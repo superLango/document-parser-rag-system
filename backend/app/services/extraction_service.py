@@ -1,8 +1,8 @@
 """结构化信息抽取服务模块。
 
-本模块基于 LLMService 从非结构化文本中抽取结构化字段信息，主要能力包括：
-- 模式驱动抽取：依据 schema_definition 描述的字段清单构造提示词
-- JSON 输出约束：要求模型仅输出合法 JSON，并做后处理解析与校验
+本模块基于 Google LangExtract 库从非结构化文本中抽取结构化字段信息，主要能力包括：
+- 模式驱动抽取：依据 schema_definition 描述的字段清单构造 few-shot 示例与提示
+- Few-shot 示例：基于 schema 字段生成 ExampleData，引导模型理解抽取目标
 - 字段缺失校验：对照 schema 检查必填字段是否齐全
 - 批量抽取：对多段文本批量执行抽取
 
@@ -32,90 +32,138 @@ schema_definition 格式约定：
 """
 
 import asyncio
-import json
 
+import langextract
+from langextract.data import FormatType, ExampleData, Extraction
+from langextract.factory import ModelConfig
+
+from app.core.config import settings
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
-from app.services.llm_service import LLMService, llm_service
 
 logger = get_logger(__name__)
-
-# 抽取任务的系统提示词，约束模型行为与输出格式
-_EXTRACTION_SYSTEM_PROMPT = (
-    "你是一个专业的结构化信息抽取助手。你的任务是根据给定的字段 schema，"
-    "从用户提供的文本中抽取结构化信息，并以严格的 JSON 格式输出。\n\n"
-    "输出要求：\n"
-    "1. 仅输出一个合法的 JSON 对象，不要输出任何额外文字、解释或 markdown 标记\n"
-    "2. JSON 的键必须与 schema 中的字段 name 完全一致\n"
-    "3. 若文本中无法找到某字段的值，将该字段的值设为 null\n"
-    "4. 字段值应为字符串、数字或布尔类型，不要输出嵌套对象\n"
-    "5. 不要编造文本中不存在的信息"
-)
 
 
 class ExtractionService:
     """结构化信息抽取服务。
 
-    基于 LLMService 执行文本到结构化字段的抽取。通过 schema_definition
-    描述待抽取字段的名称、类型与含义，构造提示词引导模型输出 JSON，
-    并对输出做字段完整性校验。
+    基于 Google LangExtract 执行文本到结构化字段的抽取。通过 schema_definition
+    描述待抽取字段的名称、类型与含义，构造 few-shot 示例与提示描述引导模型抽取，
+    并对输出做字段完整性校验。模型加载由 LangExtract 在抽取时按需处理，
+    初始化阶段仅创建 ModelConfig，不建立任何连接。
 
     Attributes:
-        _llm: 注入的 LLM 服务实例。
+        _config: LangExtract 模型配置实例。
     """
 
-    def __init__(self, llm: LLMService) -> None:
+    def __init__(
+        self,
+        model_id: str = "qwen3.5:9b",
+        model_url: str = "http://localhost:11434",
+    ) -> None:
         """初始化抽取服务。
 
+        创建 LangExtract 的 ModelConfig，provider 固定为 ollama。
+        模型加载由 LangExtract 在首次抽取时按需完成，此处仅保存配置。
+
         Args:
-            llm: 已配置好的 LLM 服务实例，用于执行模型推理。
+            model_id: Ollama 中已加载的模型标识，默认 "qwen3.5:9b"。
+            model_url: Ollama 服务地址，默认 "http://localhost:11434"。
         """
-        self._llm = llm
+        self._config = ModelConfig(
+            model_id=model_id,
+            provider="ollama",
+            provider_kwargs={"model_url": model_url},
+        )
 
-    def _build_extraction_prompt(self, text: str, schema_definition: dict) -> str:
-        """构建抽取提示词。
+    def _build_examples(self, schema_definition: dict) -> list[ExampleData]:
+        """根据 schema 字段构造 few-shot 示例。
 
-        根据 schema_definition 中描述的字段清单，构造详细的用户提示词，
-        指导模型从文本中抽取对应字段并输出 JSON。
+        为每个字段生成与类型匹配的示例值，拼装成一段示例文本，
+        并创建对应的 Extraction 列表，使模型理解字段名与抽取目标的对应关系。
 
         Args:
-            text: 待抽取的非结构化文本。
-            schema_definition: 字段定义字典，需包含 "fields" 列表，
-                每个 field 含 name、type、description、required 等键。
+            schema_definition: 字段定义字典，需包含 "fields" 列表。
 
         Returns:
-            str: 拼接完成的用户提示词。
+            list[ExampleData]: 包含示例文本与抽取结果的 ExampleData 列表。
         """
         fields = schema_definition.get("fields", [])
-        # 构造字段说明清单
-        field_lines: list[str] = []
+        if not fields:
+            return []
+
+        # 按字段类型生成示例值，并拼装示例文本
+        sample_values: dict[str, str] = {}
+        text_segments: list[str] = []
         for field in fields:
             name = field.get("name", "")
             ftype = field.get("type", "string")
+            value = self._sample_value_for_type(name, ftype)
+            sample_values[name] = value
+            text_segments.append(f"{name}为{value}")
+
+        sample_text = "本示例文本中，" + "，".join(text_segments) + "。"
+
+        extractions = [
+            Extraction(
+                extraction_class=name,
+                extraction_text=value,
+            )
+            for name, value in sample_values.items()
+        ]
+
+        return [
+            ExampleData(
+                text=sample_text,
+                extractions=extractions,
+            )
+        ]
+
+    @staticmethod
+    def _sample_value_for_type(name: str, ftype: str) -> str:
+        """根据字段类型生成示例值。
+
+        Args:
+            name: 字段名，用于生成更贴合语义的示例值。
+            ftype: 字段类型（string / number / boolean 等）。
+
+        Returns:
+            str: 示例值字符串。
+        """
+        if ftype == "number":
+            return "100"
+        if ftype == "boolean":
+            return "是"
+        # 默认 string 及其他类型
+        return f"示例{name}"
+
+    def _build_prompt_description(self, schema_definition: dict) -> str:
+        """构建中文提示描述，说明抽取目标字段。
+
+        将 schema 中的字段名、描述与必填/选填标记组织成自然语言描述，
+        作为 langextract.extract 的 prompt_description 参数传入。
+
+        Args:
+            schema_definition: 字段定义字典，需包含 "fields" 列表。
+
+        Returns:
+            str: 拼接完成的中文提示描述。
+        """
+        fields = schema_definition.get("fields", [])
+        field_lines: list[str] = []
+        for field in fields:
+            name = field.get("name", "")
             desc = field.get("description", "")
             required = field.get("required", False)
             req_label = "必填" if required else "选填"
-            field_lines.append(
-                f"- 字段名: {name} | 类型: {ftype} | 是否必填: {req_label} | 说明: {desc}"
-            )
+            field_lines.append(f"- {name}（{req_label}）：{desc}")
         fields_text = "\n".join(field_lines) if field_lines else "（无字段定义）"
 
-        # 构造输出示例，帮助模型理解期望格式
-        example_keys = [f.get("name", "") for f in fields[:3]] if fields else ["字段1"]
-        example_obj = {k: "<对应值或null>" for k in example_keys}
-        example_json = json.dumps(example_obj, ensure_ascii=False, indent=2)
-
-        prompt = (
-            f"请从以下文本中抽取结构化信息。\n\n"
-            f"【待抽取字段 schema】\n{fields_text}\n\n"
-            f"【待抽取文本】\n{text}\n\n"
-            f"【输出要求】\n"
-            f"1. 输出一个 JSON 对象，键为字段名，值为抽取到的内容\n"
-            f"2. 仅输出 JSON，不要包含任何其他文字或解释\n"
-            f"3. 找不到的字段值设为 null\n\n"
-            f"【输出示例（仅供参考格式，实际值以文本为准）】\n{example_json}"
+        return (
+            "从给定文本中抽取以下结构化字段信息：\n"
+            f"{fields_text}\n"
+            "仅抽取文本中明确出现的内容，不要编造文本中不存在的信息。"
         )
-        return prompt
 
     def _validate_extraction(
         self, data: dict, schema_definition: dict
@@ -144,11 +192,12 @@ class ExtractionService:
         """从单段文本中抽取结构化信息。
 
         流程：
-        1. 校验 schema_definition 格式
-        2. 构造抽取提示词
-        3. 调用 LLM 生成 JSON
-        4. 校验必填字段是否齐全（缺失时记录警告但不阻断，返回已抽取数据）
-        5. 返回抽取结果字典
+        1. 校验 schema_definition 格式与文本非空
+        2. 构造 few-shot 示例与提示描述
+        3. 通过 asyncio.to_thread 调用同步的 langextract.extract
+        4. 将 AnnotatedDocument.extractions 转换为字典
+        5. 校验必填字段是否齐全（缺失时记录警告但不阻断，返回已抽取数据）
+        6. 返回抽取结果字典
 
         Args:
             text: 待抽取的非结构化文本。
@@ -179,21 +228,29 @@ class ExtractionService:
                 message="待抽取文本不能为空",
             )
 
-        # 构造提示词并调用 LLM
-        prompt = self._build_extraction_prompt(text, schema_definition)
+        # 构造示例与提示描述
+        examples = self._build_examples(schema_definition)
+        prompt_description = self._build_prompt_description(schema_definition)
+
         logger.info(
             "开始结构化抽取",
             text_len=len(text),
             field_count=len(schema_definition.get("fields", [])),
         )
 
+        # 通过 asyncio.to_thread 调用同步的 langextract.extract
         try:
-            data = await self._llm.generate_json(
-                prompt=prompt,
-                system_prompt=_EXTRACTION_SYSTEM_PROMPT,
+            result = await asyncio.to_thread(
+                langextract.extract,
+                text,
+                prompt_description=prompt_description,
+                examples=examples,
+                config=self._config,
+                format_type=FormatType.JSON,
+                show_progress=False,
             )
         except BusinessException:
-            # LLM 调用异常已封装，直接向上抛出
+            # 业务异常已封装，直接向上抛出
             raise
         except Exception as err:
             logger.error("结构化抽取失败", error=str(err), exc_info=True)
@@ -202,6 +259,12 @@ class ExtractionService:
                 message=f"结构化抽取失败：{err}",
                 details={"error": str(err)},
             ) from err
+
+        # 将 AnnotatedDocument.extractions 转换为字典
+        extractions = getattr(result, "extractions", None) or []
+        data: dict = {}
+        for ext in extractions:
+            data[ext.extraction_class] = ext.extraction_text
 
         # 校验必填字段
         missing = self._validate_extraction(data, schema_definition)
@@ -272,5 +335,5 @@ class ExtractionService:
         return list(results)
 
 
-# 模块级单例，依赖 llm_service 单例
-extraction_service = ExtractionService(llm_service)
+# 模块级单例，默认使用 settings.OLLAMA_HOST 作为 Ollama 服务地址
+extraction_service = ExtractionService(model_url=settings.OLLAMA_HOST)
