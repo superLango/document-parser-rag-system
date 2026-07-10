@@ -57,11 +57,11 @@
 
 ## 阶段4：知识图谱
 
-- [ ] Task 4.1: 实现 `backend/app/services/graph_extract_service.py`（使用 DeepKE 进行实体+关系抽取，model_type="bert", task="relation_extraction"）
-- [ ] Task 4.2: 实现 `backend/app/services/graph_store.py`（Neo4j 5 Enterprise 封装：节点/边CRUD、子图查询，APOC+GDS插件）
-- [ ] Task 4.3: 实现 `backend/app/tasks/graph_tasks.py`（图构建任务：DeepKE抽取→去重→入库Neo4j）
-- [ ] Task 4.4: 实现知识图谱管理端点 `backend/app/api/v1/endpoints/knowledge_graph.py`（图查询、节点详情）
-- [ ] Task 4.5: 编写知识图谱集成测试（DeepKE实体抽取准确率、关系正确性）
+- [x] Task 4.1: 实现 `backend/app/services/graph_extract_service.py`（使用 DeepKE 进行实体+关系抽取，model_type="bert", task="relation_extraction"）
+- [x] Task 4.2: 实现 `backend/app/services/graph_store.py`（Neo4j 5 Enterprise 封装：节点/边CRUD、子图查询，APOC+GDS插件）
+- [x] Task 4.3: 实现 `backend/app/tasks/graph_tasks.py`（图构建任务：DeepKE抽取→去重→入库Neo4j）
+- [x] Task 4.4: 实现知识图谱管理端点 `backend/app/api/v1/endpoints/knowledge_graph.py`（图查询、节点详情）
+- [x] Task 4.5: 编写知识图谱集成测试（DeepKE实体抽取准确率、关系正确性）
 
 ## 阶段5：RAG问答引擎
 
