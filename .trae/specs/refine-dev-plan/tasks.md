@@ -36,14 +36,14 @@
 
 ## 阶段2：文档解析管道
 
-- [ ] Task 2.1: 实现 `backend/app/services/ocr_service.py`（PaddleOCR-VL 封装：recognize、warmup）
-- [ ] Task 2.2: 实现 `backend/app/services/layout_service.py`（MinerU 封装：复杂文档版面分析）[可并行]
-- [ ] Task 2.3: 实现 `backend/app/services/extract_service.py`（基于 Qwen3.6 的结构化抽取，按Schema输出JSON）
-- [ ] Task 2.4: 实现 `backend/app/tasks/document_tasks.py` 的 `parse_document` 任务（编排 OCR→版面→抽取，带进度推送）
-- [ ] Task 2.5: 实现 Schema 管理端点 `backend/app/api/v1/endpoints/schemas.py`（CRUD + 模板）
-- [ ] Task 2.6: 实现术语标准化服务 `backend/app/services/term_service.py`（术语库匹配 + 人工审核队列）
-- [ ] Task 2.7: 实现术语管理端点 `backend/app/api/v1/endpoints/terms.py` [可并行]
-- [ ] Task 2.8: 编写解析管道集成测试（使用 `test_standard_doc/` 样本，验证端到端解析流程）
+- [x] Task 2.1: 实现 `backend/app/services/ocr_service.py`（PaddleOCR-VL 封装：recognize、warmup）
+- [x] Task 2.2: 实现 `backend/app/services/layout_service.py`（MinerU 封装：复杂文档版面分析）[可并行]
+- [x] Task 2.3: 实现 `backend/app/services/extraction_service.py`（基于 Qwen3.5-9B + vLLM 的结构化抽取，按Schema输出JSON）
+- [x] Task 2.4: 实现 `backend/app/tasks/document_tasks.py` 的 `parse_document` 任务（编排 OCR→版面→抽取→术语标准化，带进度推送）
+- [x] Task 2.5: 实现 Schema 管理端点 `backend/app/api/v1/endpoints/schemas.py`（CRUD + 模板）
+- [x] Task 2.6: 实现术语标准化服务 `backend/app/services/term_service.py`（术语库匹配 + 人工审核队列）
+- [x] Task 2.7: 实现术语管理端点 `backend/app/api/v1/endpoints/terms.py` [可并行]
+- [x] Task 2.8: 编写解析管道集成测试（使用 `test_standard_doc/` 栂本，验证端到端解析流程）
 
 ## 阶段3：RAG知识库
 

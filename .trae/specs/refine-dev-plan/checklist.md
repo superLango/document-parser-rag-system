@@ -53,8 +53,8 @@
 - [x] 文件上传接口验证类型与大小，上传至 MinIO
 - [x] 文档解析任务通过 Celery 异步执行，支持进度推送
 - [x] SSE 端点可流式推送任务进度
-- [ ] OCR 服务封装 PaddleOCR-VL，含 warmup
-- [ ] 结构化抽取按 Schema 输出 JSON
+- [x] OCR 服务封装 PaddleOCR-VL，含 warmup
+- [x] 结构化抽取按 Schema 输出 JSON
 - [ ] 分块器支持章节结构感知
 - [ ] 嵌入服务控制 batch_size 防止 OOM
 - [ ] Milvus 混合检索（Dense+Sparse+RRF）
