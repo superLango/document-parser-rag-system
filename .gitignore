@@ -25,6 +25,9 @@ models/
 *.whl
 *.tar.gz
 
+# ===== Test documents (local only) =====
+test_standard_doc/
+
 # ===== IDE =====
 .idea/
 .vscode/
