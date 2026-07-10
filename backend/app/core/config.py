@@ -94,6 +94,17 @@ class Settings(BaseSettings):
     )
 
     # ---------------------------------------------------------------
+    # 嵌入模型配置（bge-m3 Dense+Sparse 向量）
+    # ---------------------------------------------------------------
+    EMBEDDING_MODEL_PATH: str = Field(
+        default="/home/hanson/doc_parse_project/models/bge-m3",
+        description="bge-m3 嵌入模型目录路径",
+    )
+    EMBEDDING_BATCH_SIZE: int = Field(
+        default=4, description="嵌入批量大小（防止显存溢出）"
+    )
+
+    # ---------------------------------------------------------------
     # JWT 鉴权配置
     # ---------------------------------------------------------------
     SECRET_KEY: str = Field(

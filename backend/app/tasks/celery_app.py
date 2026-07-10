@@ -27,7 +27,7 @@ celery_app = Celery(
     "document_parser",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
-    include=["app.tasks.document_tasks"],
+    include=["app.tasks.document_tasks", "app.tasks.rag_tasks"],
 )
 
 # 序列化与内容类型配置：统一使用 JSON，保证跨语言兼容性

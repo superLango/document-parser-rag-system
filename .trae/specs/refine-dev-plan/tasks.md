@@ -47,27 +47,27 @@
 
 ## 阶段3：RAG知识库
 
-- [ ] Task 3.1: 实现 `backend/app/services/chunking_service.py`（结构感知分块器：章节提取 + 递归分块）
-- [ ] Task 3.2: 实现 `backend/app/services/embedding_service.py`（bge-base-zh-v1.5 密集 + 稀疏嵌入，batch_size控制）
-- [ ] Task 3.3: 编写 Milvus Collection 初始化脚本 `scripts/create_milvus_collection.py`（dense + sparse 字段、IVF_PQ索引）
-- [ ] Task 3.4: 实现 `backend/app/services/vector_store.py`（Milvus 封装：插入、混合检索、RRF融合）
-- [ ] Task 3.5: 实现 `backend/app/tasks/rag_tasks.py`（文档入知识库任务：分块→嵌入→入库）
-- [ ] Task 3.6: 实现知识库管理端点 `backend/app/api/v1/endpoints/knowledge_base.py`（重建索引、状态查询）
-- [ ] Task 3.7: 编写RAG知识库单元测试（分块正确性、嵌入维度、检索召回）
+- [x] Task 3.1: 实现 `backend/app/services/chunking_service.py`（结构感知分块器：章节提取 + langchain RecursiveCharacterTextSplitter 递归分块）
+- [x] Task 3.2: 实现 `backend/app/services/embedding_service.py`（bge-m3 同时输出 Dense+Sparse 向量，batch_size=4防OOM，FlagEmbedding库）
+- [x] Task 3.3: 编写 Milvus Collection 初始化脚本 `scripts/create_milvus_collection.py`（dense FLOAT_VECTOR 1024维 + sparse SPARSE_FLOAT_VECTOR 字段、IVF_PQ索引+SPARSE_INVERTED_INDEX）
+- [x] Task 3.4: 实现 `backend/app/services/vector_store.py`（Milvus 封装：插入、Dense+Sparse混合检索、RRF融合）
+- [x] Task 3.5: 实现 `backend/app/tasks/rag_tasks.py`（文档入知识库任务：分块→嵌入→入库）
+- [x] Task 3.6: 实现知识库管理端点 `backend/app/api/v1/endpoints/knowledge_base.py`（重建索引、状态查询）
+- [x] Task 3.7: 编写RAG知识库单元测试（分块正确性、嵌入维度、检索召回）
 
 ## 阶段4：知识图谱
 
-- [ ] Task 4.1: 实现 `backend/app/services/graph_extract_service.py`（基于 LLM 的实体关系抽取）
-- [ ] Task 4.2: 实现 `backend/app/services/graph_store.py`（Neo4j 封装：节点/边CRUD、子图查询）
-- [ ] Task 4.3: 实现 `backend/app/tasks/graph_tasks.py`（图构建任务：抽取→去重→入库）
+- [ ] Task 4.1: 实现 `backend/app/services/graph_extract_service.py`（使用 DeepKE 进行实体+关系抽取，model_type="bert", task="relation_extraction"）
+- [ ] Task 4.2: 实现 `backend/app/services/graph_store.py`（Neo4j 5 Enterprise 封装：节点/边CRUD、子图查询，APOC+GDS插件）
+- [ ] Task 4.3: 实现 `backend/app/tasks/graph_tasks.py`（图构建任务：DeepKE抽取→去重→入库Neo4j）
 - [ ] Task 4.4: 实现知识图谱管理端点 `backend/app/api/v1/endpoints/knowledge_graph.py`（图查询、节点详情）
-- [ ] Task 4.5: 编写知识图谱集成测试（实体抽取准确率、关系正确性）
+- [ ] Task 4.5: 编写知识图谱集成测试（DeepKE实体抽取准确率、关系正确性）
 
 ## 阶段5：RAG问答引擎
 
-- [ ] Task 5.1: 实现 `backend/app/services/query_service.py`（查询理解：意图识别 + 实体提取）
-- [ ] Task 5.2: 实现 `backend/app/services/reranker_service.py`（bge-reranker-v2-m3 精排封装）[可并行]
-- [ ] Task 5.3: 实现 `backend/app/services/rag_service.py`（编排：查询→混合检索→重排→LLM生成→溯源）
+- [ ] Task 5.1: 实现 `backend/app/services/query_service.py`（查询理解：意图识别 + 实体提取，使用 Qwen3.5-9B 通过 vLLM）
+- [ ] Task 5.2: 实现 `backend/app/services/reranker_service.py`（bge-reranker-v2-m3 CrossEncoder精排封装）[可并行]
+- [ ] Task 5.3: 实现 `backend/app/services/rag_service.py`（编排：查询→混合检索→重排→Qwen3.5-9B生成→citations溯源提取）
 - [ ] Task 5.4: 实现问答端点 `backend/app/api/v1/endpoints/qa.py`（普通查询 + SSE流式查询）
 - [ ] Task 5.5: 编写RAG问答集成测试（召回率、答案质量、溯源准确性）
 
@@ -90,7 +90,7 @@
 - [ ] Task 7.1: 编写 `deploy/docker-compose.yml` 完整版（含所有服务 + GPU配置 + 显存限制）
 - [ ] Task 7.2: 编写 `backend/Dockerfile` 与 `frontend/Dockerfile`（多阶段构建）
 - [ ] Task 7.3: 编写端到端测试脚本 `scripts/e2e_test.py`（上传→解析→问答全流程）
-- [ ] Task 7.4: 配置 Prometheus + Grafana 监控（`deploy/prometheus.yml` + dashboards）
+- [ ] Task 7.4: 配置 Prometheus + Grafana 监控（`deploy/prometheus.yml` + dashboards）+ Flower Celery监控（端口5555）
 - [ ] Task 7.5: 编写部署文档 `docs/DEPLOYMENT.md`（一键部署步骤、服务地址、故障排查）
 - [ ] Task 7.6: 性能压测与优化（显存使用、并发调优、检索延迟）
 
