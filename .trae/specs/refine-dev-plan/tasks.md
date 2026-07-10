@@ -20,19 +20,19 @@
 
 ## 阶段1：核心后端
 
-- [ ] Task 1.1: 实现 `backend/app/core/config.py`（pydantic-settings，读取环境变量）
-- [ ] Task 1.2: 实现 `backend/app/core/database.py`（SQLAlchemy 异步引擎 + Session 工厂）与 `backend/app/core/logging.py`（structlog JSON 日志 + trace_id 中间件） [可并行]
-- [ ] Task 1.3: 实现 `backend/app/core/exceptions.py`（自定义异常类 + 错误码枚举）与 `backend/app/core/response.py`（统一响应封装函数） [可并行]
-- [ ] Task 1.4: 实现 `backend/app/core/security.py`（JWT 签发/验证）与 `backend/app/api/deps.py`（get_current_user、get_db、限流依赖） [可并行]
-- [ ] Task 1.5: 实现 ORM 模型 `backend/app/models/`（Document、Task、Schema、Term、User）
-- [ ] Task 1.6: 实现 Pydantic Schemas `backend/app/schemas/`（对应每个模型的 Create/Update/Response）
-- [ ] Task 1.7: 配置 Alembic 迁移（`alembic.ini` + `alembic/env.py`），生成初始迁移脚本
-- [ ] Task 1.8: 实现 `backend/app/services/storage_service.py`（MinIO 封装：上传、下载、删除）
-- [ ] Task 1.9: 实现文件管理端点 `backend/app/api/v1/endpoints/documents.py`（上传、列表、删除、详情）
-- [ ] Task 1.10: 实现鉴权端点 `backend/app/api/v1/endpoints/auth.py`（登录、刷新token）与 `backend/app/api/v1/router.py` 聚合路由
-- [ ] Task 1.11: 配置 Celery `backend/app/tasks/celery_app.py`（含 beat 定时任务）与 `backend/app/tasks/document_tasks.py` 骨架
-- [ ] Task 1.12: 实现任务进度 SSE 端点 `backend/app/api/v1/endpoints/tasks.py`（任务提交、状态查询、SSE流）
-- [ ] Task 1.13: 编写后端单元测试 `backend/tests/`（config、security、documents、auth）覆盖阶段1功能
+- [x] Task 1.1: 实现 `backend/app/core/config.py`（pydantic-settings，读取环境变量）
+- [x] Task 1.2: 实现 `backend/app/core/database.py`（SQLAlchemy 异步引擎 + Session 工厂）与 `backend/app/core/logging.py`（structlog JSON 日志 + trace_id 中间件） [可并行]
+- [x] Task 1.3: 实现 `backend/app/core/exceptions.py`（自定义异常类 + 错误码枚举）与 `backend/app/core/response.py`（统一响应封装函数） [可并行]
+- [x] Task 1.4: 实现 `backend/app/core/security.py`（JWT 签发/验证）与 `backend/app/api/deps.py`（get_current_user、get_db、限流依赖） [可并行]
+- [x] Task 1.5: 实现 ORM 模型 `backend/app/models/`（Document、Task、Schema、Term、User）
+- [x] Task 1.6: 实现 Pydantic Schemas `backend/app/schemas/`（对应每个模型的 Create/Update/Response）
+- [x] Task 1.7: 配置 Alembic 迁移（`alembic.ini` + `alembic/env.py`），生成初始迁移脚本
+- [x] Task 1.8: 实现 `backend/app/services/storage_service.py`（MinIO 封装：上传、下载、删除）
+- [x] Task 1.9: 实现文件管理端点 `backend/app/api/v1/endpoints/documents.py`（上传、列表、删除、详情）
+- [x] Task 1.10: 实现鉴权端点 `backend/app/api/v1/endpoints/auth.py`（登录、刷新token）与 `backend/app/api/v1/router.py` 聚合路由
+- [x] Task 1.11: 配置 Celery `backend/app/tasks/celery_app.py`（含 beat 定时任务）与 `backend/app/tasks/document_tasks.py` 骨架
+- [x] Task 1.12: 实现任务进度 SSE 端点 `backend/app/api/v1/endpoints/tasks.py`（任务提交、状态查询、SSE流）
+- [x] Task 1.13: 编写后端单元测试 `backend/tests/`（config、security、documents、auth）覆盖阶段1功能
 
 ## 阶段2：文档解析管道
 

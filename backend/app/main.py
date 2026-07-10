@@ -3,8 +3,10 @@
 本模块定义了 Document Parser API 的主应用实例，包含：
 - FastAPI 应用创建与元信息配置
 - CORS 中间件配置（开发环境允许所有来源）
-- 健康检查端点
-- API 路由注册（Phase 1 将启用）
+- trace_id 链路追踪中间件
+- 全局异常处理器注册
+- 健康检查与根信息端点
+- API v1 路由注册
 
 启动方式：
     python -m app.main
@@ -15,9 +17,15 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
-# Phase 1 将在此处导入 API 路由
-# from app.api.v1.api import api_router
+from app.api.deps import limiter
+from app.api.v1.router import api_router
+from app.core.logging import add_trace_id_middleware
+from app.core.response import register_exception_handlers
 
 app = FastAPI(
     title="Document Parser API",
@@ -34,6 +42,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 注册 trace_id 链路追踪中间件，自动从请求头读取或生成 trace_id
+app.add_middleware(BaseHTTPMiddleware, dispatch=add_trace_id_middleware)
+
+# 注册 slowapi 限流器
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
+# 注册全局异常处理器，统一响应体格式
+register_exception_handlers(app)
+
+# 注册 API v1 路由
+app.include_router(api_router, prefix="/api/v1")
+
+
+@app.get("/", tags=["root"])
+async def root() -> dict[str, str]:
+    """根端点，返回 API 基本信息。
+
+    Returns:
+        dict[str, str]: 包含服务名称、版本与文档地址的字典。
+    """
+    return {"name": "Document Parser API", "version": "1.0.0", "docs": "/docs"}
+
 
 @app.get("/health", tags=["health"])
 async def health_check() -> dict[str, str]:
@@ -45,10 +77,6 @@ async def health_check() -> dict[str, str]:
         dict[str, str]: 包含服务状态的字典，例如 {"status": "ok"}。
     """
     return {"status": "ok"}
-
-
-# TODO: Phase 1 将启用 API 路由
-# app.include_router(api_router, prefix="/api/v1")
 
 
 if __name__ == "__main__":
