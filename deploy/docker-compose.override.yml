@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  postgres:
+    restart: unless-stopped
+    ports:
+      - "15432:5432"
+
+  redis:
+    restart: unless-stopped
+
+  minio:
+    restart: unless-stopped
+
+  neo4j:
+    restart: unless-stopped
+
+  etcd:
+    restart: unless-stopped
+
+  milvus:
+    restart: unless-stopped
