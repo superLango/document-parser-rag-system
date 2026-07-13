@@ -65,11 +65,11 @@
 
 ## 阶段5：RAG问答引擎
 
-- [ ] Task 5.1: 实现 `backend/app/services/query_service.py`（查询理解：意图识别 + 实体提取，使用 Qwen3.5-9B 通过 vLLM）
-- [ ] Task 5.2: 实现 `backend/app/services/reranker_service.py`（bge-reranker-v2-m3 CrossEncoder精排封装）[可并行]
-- [ ] Task 5.3: 实现 `backend/app/services/rag_service.py`（编排：查询→混合检索→重排→Qwen3.5-9B生成→citations溯源提取）
-- [ ] Task 5.4: 实现问答端点 `backend/app/api/v1/endpoints/qa.py`（普通查询 + SSE流式查询）
-- [ ] Task 5.5: 编写RAG问答集成测试（召回率、答案质量、溯源准确性）
+- [x] Task 5.1: 实现 `backend/app/services/query_service.py`（查询理解：意图识别 + 实体提取，使用 Qwen3.5-9B 通过 vLLM）
+- [x] Task 5.2: 实现 `backend/app/services/reranker_service.py`（bge-reranker-v2-m3 CrossEncoder精排封装）
+- [x] Task 5.3: 实现 `backend/app/services/rag_service.py`（编排：查询→混合检索→重排→Qwen3.5-9B生成→citations溯源提取）
+- [x] Task 5.4: 实现问答端点 `backend/app/api/v1/endpoints/qa.py`（普通查询 + SSE流式查询）
+- [x] Task 5.5: 编写RAG问答集成测试（召回率、答案质量、溯源准确性）
 
 ## 阶段6：前端实现
 

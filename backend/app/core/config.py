@@ -108,6 +108,21 @@ class Settings(BaseSettings):
     )
 
     # ---------------------------------------------------------------
+    # 重排模型配置（bge-reranker-v2-m3 CrossEncoder）
+    # ---------------------------------------------------------------
+    RERANKER_MODEL_DIR: str = Field(
+        default="models/bge-reranker-v2-m3",
+        description="CrossEncoder重排模型路径",
+    )
+
+    # ---------------------------------------------------------------
+    # RAG 编排配置
+    # ---------------------------------------------------------------
+    RAG_TOP_K: int = Field(default=5, description="RAG检索默认返回数量")
+    RAG_RERANK_POOL: int = Field(default=15, description="RAG重排候选池大小")
+    RAG_MAX_CONTEXT_LENGTH: int = Field(default=4096, description="RAG上下文最大token数")
+
+    # ---------------------------------------------------------------
     # JWT 鉴权配置
     # ---------------------------------------------------------------
     SECRET_KEY: str = Field(
