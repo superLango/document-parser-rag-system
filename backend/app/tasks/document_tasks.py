@@ -38,6 +38,7 @@ from app.models.task import Task as TaskModel
 from app.services.extraction_service import extraction_service
 from app.services.layout_service import layout_service
 from app.services.ocr_service import ocr_service
+from app.services.popo_service import popo_service
 from app.services.storage_service import storage_service
 from app.services.term_service import term_service
 
@@ -177,6 +178,40 @@ async def parse_document_impl(
                     text_blocks=len(text_blocks),
                     merged_blocks=len(merged_layout),
                 )
+
+                # ----------------------------------------------------------
+                # 阶段 3.5：MinerU-Popo 后处理（进度 50%）
+                # ----------------------------------------------------------
+                # Popo 为非关键增强步骤：失败时静默跳过，不影响主流程
+                await _update_progress(task_id, 50, "文档后处理中")
+                try:
+                    popo_result = await popo_service.post_process(
+                        image_bytes,
+                        merged_layout,
+                        ocr_result.get(
+                            "page_size", {"width": 1240, "height": 1754}
+                        ),
+                    )
+                    if popo_result:
+                        # 使用 Popo 的标题层级和跨页合并结果增强文本
+                        # 如果 Popo 返回了 enriched_text，使用它替换 full_text
+                        enriched_text = popo_result.get("enriched_text")
+                        if enriched_text:
+                            full_text = enriched_text
+                        logger.info(
+                            "Popo 后处理完成",
+                            document_id=document_id,
+                            title_count=len(popo_result.get("title_hierarchy", [])),
+                            contd_count=len(
+                                popo_result.get("text_continuations", [])
+                            ),
+                        )
+                except Exception as popo_err:
+                    logger.warning(
+                        "Popo 后处理失败，跳过（不影响主流程）",
+                        document_id=document_id,
+                        error=str(popo_err),
+                    )
 
                 # ----------------------------------------------------------
                 # 阶段 4：结构化抽取（进度 60%）

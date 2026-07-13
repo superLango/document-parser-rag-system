@@ -332,6 +332,7 @@
 | PaddleOCR-VL | `models/PaddlePaddle/PaddleOCR-VL` | OCR |
 | bge-m3 | `models/bge-m3` | Dense+Sparse嵌入 |
 | bge-reranker-v2-m3 | `models/bge-reranker-v2-m3` | CrossEncoder精排 |
+| MinerU-Popo | `models/MinerU-Popo` | 文档后处理（跨页合并+标题层级+图文关联） |
 
 ### 基础设施服务（Docker Compose）— 迭代后
 | 服务 | 原始方案 | 迭代方案 | 镜像 | 说明 |

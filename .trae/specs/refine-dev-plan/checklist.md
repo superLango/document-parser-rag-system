@@ -98,8 +98,8 @@
 - [x] API端点任务提交使用 arq.enqueue_job()（非celery.delay()）
 - [x] graph_extract_service.py 使用 OneKE指令格式 + vLLM（非DeepKE）
 - [x] OneKE指令构建正确（schema驱动 + 实体/关系类型 + IEPile格式）
-- [ ] popo_service.py 实现MinerU-Popo后处理（跨页表格合并+标题层级）— 暂缓
-- [ ] document_tasks.py 解析管道集成Popo后处理步骤 — 暂缓
+- [x] popo_service.py 实现MinerU-Popo后处理（跨页表格合并+标题层级重建+图文关联）
+- [x] document_tasks.py 解析管道集成Popo后处理步骤（阶段3.5，进度50%）
 - [x] requirements.txt 移除 celery/minio/deepke
 - [x] requirements.txt 新增 arq/redis[hiredis]/boto3/langextract
 - [x] .env.example 更新为Valkey/SeaweedFS配置项

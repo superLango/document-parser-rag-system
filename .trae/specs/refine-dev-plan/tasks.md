@@ -116,10 +116,10 @@
   - [x] SubTask 8.3.1: 研究OneKE/DeepKE-LLM的InstructKGC API
   - [x] SubTask 8.3.2: 重写 `graph_extract_service.py`（移除DeepKE导入尝试，使用OneKE指令格式+vLLM推理）
   - [x] SubTask 8.3.3: 更新测试（移除DeepKE相关mock，新增OneKE指令格式测试）
-- [ ] Task 8.4: 文档解析增强 — 集成 MinerU-Popo 后处理 [可并行，暂缓]
-  - [ ] SubTask 8.4.1: 下载MinerU-Popo模型（4B轻量级后处理模型）
-  - [ ] SubTask 8.4.2: 实现 `backend/app/services/popo_service.py`（跨页表格合并+标题层级重建+图文关联）
-  - [ ] SubTask 8.4.3: 在 `document_tasks.py` 解析管道中集成Popo后处理步骤
+- [x] Task 8.4: 文档解析增强 — 集成 MinerU-Popo 后处理 [可并行]
+  - [x] SubTask 8.4.1: 下载MinerU-Popo模型（4B VLM后处理模型，17GB）
+  - [x] SubTask 8.4.2: 实现 `backend/app/services/popo_service.py`（跨页表格合并+标题层级重建+图文关联）
+  - [x] SubTask 8.4.3: 在 `document_tasks.py` 解析管道中集成Popo后处理步骤（阶段3.5，进度50%）
 - [x] Task 8.5: 清理与验证
   - [x] SubTask 8.5.1: 移除 deepke-env Conda环境（不再需要）
   - [x] SubTask 8.5.2: 更新 requirements.txt（移除celery/minio/deepke，新增arq/redis/boto3/langextract）
