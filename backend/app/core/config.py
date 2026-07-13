@@ -13,7 +13,7 @@
 - Ollama 大模型服务
 - PaddleOCR 模型路径
 - 文件上传限制
-- Celery 异步任务队列
+- arq 异步任务队列（基于 Redis）
 
 使用方式：
     from app.core.config import settings
@@ -74,6 +74,9 @@ class Settings(BaseSettings):
     )
     MINIO_BUCKET: str = Field(default="documents", description="MinIO 默认存储桶名")
     MINIO_SECURE: bool = Field(default=False, description="是否启用 HTTPS 访问 MinIO")
+    S3_ENDPOINT_URL: str = Field(
+        default="http://localhost:9000", description="S3兼容存储端点URL（SeaweedFS）"
+    )
 
     # ---------------------------------------------------------------
     # Neo4j 图数据库配置
@@ -144,14 +147,10 @@ class Settings(BaseSettings):
     )
 
     # ---------------------------------------------------------------
-    # Celery 异步任务队列配置
+    # arq 异步任务队列配置（基于 Redis）
     # ---------------------------------------------------------------
-    CELERY_BROKER_URL: str = Field(
-        default="redis://localhost:6379/1", description="Celery 消息代理地址"
-    )
-    CELERY_RESULT_BACKEND: str = Field(
-        default="redis://localhost:6379/2", description="Celery 结果后端地址"
-    )
+    # arq 使用 Redis database=1 作为任务队列，与原 Celery broker 一致。
+    # Redis 连接参数复用 REDIS_URL 中的主机与端口配置。
 
     model_config = SettingsConfigDict(
         env_file=".env",

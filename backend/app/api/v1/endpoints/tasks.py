@@ -2,20 +2,21 @@
 
 本模块定义异步解析任务的接口，包括：
 
-- ``POST /tasks/``：提交文档解析任务到 Celery 队列
+- ``POST /tasks/``：提交文档解析任务到 arq 队列
 - ``GET /tasks/{task_id}``：查询任务状态
 - ``GET /tasks/{task_id}/stream``：SSE 流式推送任务进度
 - ``GET /tasks/``：分页查询任务列表
 
-任务状态来源结合数据库 Task 记录与 Celery AsyncResult 实时状态，
-SSE 端点通过 StreamingResponse 每 0.5 秒轮询 Celery 进度并推送给客户端。
+任务状态来源为数据库 Task 记录，arq 通过 job_id 与 Task 记录关联。
+SSE 端点通过 StreamingResponse 每 0.5 秒轮询数据库 Task 进度并推送给客户端。
 """
 
 import asyncio
 import json
 from uuid import UUID
 
-from celery.result import AsyncResult
+from arq import create_pool
+from arq.connections import RedisSettings
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -31,22 +32,30 @@ from app.models.document import Document
 from app.models.task import Task
 from app.models.user import User
 from app.schemas.task import TaskResponse
-from app.tasks.celery_app import celery_app
-from app.tasks.document_tasks import parse_document
 
 logger = get_logger(__name__)
 
 router = APIRouter(prefix="/tasks", tags=["任务管理"])
 
-# Celery 状态到业务状态的映射
-_STATE_MAPPING: dict[str, str] = {
-    "PENDING": "pending",
-    "STARTED": "started",
-    "PROGRESS": "progress",
-    "SUCCESS": "success",
-    "FAILURE": "failed",
-    "RETRY": "pending",
-}
+# arq 连接池单例（懒加载）
+_arq_pool = None
+
+
+async def get_arq_pool():
+    """获取 arq Redis 连接池单例。
+
+    首次调用时创建连接池并缓存，后续直接返回单例。
+    arq 使用 database=1 作为任务队列（与原 Celery broker 一致）。
+
+    Returns:
+        ArqRedis: arq Redis 连接池实例。
+    """
+    global _arq_pool
+    if _arq_pool is None:
+        _arq_pool = await create_pool(
+            RedisSettings(host="localhost", port=6379, database=1)
+        )
+    return _arq_pool
 
 
 class TaskCreateRequest(BaseModel):
@@ -73,8 +82,8 @@ async def submit_task(
 
     处理流程：
         1. 验证指定文档存在。
-        2. 调用 ``parse_document.delay`` 将任务投递到 Celery 队列。
-        3. 在数据库中创建任务记录，记录 Celery task id。
+        2. 通过 arq ``enqueue_job`` 将任务投递到 Redis 队列。
+        3. 在数据库中创建任务记录，记录 arq job_id。
         4. 返回任务标识与初始状态。
 
     Args:
@@ -100,16 +109,25 @@ async def submit_task(
             message=f"文档 {payload.document_id} 不存在",
         )
 
-    # 提交 Celery 任务
-    async_result = parse_document.delay(
+    # 提交 arq 任务
+    pool = await get_arq_pool()
+    job = await pool.enqueue_job(
+        "parse_document_task",
         str(payload.document_id),
         payload.schema_id,
         payload.term_base_id,
     )
 
+    if job is None:
+        # 任务未入队（同名任务已存在且未完成）
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_FAILED,
+            message="任务提交失败，可能已有相同任务在执行中",
+        )
+
     # 创建任务记录
     task = Task(
-        id=async_result.id,
+        id=job.job_id,
         document_id=payload.document_id,
         status="pending",
         progress=0,
@@ -119,7 +137,7 @@ async def submit_task(
 
     logger.info(
         "任务已提交",
-        task_id=async_result.id,
+        task_id=job.job_id,
         document_id=str(payload.document_id),
         schema_id=payload.schema_id,
         term_base_id=payload.term_base_id,
@@ -135,11 +153,11 @@ async def get_task(
 ) -> dict:
     """查询任务状态。
 
-    同时查询数据库 Task 记录与 Celery AsyncResult 实时状态，
-    以 Celery 状态为优先来源，确保返回最新进度。
+    直接返回数据库 Task 记录中的状态与进度。
+    arq 任务进度由 Worker 写入数据库 Task 记录。
 
     Args:
-        task_id: Celery 任务唯一标识。
+        task_id: arq 任务唯一标识。
         db: 异步数据库会话。
         current_user: 当前已认证用户。
 
@@ -161,22 +179,12 @@ async def get_task(
             message=f"任务 {task_id} 不存在",
         )
 
-    # 查询 Celery 实时状态
-    async_result = AsyncResult(task_id, app=celery_app)
-    celery_state: str = async_result.state
-    current_status: str = _STATE_MAPPING.get(celery_state, task.status)
-
-    # 若 Celery 处于 PROGRESS 状态，从其 meta 中提取进度
-    progress: int = task.progress
-    if celery_state == "PROGRESS" and isinstance(async_result.info, dict):
-        progress = async_result.info.get("progress", task.progress)
-
     # 构建 TaskResponse
     task_response = TaskResponse(
         id=task.id,
         document_id=task.document_id,
-        status=current_status,
-        progress=progress,
+        status=task.status,
+        progress=task.progress,
         result=task.result,
         error_message=task.error_message,
         created_at=task.created_at,
@@ -194,72 +202,88 @@ async def stream_task_progress(
     """SSE 流式推送任务进度。
 
     通过 Server-Sent Events 协议向客户端实时推送任务进度。
-    每 0.5 秒轮询一次 Celery AsyncResult，根据任务状态推送不同事件：
+    每 0.5 秒轮询一次数据库 Task 记录，根据任务状态推送不同事件：
 
-    - ``PROGRESS``：推送进度数据（进度百分比与消息）
-    - ``SUCCESS``：推送最终结果并关闭流
-    - ``FAILURE``：推送错误信息并关闭流
-    - ``PENDING``/``STARTED`` 等：推送等待/处理中状态
+    - ``progress``：推送进度数据（进度百分比与状态）
+    - ``done``：推送最终结果并关闭流
+    - ``error``：推送错误信息并关闭流
 
     事件格式遵循 API 契约第 6 节的 SSE 规范：
-        ``data: {"event":"progress","percent":50,"message":"解析中"}\\n\\n``
+        ``data: {"event":"progress","progress":50,"message":"解析中"}\\n\\n``
 
     Args:
-        task_id: Celery 任务唯一标识。
+        task_id: arq 任务唯一标识。
         current_user: 当前已认证用户。
 
     Returns:
         StreamingResponse: ``text/event-stream`` 类型的流式响应。
     """
+    # 延迟导入，避免循环依赖
+    from app.core.database import AsyncSessionLocal
 
     async def event_generator():
         """SSE 事件生成器。
 
-        持续轮询 Celery 任务状态，直到任务成功或失败后终止。
+        持续轮询数据库 Task 记录，直到任务成功或失败后终止。
         """
-        async_result = AsyncResult(task_id, app=celery_app)
-
         while True:
-            state: str = async_result.state
+            # 从数据库查询任务状态
+            async with AsyncSessionLocal() as db:
+                stmt = select(Task).where(Task.id == task_id)
+                result = await db.execute(stmt)
+                task = result.scalar_one_or_none()
 
-            if state == "PROGRESS":
-                # 进度更新：从 Celery meta 中提取进度信息
-                info = async_result.info if isinstance(async_result.info, dict) else {}
+            if task is None:
+                # 任务不存在，推送错误并终止
                 payload: dict = {
-                    "event": "progress",
-                    "state": state,
-                    "progress": info.get("progress", 0),
-                    "message": info.get("message", "解析中"),
+                    "event": "error",
+                    "state": "FAILURE",
+                    "error": f"任务 {task_id} 不存在",
                 }
                 yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+                break
 
-            elif state == "SUCCESS":
+            status: str = task.status
+            progress: int = task.progress
+
+            if status in ("success", "completed"):
                 # 任务成功：推送结果并终止
                 payload = {
                     "event": "done",
-                    "state": state,
-                    "result": async_result.result,
+                    "state": "SUCCESS",
+                    "progress": 100,
+                    "result": task.result,
                 }
                 yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
                 break
 
-            elif state == "FAILURE":
+            elif status == "failed":
                 # 任务失败：推送错误并终止
                 payload = {
                     "event": "error",
-                    "state": state,
-                    "error": str(async_result.result),
+                    "state": "FAILURE",
+                    "error": task.error_message or "任务执行失败",
                 }
                 yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
                 break
 
-            else:
-                # PENDING / STARTED / RETRY 等中间状态
+            elif status == "progress":
+                # 进度更新
                 payload = {
                     "event": "progress",
-                    "state": state,
-                    "progress": 0,
-                    "message": "等待中" if state == "PENDING" else "处理中",
+                    "state": "PROGRESS",
+                    "progress": progress,
+                    "message": "处理中",
+                }
+                yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+
+            else:
+                # pending / started 等中间状态
+                payload = {
+                    "event": "progress",
+                    "state": status.upper() if status else "PENDING",
+                    "progress": progress,
+                    "message": "等待中" if status == "pending" else "处理中",
                 }
                 yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
 

@@ -24,35 +24,33 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7-alpine
-    container_name: docparser-redis
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: docparser-valkey
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
-    command: redis-server /usr/local/etc/redis/redis.conf
+      - valkey_data:/data
+      - ./valkey.conf:/usr/local/etc/valkey/valkey.conf
+    command: valkey-server /usr/local/etc/valkey/valkey.conf
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "valkey-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  minio:
-    image: quay.io/minio/minio:latest
-    container_name: docparser-minio
-    command: server /data --console-address ":9001"
+  seaweedfs:
+    image: chrislusf/seaweedfs:latest
+    container_name: docparser-seaweedfs
+    command: server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data
     ports:
-      - "9000:9000"
-      - "9001:9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      - "9000:8333"
+      - "9001:8888"
     volumes:
-      - minio_data:/data
+      - seaweedfs_data:/data
+      - ./seaweedfs_s3.json:/etc/seaweedfs/s3.json
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD", "curl", "-f", "http://localhost:8333/status"]
       interval: 30s
       timeout: 20s
       retries: 3
@@ -102,12 +100,12 @@ services:
       - "9091:9091"
     environment:
       ETCD_ENDPOINTS: etcd:2379
-      MINIO_ADDRESS: minio:9000
+      MINIO_ADDRESS: seaweedfs:8333
     volumes:
       - milvus_data:/var/lib/milvus
     depends_on:
       - etcd
-      - minio
+      - seaweedfs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
       interval: 30s
@@ -116,8 +114,8 @@ services:
 
 volumes:
   postgres_data:
-  redis_data:
-  minio_data:
+  valkey_data:
+  seaweedfs_data:
   neo4j_data:
   neo4j_logs:
   etcd_data:

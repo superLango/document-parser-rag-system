@@ -2,17 +2,14 @@
 
 测试 GraphExtractService 的核心功能：
 - Entity / Relation / ExtractionResult 数据模型
-- extract()：基于 LLM 的实体关系抽取（DeepKE 回退路径）
-- _extract_with_deepke()：DeepKE 抽取路径
+- extract()：基于OneKE指令格式的LLM实体关系抽取
 - extract_batch()：批量抽取
 - 错误处理：空文本、LLM 失败、解析异常
-- DeepKE 回退：DeepKE 不可用时自动回退到 LLM
 
 所有测试通过 mock 避免真实模型调用，确保可在无 GPU 环境运行。
 """
 
-import json
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 
@@ -75,44 +72,15 @@ class TestModels:
 
 
 # ---------------------------------------------------------------
-# 测试辅助：单例状态管理
+# 测试辅助：LLM 服务 mock
 # ---------------------------------------------------------------
 @pytest.fixture
-def reset_singleton():
-    """重置单例状态，确保测试间隔离。
+def llm_service(monkeypatch):
+    """创建服务实例，并 mock llm_service.generate_json。
 
-    保存原始类属性，重置为未初始化状态供各测试配置，
-    测试完成后恢复原始状态。
-    """
-    cls = GraphExtractService
-    saved = {
-        "_instance": cls._instance,
-        "_deepke_model": cls._deepke_model,
-        "_use_deepke": cls._use_deepke,
-        "_initialized": cls._initialized,
-    }
-    # 重置为未初始化状态
-    cls._instance = None
-    cls._deepke_model = None
-    cls._use_deepke = False
-    cls._initialized = False
-    yield cls
-    # 恢复原始状态
-    cls._instance = saved["_instance"]
-    cls._deepke_model = saved["_deepke_model"]
-    cls._use_deepke = saved["_use_deepke"]
-    cls._initialized = saved["_initialized"]
-
-
-@pytest.fixture
-def llm_service(reset_singleton, monkeypatch):
-    """创建使用 LLM 后端的服务实例，并 mock llm_service.generate_json。
-
-    DeepKE 未安装时 _init_model 会自动设置 _use_deepke=False，
-    因此实例化后即为 LLM 模式。
+    OneKE 方案下服务无需加载本地模型，实例化即为可用状态。
     """
     service = GraphExtractService()
-    assert service._use_deepke is False
 
     # mock llm_service.generate_json，避免真实模型调用
     from app.services import llm_service as llm_module
@@ -123,10 +91,10 @@ def llm_service(reset_singleton, monkeypatch):
 
 
 # ---------------------------------------------------------------
-# LLM 抽取测试（DeepKE 不可用时的回退路径）
+# LLM 抽取测试
 # ---------------------------------------------------------------
 class TestLLMExtraction:
-    """_extract_with_llm 方法测试。"""
+    """extract 方法（LLM 路径）测试。"""
 
     @pytest.mark.asyncio
     async def test_extract_llm_success(self, llm_service):
@@ -279,72 +247,6 @@ class TestValidation:
 
 
 # ---------------------------------------------------------------
-# DeepKE 抽取路径测试
-# ---------------------------------------------------------------
-@pytest.fixture
-def deepke_service(reset_singleton):
-    """创建使用 DeepKE 后端的服务实例，模型为 mock 对象。
-
-    手动设置 _use_deepke=True 并注入 mock 模型，
-    模拟 DeepKE 成功加载的场景。
-    """
-    service = GraphExtractService()
-    # 手动切换为 DeepKE 模式
-    service._use_deepke = True
-    service._deepke_model = MagicMock()
-    return service
-
-
-class TestDeepKEExtraction:
-    """_extract_with_deepke 方法测试。"""
-
-    @pytest.mark.asyncio
-    async def test_deepke_extract_success(self, deepke_service):
-        """测试 DeepKE 抽取成功返回实体与关系。"""
-        service = deepke_service
-        service._deepke_model.predict_entities.return_value = [
-            {"text": "Q235", "type": "材料", "start": 0, "end": 4},
-        ]
-        service._deepke_model.predict_relations.return_value = [
-            {"head": "Q235", "relation": "材质", "tail": "钢材"},
-        ]
-
-        result = await service.extract("Q235钢材")
-
-        assert len(result.entities) == 1
-        assert result.entities[0].text == "Q235"
-        assert result.entities[0].start == 0
-        assert result.entities[0].end == 4
-        assert len(result.relations) == 1
-        assert result.relations[0].relation == "材质"
-        service._deepke_model.predict_entities.assert_called_once_with("Q235钢材")
-        service._deepke_model.predict_relations.assert_called_once_with("Q235钢材")
-
-    @pytest.mark.asyncio
-    async def test_deepke_extract_empty_results(self, deepke_service):
-        """测试 DeepKE 返回空结果时返回空 ExtractionResult。"""
-        service = deepke_service
-        service._deepke_model.predict_entities.return_value = []
-        service._deepke_model.predict_relations.return_value = []
-
-        result = await service.extract("无实体文本")
-
-        assert result.entities == []
-        assert result.relations == []
-
-    @pytest.mark.asyncio
-    async def test_deepke_extract_failure_raises(self, deepke_service):
-        """测试 DeepKE 推理失败时抛出 BusinessException。"""
-        service = deepke_service
-        service._deepke_model.predict_entities.side_effect = RuntimeError("模型加载错误")
-
-        with pytest.raises(BusinessException) as exc_info:
-            await service.extract("测试文本")
-
-        assert "DeepKE 抽取失败" in exc_info.value.message
-
-
-# ---------------------------------------------------------------
 # 批量抽取测试
 # ---------------------------------------------------------------
 class TestBatchExtraction:
@@ -419,75 +321,22 @@ class TestBatchExtraction:
 
 
 # ---------------------------------------------------------------
-# DeepKE 回退到 LLM 测试
-# ---------------------------------------------------------------
-class TestDeepKEFallback:
-    """DeepKE 不可用时回退到 LLM 的测试。"""
-
-    def test_deepke_unavailable_falls_back_to_llm(self, reset_singleton, monkeypatch):
-        """测试 DeepKE 导入失败时自动回退到 LLM 模式。
-
-        DeepKE 未安装时，_init_model 应捕获 ImportError，
-        设置 _use_deepke=False 并标记 _initialized=True。
-        """
-        service = GraphExtractService()
-
-        assert service._use_deepke is False
-        assert service._deepke_model is None
-        assert service._initialized is True
-
-    def test_deepke_init_failure_falls_back_to_llm(self, reset_singleton, monkeypatch):
-        """测试 DeepKE 导入成功但初始化异常时回退到 LLM。
-
-        通过 mock deepke.DeepKE 抛出异常模拟权重加载失败，
-        验证服务仍能以 LLM 模式初始化。
-        """
-        # 在 sys.modules 中注入 mock 的 deepke 模块
-        import sys
-
-        mock_deepke_module = MagicMock()
-        mock_deepke_module.DeepKE.side_effect = RuntimeError("权重文件缺失")
-        monkeypatch.setitem(sys.modules, "deepke", mock_deepke_module)
-
-        service = GraphExtractService()
-
-        assert service._use_deepke is False
-        assert service._deepke_model is None
-        assert service._initialized is True
-        mock_deepke_module.DeepKE.assert_called_once()
-
-    @pytest.mark.asyncio
-    async def test_fallback_llm_works(self, reset_singleton, monkeypatch):
-        """测试回退到 LLM 后抽取功能正常工作。"""
-        service = GraphExtractService()
-        assert service._use_deepke is False
-
-        from app.services import llm_service as llm_module
-
-        mock_generate = AsyncMock(
-            return_value={
-                "entities": [{"text": "Q345", "type": "材料"}],
-                "relations": [],
-            }
-        )
-        monkeypatch.setattr(llm_module.llm_service, "generate_json", mock_generate)
-
-        result = await service.extract("Q345是低合金高强度钢")
-
-        assert len(result.entities) == 1
-        assert result.entities[0].text == "Q345"
-
-
-# ---------------------------------------------------------------
 # 提示词构造测试
 # ---------------------------------------------------------------
 class TestPromptBuilding:
     """_build_llm_prompt 方法测试。"""
 
+    def test_prompt_contains_schema_section(self):
+        """测试提示词中包含 Schema 节标识。"""
+        prompt = GraphExtractService._build_llm_prompt("测试文本")
+
+        assert "Schema:" in prompt
+
     def test_prompt_contains_entity_types(self):
         """测试提示词中包含实体类型说明。"""
         prompt = GraphExtractService._build_llm_prompt("测试文本")
 
+        assert "实体类型:" in prompt
         assert "材料" in prompt
         assert "标准" in prompt
         assert "工艺" in prompt
@@ -497,10 +346,29 @@ class TestPromptBuilding:
         """测试提示词中包含关系类型说明。"""
         prompt = GraphExtractService._build_llm_prompt("测试文本")
 
+        assert "关系类型:" in prompt
         assert "执行标准" in prompt
         assert "材质" in prompt
         assert "用于" in prompt
         assert "包含" in prompt
+
+    def test_prompt_contains_instruction_section(self):
+        """测试提示词中包含指令节。"""
+        prompt = GraphExtractService._build_llm_prompt("测试文本")
+
+        assert "指令:" in prompt
+
+    def test_prompt_contains_text_section(self):
+        """测试提示词中包含文本节。"""
+        prompt = GraphExtractService._build_llm_prompt("测试文本")
+
+        assert "文本:" in prompt
+
+    def test_prompt_contains_output_format_section(self):
+        """测试提示词中包含输出格式节。"""
+        prompt = GraphExtractService._build_llm_prompt("测试文本")
+
+        assert "输出格式:" in prompt
 
     def test_prompt_contains_text(self):
         """测试提示词中包含待抽取文本。"""

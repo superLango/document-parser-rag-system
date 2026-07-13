@@ -1,12 +1,7 @@
-"""知识图谱抽取服务 - 实体与关系抽取。
+"""知识图谱抽取服务 - 基于OneKE指令格式的LLM知识抽取。
 
-按方案 7.5 节实现，优先使用 DeepKE 进行实体关系抽取，
-当 DeepKE 不可用时回退到 LLM（Qwen3.5-9B）进行抽取。
-
-主要能力：
-- DeepKE 抽取：基于 BERT 的关系抽取模型，提供 predict_entities / predict_relations
-- LLM 回退：当 DeepKE 安装或加载失败时，使用 vLLM/Qwen3.5-9B 通过提示词抽取
-- 批量抽取：并发处理多段文本
+使用OneKE/IEPile风格的schema指令，通过vLLM(Qwen3.5-9B)进行
+实体和关系抽取，替代原DeepKE方案。
 
 实体类型：材料、标准、工艺、参数、组织、设备、属性值
 关系类型：执行标准、材质、用于、包含、参数值、属于、生产于
@@ -20,8 +15,7 @@
 """
 
 import asyncio
-import json
-from typing import Any, ClassVar, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -73,7 +67,7 @@ class ExtractionResult(BaseModel):
     relations: list[Relation] = Field(default_factory=list)
 
 
-# LLM 抽取提示词中声明的实体与关系类型
+# OneKE schema 声明的实体与关系类型
 _ENTITY_TYPES = "材料、标准、工艺、参数、组织、设备、属性值"
 _RELATION_TYPES = "执行标准、材质、用于、包含、参数值、属于、生产于"
 
@@ -84,68 +78,19 @@ _MAX_LLM_TEXT_LEN = 2000
 class GraphExtractService:
     """知识图谱抽取服务。
 
-    优先使用 DeepKE 进行实体关系抽取，DeepKE 不可用时回退到
-    LLM（Qwen3.5-9B）抽取。模型初始化仅在首次实例化时执行一次，
-    通过单例模式保证全局复用。
-
-    Attributes:
-        _deepke_model: DeepKE 模型实例，成功加载后非 None。
-        _use_deepke: 是否使用 DeepKE 作为抽取后端。
-        _initialized: 标记模型初始化是否已完成，避免重复初始化。
+    基于OneKE/IEPile风格的schema指令，通过vLLM(Qwen3.5-9B)进行
+    实体和关系抽取。无需加载本地模型，所有推理均通过LLM服务完成。
     """
 
-    _instance: ClassVar[Optional["GraphExtractService"]] = None
-    _deepke_model: Any = None
-    _use_deepke: bool = False
-    _initialized: bool = False
-
-    def __new__(cls) -> "GraphExtractService":
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
     def __init__(self) -> None:
-        # 已初始化则跳过，避免单例每次引用时重复加载模型
-        if self._initialized:
-            return
-        self._init_model()
-
-    def _init_model(self) -> None:
-        """初始化抽取模型。
-
-        尝试加载 DeepKE 关系抽取模型，失败时回退到 LLM 模式并记录警告。
-        无论成功与否，均将 _initialized 置为 True 以避免重复尝试。
-        """
-        try:
-            from deepke import DeepKE
-
-            self._deepke_model = DeepKE(
-                model_type="bert",
-                task="relation_extraction",
-            )
-            self._use_deepke = True
-            logger.info("DeepKE 模型已加载，将使用 DeepKE 进行知识抽取")
-        except ImportError as err:
-            logger.warning(
-                "DeepKE 不可用，将使用 LLM 回退进行知识抽取",
-                error=str(err),
-            )
-            self._use_deepke = False
-        except Exception as err:
-            # DeepKE 导入成功但初始化失败（如缺少预训练权重）
-            logger.warning(
-                "DeepKE 加载失败，回退到 LLM 抽取",
-                error=str(err),
-                exc_info=True,
-            )
-            self._use_deepke = False
-        finally:
-            self._initialized = True
+        # 无需任何模型加载，所有抽取通过LLM服务完成
+        pass
 
     async def extract(self, text: str) -> ExtractionResult:
         """从文本中抽取实体和关系。
 
-        根据初始化阶段确定的后端（DeepKE 或 LLM）执行抽取。
+        基于OneKE schema驱动的指令构建提示词，调用LLM服务进行抽取，
+        再解析返回的JSON为 ExtractionResult。
 
         Args:
             text: 待抽取的文本内容。
@@ -162,69 +107,6 @@ class GraphExtractService:
                 message="待抽取文本不能为空",
             )
 
-        if self._use_deepke:
-            return await self._extract_with_deepke(text)
-        return await self._extract_with_llm(text)
-
-    async def _extract_with_deepke(self, text: str) -> ExtractionResult:
-        """使用 DeepKE 抽取实体和关系。
-
-        DeepKE 的 predict_entities / predict_relations 为同步阻塞调用，
-        通过 asyncio.to_thread 放入线程池执行，避免阻塞事件循环。
-
-        Args:
-            text: 待抽取的文本内容。
-
-        Returns:
-            ExtractionResult: 抽取结果。
-
-        Raises:
-            BusinessException: DeepKE 推理失败时抛出。
-        """
-        logger.info("使用 DeepKE 抽取知识", text_len=len(text))
-
-        def _predict() -> dict:
-            """在线程池中执行的同步推理逻辑。"""
-            entities = self._deepke_model.predict_entities(text)
-            relations = self._deepke_model.predict_relations(text)
-            return {"entities": entities, "relations": relations}
-
-        try:
-            result = await asyncio.to_thread(_predict)
-        except BusinessException:
-            raise
-        except Exception as err:
-            logger.error("DeepKE 抽取失败", error=str(err), exc_info=True)
-            raise BusinessException(
-                code=ErrorCode.BUSINESS_TASK_FAILED,
-                message=f"DeepKE 抽取失败：{err}",
-                details={"error": str(err)},
-            ) from err
-
-        entities = [Entity(**e) for e in result.get("entities", [])]
-        relations = [Relation(**r) for r in result.get("relations", [])]
-        logger.info(
-            "DeepKE 抽取完成",
-            entity_count=len(entities),
-            relation_count=len(relations),
-        )
-        return ExtractionResult(entities=entities, relations=relations)
-
-    async def _extract_with_llm(self, text: str) -> ExtractionResult:
-        """使用 LLM（Qwen3.5-9B）抽取实体关系 - DeepKE 回退方案。
-
-        通过构造提示词引导 LLM 以 JSON 格式输出实体与关系，
-        再解析为 ExtractionResult。
-
-        Args:
-            text: 待抽取的文本内容。
-
-        Returns:
-            ExtractionResult: 抽取结果。
-
-        Raises:
-            BusinessException: LLM 调用或解析失败时抛出。
-        """
         from app.services.llm_service import llm_service
 
         # 截断超长文本，避免超出模型上下文窗口
@@ -261,21 +143,21 @@ class GraphExtractService:
 
     @staticmethod
     def _build_llm_prompt(text: str) -> str:
-        """构造 LLM 知识抽取提示词。
+        """构造OneKE风格的知识抽取指令。
 
-        Args:
-            text: 待抽取的文本内容（已截断）。
-
-        Returns:
-            str: 完整的提示词。
+        基于IEPile格式，使用schema驱动的指令构建。
         """
         return (
-            "请从以下技术文档中抽取实体和关系，返回 JSON 格式。\n\n"
-            f"实体类型：{_ENTITY_TYPES}\n"
-            f"关系类型：{_RELATION_TYPES}\n\n"
-            "文档内容：\n"
+            "你是一个知识抽取助手。请从以下文本中抽取实体和关系。\n\n"
+            "Schema:\n"
+            f"实体类型: {_ENTITY_TYPES}\n"
+            f"关系类型: {_RELATION_TYPES}\n\n"
+            "指令:\n"
+            "请从给定的文本中抽取符合Schema定义的实体和关系三元组。\n"
+            "输出JSON格式，包含entities和relations两个字段。\n\n"
+            "文本:\n"
             f"{text}\n\n"
-            "请返回 JSON 格式：\n"
+            "输出格式:\n"
             "{\n"
             '  "entities": [{"text": "实体文本", "type": "类型"}],\n'
             '  "relations": [{"head": "头实体", "relation": "关系", "tail": "尾实体"}]\n'

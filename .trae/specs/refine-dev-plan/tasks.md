@@ -90,9 +90,42 @@
 - [ ] Task 7.1: 编写 `deploy/docker-compose.yml` 完整版（含所有服务 + GPU配置 + 显存限制）
 - [ ] Task 7.2: 编写 `backend/Dockerfile` 与 `frontend/Dockerfile`（多阶段构建）
 - [ ] Task 7.3: 编写端到端测试脚本 `scripts/e2e_test.py`（上传→解析→问答全流程）
-- [ ] Task 7.4: 配置 Prometheus + Grafana 监控（`deploy/prometheus.yml` + dashboards）+ Flower Celery监控（端口5555）
+- [ ] Task 7.4: 配置 Prometheus + Grafana 监控（`deploy/prometheus.yml` + dashboards）+ arq任务状态监控API
 - [ ] Task 7.5: 编写部署文档 `docs/DEPLOYMENT.md`（一键部署步骤、服务地址、故障排查）
 - [ ] Task 7.6: 性能压测与优化（显存使用、并发调优、检索延迟）
+
+---
+
+## 阶段8：技术栈迭代迁移（2026-07新增）
+
+> 本阶段对已完成代码进行技术栈迭代迁移，替换为更优的技术方案。
+> 迁移按依赖顺序进行，每步迁移后需运行全量测试确保不破坏现有功能。
+
+- [x] Task 8.1: 基础设施迁移 — docker-compose 更新 [可并行]
+  - [x] SubTask 8.1.1: Redis → Valkey 8（docker-compose.yml + redis.conf→valkey.conf）
+  - [x] SubTask 8.1.2: MinIO → SeaweedFS（docker-compose.yml + seaweedfs_s3.json + storage_service.py 客户端迁移 minio→boto3）
+- [x] Task 8.2: 任务队列迁移 — Celery → arq
+  - [x] SubTask 8.2.1: 安装 arq，移除 celery 依赖
+  - [x] SubTask 8.2.2: 重写 `backend/app/tasks/celery_app.py` → `backend/app/tasks/arq_worker.py`（WorkerSettings + RedisSettings指向Valkey）
+  - [x] SubTask 8.2.3: 迁移 `document_tasks.py`（parse_document: @celery_app.task → async def parse_document_impl, asyncio.run移除）
+  - [x] SubTask 8.2.4: 迁移 `rag_tasks.py`（index_document/rebuild_index/remove_document → _impl）
+  - [x] SubTask 8.2.5: 迁移 `graph_tasks.py`（build_document_graph/rebuild_all_graphs/remove_document_graph → _impl）
+  - [x] SubTask 8.2.6: 更新 API 端点中的任务提交（celery.delay() → arq.enqueue_job()）
+  - [x] SubTask 8.2.7: 移除 Flower，SSE端点改为轮询数据库Task记录
+- [x] Task 8.3: 知识抽取迁移 — DeepKE回退 → OneKE [可并行]
+  - [x] SubTask 8.3.1: 研究OneKE/DeepKE-LLM的InstructKGC API
+  - [x] SubTask 8.3.2: 重写 `graph_extract_service.py`（移除DeepKE导入尝试，使用OneKE指令格式+vLLM推理）
+  - [x] SubTask 8.3.3: 更新测试（移除DeepKE相关mock，新增OneKE指令格式测试）
+- [ ] Task 8.4: 文档解析增强 — 集成 MinerU-Popo 后处理 [可并行，暂缓]
+  - [ ] SubTask 8.4.1: 下载MinerU-Popo模型（4B轻量级后处理模型）
+  - [ ] SubTask 8.4.2: 实现 `backend/app/services/popo_service.py`（跨页表格合并+标题层级重建+图文关联）
+  - [ ] SubTask 8.4.3: 在 `document_tasks.py` 解析管道中集成Popo后处理步骤
+- [x] Task 8.5: 清理与验证
+  - [x] SubTask 8.5.1: 移除 deepke-env Conda环境（不再需要）
+  - [x] SubTask 8.5.2: 更新 requirements.txt（移除celery/minio/deepke，新增arq/redis/boto3/langextract）
+  - [x] SubTask 8.5.3: 更新 .env.example 配置项
+  - [x] SubTask 8.5.4: 运行全量测试确保所有功能正常（290个测试通过）
+  - [ ] SubTask 8.5.5: 更新 README.md 技术栈说明
 
 ---
 
@@ -109,3 +142,9 @@
 - 阶段6 依赖阶段1-5 的API就绪（前端需对接全部API）
   - Task 6.1-6.3 可在阶段1完成后先行
 - 阶段7 依赖全部前序阶段完成
+- 阶段8（技术栈迭代）依赖阶段0-4已完成
+  - Task 8.1（基础设施）独立，可最先执行
+  - Task 8.2（Celery→arq）依赖 Task 8.1（Valkey就绪）
+  - Task 8.3（DeepKE→OneKE）独立，可与8.1/8.2并行
+  - Task 8.4（MinerU-Popo）独立，可与8.1/8.2/8.3并行
+  - Task 8.5（清理验证）依赖 Task 8.1-8.4全部完成

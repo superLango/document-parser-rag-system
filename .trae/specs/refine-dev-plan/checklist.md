@@ -80,8 +80,29 @@
 - [ ] 端到端测试脚本覆盖上传→解析→问答全流程
 
 ## 监控与运维
-- [ ] Prometheus 采集 FastAPI 与 Celery 指标
+- [ ] Prometheus 采集 FastAPI 与 arq 指标
 - [ ] Grafana dashboard 配置完成
-- [ ] Flower 监控 Celery 任务
+- [ ] arq 任务状态查询API（替代Flower）
 - [ ] 显存分配符合规划（MinerU 40-50GB、PaddleOCR 8-10GB 等）
 - [ ] 部署文档包含一键部署步骤与服务地址表
+
+## 技术栈迭代迁移（阶段8）
+- [x] docker-compose.yml 使用 Valkey 8 替代 Redis（valkey/valkey:8-alpine）
+- [x] docker-compose.yml 使用 SeaweedFS 替代 MinIO（chrislusf/seaweedfs:latest）
+- [x] valkey.conf 配置完成（原redis.conf迁移）
+- [x] storage_service.py 使用 boto3 S3兼容客户端（支持SeaweedFS）
+- [x] backend/app/tasks/arq_worker.py 替代 celery_app.py（WorkerSettings配置）
+- [x] document_tasks.py 使用 async def parse_document_impl（非@celery.task）
+- [x] rag_tasks.py 使用 async def _impl（非@celery.task）
+- [x] graph_tasks.py 使用 async def _impl（非@celery.task）
+- [x] API端点任务提交使用 arq.enqueue_job()（非celery.delay()）
+- [x] graph_extract_service.py 使用 OneKE指令格式 + vLLM（非DeepKE）
+- [x] OneKE指令构建正确（schema驱动 + 实体/关系类型 + IEPile格式）
+- [ ] popo_service.py 实现MinerU-Popo后处理（跨页表格合并+标题层级）— 暂缓
+- [ ] document_tasks.py 解析管道集成Popo后处理步骤 — 暂缓
+- [x] requirements.txt 移除 celery/minio/deepke
+- [x] requirements.txt 新增 arq/redis[hiredis]/boto3/langextract
+- [x] .env.example 更新为Valkey/SeaweedFS配置项
+- [x] deepke-env Conda环境已移除
+- [x] 全量测试通过（290个测试，迁移后无功能回退）
+- [ ] README.md 技术栈说明已更新

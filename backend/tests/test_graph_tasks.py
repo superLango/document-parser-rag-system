@@ -1,9 +1,9 @@
 """知识图谱任务测试模块。
 
-测试 graph_tasks Celery 任务的完整执行流程：
-- build_document_graph：单文档图谱构建（分块 → 抽取 → 去重 → Neo4j 入库）
-- rebuild_all_graphs：重建所有文档知识图谱
-- remove_document_graph：删除文档图谱数据
+测试 graph_tasks arq 任务的完整执行流程：
+- build_document_graph_impl：单文档图谱构建（分块 → 抽取 → 去重 → Neo4j 入库）
+- rebuild_all_graphs_impl：重建所有文档知识图谱
+- remove_document_graph_impl：删除文档图谱数据
 
 所有外部依赖（数据库 / 分块器 / 抽取服务 / 图存储）均通过 mock 隔离，
 确保无 GPU / 无模型 / 无外部服务环境下可运行。
@@ -176,12 +176,13 @@ def _setup_session_local_patch(db_mock):
 
 
 # ---------------------------------------------------------------
-# 1. build_document_graph 任务测试
+# 1. build_document_graph_impl 任务测试
 # ---------------------------------------------------------------
 class TestBuildDocumentGraph:
-    """build_document_graph 任务测试。"""
+    """build_document_graph_impl 任务测试。"""
 
-    def test_build_document_graph_success(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_success(self):
         """测试任务成功完成全流程。
 
         验证调用序列：chunker.chunk_document → graph_extract_service.extract_batch
@@ -218,11 +219,10 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_store, "batch_create",
                 new=AsyncMock(side_effect=_track_store),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
-            result = graph_tasks.build_document_graph(_DOCUMENT_ID)
+            result = await graph_tasks.build_document_graph_impl(
+                _DOCUMENT_ID, {}
+            )
 
         # 验证服务调用顺序正确
         assert call_order == [
@@ -240,7 +240,8 @@ class TestBuildDocumentGraph:
         # 1 个不重复关系
         assert result["relation_count"] == 1
 
-    def test_build_document_graph_sets_status_graph_built(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_sets_status_graph_built(self):
         """测试任务完成后 Document 状态为 graph_built。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -259,25 +260,23 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_store, "batch_create",
                 new=AsyncMock(return_value=_FAKE_STORE_RESULT),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
-            graph_tasks.build_document_graph(_DOCUMENT_ID)
+            await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
         # 验证文档状态最终为 graph_built
         assert doc.status == "graph_built"
 
-    def test_build_document_graph_progress_updates(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_progress_updates(self):
         """测试任务进度按序列上报。
 
-        验证 update_state 被调用时的 progress 值序列为：
+        验证 _update_progress 被调用时的 progress 值序列为：
         10 → 30 → 60 → 90 → 100。
         """
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
 
-        update_state_mock = MagicMock()
+        mock_update = AsyncMock()
 
         with (
             _setup_session_local_patch(db),
@@ -293,21 +292,12 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_store, "batch_create",
                 new=AsyncMock(return_value=_FAKE_STORE_RESULT),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-                new=update_state_mock,
-            ),
+            patch("app.tasks.graph_tasks._update_progress", new=mock_update),
         ):
-            graph_tasks.build_document_graph(_DOCUMENT_ID)
+            await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
-        # 提取所有 PROGRESS 状态的 progress 值
-        progress_values = []
-        for call in update_state_mock.call_args_list:
-            args, kwargs = call
-            if kwargs.get("state") == "PROGRESS":
-                meta = kwargs.get("meta", {})
-                if "progress" in meta:
-                    progress_values.append(meta["progress"])
+        # 提取所有进度上报值（_update_progress 第二个位置参数为 progress）
+        progress_values = [call.args[1] for call in mock_update.call_args_list]
 
         # 验证进度序列包含所有预期值
         assert 10 in progress_values   # 初始
@@ -316,7 +306,8 @@ class TestBuildDocumentGraph:
         assert 90 in progress_values   # 入库中
         assert 100 in progress_values  # 完成
 
-    def test_build_document_graph_calls_db_commit(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_calls_db_commit(self):
         """测试任务完成后调用了 db.commit。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -335,16 +326,14 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_store, "batch_create",
                 new=AsyncMock(return_value=_FAKE_STORE_RESULT),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
-            graph_tasks.build_document_graph(_DOCUMENT_ID)
+            await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
         # 验证 commit 被调用（至少一次用于标记 graph_built）
         assert db.commit.await_count >= 1
 
-    def test_build_document_graph_passes_correct_text_to_chunker(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_passes_correct_text_to_chunker(self):
         """测试将 Document.parsed_text 传给分块器。"""
         doc = _make_mock_document(parsed_text="自定义解析文本")
         db = _make_mock_db(document=doc)
@@ -364,17 +353,15 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_store, "batch_create",
                 new=AsyncMock(return_value=_FAKE_STORE_RESULT),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
-            graph_tasks.build_document_graph(_DOCUMENT_ID)
+            await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
         # 验证分块器接收到的文本为 Document.parsed_text
         call_args = chunk_mock.call_args
         assert call_args.args[0] == "自定义解析文本"
 
-    def test_build_document_graph_passes_chunks_text_to_extractor(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_passes_chunks_text_to_extractor(self):
         """测试将分块文本列表传给抽取服务。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -395,50 +382,40 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_store, "batch_create",
                 new=AsyncMock(return_value=_FAKE_STORE_RESULT),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
-            graph_tasks.build_document_graph(_DOCUMENT_ID)
+            await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
         # 验证抽取服务接收到的是分块文本列表
         call_args = extract_mock.call_args
         texts = call_args.args[0]
         assert texts == [c["text"] for c in _FAKE_CHUNKS]
 
-    def test_build_document_graph_document_not_found_raises(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_document_not_found_raises(self):
         """测试文档不存在时抛出异常。"""
         db = _make_mock_db(document=None)
 
-        with (
-            _setup_session_local_patch(db),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
-        ):
+        with _setup_session_local_patch(db):
             with pytest.raises(Exception) as exc_info:
-                graph_tasks.build_document_graph(_DOCUMENT_ID)
+                await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
             # 应抛出包含"文档不存在"的异常
             assert "不存在" in str(exc_info.value)
 
-    def test_build_document_graph_empty_text_raises(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_empty_text_raises(self):
         """测试文档无解析文本时抛出异常。"""
         doc = _make_mock_document(parsed_text=None)
         db = _make_mock_db(document=doc)
 
-        with (
-            _setup_session_local_patch(db),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
-        ):
+        with _setup_session_local_patch(db):
             with pytest.raises(Exception) as exc_info:
-                graph_tasks.build_document_graph(_DOCUMENT_ID)
+                await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
             assert "解析" in str(exc_info.value) or "图谱" in str(exc_info.value)
 
-    def test_build_document_graph_empty_chunks_raises(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_empty_chunks_raises(self):
         """测试分块结果为空时抛出异常。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -449,16 +426,14 @@ class TestBuildDocumentGraph:
                 graph_tasks.chunker, "chunk_document",
                 new=AsyncMock(return_value=[]),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
             with pytest.raises(Exception) as exc_info:
-                graph_tasks.build_document_graph(_DOCUMENT_ID)
+                await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
             assert "分块" in str(exc_info.value)
 
-    def test_build_document_graph_extract_failure_sets_failed(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_extract_failure_sets_failed(self):
         """测试抽取失败时 Document 状态被置为 failed。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -473,17 +448,15 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_extract_service, "extract_batch",
                 new=AsyncMock(side_effect=RuntimeError("抽取失败")),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError, match="抽取失败"):
-                graph_tasks.build_document_graph(_DOCUMENT_ID)
+                await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
         # 验证文档状态被置为 failed
         assert doc.status == "failed"
 
-    def test_build_document_graph_store_failure_sets_failed(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_store_failure_sets_failed(self):
         """测试图入库失败时 Document 状态被置为 failed。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -502,16 +475,14 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_store, "batch_create",
                 new=AsyncMock(side_effect=RuntimeError("Neo4j 入库失败")),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError, match="Neo4j 入库失败"):
-                graph_tasks.build_document_graph(_DOCUMENT_ID)
+                await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
         assert doc.status == "failed"
 
-    def test_build_document_graph_failure_calls_rollback(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_failure_calls_rollback(self):
         """测试任务失败时调用了 db.rollback。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -526,17 +497,15 @@ class TestBuildDocumentGraph:
                 graph_tasks.graph_extract_service, "extract_batch",
                 new=AsyncMock(side_effect=RuntimeError("抽取失败")),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError):
-                graph_tasks.build_document_graph(_DOCUMENT_ID)
+                await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
         # 验证 rollback 被调用
         db.rollback.assert_awaited()
 
-    def test_build_document_graph_deduplicates_entities(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_deduplicates_entities(self):
         """测试相同名称的实体被去重合并。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -571,11 +540,10 @@ class TestBuildDocumentGraph:
             patch.object(
                 graph_tasks.graph_store, "batch_create", new=store_mock,
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
-            result = graph_tasks.build_document_graph(_DOCUMENT_ID)
+            result = await graph_tasks.build_document_graph_impl(
+                _DOCUMENT_ID, {}
+            )
 
         # 验证传入 batch_create 的节点数为 2（去重后）
         nodes_arg = store_mock.call_args.args[0]
@@ -583,7 +551,8 @@ class TestBuildDocumentGraph:
         # 验证返回结果中的 entity_count 反映去重后的数量
         assert result["entity_count"] == 2
 
-    def test_build_document_graph_deduplicates_relations(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_deduplicates_relations(self):
         """测试相同关系被去重合并。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -624,18 +593,18 @@ class TestBuildDocumentGraph:
             patch.object(
                 graph_tasks.graph_store, "batch_create", new=store_mock,
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
-            result = graph_tasks.build_document_graph(_DOCUMENT_ID)
+            result = await graph_tasks.build_document_graph_impl(
+                _DOCUMENT_ID, {}
+            )
 
         # 验证传入 batch_create 的关系数为 1（去重后）
         relations_arg = store_mock.call_args.args[1]
         assert len(relations_arg) == 1
         assert result["relation_count"] == 1
 
-    def test_build_document_graph_attaches_doc_id_to_nodes(self):
+    @pytest.mark.asyncio
+    async def test_build_document_graph_attaches_doc_id_to_nodes(self):
         """测试所有节点都附带 doc_id 属性以支持文档级追溯。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -655,11 +624,8 @@ class TestBuildDocumentGraph:
             patch.object(
                 graph_tasks.graph_store, "batch_create", new=store_mock,
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
         ):
-            graph_tasks.build_document_graph(_DOCUMENT_ID)
+            await graph_tasks.build_document_graph_impl(_DOCUMENT_ID, {})
 
         # 验证所有节点均包含 doc_id
         nodes_arg = store_mock.call_args.args[0]
@@ -668,12 +634,13 @@ class TestBuildDocumentGraph:
 
 
 # ---------------------------------------------------------------
-# 2. rebuild_all_graphs 任务测试
+# 2. rebuild_all_graphs_impl 任务测试
 # ---------------------------------------------------------------
 class TestRebuildAllGraphs:
-    """rebuild_all_graphs 任务测试。"""
+    """rebuild_all_graphs_impl 任务测试。"""
 
-    def test_rebuild_all_graphs_success(self):
+    @pytest.mark.asyncio
+    async def test_rebuild_all_graphs_success(self):
         """测试重建任务对所有文档重新构建图谱。"""
         doc1 = _make_mock_document(document_id=_DOCUMENT_ID)
         doc2 = _make_mock_document(
@@ -696,14 +663,8 @@ class TestRebuildAllGraphs:
             patch.object(
                 graph_tasks.graph_store, "batch_create", new=store_mock,
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
-            patch.object(
-                graph_tasks.rebuild_all_graphs, "update_state",
-            ),
         ):
-            result = graph_tasks.rebuild_all_graphs()
+            result = await graph_tasks.rebuild_all_graphs_impl({})
 
         # 验证 batch_create 被调用两次（每文档一次）
         assert store_mock.await_count == 2
@@ -713,7 +674,8 @@ class TestRebuildAllGraphs:
         assert result["failed_count"] == 0
         assert result["failed_docs"] == []
 
-    def test_rebuild_all_graphs_partial_failure(self):
+    @pytest.mark.asyncio
+    async def test_rebuild_all_graphs_partial_failure(self):
         """测试部分文档构建失败时仍继续处理其他文档。"""
         doc1 = _make_mock_document(document_id=_DOCUMENT_ID)
         doc2 = _make_mock_document(
@@ -739,14 +701,8 @@ class TestRebuildAllGraphs:
             patch.object(
                 graph_tasks.graph_store, "batch_create", new=store_mock,
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
-            patch.object(
-                graph_tasks.rebuild_all_graphs, "update_state",
-            ),
         ):
-            result = graph_tasks.rebuild_all_graphs()
+            result = await graph_tasks.rebuild_all_graphs_impl({})
 
         # 验证一成功一失败
         assert result["total_docs"] == 2
@@ -754,19 +710,21 @@ class TestRebuildAllGraphs:
         assert result["failed_count"] == 1
         assert len(result["failed_docs"]) == 1
 
-    def test_rebuild_all_graphs_no_documents(self):
+    @pytest.mark.asyncio
+    async def test_rebuild_all_graphs_no_documents(self):
         """测试无已解析文档时返回空结果。"""
         db = _make_mock_db(documents_list=[])
 
         with _setup_session_local_patch(db):
-            result = graph_tasks.rebuild_all_graphs()
+            result = await graph_tasks.rebuild_all_graphs_impl({})
 
         assert result["total_docs"] == 0
         assert result["success_count"] == 0
         assert result["failed_count"] == 0
         assert result["failed_docs"] == []
 
-    def test_rebuild_all_graphs_returns_summary(self):
+    @pytest.mark.asyncio
+    async def test_rebuild_all_graphs_returns_summary(self):
         """测试重建结果包含完整的统计摘要字段。"""
         doc1 = _make_mock_document(document_id=_DOCUMENT_ID)
         db = _make_mock_db(documents_list=[doc1])
@@ -785,14 +743,8 @@ class TestRebuildAllGraphs:
                 graph_tasks.graph_store, "batch_create",
                 new=AsyncMock(return_value=_FAKE_STORE_RESULT),
             ),
-            patch.object(
-                graph_tasks.build_document_graph, "update_state",
-            ),
-            patch.object(
-                graph_tasks.rebuild_all_graphs, "update_state",
-            ),
         ):
-            result = graph_tasks.rebuild_all_graphs()
+            result = await graph_tasks.rebuild_all_graphs_impl({})
 
         # 验证结果包含所有摘要字段
         assert "total_docs" in result
@@ -804,19 +756,22 @@ class TestRebuildAllGraphs:
 
 
 # ---------------------------------------------------------------
-# 3. remove_document_graph 任务测试
+# 3. remove_document_graph_impl 任务测试
 # ---------------------------------------------------------------
 class TestRemoveDocumentGraph:
-    """remove_document_graph 任务测试。"""
+    """remove_document_graph_impl 任务测试。"""
 
-    def test_remove_document_graph_calls_graph_store_delete(self):
+    @pytest.mark.asyncio
+    async def test_remove_document_graph_calls_graph_store_delete(self):
         """测试删除图谱调用 graph_store.delete_by_doc。"""
         delete_mock = AsyncMock(return_value=2)
 
         with patch.object(
             graph_tasks.graph_store, "delete_by_doc", new=delete_mock
         ):
-            result = graph_tasks.remove_document_graph(_DOCUMENT_ID)
+            result = await graph_tasks.remove_document_graph_impl(
+                _DOCUMENT_ID, {}
+            )
 
         # 验证 delete_by_doc 被调用
         delete_mock.assert_awaited_once_with(_DOCUMENT_ID)
@@ -825,7 +780,8 @@ class TestRemoveDocumentGraph:
         assert result["status"] == "removed"
         assert result["deleted"] == 2
 
-    def test_remove_document_graph_passes_correct_doc_id(self):
+    @pytest.mark.asyncio
+    async def test_remove_document_graph_passes_correct_doc_id(self):
         """测试删除图谱时传递正确的 doc_id。"""
         delete_mock = AsyncMock(return_value=1)
         custom_doc_id = "770e8400-e29b-41d4-a716-446655440000"
@@ -833,32 +789,36 @@ class TestRemoveDocumentGraph:
         with patch.object(
             graph_tasks.graph_store, "delete_by_doc", new=delete_mock
         ):
-            graph_tasks.remove_document_graph(custom_doc_id)
+            await graph_tasks.remove_document_graph_impl(custom_doc_id, {})
 
         # 验证 doc_id 正确传递
         call_args = delete_mock.call_args
         assert call_args.args[0] == custom_doc_id
 
-    def test_remove_document_graph_zero_deleted(self):
+    @pytest.mark.asyncio
+    async def test_remove_document_graph_zero_deleted(self):
         """测试文档无图谱数据时返回 deleted=0。"""
         delete_mock = AsyncMock(return_value=0)
 
         with patch.object(
             graph_tasks.graph_store, "delete_by_doc", new=delete_mock
         ):
-            result = graph_tasks.remove_document_graph(_DOCUMENT_ID)
+            result = await graph_tasks.remove_document_graph_impl(
+                _DOCUMENT_ID, {}
+            )
 
         assert result["deleted"] == 0
         assert result["status"] == "removed"
 
-    def test_remove_document_graph_failure_raises(self):
+    @pytest.mark.asyncio
+    async def test_remove_document_graph_failure_raises(self):
         """测试删除图谱失败时抛出异常。"""
         with patch.object(
             graph_tasks.graph_store, "delete_by_doc",
             new=AsyncMock(side_effect=RuntimeError("Neo4j 删除失败")),
         ):
             with pytest.raises(RuntimeError, match="Neo4j 删除失败"):
-                graph_tasks.remove_document_graph(_DOCUMENT_ID)
+                await graph_tasks.remove_document_graph_impl(_DOCUMENT_ID, {})
 
 
 # ---------------------------------------------------------------

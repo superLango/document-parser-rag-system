@@ -1,6 +1,6 @@
 """文档解析流水线测试模块。
 
-测试 parse_document Celery 任务的完整执行流程：
+测试 parse_document_impl arq 任务的完整执行流程：
 - 成功路径：下载 -> OCR -> 版面分析 -> 结构化抽取 -> 术语标准化 -> 入库
 - 错误路径：OCR 失败时 Document 状态置为 failed
 
@@ -160,9 +160,10 @@ def _setup_session_local_patch(db_mock):
 # 成功路径测试
 # ---------------------------------------------------------------
 class TestParseDocumentSuccess:
-    """parse_document 任务成功路径测试。"""
+    """parse_document_impl 任务成功路径测试。"""
 
-    def test_parse_document_calls_all_services_in_order(self):
+    @pytest.mark.asyncio
+    async def test_parse_document_calls_all_services_in_order(self):
         """测试任务按正确顺序调用所有服务。
 
         验证调用序列：storage.download -> ocr.recognize_with_layout
@@ -217,12 +218,9 @@ class TestParseDocumentSuccess:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(side_effect=_track_standardize),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
-            result = document_tasks.parse_document(
-                _DOCUMENT_ID, schema_id=_SCHEMA_ID
+            result = await document_tasks.parse_document_impl(
+                _DOCUMENT_ID, _SCHEMA_ID, None, {}
             )
 
         # 验证服务调用顺序正确
@@ -239,7 +237,8 @@ class TestParseDocumentSuccess:
         assert result["document_id"] == _DOCUMENT_ID
         assert result["status"] == "completed"
 
-    def test_parse_document_sets_status_completed(self):
+    @pytest.mark.asyncio
+    async def test_parse_document_sets_status_completed(self):
         """测试任务完成后 Document 状态为 completed。"""
         doc = _make_mock_document()
         schema = _make_mock_schema_config()
@@ -267,26 +266,26 @@ class TestParseDocumentSuccess:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
-            document_tasks.parse_document(_DOCUMENT_ID, schema_id=_SCHEMA_ID)
+            await document_tasks.parse_document_impl(
+                _DOCUMENT_ID, _SCHEMA_ID, None, {}
+            )
 
         # 验证文档状态最终为 completed
         assert doc.status == "completed"
 
-    def test_parse_document_progress_updates(self):
+    @pytest.mark.asyncio
+    async def test_parse_document_progress_updates(self):
         """测试任务进度按序列上报。
 
-        验证 update_state 被调用时的 progress 值序列为：
+        验证 _update_progress 被调用时的 progress 值序列为：
         10 -> 20 -> 40 -> 60 -> 80 -> 90 -> 100。
         """
         doc = _make_mock_document()
         schema = _make_mock_schema_config()
         db = _make_mock_db(document=doc, schema_config=schema)
 
-        update_state_mock = MagicMock()
+        mock_update = AsyncMock()
 
         with (
             _setup_session_local_patch(db),
@@ -310,32 +309,26 @@ class TestParseDocumentSuccess:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-                new=update_state_mock,
-            ),
+            patch("app.tasks.document_tasks._update_progress", new=mock_update),
         ):
-            document_tasks.parse_document(_DOCUMENT_ID, schema_id=_SCHEMA_ID)
+            await document_tasks.parse_document_impl(
+                _DOCUMENT_ID, _SCHEMA_ID, None, {}
+            )
 
-        # 提取所有 PROGRESS 状态的 progress 值
-        progress_values = []
-        for call in update_state_mock.call_args_list:
-            args, kwargs = call
-            if kwargs.get("state") == "PROGRESS":
-                meta = kwargs.get("meta", {})
-                if "progress" in meta:
-                    progress_values.append(meta["progress"])
+        # 提取所有进度上报值（_update_progress 第二个位置参数为 progress）
+        progress_values = [call.args[1] for call in mock_update.call_args_list]
 
         # 验证进度序列包含所有预期值
-        assert 10 in progress_values  # 初始
-        assert 20 in progress_values  # OCR
-        assert 40 in progress_values  # 版面分析
-        assert 60 in progress_values  # 结构化抽取
-        assert 80 in progress_values  # 术语标准化
-        assert 90 in progress_values  # 保存
+        assert 10 in progress_values   # 初始
+        assert 20 in progress_values   # OCR
+        assert 40 in progress_values   # 版面分析
+        assert 60 in progress_values   # 结构化抽取
+        assert 80 in progress_values   # 术语标准化
+        assert 90 in progress_values   # 保存
         assert 100 in progress_values  # 完成
 
-    def test_parse_document_without_schema_id(self):
+    @pytest.mark.asyncio
+    async def test_parse_document_without_schema_id(self):
         """测试不提供 schema_id 时跳过结构化抽取。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc, schema_config=None)
@@ -362,12 +355,9 @@ class TestParseDocumentSuccess:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
-            result = document_tasks.parse_document(
-                _DOCUMENT_ID, schema_id=None
+            result = await document_tasks.parse_document_impl(
+                _DOCUMENT_ID, None, None, {}
             )
 
         # 未提供 schema_id 时不应调用结构化抽取
@@ -376,7 +366,8 @@ class TestParseDocumentSuccess:
         assert result["status"] == "completed"
         assert doc.status == "completed"
 
-    def test_parse_document_writes_parsed_text(self):
+    @pytest.mark.asyncio
+    async def test_parse_document_writes_parsed_text(self):
         """测试解析文本被写入 Document.parsed_text。"""
         doc = _make_mock_document()
         schema = _make_mock_schema_config()
@@ -404,16 +395,16 @@ class TestParseDocumentSuccess:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
-            document_tasks.parse_document(_DOCUMENT_ID, schema_id=_SCHEMA_ID)
+            await document_tasks.parse_document_impl(
+                _DOCUMENT_ID, _SCHEMA_ID, None, {}
+            )
 
         # 验证解析文本被写入
         assert doc.parsed_text == "测试文本内容"
 
-    def test_parse_document_writes_structured_data(self):
+    @pytest.mark.asyncio
+    async def test_parse_document_writes_structured_data(self):
         """测试结构化数据被写入 Document.structured_data。"""
         doc = _make_mock_document()
         schema = _make_mock_schema_config()
@@ -441,15 +432,15 @@ class TestParseDocumentSuccess:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
-            document_tasks.parse_document(_DOCUMENT_ID, schema_id=_SCHEMA_ID)
+            await document_tasks.parse_document_impl(
+                _DOCUMENT_ID, _SCHEMA_ID, None, {}
+            )
 
         assert doc.structured_data == _EXTRACTED_DATA
 
-    def test_parse_document_writes_layout_data(self):
+    @pytest.mark.asyncio
+    async def test_parse_document_writes_layout_data(self):
         """测试版面数据被写入 Document.layout_data。"""
         doc = _make_mock_document()
         schema = _make_mock_schema_config()
@@ -477,18 +468,18 @@ class TestParseDocumentSuccess:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
-            document_tasks.parse_document(_DOCUMENT_ID, schema_id=_SCHEMA_ID)
+            await document_tasks.parse_document_impl(
+                _DOCUMENT_ID, _SCHEMA_ID, None, {}
+            )
 
         # 验证版面数据被写入
         assert doc.layout_data is not None
         assert "ocr_layout" in doc.layout_data
         assert "text_blocks" in doc.layout_data
 
-    def test_parse_document_calls_db_commit(self):
+    @pytest.mark.asyncio
+    async def test_parse_document_calls_db_commit(self):
         """测试任务完成后调用了 db.commit。"""
         doc = _make_mock_document()
         schema = _make_mock_schema_config()
@@ -516,11 +507,10 @@ class TestParseDocumentSuccess:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
-            document_tasks.parse_document(_DOCUMENT_ID, schema_id=_SCHEMA_ID)
+            await document_tasks.parse_document_impl(
+                _DOCUMENT_ID, _SCHEMA_ID, None, {}
+            )
 
         # 验证 commit 被调用至少两次：processing 标记 + 最终保存
         assert db.commit.await_count >= 2
@@ -530,9 +520,10 @@ class TestParseDocumentSuccess:
 # 错误路径测试
 # ---------------------------------------------------------------
 class TestParseDocumentFailure:
-    """parse_document 任务错误路径测试。"""
+    """parse_document_impl 任务错误路径测试。"""
 
-    def test_ocr_failure_sets_document_failed(self):
+    @pytest.mark.asyncio
+    async def test_ocr_failure_sets_document_failed(self):
         """测试 OCR 失败时 Document 状态被置为 failed。
 
         Mock ocr_service.recognize_with_layout 抛出异常，
@@ -565,18 +556,18 @@ class TestParseDocumentFailure:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
             # 任务应抛出异常
             with pytest.raises(RuntimeError, match="OCR 模型推理失败"):
-                document_tasks.parse_document(_DOCUMENT_ID, schema_id=None)
+                await document_tasks.parse_document_impl(
+                    _DOCUMENT_ID, None, None, {}
+                )
 
         # 验证文档状态被置为 failed
         assert doc.status == "failed"
 
-    def test_ocr_failure_calls_rollback(self):
+    @pytest.mark.asyncio
+    async def test_ocr_failure_calls_rollback(self):
         """测试 OCR 失败时调用了 db.rollback。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc, schema_config=None)
@@ -591,22 +582,26 @@ class TestParseDocumentFailure:
                 document_tasks.ocr_service, "recognize_with_layout",
                 new=AsyncMock(side_effect=RuntimeError("OCR 失败")),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError):
-                document_tasks.parse_document(_DOCUMENT_ID, schema_id=None)
+                await document_tasks.parse_document_impl(
+                    _DOCUMENT_ID, None, None, {}
+                )
 
         # 验证 rollback 被调用
         db.rollback.assert_awaited()
 
-    def test_ocr_failure_sets_failure_state(self):
-        """测试 OCR 失败时任务状态被置为 FAILURE。"""
+    @pytest.mark.asyncio
+    async def test_ocr_failure_does_not_report_completion_progress(self):
+        """测试 OCR 失败时不会上报完成进度 100。
+
+        arq 迁移后不再有 Celery 的 FAILURE 状态，改为验证进度上报
+        在失败时不会达到完成进度（100）。
+        """
         doc = _make_mock_document()
         db = _make_mock_db(document=doc, schema_config=None)
 
-        update_state_mock = MagicMock()
+        mock_update = AsyncMock()
 
         with (
             _setup_session_local_patch(db),
@@ -618,22 +613,22 @@ class TestParseDocumentFailure:
                 document_tasks.ocr_service, "recognize_with_layout",
                 new=AsyncMock(side_effect=RuntimeError("OCR 失败")),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-                new=update_state_mock,
-            ),
+            patch("app.tasks.document_tasks._update_progress", new=mock_update),
         ):
             with pytest.raises(RuntimeError):
-                document_tasks.parse_document(_DOCUMENT_ID, schema_id=None)
+                await document_tasks.parse_document_impl(
+                    _DOCUMENT_ID, None, None, {}
+                )
 
-        # 验证 update_state 被调用且至少一次 state 为 FAILURE
-        failure_calls = [
-            call for call in update_state_mock.call_args_list
-            if call.kwargs.get("state") == "FAILURE"
-        ]
-        assert len(failure_calls) >= 1
+        # 提取所有进度上报值
+        progress_values = [call.args[1] for call in mock_update.call_args_list]
+        # 初始进度 10 应被上报
+        assert 10 in progress_values
+        # 失败时不应上报完成进度 100
+        assert 100 not in progress_values
 
-    def test_storage_download_failure_sets_document_failed(self):
+    @pytest.mark.asyncio
+    async def test_storage_download_failure_sets_document_failed(self):
         """测试下载失败时 Document 状态被置为 failed。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc, schema_config=None)
@@ -644,16 +639,16 @@ class TestParseDocumentFailure:
                 document_tasks.storage_service, "download",
                 new=AsyncMock(side_effect=RuntimeError("MinIO 下载失败")),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError, match="MinIO 下载失败"):
-                document_tasks.parse_document(_DOCUMENT_ID, schema_id=None)
+                await document_tasks.parse_document_impl(
+                    _DOCUMENT_ID, None, None, {}
+                )
 
         assert doc.status == "failed"
 
-    def test_extraction_failure_sets_document_failed(self):
+    @pytest.mark.asyncio
+    async def test_extraction_failure_sets_document_failed(self):
         """测试结构化抽取失败时 Document 状态被置为 failed。"""
         doc = _make_mock_document()
         schema = _make_mock_schema_config()
@@ -681,28 +676,25 @@ class TestParseDocumentFailure:
                 document_tasks.term_service, "standardize_text",
                 new=AsyncMock(return_value=_STANDARDIZE_RESULT),
             ),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError, match="抽取失败"):
-                document_tasks.parse_document(_DOCUMENT_ID, schema_id=_SCHEMA_ID)
+                await document_tasks.parse_document_impl(
+                    _DOCUMENT_ID, _SCHEMA_ID, None, {}
+                )
 
         assert doc.status == "failed"
 
-    def test_document_not_found_raises(self):
+    @pytest.mark.asyncio
+    async def test_document_not_found_raises(self):
         """测试文档不存在时抛出异常。"""
         # mock db.get 返回 None（文档不存在）
         db = _make_mock_db(document=None, schema_config=None)
 
-        with (
-            _setup_session_local_patch(db),
-            patch.object(
-                document_tasks.parse_document, "update_state",
-            ),
-        ):
+        with _setup_session_local_patch(db):
             with pytest.raises(Exception) as exc_info:
-                document_tasks.parse_document(_DOCUMENT_ID, schema_id=None)
+                await document_tasks.parse_document_impl(
+                    _DOCUMENT_ID, None, None, {}
+                )
 
             # 应抛出包含"文档不存在"的异常
             assert "不存在" in str(exc_info.value) or "文档" in str(exc_info.value)

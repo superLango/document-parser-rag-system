@@ -1,8 +1,8 @@
 """文档解析任务模块。
 
-本模块定义 Celery 异步任务，负责文档解析的完整流水线与过期任务清理：
+本模块定义 arq 异步任务，负责文档解析的完整流水线与过期任务清理：
 
-1. ``parse_document``：文档解析主任务，执行端到端的解析流程：
+1. ``parse_document_impl``：文档解析主任务，执行端到端的解析流程：
    - 从 MinIO 下载原始文档（``storage_service.download``）
    - 调用 OCR 服务识别文字与版面区域（``ocr_service.recognize_with_layout``）
    - 调用版面分析服务抽取结构化文本块（``layout_service.extract_text_blocks``），
@@ -11,27 +11,22 @@
      ``extraction_service.extract`` 执行结构化字段抽取
    - 调用 ``term_service.standardize_text`` 对全文做术语标准化
    - 将解析文本、结构化数据与版面数据回写至 ``Document`` 记录
-   - 每个阶段通过 ``self.update_state`` 上报进度
+   - 每个阶段通过更新数据库 Task 记录上报进度
 
-2. ``cleanup_expired_tasks``：定时清理超过 7 天的 ``Task`` 记录
+2. ``cleanup_expired_tasks_impl``：定时清理超过 7 天的 ``Task`` 记录
 
-异步处理说明：
-    Celery 任务本身为同步函数，而项目中的服务（OCR / 版面 / LLM / 术语等）
-    均为异步接口。本模块通过 ``asyncio.run`` 在同步任务内启动事件循环，
-    并定义内部 async 函数执行实际工作。数据库访问直接使用
-    ``AsyncSessionLocal`` 上下文管理器，而非 FastAPI 的 ``get_db`` 依赖。
+arq 任务原生为 async 函数，与服务层异步接口完美契合，无需 ``asyncio.run`` 包装。
+数据库访问直接使用 ``AsyncSessionLocal`` 上下文管理器，而非 FastAPI 的 ``get_db`` 依赖。
 
 错误处理策略：
     解析过程中任一阶段抛出异常时，将 ``Document.status`` 置为 ``failed``，
-    记录错误信息，更新任务状态为 ``FAILURE``，并重新抛出以由 Celery 标记失败。
+    记录错误信息，更新任务状态为 ``failed``，并重新抛出以由 arq 标记失败。
 """
 
-import asyncio
 import traceback
 import uuid
 from datetime import datetime, timedelta
 
-from celery import Task
 from sqlalchemy import delete, select
 
 from app.core.database import AsyncSessionLocal
@@ -45,7 +40,6 @@ from app.services.layout_service import layout_service
 from app.services.ocr_service import ocr_service
 from app.services.storage_service import storage_service
 from app.services.term_service import term_service
-from app.tasks.celery_app import celery_app
 
 logger = get_logger(__name__)
 
@@ -53,47 +47,247 @@ logger = get_logger(__name__)
 _TASK_EXPIRE_DAYS: int = 7
 
 
-@celery_app.task(bind=True, name="parse_document")
-def parse_document(
-    self: Task,
+async def _update_progress(task_id: str | None, progress: int, message: str) -> None:
+    """更新任务进度到数据库。
+
+    在独立的 ``AsyncSessionLocal`` 会话中更新 Task 记录的 progress 与 status 字段。
+    若 task_id 为 None 或任务记录不存在，则静默跳过（不影响主流程）。
+
+    Args:
+        task_id: 任务唯一标识（arq job_id），为 None 时跳过。
+        progress: 进度百分比（0-100）。
+        message: 进度描述信息（当前未持久化，预留扩展）。
+    """
+    if not task_id:
+        return
+    try:
+        async with AsyncSessionLocal() as db:
+            stmt = select(TaskModel).where(TaskModel.id == task_id)
+            result = await db.execute(stmt)
+            task = result.scalar_one_or_none()
+            if task:
+                task.progress = progress
+                task.status = "progress"
+                await db.commit()
+    except Exception as exc:
+        # 进度更新失败不应影响主流程，仅记录日志
+        logger.warning("更新任务进度失败", task_id=task_id, error=str(exc))
+
+
+async def parse_document_impl(
     document_id: str,
-    schema_id: str | None = None,
-    term_base_id: str | None = None,
+    schema_id: str | None,
+    term_base_id: str | None,
+    ctx: dict,
 ) -> dict:
-    """文档解析主任务。
+    """文档解析主任务（arq 异步入口）。
 
     接收文档标识与可选的解析模式参数，执行完整的文档解析流程：
     下载文件 -> OCR/版面识别 -> 结构化抽取 -> 术语标准化 -> 入库。
 
-    由于 Celery 任务为同步函数，而服务层均为异步接口，此处通过
-    ``asyncio.run`` 启动事件循环执行内部 async 逻辑。
+    arq 任务原生为 async 函数，与服务层异步接口直接配合，无需 ``asyncio.run``。
+    进度通过更新数据库 Task 记录上报，替代 Celery 的 ``self.update_state``。
 
     Args:
-        self: Celery 任务实例（bind=True 绑定）。
         document_id: 待解析文档的唯一标识（UUID 字符串）。
         schema_id: 结构化抽取模式标识，None 表示跳过结构化抽取。
         term_base_id: 术语库标识，None 表示使用全量术语库。
+        ctx: arq 任务上下文，包含 ``job_id`` 等元数据。
 
     Returns:
         dict: 解析结果，包含 document_id、status、parsed_text 长度等摘要信息。
 
     Raises:
-        Exception: 解析过程中任一阶段失败时重新抛出，由 Celery 标记任务失败。
+        Exception: 解析过程中任一阶段失败时重新抛出，由 arq 标记任务失败。
     """
+    # 从 arq ctx 获取任务 ID，用于数据库进度更新
+    task_id: str | None = ctx.get("job_id") if isinstance(ctx, dict) else None
+
     logger.info(
         "开始解析文档",
         document_id=document_id,
         schema_id=schema_id,
         term_base_id=term_base_id,
+        task_id=task_id,
     )
     # 上报初始进度
-    self.update_state(state="PROGRESS", meta={"progress": 10, "message": "开始解析"})
+    await _update_progress(task_id, 10, "开始解析")
+
+    doc_uuid: uuid.UUID = uuid.UUID(document_id)
 
     try:
-        result = asyncio.run(
-            _parse_document_async(self, document_id, schema_id, term_base_id)
-        )
-        return result
+        async with AsyncSessionLocal() as db:
+            # 加载文档记录，不存在则直接失败
+            document: Document | None = await db.get(Document, doc_uuid)
+            if document is None:
+                raise BusinessException(
+                    message=f"文档不存在: {document_id}",
+                    code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
+                )
+
+            # 标记为处理中
+            document.status = "processing"
+            await db.commit()
+
+            try:
+                # ----------------------------------------------------------
+                # 阶段 1：从 MinIO 下载原始文档（进度 10%）
+                # ----------------------------------------------------------
+                if not document.minio_object_name:
+                    raise BusinessException(
+                        message="文档缺少 MinIO 对象标识，无法下载",
+                        code=ErrorCode.BUSINESS_TASK_FAILED,
+                    )
+                image_bytes: bytes = await storage_service.download(
+                    document.minio_object_name
+                )
+                logger.info(
+                    "文档下载完成",
+                    document_id=document_id,
+                    size=len(image_bytes),
+                )
+
+                # ----------------------------------------------------------
+                # 阶段 2：OCR 识别（进度 20%）
+                # ----------------------------------------------------------
+                await _update_progress(task_id, 20, "OCR识别中")
+                ocr_result: dict = await ocr_service.recognize_with_layout(image_bytes)
+                full_text: str = ocr_result.get("text", "")
+                ocr_layout: list = ocr_result.get("layout", [])
+                logger.info(
+                    "OCR 识别完成",
+                    document_id=document_id,
+                    text_len=len(full_text),
+                    layout_blocks=len(ocr_layout),
+                )
+
+                # ----------------------------------------------------------
+                # 阶段 3：版面分析（进度 40%）
+                # ----------------------------------------------------------
+                await _update_progress(task_id, 40, "版面分析中")
+                text_blocks: list[dict] = await layout_service.extract_text_blocks(
+                    image_bytes
+                )
+                # 将版面分析的文本块与 OCR 版面结果合并：
+                # OCR layout 携带识别文本，layout_service 提供更精细的区域置信度
+                merged_layout: list[dict] = _merge_layout(ocr_layout, text_blocks)
+                logger.info(
+                    "版面分析完成",
+                    document_id=document_id,
+                    text_blocks=len(text_blocks),
+                    merged_blocks=len(merged_layout),
+                )
+
+                # ----------------------------------------------------------
+                # 阶段 4：结构化抽取（进度 60%）
+                # ----------------------------------------------------------
+                await _update_progress(task_id, 60, "结构化抽取中")
+                structured_data: dict | None = None
+                if schema_id:
+                    schema_uuid: uuid.UUID = uuid.UUID(schema_id)
+                    schema_config: SchemaConfig | None = await db.get(
+                        SchemaConfig, schema_uuid
+                    )
+                    if schema_config is None:
+                        raise BusinessException(
+                            message=f"SchemaConfig 不存在: {schema_id}",
+                            code=ErrorCode.BUSINESS_TASK_FAILED,
+                        )
+                    structured_data = await extraction_service.extract(
+                        full_text, schema_config.schema_definition
+                    )
+                    logger.info(
+                        "结构化抽取完成",
+                        document_id=document_id,
+                        schema_id=schema_id,
+                        fields=len(structured_data) if structured_data else 0,
+                    )
+                else:
+                    logger.info(
+                        "未提供 schema_id，跳过结构化抽取",
+                        document_id=document_id,
+                    )
+
+                # ----------------------------------------------------------
+                # 阶段 5：术语标准化（进度 80%）
+                # ----------------------------------------------------------
+                await _update_progress(task_id, 80, "术语标准化中")
+                # 将 term_base_id 转为 UUID 传入（当前版本未启用，预留供未来按库过滤）
+                term_base_uuid: uuid.UUID | None = (
+                    uuid.UUID(term_base_id) if term_base_id else None
+                )
+                standard_result: dict = await term_service.standardize_text(
+                    db, full_text, term_base_uuid
+                )
+                standardized_text: str = standard_result.get(
+                    "standardized_text", full_text
+                )
+                replacements: list = standard_result.get("replacements", [])
+                logger.info(
+                    "术语标准化完成",
+                    document_id=document_id,
+                    replacement_count=len(replacements),
+                )
+
+                # ----------------------------------------------------------
+                # 阶段 6：保存结果（进度 90%）
+                # ----------------------------------------------------------
+                await _update_progress(task_id, 90, "保存结果中")
+                document.status = "completed"
+                document.parsed_text = standardized_text
+                document.structured_data = structured_data
+                document.layout_data = {
+                    "ocr_layout": ocr_layout,
+                    "text_blocks": text_blocks,
+                    "merged": merged_layout,
+                    "term_replacements": replacements,
+                }
+                await db.commit()
+                logger.info(
+                    "文档解析结果已保存",
+                    document_id=document_id,
+                )
+
+                # ----------------------------------------------------------
+                # 阶段 7：完成（进度 100%）
+                # ----------------------------------------------------------
+                await _update_progress(task_id, 100, "解析完成")
+                logger.info("文档解析任务完成", document_id=document_id)
+
+                return {
+                    "document_id": document_id,
+                    "status": "completed",
+                    "parsed_text_length": len(standardized_text),
+                    "layout_blocks": len(merged_layout),
+                    "structured_fields": (
+                        len(structured_data) if structured_data else 0
+                    ),
+                    "term_replacements": len(replacements),
+                }
+
+            except Exception as exc:
+                # 异常处理：标记文档为失败，回滚后写入错误状态
+                logger.error(
+                    "解析过程中异常，标记文档为失败",
+                    document_id=document_id,
+                    error=str(exc),
+                )
+                # 回滚事务以丢弃半成品写入，再单独提交失败状态
+                await db.rollback()
+                try:
+                    # 重新获取文档并标记失败（rollback 后原对象已过期）
+                    failed_doc: Document | None = await db.get(Document, doc_uuid)
+                    if failed_doc is not None:
+                        failed_doc.status = "failed"
+                        await db.commit()
+                except Exception as mark_err:
+                    logger.error(
+                        "标记文档失败状态时再次异常",
+                        document_id=document_id,
+                        error=str(mark_err),
+                    )
+                raise
+
     except Exception as exc:
         # 记录完整错误堆栈，便于排障
         logger.error(
@@ -102,228 +296,7 @@ def parse_document(
             error=str(exc),
             traceback=traceback.format_exc(),
         )
-        # 更新任务状态为 FAILURE，供前端轮询感知
-        self.update_state(
-            state="FAILURE",
-            meta={"error": str(exc), "message": "解析失败"},
-        )
         raise
-
-
-async def _parse_document_async(
-    task: Task,
-    document_id: str,
-    schema_id: str | None,
-    term_base_id: str | None,
-) -> dict:
-    """文档解析的异步实现。
-
-    在独立的 ``AsyncSessionLocal`` 会话中执行完整流水线，确保事务边界
-    由本函数统一控制。任一阶段失败时将 Document 状态置为 failed 并回滚。
-
-    Args:
-        task: Celery 任务实例，用于上报进度。
-        document_id: 文档 UUID 字符串。
-        schema_id: 结构化抽取模式 ID，可为空。
-        term_base_id: 术语库 ID，可为空。
-
-    Returns:
-        dict: 解析结果摘要。
-
-    Raises:
-        Exception: 解析失败时重新抛出，由上层 ``parse_document`` 处理。
-    """
-    doc_uuid: uuid.UUID = uuid.UUID(document_id)
-
-    async with AsyncSessionLocal() as db:
-        # 加载文档记录，不存在则直接失败
-        document: Document | None = await db.get(Document, doc_uuid)
-        if document is None:
-            raise BusinessException(
-                message=f"文档不存在: {document_id}",
-                code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
-            )
-
-        # 标记为处理中
-        document.status = "processing"
-        await db.commit()
-
-        try:
-            # ----------------------------------------------------------
-            # 阶段 1：从 MinIO 下载原始文档（进度 10%）
-            # ----------------------------------------------------------
-            if not document.minio_object_name:
-                raise BusinessException(
-                    message="文档缺少 MinIO 对象标识，无法下载",
-                    code=ErrorCode.BUSINESS_TASK_FAILED,
-                )
-            image_bytes: bytes = await storage_service.download(
-                document.minio_object_name
-            )
-            logger.info(
-                "文档下载完成",
-                document_id=document_id,
-                size=len(image_bytes),
-            )
-
-            # ----------------------------------------------------------
-            # 阶段 2：OCR 识别（进度 20%）
-            # ----------------------------------------------------------
-            task.update_state(
-                state="PROGRESS",
-                meta={"progress": 20, "message": "OCR识别中"},
-            )
-            ocr_result: dict = await ocr_service.recognize_with_layout(image_bytes)
-            full_text: str = ocr_result.get("text", "")
-            ocr_layout: list = ocr_result.get("layout", [])
-            logger.info(
-                "OCR 识别完成",
-                document_id=document_id,
-                text_len=len(full_text),
-                layout_blocks=len(ocr_layout),
-            )
-
-            # ----------------------------------------------------------
-            # 阶段 3：版面分析（进度 40%）
-            # ----------------------------------------------------------
-            task.update_state(
-                state="PROGRESS",
-                meta={"progress": 40, "message": "版面分析中"},
-            )
-            text_blocks: list[dict] = await layout_service.extract_text_blocks(
-                image_bytes
-            )
-            # 将版面分析的文本块与 OCR 版面结果合并：
-            # OCR layout 携带识别文本，layout_service 提供更精细的区域置信度
-            merged_layout: list[dict] = _merge_layout(ocr_layout, text_blocks)
-            logger.info(
-                "版面分析完成",
-                document_id=document_id,
-                text_blocks=len(text_blocks),
-                merged_blocks=len(merged_layout),
-            )
-
-            # ----------------------------------------------------------
-            # 阶段 4：结构化抽取（进度 60%）
-            # ----------------------------------------------------------
-            task.update_state(
-                state="PROGRESS",
-                meta={"progress": 60, "message": "结构化抽取中"},
-            )
-            structured_data: dict | None = None
-            if schema_id:
-                schema_uuid: uuid.UUID = uuid.UUID(schema_id)
-                schema_config: SchemaConfig | None = await db.get(
-                    SchemaConfig, schema_uuid
-                )
-                if schema_config is None:
-                    raise BusinessException(
-                        message=f"SchemaConfig 不存在: {schema_id}",
-                        code=ErrorCode.BUSINESS_TASK_FAILED,
-                    )
-                structured_data = await extraction_service.extract(
-                    full_text, schema_config.schema_definition
-                )
-                logger.info(
-                    "结构化抽取完成",
-                    document_id=document_id,
-                    schema_id=schema_id,
-                    fields=len(structured_data) if structured_data else 0,
-                )
-            else:
-                logger.info(
-                    "未提供 schema_id，跳过结构化抽取",
-                    document_id=document_id,
-                )
-
-            # ----------------------------------------------------------
-            # 阶段 5：术语标准化（进度 80%）
-            # ----------------------------------------------------------
-            task.update_state(
-                state="PROGRESS",
-                meta={"progress": 80, "message": "术语标准化中"},
-            )
-            # 将 term_base_id 转为 UUID 传入（当前版本未启用，预留供未来按库过滤）
-            term_base_uuid: uuid.UUID | None = (
-                uuid.UUID(term_base_id) if term_base_id else None
-            )
-            standard_result: dict = await term_service.standardize_text(
-                db, full_text, term_base_uuid
-            )
-            standardized_text: str = standard_result.get(
-                "standardized_text", full_text
-            )
-            replacements: list = standard_result.get("replacements", [])
-            logger.info(
-                "术语标准化完成",
-                document_id=document_id,
-                replacement_count=len(replacements),
-            )
-
-            # ----------------------------------------------------------
-            # 阶段 6：保存结果（进度 90%）
-            # ----------------------------------------------------------
-            task.update_state(
-                state="PROGRESS",
-                meta={"progress": 90, "message": "保存结果中"},
-            )
-            document.status = "completed"
-            document.parsed_text = standardized_text
-            document.structured_data = structured_data
-            document.layout_data = {
-                "ocr_layout": ocr_layout,
-                "text_blocks": text_blocks,
-                "merged": merged_layout,
-                "term_replacements": replacements,
-            }
-            await db.commit()
-            logger.info(
-                "文档解析结果已保存",
-                document_id=document_id,
-            )
-
-            # ----------------------------------------------------------
-            # 阶段 7：完成（进度 100%）
-            # ----------------------------------------------------------
-            task.update_state(
-                state="PROGRESS",
-                meta={"progress": 100, "message": "解析完成"},
-            )
-            logger.info("文档解析任务完成", document_id=document_id)
-
-            return {
-                "document_id": document_id,
-                "status": "completed",
-                "parsed_text_length": len(standardized_text),
-                "layout_blocks": len(merged_layout),
-                "structured_fields": (
-                    len(structured_data) if structured_data else 0
-                ),
-                "term_replacements": len(replacements),
-            }
-
-        except Exception as exc:
-            # 异常处理：标记文档为失败，回滚后写入错误状态
-            logger.error(
-                "解析过程中异常，标记文档为失败",
-                document_id=document_id,
-                error=str(exc),
-            )
-            # 回滚事务以丢弃半成品写入，再单独提交失败状态
-            await db.rollback()
-            try:
-                # 重新获取文档并标记失败（rollback 后原对象已过期）
-                failed_doc: Document | None = await db.get(Document, doc_uuid)
-                if failed_doc is not None:
-                    failed_doc.status = "failed"
-                    await db.commit()
-            except Exception as mark_err:
-                logger.error(
-                    "标记文档失败状态时再次异常",
-                    document_id=document_id,
-                    error=str(mark_err),
-                )
-            raise
 
 
 def _merge_layout(ocr_layout: list[dict], text_blocks: list[dict]) -> list[dict]:
@@ -384,53 +357,39 @@ def _bbox_key(bbox: list) -> tuple[int, int, int, int]:
     return (int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))
 
 
-@celery_app.task(name="cleanup_expired_tasks")
-def cleanup_expired_tasks() -> int:
+async def cleanup_expired_tasks_impl() -> dict:
     """清理过期任务记录。
 
     删除 ``tasks`` 表中创建时间早于 7 天的记录，避免结果无限增长。
-    由 Beat 调度器每日凌晨 2 点触发执行。
+    由 arq cron 调度器每日凌晨 2 点触发执行。
 
     Returns:
-        int: 本次清理的任务记录数量。
+        dict: 包含 deleted_count 的清理结果摘要。
     """
     logger.info("开始清理过期任务记录", expire_days=_TASK_EXPIRE_DAYS)
     try:
-        deleted_count: int = asyncio.run(_cleanup_expired_tasks_async())
-        logger.info("过期任务记录清理完成", deleted_count=deleted_count)
-        return deleted_count
+        threshold: datetime = datetime.utcnow() - timedelta(days=_TASK_EXPIRE_DAYS)
+        async with AsyncSessionLocal() as db:
+            # 先查询待删除记录数量，便于日志记录与返回
+            count_stmt = select(TaskModel).where(TaskModel.created_at < threshold)
+            result = await db.execute(count_stmt)
+            expired_tasks: list = list(result.scalars().all())
+            if not expired_tasks:
+                logger.info("无过期任务记录需要清理")
+                return {"deleted_count": 0}
+
+            deleted_count: int = len(expired_tasks)
+            # 批量删除
+            await db.execute(
+                delete(TaskModel).where(TaskModel.created_at < threshold)
+            )
+            await db.commit()
+            logger.info(
+                "过期任务记录已删除",
+                deleted_count=deleted_count,
+                threshold=threshold.isoformat(),
+            )
+            return {"deleted_count": deleted_count}
     except Exception as err:
         logger.error("清理过期任务记录失败", error=str(err))
         raise
-
-
-async def _cleanup_expired_tasks_async() -> int:
-    """异步执行过期任务记录清理。
-
-    查询 ``Task`` 表中 ``created_at`` 早于阈值时间的记录并删除。
-
-    Returns:
-        int: 删除的记录数量。
-    """
-    threshold: datetime = datetime.utcnow() - timedelta(days=_TASK_EXPIRE_DAYS)
-    async with AsyncSessionLocal() as db:
-        # 先查询待删除记录数量，便于日志记录与返回
-        count_stmt = select(TaskModel).where(TaskModel.created_at < threshold)
-        result = await db.execute(count_stmt)
-        expired_tasks: list = list(result.scalars().all())
-        if not expired_tasks:
-            logger.info("无过期任务记录需要清理")
-            return 0
-
-        deleted_count: int = len(expired_tasks)
-        # 批量删除
-        await db.execute(
-            delete(TaskModel).where(TaskModel.created_at < threshold)
-        )
-        await db.commit()
-        logger.info(
-            "过期任务记录已删除",
-            deleted_count=deleted_count,
-            threshold=threshold.isoformat(),
-        )
-        return deleted_count

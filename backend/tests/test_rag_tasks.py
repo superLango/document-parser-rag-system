@@ -1,9 +1,9 @@
 """RAG 知识库任务测试模块。
 
-测试 rag_tasks Celery 任务的完整执行流程：
-- index_document：文档入库（分块 → 嵌入 → Milvus 入库）
-- rebuild_index：重建整个知识库索引
-- remove_document：从知识库移除文档
+测试 rag_tasks arq 任务的完整执行流程：
+- index_document_impl：文档入库（分块 → 嵌入 → Milvus 入库）
+- rebuild_index_impl：重建整个知识库索引
+- remove_document_impl：从知识库移除文档
 
 所有外部依赖（数据库 / 分块器 / 嵌入模型 / Milvus）均通过 mock 隔离，
 确保无 GPU / 无模型 / 无外部服务环境下可运行。
@@ -162,12 +162,13 @@ def _setup_session_local_patch(db_mock):
 
 
 # ---------------------------------------------------------------
-# 1. index_document 任务测试
+# 1. index_document_impl 任务测试
 # ---------------------------------------------------------------
 class TestIndexDocument:
-    """index_document 任务测试。"""
+    """index_document_impl 任务测试。"""
 
-    def test_index_document_calls_all_services_in_order(self):
+    @pytest.mark.asyncio
+    async def test_index_document_calls_all_services_in_order(self):
         """测试任务按正确顺序调用所有服务。
 
         验证调用序列：chunker.chunk_document → embedding_service.embed_documents
@@ -204,11 +205,8 @@ class TestIndexDocument:
                 rag_tasks.vector_store, "insert",
                 new=AsyncMock(side_effect=_track_insert),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
-            result = rag_tasks.index_document(_DOCUMENT_ID)
+            result = await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
         # 验证服务调用顺序正确
         assert call_order == [
@@ -223,7 +221,8 @@ class TestIndexDocument:
         assert result["status"] == "indexed"
         assert result["chunk_count"] == len(_FAKE_CHUNKS)
 
-    def test_index_document_sets_status_indexed(self):
+    @pytest.mark.asyncio
+    async def test_index_document_sets_status_indexed(self):
         """测试任务完成后 Document 状态为 indexed。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -242,25 +241,23 @@ class TestIndexDocument:
                 rag_tasks.vector_store, "insert",
                 new=AsyncMock(return_value=_FAKE_PRIMARY_KEYS),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
-            rag_tasks.index_document(_DOCUMENT_ID)
+            await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
         # 验证文档状态最终为 indexed
         assert doc.status == "indexed"
 
-    def test_index_document_progress_updates(self):
+    @pytest.mark.asyncio
+    async def test_index_document_progress_updates(self):
         """测试任务进度按序列上报。
 
-        验证 update_state 被调用时的 progress 值序列为：
+        验证 _update_progress 被调用时的 progress 值序列为：
         10 → 20 → 40 → 70 → 90 → 100。
         """
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
 
-        update_state_mock = MagicMock()
+        mock_update = AsyncMock()
 
         with (
             _setup_session_local_patch(db),
@@ -276,21 +273,12 @@ class TestIndexDocument:
                 rag_tasks.vector_store, "insert",
                 new=AsyncMock(return_value=_FAKE_PRIMARY_KEYS),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-                new=update_state_mock,
-            ),
+            patch("app.tasks.rag_tasks._update_progress", new=mock_update),
         ):
-            rag_tasks.index_document(_DOCUMENT_ID)
+            await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
-        # 提取所有 PROGRESS 状态的 progress 值
-        progress_values = []
-        for call in update_state_mock.call_args_list:
-            args, kwargs = call
-            if kwargs.get("state") == "PROGRESS":
-                meta = kwargs.get("meta", {})
-                if "progress" in meta:
-                    progress_values.append(meta["progress"])
+        # 提取所有进度上报值（_update_progress 第二个位置参数为 progress）
+        progress_values = [call.args[1] for call in mock_update.call_args_list]
 
         # 验证进度序列包含所有预期值
         assert 10 in progress_values   # 初始
@@ -300,7 +288,8 @@ class TestIndexDocument:
         assert 90 in progress_values   # 入库中
         assert 100 in progress_values  # 完成
 
-    def test_index_document_calls_db_commit(self):
+    @pytest.mark.asyncio
+    async def test_index_document_calls_db_commit(self):
         """测试任务完成后调用了 db.commit。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -319,16 +308,14 @@ class TestIndexDocument:
                 rag_tasks.vector_store, "insert",
                 new=AsyncMock(return_value=_FAKE_PRIMARY_KEYS),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
-            rag_tasks.index_document(_DOCUMENT_ID)
+            await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
         # 验证 commit 被调用（至少一次用于标记 indexed）
         assert db.commit.await_count >= 1
 
-    def test_index_document_passes_correct_text_to_chunker(self):
+    @pytest.mark.asyncio
+    async def test_index_document_passes_correct_text_to_chunker(self):
         """测试将 Document.parsed_text 传给分块器。"""
         doc = _make_mock_document(parsed_text="自定义解析文本")
         db = _make_mock_db(document=doc)
@@ -348,17 +335,15 @@ class TestIndexDocument:
                 rag_tasks.vector_store, "insert",
                 new=AsyncMock(return_value=_FAKE_PRIMARY_KEYS),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
-            rag_tasks.index_document(_DOCUMENT_ID)
+            await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
         # 验证分块器接收到的文本为 Document.parsed_text
         call_args = chunk_mock.call_args
         assert call_args.args[0] == "自定义解析文本"
 
-    def test_index_document_passes_chunks_text_to_embedder(self):
+    @pytest.mark.asyncio
+    async def test_index_document_passes_chunks_text_to_embedder(self):
         """测试将分块文本列表传给嵌入服务。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -378,50 +363,40 @@ class TestIndexDocument:
                 rag_tasks.vector_store, "insert",
                 new=AsyncMock(return_value=_FAKE_PRIMARY_KEYS),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
-            rag_tasks.index_document(_DOCUMENT_ID)
+            await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
         # 验证嵌入服务接收到的是分块文本列表
         call_args = embed_mock.call_args
         texts = call_args.args[0]
         assert texts == [c["text"] for c in _FAKE_CHUNKS]
 
-    def test_index_document_document_not_found_raises(self):
+    @pytest.mark.asyncio
+    async def test_index_document_document_not_found_raises(self):
         """测试文档不存在时抛出异常。"""
         db = _make_mock_db(document=None)
 
-        with (
-            _setup_session_local_patch(db),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
-        ):
+        with _setup_session_local_patch(db):
             with pytest.raises(Exception) as exc_info:
-                rag_tasks.index_document(_DOCUMENT_ID)
+                await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
             # 应抛出包含"文档不存在"的异常
             assert "不存在" in str(exc_info.value)
 
-    def test_index_document_no_parsed_text_raises(self):
+    @pytest.mark.asyncio
+    async def test_index_document_no_parsed_text_raises(self):
         """测试文档无解析文本时抛出异常。"""
         doc = _make_mock_document(parsed_text=None)
         db = _make_mock_db(document=doc)
 
-        with (
-            _setup_session_local_patch(db),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
-        ):
+        with _setup_session_local_patch(db):
             with pytest.raises(Exception) as exc_info:
-                rag_tasks.index_document(_DOCUMENT_ID)
+                await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
             assert "解析" in str(exc_info.value) or "索引" in str(exc_info.value)
 
-    def test_index_document_empty_chunks_raises(self):
+    @pytest.mark.asyncio
+    async def test_index_document_empty_chunks_raises(self):
         """测试分块结果为空时抛出异常。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -432,16 +407,14 @@ class TestIndexDocument:
                 rag_tasks.chunker, "chunk_document",
                 new=AsyncMock(return_value=[]),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
             with pytest.raises(Exception) as exc_info:
-                rag_tasks.index_document(_DOCUMENT_ID)
+                await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
             assert "分块" in str(exc_info.value)
 
-    def test_index_document_embedding_failure_sets_failed(self):
+    @pytest.mark.asyncio
+    async def test_index_document_embedding_failure_sets_failed(self):
         """测试嵌入失败时 Document 状态被置为 failed。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -456,17 +429,15 @@ class TestIndexDocument:
                 rag_tasks.embedding_service, "embed_documents",
                 new=AsyncMock(side_effect=RuntimeError("嵌入失败")),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError, match="嵌入失败"):
-                rag_tasks.index_document(_DOCUMENT_ID)
+                await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
         # 验证文档状态被置为 failed
         assert doc.status == "failed"
 
-    def test_index_document_vector_store_failure_sets_failed(self):
+    @pytest.mark.asyncio
+    async def test_index_document_vector_store_failure_sets_failed(self):
         """测试向量入库失败时 Document 状态被置为 failed。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -485,16 +456,14 @@ class TestIndexDocument:
                 rag_tasks.vector_store, "insert",
                 new=AsyncMock(side_effect=RuntimeError("Milvus 入库失败")),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError, match="Milvus 入库失败"):
-                rag_tasks.index_document(_DOCUMENT_ID)
+                await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
         assert doc.status == "failed"
 
-    def test_index_document_failure_calls_rollback(self):
+    @pytest.mark.asyncio
+    async def test_index_document_failure_calls_rollback(self):
         """测试任务失败时调用了 db.rollback。"""
         doc = _make_mock_document()
         db = _make_mock_db(document=doc)
@@ -509,24 +478,22 @@ class TestIndexDocument:
                 rag_tasks.embedding_service, "embed_documents",
                 new=AsyncMock(side_effect=RuntimeError("嵌入失败")),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
         ):
             with pytest.raises(RuntimeError):
-                rag_tasks.index_document(_DOCUMENT_ID)
+                await rag_tasks.index_document_impl(_DOCUMENT_ID, {})
 
         # 验证 rollback 被调用
         db.rollback.assert_awaited()
 
 
 # ---------------------------------------------------------------
-# 2. rebuild_index 任务测试
+# 2. rebuild_index_impl 任务测试
 # ---------------------------------------------------------------
 class TestRebuildIndex:
-    """rebuild_index 任务测试。"""
+    """rebuild_index_impl 任务测试。"""
 
-    def test_rebuild_index_clears_vector_store(self):
+    @pytest.mark.asyncio
+    async def test_rebuild_index_clears_vector_store(self):
         """测试重建任务先清空 Milvus 集合。"""
         doc1 = _make_mock_document(document_id=_DOCUMENT_ID)
         doc2 = _make_mock_document(
@@ -553,14 +520,8 @@ class TestRebuildIndex:
                 rag_tasks.vector_store, "insert",
                 new=AsyncMock(return_value=_FAKE_PRIMARY_KEYS),
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
-            patch.object(
-                rag_tasks.rebuild_index, "update_state",
-            ),
         ):
-            result = rag_tasks.rebuild_index()
+            result = await rag_tasks.rebuild_index_impl({})
 
         # 验证 delete_all 被调用
         delete_all_mock.assert_awaited()
@@ -569,7 +530,8 @@ class TestRebuildIndex:
         assert result["success_count"] == 2
         assert result["failed_count"] == 0
 
-    def test_rebuild_index_indexes_all_documents(self):
+    @pytest.mark.asyncio
+    async def test_rebuild_index_indexes_all_documents(self):
         """测试重建任务对所有文档重新索引。"""
         doc1 = _make_mock_document(document_id=_DOCUMENT_ID)
         doc2 = _make_mock_document(
@@ -596,20 +558,15 @@ class TestRebuildIndex:
             patch.object(
                 rag_tasks.vector_store, "insert", new=insert_mock,
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
-            patch.object(
-                rag_tasks.rebuild_index, "update_state",
-            ),
         ):
-            result = rag_tasks.rebuild_index()
+            result = await rag_tasks.rebuild_index_impl({})
 
         # 验证 insert 被调用两次（每文档一次）
         assert insert_mock.await_count == 2
         assert result["success_count"] == 2
 
-    def test_rebuild_index_partial_failure(self):
+    @pytest.mark.asyncio
+    async def test_rebuild_index_partial_failure(self):
         """测试部分文档索引失败时仍继续处理其他文档。"""
         doc1 = _make_mock_document(document_id=_DOCUMENT_ID)
         doc2 = _make_mock_document(
@@ -639,14 +596,8 @@ class TestRebuildIndex:
             patch.object(
                 rag_tasks.vector_store, "insert", new=insert_mock,
             ),
-            patch.object(
-                rag_tasks.index_document, "update_state",
-            ),
-            patch.object(
-                rag_tasks.rebuild_index, "update_state",
-            ),
         ):
-            result = rag_tasks.rebuild_index()
+            result = await rag_tasks.rebuild_index_impl({})
 
         # 验证一成功一失败
         assert result["total_docs"] == 2
@@ -654,7 +605,8 @@ class TestRebuildIndex:
         assert result["failed_count"] == 1
         assert len(result["failed_docs"]) == 1
 
-    def test_rebuild_index_no_documents(self):
+    @pytest.mark.asyncio
+    async def test_rebuild_index_no_documents(self):
         """测试无已解析文档时返回空结果。"""
         db = _make_mock_db(documents_list=[])
 
@@ -665,7 +617,7 @@ class TestRebuildIndex:
                 new=AsyncMock(),
             ),
         ):
-            result = rag_tasks.rebuild_index()
+            result = await rag_tasks.rebuild_index_impl({})
 
         assert result["total_docs"] == 0
         assert result["success_count"] == 0
@@ -673,19 +625,20 @@ class TestRebuildIndex:
 
 
 # ---------------------------------------------------------------
-# 3. remove_document 任务测试
+# 3. remove_document_impl 任务测试
 # ---------------------------------------------------------------
 class TestRemoveDocument:
-    """remove_document 任务测试。"""
+    """remove_document_impl 任务测试。"""
 
-    def test_remove_document_calls_vector_store_delete(self):
+    @pytest.mark.asyncio
+    async def test_remove_document_calls_vector_store_delete(self):
         """测试移除文档调用 vector_store.delete_by_doc_id。"""
         delete_mock = AsyncMock(return_value=2)
 
         with patch.object(
             rag_tasks.vector_store, "delete_by_doc_id", new=delete_mock
         ):
-            result = rag_tasks.remove_document(_DOCUMENT_ID)
+            result = await rag_tasks.remove_document_impl(_DOCUMENT_ID, {})
 
         # 验证 delete_by_doc_id 被调用
         delete_mock.assert_awaited_once_with(_DOCUMENT_ID)
@@ -693,7 +646,8 @@ class TestRemoveDocument:
         assert result["doc_id"] == _DOCUMENT_ID
         assert result["status"] == "removed"
 
-    def test_remove_document_passes_correct_doc_id(self):
+    @pytest.mark.asyncio
+    async def test_remove_document_passes_correct_doc_id(self):
         """测试移除文档时传递正确的 doc_id。"""
         delete_mock = AsyncMock(return_value=1)
         custom_doc_id = "770e8400-e29b-41d4-a716-446655440000"
@@ -701,17 +655,18 @@ class TestRemoveDocument:
         with patch.object(
             rag_tasks.vector_store, "delete_by_doc_id", new=delete_mock
         ):
-            rag_tasks.remove_document(custom_doc_id)
+            await rag_tasks.remove_document_impl(custom_doc_id, {})
 
         # 验证 doc_id 正确传递
         call_args = delete_mock.call_args
         assert call_args.args[0] == custom_doc_id
 
-    def test_remove_document_failure_raises(self):
+    @pytest.mark.asyncio
+    async def test_remove_document_failure_raises(self):
         """测试移除文档失败时抛出异常。"""
         with patch.object(
             rag_tasks.vector_store, "delete_by_doc_id",
             new=AsyncMock(side_effect=RuntimeError("Milvus 删除失败")),
         ):
             with pytest.raises(RuntimeError, match="Milvus 删除失败"):
-                rag_tasks.remove_document(_DOCUMENT_ID)
+                await rag_tasks.remove_document_impl(_DOCUMENT_ID, {})

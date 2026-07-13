@@ -269,26 +269,44 @@
 
 ## 技术选型锁定清单
 
-### 后端依赖（`backend/requirements.txt`）
-| 包 | 版本 | 用途 |
-|---|---|---|
-| fastapi | 0.115+ | Web框架 |
-| uvicorn[standard] | 0.30+ | ASGI服务器 |
-| pydantic | 2.5+ | 数据验证 |
-| pydantic-settings | 2.1+ | 配置管理 |
-| sqlalchemy[asyncio] | 2.0+ | ORM |
-| asyncpg | 0.29+ | PG异步驱动 |
-| alembic | 1.13+ | 数据库迁移 |
-| celery | 5.3+ | 异步任务 |
-| redis | 5.0+ | 缓存/队列 |
-| python-jose[cryptography] | 3.3+ | JWT |
-| slowapi | 0.1.9+ | 限流 |
-| minio | 7.2+ | 对象存储客户端 |
-| pymilvus | 2.4+ | 向量数据库客户端 |
-| neo4j | 5.14+ | 图数据库客户端 |
-| ollama | 0.3+ | 本地LLM客户端 |
-| sentence-transformers | 3.0+ | 嵌入模型 |
-| structlog | 24.1+ | 结构化日志 |
+### 技术栈迭代（2026-07）
+
+基于可行性验证结果，对原始方案中的5项技术栈进行迭代升级：
+
+| 原始方案 | 迭代方案 | 迭代类型 | 可行性 | 理由 |
+|----------|----------|----------|--------|------|
+| DeepKE 2.2.7 (PyTorch 1.11) | **OneKE / DeepKE-LLM** | 替换 | ✅ 高 | DeepKE打包问题(PyTorch<=1.11, transformers==4.26)；OneKE基于LLM(Chinese-Alpaca-2-13B)，支持vLLM+Qwen，无需独立环境 |
+| Celery 5.3+ | **arq** | 替换 | ✅ 高 | arq原生asyncio，与FastAPI完美契合，7x更快，仅依赖Redis(Valkey) |
+| MinIO | **SeaweedFS** (主) / RustFS (备) | 替换 | ✅ 高 | MinIO 2025进入维护模式+AGPLv3；RustFS仍为Alpha；SeaweedFS自2015生产就绪，Apache 2.0，Kubeflow默认存储 |
+| Redis | **Valkey** | 替换 | ✅ 高 | Redis改SSPL许可证；Valkey为Redis 7.2.4 fork，BSD许可，Linux Foundation，100% API兼容，230%吞吐提升 |
+| MinerU | **MinerU 3.2+ + MinerU-Popo** | 增强 | ✅ 高 | MinerU-Popo非MinerU替代，而是OCR后处理增强层（跨页表格合并、标题层级重建、图文关联），与MinerU协同使用 |
+
+### 后端依赖（`backend/requirements.txt`）— 迭代后
+| 包 | 版本 | 用途 | 变更 |
+|---|---|---|---|
+| fastapi | 0.115+ | Web框架 | - |
+| uvicorn[standard] | 0.30+ | ASGI服务器 | - |
+| pydantic | 2.5+ | 数据验证 | - |
+| pydantic-settings | 2.1+ | 配置管理 | - |
+| sqlalchemy[asyncio] | 2.0+ | ORM | - |
+| asyncpg | 0.29+ | PG异步驱动 | - |
+| alembic | 1.13+ | 数据库迁移 | - |
+| ~~celery~~ | ~~5.3+~~ | ~~异步任务~~ | **移除** → arq |
+| **arq** | **0.26+** | **异步任务队列** | **新增** |
+| ~~redis~~ | ~~5.0+~~ | ~~缓存/队列~~ | **移除** → valkey |
+| **valkey** | **8.0+** | **缓存/队列** | **新增** (Redis兼容客户端) |
+| python-jose[cryptography] | 3.3+ | JWT | - |
+| slowapi | 0.1.9+ | 限流 | - |
+| ~~minio~~ | ~~7.2+~~ | ~~对象存储客户端~~ | **移除** → boto3(S3兼容) |
+| **boto3** | **1.35+** | **S3兼容存储客户端** | **新增** (支持SeaweedFS/RustFS/MinIO) |
+| pymilvus | 2.4+ | 向量数据库客户端 | - |
+| neo4j | 5.14+ | 图数据库客户端 | - |
+| ~~ollama~~ | ~~0.3+~~ | ~~本地LLM客户端~~ | **移除** → vLLM直连 |
+| ~~deepke~~ | ~~2.2.7~~ | ~~知识抽取~~ | **移除** → OneKE |
+| **langextract** | **1.6+** | **结构化抽取** | **已使用** |
+| sentence-transformers | 3.0+ | 嵌入模型 | - |
+| structlog | 24.1+ | 结构化日志 | - |
+| FlagEmbedding | 1.3+ | bge-m3稀疏向量 | - |
 
 ### 前端依赖（`frontend/package.json`）
 | 包 | 版本 | 用途 |
@@ -310,6 +328,34 @@
 | 模型 | 路径 | 用途 |
 |---|---|---|
 | Qwen3.6-35B-A3B-FP8 | `models/Qwen/Qwen3.6-35B-A3B-FP8` | 主LLM |
-| Qwen3.5-9B | `models/Qwen/Qwen3.5-9B` | 备用LLM |
+| Qwen3.5-9B | `models/Qwen/Qwen3.5-9B` | 备用LLM（当前使用） |
 | PaddleOCR-VL | `models/PaddlePaddle/PaddleOCR-VL` | OCR |
-| bge-base-zh-v1.5 | `models/bge-base-zh-v1.5` | 嵌入 |
+| bge-m3 | `models/bge-m3` | Dense+Sparse嵌入 |
+| bge-reranker-v2-m3 | `models/bge-reranker-v2-m3` | CrossEncoder精排 |
+
+### 基础设施服务（Docker Compose）— 迭代后
+| 服务 | 原始方案 | 迭代方案 | 镜像 | 说明 |
+|------|----------|----------|------|------|
+| 关系数据库 | PostgreSQL 15 | PostgreSQL 15 | `postgres:15-alpine` | 不变 |
+| 缓存/队列 | Redis 7 | **Valkey 8** | `valkey/valkey:8-alpine` | BSD许可，drop-in替换 |
+| 对象存储 | MinIO | **SeaweedFS** | `chrislusf/seaweedfs:latest` | Apache 2.0，生产就绪 |
+| 图数据库 | Neo4j 5 Enterprise | Neo4j 5 Enterprise | `neo4j:5-enterprise` | APOC+GDS插件 |
+| 向量数据库 | Milvus 2.4 | Milvus 2.4 | `milvusdb/milvus:v2.4.0` | 不变 |
+| 任务队列 | Celery + Flower | **arq** (无Flower) | - | 原生asyncio，无需独立broker |
+
+### 迭代影响分析
+
+#### 已完成阶段（Phase 0-4）的迁移工作
+| 阶段 | 迁移内容 | 工作量 | 优先级 |
+|------|----------|--------|--------|
+| Phase 0 | docker-compose: Redis→Valkey, MinIO→SeaweedFS | 中 | 高 |
+| Phase 1 | celery_app→arq worker, redis→valkey客户端 | 中 | 高 |
+| Phase 2 | layout_service: 集成MinerU-Popo后处理 | 低 | 中 |
+| Phase 4 | graph_extract_service: DeepKE回退→OneKE | 中 | 高 |
+
+#### 后续阶段（Phase 5-7）的调整
+| 阶段 | 调整内容 | 说明 |
+|------|----------|------|
+| Phase 5 | 无变更 | RAG问答引擎不涉及被迭代的技术栈 |
+| Phase 6 | 无变更 | 前端不涉及后端技术栈 |
+| Phase 7 | Flower监控移除 | arq无官方监控工具，用arq内置job状态API替代 |

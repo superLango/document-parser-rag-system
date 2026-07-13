@@ -9,12 +9,14 @@
 - ``GET /kg/subgraph``：获取实体周边子图（N 跳邻居）
 - ``GET /kg/stats``：图统计信息（节点/关系/标签）
 
-POST 端点通过 Celery 异步任务执行图谱构建，返回 ``task_id`` 供前端轮询进度。
+POST 端点通过 arq 异步任务执行图谱构建，返回 ``task_id`` 供前端轮询进度。
 所有接口均需 Bearer Token 鉴权，统一响应体由 ``app.core.response`` 构造。
 """
 
 import uuid
 
+from arq import create_pool
+from arq.connections import RedisSettings
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,15 +29,30 @@ from app.core.response import success
 from app.models.document import Document
 from app.models.user import User
 from app.services.graph_store import graph_store
-from app.tasks.graph_tasks import (
-    build_document_graph,
-    rebuild_all_graphs,
-    remove_document_graph,
-)
 
 logger = get_logger(__name__)
 
 router = APIRouter(prefix="/kg", tags=["知识图谱管理"])
+
+# arq 连接池单例（懒加载）
+_arq_pool = None
+
+
+async def get_arq_pool():
+    """获取 arq Redis 连接池单例。
+
+    首次调用时创建连接池并缓存，后续直接返回单例。
+    arq 使用 database=1 作为任务队列（与原 Celery broker 一致）。
+
+    Returns:
+        ArqRedis: arq Redis 连接池实例。
+    """
+    global _arq_pool
+    if _arq_pool is None:
+        _arq_pool = await create_pool(
+            RedisSettings(host="localhost", port=6379, database=1)
+        )
+    return _arq_pool
 
 
 @router.post("/documents/{doc_id}/graph")
@@ -48,7 +65,7 @@ async def build_graph_endpoint(
 
     处理流程：
         1. 验证文档存在且已完成解析。
-        2. 调用 ``build_document_graph.delay`` 投递 Celery 任务。
+        2. 通过 arq ``enqueue_job`` 投递图谱构建任务。
         3. 返回 task_id 供前端轮询进度。
 
     Args:
@@ -81,15 +98,22 @@ async def build_graph_endpoint(
             message="文档尚未解析完成，无法构建图谱",
         )
 
-    # 提交 Celery 任务
-    async_result = build_document_graph.delay(str(doc_id))
+    # 提交 arq 任务
+    pool = await get_arq_pool()
+    job = await pool.enqueue_job("build_document_graph_task", str(doc_id))
+
+    if job is None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_FAILED,
+            message="任务提交失败，可能已有相同任务在执行中",
+        )
 
     logger.info(
         "文档知识图谱构建任务已提交",
         doc_id=str(doc_id),
-        task_id=async_result.id,
+        task_id=job.job_id,
     )
-    return success(data={"task_id": async_result.id, "status": "pending"})
+    return success(data={"task_id": job.job_id, "status": "pending"})
 
 
 @router.post("/rebuild")
@@ -107,14 +131,21 @@ async def rebuild_graph_endpoint(
     Returns:
         dict: 包含 task_id 与 status 的统一成功响应。
     """
-    # 提交 Celery 任务
-    async_result = rebuild_all_graphs.delay()
+    # 提交 arq 任务
+    pool = await get_arq_pool()
+    job = await pool.enqueue_job("rebuild_all_graphs_task")
+
+    if job is None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_FAILED,
+            message="任务提交失败，可能已有相同任务在执行中",
+        )
 
     logger.info(
         "知识图谱重建任务已提交",
-        task_id=async_result.id,
+        task_id=job.job_id,
     )
-    return success(data={"task_id": async_result.id, "status": "pending"})
+    return success(data={"task_id": job.job_id, "status": "pending"})
 
 
 @router.delete("/documents/{doc_id}")
@@ -134,15 +165,22 @@ async def remove_graph_endpoint(
     Returns:
         dict: 包含 task_id 与 status 的统一成功响应。
     """
-    # 提交 Celery 任务
-    async_result = remove_document_graph.delay(str(doc_id))
+    # 提交 arq 任务
+    pool = await get_arq_pool()
+    job = await pool.enqueue_job("remove_document_graph_task", str(doc_id))
+
+    if job is None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_FAILED,
+            message="任务提交失败，可能已有相同任务在执行中",
+        )
 
     logger.info(
         "文档图谱删除任务已提交",
         doc_id=str(doc_id),
-        task_id=async_result.id,
+        task_id=job.job_id,
     )
-    return success(data={"task_id": async_result.id, "status": "pending"})
+    return success(data={"task_id": job.job_id, "status": "pending"})
 
 
 @router.get("/search")
