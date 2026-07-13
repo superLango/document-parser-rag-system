@@ -87,12 +87,12 @@
 
 ## 阶段7：集成测试与部署优化
 
-- [ ] Task 7.1: 编写 `deploy/docker-compose.yml` 完整版（含所有服务 + GPU配置 + 显存限制）
-- [ ] Task 7.2: 编写 `backend/Dockerfile` 与 `frontend/Dockerfile`（多阶段构建）
-- [ ] Task 7.3: 编写端到端测试脚本 `scripts/e2e_test.py`（上传→解析→问答全流程）
-- [ ] Task 7.4: 配置 Prometheus + Grafana 监控（`deploy/prometheus.yml` + dashboards）+ arq任务状态监控API
-- [ ] Task 7.5: 编写部署文档 `docs/DEPLOYMENT.md`（一键部署步骤、服务地址、故障排查）
-- [ ] Task 7.6: 性能压测与优化（显存使用、并发调优、检索延迟）
+- [x] Task 7.1: 编写 `deploy/docker-compose.yml` 完整版（含所有服务 + GPU配置 + 显存限制）
+- [x] Task 7.2: 编写 `backend/Dockerfile` 与 `frontend/Dockerfile`（多阶段构建）
+- [x] Task 7.3: 编写端到端测试脚本 `scripts/e2e_test.py`（上传→解析→问答全流程）
+- [x] Task 7.4: 配置 Prometheus + Grafana 监控（`deploy/prometheus.yml` + dashboards）+ arq任务状态监控API
+- [x] Task 7.5: 编写部署文档 `docs/DEPLOYMENT.md`（一键部署步骤、服务地址、故障排查）
+- [x] Task 7.6: 性能压测与优化（显存使用、并发调优、检索延迟）
 
 ---
 
@@ -125,7 +125,38 @@
   - [x] SubTask 8.5.2: 更新 requirements.txt（移除celery/minio/deepke，新增arq/redis/boto3/langextract）
   - [x] SubTask 8.5.3: 更新 .env.example 配置项
   - [x] SubTask 8.5.4: 运行全量测试确保所有功能正常（290个测试通过）
-  - [ ] SubTask 8.5.5: 更新 README.md 技术栈说明
+  - [x] SubTask 8.5.5: 更新 README.md 技术栈说明
+
+---
+
+## 阶段9：品牌重塑、Bug修复与项目清理（2026-07新增）
+
+> 本阶段完成项目品牌重塑（DocParser → Hansight）、知识图谱页面 Bug 修复、测试文件清理与文档更新。
+
+- [x] Task 9.1: 品牌重塑 — DocParser → Hansight
+  - [x] SubTask 9.1.1: 设计 Hansight 品牌 Logo（SVG：眼形轮廓 + 文档结构线 + 焦点圆点，蓝色渐变）
+  - [x] SubTask 9.1.2: 重写 `frontend/src/components/brand/BrandLogo.vue`（Hansight Logo 实现）
+  - [x] SubTask 9.1.3: 更新前端品牌名称（DefaultLayout.vue、Login.vue、index.html、variables.scss、global.scss）
+  - [x] SubTask 9.1.4: 更新后端配置 `backend/app/core/config.py`（APP_NAME: Hansight）
+  - [x] SubTask 9.1.5: 更新部署配置 `deploy/docker-compose.yml`（APP_NAME: Hansight）
+  - [x] SubTask 9.1.6: 更新监控配置（prometheus.yml、grafana dashboards/dashboard.yml）
+  - [x] SubTask 9.1.7: 更新部署文档 `docs/DEPLOYMENT.md`（标题与正文 Hansight 化）
+  - [x] SubTask 9.1.8: 更新前端 package.json 名称为 hansight-frontend
+  - [x] SubTask 9.1.9: 更新技术栈迭代迁移计划文档（容器名 hansight-* 化）
+- [x] Task 9.2: Bug 修复 — 知识图谱页面服务器内部错误
+  - [x] SubTask 9.2.1: 修改 `graph_store.py` 增加 `_try_connect()` 方法实现 Neo4j 优雅降级（连接失败时返回空数据而非抛出 500）
+  - [x] SubTask 9.2.2: 更新 4 个读方法（get_graph、search_nodes、get_stats、get_subgraph）使用 `_try_connect()` 守卫
+  - [x] SubTask 9.2.3: 创建 Neo4j 用户 `docparser` 并配置 `backend/.env` 凭证
+- [x] Task 9.3: 测试文件清理
+  - [x] SubTask 9.3.1: 删除前端测试文件（8 个 API 模块测试 + 2 个 Store 测试 + 2 个测试辅助文件 + vitest.config.ts）
+  - [x] SubTask 9.3.2: 删除后端测试目录 `backend/tests/`（24 个测试文件 + conftest.py + __pycache__）
+  - [x] SubTask 9.3.3: 删除脚本测试文件（e2e_test.py、perf_test.py、integration_test.py）
+  - [x] SubTask 9.3.4: 更新 `frontend/package.json` 移除测试脚本（test/test:watch/test:coverage）与测试依赖（vitest、@vitest/coverage-v8、@vue/test-utils、jsdom）
+  - [x] SubTask 9.3.5: 修复 `frontend/vite.config.ts` 开发端口为 5174（避免与 TRAE IDE 端口冲突）
+  - [x] SubTask 9.3.6: 重新生成 pnpm-lock.yaml（移除 197 个测试相关包）
+- [x] Task 9.4: 文档更新
+  - [x] SubTask 9.4.1: 全面重写根目录 `README.md`（功能说明、安装指南、使用方法、变更记录）
+  - [x] SubTask 9.4.2: 更新开发任务进度文档（本文件）
 
 ---
 
@@ -148,3 +179,8 @@
   - Task 8.3（DeepKE→OneKE）独立，可与8.1/8.2并行
   - Task 8.4（MinerU-Popo）独立，可与8.1/8.2/8.3并行
   - Task 8.5（清理验证）依赖 Task 8.1-8.4全部完成
+- 阶段9（品牌重塑与清理）依赖阶段0-8已完成
+  - Task 9.1（品牌重塑）独立，可最先执行
+  - Task 9.2（Neo4j Bug修复）独立，可与9.1并行
+  - Task 9.3（测试文件清理）依赖 Task 9.1（品牌重塑完成后清理，避免替换到测试文件）
+  - Task 9.4（文档更新）依赖 Task 9.1-9.3全部完成

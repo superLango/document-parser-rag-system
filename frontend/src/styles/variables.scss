@@ -1,41 +1,55 @@
 // ============================================================
-// 设计系统变量 - Technical Blueprint 深色主题
-// 文档智能解析与 RAG 系统
+// Hansight 设计系统 - 精炼明亮主题
+// B2B 文档智能解析平台
+// 色彩语言：冷调中性 + 蓝色强调，功能优先
 // ============================================================
 
 :root {
   // ---------- 基础背景 ----------
-  --bg-base: #0B1120;              // 深海军蓝黑
-  --bg-surface: #131C2E;           // 抬升表面
-  --bg-surface-hover: #1A2540;     // 表面悬停
-  --bg-overlay: rgba(11, 17, 32, 0.85);
+  --bg-base: #F8FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-surface-hover: #F1F5F9;
+  --bg-surface-active: #E2E8F0;
+  --bg-elevated: #FFFFFF;
+  --bg-overlay: rgba(15, 23, 42, 0.5);
+  --bg-sidebar: #FAFBFC;
 
   // ---------- 边框 ----------
-  --border-base: #1E3A5F;          // 淡蓝边框
-  --border-hover: #2D4F7A;         // 边框悬停
-  --border-light: rgba(30, 58, 95, 0.5);
+  --border-base: #E2E8F0;
+  --border-hover: #CBD5E1;
+  --border-light: #F1F5F9;
+  --border-focus: #2563EB;
 
   // ---------- 强调色 ----------
-  --accent-primary: #00D9FF;       // 电气青 - 操作与高亮
-  --accent-primary-dim: #0891B2;   // 青色暗调
-  --accent-secondary: #FFB800;     // 琥珀 - 警告与重要数据
-  --accent-success: #00E676;       // 成功
-  --accent-danger: #FF4757;        // 危险
-  --accent-info: #60A5FA;          // 信息
+  --accent-primary: #2563EB;
+  --accent-primary-hover: #1D4ED8;
+  --accent-primary-dim: #1E40AF;
+  --accent-primary-light: #DBEAFE;
+  --accent-primary-bg: #EFF6FF;
+  --accent-secondary: #F59E0B;
+  --accent-success: #16A34A;
+  --accent-success-light: #DCFCE7;
+  --accent-danger: #DC2626;
+  --accent-danger-light: #FEE2E2;
+  --accent-warning: #F59E0B;
+  --accent-warning-light: #FEF3C7;
+  --accent-info: #0EA5E9;
+  --accent-info-light: #E0F2FE;
 
   // ---------- 文本 ----------
-  --text-primary: #E2E8F0;         // 主文本
-  --text-secondary: #94A3B8;       // 次文本
-  --text-muted: #64748B;           // 弱化文本
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-tertiary: #64748B;
+  --text-muted: #94A3B8;
+  --text-inverse: #FFFFFF;
 
-  // ---------- 辉光 ----------
-  --glow-cyan: 0 0 20px rgba(0, 217, 255, 0.3);
-  --glow-cyan-strong: 0 0 30px rgba(0, 217, 255, 0.5);
-  --glow-amber: 0 0 20px rgba(255, 184, 0, 0.3);
-
-  // ---------- 蓝图网格 ----------
-  --grid-line: rgba(30, 58, 95, 0.3);
-  --grid-line-major: rgba(0, 217, 255, 0.06);
+  // ---------- 阴影（着色阴影，非纯黑） ----------
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+  --shadow-primary: 0 4px 12px rgba(37, 99, 235, 0.25);
 
   // ---------- 字体 ----------
   --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -64,64 +78,88 @@
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
+  --radius-xl: 12px;
   --radius-full: 9999px;
 
   // ---------- 布局 ----------
   --sidebar-width: 240px;
   --sidebar-collapsed-width: 64px;
   --header-height: 56px;
+  --content-max-width: 1400px;
 
   // ---------- 动画 ----------
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.25s ease;
-  --transition-slow: 0.4s ease;
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  // ---------- z-index 层级 ----------
+  --z-sidebar: 100;
+  --z-header: 200;
+  --z-dropdown: 300;
+  --z-modal: 400;
+  --z-tooltip: 500;
+  --z-notification: 600;
 
   // ============================================================
-  // Element Plus 深色主题覆盖
+  // Element Plus 主题覆盖
   // ============================================================
-  --el-color-primary: #00D9FF;
-  --el-color-primary-light-3: #33e0ff;
-  --el-color-primary-light-5: #66e7ff;
-  --el-color-primary-light-7: #99eeff;
-  --el-color-primary-light-8: #ccf5ff;
-  --el-color-primary-light-9: rgba(0, 217, 255, 0.1);
-  --el-color-primary-dark-2: #00b8d4;
+  --el-color-primary: #2563EB;
+  --el-color-primary-light-3: #6BA3F1;
+  --el-color-primary-light-5: #93C5FD;
+  --el-color-primary-light-7: #BFDBFE;
+  --el-color-primary-light-8: #DBEAFE;
+  --el-color-primary-light-9: #EFF6FF;
+  --el-color-primary-dark-2: #1D4ED8;
 
-  --el-color-success: #00E676;
-  --el-color-warning: #FFB800;
-  --el-color-danger: #FF4757;
-  --el-color-info: #60A5FA;
+  --el-color-success: #16A34A;
+  --el-color-warning: #F59E0B;
+  --el-color-danger: #DC2626;
+  --el-color-info: #0EA5E9;
 
-  --el-bg-color: #131C2E;
-  --el-bg-color-page: #0B1120;
-  --el-bg-color-overlay: #1A2540;
+  --el-bg-color: #FFFFFF;
+  --el-bg-color-page: #F8FAFC;
+  --el-bg-color-overlay: #FFFFFF;
 
-  --el-text-color-primary: #E2E8F0;
-  --el-text-color-regular: #94A3B8;
+  --el-text-color-primary: #0F172A;
+  --el-text-color-regular: #475569;
   --el-text-color-secondary: #64748B;
-  --el-text-color-placeholder: #475569;
+  --el-text-color-placeholder: #94A3B8;
 
-  --el-border-color: #1E3A5F;
-  --el-border-color-light: #1A2540;
-  --el-border-color-lighter: #131C2E;
-  --el-border-color-extra-light: rgba(30, 58, 95, 0.3);
-  --el-border-color-dark: #2D4F7A;
-  --el-border-color-darker: #2D4F7A;
+  --el-border-color: #E2E8F0;
+  --el-border-color-light: #F1F5F9;
+  --el-border-color-lighter: #F8FAFC;
+  --el-border-color-extra-light: #FAFBFC;
+  --el-border-color-dark: #CBD5E1;
+  --el-border-color-darker: #94A3B8;
 
-  --el-fill-color: #1A2540;
-  --el-fill-color-light: #131C2E;
-  --el-fill-color-lighter: #0B1120;
-  --el-fill-color-blank: #131C2E;
+  --el-fill-color: #F1F5F9;
+  --el-fill-color-light: #F8FAFC;
+  --el-fill-color-lighter: #FAFBFC;
+  --el-fill-color-blank: #FFFFFF;
 
-  --el-mask-color: rgba(11, 17, 32, 0.9);
-  --el-box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-  --el-box-shadow-light: 0 2px 12px rgba(0, 0, 0, 0.4);
+  --el-mask-color: rgba(15, 23, 42, 0.5);
+  --el-box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --el-box-shadow-light: 0 1px 3px rgba(15, 23, 42, 0.06);
 
-  // 字体
   --el-font-family: var(--font-sans);
   --el-font-size-base: var(--fs-sm);
 
-  // 圆角
   --el-border-radius-base: var(--radius-md);
   --el-border-radius-small: var(--radius-sm);
+}
+
+// ---------- 响应式断点 ----------
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+$bp-2xl: 1536px;
+
+// ---------- 断点 mixin ----------
+@mixin respond-to($bp) {
+  @if $bp == sm { @media (max-width: $bp-sm) { @content; } }
+  @else if $bp == md { @media (max-width: $bp-md) { @content; } }
+  @else if $bp == lg { @media (max-width: $bp-lg) { @content; } }
+  @else if $bp == xl { @media (max-width: $bp-xl) { @content; } }
 }

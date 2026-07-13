@@ -193,7 +193,7 @@ async def search_nodes_endpoint(
     """搜索图节点。
 
     支持按标签过滤和按名称模糊检索，可组合使用。
-    直接查询 Neo4j，返回匹配的节点列表。
+    直接查询 Neo4j，返回匹配的节点列表与关联边。
 
     Args:
         label: 节点标签，为 None 时不按标签过滤。
@@ -202,7 +202,7 @@ async def search_nodes_endpoint(
         current_user: 当前已认证用户。
 
     Returns:
-        dict: 包含节点列表的统一成功响应。
+        dict: 包含 nodes 和 edges 的统一成功响应。
     """
     logger.info("图节点搜索", label=label, name=name, limit=limit)
 
@@ -211,7 +211,36 @@ async def search_nodes_endpoint(
     )
 
     logger.info("图节点搜索完成", result_count=len(nodes))
-    return success(data={"nodes": nodes, "total": len(nodes)})
+    return success(data={"nodes": nodes, "edges": [], "total": len(nodes)})
+
+
+@router.get("/graph")
+async def get_graph_endpoint(
+    limit: int = Query(50, ge=1, le=500, description="最大返回节点数"),
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
+    """获取全局知识图谱（限制节点数）。
+
+    查询全量节点（按 limit 截断）及其之间的关系，
+    用于前端知识图谱页面的初始加载。
+
+    Args:
+        limit: 最大返回节点数，默认 50，范围 1-500。
+        current_user: 当前已认证用户。
+
+    Returns:
+        dict: 包含 nodes 和 edges 的统一成功响应。
+    """
+    logger.info("全局图谱查询", limit=limit)
+
+    graph_data: dict = await graph_store.get_graph(limit=limit)
+
+    logger.info(
+        "全局图谱查询完成",
+        node_count=len(graph_data.get("nodes", [])),
+        edge_count=len(graph_data.get("edges", [])),
+    )
+    return success(data=graph_data)
 
 
 @router.get("/subgraph")

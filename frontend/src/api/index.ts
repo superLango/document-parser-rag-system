@@ -36,8 +36,15 @@ instance.interceptors.request.use(
 // ---------- 响应拦截器 ----------
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    // 直接返回 data 层，便于调用方使用
-    return response.data
+    // 后端统一响应格式: { code, message, data, trace_id }
+    // 解包: axios response.data → 后端响应体 → 取 data 字段
+    const body = response.data
+    if (body && typeof body === 'object' && 'code' in body && 'data' in body) {
+      // 标准响应体，返回 data 字段
+      return body.data
+    }
+    // 非标准格式（如二进制下载），直接返回
+    return body
   },
   async (error) => {
     const { response } = error
@@ -52,8 +59,8 @@ instance.interceptors.response.use(
 
     // 统一错误提示（Element Plus）
     const message =
-      response?.data?.detail ||
       response?.data?.message ||
+      response?.data?.detail ||
       error.message ||
       '请求失败，请稍后重试'
 

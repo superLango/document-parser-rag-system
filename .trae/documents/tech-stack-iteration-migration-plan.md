@@ -44,7 +44,7 @@
 # L27-40: redis → valkey
 valkey:
   image: valkey/valkey:8-alpine
-  container_name: docparser-valkey
+  container_name: hansight-valkey
   ports:
     - "6379:6379"
   volumes:
@@ -70,7 +70,7 @@ valkey:
 # L42-58: minio → seaweedfs
 seaweedfs:
   image: chrislusf/seaweedfs:latest
-  container_name: docparser-seaweedfs
+  container_name: hansight-seaweedfs
   command: server -s3 -s3.config=/etc/seaweedfs/s3.json
   ports:
     - "9000:8333"   # S3 API

@@ -33,6 +33,12 @@ test_standard_doc/
 .vscode/
 *.swp
 
+# ===== AI assistant configs =====
+.agents/
+.claude/
+.trae/skills/
+skills-lock.json
+
 # ===== OS =====
 .DS_Store
 Thumbs.db

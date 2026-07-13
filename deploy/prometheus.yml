@@ -1,0 +1,72 @@
+# Prometheus 采集配置
+# 采集 Hansight 各服务的运行指标，用于监控与告警
+# 所有 target 使用 docker-compose 内部服务名通信
+
+global:
+  scrape_interval: 15s          # 默认采集间隔
+  evaluation_interval: 15s      # 规则评估间隔
+  external_labels:
+    monitor: hansight-monitor  # 外部标签，用于多实例区分
+
+# 告警规则文件（可选，按需启用）
+# rule_files:
+#   - alert_rules.yml
+
+# ===== 采集目标配置 =====
+scrape_configs:
+  # ---- Prometheus 自身指标 ----
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # ---- 后端 API 服务 ----
+  # FastAPI 通过 prometheus 中间件暴露 /metrics
+  - job_name: backend
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["backend:8000"]
+        labels:
+          service: backend-api
+
+  # ---- arq 异步任务 Worker ----
+  # arq worker 通过 prometheus 集成暴露任务指标
+  - job_name: arq-worker
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["arq-worker:8000"]
+        labels:
+          service: arq-worker
+
+  # ---- PostgreSQL 数据库 ----
+  # 需部署 postgres_exporter（默认端口 9187）
+  - job_name: postgres
+    static_configs:
+      - targets: ["postgres:9187"]
+        labels:
+          service: postgres
+
+  # ---- Valkey（Redis 兼容）缓存 ----
+  # 需部署 redis_exporter（默认端口 9121）
+  - job_name: valkey
+    static_configs:
+      - targets: ["valkey:9121"]
+        labels:
+          service: valkey
+
+  # ---- Milvus 向量数据库 ----
+  # Milvus 原生暴露指标于 9091 端口
+  - job_name: milvus
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["milvus:9091"]
+        labels:
+          service: milvus
+
+  # ---- Neo4j 图数据库 ----
+  # 需开启 Neo4j Prometheus 指标导出（默认端口 2004）
+  - job_name: neo4j
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["neo4j:2004"]
+        labels:
+          service: neo4j

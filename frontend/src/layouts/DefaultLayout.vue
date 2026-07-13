@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useAppStore } from '@/stores/app'
+import BrandLogo from '@/components/brand/BrandLogo.vue'
 import {
   Odometer,
   Document,
-  View,
   SetUp,
   Collection,
   Share,
@@ -21,47 +21,74 @@ const router = useRouter()
 const auth = useAuthStore()
 const appStore = useAppStore()
 
-// 图标映射：meta.icon 名称 -> 组件
-const iconMap: Record<string, unknown> = {
-  Odometer,
-  Document,
-  View,
-  SetUp,
-  Collection,
-  Share,
-  ChatDotRound,
+// ---------- 侧边栏导航项 ----------
+interface NavItem {
+  path: string
+  title: string
+  icon: unknown
 }
 
-// 侧边栏导航项（与路由 children 对应，过滤隐藏项）
-const navItems = computed(() => {
-  const parentRoute = router.getRoutes().find((r) => r.path === '/')
-  if (!parentRoute?.children) return []
-  return parentRoute.children
-    .filter((child) => !child.meta?.hidden)
-    .map((child) => ({
-      path: child.path === '' ? '/' : `/${child.path}`,
-      name: String(child.name),
-      title: (child.meta?.title as string) || String(child.name),
-      icon: (child.meta?.icon as string) || '',
-    }))
-})
+const navItems: NavItem[] = [
+  { path: '/', title: '仪表盘', icon: Odometer },
+  { path: '/documents', title: '文档管理', icon: Document },
+  { path: '/schemas', title: '抽取 Schema', icon: SetUp },
+  { path: '/terms', title: '术语库', icon: Collection },
+  { path: '/knowledge', title: '知识图谱', icon: Share },
+  { path: '/qa', title: '智能问答', icon: ChatDotRound },
+]
 
-// 面包屑：根据当前路由 meta.title
+// ---------- 面包屑 ----------
 const breadcrumb = computed(() => route.meta.title as string)
 
-// 当前激活项
+// ---------- 当前激活项 ----------
 const activePath = computed(() => {
   if (route.path === '/') return '/'
   return `/${route.path.split('/')[1]}`
 })
 
-// 用户下拉操作
+// ---------- 用户下拉操作 ----------
 function handleCommand(command: string) {
   if (command === 'logout') {
     auth.logout()
     router.push('/login')
   }
 }
+
+// ---------- 响应式自动收缩 ----------
+// 屏幕 < 1024px 时自动收缩侧边栏；用户仍可手动展开/收缩
+const RESPONSIVE_BREAKPOINT = 1024
+let lastWidth = 0
+
+function handleResize() {
+  const w = window.innerWidth
+  // 仅在跨越断点时改变状态，避免覆盖用户手动操作
+  if (lastWidth >= RESPONSIVE_BREAKPOINT && w < RESPONSIVE_BREAKPOINT) {
+    appStore.sidebarCollapsed = true
+  } else if (lastWidth > 0 && lastWidth < RESPONSIVE_BREAKPOINT && w >= RESPONSIVE_BREAKPOINT) {
+    appStore.sidebarCollapsed = false
+  }
+  lastWidth = w
+}
+
+onMounted(() => {
+  lastWidth = window.innerWidth
+  // 初次加载：小屏默认收缩
+  if (lastWidth < RESPONSIVE_BREAKPOINT) {
+    appStore.sidebarCollapsed = true
+  }
+  window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
+// 路由切换时，在小屏下自动收起侧边栏（移动端体验）
+watch(() => route.path, () => {
+  if (window.innerWidth < RESPONSIVE_BREAKPOINT && !appStore.sidebarCollapsed) {
+    appStore.sidebarCollapsed = true
+  }
+})
 </script>
 
 <template>
@@ -70,24 +97,43 @@ function handleCommand(command: string) {
     <aside class="sidebar">
       <!-- Logo -->
       <div class="logo">
-        <span class="logo-mark">◈</span>
-        <span class="logo-text">DOC<span class="logo-accent">.</span>INTEL</span>
+        <BrandLogo :size="30" />
+        <span class="logo-text">Hansight</span>
       </div>
 
       <!-- 导航 -->
       <nav class="nav">
-        <router-link
-          v-for="item in navItems"
-          :key="item.name"
-          :to="item.path"
-          class="nav-item"
-          :class="{ 'is-active': activePath === item.path }"
-        >
-          <span class="nav-icon">
-            <component :is="iconMap[item.icon]" v-if="item.icon" />
-          </span>
-          <span class="nav-label">{{ item.title }}</span>
-        </router-link>
+        <template v-for="item in navItems" :key="item.path">
+          <el-tooltip
+            v-if="appStore.sidebarCollapsed"
+            :content="item.title"
+            placement="right"
+            :show-after="200"
+            :hide-after="0"
+          >
+            <router-link
+              :to="item.path"
+              class="nav-item"
+              :class="{ 'is-active': activePath === item.path }"
+            >
+              <span class="nav-icon">
+                <component :is="item.icon" />
+              </span>
+              <span class="nav-label">{{ item.title }}</span>
+            </router-link>
+          </el-tooltip>
+          <router-link
+            v-else
+            :to="item.path"
+            class="nav-item"
+            :class="{ 'is-active': activePath === item.path }"
+          >
+            <span class="nav-icon">
+              <component :is="item.icon" />
+            </span>
+            <span class="nav-label">{{ item.title }}</span>
+          </router-link>
+        </template>
       </nav>
 
       <!-- 底部版本信息 -->
@@ -104,6 +150,7 @@ function handleCommand(command: string) {
           <el-button
             text
             class="collapse-btn"
+            :aria-label="appStore.sidebarCollapsed ? '展开侧边栏' : '收起侧边栏'"
             @click="appStore.toggleSidebar()"
           >
             <el-icon><Fold v-if="!appStore.sidebarCollapsed" /><Expand v-else /></el-icon>
@@ -131,7 +178,7 @@ function handleCommand(command: string) {
       </header>
 
       <!-- 内容区 -->
-      <main class="content blueprint-bg">
+      <main class="content">
         <router-view v-slot="{ Component }">
           <transition name="fade-slide" mode="out-in">
             <component :is="Component" />
@@ -154,11 +201,12 @@ function handleCommand(command: string) {
 .sidebar {
   width: var(--sidebar-width);
   flex-shrink: 0;
-  background-color: var(--bg-surface);
+  background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border-base);
   display: flex;
   flex-direction: column;
   transition: width var(--transition-base);
+  z-index: var(--z-sidebar);
 }
 
 .is-collapsed .sidebar {
@@ -174,24 +222,20 @@ function handleCommand(command: string) {
   border-bottom: 1px solid var(--border-base);
   overflow: hidden;
 
-  .logo-mark {
-    color: var(--accent-primary);
-    font-size: 20px;
-    filter: drop-shadow(0 0 6px rgba(0, 217, 255, 0.5));
-  }
-
   .logo-text {
-    font-family: var(--font-mono);
-    font-weight: 600;
-    font-size: 16px;
-    letter-spacing: 0.05em;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
     white-space: nowrap;
   }
+}
 
-  .logo-accent {
-    color: var(--accent-primary);
-  }
+.is-collapsed .logo {
+  justify-content: center;
+  padding: 0;
+  gap: 0;
 }
 
 .is-collapsed .logo-text {
@@ -202,6 +246,7 @@ function handleCommand(command: string) {
   flex: 1;
   padding: 16px 0;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .nav-item {
@@ -215,8 +260,9 @@ function handleCommand(command: string) {
   color: var(--text-secondary);
   cursor: pointer;
   position: relative;
-  transition: all var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
   white-space: nowrap;
+  text-decoration: none;
 
   &:hover {
     background-color: var(--bg-surface-hover);
@@ -225,7 +271,8 @@ function handleCommand(command: string) {
 
   &.is-active {
     color: var(--accent-primary);
-    background-color: rgba(0, 217, 255, 0.08);
+    background-color: var(--accent-primary-light);
+    font-weight: 600;
 
     &::before {
       content: '';
@@ -237,7 +284,6 @@ function handleCommand(command: string) {
       height: 24px;
       background: var(--accent-primary);
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      box-shadow: 0 0 12px rgba(0, 217, 255, 0.6);
     }
   }
 
@@ -245,7 +291,9 @@ function handleCommand(command: string) {
     font-size: 18px;
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    width: 20px;
   }
 
   .nav-label {
@@ -258,8 +306,12 @@ function handleCommand(command: string) {
   .nav-item {
     justify-content: center;
     padding: 0;
+    margin: 2px 10px;
   }
   .nav-label {
+    display: none;
+  }
+  .nav-item.is-active::before {
     display: none;
   }
 }
@@ -276,6 +328,7 @@ function handleCommand(command: string) {
 
 .is-collapsed .sidebar-footer {
   text-align: center;
+  padding: 12px 0;
 }
 
 // ---------- 主区域 ----------
@@ -295,6 +348,7 @@ function handleCommand(command: string) {
   padding: 0 24px;
   background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-base);
+  z-index: var(--z-header);
 }
 
 .header-left {
@@ -349,7 +403,7 @@ function handleCommand(command: string) {
     height: 32px;
     border-radius: var(--radius-full);
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-dim));
-    color: var(--bg-base);
+    color: #FFFFFF;
     font-weight: 600;
     font-size: var(--fs-sm);
     display: flex;
@@ -373,5 +427,32 @@ function handleCommand(command: string) {
   flex: 1;
   overflow-y: auto;
   padding: 24px;
+}
+
+// ---------- 移动端适配：用户名隐藏 ----------
+@media (max-width: 640px) {
+  .header {
+    padding: 0 16px;
+  }
+  .header-right .user-name {
+    display: none;
+  }
+  .content {
+    padding: 16px;
+  }
+}
+
+// ---------- 路由切换动画 ----------
+:deep(.fade-slide-enter-active),
+:deep(.fade-slide-leave-active) {
+  transition: opacity var(--transition-base), transform var(--transition-base);
+}
+:deep(.fade-slide-enter-from) {
+  opacity: 0;
+  transform: translateY(8px);
+}
+:deep(.fade-slide-leave-to) {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 </style>

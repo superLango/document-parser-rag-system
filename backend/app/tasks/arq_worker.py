@@ -11,6 +11,8 @@ arq 通过 Redis/Valkey 进行任务分发，使用 msgpack 编码。
     job = await pool.enqueue_job("parse_document_task", document_id, schema_id, term_base_id)
 """
 
+from urllib.parse import urlparse
+
 from arq import cron
 from arq.connections import RedisSettings
 
@@ -20,12 +22,18 @@ from app.core.config import settings
 def get_redis_settings() -> RedisSettings:
     """从配置构建 arq RedisSettings。
 
-    解析 REDIS_URL 或使用独立配置项。
+    解析 REDIS_URL，支持 docker 容器内的 valkey 服务名。
     arq 使用 database=1 作为任务队列（与 Celery broker 一致）。
     """
+    redis_url = getattr(settings, "redis_url", None) or "redis://localhost:6379/0"
+    parsed = urlparse(redis_url)
+    host = parsed.hostname or "localhost"
+    port = parsed.port or 6379
+    # database=1 用于任务队列（database=0 用于缓存）
     return RedisSettings(
-        host="localhost",
-        port=6379,
+        host=host,
+        port=port,
+        password=parsed.password or None,
         database=1,
     )
 

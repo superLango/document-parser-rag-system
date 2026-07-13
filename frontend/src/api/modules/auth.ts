@@ -7,13 +7,7 @@ import type { LoginRequest, Token, User } from '@/api/types'
 export const authApi = {
   // 登录获取 token
   login(data: LoginRequest): Promise<Token> {
-    // 后端 OAuth2PasswordRequestForm 需要 form-data
-    const formData = new URLSearchParams()
-    formData.append('username', data.username)
-    formData.append('password', data.password)
-    return http.post<Token>('/auth/login', formData, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    })
+    return http.post<Token>('/auth/login', data)
   },
 
   // 获取当前登录用户

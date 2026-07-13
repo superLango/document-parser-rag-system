@@ -22,8 +22,8 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+import bcrypt as _bcrypt
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -33,9 +33,6 @@ from app.core.logging import get_logger
 from app.models.user import User
 
 logger = get_logger(__name__)
-
-# bcrypt 上下文：scheme 指定使用 bcrypt 算法，deprecated="auto" 自动处理旧哈希
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def create_access_token(
@@ -115,7 +112,9 @@ def hash_password(password: str) -> str:
     Returns:
         str: bcrypt 哈希字符串，可直接持久化到数据库。
     """
-    return pwd_context.hash(password)
+    return _bcrypt.hashpw(
+        password.encode("utf-8"), _bcrypt.gensalt()
+    ).decode("utf-8")
 
 
 def verify_password(plain: str, hashed: str) -> bool:
@@ -128,7 +127,9 @@ def verify_password(plain: str, hashed: str) -> bool:
     Returns:
         bool: 匹配返回 True，否则返回 False。
     """
-    return pwd_context.verify(plain, hashed)
+    return _bcrypt.checkpw(
+        plain.encode("utf-8"), hashed.encode("utf-8")
+    )
 
 
 async def authenticate_user(

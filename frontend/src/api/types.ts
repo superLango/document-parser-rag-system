@@ -26,14 +26,15 @@ export interface LoginRequest {
 export interface Token {
   access_token: string
   token_type: string
+  expires_in: number
 }
 
 export interface User {
-  id: number
+  id: string
   username: string
   email: string
   is_active: boolean
-  is_superuser: boolean
+  is_superuser?: boolean
   created_at: string
 }
 
@@ -127,18 +128,20 @@ export interface TermCreate {
 
 // ---------- 知识图谱 ----------
 export interface GraphNode {
-  id: string
-  label: string
-  type: 'document' | 'term' | 'standard' | 'concept' | 'entity'
-  properties: Record<string, unknown>
+  id: number | string
+  name: string
+  labels: string[]
+  type?: string
+  label?: string
+  properties?: Record<string, unknown>
 }
 
 export interface GraphEdge {
-  id: string
   source: string
   target: string
-  label: string
   type: string
+  label?: string
+  id?: string
 }
 
 export interface KnowledgeGraph {

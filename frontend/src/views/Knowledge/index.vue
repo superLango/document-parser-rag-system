@@ -14,7 +14,8 @@ const query = reactive({
 async function fetchGraph() {
   loading.value = true
   try {
-    graph.value = await knowledgeApi.getGraph({ limit: 50 })
+    const result = await knowledgeApi.getGraph({ limit: 50 })
+    graph.value = result || { nodes: [], edges: [] }
   } catch {
     graph.value = { nodes: [], edges: [] }
   } finally {
@@ -23,9 +24,13 @@ async function fetchGraph() {
 }
 
 async function handleSearch() {
+  if (!query.keyword.trim()) {
+    return fetchGraph()
+  }
   loading.value = true
   try {
-    graph.value = await knowledgeApi.search(query.keyword)
+    const result = await knowledgeApi.search(query.keyword)
+    graph.value = result || { nodes: [], edges: [] }
   } catch {
     graph.value = { nodes: [], edges: [] }
   } finally {
@@ -82,7 +87,6 @@ onMounted(fetchGraph)
           </div>
           <el-empty v-if="!loading && !graph.nodes.length" description="暂无图谱数据，请先解析文档构建知识图谱" :image-size="100" />
           <div v-else-if="!loading && graph.nodes.length" class="graph-hint mono">
-            <span class="hint-mark">◈</span>
             <span>图谱渲染组件（Cytoscape）集成预留位</span>
           </div>
         </div>
@@ -147,11 +151,9 @@ onMounted(fetchGraph)
 .graph-canvas {
   height: calc(100vh - 280px);
   min-height: 400px;
-  background-color: var(--bg-base);
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-base);
+  border-radius: var(--radius-lg);
 }
 
 .graph-placeholder {
@@ -168,11 +170,5 @@ onMounted(fetchGraph)
   gap: 12px;
   color: var(--text-muted);
   font-size: var(--fs-sm);
-
-  .hint-mark {
-    font-size: 32px;
-    color: var(--accent-primary);
-    filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.4));
-  }
 }
 </style>

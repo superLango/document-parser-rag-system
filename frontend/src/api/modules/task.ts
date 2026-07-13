@@ -12,7 +12,7 @@ export const taskApi = {
     page?: number
     page_size?: number
   }): Promise<Paginated<Task>> {
-    return http.get<Paginated<Task>>('/tasks', { params })
+    return http.get<Paginated<Task>>('/tasks/', { params })
   },
 
   // 任务详情

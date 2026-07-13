@@ -1,0 +1,16 @@
+# Grafana 仪表盘自动配置
+# 启动时从指定目录加载 JSON 仪表盘文件
+
+apiVersion: 1
+
+providers:
+  - name: Hansight Dashboards
+    orgId: 1
+    # 仪表盘 JSON 文件目录（对应 compose 挂载的 ./grafana/dashboards）
+    folder: ""
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards

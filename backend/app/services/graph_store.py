@@ -86,6 +86,19 @@ class GraphStore:
         if not self._connected:
             self._connect()
 
+    def _try_connect(self) -> bool:
+        """尝试连接 Neo4j，失败时返回 False 而非抛出异常。
+
+        用于读操作（get_graph / search_nodes / get_stats / get_subgraph）
+        的优雅降级：Neo4j 不可用时返回空数据，避免 500 错误。
+        """
+        try:
+            self._ensure_connected()
+            return True
+        except RuntimeError as exc:
+            logger.warning("Neo4j 不可用，返回空数据", error=str(exc))
+            return False
+
     def _connect(self) -> None:
         """连接 Neo4j 并创建异步 Driver。
 
@@ -279,7 +292,7 @@ class GraphStore:
         """获取实体周边子图。
 
         以指定实体为中心，查询 N 跳范围内的全部节点与关系，
-        用于前端知识图谱可视化展示。
+        用于前端知识图谱可视化展示。Neo4j 不可用时返回空子图。
 
         Args:
             entity_name: 中心实体名称。
@@ -291,7 +304,8 @@ class GraphStore:
                    "edges": [{"source": str, "target": str, "type": str}]}``
                 若实体不存在则返回空子图。
         """
-        self._ensure_connected()
+        if not self._try_connect():
+            return {"nodes": [], "edges": []}
 
         # 限制跳数范围，防止全图扫描
         hops = max(1, min(max_hops, 5))
@@ -355,6 +369,7 @@ class GraphStore:
         """搜索节点。
 
         支持按标签过滤和按名称模糊检索，可组合使用。
+        Neo4j 不可用时返回空列表。
 
         Args:
             label: 节点标签，为 None 时不按标签过滤。
@@ -364,7 +379,8 @@ class GraphStore:
         Returns:
             list[dict]: 匹配的节点列表，每项包含 id、name、labels。
         """
-        self._ensure_connected()
+        if not self._try_connect():
+            return []
 
         # 构建查询条件
         query_label = f":{self._validate_label(label)}" if label else ""
@@ -429,13 +445,16 @@ class GraphStore:
     async def get_stats(self) -> dict:
         """获取图统计信息。
 
+        Neo4j 不可用时返回零值统计。
+
         Returns:
             dict: 统计信息，包含：
                 - ``total_nodes``: 节点总数
                 - ``total_relations``: 关系总数
                 - ``node_labels``: 全部标签列表
         """
-        self._ensure_connected()
+        if not self._try_connect():
+            return {"total_nodes": 0, "total_relations": 0, "node_labels": []}
 
         stats: dict[str, Any] = {}
 
@@ -458,6 +477,66 @@ class GraphStore:
             stats["node_labels"] = record["labels"] if record else []
 
         return stats
+
+    async def get_graph(self, limit: int = 50) -> dict:
+        """获取全局知识图谱（限制节点数）。
+
+        查询全部节点（按 limit 截断）及其之间的关系，
+        用于前端知识图谱页面的初始加载。Neo4j 不可用时返回空图谱。
+
+        Args:
+            limit: 最大返回节点数，默认 50。
+
+        Returns:
+            dict: 图谱数据，格式与 get_subgraph 一致：
+                ``{"nodes": [...], "edges": [...]}``
+        """
+        if not self._try_connect():
+            return {"nodes": [], "edges": []}
+
+        nodes_query = """
+        MATCH (n)
+        RETURN id(n) AS node_id, n.name AS name, labels(n) AS labels, n.type AS type
+        LIMIT $limit
+        """
+
+        async with self._driver.session() as session:
+            result = await session.run(nodes_query, limit=limit)
+            records = await result.data()
+
+            nodes: list[dict] = [
+                {
+                    "id": r["node_id"],
+                    "name": r["name"] or "",
+                    "labels": r["labels"],
+                    "type": r.get("type", ""),
+                }
+                for r in records
+            ]
+
+            # 查询这些节点之间的关系
+            result = await session.run(
+                """
+                MATCH (a)-[r]->(b)
+                WHERE a.name IS NOT NULL AND b.name IS NOT NULL
+                RETURN a.name AS source, b.name AS target, type(r) AS rel_type
+                LIMIT $limit
+                """,
+                limit=limit,
+            )
+            rel_records = await result.data()
+
+        edges: list[dict] = [
+            {"source": r["source"], "target": r["target"], "type": r["rel_type"]}
+            for r in rel_records
+        ]
+
+        logger.info(
+            "全局图谱查询完成",
+            node_count=len(nodes),
+            edge_count=len(edges),
+        )
+        return {"nodes": nodes, "edges": edges}
 
     async def close(self) -> None:
         """关闭驱动连接，释放资源。"""

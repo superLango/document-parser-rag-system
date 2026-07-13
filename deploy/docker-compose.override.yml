@@ -1,15 +1,18 @@
 version: "3.9"
 
+# 开发环境覆盖配置
+# 使用方式: docker compose -f docker-compose.yml -f docker-compose.override.yml up
+
 services:
   postgres:
     restart: unless-stopped
     ports:
       - "15432:5432"
 
-  redis:
+  valkey:
     restart: unless-stopped
 
-  minio:
+  seaweedfs:
     restart: unless-stopped
 
   neo4j:

@@ -12,7 +12,7 @@ export const schemaApi = {
     page?: number
     page_size?: number
   }): Promise<Paginated<Schema>> {
-    return http.get<Paginated<Schema>>('/schemas', { params })
+    return http.get<Paginated<Schema>>('/schemas/', { params })
   },
 
   // Schema 详情
@@ -22,7 +22,7 @@ export const schemaApi = {
 
   // 创建 Schema
   create(data: SchemaCreate): Promise<Schema> {
-    return http.post<Schema>('/schemas', data)
+    return http.post<Schema>('/schemas/', data)
   },
 
   // 更新 Schema

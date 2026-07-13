@@ -86,7 +86,7 @@ onMounted(() => {
         >
           <div class="message-avatar">
             <span v-if="msg.role === 'user'">U</span>
-            <span v-else class="mono">◈</span>
+            <span v-else>AI</span>
           </div>
           <div class="message-body">
             <div class="message-content">{{ msg.content }}</div>
@@ -105,7 +105,7 @@ onMounted(() => {
           </div>
         </div>
         <div v-if="loading" class="message is-assistant">
-          <div class="message-avatar"><span class="mono">◈</span></div>
+          <div class="message-avatar"><span>AI</span></div>
           <div class="message-body">
             <div class="typing">
               <span></span><span></span><span></span>
@@ -174,12 +174,12 @@ onMounted(() => {
 
     .message-avatar {
       background: linear-gradient(135deg, var(--accent-primary), var(--accent-primary-dim));
-      color: var(--bg-base);
+      color: #FFFFFF;
     }
 
     .message-content {
-      background: rgba(0, 217, 255, 0.1);
-      border-color: rgba(0, 217, 255, 0.3);
+      background: rgba(37, 99, 235, 0.08);
+      border-color: rgba(37, 99, 235, 0.2);
     }
   }
 

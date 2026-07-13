@@ -13,7 +13,7 @@ export const documentApi = {
     status?: string
     keyword?: string
   }): Promise<Paginated<Document>> {
-    return http.get<Paginated<Document>>('/documents', { params })
+    return http.get<Paginated<Document>>('/documents/', { params })
   },
 
   // 文档详情
@@ -30,7 +30,7 @@ export const documentApi = {
     if (meta.standard_number) {
       formData.append('standard_number', meta.standard_number)
     }
-    return http.post<Document>(`/documents/upload`, formData, {
+    return http.post<Document>('/documents/', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
   },

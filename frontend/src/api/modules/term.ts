@@ -12,7 +12,7 @@ export const termApi = {
     page?: number
     page_size?: number
   }): Promise<Paginated<Term>> {
-    return http.get<Paginated<Term>>('/terms', { params })
+    return http.get<Paginated<Term>>('/terms/', { params })
   },
 
   // 术语详情
@@ -22,7 +22,7 @@ export const termApi = {
 
   // 创建术语
   create(data: TermCreate): Promise<Term> {
-    return http.post<Term>('/terms', data)
+    return http.post<Term>('/terms/', data)
   },
 
   // 更新术语

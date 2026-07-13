@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     # ---------------------------------------------------------------
     # 应用基础配置
     # ---------------------------------------------------------------
-    APP_NAME: str = Field(default="DocumentParser", description="应用名称")
+    APP_NAME: str = Field(default="Hansight", description="应用名称")
     APP_ENV: str = Field(default="development", description="运行环境")
     DEBUG: bool = Field(default=True, description="是否开启调试模式")
 

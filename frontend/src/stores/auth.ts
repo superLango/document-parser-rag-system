@@ -31,13 +31,17 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // 获取当前用户信息
+  // 仅在 401（令牌无效/过期）时清除登录态，其他错误（如网络异常）保留 token
   async function fetchUser() {
     try {
       const res = await authApi.getCurrentUser()
       user.value = res
-    } catch {
-      // 获取失败时清除登录态
-      logout()
+    } catch (error: any) {
+      const status = error?.response?.status
+      if (status === 401) {
+        logout()
+      }
+      // 非 401 错误不清除 token，允许后续请求重试
     }
   }
 
@@ -61,7 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
 
 // ---------- 类型 ----------
 interface AuthUser {
-  id: number
+  id: string
   username: string
   email: string
   is_active: boolean

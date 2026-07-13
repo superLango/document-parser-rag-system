@@ -7,7 +7,7 @@ import type { QARequest, QAResponse, QAMessage } from '@/api/types'
 export const qaApi = {
   // 提问
   ask(data: QARequest): Promise<QAResponse> {
-    return http.post<QAResponse>('/qa/ask', data)
+    return http.post<QAResponse>('/qa/query', data)
   },
 
   // 流式问答（SSE）

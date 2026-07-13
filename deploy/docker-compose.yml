@@ -3,7 +3,7 @@ version: "3.9"
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: docparser-postgres
+    container_name: hansight-postgres
     environment:
       POSTGRES_DB: docparser
       POSTGRES_USER: postgres
@@ -26,7 +26,7 @@ services:
 
   valkey:
     image: valkey/valkey:8-alpine
-    container_name: docparser-valkey
+    container_name: hansight-valkey
     ports:
       - "6379:6379"
     volumes:
@@ -41,7 +41,7 @@ services:
 
   seaweedfs:
     image: chrislusf/seaweedfs:latest
-    container_name: docparser-seaweedfs
+    container_name: hansight-seaweedfs
     command: server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data
     ports:
       - "9000:8333"
@@ -57,7 +57,7 @@ services:
 
   neo4j:
     image: neo4j:5
-    container_name: docparser-neo4j
+    container_name: hansight-neo4j
     environment:
       NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
       NEO4J_PLUGINS: '["apoc"]'
@@ -73,7 +73,7 @@ services:
 
   etcd:
     image: quay.io/coreos/etcd:v3.5.5
-    container_name: docparser-etcd
+    container_name: hansight-etcd
     environment:
       ETCD_AUTO_COMPACTION_MODE: revision
       ETCD_AUTO_COMPACTION_RETENTION: "1000"
@@ -93,7 +93,7 @@ services:
 
   milvus:
     image: milvusdb/milvus:v2.4.0
-    container_name: docparser-milvus
+    container_name: hansight-milvus
     command: ["milvus", "run", "standalone"]
     ports:
       - "19530:19530"
@@ -112,6 +112,200 @@ services:
       timeout: 20s
       retries: 3
 
+  # ===============================================================
+  # 应用服务层
+  # ===============================================================
+
+  # ---- 后端 API 服务 ----
+  # FastAPI 应用，提供 REST API / WebSocket / SSE
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: hansight-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+      seaweedfs:
+        condition: service_healthy
+    environment:
+      # 应用基础配置
+      APP_NAME: Hansight
+      APP_ENV: production
+      DEBUG: "false"
+      # PostgreSQL 数据库（连接 docker 内部服务名 postgres）
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: docparser
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_URL: postgresql+asyncpg://postgres:${POSTGRES_PASSWORD}@postgres:5432/docparser
+      # Valkey（Redis 兼容）连接
+      REDIS_URL: redis://valkey:6379/0
+      # SeaweedFS（S3 兼容对象存储）
+      MINIO_ENDPOINT: seaweedfs:8333
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET: documents
+      MINIO_SECURE: "false"
+      S3_ENDPOINT_URL: http://seaweedfs:8333
+      # Neo4j 图数据库
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      # Milvus 向量数据库
+      MILVUS_HOST: milvus
+      MILVUS_PORT: "19530"
+      MILVUS_COLLECTION: doc_chunks
+      # 模型路径（挂载宿主机 models 目录到容器内 /app/models）
+      EMBEDDING_MODEL_PATH: /app/models/bge-m3
+      RERANKER_MODEL_DIR: /app/models/bge-reranker-v2-m3
+      POPO_MODEL_DIR: /app/models/MinerU-Popo
+      PADDLE_OCR_MODEL_DIR: /app/models/PaddlePaddle/PaddleOCR-VL
+      # JWT 鉴权（生产环境必须替换 SECRET_KEY）
+      SECRET_KEY: ${JWT_SECRET_KEY}
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: "1440"
+      # Ollama 大模型服务
+      OLLAMA_HOST: http://host.docker.internal:11434
+      OLLAMA_MODEL: gemma2:2b
+      # 文件上传限制
+      MAX_FILE_SIZE: "524288000"
+      ALLOWED_EXTENSIONS: .pdf,.png,.jpg,.jpeg,.tiff,.bmp
+    ports:
+      - "8000:8000"
+    volumes:
+      # 挂载模型目录（OCR / 嵌入 / 重排模型）
+      - ../models:/app/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"]
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # ---- arq 异步任务 Worker ----
+  # 执行文档解析、向量入库、知识图谱构建等耗时任务，需要 GPU
+  arq-worker:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: hansight-arq-worker
+    command: arq app.tasks.arq_worker.WorkerSettings
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    environment:
+      # 与 backend 共享相同的应用配置
+      APP_NAME: Hansight-Worker
+      APP_ENV: production
+      DEBUG: "false"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: docparser
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_URL: postgresql+asyncpg://postgres:${POSTGRES_PASSWORD}@postgres:5432/docparser
+      REDIS_URL: redis://valkey:6379/0
+      MINIO_ENDPOINT: seaweedfs:8333
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET: documents
+      MINIO_SECURE: "false"
+      S3_ENDPOINT_URL: http://seaweedfs:8333
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      MILVUS_HOST: milvus
+      MILVUS_PORT: "19530"
+      MILVUS_COLLECTION: doc_chunks
+      EMBEDDING_MODEL_PATH: /app/models/bge-m3
+      RERANKER_MODEL_DIR: /app/models/bge-reranker-v2-m3
+      POPO_MODEL_DIR: /app/models/MinerU-Popo
+      PADDLE_OCR_MODEL_DIR: /app/models/PaddlePaddle/PaddleOCR-VL
+      SECRET_KEY: ${JWT_SECRET_KEY}
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: "1440"
+      OLLAMA_HOST: http://host.docker.internal:11434
+      OLLAMA_MODEL: gemma2:2b
+      MAX_FILE_SIZE: "524288000"
+      ALLOWED_EXTENSIONS: .pdf,.png,.jpg,.jpeg,.tiff,.bmp
+    volumes:
+      # OCR / 嵌入 / 重排模型，与 backend 共用同一宿主机目录
+      - ../models:/app/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"]
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # ---- 前端 Web 服务 ----
+  # Vue3 SPA，由 nginx 提供静态资源并反向代理后端 API
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: hansight-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ===============================================================
+  # 监控服务层
+  # ===============================================================
+
+  # ---- Prometheus 指标采集 ----
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: hansight-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      - --web.enable-lifecycle
+    restart: unless-stopped
+
+  # ---- Grafana 可视化面板 ----
+  # 端口映射 3001:3000 以避免与 TRAE IDE 端口冲突
+  grafana:
+    image: grafana/grafana:latest
+    container_name: hansight-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   valkey_data:
@@ -120,3 +314,5 @@ volumes:
   neo4j_logs:
   etcd_data:
   milvus_data:
+  prometheus_data:
+  grafana_data:

@@ -5,7 +5,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="not-found blueprint-bg">
+  <div class="not-found">
     <div class="nf-content">
       <div class="nf-code mono">404</div>
       <h2 class="nf-title">页面未找到</h2>
@@ -33,7 +33,6 @@ const router = useRouter()
   font-size: 96px;
   font-weight: 700;
   color: var(--accent-primary);
-  filter: drop-shadow(0 0 24px rgba(0, 217, 255, 0.4));
   line-height: 1;
 }
 

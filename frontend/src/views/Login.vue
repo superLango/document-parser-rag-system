@@ -3,6 +3,7 @@ import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import type { FormInstance, FormRules } from 'element-plus'
+import BrandLogo from '@/components/brand/BrandLogo.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -38,12 +39,24 @@ async function handleLogin() {
 </script>
 
 <template>
-  <div class="login-page blueprint-bg">
+  <div class="login-page">
+    <!-- 背景装饰：右侧抽象图谱网格 -->
+    <div class="bg-decor" aria-hidden="true">
+      <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <pattern id="dotgrid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="#2563EB" fill-opacity="0.08" />
+          </pattern>
+        </defs>
+        <rect width="600" height="600" fill="url(#dotgrid)" />
+      </svg>
+    </div>
+
     <div class="login-card">
       <!-- 品牌区 -->
       <div class="brand">
-        <div class="brand-mark">◈</div>
-        <h1 class="brand-name mono">DOC<span class="accent">.</span>INTEL</h1>
+        <BrandLogo :size="56" />
+        <h1 class="brand-name">Hansight</h1>
         <p class="brand-sub">文档智能解析与 RAG 系统</p>
       </div>
 
@@ -72,7 +85,7 @@ async function handleLogin() {
       </el-form>
 
       <div class="login-footer mono">
-        <span>TECHNICAL BLUEPRINT · v1.0.0</span>
+        <span>Hansight · v1.0.0</span>
       </div>
     </div>
   </div>
@@ -80,47 +93,58 @@ async function handleLogin() {
 
 <style scoped lang="scss">
 .login-page {
+  position: relative;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
+  background: linear-gradient(135deg, #EFF6FF 0%, #F8FAFC 50%, #F1F5F9 100%);
+  overflow: hidden;
+}
+
+.bg-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.6;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .login-card {
+  position: relative;
   width: 100%;
   max-width: 400px;
   background: var(--bg-surface);
   border: 1px solid var(--border-base);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   padding: 40px 32px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-xl);
+  z-index: 1;
 }
 
 .brand {
   text-align: center;
   margin-bottom: 32px;
-
-  .brand-mark {
-    font-size: 40px;
-    color: var(--accent-primary);
-    filter: drop-shadow(0 0 12px rgba(0, 217, 255, 0.6));
-    margin-bottom: 12px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 
   .brand-name {
     font-size: 28px;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
-
-    .accent {
-      color: var(--accent-primary);
-    }
+    margin: 0;
   }
 
   .brand-sub {
-    margin-top: 8px;
+    margin: 0;
     font-size: var(--fs-sm);
     color: var(--text-secondary);
   }
@@ -138,5 +162,14 @@ async function handleLogin() {
   text-align: center;
   font-size: var(--fs-xs);
   color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 24px;
+  }
+  .brand .brand-name {
+    font-size: 24px;
+  }
 }
 </style>
