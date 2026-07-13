@@ -73,17 +73,17 @@
 
 ## 阶段6：前端实现
 
-- [ ] Task 6.1: 初始化 Vue 项目脚手架（main.ts、App.vue、router、layouts/DefaultLayout.vue、Pinia）
-- [ ] Task 6.2: 实现 `frontend/src/api/index.ts`（axios实例 + 拦截器 + trace_id）与 `frontend/src/api/types.ts` 生成脚本（openapi-typescript）
-- [ ] Task 6.3: 实现各资源 API 模块 `frontend/src/api/`（document、task、schema、term、knowledge、qa）
-- [ ] Task 6.4: 实现 Dashboard 页面 `frontend/src/views/Dashboard/`（统计概览） [可并行]
-- [ ] Task 6.5: 实现 Documents 页面 `frontend/src/views/Documents/`（上传区 + 文件列表 + 分页） [可并行]
-- [ ] Task 6.6: 实现 Parser 页面 `frontend/src/views/Parser/`（双栏：PdfViewer + BoundingBoxes + ResultPanel）
-- [ ] Task 6.7: 实现 Schemas 页面 `frontend/src/views/Schemas/`（SchemaBuilder 动态表单） [可并行]
-- [ ] Task 6.8: 实现 Terms 页面 `frontend/src/views/Terms/`（TermList + MatchDialog） [可并行]
-- [ ] Task 6.9: 实现 Knowledge 页面 `frontend/src/views/Knowledge/`（GraphViewer Cytoscape） [可并行]
-- [ ] Task 6.10: 实现 QA 页面 `frontend/src/views/QA/`（ChatWindow + SourceCard + SSE流式接收）
-- [ ] Task 6.11: 编写前端 Dockerfile（多阶段构建）与 nginx.conf 静态托管配置
+- [x] Task 6.1: 初始化 Vue 项目脚手架（main.ts、App.vue、router、layouts/DefaultLayout.vue、Pinia）
+- [x] Task 6.2: 实现 `frontend/src/api/index.ts`（axios实例 + 拦截器 + trace_id）与 `frontend/src/api/types.ts` 生成脚本（openapi-typescript）
+- [x] Task 6.3: 实现各资源 API 模块 `frontend/src/api/`（document、task、schema、term、knowledge、qa）
+- [x] Task 6.4: 实现 Dashboard 页面 `frontend/src/views/Dashboard/`（统计概览）
+- [x] Task 6.5: 实现 Documents 页面 `frontend/src/views/Documents/`（上传区 + 文件列表 + 分页）
+- [x] Task 6.6: 实现 Parser 页面 `frontend/src/views/Parser/`（双栏：PdfViewer + BoundingBoxes + ResultPanel）
+- [x] Task 6.7: 实现 Schemas 页面 `frontend/src/views/Schemas/`（SchemaBuilder 动态表单）
+- [x] Task 6.8: 实现 Terms 页面 `frontend/src/views/Terms/`（TermList + MatchDialog）
+- [x] Task 6.9: 实现 Knowledge 页面 `frontend/src/views/Knowledge/`（GraphViewer Cytoscape）
+- [x] Task 6.10: 实现 QA 页面 `frontend/src/views/QA/`（ChatWindow + SourceCard + SSE流式接收）
+- [x] Task 6.11: 编写前端 Dockerfile（多阶段构建）与 nginx.conf 静态托管配置
 
 ## 阶段7：集成测试与部署优化
 

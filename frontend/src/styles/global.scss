@@ -1,0 +1,314 @@
+// ============================================================
+// 全局样式 - Technical Blueprint 主题
+// ============================================================
+
+@use './variables.scss';
+
+// ---------- Google Fonts 导入 ----------
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+// ---------- CSS Reset ----------
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+html {
+  font-size: var(--fs-base);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  color: var(--text-primary);
+  background-color: var(--bg-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// ---------- 蓝图背景网格 ----------
+// 模拟工程绘图纸的细密网格，含主网格与次网格
+.blueprint-bg {
+  background-color: var(--bg-base);
+  background-image:
+    // 次网格线（细密 20px）
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    // 主网格线（青色淡光 100px）
+    linear-gradient(var(--grid-line-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-major) 1px, transparent 1px);
+  background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+  background-position: -1px -1px;
+}
+
+// ---------- 滚动条样式 ----------
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-base);
+  border-radius: var(--radius-full);
+
+  &:hover {
+    background: var(--border-hover);
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--bg-base);
+}
+
+// Firefox 滚动条
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-base) var(--bg-base);
+}
+
+// ---------- 文本选中 ----------
+::selection {
+  background: rgba(0, 217, 255, 0.25);
+  color: var(--accent-primary);
+}
+
+::moz-selection {
+  background: rgba(0, 217, 255, 0.25);
+  color: var(--accent-primary);
+}
+
+// ---------- 焦点状态（青色辉光）----------
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+// ---------- 链接 ----------
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--el-color-primary-light-3);
+  }
+}
+
+// ---------- 标题 ----------
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+// ---------- 等宽标签（技术数据：文档 ID、状态码等）----------
+.mono {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum';
+}
+
+// ---------- 通用卡片 ----------
+.bp-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-base);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+
+  &:hover {
+    border-color: var(--border-hover);
+  }
+}
+
+// ---------- 主按钮辉光 ----------
+.btn-glow {
+  box-shadow: var(--glow-cyan);
+  transition: box-shadow var(--transition-base), transform var(--transition-fast);
+
+  &:hover {
+    box-shadow: var(--glow-cyan-strong);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+// ---------- 文本截断 ----------
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ============================================================
+// 动画关键帧
+// ============================================================
+
+// 淡入
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// 向上滑入
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 青色脉冲辉光
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.6);
+  }
+}
+
+// 骨架屏闪烁
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// 工具类
+.fade-in {
+  animation: fade-in var(--transition-slow) ease forwards;
+}
+
+.slide-up {
+  animation: slide-up var(--transition-base) ease forwards;
+}
+
+// ============================================================
+// Element Plus 深色细节覆盖
+// ============================================================
+
+// 输入框
+.el-input__wrapper {
+  background-color: var(--bg-surface) !important;
+  box-shadow: 0 0 0 1px var(--border-base) inset !important;
+
+  &:hover {
+    box-shadow: 0 0 0 1px var(--border-hover) inset !important;
+  }
+
+  &.is-focus {
+    box-shadow: 0 0 0 1px var(--accent-primary) inset, 0 0 12px rgba(0, 217, 255, 0.2) !important;
+  }
+}
+
+.el-input__inner {
+  color: var(--text-primary) !important;
+}
+
+// 表格
+.el-table {
+  background-color: transparent;
+  color: var(--text-primary);
+
+  tr {
+    background-color: transparent;
+  }
+
+  th.el-table__cell {
+    background-color: var(--bg-surface) !important;
+    border-bottom: 1px solid var(--border-base) !important;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  td.el-table__cell {
+    border-bottom: 1px solid var(--border-light) !important;
+  }
+
+  .el-table__row:hover > td.el-table__cell {
+    background-color: var(--bg-surface-hover) !important;
+  }
+}
+
+// 对话框
+.el-dialog {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-base);
+
+  .el-dialog__title,
+  .el-dialog__body {
+    color: var(--text-primary);
+  }
+}
+
+// 卡片
+.el-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-base);
+  color: var(--text-primary);
+
+  .el-card__header {
+    border-bottom: 1px solid var(--border-base);
+  }
+}
+
+// 标签
+.el-tag {
+  background-color: rgba(0, 217, 255, 0.1);
+  border-color: rgba(0, 217, 255, 0.3);
+  color: var(--accent-primary);
+}
+
+// 分页
+.el-pagination {
+  --el-pagination-button-color: var(--text-secondary);
+  --el-pagination-button-bg-color: var(--bg-surface);
+
+  button {
+    background-color: var(--bg-surface) !important;
+  }
+}
+
+// 下拉菜单
+.el-dropdown-menu {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-base);
+
+  .el-dropdown-menu__item {
+    color: var(--text-secondary);
+
+    &:hover {
+      background-color: var(--bg-surface-hover);
+      color: var(--accent-primary);
+    }
+  }
+}

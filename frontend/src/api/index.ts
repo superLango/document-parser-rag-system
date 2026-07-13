@@ -1,0 +1,95 @@
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type InternalAxiosRequestConfig,
+  type AxiosResponse,
+} from 'axios'
+
+/**
+ * Axios 实例
+ * 统一处理请求/响应拦截、鉴权、错误处理
+ */
+const instance: AxiosInstance = axios.create({
+  baseURL: '/api/v1',
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+// ---------- 请求拦截器 ----------
+instance.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // 注入 Authorization
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    // 注入链路追踪 ID
+    config.headers['X-Trace-Id'] = generateTraceId()
+
+    return config
+  },
+  (error) => Promise.reject(error),
+)
+
+// ---------- 响应拦截器 ----------
+instance.interceptors.response.use(
+  (response: AxiosResponse) => {
+    // 直接返回 data 层，便于调用方使用
+    return response.data
+  },
+  async (error) => {
+    const { response } = error
+
+    // 401 未授权：清除登录态并跳转登录页
+    if (response?.status === 401) {
+      localStorage.removeItem('token')
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login'
+      }
+    }
+
+    // 统一错误提示（Element Plus）
+    const message =
+      response?.data?.detail ||
+      response?.data?.message ||
+      error.message ||
+      '请求失败，请稍后重试'
+
+    import('element-plus').then(({ ElMessage }) => {
+      ElMessage.error(message)
+    })
+
+    return Promise.reject(error)
+  },
+)
+
+// 生成简易链路追踪 ID
+function generateTraceId(): string {
+  return `trace-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
+/**
+ * 类型安全的 HTTP 封装
+ * 因响应拦截器已解包 data，此处返回实际数据类型
+ */
+export const http = {
+  get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return instance.get(url, config) as unknown as Promise<T>
+  },
+  post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    return instance.post(url, data, config) as unknown as Promise<T>
+  },
+  put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    return instance.put(url, data, config) as unknown as Promise<T>
+  },
+  patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    return instance.patch(url, data, config) as unknown as Promise<T>
+  },
+  delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return instance.delete(url, config) as unknown as Promise<T>
+  },
+}
+
+export default instance

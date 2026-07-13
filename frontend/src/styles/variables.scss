@@ -1,0 +1,127 @@
+// ============================================================
+// 设计系统变量 - Technical Blueprint 深色主题
+// 文档智能解析与 RAG 系统
+// ============================================================
+
+:root {
+  // ---------- 基础背景 ----------
+  --bg-base: #0B1120;              // 深海军蓝黑
+  --bg-surface: #131C2E;           // 抬升表面
+  --bg-surface-hover: #1A2540;     // 表面悬停
+  --bg-overlay: rgba(11, 17, 32, 0.85);
+
+  // ---------- 边框 ----------
+  --border-base: #1E3A5F;          // 淡蓝边框
+  --border-hover: #2D4F7A;         // 边框悬停
+  --border-light: rgba(30, 58, 95, 0.5);
+
+  // ---------- 强调色 ----------
+  --accent-primary: #00D9FF;       // 电气青 - 操作与高亮
+  --accent-primary-dim: #0891B2;   // 青色暗调
+  --accent-secondary: #FFB800;     // 琥珀 - 警告与重要数据
+  --accent-success: #00E676;       // 成功
+  --accent-danger: #FF4757;        // 危险
+  --accent-info: #60A5FA;          // 信息
+
+  // ---------- 文本 ----------
+  --text-primary: #E2E8F0;         // 主文本
+  --text-secondary: #94A3B8;       // 次文本
+  --text-muted: #64748B;           // 弱化文本
+
+  // ---------- 辉光 ----------
+  --glow-cyan: 0 0 20px rgba(0, 217, 255, 0.3);
+  --glow-cyan-strong: 0 0 30px rgba(0, 217, 255, 0.5);
+  --glow-amber: 0 0 20px rgba(255, 184, 0, 0.3);
+
+  // ---------- 蓝图网格 ----------
+  --grid-line: rgba(30, 58, 95, 0.3);
+  --grid-line-major: rgba(0, 217, 255, 0.06);
+
+  // ---------- 字体 ----------
+  --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  // ---------- 字号阶梯 ----------
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-base: 16px;
+  --fs-lg: 20px;
+  --fs-xl: 24px;
+  --fs-2xl: 32px;
+  --fs-3xl: 40px;
+
+  // ---------- 间距 ----------
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  // ---------- 圆角 ----------
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  // ---------- 布局 ----------
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  --header-height: 56px;
+
+  // ---------- 动画 ----------
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+
+  // ============================================================
+  // Element Plus 深色主题覆盖
+  // ============================================================
+  --el-color-primary: #00D9FF;
+  --el-color-primary-light-3: #33e0ff;
+  --el-color-primary-light-5: #66e7ff;
+  --el-color-primary-light-7: #99eeff;
+  --el-color-primary-light-8: #ccf5ff;
+  --el-color-primary-light-9: rgba(0, 217, 255, 0.1);
+  --el-color-primary-dark-2: #00b8d4;
+
+  --el-color-success: #00E676;
+  --el-color-warning: #FFB800;
+  --el-color-danger: #FF4757;
+  --el-color-info: #60A5FA;
+
+  --el-bg-color: #131C2E;
+  --el-bg-color-page: #0B1120;
+  --el-bg-color-overlay: #1A2540;
+
+  --el-text-color-primary: #E2E8F0;
+  --el-text-color-regular: #94A3B8;
+  --el-text-color-secondary: #64748B;
+  --el-text-color-placeholder: #475569;
+
+  --el-border-color: #1E3A5F;
+  --el-border-color-light: #1A2540;
+  --el-border-color-lighter: #131C2E;
+  --el-border-color-extra-light: rgba(30, 58, 95, 0.3);
+  --el-border-color-dark: #2D4F7A;
+  --el-border-color-darker: #2D4F7A;
+
+  --el-fill-color: #1A2540;
+  --el-fill-color-light: #131C2E;
+  --el-fill-color-lighter: #0B1120;
+  --el-fill-color-blank: #131C2E;
+
+  --el-mask-color: rgba(11, 17, 32, 0.9);
+  --el-box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --el-box-shadow-light: 0 2px 12px rgba(0, 0, 0, 0.4);
+
+  // 字体
+  --el-font-family: var(--font-sans);
+  --el-font-size-base: var(--fs-sm);
+
+  // 圆角
+  --el-border-radius-base: var(--radius-md);
+  --el-border-radius-small: var(--radius-sm);
+}

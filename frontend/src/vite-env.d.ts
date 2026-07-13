@@ -2,15 +2,16 @@
 
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
-  const component: DefineComponent<{}, {}, any>
+  const component: DefineComponent<Record<string, never>, Record<string, never>, unknown>
   export default component
 }
 
-interface ImportMetaEnv {
-  readonly VITE_API_BASE_URL: string
-  readonly VITE_APP_TITLE: string
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv
+// 路由元信息类型扩展
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    icon?: string
+    public?: boolean
+    hidden?: boolean
+  }
 }
