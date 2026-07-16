@@ -2,6 +2,7 @@
 
 本模块定义了 Document Parser API 的主应用实例，包含：
 - FastAPI 应用创建与元信息配置
+- Prometheus 指标集成（/metrics 端点，供 Prometheus 抓取）
 - CORS 中间件配置（开发环境允许所有来源）
 - trace_id 链路追踪中间件
 - 全局异常处理器注册
@@ -17,6 +18,7 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -32,6 +34,23 @@ app = FastAPI(
     version="1.0.0",
     description="文档解析与 RAG 系统后端 API",
 )
+
+# ---------------------------------------------------------------
+# Prometheus 指标集成
+# 暴露 /metrics 端点供 Prometheus 抓取，记录 HTTP 请求量/延迟/进行中数等指标。
+# 通过 ENABLE_METRICS 环境变量控制是否启用，避免测试环境受影响。
+# excluded_handlers 排除 /metrics 自身，防止自引用污染数据。
+# ---------------------------------------------------------------
+Instrumentator(
+    should_group_status_codes=True,
+    should_ignore_untemplated=True,
+    should_respect_env_var=True,
+    should_instrument_requests_inprogress=True,
+    excluded_handlers=["/metrics"],
+    env_var_name="ENABLE_METRICS",
+    inprogress_name="fastapi_inprogress",
+    inprogress_labels=True,
+).instrument(app).expose(app, endpoint="/metrics", include_render=False)
 
 # 配置 CORS 中间件（开发环境允许所有来源）
 app.add_middleware(

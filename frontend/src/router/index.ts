@@ -45,10 +45,28 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '术语库', icon: 'Collection' },
       },
       {
+        path: 'terms/review',
+        name: 'TermReview',
+        component: () => import('@/views/Terms/Review.vue'),
+        meta: { title: '术语审核', icon: 'CircleCheck' },
+      },
+      {
         path: 'knowledge',
         name: 'Knowledge',
         component: () => import('@/views/Knowledge/index.vue'),
         meta: { title: '知识图谱', icon: 'Share' },
+      },
+      {
+        path: 'kb',
+        name: 'KnowledgeBase',
+        component: () => import('@/views/KnowledgeBase/index.vue'),
+        meta: { title: '知识库管理', icon: 'FolderOpened', requiresAuth: true },
+      },
+      {
+        path: 'tasks',
+        name: 'Tasks',
+        component: () => import('@/views/Tasks/index.vue'),
+        meta: { title: '任务管理', icon: 'Tickets' },
       },
       {
         path: 'qa',

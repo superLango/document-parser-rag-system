@@ -17,7 +17,7 @@ export const documentApi = {
   },
 
   // 文档详情
-  getDetail(id: number): Promise<Document> {
+  getDetail(id: string): Promise<Document> {
     return http.get<Document>(`/documents/${id}`)
   },
 
@@ -35,18 +35,8 @@ export const documentApi = {
     })
   },
 
-  // 更新文档元信息
-  update(id: number, data: Partial<DocumentCreate>): Promise<Document> {
-    return http.put<Document>(`/documents/${id}`, data)
-  },
-
   // 删除文档
-  remove(id: number): Promise<void> {
+  remove(id: string): Promise<void> {
     return http.delete<void>(`/documents/${id}`)
-  },
-
-  // 触发解析
-  parse(id: number, schemaId?: number): Promise<void> {
-    return http.post<void>(`/documents/${id}/parse`, { schema_id: schemaId })
   },
 }

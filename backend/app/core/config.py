@@ -108,6 +108,14 @@ class Settings(BaseSettings):
     )
 
     # ---------------------------------------------------------------
+    # vLLM 大语言模型配置
+    # ---------------------------------------------------------------
+    LLM_MODEL_PATH: str = Field(
+        default="/home/hanson/doc_parse_project/models/Qwen/Qwen3___5-9B",
+        description="vLLM 大语言模型权重目录路径",
+    )
+
+    # ---------------------------------------------------------------
     # 重排模型配置（bge-reranker-v2-m3 CrossEncoder）
     # ---------------------------------------------------------------
     RERANKER_MODEL_DIR: str = Field(

@@ -2,9 +2,14 @@
 import { ref, nextTick, onMounted } from 'vue'
 import { Promotion } from '@element-plus/icons-vue'
 import { qaApi } from '@/api/modules/qa'
+import type { Citation } from '@/api/modules/qa'
 import type { QAMessage } from '@/api/types'
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 
-const messages = ref<QAMessage[]>([])
+// 本地消息类型：sources 使用 Citation（对齐后端 SSE done 事件的 citations 字段）
+type ChatMessage = Omit<QAMessage, 'sources'> & { sources?: Citation[] }
+
+const messages = ref<ChatMessage[]>([])
 const input = ref('')
 const loading = ref(false)
 const scrollRef = ref<HTMLElement>()
@@ -31,26 +36,37 @@ async function ask() {
   loading.value = true
   await scrollToBottom()
 
-  try {
-    const res = await qaApi.ask({ question, top_k: 5 })
-    messages.value.push({
-      id: `a-${Date.now()}`,
-      role: 'assistant',
-      content: res.answer,
-      sources: res.sources,
-      created_at: new Date().toISOString(),
-    })
-  } catch {
-    messages.value.push({
-      id: `a-${Date.now()}`,
-      role: 'assistant',
-      content: '抱歉，回答问题时出错，请稍后重试。',
-      created_at: new Date().toISOString(),
-    })
-  } finally {
-    loading.value = false
-    await scrollToBottom()
+  // 创建空的 assistant 消息，流式追加内容实现打字机效果
+  const assistantMsg: ChatMessage = {
+    id: `a-${Date.now()}`,
+    role: 'assistant',
+    content: '',
+    created_at: new Date().toISOString(),
   }
+  messages.value.push(assistantMsg)
+  await scrollToBottom()
+
+  await qaApi.askStream(
+    question,
+    {
+      onChunk: (chunk) => {
+        assistantMsg.content += chunk
+        scrollToBottom()
+      },
+      onDone: (data) => {
+        assistantMsg.sources = data.citations
+      },
+      onError: (msg) => {
+        if (!assistantMsg.content) {
+          assistantMsg.content = `抱歉，回答问题时出错：${msg}`
+        }
+      },
+    },
+    { top_k: 5 },
+  )
+
+  loading.value = false
+  await scrollToBottom()
 }
 
 onMounted(() => {
@@ -89,7 +105,10 @@ onMounted(() => {
             <span v-else>AI</span>
           </div>
           <div class="message-body">
-            <div class="message-content">{{ msg.content }}</div>
+            <div class="message-content">
+              <MarkdownRenderer v-if="msg.role === 'assistant' && msg.content" :content="msg.content" />
+              <template v-else>{{ msg.content }}</template>
+            </div>
             <div v-if="msg.sources?.length" class="message-sources">
               <div class="sources-label mono">引用来源</div>
               <div
@@ -97,18 +116,10 @@ onMounted(() => {
                 :key="i"
                 class="source-item"
               >
-                <span class="mono source-doc">{{ src.document_title }}</span>
-                <span class="source-page">第 {{ src.page }} 页</span>
-                <span class="mono source-score">score: {{ src.score.toFixed(2) }}</span>
+                <span class="mono source-doc">{{ src.document_id }}</span>
+                <el-tag v-if="src.source" size="small" effect="plain">{{ src.source }}</el-tag>
+                <span class="mono source-score">score: {{ src.score?.toFixed(3) }}</span>
               </div>
-            </div>
-          </div>
-        </div>
-        <div v-if="loading" class="message is-assistant">
-          <div class="message-avatar"><span>AI</span></div>
-          <div class="message-body">
-            <div class="typing">
-              <span></span><span></span><span></span>
             </div>
           </div>
         </div>
@@ -180,6 +191,7 @@ onMounted(() => {
     .message-content {
       background: rgba(37, 99, 235, 0.08);
       border-color: rgba(37, 99, 235, 0.2);
+      white-space: pre-wrap;
     }
   }
 
@@ -221,7 +233,6 @@ onMounted(() => {
   font-size: var(--fs-sm);
   color: var(--text-primary);
   line-height: 1.6;
-  white-space: pre-wrap;
   word-break: break-word;
 }
 
@@ -250,36 +261,10 @@ onMounted(() => {
       flex: 1;
     }
 
-    .source-page {
-      color: var(--text-secondary);
-    }
-
     .source-score {
       color: var(--text-muted);
     }
   }
-}
-
-.typing {
-  display: flex;
-  gap: 4px;
-  padding: 12px 16px;
-
-  span {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent-primary);
-    animation: typing-bounce 1.2s infinite;
-  }
-
-  span:nth-child(2) { animation-delay: 0.2s; }
-  span:nth-child(3) { animation-delay: 0.4s; }
-}
-
-@keyframes typing-bounce {
-  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-  30% { opacity: 1; transform: translateY(-4px); }
 }
 
 .input-bar {

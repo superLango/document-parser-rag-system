@@ -5,24 +5,28 @@
 - ``POST /documents/``：上传文件到 MinIO 并创建文档记录
 - ``GET /documents/``：分页查询文档列表
 - ``GET /documents/{document_id}``：获取文档详情
+- ``GET /documents/{document_id}/download``：下载文档文件内容（PDF 预览）
 - ``DELETE /documents/{document_id}``：删除文档（同时清理 MinIO 对象）
 
 所有接口均需 Bearer Token 鉴权，并通过 slowapi 对上传接口实施限流。
 统一响应体由 ``app.core.response`` 中的 ``success`` / ``paginated`` 构造。
 """
 
+import io
 import uuid
 from pathlib import Path
 from uuid import UUID
 
+from botocore.exceptions import ClientError
 from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
+from fastapi.responses import StreamingResponse
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_active_user, get_pagination_params, limiter
 from app.core.config import settings
 from app.core.database import get_db
-from app.core.exceptions import BusinessException, ErrorCode
+from app.core.exceptions import BusinessException, ErrorCode, SystemException
 from app.core.logging import get_logger
 from app.core.response import paginated, success
 from app.models.document import Document
@@ -191,6 +195,69 @@ async def get_document(
         )
 
     return success(data=DocumentResponse.model_validate(document).model_dump())
+
+
+@router.get("/{document_id}/download")
+async def download_document(
+    document_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+) -> StreamingResponse:
+    """下载文档文件内容（供前端 PDF 预览组件使用）。
+
+    根据文档 ID 查询记录，从 S3兼容存储(SeaweedFS) 读取对象内容，
+    以 ``application/pdf`` 流形式返回，前端可直接用于 PDF 预览。
+    该端点直接返回文件流，不包装在统一响应体中。
+
+    Args:
+        document_id: 文档唯一标识。
+        db: 异步数据库会话。
+        current_user: 当前已认证用户。
+
+    Returns:
+        StreamingResponse: 以 ``application/pdf`` 形式返回的文件流。
+
+    Raises:
+        BusinessException: 文档不存在时抛出 ``BUSINESS_DOCUMENT_NOT_FOUND``。
+        SystemException: 文件读取失败时抛出。
+    """
+    # 查询文档记录，确认存在
+    stmt = select(Document).where(Document.id == document_id)
+    result = await db.execute(stmt)
+    document = result.scalar_one_or_none()
+
+    if document is None:
+        logger.warning("文档不存在", document_id=str(document_id))
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
+            message=f"文档 {document_id} 不存在",
+        )
+
+    # 从存储服务下载文件内容
+    try:
+        content: bytes = await storage_service.download(document.minio_object_name)
+    except ClientError as err:
+        logger.error(
+            "文件下载失败",
+            document_id=str(document_id),
+            object_name=document.minio_object_name,
+            error=str(err),
+        )
+        raise SystemException(message="文件读取失败")
+
+    logger.info(
+        "文档下载成功",
+        document_id=str(document_id),
+        filename=document.filename,
+        size=len(content),
+    )
+    return StreamingResponse(
+        io.BytesIO(content),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'inline; filename="{document.filename}"',
+        },
+    )
 
 
 @router.delete("/{document_id}")

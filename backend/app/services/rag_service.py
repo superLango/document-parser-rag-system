@@ -33,6 +33,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
+from typing import Any
 
 from app.core.config import settings
 from app.core.logging import get_logger
@@ -44,6 +45,33 @@ from app.services.reranker_service import RerankResult, reranker_service
 from app.services.vector_store import vector_store
 
 logger = get_logger(__name__)
+
+# LlamaIndex 索引管理器：懒导入，避免依赖未安装时影响主流程
+_index_manager: Any = None
+
+
+def _get_index_manager() -> Any:
+    """懒加载 LlamaIndex 索引管理器单例。
+
+    采用延迟导入，避免 llama-index-core 未安装时影响整个 rag_service 模块加载。
+    首次调用时创建 IndexManager 实例并缓存。
+
+    Returns:
+        IndexManager 实例，导入失败时返回 None。
+    """
+    global _index_manager
+    if _index_manager is not None:
+        return _index_manager
+    try:
+        from app.services.index_manager import index_manager as _im
+        _index_manager = _im
+        return _index_manager
+    except Exception as err:
+        logger.warning(
+            "LlamaIndex 索引管理器不可用，降级到 Milvus 管道",
+            error=str(err),
+        )
+        return None
 
 # LLM 系统提示词，引导模型基于检索片段回答问题
 _SYSTEM_PROMPT = (
@@ -117,7 +145,12 @@ class RAGService:
     ) -> RAGResponse:
         """处理用户查询，返回完整 RAG 响应。
 
-        完整流程：查询理解 → 并行检索（向量+图谱）→ 重排 → 上下文组装 → LLM 生成。
+        完整流程：查询理解 → [LlamaIndex 索引路由] → 并行检索（向量+图谱）
+        → 重排 → 上下文组装 → LLM 生成。
+
+        LlamaIndex 索引路由：对于 summarization 和 comparison 意图，优先尝试
+        LlamaIndex 的 SummaryIndex/TreeIndex；若索引不可用或查询失败，降级到
+        现有 Milvus 混合检索管道，保证向后兼容。
 
         Args:
             question: 用户问题文本。
@@ -131,6 +164,33 @@ class RAGService:
         """
         # 1. 查询理解
         analysis = await self._understand_query(question)
+
+        # 1.5 LlamaIndex 索引路由：对 summarization/comparison 意图优先使用 LlamaIndex
+        if analysis.intent in ("summarization", "comparison"):
+            li_result = await self._try_llamaindex_query(
+                question, analysis.intent, top_k, analysis.sub_queries
+            )
+            if li_result is not None:
+                # LlamaIndex 成功处理，直接返回结果
+                return RAGResponse(
+                    answer=li_result.answer,
+                    intent=analysis.intent,
+                    entities=self._entities_to_dicts(analysis.entities),
+                    citations=[
+                        Citation(
+                            document_id=c.get("document_id", ""),
+                            chunk_id=c.get("chunk_id", ""),
+                            content=c.get("content", ""),
+                            score=c.get("score", 0.0),
+                            source=c.get("source", "llamaindex"),
+                        )
+                        for c in li_result.citations
+                    ],
+                    query_analysis=analysis.model_dump(),
+                    retrieval_count=len(li_result.citations),
+                    rerank_count=len(li_result.citations),
+                )
+            # LlamaIndex 不可用或失败，降级到 Milvus 管道
 
         # 2. 并行检索：向量检索与知识图谱检索
         retrieval_query = analysis.rewritten_query or question
@@ -253,6 +313,114 @@ class RAGService:
         except Exception as err:
             logger.error("LLM 流式生成失败", error=str(err), exc_info=True)
             yield f"\n[生成失败：{err}]"
+
+    # ---------------------------------------------------------------
+    # 内部方法：LlamaIndex 索引路由
+    # ---------------------------------------------------------------
+    async def _try_llamaindex_query(
+        self,
+        question: str,
+        intent: str,
+        top_k: int,
+        sub_queries: list[str] | None = None,
+    ) -> Any:
+        """尝试使用 LlamaIndex 索引处理查询。
+
+        路由策略：
+        - ``summarization`` → IndexManager.query_with_intent（SummaryIndex）
+        - ``comparison`` → 优先 SubQuestionQueryEngine（子问题分解），
+          失败降级到 IndexManager.query_with_intent（TreeIndex）
+
+        若 LlamaIndex 不可用、未构建或查询失败，返回 None 由调用方降级到 Milvus。
+
+        Args:
+            question: 用户查询文本。
+            intent: 查询意图（summarization 或 comparison）。
+            top_k: 返回结果数量上限。
+            sub_queries: 子问题列表（comparison 意图时使用）。
+
+        Returns:
+            IndexQueryResult | EngineQueryResult | None: 查询结果，失败返回 None。
+        """
+        # comparison 意图：优先尝试 SubQuestionQueryEngine
+        if intent == "comparison" and sub_queries:
+            sq_result = await self._try_subquestion_engine(
+                question, sub_queries, top_k
+            )
+            if sq_result is not None:
+                return sq_result
+            # SubQuestionQueryEngine 失败，降级到 TreeIndex
+
+        # 通用 LlamaIndex 索引查询（SummaryIndex/TreeIndex/KeywordTableIndex）
+        im = _get_index_manager()
+        if im is None:
+            return None
+        try:
+            result = await im.query_with_intent(question, intent, top_k)
+            # 索引未构建或查询失败时 result.answer 为空
+            if not result.answer and not result.citations:
+                logger.debug(
+                    "LlamaIndex 查询返回空结果，降级到 Milvus",
+                    intent=intent,
+                    index_type=result.index_type,
+                )
+                return None
+            logger.info(
+                "LlamaIndex 索引查询成功",
+                intent=intent,
+                index_type=result.index_type,
+                citation_count=len(result.citations),
+            )
+            return result
+        except Exception as err:
+            logger.warning(
+                "LlamaIndex 索引查询异常，降级到 Milvus",
+                intent=intent,
+                error=str(err),
+            )
+            return None
+
+    async def _try_subquestion_engine(
+        self,
+        question: str,
+        sub_queries: list[str],
+        top_k: int,
+    ) -> Any:
+        """尝试使用 SubQuestionQueryEngine 处理 comparison 意图查询。
+
+        Args:
+            question: 原始用户问题。
+            sub_queries: 子问题列表。
+            top_k: 返回结果数量上限。
+
+        Returns:
+            EngineQueryResult | None: 查询结果，失败返回 None。
+        """
+        try:
+            from app.services.query_engines import subquestion_engine
+            result = await subquestion_engine.query(
+                question=question,
+                sub_queries=sub_queries,
+                top_k=top_k,
+            )
+            if not result.answer:
+                logger.debug("SubQuestionQueryEngine 返回空结果")
+                return None
+            logger.info(
+                "SubQuestionQueryEngine 查询成功",
+                sub_query_count=len(sub_queries),
+                citation_count=len(result.citations),
+            )
+            return result
+        except ImportError:
+            logger.debug("query_engines 模块不可用，跳过 SubQuestionQueryEngine")
+            return None
+        except Exception as err:
+            logger.warning(
+                "SubQuestionQueryEngine 查询异常",
+                error=str(err),
+            )
+            return None
 
     # ---------------------------------------------------------------
     # 内部方法：查询理解

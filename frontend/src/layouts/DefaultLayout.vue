@@ -10,6 +10,8 @@ import {
   SetUp,
   Collection,
   Share,
+  FolderOpened,
+  Tickets,
   ChatDotRound,
   Fold,
   Expand,
@@ -34,6 +36,8 @@ const navItems: NavItem[] = [
   { path: '/schemas', title: '抽取 Schema', icon: SetUp },
   { path: '/terms', title: '术语库', icon: Collection },
   { path: '/knowledge', title: '知识图谱', icon: Share },
+  { path: '/kb', title: '知识库', icon: FolderOpened },
+  { path: '/tasks', title: '任务管理', icon: Tickets },
   { path: '/qa', title: '智能问答', icon: ChatDotRound },
 ]
 

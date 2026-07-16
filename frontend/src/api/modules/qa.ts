@@ -1,5 +1,26 @@
 import { http } from '@/api'
 import type { QARequest, QAResponse, QAMessage } from '@/api/types'
+import { parseSSEStream } from '@/utils/sse'
+
+/**
+ * 流式问答引用信息（对应后端 SSE done 事件的 citations 字段）
+ */
+export interface Citation {
+  document_id?: string
+  chunk_id?: string
+  content?: string
+  score?: number
+  source?: string  // vector/graph
+}
+
+/**
+ * 流式问答回调
+ */
+export interface AskStreamCallbacks {
+  onChunk?: (content: string) => void
+  onDone?: (data: { answer: string; citations: Citation[] }) => void
+  onError?: (message: string) => void
+}
 
 /**
  * 智能问答（RAG）接口
@@ -10,16 +31,37 @@ export const qaApi = {
     return http.post<QAResponse>('/qa/query', data)
   },
 
-  // 流式问答（SSE）
-  askStream(data: QARequest): EventSource {
-    const params = new URLSearchParams({
-      question: data.question,
-      top_k: String(data.top_k ?? 5),
+  // 流式问答（SSE）：POST /qa/stream，使用 fetch + ReadableStream 消费
+  async askStream(
+    query: string,
+    callbacks: AskStreamCallbacks,
+    options?: { top_k?: number; schema_id?: string },
+  ): Promise<void> {
+    const token = localStorage.getItem('token')
+    const response = await fetch('/api/v1/qa/stream', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({
+        query,
+        top_k: options?.top_k,
+        schema_id: options?.schema_id,
+      }),
     })
-    if (data.conversation_id) {
-      params.append('conversation_id', data.conversation_id)
+
+    if (!response.ok) {
+      callbacks.onError?.(`HTTP ${response.status}`)
+      return
     }
-    return new EventSource(`/api/v1/qa/ask/stream?${params.toString()}`)
+
+    await parseSSEStream(
+      response,
+      callbacks.onChunk ?? (() => {}),
+      callbacks.onDone ?? (() => {}),
+      callbacks.onError ?? (() => {}),
+    )
   },
 
   // 会话历史

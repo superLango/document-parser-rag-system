@@ -10,9 +10,10 @@
 - GET /terms/categories：获取分类列表
 """
 
+from typing import Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -49,6 +50,12 @@ class TermUpdateRequest(BaseModel):
     synonyms: list[str] | None = None
 
 
+class TermReviewRequest(BaseModel):
+    """术语审核请求体。"""
+
+    action: Literal["approve", "reject"]
+
+
 def _serialize_term(t: Term) -> dict:
     """将 Term ORM 对象序列化为前端期望的字典格式。"""
     return {
@@ -65,6 +72,7 @@ def _serialize_term(t: Term) -> dict:
 
 @router.get("/")
 async def list_terms(
+    status: str | None = Query(None, description="按状态过滤：active/pending/deprecated"),
     pagination: dict = Depends(get_pagination_params),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
@@ -73,16 +81,18 @@ async def list_terms(
     page = pagination["page"]
     page_size = pagination["page_size"]
 
-    total_result = await db.execute(select(func.count()).select_from(Term))
+    count_stmt = select(func.count()).select_from(Term)
+    list_stmt = select(Term).order_by(Term.created_at.desc())
+
+    if status:
+        count_stmt = count_stmt.where(Term.status == status)
+        list_stmt = list_stmt.where(Term.status == status)
+
+    total_result = await db.execute(count_stmt)
     total = total_result.scalar_one()
 
     offset = (page - 1) * page_size
-    list_stmt = (
-        select(Term)
-        .order_by(Term.created_at.desc())
-        .offset(offset)
-        .limit(page_size)
-    )
+    list_stmt = list_stmt.offset(offset).limit(page_size)
     result = await db.execute(list_stmt)
     terms = result.scalars().all()
 
@@ -216,3 +226,36 @@ async def delete_term(
     await db.delete(term)
     await db.commit()
     return success(message="删除成功")
+
+
+@router.put("/{term_id}/review")
+async def review_term(
+    term_id: UUID,
+    payload: TermReviewRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
+    """审核术语（通过/拒绝）。
+
+    - approve：将术语状态置为 active
+    - reject：将术语状态置为 deprecated
+    """
+    stmt = select(Term).where(Term.id == term_id)
+    result = await db.execute(stmt)
+    term = result.scalar_one_or_none()
+
+    if term is None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
+            message=f"术语 {term_id} 不存在",
+        )
+
+    if payload.action == "approve":
+        term.status = "active"
+    else:
+        term.status = "deprecated"
+
+    await db.commit()
+    await db.refresh(term)
+
+    return success(data=_serialize_term(term))

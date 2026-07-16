@@ -36,7 +36,6 @@ import asyncio
 from typing import Any
 
 import numpy as np
-from FlagEmbedding import BGEM3FlagModel
 
 from app.core.config import settings
 from app.core.logging import get_logger
@@ -58,7 +57,7 @@ class EmbeddingService:
     """
 
     _instance: "EmbeddingService | None" = None
-    _model: BGEM3FlagModel | None = None
+    _model: Any = None
     _loaded: bool = False
 
     def __new__(cls) -> "EmbeddingService":
@@ -84,6 +83,8 @@ class EmbeddingService:
             return
         model_path = settings.EMBEDDING_MODEL_PATH
         logger.info("开始加载 bge-m3 嵌入模型", model_path=model_path)
+        from FlagEmbedding import BGEM3FlagModel  # 延迟导入，避免模块导入阶段即触发重型依赖
+
         self._model = BGEM3FlagModel(
             model_path,
             use_fp16=True,  # 半精度减少显存

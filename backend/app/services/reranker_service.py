@@ -32,8 +32,6 @@ import threading
 from dataclasses import dataclass, field
 from typing import Any
 
-from sentence_transformers import CrossEncoder
-
 from app.core.config import settings
 from app.core.logging import get_logger
 
@@ -111,6 +109,8 @@ class RerankerService:
                     "开始加载 bge-reranker-v2-m3 CrossEncoder 模型",
                     model_path=model_path,
                 )
+                from sentence_transformers import CrossEncoder  # 延迟导入，避免模块导入阶段即触发重型依赖
+
                 self._model = CrossEncoder(
                     model_path,
                     max_length=512,  # 限制输入对长度，防止显存溢出

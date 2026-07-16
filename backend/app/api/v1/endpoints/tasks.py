@@ -4,6 +4,7 @@
 
 - ``POST /tasks/``：提交文档解析任务到 arq 队列
 - ``GET /tasks/{task_id}``：查询任务状态
+- ``POST /tasks/{task_id}/retry``：重试文档解析任务
 - ``GET /tasks/{task_id}/stream``：SSE 流式推送任务进度
 - ``GET /tasks/``：分页查询任务列表
 
@@ -192,6 +193,97 @@ async def get_task(
     )
 
     return success(data=task_response.model_dump())
+
+
+@router.post("/{task_id}/retry")
+async def retry_task(
+    task_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
+    """重试文档解析任务。
+
+    处理流程：
+        1. 根据 ``task_id`` 查询原任务记录。
+        2. 从原任务获取 ``document_id``，并验证文档仍然存在。
+        3. 通过 arq ``enqueue_job`` 重新投递解析任务到 Redis 队列。
+           由于 Task 模型未存储 ``schema_id`` 与 ``term_base_id``，
+           重试时这两个参数以 ``None`` 提交。
+        4. 在数据库中创建新的任务记录，记录新的 arq job_id。
+        5. 返回新任务标识与初始状态。
+
+    Args:
+        task_id: 原任务唯一标识。
+        db: 异步数据库会话。
+        current_user: 当前已认证用户。
+
+    Returns:
+        dict: 包含新任务 ``task_id`` 与 ``status`` 的统一成功响应。
+
+    Raises:
+        BusinessException: 原任务不存在时抛出 ``BUSINESS_TASK_NOT_FOUND``；
+            文档不存在时抛出 ``BUSINESS_DOCUMENT_NOT_FOUND``；
+            任务入队失败时抛出 ``BUSINESS_TASK_FAILED``。
+    """
+    # 查询原任务记录
+    stmt = select(Task).where(Task.id == task_id)
+    result = await db.execute(stmt)
+    task = result.scalar_one_or_none()
+
+    if task is None:
+        logger.warning("任务不存在，无法重试", task_id=task_id)
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_NOT_FOUND,
+            message=f"任务 {task_id} 不存在",
+        )
+
+    document_id = task.document_id
+
+    # 验证文档仍然存在
+    doc_stmt = select(Document).where(Document.id == document_id)
+    doc_result = await db.execute(doc_stmt)
+    document = doc_result.scalar_one_or_none()
+
+    if document is None:
+        logger.warning("文档不存在，无法重试", document_id=str(document_id))
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
+            message=f"文档 {document_id} 不存在",
+        )
+
+    # 提交 arq 任务（schema_id 与 term_base_id 原任务未存储，传 None）
+    pool = await get_arq_pool()
+    job = await pool.enqueue_job(
+        "parse_document_task",
+        str(document_id),
+        None,
+        None,
+    )
+
+    if job is None:
+        # 任务未入队（同名任务已存在且未完成）
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_FAILED,
+            message="任务重试失败，可能已有相同任务在执行中",
+        )
+
+    # 创建新的任务记录
+    new_task = Task(
+        id=job.job_id,
+        document_id=document_id,
+        status="pending",
+        progress=0,
+    )
+    db.add(new_task)
+    await db.commit()
+
+    logger.info(
+        "任务已重试提交",
+        task_id=job.job_id,
+        original_task_id=task_id,
+        document_id=str(document_id),
+    )
+    return success(data={"task_id": new_task.id, "status": "pending"})
 
 
 @router.get("/{task_id}/stream")

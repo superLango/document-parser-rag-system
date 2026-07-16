@@ -9,6 +9,7 @@ export const termApi = {
   getList(params?: {
     category?: string
     keyword?: string
+    status?: string
     page?: number
     page_size?: number
   }): Promise<Paginated<Term>> {
@@ -38,6 +39,11 @@ export const termApi = {
   // 批量导入
   batchImport(data: TermCreate[]): Promise<{ imported: number }> {
     return http.post<{ imported: number }>('/terms/batch', data)
+  },
+
+  // 审核术语
+  review(id: number, action: 'approve' | 'reject'): Promise<Term> {
+    return http.put<Term>(`/terms/${id}/review`, { action })
   },
 
   // 分类列表

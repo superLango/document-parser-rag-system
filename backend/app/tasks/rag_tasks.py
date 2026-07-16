@@ -186,6 +186,48 @@ async def index_document_impl(doc_id: str, ctx: dict) -> dict:
                 )
 
                 # ----------------------------------------------------------
+                # 阶段 4.5：构建 LlamaIndex 辅助索引（Summary/Tree/Keyword）
+                # ----------------------------------------------------------
+                # 将分块转换为 LlamaIndex TextNode 并加入 IndexManager
+                # 失败不影响主流程（Milvus 索引已成功）
+                try:
+                    from llama_index.core.schema import TextNode as LITextNode
+                    from app.services.index_manager import index_manager
+
+                    li_nodes: list[LITextNode] = []
+                    for chunk in chunks:
+                        meta = chunk["metadata"]
+                        li_nodes.append(
+                            LITextNode(
+                                id_=chunk["chunk_id"],
+                                text=chunk["text"],
+                                metadata={
+                                    "doc_id": doc_id,
+                                    "doc_title": meta.get("doc_title", ""),
+                                    "file_name": meta.get("file_name", ""),
+                                    "title_chain": meta.get("title_chain", ""),
+                                    "section_level": meta.get("section_level", ""),
+                                    "section_title": meta.get("section_title", ""),
+                                    "chunk_index": meta.get("chunk_index", 0),
+                                },
+                            )
+                        )
+                    await index_manager.build_indices(li_nodes)
+                    logger.info(
+                        "LlamaIndex 辅助索引构建完成",
+                        doc_id=doc_id,
+                        node_count=len(li_nodes),
+                    )
+                except ImportError:
+                    logger.debug("llama-index-core 未安装，跳过辅助索引构建")
+                except Exception as li_err:
+                    logger.warning(
+                        "LlamaIndex 辅助索引构建失败，不影响主流程",
+                        doc_id=doc_id,
+                        error=str(li_err),
+                    )
+
+                # ----------------------------------------------------------
                 # 阶段 5：更新文档状态为 indexed（进度 100%）
                 # ----------------------------------------------------------
                 document.status = "indexed"
@@ -256,6 +298,16 @@ async def rebuild_index_impl(ctx: dict) -> dict:
         # 阶段 1：清空 Milvus 集合
         logger.info("清空 Milvus 集合")
         await vector_store.delete_all()
+
+        # 阶段 1.5：清空 LlamaIndex 辅助索引
+        try:
+            from app.services.index_manager import index_manager
+            await index_manager.clear()
+            logger.info("LlamaIndex 辅助索引已清空")
+        except ImportError:
+            logger.debug("llama-index-core 未安装，跳过辅助索引清空")
+        except Exception as li_err:
+            logger.warning("清空 LlamaIndex 辅助索引失败", error=str(li_err))
 
         # 阶段 2：查询所有已解析文档
         async with AsyncSessionLocal() as db:

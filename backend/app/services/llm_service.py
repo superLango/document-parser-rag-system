@@ -30,6 +30,7 @@ import re
 from collections.abc import AsyncGenerator
 from typing import Any
 
+from app.core.config import settings
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
 
@@ -454,7 +455,5 @@ class LLMService:
             await asyncio.sleep(0)
 
 
-# 模块级单例：
-# 使用硬编码模型路径创建单例实例，便于全局复用。
-# TODO: 建议在 settings 中新增 LLM_MODEL_PATH 配置项后替换此处的硬编码路径。
-llm_service = LLMService(model_path=_DEFAULT_MODEL_PATH)
+# 模块级单例：从 settings.LLM_MODEL_PATH 读取模型路径创建全局复用实例。
+llm_service = LLMService(model_path=settings.LLM_MODEL_PATH)

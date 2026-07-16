@@ -68,6 +68,9 @@ class DocumentResponse(DocumentBase):
     Attributes:
         id: 文档唯一标识。
         status: 文档处理状态。
+        parsed_text: 解析后的纯文本，未解析时为 None。
+        structured_data: 结构化抽取结果，未解析时为 None。
+        layout_data: 版面分析结果（含 merged 区域列表），未解析时为 None。
         created_at: 创建时间。
         updated_at: 更新时间，可为空。
     """
@@ -76,6 +79,9 @@ class DocumentResponse(DocumentBase):
 
     id: UUID
     status: str
+    parsed_text: str | None = None
+    structured_data: dict | None = None
+    layout_data: dict | None = None
     created_at: datetime
     updated_at: datetime | None = None
 

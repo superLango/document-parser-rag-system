@@ -21,3 +21,16 @@ structlog>=24.1.0
 python-multipart>=0.0.6
 httpx>=0.25.0
 mineru>=3.4.0
+
+# LlamaIndex 集成依赖（P0：索引层 + 查询引擎增强）
+# 仅引入 core，避免全量集成；0.11+ 使用 pydantic v2，兼容 Python 3.12+
+# llama-index-core 提供索引/检索/查询引擎抽象层
+llama-index-core>=0.11.0,<0.12
+# langchain-text-splitters 已在 chunking_service.py 中使用（升级为显式依赖）
+langchain-text-splitters>=0.2.0,<0.3
+
+# 测试依赖（Phase F 测试体系）
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0
+prometheus-fastapi-instrumentator>=7.0.0

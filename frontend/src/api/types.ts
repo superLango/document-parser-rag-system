@@ -41,8 +41,32 @@ export interface User {
 // ---------- 文档 ----------
 export type DocumentStatus = 'pending' | 'parsing' | 'completed' | 'failed'
 
+/**
+ * 版面分析区域（BoundingBox）
+ * bbox 坐标 [x1, y1, x2, y2] 基于原始 PDF 页面尺寸
+ */
+export interface LayoutRegion {
+  type: string // text/table/figure/title/header/footer
+  bbox: [number, number, number, number] // [x1, y1, x2, y2]
+  text?: string
+  confidence?: number | null
+  page?: number // 可选页码（1-based）
+}
+
+/**
+ * 版面分析结果
+ * merged 为合并后的区域列表，用于 BoundingBox 叠加
+ */
+export interface LayoutData {
+  merged?: LayoutRegion[]
+  ocr_layout?: unknown
+  text_blocks?: unknown
+  term_replacements?: unknown
+  [key: string]: unknown
+}
+
 export interface Document {
-  id: number
+  id: string
   title: string
   file_name: string
   file_path: string
@@ -55,6 +79,10 @@ export interface Document {
   uploaded_at: string
   parsed_at: string | null
   metadata: Record<string, unknown>
+  // 解析结果字段（后端 DocumentResponse 暴露，可能为 null）
+  parsed_text?: string | null
+  structured_data?: Record<string, unknown> | null
+  layout_data?: LayoutData | null
 }
 
 export interface DocumentCreate {
@@ -67,15 +95,28 @@ export interface DocumentCreate {
 export type TaskStatus = 'queued' | 'running' | 'success' | 'failed'
 
 export interface Task {
-  id: number
-  document_id: number
+  id: string
+  document_id: string
   task_type: string
   status: TaskStatus
   progress: number
   started_at: string | null
   completed_at: string | null
+  created_at: string
   error_message: string | null
   result: Record<string, unknown> | null
+}
+
+// ---------- 任务提交 ----------
+export interface TaskCreateRequest {
+  document_id: string
+  schema_id?: string
+  term_base_id?: string
+}
+
+export interface TaskSubmitResponse {
+  task_id: string
+  status: string
 }
 
 // ---------- 抽取 Schema ----------
@@ -159,11 +200,11 @@ export interface QAMessage {
 }
 
 export interface QAReference {
-  document_id: number
-  document_title: string
-  page: number
-  snippet: string
+  document_id: string
+  chunk_id?: string
+  content?: string
   score: number
+  source?: string // vector/graph
 }
 
 export interface QARequest {
@@ -176,6 +217,31 @@ export interface QAResponse {
   answer: string
   sources: QAReference[]
   conversation_id: string
+}
+
+// ---------- 知识库 ----------
+export interface KBStats {
+  total_chunks: number
+  total_docs: number
+  indexed_docs: number
+  completed_docs: number
+}
+
+export interface KBSearchResult {
+  id: string
+  chunk_id: string
+  text: string
+  doc_id: string
+  title_chain: string
+  metadata: Record<string, unknown>
+  score: number
+  rank: number
+}
+
+export interface KBSearchResponse {
+  query: string
+  results: KBSearchResult[]
+  total: number
 }
 
 // ---------- 仪表盘统计 ----------
