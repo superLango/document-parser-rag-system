@@ -135,12 +135,26 @@ class VectorStore:
         """
         self._ensure_connected()
 
+        # 将 sparse_vector 从 {"indices":[...],"values":[...]} 转换为
+        # pymilvus 3.x 要求的 {int: float} 字典格式
+        sparse_list: list[dict[int, float]] = []
+        for c in chunks:
+            sv = c["sparse_vector"]
+            if isinstance(sv, dict) and "indices" in sv and "values" in sv:
+                # 旧格式 {"indices": [int,...], "values": [float,...]}
+                sparse_list.append(
+                    {int(k): float(v) for k, v in zip(sv["indices"], sv["values"])}
+                )
+            else:
+                # 已是 {int: float} 或 {str: float} 格式
+                sparse_list.append({int(k): float(v) for k, v in sv.items()})
+
         # 按 Collection schema 字段顺序组织数据
         data = [
             [c["chunk_id"] for c in chunks],                # chunk_id
             [c["text"] for c in chunks],                   # text
             [c["dense_vector"].tolist() for c in chunks],  # dense_vector
-            [c["sparse_vector"] for c in chunks],           # sparse_vector (Milvus 格式)
+            sparse_list,                                    # sparse_vector (pymilvus 3.x 格式)
             [c["doc_id"] for c in chunks],                  # doc_id
             [c["title_chain"] for c in chunks],             # title_chain
             [c["metadata"] for c in chunks],                # metadata
@@ -160,14 +174,17 @@ class VectorStore:
         query_dense: np.ndarray,
         query_sparse: dict,
         top_k: int = 10,
-        nprobe: int = 16,
+        ef: int = 64,
     ) -> list[dict]:
         """Dense + Sparse 混合检索 + RRF 融合。
 
-        按方案 8.3 节实现：
-        1. Dense 检索 (metric_type=IP, nprobe=16, limit=top_k*2)
-        2. Sparse 检索 (metric_type=IP, limit=top_k*2)
+        按方案 8.3 节 + P2.1 优化实现：
+        1. Dense 检索 (HNSW, metric_type=IP, ef=64, limit=top_k*2)
+        2. Sparse 检索 (SPARSE_INVERTED_INDEX, metric_type=IP, limit=top_k*2)
         3. RRF (Reciprocal Rank Fusion) 融合两路结果取 top_k
+
+        P2.1 优化：Dense 检索从 IVF_PQ(nprobe) 迁移到 HNSW(ef)，
+        检索延迟预期降低 60%+。
 
         两路检索均扩大到 top_k*2 以提高 RRF 融合的召回率，
         融合后截取前 top_k 条返回。
@@ -177,7 +194,8 @@ class VectorStore:
             query_sparse: 查询稀疏向量，Milvus 格式
                 {"indices": [int, ...], "values": [float, ...]}。
             top_k: 最终返回的结果数，默认 10。
-            nprobe: Dense 检索的 nprobe 参数，默认 16。
+            ef: HNSW 检索的 ef 参数（搜索宽度），默认 64。
+                ef 越大召回率越高但速度越慢，需 ≥ top_k。
 
         Returns:
             list[dict]: 融合后的检索结果，按 RRF 分数降序排列，每项包含：
@@ -192,20 +210,32 @@ class VectorStore:
         """
         self._ensure_connected()
 
-        # Dense 检索：metric_type=IP，配合归一化向量等价于余弦相似度
+        # 将 query_sparse 从 {"indices":[...],"values":[...]} 转换为
+        # pymilvus 3.x 要求的 {int: float} 字典格式
+        if isinstance(query_sparse, dict) and "indices" in query_sparse and "values" in query_sparse:
+            query_sparse_dict: dict[int, float] = {
+                int(k): float(v)
+                for k, v in zip(query_sparse["indices"], query_sparse["values"])
+            }
+        else:
+            query_sparse_dict = {int(k): float(v) for k, v in query_sparse.items()}
+
+        # Dense 检索：HNSW 索引，metric_type=IP，配合归一化向量等价于余弦相似度
+        # ef 为 HNSW 搜索宽度参数，需 >= top_k*2 以保证足够候选
+        ef_search = max(ef, top_k * 2)
         dense_results = await asyncio.to_thread(
             self._collection.search,
             data=[query_dense.tolist()],
             anns_field="dense_vector",
-            param={"metric_type": "IP", "params": {"nprobe": nprobe}},
+            param={"metric_type": "IP", "params": {"ef": ef_search}},
             limit=top_k * 2,
             output_fields=["chunk_id", "text", "doc_id", "title_chain", "metadata"],
         )
 
-        # Sparse 检索：metric_type=IP，对齐稠密侧度量
+        # Sparse 检索：SPARSE_INVERTED_INDEX，metric_type=IP，对齐稠密侧度量
         sparse_results = await asyncio.to_thread(
             self._collection.search,
-            data=[query_sparse],
+            data=[query_sparse_dict],
             anns_field="sparse_vector",
             param={"metric_type": "IP"},
             limit=top_k * 2,
@@ -220,6 +250,7 @@ class VectorStore:
         logger.info(
             "混合检索完成",
             top_k=top_k,
+            ef=ef_search,
             dense_hits=len(dense_results[0]),
             sparse_hits=len(sparse_results[0]),
             fused_count=len(fused),
@@ -320,6 +351,298 @@ class VectorStore:
             deleted=result.delete_count,
         )
         return result.delete_count
+
+    async def incremental_insert(
+        self,
+        chunks: list[dict],
+        doc_id: str,
+        replace_existing: bool = True,
+    ) -> dict:
+        """增量插入文档分块，无需全量重建索引（P1.5 优化）。
+
+        按方案 5.2 节实现 RAGFlow 风格的增量索引更新，封装以下完整流程：
+
+        1. （可选）按 doc_id 删除该文档的旧分块，避免 chunk_id 冲突
+        2. 调用 ``embedding_service.embed_documents`` 批量嵌入新分块
+        3. 调用 ``self.insert`` 写入 Milvus（Milvus 自动维护增量索引）
+        4. 调用 ``cache_service.invalidate_by_doc_id`` 失效相关缓存
+        5. 若 LlamaIndex 辅助索引已构建，调用 ``index_manager.build_indices``
+           增量追加新节点（IndexManager 内部会 extend 节点列表并重建）
+
+        各阶段具备容错能力：缓存失效与 LlamaIndex 更新失败不影响主流程。
+
+        Args:
+            chunks: 分块列表，每个分块需含 chunk_id、text、metadata 字段。
+                不含向量字段（dense_vector/sparse_vector），由本方法嵌入生成。
+            doc_id: 文档 ID，用于清理旧分块与缓存失效。
+            replace_existing: 是否先删除该文档的旧分块。默认 True，
+                适用于文档重新解析场景；首次插入设为 False 可跳过删除。
+
+        Returns:
+            dict: 增量插入结果，包含：
+                - inserted_count: 新插入的分块数
+                - deleted_count: 删除的旧分块数（replace_existing=True 时）
+                - cache_invalidated: 缓存是否已失效
+                - llm_index_updated: LlamaIndex 索引是否已更新
+        """
+        # 延迟导入，避免模块导入时循环依赖
+        from app.services.cache_service import rag_cache_service
+        from app.services.embedding_service import embedding_service
+
+        deleted_count = 0
+
+        # 1. 可选：删除该文档的旧分块（重新解析场景）
+        if replace_existing:
+            try:
+                deleted_count = await self.delete_by_doc_id(doc_id)
+                logger.info(
+                    "增量插入：已清理旧分块",
+                    doc_id=doc_id,
+                    deleted=deleted_count,
+                )
+            except Exception as err:
+                logger.warning(
+                    "增量插入：清理旧分块失败，继续插入",
+                    doc_id=doc_id,
+                    error=str(err),
+                )
+
+        # 无新分块需要插入时直接返回
+        if not chunks:
+            logger.info("增量插入：无新分块需要插入", doc_id=doc_id)
+            return {
+                "inserted_count": 0,
+                "deleted_count": deleted_count,
+                "cache_invalidated": False,
+                "llm_index_updated": False,
+            }
+
+        # 2. P2.5 流水线嵌入+插入：分批嵌入，嵌入批次 N 与插入批次 N-1 并行
+        # 嵌入为 GPU 密集型，插入为网络 IO 密集型，两者可真正并行执行
+        # 流水线批次大小：单次嵌入批量的 2 倍，平衡吞吐与延迟
+        pipeline_batch_size = max(settings.EMBEDDING_BATCH_SIZE * 2, 32)
+        batches: list[list[dict]] = [
+            chunks[i : i + pipeline_batch_size]
+            for i in range(0, len(chunks), pipeline_batch_size)
+        ]
+
+        chunks_with_vectors: list[dict] = []
+        inserted_count = 0
+
+        if len(batches) <= 1:
+            # 单批次：直接嵌入+插入（保持原逻辑，避免任务调度开销）
+            try:
+                texts = [c.get("text", "") for c in chunks]
+                embeddings = await embedding_service.embed_documents(texts)
+            except Exception as err:
+                logger.error(
+                    "增量插入：嵌入生成失败",
+                    doc_id=doc_id,
+                    error=str(err),
+                )
+                raise
+
+            dense_vectors = embeddings["dense_vectors"]
+            sparse_indices = embeddings["sparse_indices"]
+
+            for idx, chunk in enumerate(chunks):
+                meta = chunk.get("metadata", {})
+                chunks_with_vectors.append(
+                    {
+                        "chunk_id": chunk.get("chunk_id", f"{doc_id}_{idx}"),
+                        "text": chunk.get("text", ""),
+                        "dense_vector": dense_vectors[idx],
+                        "sparse_vector": sparse_indices[idx],
+                        "doc_id": doc_id,
+                        "title_chain": meta.get("title_chain", ""),
+                        "metadata": meta,
+                    }
+                )
+
+            try:
+                primary_keys = await self.insert(chunks_with_vectors)
+                inserted_count = len(primary_keys)
+            except Exception as err:
+                logger.error(
+                    "增量插入：Milvus 插入失败",
+                    doc_id=doc_id,
+                    error=str(err),
+                )
+                raise
+        else:
+            # 多批次：流水线并行（嵌入批次 N 与插入批次 N-1 并行）
+            logger.info(
+                "流水线嵌入+插入启动",
+                doc_id=doc_id,
+                total_chunks=len(chunks),
+                batch_count=len(batches),
+                batch_size=pipeline_batch_size,
+            )
+            insert_task: asyncio.Task | None = None
+
+            for batch_idx, batch in enumerate(batches):
+                # 启动当前批次嵌入
+                batch_texts = [c.get("text", "") for c in batch]
+                embed_task = asyncio.create_task(
+                    embedding_service.embed_documents(batch_texts)
+                )
+
+                # 同时等待上一批插入完成（此时 embed_task 正在并行执行）
+                if insert_task is not None:
+                    try:
+                        prev_pks = await insert_task
+                        inserted_count += len(prev_pks)
+                    except Exception as err:
+                        logger.error(
+                            "增量插入：流水线 Milvus 插入失败",
+                            doc_id=doc_id,
+                            batch_idx=batch_idx - 1,
+                            error=str(err),
+                        )
+                        # 取消正在进行的嵌入任务
+                        embed_task.cancel()
+                        raise
+
+                # 等待当前批次嵌入完成
+                try:
+                    embeddings = await embed_task
+                except Exception as err:
+                    logger.error(
+                        "增量插入：流水线嵌入生成失败",
+                        doc_id=doc_id,
+                        batch_idx=batch_idx,
+                        error=str(err),
+                    )
+                    raise
+
+                dense_vectors = embeddings["dense_vectors"]
+                sparse_indices = embeddings["sparse_indices"]
+
+                # 组装当前批次的 chunks_with_vectors
+                batch_chunks_with_vectors: list[dict] = []
+                for idx, chunk in enumerate(batch):
+                    meta = chunk.get("metadata", {})
+                    batch_chunks_with_vectors.append(
+                        {
+                            "chunk_id": chunk.get("chunk_id", f"{doc_id}_{batch_idx}_{idx}"),
+                            "text": chunk.get("text", ""),
+                            "dense_vector": dense_vectors[idx],
+                            "sparse_vector": sparse_indices[idx],
+                            "doc_id": doc_id,
+                            "title_chain": meta.get("title_chain", ""),
+                            "metadata": meta,
+                        }
+                    )
+                chunks_with_vectors.extend(batch_chunks_with_vectors)
+
+                # 启动当前批次插入（下一轮迭代时与下一批嵌入并行）
+                insert_task = asyncio.create_task(
+                    self.insert(batch_chunks_with_vectors)
+                )
+
+            # 等待最后一批插入完成
+            if insert_task is not None:
+                try:
+                    last_pks = await insert_task
+                    inserted_count += len(last_pks)
+                except Exception as err:
+                    logger.error(
+                        "增量插入：流水线最后一批 Milvus 插入失败",
+                        doc_id=doc_id,
+                        error=str(err),
+                    )
+                    raise
+
+            logger.info(
+                "流水线嵌入+插入完成",
+                doc_id=doc_id,
+                inserted_count=inserted_count,
+                batch_count=len(batches),
+            )
+
+        # 4. 失效相关缓存（失败不影响主流程）
+        cache_invalidated = False
+        try:
+            await rag_cache_service.invalidate_by_doc_id(doc_id)
+            cache_invalidated = True
+        except Exception as err:
+            logger.warning(
+                "增量插入：缓存失效失败",
+                doc_id=doc_id,
+                error=str(err),
+            )
+
+        # 4.5 P2.3：增量更新 BM25 索引（失败不影响主流程）
+        # 新文档入库时同步更新 BM25 索引，避免首次检索时全量重建
+        try:
+            from app.services.bm25_retriever import bm25_retriever
+
+            bm25_retriever.add_documents(chunks_with_vectors)
+        except Exception as err:
+            logger.warning(
+                "增量插入：BM25 索引更新失败",
+                doc_id=doc_id,
+                error=str(err),
+            )
+
+        # 5. 增量更新 LlamaIndex 辅助索引（已构建时追加新节点）
+        llm_index_updated = False
+        try:
+            from app.services.index_manager import index_manager
+
+            if index_manager._built:
+                from llama_index.core.schema import TextNode as LITextNode
+
+                new_nodes: list[LITextNode] = []
+                for chunk in chunks:
+                    meta = chunk.get("metadata", {})
+                    new_nodes.append(
+                        LITextNode(
+                            id_=chunk.get("chunk_id", ""),
+                            text=chunk.get("text", ""),
+                            metadata={
+                                "doc_id": doc_id,
+                                "doc_title": meta.get("doc_title", ""),
+                                "file_name": meta.get("file_name", ""),
+                                "chunk_type": meta.get("chunk_type", "text"),
+                                "title_chain": meta.get("title_chain", ""),
+                            },
+                        )
+                    )
+                if new_nodes:
+                    # IndexManager.build_indices 在 _built=True 时
+                    # 会 extend 节点列表并重建内部索引
+                    await index_manager.build_indices(new_nodes)
+                    llm_index_updated = True
+                    logger.info(
+                        "增量插入：LlamaIndex 索引已更新",
+                        doc_id=doc_id,
+                        node_count=len(new_nodes),
+                    )
+        except ImportError:
+            logger.debug("llama-index-core 未安装，跳过 LlamaIndex 增量更新")
+        except Exception as err:
+            logger.warning(
+                "增量插入：LlamaIndex 索引更新失败",
+                doc_id=doc_id,
+                error=str(err),
+            )
+
+        logger.info(
+            "增量插入完成",
+            doc_id=doc_id,
+            inserted=inserted_count,
+            deleted=deleted_count,
+            cache_invalidated=cache_invalidated,
+            llm_index_updated=llm_index_updated,
+        )
+
+        return {
+            "inserted_count": inserted_count,
+            "deleted_count": deleted_count,
+            "cache_invalidated": cache_invalidated,
+            "llm_index_updated": llm_index_updated,
+        }
 
     async def count(self, doc_id: str | None = None) -> int:
         """统计记录数。

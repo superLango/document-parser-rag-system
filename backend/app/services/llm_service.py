@@ -54,14 +54,26 @@ class LLMService:
         _init_kwargs: 传递给 vllm.LLM 的初始化参数。
     """
 
-    def __init__(self, model_path: str, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        model_path: str,
+        api_base: str | None = None,
+        api_model: str | None = None,
+        **kwargs: Any,
+    ) -> None:
         """初始化 LLM 服务，仅保存配置不加载模型。
 
         Args:
-            model_path: HuggingFace 格式模型权重目录路径。
+            model_path: HuggingFace 格式模型权重目录路径（本地模式使用）。
+            api_base: 远程 vLLM OpenAI 兼容 API 地址（如 http://localhost:8877/v1）。
+                设置后优先使用 API 模式，无需本地安装 vllm。
+            api_model: 远程 API 使用的模型名称。
             **kwargs: 传递给 vllm.LLM 的额外初始化参数，覆盖默认值。
         """
         self._model_path: str = model_path
+        self._api_base: str | None = api_base
+        self._api_model: str = api_model or "default"
+        self._api_mode: bool = api_base is not None
         self._llm: Any = None
         self._loaded: bool = False
         # 默认初始化参数，可被 kwargs 覆盖
@@ -77,15 +89,41 @@ class LLMService:
     def _load_model(self) -> None:
         """加载 vLLM 模型实例。
 
-        在首次调用时创建 vllm.LLM 实例并完成模型权重加载与 KV cache 预分配。
-        该方法为同步阻塞调用，应由调用方通过 asyncio.to_thread 包装执行。
+        API 模式下仅验证远程服务可用性；本地模式下创建 vllm.LLM 实例
+        并完成模型权重加载与 KV cache 预分配。该方法为同步阻塞调用，
+        应由调用方通过 asyncio.to_thread 包装执行。
 
         Raises:
             BusinessException: 模型加载失败或 GPU 显存不足时抛出。
         """
         if self._loaded:
             return
-        logger.info("开始加载 vLLM 模型", model_path=self._model_path)
+
+        # API 模式：验证远程服务可用
+        if self._api_mode:
+            import httpx
+
+            logger.info("使用 Ollama API 模式", api_base=self._api_base, model=self._api_model)
+            try:
+                # Ollama 原生 API：通过 /api/tags 验证服务可用
+                ollama_base = self._api_base.rstrip("/v1").rstrip("/")
+                resp = httpx.get(
+                    f"{ollama_base}/api/tags",
+                    timeout=30.0,
+                )
+                resp.raise_for_status()
+                self._loaded = True
+                logger.info("Ollama API 连接成功", api_base=self._api_base)
+            except Exception as err:
+                logger.error("远程 vLLM API 连接失败", api_base=self._api_base, error=str(err))
+                raise BusinessException(
+                    code=ErrorCode.SYSTEM_SERVICE_UNAVAILABLE,
+                    message=f"远程 vLLM API 连接失败：{err}",
+                    details={"api_base": self._api_base},
+                ) from err
+            return
+
+        logger.info("开始加载 vLLM 模型（本地模式）", model_path=self._model_path)
         try:
             # 延迟导入 vllm，避免模块导入阶段即触发重型依赖初始化
             from vllm import LLM
@@ -161,15 +199,18 @@ class LLMService:
         messages: list[dict[str, str]],
         max_tokens: int,
         temperature: float,
+        model_override: str | None = None,
     ) -> str:
         """同步调用 vLLM chat 接口，返回生成的文本。
 
-        使用 chat_template_kwargs={"enable_thinking": False} 关闭 Qwen3.5 的
-        思考模式，使模型直接输出最终答案，避免输出被 <think> 标签包裹。
+        API 模式下通过 OpenAI 兼容接口调用远程 vLLM；本地模式下使用
+        vllm.LLM.chat() 同步推理。使用 chat_template_kwargs={"enable_thinking": False}
+        关闭 Qwen3.5 的思考模式，使模型直接输出最终答案。
 
         Args:
             messages: OpenAI 风格的消息列表。
             max_tokens: 生成最大 token 数。
+            model_override: 可选，覆盖默认模型名称（用于 LLM 路由）。
             temperature: 采样温度，越低输出越确定。
 
         Returns:
@@ -178,6 +219,52 @@ class LLMService:
         Raises:
             BusinessException: 推理失败或显存不足时抛出。
         """
+        # API 模式：通过 Ollama 原生 API 调用（支持 think:false 关闭 Qwen3.5 thinking）
+        if self._api_mode:
+            import httpx
+
+            # LLM 路由：model_override 覆盖默认模型（轻量模型用于简单查询）
+            use_model = model_override or self._api_model
+            try:
+                # 使用 Ollama 原生 /api/chat 接口，通过 think:false 关闭 thinking 模式
+                # API base 格式为 http://localhost:11434/v1，需转换为 http://localhost:11434
+                ollama_base = self._api_base.rstrip("/v1").rstrip("/")
+                resp = httpx.post(
+                    f"{ollama_base}/api/chat",
+                    json={
+                        "model": use_model,
+                        "messages": messages,
+                        "stream": False,
+                        "think": False,
+                        "options": {
+                            "num_predict": max_tokens,
+                            "temperature": temperature,
+                            "top_p": 0.9,
+                        },
+                    },
+                    timeout=180.0,
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                text = data["message"]["content"]
+                text = self._strip_thinking(text)
+                return text
+            except Exception as err:
+                if "out of memory" in str(err).lower() or "oom" in str(err).lower():
+                    logger.error("远程推理时显存不足", error=str(err))
+                    raise BusinessException(
+                        code=ErrorCode.SYSTEM_SERVICE_UNAVAILABLE,
+                        message="GPU 显存不足，推理失败，请减少输入长度或释放显存",
+                        details={"error": str(err)},
+                    ) from err
+                logger.error("远程 vLLM API 推理失败", error=str(err), exc_info=True)
+                raise BusinessException(
+                    code=ErrorCode.SYSTEM_INTERNAL_ERROR,
+                    message=f"大模型推理失败：{err}",
+                    details={"error": str(err)},
+                ) from err
+
+        # 本地模式：使用 vllm.LLM.chat()
         from vllm import SamplingParams
 
         # 构建采样参数：低温度保证输出稳定性
@@ -277,17 +364,22 @@ class LLMService:
         system_prompt: str | None = None,
         max_tokens: int = 2048,
         temperature: float = 0.1,
+        model_override: str | None = None,
     ) -> str:
         """生成文本回复。
 
         根据用户输入与可选的系统提示词，调用大模型生成文本。低温度
         （默认 0.1）保证输出稳定，适合结构化抽取场景。
 
+        LLM 路由：通过 ``model_override`` 参数指定轻量模型（如 gemma2:2b），
+        用于 general 意图简单事实查询，降低推理延迟。
+
         Args:
             prompt: 用户输入文本。
             system_prompt: 可选的系统提示词，用于设定模型角色与输出约束。
             max_tokens: 生成最大 token 数，默认 2048。
             temperature: 采样温度，默认 0.1，越低输出越确定。
+            model_override: 可选，覆盖默认模型名称（用于 LLM 路由）。
 
         Returns:
             str: 模型生成的文本内容。
@@ -309,6 +401,7 @@ class LLMService:
             messages,
             max_tokens=max_tokens,
             temperature=temperature,
+            model_override=model_override,
         )
         logger.info("文本生成完成", output_len=len(text))
         return text
@@ -455,5 +548,9 @@ class LLMService:
             await asyncio.sleep(0)
 
 
-# 模块级单例：从 settings.LLM_MODEL_PATH 读取模型路径创建全局复用实例。
-llm_service = LLMService(model_path=settings.LLM_MODEL_PATH)
+# 模块级单例：根据配置选择 API 模式或本地加载模式
+llm_service = LLMService(
+    model_path=settings.LLM_MODEL_PATH,
+    api_base=settings.LLM_API_BASE,
+    api_model=settings.LLM_API_MODEL,
+)

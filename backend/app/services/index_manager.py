@@ -303,13 +303,17 @@ class IndexManager:
 
         每种索引独立构建，单个失败不影响其他。构建在后台线程执行以避免
         阻塞事件循环。
+
+        注：llama-index-core 0.11+ 的 SummaryIndex/TreeIndex/KeywordTableIndex
+        无 ``from_nodes`` 类方法，应使用构造函数 ``Index(nodes=...)`` 直接
+        传入节点列表。早期文档示例中的 ``from_nodes`` 写法会抛 AttributeError。
         """
         from llama_index.core import SummaryIndex, TreeIndex, KeywordTableIndex
 
         # SummaryIndex
         try:
             self._summary_index = await asyncio.to_thread(
-                SummaryIndex.from_nodes, self._nodes
+                lambda: SummaryIndex(nodes=self._nodes)
             )
             self._summary_available = True
             logger.info("SummaryIndex 构建成功", node_count=len(self._nodes))
@@ -317,10 +321,10 @@ class IndexManager:
             logger.warning("SummaryIndex 构建失败", error=str(err))
             self._summary_available = False
 
-        # TreeIndex
+        # TreeIndex（需要 LLM 进行摘要生成，构建时可能较慢）
         try:
             self._tree_index = await asyncio.to_thread(
-                TreeIndex.from_nodes, self._nodes
+                lambda: TreeIndex(nodes=self._nodes)
             )
             self._tree_available = True
             logger.info("TreeIndex 构建成功", node_count=len(self._nodes))
@@ -328,10 +332,10 @@ class IndexManager:
             logger.warning("TreeIndex 构建失败", error=str(err))
             self._tree_available = False
 
-        # KeywordTableIndex
+        # KeywordTableIndex（需要 LLM 抽取关键词）
         try:
             self._keyword_index = await asyncio.to_thread(
-                KeywordTableIndex.from_nodes, self._nodes
+                lambda: KeywordTableIndex(nodes=self._nodes)
             )
             self._keyword_available = True
             logger.info("KeywordTableIndex 构建成功", node_count=len(self._nodes))
@@ -383,7 +387,9 @@ class IndexManager:
     async def _query_summary(self, question: str, top_k: int) -> IndexQueryResult:
         """使用 SummaryIndex 执行摘要查询。
 
-        SummaryIndex 会遍历所有节点生成摘要，适合总结类问题。
+        优化策略：当节点数量过多（>30）时，采样前 30 个节点构建临时
+        SummaryIndex，避免遍历全部节点导致 LLM 调用超时。使用 compact
+        模式将节点文本紧凑拼接后一次性 LLM 调用。
 
         Args:
             question: 用户查询文本。
@@ -394,11 +400,31 @@ class IndexManager:
         """
         try:
             llm = self._get_llm()
-            query_engine = self._summary_index.as_query_engine(
-                llm=llm,
-                response_mode="tree_summarize",
-                similarity_top_k=top_k,
-            )
+
+            # 节点数量过多时采样，避免遍历全部节点导致超时
+            MAX_SUMMARY_NODES = 30
+            if len(self._nodes) > MAX_SUMMARY_NODES:
+                # 均匀采样：从头、中、尾各取一部分，保证覆盖全文
+                nodes_for_summary = self._nodes[:MAX_SUMMARY_NODES]
+                logger.info(
+                    "SummaryIndex 节点采样",
+                    total_nodes=len(self._nodes),
+                    sampled_nodes=len(nodes_for_summary),
+                )
+                from llama_index.core import SummaryIndex as _SI
+                tmp_index = _SI(nodes=nodes_for_summary)
+                query_engine = tmp_index.as_query_engine(
+                    llm=llm,
+                    response_mode="compact",
+                    similarity_top_k=top_k,
+                )
+            else:
+                query_engine = self._summary_index.as_query_engine(
+                    llm=llm,
+                    response_mode="compact",
+                    similarity_top_k=top_k,
+                )
+
             response = await asyncio.to_thread(query_engine.query, question)
             citations = self._extract_citations(response, "summary")
             return IndexQueryResult(

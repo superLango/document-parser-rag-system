@@ -39,6 +39,7 @@
 
 import asyncio
 import re
+from html.parser import HTMLParser
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -53,6 +54,50 @@ _SECTION_PATTERN: re.Pattern[str] = re.compile(r"^(\d+(?:\.\d+)*)\s+(.+)$")
 # 中文语境下的递归分块分隔符，按优先级从高到低排列
 # 优先在段落边界切分，其次换行、句号、分号、逗号、空格，最后逐字符
 _DEFAULT_SEPARATORS: list[str] = ["\n\n", "\n", "。", "；", "，", " ", ""]
+
+# 匹配 HTML <table>...</table> 块（非贪婪匹配，支持嵌套属性）
+_HTML_TABLE_PATTERN: re.Pattern[str] = re.compile(
+    r"<table[^>]*>.*?</table>", re.IGNORECASE | re.DOTALL
+)
+
+# 表格 chunk 按行分组的最大行数（超过则分割，每组都带表头）
+_TABLE_MAX_ROWS_PER_CHUNK: int = 15
+
+
+class _HTMLTableParser(HTMLParser):
+    """简易 HTML 表格解析器，提取行列数据。
+
+    解析 <table> 中的 <tr> 行与 <td>/<th> 单元格，
+    忽略 rowspan/colspan 合并语义（取文本内容）。
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.rows: list[list[str]] = []
+        self._current_row: list[str] | None = None
+        self._current_cell: list[str] = []
+        self._in_cell: bool = False
+
+    def handle_starttag(self, tag: str, attrs: list) -> None:
+        tag_lower = tag.lower()
+        if tag_lower == "tr":
+            self._current_row = []
+        elif tag_lower in ("td", "th"):
+            self._in_cell = True
+            self._current_cell = []
+
+    def handle_endtag(self, tag: str) -> None:
+        tag_lower = tag.lower()
+        if tag_lower in ("td", "th") and self._current_row is not None:
+            self._current_row.append("".join(self._current_cell).strip())
+            self._in_cell = False
+        elif tag_lower == "tr" and self._current_row is not None:
+            self.rows.append(self._current_row)
+            self._current_row = None
+
+    def handle_data(self, data: str) -> None:
+        if self._in_cell:
+            self._current_cell.append(data)
 
 
 class StructureAwareChunker:
@@ -170,6 +215,258 @@ class StructureAwareChunker:
         )
         return chunks
 
+    def _extract_html_tables(
+        self, text: str
+    ) -> tuple[list[dict], str]:
+        """从 OCR 文本中提取 HTML <table> 块，返回结构化表格列表与清理后文本。
+
+        OCR 服务（PaddleOCR 版面分析）会将识别到的表格以 HTML 格式嵌入
+        解析文本。这些 HTML 表格包含完整的行列数据，但被当作普通文本
+        分块时会被截断，破坏行列关系。本方法提取这些 HTML 表格为独立
+        结构化表格，并从原文中移除以避免干扰常规分块。
+
+        Args:
+            text: OCR 解析文本，可能包含 HTML <table> 块。
+
+        Returns:
+            tuple[list[dict], str]:
+                - 表格列表，每个表格含 headers/rows/markdown/page_hint/table_id
+                - 移除 HTML 表格后的清理文本（保留表格前的标题行作为上下文）
+        """
+        tables: list[dict] = []
+        matches = list(_HTML_TABLE_PATTERN.finditer(text))
+
+        if not matches:
+            return tables, text
+
+        # 从后往前替换，避免偏移量变化
+        cleaned_text = text
+        for match in reversed(matches):
+            html_block = match.group(0)
+            start = match.start()
+
+            # 尝试从表格前的文本中提取表格标题（如"表1 奥氏体型不锈钢的化学成分"）
+            preceding_text = text[max(0, start - 200):start]
+            title_match = re.search(
+                r"((?:表|Table)\s*\d+[^<\n]{0,60})$", preceding_text, re.IGNORECASE
+            )
+            table_title = title_match.group(1).strip() if title_match else ""
+
+            # 解析 HTML 表格为行列数据
+            rows = self._html_table_to_rows(html_block)
+            if not rows or len(rows) < 2:
+                continue
+
+            # 第一行作为表头
+            headers = rows[0]
+            data_rows = [r for r in rows[1:] if any(c for c in r)]
+            if not data_rows:
+                continue
+
+            # 补齐不等长行
+            col_count = max(len(headers), max(len(r) for r in data_rows))
+            while len(headers) < col_count:
+                headers.append("")
+            for r in data_rows:
+                while len(r) < col_count:
+                    r.append("")
+
+            table_dict = {
+                "table_id": len(tables),
+                "title": table_title,
+                "headers": headers,
+                "rows": data_rows,
+                "row_count": len(data_rows),
+                "col_count": col_count,
+                "html": html_block,
+            }
+            table_dict["markdown"] = self._rows_to_markdown(headers, data_rows)
+            tables.append(table_dict)
+
+            # 从清理文本中移除 HTML 表格块
+            cleaned_text = cleaned_text[:match.start()] + cleaned_text[match.end():]
+
+        logger.info(
+            "HTML 表格提取完成",
+            table_count=len(tables),
+            total_rows=sum(t["row_count"] for t in tables),
+        )
+        return tables, cleaned_text
+
+    @staticmethod
+    def _html_table_to_rows(html_block: str) -> list[list[str]]:
+        """将 HTML 表格块解析为行列数据。
+
+        使用内置 HTMLParser 解析 <tr>/<td> 标签，提取纯文本内容。
+        忽略 rowspan/colspan 合并语义（简化处理，取文本内容）。
+
+        Args:
+            html_block: HTML <table>...</table> 字符串。
+
+        Returns:
+            list[list[str]]: 行列表，每行为单元格字符串列表。
+        """
+        parser = _HTMLTableParser()
+        try:
+            parser.feed(html_block)
+        except Exception as err:
+            logger.warning("HTML 表格解析失败", error=str(err))
+            return []
+        return parser.rows
+
+    @staticmethod
+    def _rows_to_markdown(
+        headers: list[str], rows: list[list[str]], max_rows: int | None = None
+    ) -> str:
+        """将行列数据转换为 Markdown 格式表格。
+
+        Args:
+            headers: 表头列表。
+            rows: 数据行列表。
+            max_rows: 最多包含的数据行数，None 表示不限制。
+
+        Returns:
+            str: Markdown 格式表格字符串。
+        """
+        if not headers:
+            return ""
+
+        display_rows = rows[:max_rows] if max_rows else rows
+        header_line = "| " + " | ".join(headers) + " |"
+        separator = "| " + " | ".join(["---"] * len(headers)) + " |"
+        data_lines = [
+            "| " + " | ".join(row) + " |" for row in display_rows
+        ]
+        return "\n".join([header_line, separator] + data_lines)
+
+    def _split_table_to_chunks(
+        self,
+        table: dict,
+        doc_meta: dict,
+        max_rows: int = _TABLE_MAX_ROWS_PER_CHUNK,
+    ) -> list[dict]:
+        """将大表格按行分组为多个 chunk，每组都带表头。
+
+        确保每个 chunk 包含完整的表头 + 至多 max_rows 行数据，
+        使向量检索能精确匹配到包含目标数据行的 chunk。
+
+        Args:
+            table: 表格 dict，含 headers/rows/title 等。
+            doc_meta: 文档元数据。
+            max_rows: 每组最大数据行数，默认 15。
+
+        Returns:
+            list[dict]: 分块列表。小表格返回单个 chunk，大表格返回多个。
+        """
+        doc_id = doc_meta.get("doc_id", "unknown")
+        table_id = table.get("table_id", 0)
+        headers = table.get("headers", [])
+        rows = table.get("rows", [])
+        title = table.get("title", "")
+        row_count = len(rows)
+
+        # 小表格：单个 chunk
+        if row_count <= max_rows:
+            return [self._make_table_chunk(
+                headers, rows, doc_meta, table_id, 0, 1, title, row_count
+            )]
+
+        # 大表格：按行分组
+        chunks: list[dict] = []
+        group_count = (row_count + max_rows - 1) // max_rows
+        for group_idx in range(group_count):
+            start = group_idx * max_rows
+            end = min(start + max_rows, row_count)
+            group_rows = rows[start:end]
+            chunks.append(self._make_table_chunk(
+                headers, group_rows, doc_meta, table_id,
+                group_idx, group_count, title, row_count,
+            ))
+
+        logger.info(
+            "大表格按行分组",
+            table_id=table_id,
+            total_rows=row_count,
+            group_count=group_count,
+            max_rows=max_rows,
+        )
+        return chunks
+
+    def _make_table_chunk(
+        self,
+        headers: list[str],
+        rows: list[list[str]],
+        doc_meta: dict,
+        table_id: int,
+        group_idx: int,
+        group_count: int,
+        title: str,
+        total_rows: int,
+    ) -> dict:
+        """生成单个表格分块。
+
+        在 Markdown 表格前添加语义增强前缀（表格标题、列标题、行范围），
+        提升向量检索的匹配率。
+
+        Args:
+            headers: 表头列表。
+            rows: 本 chunk 包含的数据行。
+            doc_meta: 文档元数据。
+            table_id: 表格序号。
+            group_idx: 分组序号（从 0 开始）。
+            group_count: 总分组数（1 表示未分割）。
+            title: 表格标题（如"表1 奥氏体型不锈钢的化学成分"）。
+            total_rows: 原始表格总行数（用于元数据记录）。
+
+        Returns:
+            dict: 分块 dict，metadata.chunk_type="table"。
+        """
+        doc_id = doc_meta.get("doc_id", "unknown")
+        markdown = self._rows_to_markdown(headers, rows)
+        header_str = ", ".join(h for h in headers if h) or "未命名列"
+
+        # 语义增强前缀
+        title_part = f"（{title}）" if title else ""
+        range_part = (
+            f"第{group_idx + 1}-{group_idx + len(rows)}行/共{total_rows}行"
+            if group_count > 1
+            else f"共{len(rows)}行"
+        )
+
+        enhanced_text = (
+            f"【表格{table_id}】{title_part}列标题：{header_str}\n"
+            f"数据范围：{range_part}\n\n"
+            f"{markdown}"
+        )
+
+        chunk_id = (
+            f"{doc_id}_table_{table_id}"
+            if group_count == 1
+            else f"{doc_id}_table_{table_id}_g{group_idx}"
+        )
+
+        return {
+            "chunk_id": chunk_id,
+            "text": enhanced_text,
+            "metadata": {
+                "doc_id": doc_id,
+                "doc_title": doc_meta.get("doc_title", ""),
+                "file_name": doc_meta.get("file_name", ""),
+                "chunk_type": "table",
+                "table_id": table_id,
+                "table_group": group_idx,
+                "table_group_count": group_count,
+                "table_title": title,
+                "table_headers": headers,
+                "table_row_count": len(rows),
+                "table_total_rows": total_rows,
+                "title_chain": f"{doc_meta.get('doc_title', '')} > 表格{table_id}{title_part}",
+                "section_level": "table",
+                "section_title": f"表格{table_id}{title_part}",
+                "chunk_index": table_id * 100 + group_idx,
+            },
+        }
+
     def _extract_sections(self, text: str, doc_meta: dict) -> list[dict]:
         """提取章节结构，匹配 "3.2.1 标题" 格式。
 
@@ -261,6 +558,77 @@ class StructureAwareChunker:
         # 拼接所有页面的文本，页面间以空行分隔以保留页面边界
         full_text = "\n\n".join(p["text"] for p in pages if p.get("text"))
         return await self.chunk_document(full_text, doc_meta)
+
+    async def chunk_document_with_tables(
+        self,
+        text: str,
+        doc_meta: dict,
+        pdf_path: str | None = None,
+    ) -> list[dict]:
+        """表格感知分块（P1.1 + P3 优化）。
+
+        在常规结构感知分块基础上，从 OCR 文本和 PDF 中提取表格并作为独立分块。
+        表格保留完整 Markdown 结构，附加语义增强前缀。大表格按行分组，
+        确保每个 chunk 包含完整表头 + 数据行。
+
+        优化流程（P3）：
+        1. 优先从 OCR 文本中提取 HTML <table> 块（扫描版 PDF 的主要表格来源）
+        2. 对移除表格后的文本进行常规结构感知分块
+        3. 表格按行分组为多个 chunk（大表分割，每组带表头）
+        4. 若提供 pdf_path，用 pdfplumber 补充提取矢量表格（作为补充）
+
+        Args:
+            text: 文档纯文本（OCR 结果，可能含 HTML 表格）。
+            doc_meta: 文档元数据。
+            pdf_path: 原始 PDF 文件路径，提供时启用 pdfplumber 表格提取。
+
+        Returns:
+            list[dict]: 分块列表（常规分块 + 表格分块）。
+        """
+        # 1. 从 OCR 文本提取 HTML 表格（P3 优化：扫描版 PDF 的主要表格来源）
+        html_tables, cleaned_text = self._extract_html_tables(text)
+
+        # 2. 对移除表格后的文本进行常规结构感知分块
+        chunks = await self.chunk_document(cleaned_text, doc_meta)
+
+        # 3. HTML 表格按行分组为独立 chunk
+        table_chunk_count = 0
+        for table in html_tables:
+            table_chunks = self._split_table_to_chunks(table, doc_meta)
+            chunks.extend(table_chunks)
+            table_chunk_count += len(table_chunks)
+
+        # 4. pdfplumber 补充提取（矢量 PDF 表格，作为补充）
+        if pdf_path:
+            try:
+                from app.services.table_extractor import table_extractor
+
+                pdf_tables = await table_extractor.extract_tables(pdf_path)
+                if pdf_tables:
+                    logger.info(
+                        "表格感知分块：pdfplumber 补充提取到表格",
+                        doc_id=doc_meta.get("doc_id"),
+                        table_count=len(pdf_tables),
+                    )
+                    for table in pdf_tables:
+                        table_chunk = table_extractor.table_to_chunk(table, doc_meta)
+                        chunks.append(table_chunk)
+                        table_chunk_count += 1
+            except Exception as err:
+                logger.warning(
+                    "pdfplumber 表格提取失败，仅使用 HTML 表格分块",
+                    doc_id=doc_meta.get("doc_id"),
+                    error=str(err),
+                )
+
+        logger.info(
+            "表格感知分块完成",
+            doc_id=doc_meta.get("doc_id"),
+            total_chunks=len(chunks),
+            html_tables=len(html_tables),
+            table_chunks=table_chunk_count,
+        )
+        return chunks
 
 
 # 模块级单例，默认 chunk_size=512、chunk_overlap=64

@@ -47,3 +47,6 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+# ===== RAG evaluation scripts (local only) =====
+scripts/rag_evaluation.py

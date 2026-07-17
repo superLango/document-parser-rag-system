@@ -25,6 +25,7 @@ arq 任务原生为 async 函数，与服务层异步接口完美契合，无需
     记录错误信息，更新任务状态为 ``failed``，并重新抛出以由 arq 标记失败。
 """
 
+import os
 import traceback
 import uuid
 
@@ -36,10 +37,15 @@ from app.core.logging import get_logger
 from app.models.document import Document
 from app.models.task import Task as TaskModel
 from app.services.chunking_service import chunker
-from app.services.embedding_service import embedding_service
 from app.services.vector_store import vector_store
 
 logger = get_logger(__name__)
+
+# 本地 PDF 查找目录（用于表格感知分块）
+# 通过环境变量可覆盖，默认指向测试标准文档目录
+_PDF_DIR = os.environ.get(
+    "TEST_PDF_DIR", "/home/hanson/doc_parse_project/test_standard_doc"
+)
 
 
 async def _update_progress(task_id: str | None, progress: int, message: str) -> None:
@@ -127,105 +133,68 @@ async def index_document_impl(doc_id: str, ctx: dict) -> dict:
                 }
 
                 # ----------------------------------------------------------
-                # 阶段 2：结构感知分块（进度 40%）
+                # 阶段 2：表格感知分块（P1.1 优化，进度 40%）
                 # ----------------------------------------------------------
+                # 若本地能找到对应 PDF 文件，启用表格提取生成独立表格分块；
+                # 否则退化为常规结构感知分块。
                 await _update_progress(task_id, 40, "文本分块中")
-                chunks: list[dict] = await chunker.chunk_document(
-                    document.parsed_text, doc_meta
-                )
+                pdf_path: str | None = None
+                if document.filename:
+                    candidate = os.path.join(_PDF_DIR, document.filename)
+                    if os.path.isfile(candidate):
+                        pdf_path = candidate
+
+                if pdf_path:
+                    chunks: list[dict] = await chunker.chunk_document_with_tables(
+                        document.parsed_text, doc_meta, pdf_path=pdf_path
+                    )
+                else:
+                    chunks = await chunker.chunk_document(
+                        document.parsed_text, doc_meta
+                    )
+
                 if not chunks:
                     raise BusinessException(
                         message="文档分块结果为空，无法索引",
                         code=ErrorCode.BUSINESS_TASK_FAILED,
                     )
+
+                table_chunk_count = sum(
+                    1 for c in chunks
+                    if c.get("metadata", {}).get("chunk_type") == "table"
+                )
                 logger.info(
                     "文本分块完成",
                     doc_id=doc_id,
                     chunk_count=len(chunks),
+                    table_chunks=table_chunk_count,
+                    pdf_path=pdf_path,
                 )
 
                 # ----------------------------------------------------------
-                # 阶段 3：bge-m3 嵌入（进度 70%）
+                # 阶段 3-4.5：增量索引更新（P1.5 优化，进度 70%→90%）
                 # ----------------------------------------------------------
-                await _update_progress(task_id, 70, "向量嵌入中")
-                texts: list[str] = [c["text"] for c in chunks]
-                embed_result: dict = await embedding_service.embed_documents(texts)
-                dense_vectors = embed_result["dense_vectors"]
-                sparse_indices = embed_result["sparse_indices"]
-                logger.info(
-                    "向量嵌入完成",
+                # 调用 vector_store.incremental_insert 完成以下完整流程：
+                #   a. 删除该文档的旧分块（避免 chunk_id 冲突）
+                #   b. 批量嵌入新分块（bge-m3 dense + sparse）
+                #   c. 写入 Milvus（索引自动更新）
+                #   d. 失效相关缓存（L1/L2/L3）
+                #   e. 增量更新 LlamaIndex 辅助索引（已构建时追加节点）
+                await _update_progress(task_id, 70, "向量嵌入与入库中")
+                incremental_result: dict = await vector_store.incremental_insert(
+                    chunks=chunks,
                     doc_id=doc_id,
-                    dense_shape=str(dense_vectors.shape),
-                    sparse_count=len(sparse_indices),
+                    replace_existing=True,
                 )
-
-                # ----------------------------------------------------------
-                # 阶段 4：组装分块向量并插入 Milvus（进度 90%）
-                # ----------------------------------------------------------
-                await _update_progress(task_id, 90, "写入向量库中")
-                # 将嵌入向量合并到分块字典中，满足 vector_store.insert 的字段要求
-                insert_chunks: list[dict] = []
-                for idx, chunk in enumerate(chunks):
-                    meta = chunk["metadata"]
-                    insert_chunks.append(
-                        {
-                            "chunk_id": chunk["chunk_id"],
-                            "text": chunk["text"],
-                            "dense_vector": dense_vectors[idx],
-                            "sparse_vector": sparse_indices[idx],
-                            "doc_id": doc_id,
-                            "title_chain": meta.get("title_chain", ""),
-                            "metadata": meta,
-                        }
-                    )
-                primary_keys: list[int] = await vector_store.insert(insert_chunks)
+                inserted_count: int = incremental_result["inserted_count"]
                 logger.info(
-                    "向量入库完成",
+                    "增量索引更新完成",
                     doc_id=doc_id,
-                    inserted=len(primary_keys),
+                    inserted=inserted_count,
+                    deleted=incremental_result["deleted_count"],
+                    cache_invalidated=incremental_result["cache_invalidated"],
+                    llm_index_updated=incremental_result["llm_index_updated"],
                 )
-
-                # ----------------------------------------------------------
-                # 阶段 4.5：构建 LlamaIndex 辅助索引（Summary/Tree/Keyword）
-                # ----------------------------------------------------------
-                # 将分块转换为 LlamaIndex TextNode 并加入 IndexManager
-                # 失败不影响主流程（Milvus 索引已成功）
-                try:
-                    from llama_index.core.schema import TextNode as LITextNode
-                    from app.services.index_manager import index_manager
-
-                    li_nodes: list[LITextNode] = []
-                    for chunk in chunks:
-                        meta = chunk["metadata"]
-                        li_nodes.append(
-                            LITextNode(
-                                id_=chunk["chunk_id"],
-                                text=chunk["text"],
-                                metadata={
-                                    "doc_id": doc_id,
-                                    "doc_title": meta.get("doc_title", ""),
-                                    "file_name": meta.get("file_name", ""),
-                                    "title_chain": meta.get("title_chain", ""),
-                                    "section_level": meta.get("section_level", ""),
-                                    "section_title": meta.get("section_title", ""),
-                                    "chunk_index": meta.get("chunk_index", 0),
-                                },
-                            )
-                        )
-                    await index_manager.build_indices(li_nodes)
-                    logger.info(
-                        "LlamaIndex 辅助索引构建完成",
-                        doc_id=doc_id,
-                        node_count=len(li_nodes),
-                    )
-                except ImportError:
-                    logger.debug("llama-index-core 未安装，跳过辅助索引构建")
-                except Exception as li_err:
-                    logger.warning(
-                        "LlamaIndex 辅助索引构建失败，不影响主流程",
-                        doc_id=doc_id,
-                        error=str(li_err),
-                    )
 
                 # ----------------------------------------------------------
                 # 阶段 5：更新文档状态为 indexed（进度 100%）
@@ -234,13 +203,22 @@ async def index_document_impl(doc_id: str, ctx: dict) -> dict:
                 await db.commit()
 
                 await _update_progress(task_id, 100, "索引完成")
-                logger.info("文档索引任务完成", doc_id=doc_id, chunk_count=len(chunks))
+                logger.info(
+                    "文档索引任务完成",
+                    doc_id=doc_id,
+                    chunk_count=len(chunks),
+                    inserted=inserted_count,
+                )
 
                 return {
                     "doc_id": doc_id,
                     "status": "indexed",
                     "chunk_count": len(chunks),
-                    "inserted": len(primary_keys),
+                    "table_chunk_count": table_chunk_count,
+                    "inserted": inserted_count,
+                    "deleted_old": incremental_result["deleted_count"],
+                    "cache_invalidated": incremental_result["cache_invalidated"],
+                    "llm_index_updated": incremental_result["llm_index_updated"],
                 }
 
             except Exception as exc:

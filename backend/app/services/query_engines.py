@@ -127,17 +127,33 @@ class SubQuestionQueryEngineWrapper:
 
             # 为每个子问题创建查询引擎并并行执行
             # 优先使用 SummaryIndex（适合事实查询），降级到 KeywordTableIndex
+            # 节点过多时采样前 30 个，避免遍历全部节点导致超时
+            MAX_SUBQ_NODES = 30
+            from llama_index.core import SummaryIndex as _SI
+
             async def _query_one(sub_q: str) -> dict:
                 """查询单个子问题。"""
                 try:
                     # 选择可用的索引
                     if im._summary_available and im._summary_index is not None:
-                        engine = im._summary_index.as_query_engine(
-                            llm=llm, similarity_top_k=top_k
-                        )
+                        if len(im._nodes) > MAX_SUBQ_NODES:
+                            tmp_idx = _SI(nodes=im._nodes[:MAX_SUBQ_NODES])
+                            engine = tmp_idx.as_query_engine(
+                                llm=llm,
+                                response_mode="compact",
+                                similarity_top_k=top_k,
+                            )
+                        else:
+                            engine = im._summary_index.as_query_engine(
+                                llm=llm,
+                                response_mode="compact",
+                                similarity_top_k=top_k,
+                            )
                     elif im._keyword_available and im._keyword_index is not None:
                         engine = im._keyword_index.as_query_engine(
-                            llm=llm, similarity_top_k=top_k
+                            llm=llm,
+                            response_mode="compact",
+                            similarity_top_k=top_k,
                         )
                     else:
                         return {"question": sub_q, "answer": "", "citations": []}

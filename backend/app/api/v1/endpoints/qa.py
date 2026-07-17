@@ -245,3 +245,105 @@ async def qa_health() -> dict:
             ``{"status": "healthy", "service": "rag"}``。
     """
     return {"status": "healthy", "service": "rag"}
+
+
+@router.post("/build-llamaindex")
+async def build_llamaindex_index(
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
+    """手动触发 LlamaIndex 辅助索引构建。
+
+    从数据库加载所有已索引文档的 parsed_text，分块后转换为
+    LlamaIndex TextNode，调用 index_manager.build_indices() 构建
+    SummaryIndex / TreeIndex / KeywordTableIndex。
+
+    用于后端进程启动后恢复 LlamaIndex 索引（arq worker 构建的
+    索引存在于 worker 进程，后端进程需单独构建）。
+    """
+    import asyncio
+    from sqlalchemy import select
+    from app.core.database import AsyncSessionLocal
+    from app.models.document import Document
+
+    try:
+        from llama_index.core.schema import TextNode as LITextNode
+        from app.services.index_manager import index_manager
+    except ImportError:
+        return {"status": "skipped", "message": "llama-index-core 未安装"}
+
+    # 1. 查询所有已索引文档
+    async with AsyncSessionLocal() as db:
+        stmt = select(Document).where(Document.status == "indexed")
+        result = await db.execute(stmt)
+        documents = list(result.scalars().all())
+
+    if not documents:
+        return {"status": "no_documents", "message": "没有已索引的文档"}
+
+    # 2. 表格感知分块（P1.1 优化）：常规分块 + PDF 表格提取
+    from app.services.chunking_service import chunker
+    from app.services.table_extractor import table_extractor
+
+    # 本地 PDF 查找目录（测试文档存放路径）
+    import os
+    _PDF_DIR = os.environ.get(
+        "TEST_PDF_DIR", "/home/hanson/doc_parse_project/test_standard_doc"
+    )
+
+    all_nodes: list[LITextNode] = []
+    table_node_count = 0
+    for doc in documents:
+        text = doc.parsed_text or ""
+        if not text.strip():
+            continue
+
+        # 查找本地 PDF 文件用于表格提取
+        pdf_path: str | None = None
+        if doc.filename:
+            candidate = os.path.join(_PDF_DIR, doc.filename)
+            if os.path.isfile(candidate):
+                pdf_path = candidate
+
+        doc_meta = {
+            "doc_id": str(doc.id),
+            "doc_title": doc.filename or "",
+            "file_name": doc.filename or "",
+        }
+
+        # 表格感知分块：常规文本分块 + 表格独立分块
+        chunks = await chunker.chunk_document_with_tables(
+            text, doc_meta, pdf_path=pdf_path
+        )
+
+        for chunk in chunks:
+            chunk_text = chunk.get("text", "")
+            if len(chunk_text) < 10:
+                continue
+            chunk_meta = chunk.get("metadata", {})
+            node = LITextNode(
+                id_=chunk.get("chunk_id", f"{doc.id}_{len(all_nodes)}"),
+                text=chunk_text,
+                metadata={
+                    "doc_id": str(doc.id),
+                    "doc_title": doc.filename or "",
+                    "file_name": doc.filename or "",
+                    "chunk_type": chunk_meta.get("chunk_type", "text"),
+                    "title_chain": chunk_meta.get("title_chain", ""),
+                },
+            )
+            all_nodes.append(node)
+            if chunk_meta.get("chunk_type") == "table":
+                table_node_count += 1
+
+    # 3. 构建 LlamaIndex 索引
+    await index_manager.build_indices(all_nodes)
+
+    return {
+        "status": "success",
+        "document_count": len(documents),
+        "node_count": len(all_nodes),
+        "table_node_count": table_node_count,
+        "summary_available": index_manager._summary_available,
+        "tree_available": index_manager._tree_available,
+        "keyword_available": index_manager._keyword_available,
+    }

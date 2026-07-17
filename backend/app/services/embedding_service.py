@@ -106,8 +106,8 @@ class EmbeddingService:
 
         Args:
             texts: 待编码文本列表。
-            batch_size: 批次大小，默认使用配置项 EMBEDDING_BATCH_SIZE（=4），
-                防止显存溢出。
+            batch_size: 批次大小，默认使用配置项 EMBEDDING_BATCH_SIZE（=16），
+                利用批量推理加速（P2.2 优化，从 4 提升到 16）。
 
         Returns:
             dict: 包含以下键：
@@ -178,7 +178,7 @@ class EmbeddingService:
     async def embed_documents(self, texts: list[str]) -> dict[str, Any]:
         """编码文档列表（批量）。
 
-        使用配置项 EMBEDDING_BATCH_SIZE（=4）作为批次大小。
+        使用配置项 EMBEDDING_BATCH_SIZE（=16）作为批次大小。
 
         Args:
             texts: 待编码文档文本列表。

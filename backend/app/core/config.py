@@ -104,7 +104,7 @@ class Settings(BaseSettings):
         description="bge-m3 嵌入模型目录路径",
     )
     EMBEDDING_BATCH_SIZE: int = Field(
-        default=4, description="嵌入批量大小（防止显存溢出）"
+        default=16, description="嵌入批量大小（P2.2 优化：从 4 提升到 16，利用批量推理加速）"
     )
 
     # ---------------------------------------------------------------
@@ -113,6 +113,20 @@ class Settings(BaseSettings):
     LLM_MODEL_PATH: str = Field(
         default="/home/hanson/doc_parse_project/models/Qwen/Qwen3___5-9B",
         description="vLLM 大语言模型权重目录路径",
+    )
+    # 远程 vLLM OpenAI 兼容 API 配置（设置后优先使用 API 模式，无需本地安装 vllm）
+    LLM_API_BASE: str | None = Field(
+        default="http://localhost:11434/v1",
+        description="远程 vLLM/Ollama OpenAI 兼容 API 地址（为空则使用本地加载模式）",
+    )
+    LLM_API_MODEL: str = Field(
+        default="qwen3.6:35b",
+        description="远程 API 使用的模型名称",
+    )
+    # 轻量模型配置（用于 general 意图简单事实查询，降低延迟）
+    LLM_LIGHT_MODEL: str = Field(
+        default="gemma4:12b",
+        description="轻量模型名称（用于简单查询的LLM路由）",
     )
 
     # ---------------------------------------------------------------
@@ -128,7 +142,7 @@ class Settings(BaseSettings):
     # ---------------------------------------------------------------
     RAG_TOP_K: int = Field(default=5, description="RAG检索默认返回数量")
     RAG_RERANK_POOL: int = Field(default=15, description="RAG重排候选池大小")
-    RAG_MAX_CONTEXT_LENGTH: int = Field(default=4096, description="RAG上下文最大token数")
+    RAG_MAX_CONTEXT_LENGTH: int = Field(default=8192, description="RAG上下文最大token数")
 
     # ---------------------------------------------------------------
     # JWT 鉴权配置

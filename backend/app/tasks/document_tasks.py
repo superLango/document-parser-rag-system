@@ -15,6 +15,9 @@
 
 2. ``cleanup_expired_tasks_impl``：定时清理超过 7 天的 ``Task`` 记录
 
+P2.5 优化：PDF 多页 OCR 与版面分析并行执行（带并发限制），
+大幅缩短多页文档解析耗时（预期 3 倍提速）。
+
 arq 任务原生为 async 函数，与服务层异步接口完美契合，无需 ``asyncio.run`` 包装。
 数据库访问直接使用 ``AsyncSessionLocal`` 上下文管理器，而非 FastAPI 的 ``get_db`` 依赖。
 
@@ -23,10 +26,12 @@ arq 任务原生为 async 函数，与服务层异步接口完美契合，无需
     记录错误信息，更新任务状态为 ``failed``，并重新抛出以由 arq 标记失败。
 """
 
+import asyncio
 import traceback
 import uuid
 from datetime import datetime, timedelta
 
+import fitz  # PyMuPDF，用于 PDF 转图像
 from sqlalchemy import delete, select
 
 from app.core.database import AsyncSessionLocal
@@ -46,6 +51,113 @@ logger = get_logger(__name__)
 
 # 过期任务清理阈值：删除创建时间早于该天数前的 Task 记录
 _TASK_EXPIRE_DAYS: int = 7
+
+# PDF 转图像的 DPI（平衡 OCR 质量与速度）
+_PDF_RENDER_DPI: int = 200
+
+# P2.5: PDF 多页 OCR / 版面分析并行度上限
+# 受 GPU 显存约束，过高的并发会导致 OOM；4 路并发在多数 GPU 上稳定
+_PDF_PARALLEL_PAGES: int = 4
+
+
+def _is_pdf(data: bytes) -> bool:
+    """检测字节流是否为 PDF 文件（通过 magic bytes）。"""
+    return data[:5] == b"%PDF-"
+
+
+def _pdf_to_page_images(pdf_bytes: bytes, dpi: int = _PDF_RENDER_DPI) -> list[bytes]:
+    """将 PDF 每页转为 PNG 图像字节列表。
+
+    Args:
+        pdf_bytes: PDF 文件原始字节流。
+        dpi: 渲染分辨率，默认 200（平衡 OCR 质量与速度）。
+
+    Returns:
+        list[bytes]: 每页对应的 PNG 图像字节流列表。
+    """
+    images: list[bytes] = []
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    for page in doc:
+        pix = page.get_pixmap(dpi=dpi)
+        images.append(pix.tobytes("png"))
+    doc.close()
+    return images
+
+
+async def _parallel_ocr_pages(
+    page_images: list[bytes],
+    concurrency: int = _PDF_PARALLEL_PAGES,
+) -> list[dict]:
+    """并行 OCR 多页图像（P2.5 优化）。
+
+    使用 ``asyncio.Semaphore`` 限制并发度，避免 GPU 显存溢出。
+    返回结果顺序与输入 ``page_images`` 一致，便于按页序合并文本。
+
+    Args:
+        page_images: 每页 PNG 图像字节流列表。
+        concurrency: 最大并发数，默认 4。
+
+    Returns:
+        list[dict]: 每页 OCR 结果列表，顺序与输入一致。每项含
+            ``text``、``layout``、``page``（页码从 1 开始）字段。
+    """
+    semaphore = asyncio.Semaphore(concurrency)
+    total = len(page_images)
+
+    async def _ocr_one(idx: int, img: bytes) -> dict:
+        async with semaphore:
+            result = await ocr_service.recognize_with_layout(img)
+            # 标注页码，便于后续合并
+            for item in result.get("layout", []):
+                item["page"] = idx + 1
+            result["page"] = idx + 1
+            return result
+
+    tasks = [_ocr_one(i, img) for i, img in enumerate(page_images)]
+    results = await asyncio.gather(*tasks, return_exceptions=False)
+
+    logger.info(
+        "并行 OCR 完成",
+        total_pages=total,
+        concurrency=concurrency,
+    )
+    return list(results)
+
+
+async def _parallel_layout_pages(
+    page_images: list[bytes],
+    concurrency: int = _PDF_PARALLEL_PAGES,
+) -> list[list[dict]]:
+    """并行版面分析多页图像（P2.5 优化）。
+
+    与 ``_parallel_ocr_pages`` 配合使用，对同样的页面图像并行执行
+    版面分析。返回结果顺序与输入一致。
+
+    Args:
+        page_images: 每页 PNG 图像字节流列表。
+        concurrency: 最大并发数，默认 4。
+
+    Returns:
+        list[list[dict]]: 每页文本块列表，已标注 ``page`` 字段。
+    """
+    semaphore = asyncio.Semaphore(concurrency)
+
+    async def _layout_one(idx: int, img: bytes) -> list[dict]:
+        async with semaphore:
+            blocks = await layout_service.extract_text_blocks(img)
+            for block in blocks:
+                block["page"] = idx + 1
+            return blocks
+
+    tasks = [_layout_one(i, img) for i, img in enumerate(page_images)]
+    results = await asyncio.gather(*tasks, return_exceptions=False)
+
+    logger.info(
+        "并行版面分析完成",
+        total_pages=len(page_images),
+        concurrency=concurrency,
+    )
+    return list(results)
 
 
 async def _update_progress(task_id: str | None, progress: int, message: str) -> None:
@@ -151,10 +263,40 @@ async def parse_document_impl(
                 # ----------------------------------------------------------
                 # 阶段 2：OCR 识别（进度 20%）
                 # ----------------------------------------------------------
+                # P2.5 优化：PDF 多页并行 OCR（带并发限制），替代原串行逐页 OCR
                 await _update_progress(task_id, 20, "OCR识别中")
-                ocr_result: dict = await ocr_service.recognize_with_layout(image_bytes)
-                full_text: str = ocr_result.get("text", "")
-                ocr_layout: list = ocr_result.get("layout", [])
+                if _is_pdf(image_bytes):
+                    # PDF 文档：逐页转为图像并并行 OCR，合并结果
+                    page_images: list[bytes] = _pdf_to_page_images(image_bytes)
+                    logger.info(
+                        "PDF 转图像完成",
+                        document_id=document_id,
+                        page_count=len(page_images),
+                    )
+                    # P2.5: 并行 OCR 所有页面（Semaphore 限制并发度）
+                    page_results: list[dict] = await _parallel_ocr_pages(
+                        page_images
+                    )
+                    all_texts: list[str] = []
+                    all_layouts: list[dict] = []
+                    for page_result in page_results:
+                        page_idx = page_result.get("page", 1) - 1
+                        page_text = page_result.get("text", "")
+                        if page_text:
+                            all_texts.append(
+                                f"--- 第{page_idx + 1}页 ---\n{page_text}"
+                            )
+                        for item in page_result.get("layout", []):
+                            all_layouts.append(item)
+                    full_text: str = "\n\n".join(all_texts)
+                    ocr_layout: list = all_layouts
+                    ocr_result = {"text": full_text, "layout": ocr_layout}
+                else:
+                    ocr_result: dict = await ocr_service.recognize_with_layout(
+                        image_bytes
+                    )
+                    full_text = ocr_result.get("text", "")
+                    ocr_layout = ocr_result.get("layout", [])
                 logger.info(
                     "OCR 识别完成",
                     document_id=document_id,
@@ -165,10 +307,20 @@ async def parse_document_impl(
                 # ----------------------------------------------------------
                 # 阶段 3：版面分析（进度 40%）
                 # ----------------------------------------------------------
+                # P2.5 优化：PDF 多页并行版面分析，替代原串行逐页分析
                 await _update_progress(task_id, 40, "版面分析中")
-                text_blocks: list[dict] = await layout_service.extract_text_blocks(
-                    image_bytes
-                )
+                if _is_pdf(image_bytes):
+                    # P2.5: 并行版面分析所有页面
+                    page_blocks_list: list[list[dict]] = (
+                        await _parallel_layout_pages(page_images)
+                    )
+                    text_blocks: list[dict] = []
+                    for blocks in page_blocks_list:
+                        text_blocks.extend(blocks)
+                else:
+                    text_blocks: list[dict] = await layout_service.extract_text_blocks(
+                        image_bytes
+                    )
                 # 将版面分析的文本块与 OCR 版面结果合并：
                 # OCR layout 携带识别文本，layout_service 提供更精细的区域置信度
                 merged_layout: list[dict] = _merge_layout(ocr_layout, text_blocks)
@@ -185,8 +337,10 @@ async def parse_document_impl(
                 # Popo 为非关键增强步骤：失败时静默跳过，不影响主流程
                 await _update_progress(task_id, 50, "文档后处理中")
                 try:
+                    # PDF 时传第一页图像给 Popo（增强步骤，非关键）
+                    popo_image = page_images[0] if _is_pdf(image_bytes) else image_bytes
                     popo_result = await popo_service.post_process(
-                        image_bytes,
+                        popo_image,
                         merged_layout,
                         ocr_result.get(
                             "page_size", {"width": 1240, "height": 1754}

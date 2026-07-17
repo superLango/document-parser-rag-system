@@ -203,9 +203,9 @@ class WorkerSettings:
     async def on_startup(ctx):
         from app.core.logging import get_logger
         logger = get_logger("arq_worker")
-        # 启动 Prometheus metrics HTTP server（端口 9100）
+        # 启动 Prometheus metrics HTTP server（端口 9102，避开 WeKnora 占用的 9100/9101）
         # 供 Prometheus 抓取 arq 任务相关指标
-        start_http_server(9100)
+        start_http_server(9102)
         # 初始化队列大小指标为 0，后续由任务调度自然反映
         task_queue_size.set(0)
         logger.info("arq Worker 启动，metrics server 监听 9100 端口")

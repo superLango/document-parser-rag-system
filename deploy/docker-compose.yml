@@ -101,6 +101,9 @@ services:
     environment:
       ETCD_ENDPOINTS: etcd:2379
       MINIO_ADDRESS: seaweedfs:8333
+      MINIO_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET_NAME: a-bucket
     volumes:
       - milvus_data:/var/lib/milvus
     depends_on:
