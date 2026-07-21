@@ -8,6 +8,7 @@ import cytoscape, {
   type NodeSingular,
   type EdgeSingular,
 } from 'cytoscape'
+import { Network } from 'lucide-vue-next'
 import type { GraphNode, GraphEdge } from '@/api/types'
 
 interface Props {
@@ -265,37 +266,21 @@ defineExpose({
 </script>
 
 <template>
-  <div class="graph-viewer">
-    <div ref="containerRef" class="cy-container" />
-    <el-empty
+  <div class="relative size-full">
+    <div ref="containerRef" class="size-full min-h-[400px] bg-zinc-900" />
+    <div
       v-if="!nodes.length"
-      class="graph-empty"
-      description="暂无图谱数据"
-      :image-size="80"
-    />
+      class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 py-12 text-center text-zinc-300"
+    >
+      <div class="flex size-12 items-center justify-center rounded-full bg-zinc-800 text-zinc-400">
+        <Network class="size-6" :stroke-width="1.25" />
+      </div>
+      <div class="space-y-1">
+        <p class="text-sm font-medium text-zinc-200">暂无图谱数据</p>
+        <p class="max-w-sm text-xs text-zinc-400">
+          请构建图谱或选择文档后查看节点与关系
+        </p>
+      </div>
+    </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.graph-viewer {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.cy-container {
-  width: 100%;
-  height: 100%;
-  min-height: 400px;
-  background-color: var(--bg-base, #0f1623);
-}
-
-.graph-empty {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-</style>

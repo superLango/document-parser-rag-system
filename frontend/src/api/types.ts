@@ -39,7 +39,7 @@ export interface User {
 }
 
 // ---------- 文档 ----------
-export type DocumentStatus = 'pending' | 'parsing' | 'completed' | 'failed'
+export type DocumentStatus = 'pending' | 'processing' | 'completed' | 'failed'
 
 /**
  * 版面分析区域（BoundingBox）
@@ -65,30 +65,37 @@ export interface LayoutData {
   [key: string]: unknown
 }
 
+/**
+ * 文档模型
+ * 字段与后端 DocumentResponse（backend/app/schemas/document.py）严格对齐
+ * - id: UUID 字符串
+ * - filename: 原始文件名
+ * - file_size: 文件字节数
+ * - file_type: 扩展名（不含点），如 'pdf'
+ * - status: pending / processing / completed / failed
+ * - parsed_text: OCR 解析后的纯文本，未解析时为 null
+ * - structured_data: 结构化抽取结果，未抽取时为 null
+ * - layout_data: 版面分析结果（含 merged 区域列表），未解析时为 null
+ * - created_at: 创建时间 ISO 字符串
+ * - updated_at: 更新时间，可为 null
+ */
 export interface Document {
   id: string
-  title: string
-  file_name: string
-  file_path: string
+  filename: string
   file_size: number
-  mime_type: string
-  doc_type: string
-  standard_number: string
+  file_type: string | null
   status: DocumentStatus
-  page_count: number
-  uploaded_at: string
-  parsed_at: string | null
-  metadata: Record<string, unknown>
-  // 解析结果字段（后端 DocumentResponse 暴露，可能为 null）
   parsed_text?: string | null
   structured_data?: Record<string, unknown> | null
   layout_data?: LayoutData | null
+  created_at: string
+  updated_at: string | null
 }
 
 export interface DocumentCreate {
-  title: string
-  doc_type: string
-  standard_number?: string
+  filename: string
+  file_size: number
+  file_type?: string | null
 }
 
 // ---------- 解析任务 ----------
@@ -128,13 +135,24 @@ export interface SchemaField {
   enum_values?: string[]
 }
 
+/**
+ * Schema 配置，支持父子层级结构
+ * - parent_id 为 null 时表示父分类
+ * - parent_id 不为空时表示该分类下的子 Schema
+ * - sample_fields 为字段抽取示例，作为 LangExtract 抽取依据
+ */
 export interface Schema {
-  id: number
+  id: string
+  parent_id: string | null
   name: string
   description: string
   doc_type: string
   fields: SchemaField[]
+  sample_fields: Record<string, string | string[]>
   is_active: boolean
+  sort_order: number
+  is_parent: boolean
+  children_count?: number
   created_at: string
   updated_at: string
 }
@@ -142,8 +160,26 @@ export interface Schema {
 export interface SchemaCreate {
   name: string
   description: string
-  doc_type: string
+  doc_type?: string
   fields: SchemaField[]
+  sample_fields?: Record<string, string | string[]>
+  parent_id?: string | null
+  is_active?: boolean
+  sort_order?: number
+}
+
+/**
+ * 合并后的整体 Schema（由 /schemas/{parent_id}/merged 返回）
+ * 用于 LangExtract 抽取时获取完整字段定义
+ */
+export interface MergedSchema {
+  id: string
+  name: string
+  description: string
+  fields: SchemaField[]
+  sample_fields: Record<string, string | string[]>
+  children_count: number
+  children_ids: string[]
 }
 
 // ---------- 术语 ----------

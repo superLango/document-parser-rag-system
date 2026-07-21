@@ -56,8 +56,10 @@ _TASK_EXPIRE_DAYS: int = 7
 _PDF_RENDER_DPI: int = 200
 
 # P2.5: PDF 多页 OCR / 版面分析并行度上限
-# 受 GPU 显存约束，过高的并发会导致 OOM；4 路并发在多数 GPU 上稳定
-_PDF_PARALLEL_PAGES: int = 4
+# GB10 嵌入式 GPU 显存有限，4 路并发会导致 CUDA error(304) "OS call failed"
+# 改为 1 路串行 OCR，避免多任务同时加载/使用 GPU 模型导致崩溃
+# 如需提高吞吐量，可改为 2，但需观察 GPU 显存使用情况
+_PDF_PARALLEL_PAGES: int = 1
 
 
 def _is_pdf(data: bytes) -> bool:

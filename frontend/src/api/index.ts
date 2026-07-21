@@ -4,10 +4,13 @@ import axios, {
   type InternalAxiosRequestConfig,
   type AxiosResponse,
 } from 'axios'
+import { toast } from '@/components/ui/toast'
 
 /**
  * Axios 实例
  * 统一处理请求/响应拦截、鉴权、错误处理
+ *
+ * 错误提示使用自研 Toast 系统
  */
 const instance: AxiosInstance = axios.create({
   baseURL: '/api/v1',
@@ -57,16 +60,17 @@ instance.interceptors.response.use(
       }
     }
 
-    // 统一错误提示（Element Plus）
+    // 统一错误提示（Toast 系统）
     const message =
       response?.data?.message ||
       response?.data?.detail ||
       error.message ||
       '请求失败，请稍后重试'
 
-    import('element-plus').then(({ ElMessage }) => {
-      ElMessage.error(message)
-    })
+    // 401 不重复 toast，由路由守卫处理
+    if (response?.status !== 401) {
+      toast.error('请求失败', message)
+    }
 
     return Promise.reject(error)
   },

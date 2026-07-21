@@ -1,20 +1,39 @@
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted } from 'vue'
-import { Search, Plus, Refresh, Delete, DataLine } from '@element-plus/icons-vue'
+import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
+import {
+  Search,
+  Plus,
+  RefreshCw,
+  Trash2,
+  Share2,
+  Network,
+  GitBranch,
+  Tag,
+  Loader2,
+  AlertTriangle,
+  X,
+  MousePointerClick,
+} from 'lucide-vue-next'
 import { knowledgeApi } from '@/api/modules/knowledge'
 import { documentApi } from '@/api/modules/document'
 import type { KnowledgeGraph, GraphNode, GraphEdge, Document as DocType } from '@/api/types'
 import GraphViewer from '@/components/GraphViewer.vue'
+import { toast } from '@/components/ui/toast'
+import { PageHeader } from '@/components/ui/page-header'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { Dialog } from '@/components/ui/dialog'
+import { Select } from '@/components/ui/select'
 
 // ---------- 图谱数据 ----------
 const loading = ref(true)
 const graph = ref<KnowledgeGraph>({ nodes: [], edges: [] })
-
-const query = reactive({
-  keyword: '',
-})
-
-// 搜索结果高亮节点名称集合
+const query = reactive({ keyword: '' })
 const highlightNames = ref<string[]>([])
 
 async function fetchGraph() {
@@ -38,7 +57,6 @@ async function handleSearch() {
   try {
     const result = await knowledgeApi.search(query.keyword.trim())
     graph.value = result || { nodes: [], edges: [] }
-    // 高亮匹配的节点
     highlightNames.value = graph.value.nodes.map((n) => String(n.name))
   } catch {
     graph.value = { nodes: [], edges: [] }
@@ -47,7 +65,7 @@ async function handleSearch() {
   }
 }
 
-// ---------- 统计信息 ----------
+// ---------- 统计 ----------
 const statsLoading = ref(false)
 const stats = ref<{
   total_nodes: number
@@ -65,25 +83,33 @@ async function fetchStats() {
     const result = await knowledgeApi.getStats()
     stats.value = result || { total_nodes: 0, total_relations: 0, node_labels: [] }
   } catch {
-    // 拦截器已处理错误提示
+    // 错误已处理
   } finally {
     statsLoading.value = false
   }
 }
 
-// ---------- 构建图谱对话框 ----------
+// ---------- 构建图谱 ----------
 const buildDialogVisible = ref(false)
 const buildLoading = ref(false)
 const buildSubmitting = ref(false)
 const buildDocList = ref<DocType[]>([])
-const selectedDocId = ref<string>('')
+const ALL_DOC_VALUE = '__none__'
+const selectedDocId = ref<string>(ALL_DOC_VALUE)
+
+const docOptions = computed(() => [
+  { value: ALL_DOC_VALUE, label: '请选择文档' },
+  ...buildDocList.value.map((d) => ({
+    value: String(d.id),
+    label: d.filename,
+  })),
+])
 
 async function openBuildDialog() {
   buildDialogVisible.value = true
-  selectedDocId.value = ''
+  selectedDocId.value = ALL_DOC_VALUE
   buildLoading.value = true
   try {
-    // 仅展示已解析完成的文档（status=completed）
     const res = await documentApi.getList({ status: 'completed', page_size: 100 })
     buildDocList.value = res.items || []
   } catch {
@@ -94,45 +120,50 @@ async function openBuildDialog() {
 }
 
 async function submitBuild() {
-  if (!selectedDocId.value) {
-    ElMessage.warning('请选择要构建图谱的文档')
+  if (selectedDocId.value === ALL_DOC_VALUE) {
+    toast.warning('请选择文档', '需要选择已解析完成的文档')
     return
   }
   buildSubmitting.value = true
   try {
     const res = await knowledgeApi.buildGraph(selectedDocId.value)
-    ElMessage.success(`图谱构建任务已提交，task_id: ${res.task_id}`)
+    toast.success('已提交', `图谱构建任务已提交（task_id: ${res.task_id}）`)
     buildDialogVisible.value = false
-    // 略微延迟后刷新统计
     setTimeout(() => {
       fetchStats()
       fetchGraph()
     }, 2000)
   } catch {
-    // 拦截器已处理错误提示
+    // 错误已处理
   } finally {
     buildSubmitting.value = false
   }
 }
 
-// ---------- 重建全部图谱 ----------
-async function handleRebuild() {
+// ---------- 重建全部 ----------
+const rebuildDialogVisible = ref(false)
+const rebuilding = ref(false)
+
+async function confirmRebuild() {
+  rebuilding.value = true
   try {
     const res = await knowledgeApi.rebuildGraph()
-    ElMessage.success(`重建任务已提交，task_id: ${res.task_id}`)
+    toast.success('已提交', `重建任务已提交（task_id: ${res.task_id}）`)
+    rebuildDialogVisible.value = false
     setTimeout(() => {
       fetchStats()
       fetchGraph()
     }, 2000)
   } catch {
-    // 拦截器已处理错误提示
+    // 错误已处理
+  } finally {
+    rebuilding.value = false
   }
 }
 
 // ---------- 节点交互 ----------
 const selectedNode = ref<GraphNode | null>(null)
 
-// 节点详情关联的边列表
 const relatedEdges = computed<GraphEdge[]>(() => {
   if (!selectedNode.value) return []
   const name = String(selectedNode.value.name)
@@ -141,9 +172,17 @@ const relatedEdges = computed<GraphEdge[]>(() => {
   )
 })
 
+const nodeProperties = computed<Array<{ key: string; value: string }>>(() => {
+  if (!selectedNode.value) return []
+  const props = (selectedNode.value.properties || {}) as Record<string, unknown>
+  return Object.entries(props).map(([key, value]) => ({
+    key,
+    value: typeof value === 'object' ? JSON.stringify(value) : String(value ?? ''),
+  }))
+})
+
 async function handleNodeClick(node: GraphNode) {
   selectedNode.value = node
-  // 获取以该节点为中心的 2 跳子图
   const name = String(node.name)
   if (!name) return
   loading.value = true
@@ -176,11 +215,9 @@ function closeContextMenu() {
   contextMenu.visible = false
 }
 
-// 从节点 properties 中提取 document_id
 function getNodeDocId(node: GraphNode | null): string {
   if (!node) return ''
   const props = (node.properties || {}) as Record<string, unknown>
-  // 兼容多种命名
   const raw =
     (props.document_id as string | undefined) ||
     (props.doc_id as string | undefined) ||
@@ -190,172 +227,182 @@ function getNodeDocId(node: GraphNode | null): string {
 }
 
 const deleteDocId = ref<string>('')
+const deleteDialogVisible = ref(false)
 
-async function confirmDeleteNodeGraph() {
+function openDeleteFromContext() {
   if (!contextMenu.node) return
   const docId = getNodeDocId(contextMenu.node)
   if (!docId) {
-    ElMessage.warning('该节点未携带 document_id，无法定位所属文档图谱')
+    toast.warning('无法删除', '该节点未携带 document_id，无法定位所属文档图谱')
     closeContextMenu()
     return
   }
   deleteDocId.value = docId
   closeContextMenu()
+  deleteDialogVisible.value = true
 }
 
-// 删除确认弹窗触发
-const deleteConfirmVisible = ref(false)
-watch(deleteDocId, (val) => {
-  if (val) deleteConfirmVisible.value = true
-})
-
-async function doDeleteGraph() {
+async function confirmDeleteGraph() {
   if (!deleteDocId.value) return
   try {
     const res = await knowledgeApi.deleteGraph(deleteDocId.value)
-    ElMessage.success(`删除任务已提交，task_id: ${res.task_id}`)
+    toast.success('已提交', `删除任务已提交（task_id: ${res.task_id}）`)
     selectedNode.value = null
+    deleteDialogVisible.value = false
     setTimeout(() => {
       fetchStats()
       fetchGraph()
     }, 2000)
   } catch {
-    // 拦截器已处理错误提示
+    // 错误已处理
   } finally {
-    deleteConfirmVisible.value = false
     deleteDocId.value = ''
   }
 }
 
-// 关闭右键菜单：点击页面任意位置
 function onDocumentClick() {
   if (contextMenu.visible) closeContextMenu()
 }
 
-// ---------- 节点属性表格 ----------
-const nodeProperties = computed<Array<{ key: string; value: string }>>(() => {
-  if (!selectedNode.value) return []
-  const props = (selectedNode.value.properties || {}) as Record<string, unknown>
-  return Object.entries(props).map(([key, value]) => ({
-    key,
-    value: typeof value === 'object' ? JSON.stringify(value) : String(value ?? ''),
-  }))
-})
-
-// ---------- 初始化 ----------
 onMounted(() => {
   fetchGraph()
   fetchStats()
   document.addEventListener('click', onDocumentClick)
 })
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', onDocumentClick)
+})
 </script>
 
 <template>
-  <div class="knowledge">
-    <!-- 页头 -->
-    <div class="page-header">
-      <div>
-        <h2 class="page-title">知识图谱</h2>
-        <p class="page-desc">文档实体与关系的可视化网络</p>
-      </div>
-      <div class="header-actions">
-        <el-button type="primary" @click="openBuildDialog">
-          <el-icon><Plus /></el-icon>
-          <span>构建图谱</span>
-        </el-button>
-        <el-popconfirm
-          title="确定重建全部知识图谱？该操作可能耗时较长"
-          confirm-button-text="重建"
-          cancel-button-text="取消"
-          confirm-button-type="warning"
-          @confirm="handleRebuild"
-        >
-          <template #reference>
-            <el-button type="warning" plain>
-              <el-icon><Refresh /></el-icon>
-              <span>重建全部图谱</span>
-            </el-button>
-          </template>
-        </el-popconfirm>
-      </div>
-    </div>
+  <div class="relative">
+    <PageHeader title="知识图谱" description="文档实体与关系的可视化网络">
+      <template #actions>
+        <Button variant="outline" @click="rebuildDialogVisible = true">
+          <RefreshCw class="size-4" :stroke-width="1.5" />
+          重建全部
+        </Button>
+        <Button @click="openBuildDialog">
+          <Plus class="size-4" :stroke-width="1.5" />
+          构建图谱
+        </Button>
+      </template>
+    </PageHeader>
 
     <!-- 统计卡片 -->
-    <div class="stats-row">
-      <div class="bp-card stat-card">
-        <div class="stat-icon stat-nodes">
-          <el-icon><DataLine /></el-icon>
-        </div>
-        <div class="stat-meta">
-          <div class="stat-label">节点总数</div>
-          <div class="stat-value mono" v-loading="statsLoading">
-            {{ stats.total_nodes }}
+    <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <Card>
+        <CardContent class="flex items-center gap-3 p-4">
+          <div class="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+            <Network class="size-5" :stroke-width="1.5" />
           </div>
-        </div>
-      </div>
-      <div class="bp-card stat-card">
-        <div class="stat-icon stat-edges">
-          <el-icon><DataLine /></el-icon>
-        </div>
-        <div class="stat-meta">
-          <div class="stat-label">关系总数</div>
-          <div class="stat-value mono" v-loading="statsLoading">
-            {{ stats.total_relations }}
+          <div class="flex-1">
+            <p class="text-xs text-muted-foreground">节点总数</p>
+            <Skeleton v-if="statsLoading" class="mt-1 h-6 w-16" />
+            <p v-else class="font-mono text-2xl font-semibold text-foreground">
+              {{ stats.total_nodes }}
+            </p>
           </div>
-        </div>
-      </div>
-      <div class="bp-card stat-card stat-card-wide">
-        <div class="stat-icon stat-labels">
-          <el-icon><DataLine /></el-icon>
-        </div>
-        <div class="stat-meta">
-          <div class="stat-label">标签分布</div>
-          <div class="label-cloud" v-loading="statsLoading">
-            <el-tag
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent class="flex items-center gap-3 p-4">
+          <div class="flex size-10 items-center justify-center rounded-md bg-success/10 text-success">
+            <GitBranch class="size-5" :stroke-width="1.5" />
+          </div>
+          <div class="flex-1">
+            <p class="text-xs text-muted-foreground">关系总数</p>
+            <Skeleton v-if="statsLoading" class="mt-1 h-6 w-16" />
+            <p v-else class="font-mono text-2xl font-semibold text-foreground">
+              {{ stats.total_relations }}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent class="p-4">
+          <div class="flex items-center gap-3">
+            <div class="flex size-10 items-center justify-center rounded-md bg-warning/10 text-warning">
+              <Tag class="size-5" :stroke-width="1.5" />
+            </div>
+            <div class="flex-1">
+              <p class="text-xs text-muted-foreground">标签分布</p>
+              <Skeleton v-if="statsLoading" class="mt-1 h-6 w-full" />
+              <p v-else-if="!stats.node_labels.length" class="text-sm text-muted-foreground">
+                暂无标签
+              </p>
+            </div>
+          </div>
+          <div
+            v-if="!statsLoading && stats.node_labels.length"
+            class="mt-2 flex flex-wrap gap-1"
+          >
+            <Badge
               v-for="lb in stats.node_labels"
               :key="lb"
-              class="label-chip"
-              size="small"
-              effect="plain"
-              round
+              variant="outline"
+              class="text-[10px]"
             >
               {{ lb }}
-            </el-tag>
-            <span v-if="!stats.node_labels.length" class="empty-hint mono">
-              暂无标签
+            </Badge>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+
+    <!-- 搜索栏 -->
+    <Card class="mb-4">
+      <CardContent class="flex gap-2 p-3">
+        <div class="relative flex-1">
+          <Search
+            class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+            :stroke-width="1.5"
+          />
+          <Input
+            v-model="query.keyword"
+            placeholder="搜索节点（文档、术语、标准）"
+            class="pl-9"
+            @keyup.enter="handleSearch"
+          />
+        </div>
+        <Button class="sm:w-[88px]" @click="handleSearch">
+          <Search class="size-4" :stroke-width="1.5" />
+          搜索
+        </Button>
+      </CardContent>
+    </Card>
+
+    <!-- 主体：图谱 + 侧边栏 -->
+    <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_360px]">
+      <!-- 图谱画布 -->
+      <Card class="flex flex-col overflow-hidden">
+        <div
+          class="flex items-center justify-between border-b border-border px-4 py-3"
+        >
+          <div class="flex items-center gap-2">
+            <Share2 class="size-4 text-primary" :stroke-width="1.5" />
+            <span class="text-sm font-medium text-foreground">图谱视图</span>
+          </div>
+          <div class="flex items-center gap-4 text-xs text-muted-foreground">
+            <span>
+              节点
+              <strong class="ml-1 font-mono text-primary">{{ graph.nodes.length }}</strong>
+            </span>
+            <span>
+              关系
+              <strong class="ml-1 font-mono text-primary">{{ graph.edges.length }}</strong>
             </span>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- 搜索 -->
-    <div class="bp-card filter-bar">
-      <el-input
-        v-model="query.keyword"
-        placeholder="搜索节点（文档、术语、标准）"
-        clearable
-        @keyup.enter="handleSearch"
-      >
-        <template #prefix>
-          <el-icon><Search /></el-icon>
-        </template>
-      </el-input>
-      <el-button type="primary" @click="handleSearch">搜索</el-button>
-    </div>
-
-    <!-- 主体：图谱 + 侧边栏 -->
-    <div class="main-grid">
-      <!-- 图谱画布 -->
-      <div class="bp-card graph-card">
-        <div class="graph-header">
-          <span class="graph-title">图谱视图</span>
-          <div class="graph-stats mono">
-            <span class="stat-item">节点 <strong>{{ graph.nodes.length }}</strong></span>
-            <span class="stat-item">关系 <strong>{{ graph.edges.length }}</strong></span>
+        <div class="relative min-h-[480px] flex-1 bg-muted/20">
+          <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-background/60">
+            <Loader2 class="size-6 animate-spin text-primary" :stroke-width="1.5" />
           </div>
-        </div>
-        <div class="graph-canvas" v-loading="loading">
+
           <GraphViewer
             v-if="graph.nodes.length"
             :nodes="graph.nodes"
@@ -364,528 +411,267 @@ onMounted(() => {
             @node-click="handleNodeClick"
             @node-right-click="handleNodeRightClick"
           />
-          <div v-else class="graph-empty-wrapper">
-            <el-empty
-              description="暂无图谱数据，请先解析文档后构建知识图谱"
-              :image-size="100"
+
+          <div v-else-if="!loading" class="absolute inset-0 flex items-center justify-center">
+            <EmptyState
+              :icon="Share2"
+              title="暂无图谱数据"
+              description="请先解析文档后构建知识图谱"
             />
           </div>
         </div>
-      </div>
+      </Card>
 
       <!-- 侧边栏节点详情 -->
-      <div class="bp-card side-card">
-        <div class="side-header">
-          <span class="side-title">节点详情</span>
-        </div>
-        <div v-if="!selectedNode" class="side-empty">
-          <el-empty description="点击节点查看详情" :image-size="80" />
-        </div>
-        <div v-else class="side-content">
-          <div class="detail-section">
-            <div class="detail-label">节点名称</div>
-            <div class="detail-value mono">{{ selectedNode.name || '—' }}</div>
+      <Card class="flex flex-col overflow-hidden">
+        <div class="border-b border-border px-4 py-3">
+          <div class="flex items-center gap-2">
+            <MousePointerClick class="size-4 text-primary" :stroke-width="1.5" />
+            <span class="text-sm font-medium text-foreground">节点详情</span>
           </div>
-          <div class="detail-section">
-            <div class="detail-label">标签</div>
-            <div class="label-list">
-              <el-tag
-                v-for="lb in (selectedNode.labels || [])"
+        </div>
+
+        <div v-if="!selectedNode" class="flex flex-1 items-center justify-center p-8">
+          <EmptyState
+            :icon="MousePointerClick"
+            title="点击节点查看详情"
+            description="点击图谱中的节点查看详细信息与关联关系"
+          />
+        </div>
+
+        <div v-else class="flex-1 overflow-y-auto p-4">
+          <!-- 节点名称 -->
+          <div class="mb-4">
+            <p class="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+              节点名称
+            </p>
+            <p class="break-all font-mono text-sm font-medium text-foreground">
+              {{ selectedNode.name || '-' }}
+            </p>
+          </div>
+
+          <!-- 标签 -->
+          <div class="mb-4">
+            <p class="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+              标签
+            </p>
+            <div v-if="selectedNode.labels?.length" class="flex flex-wrap gap-1">
+              <Badge
+                v-for="lb in selectedNode.labels"
                 :key="lb"
-                size="small"
-                effect="plain"
-                round
+                variant="secondary"
+                class="text-[10px]"
               >
                 {{ lb }}
-              </el-tag>
-              <span v-if="!selectedNode.labels?.length" class="empty-hint mono">—</span>
+              </Badge>
             </div>
+            <span v-else class="text-sm text-muted-foreground">-</span>
           </div>
-          <div class="detail-section">
-            <div class="detail-label">类型</div>
-            <div class="detail-value mono">{{ selectedNode.type || selectedNode.label || '—' }}</div>
+
+          <!-- 类型 -->
+          <div class="mb-4">
+            <p class="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+              类型
+            </p>
+            <p class="font-mono text-sm text-foreground">
+              {{ selectedNode.type || selectedNode.label || '-' }}
+            </p>
           </div>
-          <div class="detail-section">
-            <div class="detail-label">属性</div>
-            <el-table
-              :data="nodeProperties"
-              size="small"
-              border
-              max-height="220"
-              empty-text="无属性"
+
+          <!-- 属性 -->
+          <div class="mb-4">
+            <p class="mb-1.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+              属性
+            </p>
+            <div
+              v-if="nodeProperties.length"
+              class="overflow-hidden rounded-md border border-border"
             >
-              <el-table-column prop="key" label="键" width="100" />
-              <el-table-column prop="value" label="值" show-overflow-tooltip />
-            </el-table>
-          </div>
-          <div class="detail-section">
-            <div class="detail-label">
-              关联关系
-              <span class="rel-count mono">({{ relatedEdges.length }})</span>
-            </div>
-            <div class="rel-list">
-              <div v-for="(edge, idx) in relatedEdges" :key="idx" class="rel-item">
-                <span class="rel-node mono">{{ edge.source }}</span>
-                <el-tag size="small" type="info" effect="plain">{{ edge.type }}</el-tag>
-                <span class="rel-node mono">{{ edge.target }}</span>
+              <div class="divide-y divide-border">
+                <div
+                  v-for="prop in nodeProperties"
+                  :key="prop.key"
+                  class="grid grid-cols-3 gap-2 px-2 py-1.5 text-xs"
+                >
+                  <span class="font-mono text-muted-foreground">{{ prop.key }}</span>
+                  <span class="col-span-2 break-all text-foreground" :title="prop.value">
+                    {{ prop.value }}
+                  </span>
+                </div>
               </div>
-              <div v-if="!relatedEdges.length" class="empty-hint mono">暂无关联关系</div>
             </div>
+            <p v-else class="text-sm text-muted-foreground">无属性</p>
+          </div>
+
+          <!-- 关联关系 -->
+          <div>
+            <div class="mb-1.5 flex items-center gap-2">
+              <p class="text-[10px] uppercase tracking-wide text-muted-foreground">
+                关联关系
+              </p>
+              <Badge variant="secondary" class="text-[10px]">
+                {{ relatedEdges.length }}
+              </Badge>
+            </div>
+            <div v-if="relatedEdges.length" class="space-y-1.5">
+              <div
+                v-for="(edge, idx) in relatedEdges"
+                :key="idx"
+                class="flex items-center gap-2 rounded-md border border-border bg-muted/20 p-2 text-xs"
+              >
+                <span class="flex-1 break-all font-mono text-foreground" :title="edge.source">
+                  {{ edge.source }}
+                </span>
+                <Badge variant="outline" class="shrink-0 text-[10px]">
+                  {{ edge.type }}
+                </Badge>
+                <span class="flex-1 break-all text-right font-mono text-foreground" :title="edge.target">
+                  {{ edge.target }}
+                </span>
+              </div>
+            </div>
+            <p v-else class="text-sm text-muted-foreground">暂无关联关系</p>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
 
-    <!-- 构建图谱对话框 -->
-    <el-dialog
-      v-model="buildDialogVisible"
+    <!-- 构建图谱 Dialog -->
+    <Dialog
+      :open="buildDialogVisible"
       title="构建知识图谱"
-      width="520px"
+      description="选择已解析完成的文档构建图谱"
+      class="max-w-lg"
+      @update:open="(v) => (buildDialogVisible = v)"
     >
-      <el-form label-width="80px" label-position="left">
-        <el-form-item label="文档" required>
-          <el-select
+      <div class="space-y-4">
+        <div class="space-y-1.5">
+          <Label>选择文档 <span class="text-danger">*</span></Label>
+          <Select
             v-model="selectedDocId"
-            placeholder="请选择已解析完成的文档"
-            filterable
-            style="width: 100%"
-            :loading="buildLoading"
-          >
-            <el-option
-              v-for="doc in buildDocList"
-              :key="doc.id"
-              :label="doc.title"
-              :value="String(doc.id)"
-            >
-              <div class="doc-option">
-                <span class="doc-option-title">{{ doc.title }}</span>
-                <span class="doc-option-meta mono">{{ doc.standard_number || '—' }}</span>
-              </div>
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="buildDialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="buildSubmitting" @click="submitBuild">
-          确认构建
-        </el-button>
-      </template>
-    </el-dialog>
+            :options="docOptions"
+            placeholder="请选择文档"
+            :disabled="buildLoading"
+          />
+        </div>
 
-    <!-- 删除确认对话框 -->
-    <el-dialog
-      v-model="deleteConfirmVisible"
-      title="删除文档图谱"
-      width="420px"
-    >
-      <div class="delete-confirm">
-        <el-icon class="delete-icon"><Delete /></el-icon>
-        <p class="delete-text">
-          即将删除文档 <code class="mono">{{ deleteDocId }}</code> 关联的全部图谱数据，
-          该操作不可恢复，是否继续？
-        </p>
+        <div v-if="buildDocList.length" class="rounded-md border border-border bg-muted/20 p-3">
+          <p class="text-xs font-medium text-muted-foreground">
+            已解析文档共 {{ buildDocList.length }} 个
+          </p>
+        </div>
+
+        <div class="flex items-start gap-3 rounded-md border border-primary/30 bg-primary/5 p-3">
+          <AlertTriangle class="mt-0.5 size-4 shrink-0 text-primary" :stroke-width="1.5" />
+          <p class="text-xs text-muted-foreground">
+            构建图谱会从文档抽取实体与关系并写入 Neo4j。该任务异步执行，完成后图谱视图会自动刷新。
+          </p>
+        </div>
       </div>
-      <template #footer>
-        <el-button @click="deleteConfirmVisible = false">取消</el-button>
-        <el-button type="danger" @click="doDeleteGraph">确认删除</el-button>
-      </template>
-    </el-dialog>
+
+      <div class="mt-6 flex items-center justify-end gap-2">
+        <Button variant="outline" @click="buildDialogVisible = false">取消</Button>
+        <Button
+          :disabled="buildSubmitting || selectedDocId === ALL_DOC_VALUE"
+          @click="submitBuild"
+        >
+          <Loader2 v-if="buildSubmitting" class="size-4 animate-spin" :stroke-width="1.5" />
+          {{ buildSubmitting ? '提交中...' : '确认构建' }}
+        </Button>
+      </div>
+    </Dialog>
+
+    <!-- 重建全部 Dialog -->
+    <Dialog
+      :open="rebuildDialogVisible"
+      title="重建全部知识图谱"
+      description="该操作将清空现有图谱并重新构建"
+      @update:open="(v) => (rebuildDialogVisible = v)"
+    >
+      <div class="flex items-start gap-3 rounded-md border border-warning/30 bg-warning/5 p-3">
+        <AlertTriangle class="mt-0.5 size-4 shrink-0 text-warning" :stroke-width="1.5" />
+        <div class="flex-1 space-y-1 text-sm">
+          <p class="font-medium text-foreground">确认重建全部图谱？</p>
+          <p class="text-xs text-muted-foreground">
+            该操作将清空所有现有图谱数据，重新扫描所有已解析文档并构建图谱。任务异步执行，可能耗时较长。
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-6 flex items-center justify-end gap-2">
+        <Button variant="outline" @click="rebuildDialogVisible = false">取消</Button>
+        <Button
+          variant="destructive"
+          :disabled="rebuilding"
+          @click="confirmRebuild"
+        >
+          <Loader2 v-if="rebuilding" class="size-4 animate-spin" :stroke-width="1.5" />
+          <RefreshCw v-else class="size-4" :stroke-width="1.5" />
+          确认重建
+        </Button>
+      </div>
+    </Dialog>
+
+    <!-- 删除确认 Dialog -->
+    <Dialog
+      :open="deleteDialogVisible"
+      title="删除文档图谱"
+      description="将删除该文档关联的全部图谱数据"
+      @update:open="(v) => (deleteDialogVisible = v)"
+    >
+      <div class="flex items-start gap-3 rounded-md border border-danger/30 bg-danger/5 p-3">
+        <X class="mt-0.5 size-4 shrink-0 text-danger" :stroke-width="1.5" />
+        <div class="flex-1 space-y-1 text-sm">
+          <p class="text-foreground">
+            即将删除文档
+            <code class="rounded bg-muted/60 px-1.5 py-0.5 font-mono text-xs text-danger">
+              {{ deleteDocId }}
+            </code>
+            关联的全部图谱数据
+          </p>
+          <p class="text-xs text-muted-foreground">
+            该操作不可恢复，是否继续？
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-6 flex items-center justify-end gap-2">
+        <Button variant="outline" @click="deleteDialogVisible = false">取消</Button>
+        <Button variant="destructive" @click="confirmDeleteGraph">
+          <Trash2 class="size-4" :stroke-width="1.5" />
+          确认删除
+        </Button>
+      </div>
+    </Dialog>
 
     <!-- 右键上下文菜单 -->
-    <div
-      v-if="contextMenu.visible"
-      class="context-menu"
-      :style="{ left: `${contextMenu.x}px`, top: `${contextMenu.y}px` }"
-      @click.stop
-    >
-      <div class="context-menu-header">
-        {{ contextMenu.node?.name }}
-      </div>
-      <div class="context-menu-item" @click="confirmDeleteNodeGraph">
-        <el-icon><Delete /></el-icon>
-        <span>删除该文档图谱</span>
-      </div>
+    <Teleport to="body">
       <div
-        v-if="!getNodeDocId(contextMenu.node)"
-        class="context-menu-tip mono"
+        v-if="contextMenu.visible"
+        class="fixed z-[2000] min-w-[200px] rounded-md border border-border bg-popover p-1 shadow-lg"
+        :style="{ left: `${contextMenu.x}px`, top: `${contextMenu.y}px` }"
+        @click.stop
       >
-        节点未携带 document_id
+        <div class="border-b border-border px-3 py-2">
+          <p class="break-all text-sm font-medium text-foreground">
+            {{ contextMenu.node?.name }}
+          </p>
+        </div>
+        <button
+          type="button"
+          class="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-danger/10 hover:text-danger"
+          @click="openDeleteFromContext"
+        >
+          <Trash2 class="size-4" :stroke-width="1.5" />
+          删除该文档图谱
+        </button>
+        <p
+          v-if="!getNodeDocId(contextMenu.node)"
+          class="px-3 py-1.5 text-[10px] text-muted-foreground"
+        >
+          节点未携带 document_id
+        </p>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
-
-<style scoped lang="scss">
-@use 'sass:color';
-
-.knowledge {
-  position: relative;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-
-  .page-title {
-    font-size: var(--fs-xl);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .page-desc {
-    font-size: var(--fs-sm);
-    color: var(--text-secondary);
-  }
-
-  .header-actions {
-    display: flex;
-    gap: 12px;
-  }
-}
-
-// ---------- 统计卡片 ----------
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr) 2fr;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.stat-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 20px;
-
-  &.stat-card-wide {
-    .stat-meta {
-      flex: 1;
-      min-width: 0;
-    }
-  }
-
-  .stat-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-
-    &.stat-nodes {
-      background-color: rgba(74, 163, 255, 0.15);
-      color: #4aa3ff;
-    }
-    &.stat-edges {
-      background-color: rgba(82, 196, 26, 0.15);
-      color: #52c41a;
-    }
-    &.stat-labels {
-      background-color: rgba(250, 140, 22, 0.15);
-      color: #fa8c16;
-    }
-  }
-
-  .stat-meta {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .stat-label {
-    font-size: var(--fs-xs);
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-  }
-
-  .stat-value {
-    font-size: var(--fs-xl);
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.2;
-  }
-}
-
-.label-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-
-  .label-chip {
-    font-size: var(--fs-xs);
-  }
-}
-
-.empty-hint {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-}
-
-// ---------- 搜索栏 ----------
-.filter-bar {
-  display: flex;
-  gap: 12px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-}
-
-// ---------- 主体网格 ----------
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 16px;
-  align-items: stretch;
-}
-
-.graph-card {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.graph-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--border-base);
-
-  .graph-title {
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .graph-stats {
-    display: flex;
-    gap: 20px;
-    font-size: var(--fs-xs);
-    color: var(--text-secondary);
-
-    strong {
-      color: var(--accent-primary);
-      font-weight: 600;
-      margin-left: 4px;
-    }
-  }
-}
-
-.graph-canvas {
-  height: calc(100vh - 460px);
-  min-height: 420px;
-  background-color: var(--bg-base);
-  border: 1px solid var(--border-base);
-  border-radius: var(--radius-lg);
-  position: relative;
-}
-
-.graph-empty-wrapper {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-// ---------- 侧边栏 ----------
-.side-card {
-  display: flex;
-  flex-direction: column;
-  max-height: calc(100vh - 460px);
-  min-height: 420px;
-  overflow: hidden;
-}
-
-.side-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-base);
-
-  .side-title {
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-}
-
-.side-empty {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.side-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.detail-section {
-  margin-bottom: 18px;
-
-  .detail-label {
-    font-size: var(--fs-xs);
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    .rel-count {
-      color: var(--accent-primary);
-    }
-  }
-
-  .detail-value {
-    font-size: var(--fs-sm);
-    color: var(--text-primary);
-    word-break: break-all;
-  }
-}
-
-.label-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.rel-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.rel-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--fs-xs);
-  padding: 6px 8px;
-  background: var(--bg-base);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
-
-  .rel-node {
-    flex: 1;
-    color: var(--text-primary);
-    word-break: break-all;
-    min-width: 0;
-  }
-}
-
-// ---------- 构建对话框 ----------
-.doc-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-
-  .doc-option-title {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .doc-option-meta {
-    font-size: var(--fs-xs);
-    color: var(--text-muted);
-    flex-shrink: 0;
-  }
-}
-
-// ---------- 删除确认 ----------
-.delete-confirm {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-
-  .delete-icon {
-    font-size: 24px;
-    color: var(--accent-danger, #ff4d4f);
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .delete-text {
-    margin: 0;
-    color: var(--text-primary);
-    line-height: 1.6;
-
-    code {
-      color: var(--accent-primary);
-      background: var(--bg-base);
-      padding: 2px 6px;
-      border-radius: var(--radius-sm);
-    }
-  }
-}
-
-// ---------- 右键菜单 ----------
-.context-menu {
-  position: fixed;
-  z-index: 3000;
-  min-width: 200px;
-  background: var(--bg-surface, #1a2332);
-  border: 1px solid var(--border-base, #2a3548);
-  border-radius: var(--radius-md, 6px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  padding: 4px;
-
-  .context-menu-header {
-    padding: 8px 12px;
-    font-size: var(--fs-sm);
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-light, #1f2a3a);
-    margin-bottom: 4px;
-    font-weight: 600;
-    word-break: break-all;
-  }
-
-  .context-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    color: var(--text-primary);
-    font-size: var(--fs-sm);
-    cursor: pointer;
-    border-radius: var(--radius-sm, 4px);
-    transition: background-color 0.15s;
-
-    &:hover {
-      background-color: var(--bg-base, #0f1623);
-      color: var(--accent-danger, #ff4d4f);
-    }
-  }
-
-  .context-menu-tip {
-    padding: 6px 12px;
-    font-size: var(--fs-xs);
-    color: var(--text-muted);
-  }
-}
-
-// ---------- 响应式 ----------
-@media (max-width: 1100px) {
-  .main-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .side-card {
-    max-height: none;
-    min-height: 0;
-  }
-
-  .stats-row {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .stat-card-wide {
-    grid-column: span 2;
-  }
-}
-</style>

@@ -1,25 +1,38 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { Document, SetUp, Collection, DocumentChecked } from '@element-plus/icons-vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { FileText, ListChecks, Braces, BookOpen, TrendingUp, ArrowRight, Clock } from 'lucide-vue-next'
 import { dashboardApi } from '@/api/modules/dashboard'
+import { PageHeader } from '@/components/ui/page-header'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { StatusBadge } from '@/components/ui/status-badge'
+import { Button } from '@/components/ui/button'
 import type { DashboardStats } from '@/api/types'
+
+const router = useRouter()
 
 const loading = ref(true)
 const stats = ref<DashboardStats | null>(null)
 
 const statCards = [
-  { key: 'documents_count', label: '文档总数', icon: Document, color: 'var(--accent-primary)' },
-  { key: 'tasks_count', label: '解析任务', icon: DocumentChecked, color: 'var(--accent-secondary)' },
-  { key: 'schemas_count', label: '抽取 Schema', icon: SetUp, color: 'var(--accent-success)' },
-  { key: 'terms_count', label: '术语条目', icon: Collection, color: 'var(--accent-info)' },
-] as const
+  { key: 'documents_count' as const, label: '文档总数', icon: FileText, accent: 'text-primary' },
+  { key: 'tasks_count' as const, label: '解析任务', icon: ListChecks, accent: 'text-info' },
+  { key: 'schemas_count' as const, label: '抽取 Schema', icon: Braces, accent: 'text-success' },
+  { key: 'terms_count' as const, label: '术语条目', icon: BookOpen, accent: 'text-warning' },
+]
+
+const successRate = computed(() => {
+  if (!stats.value) return 0
+  return Math.round(stats.value.success_rate * 100) / 100
+})
 
 async function fetchStats() {
   loading.value = true
   try {
     stats.value = await dashboardApi.getStats()
   } catch {
-    // 后端未就绪时使用空数据
     stats.value = {
       documents_count: 0,
       tasks_count: 0,
@@ -34,216 +47,145 @@ async function fetchStats() {
   }
 }
 
+function gotoDocuments() {
+  router.push('/documents')
+}
+
+function gotoTasks() {
+  router.push('/tasks')
+}
+
 onMounted(fetchStats)
 </script>
 
 <template>
-  <div class="dashboard">
-    <!-- 页头 -->
-    <div class="page-header">
-      <div>
-        <h2 class="page-title">仪表盘</h2>
-        <p class="page-desc">系统运行概览与近期活动</p>
-      </div>
+  <div>
+    <PageHeader title="仪表盘" description="系统运行概览与近期活动" />
+
+    <!-- KPI 卡片 -->
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <Card v-for="card in statCards" :key="card.key">
+        <CardContent class="flex items-center gap-4 p-5">
+          <div
+            class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-muted"
+            :class="card.accent"
+          >
+            <component :is="card.icon" class="size-5" :stroke-width="1.5" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-2xl font-semibold tabular-nums text-foreground">
+              <Skeleton v-if="loading" class="h-6 w-16" />
+              <template v-else>{{ stats?.[card.key] ?? 0 }}</template>
+            </div>
+            <div class="text-xs text-muted-foreground">{{ card.label }}</div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
 
-    <!-- 统计卡片 -->
-    <div class="stat-grid">
-      <div
-        v-for="card in statCards"
-        :key="card.key"
-        class="stat-card bp-card"
-      >
-        <div class="stat-icon" :style="{ color: card.color, borderColor: card.color }">
-          <el-icon><component :is="card.icon" /></el-icon>
+    <!-- 成功率横幅 -->
+    <Card class="mt-4">
+      <CardContent class="flex items-center gap-4 p-5">
+        <div class="flex size-10 items-center justify-center rounded-lg bg-success/15 text-success">
+          <TrendingUp class="size-5" :stroke-width="1.5" />
         </div>
-        <div class="stat-body">
-          <div class="stat-value mono">
-            <el-skeleton-item v-if="loading" variant="text" style="width: 60px" />
-            <template v-else>{{ stats?.[card.key] ?? 0 }}</template>
-          </div>
-          <div class="stat-label">{{ card.label }}</div>
+        <div class="flex-1">
+          <div class="text-sm font-medium text-foreground">解析成功率</div>
+          <div class="text-xs text-muted-foreground">最近 7 天任务执行成功比例</div>
         </div>
-      </div>
-    </div>
+        <div class="text-2xl font-semibold tabular-nums text-foreground">
+          <Skeleton v-if="loading" class="h-6 w-20" />
+          <template v-else>{{ successRate }}%</template>
+        </div>
+      </CardContent>
+    </Card>
 
     <!-- 近期活动 -->
-    <div class="activity-grid">
-      <div class="bp-card activity-card">
-        <div class="card-header">
-          <span class="card-title">近期文档</span>
-          <span class="mono card-count">{{ stats?.recent_documents.length ?? 0 }}</span>
-        </div>
-        <div class="card-body">
-          <template v-if="loading">
-            <div v-for="i in 4" :key="i" class="skeleton-row">
-              <el-skeleton-item variant="text" style="width: 50%" />
-              <el-skeleton-item variant="text" style="width: 30%" />
-            </div>
-          </template>
+    <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <!-- 近期文档 -->
+      <Card>
+        <CardHeader class="flex-row items-center justify-between space-y-0">
+          <CardTitle class="text-base">近期文档</CardTitle>
+          <Button variant="ghost" size="sm" class="h-7 gap-1 text-xs" @click="gotoDocuments">
+            查看全部
+            <ArrowRight class="size-3" :stroke-width="1.5" />
+          </Button>
+        </CardHeader>
+        <CardContent class="p-0">
+          <div v-if="loading" class="space-y-3 p-5 pt-0">
+            <Skeleton v-for="i in 4" :key="i" class="h-9 w-full" />
+          </div>
           <template v-else-if="stats?.recent_documents.length">
-            <div
-              v-for="doc in stats.recent_documents"
-              :key="doc.id"
-              class="activity-row"
-            >
-              <span class="activity-title text-truncate">{{ doc.title }}</span>
-              <span class="mono activity-meta">{{ doc.standard_number || doc.doc_type }}</span>
-            </div>
+            <ul class="divide-y divide-border">
+              <li
+                v-for="doc in stats.recent_documents"
+                :key="doc.id"
+                class="flex items-center gap-3 px-5 py-2.5 transition-colors hover:bg-muted/50"
+              >
+                <FileText class="size-4 shrink-0 text-muted-foreground" :stroke-width="1.5" />
+                <div class="min-w-0 flex-1">
+                  <div class="truncate text-sm font-medium text-foreground">{{ doc.filename }}</div>
+                  <div class="text-xs text-muted-foreground font-mono">
+                    {{ doc.file_type || '文档' }}
+                  </div>
+                </div>
+                <StatusBadge :status="doc.status" kind="document" />
+              </li>
+            </ul>
           </template>
-          <el-empty v-else description="暂无文档" :image-size="60" />
-        </div>
-      </div>
+          <EmptyState
+            v-else
+            :icon="FileText"
+            title="暂无文档"
+            description="上传 PDF 文档后将在此显示"
+            class="py-8"
+          />
+        </CardContent>
+      </Card>
 
-      <div class="bp-card activity-card">
-        <div class="card-header">
-          <span class="card-title">近期任务</span>
-          <span class="mono card-count">{{ stats?.recent_tasks.length ?? 0 }}</span>
-        </div>
-        <div class="card-body">
-          <template v-if="loading">
-            <div v-for="i in 4" :key="i" class="skeleton-row">
-              <el-skeleton-item variant="text" style="width: 40%" />
-              <el-skeleton-item variant="text" style="width: 30%" />
-            </div>
-          </template>
+      <!-- 近期任务 -->
+      <Card>
+        <CardHeader class="flex-row items-center justify-between space-y-0">
+          <CardTitle class="text-base">近期任务</CardTitle>
+          <Button variant="ghost" size="sm" class="h-7 gap-1 text-xs" @click="gotoTasks">
+            查看全部
+            <ArrowRight class="size-3" :stroke-width="1.5" />
+          </Button>
+        </CardHeader>
+        <CardContent class="p-0">
+          <div v-if="loading" class="space-y-3 p-5 pt-0">
+            <Skeleton v-for="i in 4" :key="i" class="h-9 w-full" />
+          </div>
           <template v-else-if="stats?.recent_tasks.length">
-            <div
-              v-for="task in stats.recent_tasks"
-              :key="task.id"
-              class="activity-row"
-            >
-              <span class="mono activity-title">TASK-{{ task.id }}</span>
-              <span class="activity-meta" :class="`status-${task.status}`">{{ task.status }}</span>
-            </div>
+            <ul class="divide-y divide-border">
+              <li
+                v-for="task in stats.recent_tasks"
+                :key="task.id"
+                class="flex items-center gap-3 px-5 py-2.5 transition-colors hover:bg-muted/50"
+              >
+                <ListChecks class="size-4 shrink-0 text-muted-foreground" :stroke-width="1.5" />
+                <div class="min-w-0 flex-1">
+                  <div class="truncate font-mono text-sm text-foreground">
+                    TASK-{{ task.id.slice(0, 8) }}
+                  </div>
+                  <div class="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Clock class="size-3" :stroke-width="1.5" />
+                    {{ task.task_type }}
+                  </div>
+                </div>
+                <StatusBadge :status="task.status" kind="task" />
+              </li>
+            </ul>
           </template>
-          <el-empty v-else description="暂无任务" :image-size="60" />
-        </div>
-      </div>
+          <EmptyState
+            v-else
+            :icon="ListChecks"
+            title="暂无任务"
+            description="提交解析任务后将在此显示"
+            class="py-8"
+          />
+        </CardContent>
+      </Card>
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-
-  .page-title {
-    font-size: var(--fs-xl);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .page-desc {
-    font-size: var(--fs-sm);
-    color: var(--text-secondary);
-  }
-}
-
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.stat-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
-
-  .stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-md);
-    border: 1px solid;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-  }
-
-  .stat-value {
-    font-size: var(--fs-2xl);
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.2;
-  }
-
-  .stat-label {
-    font-size: var(--fs-sm);
-    color: var(--text-secondary);
-    margin-top: 2px;
-  }
-}
-
-.activity-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
-.activity-card {
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-base);
-
-    .card-title {
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .card-count {
-      font-size: var(--fs-xs);
-      color: var(--accent-primary);
-    }
-  }
-
-  .card-body {
-    padding: 8px 20px;
-  }
-}
-
-.skeleton-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-}
-
-.activity-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-light);
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  .activity-title {
-    font-size: var(--fs-sm);
-    color: var(--text-primary);
-    max-width: 60%;
-  }
-
-  .activity-meta {
-    font-size: var(--fs-xs);
-    color: var(--text-muted);
-  }
-
-  .status-success { color: var(--accent-success); }
-  .status-failed { color: var(--accent-danger); }
-  .status-running { color: var(--accent-primary); }
-  .status-queued { color: var(--text-secondary); }
-}
-</style>

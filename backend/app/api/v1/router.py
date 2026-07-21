@@ -14,6 +14,7 @@ from fastapi import APIRouter
 from app.api.v1.endpoints.auth import router as auth_router
 from app.api.v1.endpoints.dashboard import router as dashboard_router
 from app.api.v1.endpoints.documents import router as documents_router
+from app.api.v1.endpoints.extraction import router as extraction_router
 from app.api.v1.endpoints.knowledge_base import router as kb_router
 from app.api.v1.endpoints.knowledge_graph import router as kg_router
 from app.api.v1.endpoints.schemas import router as schemas_router
@@ -25,6 +26,7 @@ api_router = APIRouter()
 api_router.include_router(auth_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(documents_router)
+api_router.include_router(extraction_router)
 api_router.include_router(kb_router)
 api_router.include_router(kg_router)
 api_router.include_router(schemas_router)

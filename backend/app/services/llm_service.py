@@ -505,6 +505,95 @@ class LLMService:
             details={"raw_output": text[:500]},
         )
 
+    async def _stream_chat(
+        self,
+        messages: list[dict[str, str]],
+        max_tokens: int,
+        temperature: float,
+        model_override: str | None = None,
+    ) -> AsyncGenerator[str, None]:
+        """异步流式调用 Ollama /api/chat，逐 token yield。
+
+        API 模式下使用 httpx.AsyncClient 流式读取 NDJSON 响应，
+        每行一个 JSON 对象，包含 message.content 字段即增量 token。
+        当 done=true 时流结束。
+
+        本地模式（vLLM 同步阻塞）不支持原生流式，回退到「先调用 _call_chat
+        获取完整文本，再按字符分块 yield」的伪流式策略。
+
+        Args:
+            messages: OpenAI 风格的消息列表。
+            max_tokens: 生成最大 token 数。
+            temperature: 采样温度。
+            model_override: 可选，覆盖默认模型名称。
+
+        Yields:
+            str: 模型生成的文本分片（token 级别）。
+        """
+        if not self._api_mode:
+            # 本地 vLLM 模式：回退到伪流式
+            full_text = await asyncio.to_thread(
+                self._call_chat,
+                messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                model_override=model_override,
+            )
+            for i in range(0, len(full_text), 4):
+                yield full_text[i : i + 4]
+                await asyncio.sleep(0.02)
+            return
+
+        import httpx
+
+        use_model = model_override or self._api_model
+        ollama_base = self._api_base.rstrip("/v1").rstrip("/")
+
+        try:
+            async with httpx.AsyncClient(timeout=180.0) as client:
+                async with client.stream(
+                    "POST",
+                    f"{ollama_base}/api/chat",
+                    json={
+                        "model": use_model,
+                        "messages": messages,
+                        "stream": True,
+                        "think": False,
+                        "options": {
+                            "num_predict": max_tokens,
+                            "temperature": temperature,
+                            "top_p": 0.9,
+                        },
+                    },
+                ) as response:
+                    response.raise_for_status()
+                    async for line in response.aiter_lines():
+                        if not line or not line.strip():
+                            continue
+                        try:
+                            data = json.loads(line)
+                        except json.JSONDecodeError:
+                            continue
+                        if data.get("done", False):
+                            break
+                        chunk = data.get("message", {}).get("content", "")
+                        if chunk:
+                            yield chunk
+        except Exception as err:
+            if "out of memory" in str(err).lower() or "oom" in str(err).lower():
+                logger.error("流式推理显存不足", error=str(err))
+                raise BusinessException(
+                    code=ErrorCode.SYSTEM_SERVICE_UNAVAILABLE,
+                    message="GPU 显存不足，流式推理失败",
+                    details={"error": str(err)},
+                ) from err
+            logger.error("Ollama 流式 API 调用失败", error=str(err), exc_info=True)
+            raise BusinessException(
+                code=ErrorCode.SYSTEM_INTERNAL_ERROR,
+                message=f"大模型流式推理失败：{err}",
+                details={"error": str(err)},
+            ) from err
+
     async def stream_generate(
         self,
         prompt: str,
@@ -515,37 +604,47 @@ class LLMService:
     ) -> AsyncGenerator[str, None]:
         """以流式方式生成文本，按 chunk 增量返回。
 
-        由于当前 vLLM 的 LLM.chat() 为同步阻塞 API 且不支持原生 token 流式
-        输出，本方法采用「先生成后分块」的策略：先调用 generate() 获取
-        完整输出，再按 chunk_size 个字符切分，逐块 yield，模拟流式效果。
-        每个 chunk 之间插入极短的 asyncio.sleep，让出事件循环控制权。
+        API 模式下通过 Ollama /api/chat ``stream=true`` 真流式输出，
+        每个 token 即时推送（首字延迟 < 1s），适合 SSE 场景实现真实
+        打字机效果。
 
-        当 vLLM 升级支持原生流式输出后，可改为基于 vLLM streaming
-        callback 的实现，无需改动调用方代码。
+        本地模式（vLLM 同步阻塞 API）不支持原生 token 流式，回退到
+        「先生成完整文本再按 chunk_size 字符切分」的伪流式策略，每块
+        之间插入 20ms 延迟，模拟流式节奏。
 
         Args:
             prompt: 用户输入文本。
             system_prompt: 可选的系统提示词。
             max_tokens: 生成最大 token 数，默认 2048。
             temperature: 采样温度，默认 0.1。
-            chunk_size: 每个 chunk 包含的字符数，默认 4。
+            chunk_size: 每个 chunk 包含的字符数（仅在本地伪流式模式下生效），
+                默认 4。API 真流式模式下忽略此参数。
 
         Yields:
             str: 文本分片，调用方应累加拼接为完整输出。
         """
-        # 先生成完整输出
-        full_text = await self.generate(
-            prompt=prompt,
-            system_prompt=system_prompt,
+        await asyncio.to_thread(self._ensure_loaded)
+        messages = self._build_messages(prompt, system_prompt)
+        logger.info(
+            "开始流式生成",
+            prompt_len=len(prompt),
             max_tokens=max_tokens,
             temperature=temperature,
+            api_mode=self._api_mode,
         )
 
-        # 按 chunk_size 切分并逐块 yield
-        for i in range(0, len(full_text), chunk_size):
-            yield full_text[i : i + chunk_size]
-            # 让出事件循环，模拟流式节奏
-            await asyncio.sleep(0)
+        try:
+            async for chunk in self._stream_chat(
+                messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+            ):
+                yield chunk
+        except Exception as err:
+            logger.error("LLM 流式生成失败", error=str(err), exc_info=True)
+            raise
+
+        logger.info("流式生成完成")
 
 
 # 模块级单例：根据配置选择 API 模式或本地加载模式

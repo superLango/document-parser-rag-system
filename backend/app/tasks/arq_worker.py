@@ -208,7 +208,26 @@ class WorkerSettings:
         start_http_server(9102)
         # 初始化队列大小指标为 0，后续由任务调度自然反映
         task_queue_size.set(0)
-        logger.info("arq Worker 启动，metrics server 监听 9100 端口")
+        logger.info("arq Worker 启动，metrics server 监听 9102 端口")
+
+        # 在 arq event loop 中预热 OCR 模型
+        # 重要：paddleocr/paddlepaddle-gpu 在 arq 的 asyncio loop 中首次调用时，
+        # 可能因 CUDA 上下文初始化与 arq 的信号处理冲突而报 CUDA error(304)
+        # 在 on_startup 中提前 warmup，确保 GPU 上下文在主线程中正确初始化
+        try:
+            from app.services.ocr_service import ocr_service
+            logger.info("开始预热 OCR 模型...")
+            await ocr_service.warmup()
+            logger.info(
+                "OCR 模型预热完成",
+                backend=ocr_service._backend,
+                loaded=ocr_service._loaded,
+            )
+        except Exception as exc:
+            logger.warning(
+                "OCR 模型预热失败，将在任务执行时重试",
+                error=str(exc),
+            )
 
     async def on_shutdown(ctx):
         from app.core.logging import get_logger

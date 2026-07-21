@@ -1,11 +1,34 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { Upload, Search, View, Delete, ArrowDown, Document } from '@element-plus/icons-vue'
-import type { UploadFile } from 'element-plus'
+import {
+  Upload,
+  Search,
+  Eye,
+  Trash2,
+  FileText,
+  PlayCircle,
+  Plus,
+  X,
+  Check,
+} from 'lucide-vue-next'
 import { documentApi } from '@/api/modules/document'
 import { taskApi } from '@/api/modules/task'
 import { schemaApi } from '@/api/modules/schema'
+import { toast } from '@/components/ui/toast'
+import { PageHeader } from '@/components/ui/page-header'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/ui/status-badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
+import { Pagination } from '@/components/ui/pagination'
+import { Dialog } from '@/components/ui/dialog'
+import { Select } from '@/components/ui/select'
+import { Tooltip } from '@/components/ui/tooltip'
 import type { Document as DocType, Schema } from '@/api/types'
 
 const router = useRouter()
@@ -14,7 +37,6 @@ const router = useRouter()
 const loading = ref(true)
 const documents = ref<DocType[]>([])
 const total = ref(0)
-
 const query = reactive({
   page: 1,
   page_size: 10,
@@ -40,84 +62,66 @@ function handleSearch() {
   fetchList()
 }
 
-// ---------- 文档上传 ----------
-const uploadRef = ref()
+function onPageChange(page: number) {
+  query.page = page
+  fetchList()
+}
+
+// ---------- 上传 ----------
+// 后端上传端点仅接收 file 字段，filename/file_size/file_type 由后端从文件中提取
 const uploadDialogVisible = ref(false)
 const uploading = ref(false)
 const pendingFile = ref<File | null>(null)
-const uploadForm = reactive({
-  title: '',
-  doc_type: 'standard',
-  standard_number: '',
-})
+const isDragOver = ref(false)
 
-const docTypeOptions = [
-  { label: '标准', value: 'standard' },
-  { label: '规程', value: 'regulation' },
-  { label: '规范', value: 'specification' },
-  { label: '手册', value: 'manual' },
-  { label: '其他', value: 'other' },
-]
+const MAX_FILE_SIZE = 50 * 1024 * 1024
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
-
-function handleUpload() {
-  uploadRef.value?.$el?.querySelector('input[type=file]')?.click()
-}
-
-function handleFileChange(uploadFile: UploadFile) {
-  if (uploadFile.status !== 'ready') return
-  const file = uploadFile.raw
-  if (!file) return
-
-  // 文件类型校验：仅支持 PDF
-  const isPdf =
-    file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
-  if (!isPdf) {
-    ElMessage.error('仅支持 PDF 格式文件')
-    uploadRef.value?.clearFiles()
-    return
-  }
-
-  // 文件大小校验：≤ 50MB
-  if (file.size > MAX_FILE_SIZE) {
-    ElMessage.error('文件大小不能超过 50MB')
-    uploadRef.value?.clearFiles()
-    return
-  }
-
-  // 存储文件并打开元信息对话框
-  pendingFile.value = file
-  uploadForm.title = file.name.replace(/\.pdf$/i, '')
-  uploadForm.doc_type = 'standard'
-  uploadForm.standard_number = ''
+function openUploadDialog() {
   uploadDialogVisible.value = true
+  pendingFile.value = null
 }
 
-function onUploadDialogClose() {
+function onFileSelect(e: Event) {
+  const input = e.target as HTMLInputElement
+  if (input.files?.[0]) handleFile(input.files[0])
+}
+
+function onDrop(e: DragEvent) {
+  isDragOver.value = false
+  const file = e.dataTransfer?.files?.[0]
+  if (file) handleFile(file)
+}
+
+function handleFile(file: File) {
+  const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
+  if (!isPdf) {
+    toast.error('格式不支持', '仅支持 PDF 格式文件')
+    return
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    toast.error('文件过大', '文件大小不能超过 50MB')
+    return
+  }
+  pendingFile.value = file
+}
+
+function removeFile() {
   pendingFile.value = null
-  uploadRef.value?.clearFiles()
 }
 
 async function submitUpload() {
-  if (!pendingFile.value) return
-  if (!uploadForm.title.trim()) {
-    ElMessage.error('请填写文档标题')
+  if (!pendingFile.value) {
+    toast.warning('请选择文件', '请先添加 PDF 文件')
     return
   }
-
   uploading.value = true
   try {
-    await documentApi.upload(pendingFile.value, {
-      title: uploadForm.title.trim(),
-      doc_type: uploadForm.doc_type,
-      standard_number: uploadForm.standard_number.trim() || undefined,
-    })
-    ElMessage.success('文档上传成功')
+    await documentApi.upload(pendingFile.value)
+    toast.success('上传成功', '文档已添加到列表')
     uploadDialogVisible.value = false
     await fetchList()
   } catch {
-    // 错误提示已由 axios 拦截器处理
+    // 错误已由拦截器处理
   } finally {
     uploading.value = false
   }
@@ -129,49 +133,55 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`
 }
 
-// ---------- 文档删除 ----------
-// 表格 row 类型为 DefaultRow，此处断言为 DocType
-async function handleDelete(row: unknown) {
-  const doc = row as DocType
+function formatTime(iso: string): string {
+  if (!iso) return '-'
   try {
-    await documentApi.remove(doc.id)
-    ElMessage.success('文档已删除')
-    await fetchList()
+    return new Date(iso).toLocaleString('zh-CN', { hour12: false })
   } catch {
-    // 错误提示已由 axios 拦截器处理
+    return iso
   }
 }
 
-// ---------- 触发解析 ----------
+// ---------- 行操作 ----------
+function viewDetail(doc: DocType) {
+  router.push(`/parser/${doc.id}`)
+}
+
+async function handleDelete(doc: DocType) {
+  if (!confirm(`确定删除文档「${doc.filename}」？\n删除后不可恢复。`)) return
+  try {
+    await documentApi.remove(doc.id)
+    toast.success('已删除', '文档已从列表移除')
+    await fetchList()
+  } catch {
+    // 错误已处理
+  }
+}
+
+// ---------- 解析对话框 ----------
 const parseDialogVisible = ref(false)
 const parseDoc = ref<DocType | null>(null)
 const schemaLoading = ref(false)
 const schemas = ref<Schema[]>([])
 const selectedSchemaId = ref<string>('')
 const submittingParse = ref(false)
+// 仅 OCR 解析（不依赖 Schema 进行结构化抽取）
+const ocrOnly = ref(false)
 
-// 表格 row 类型为 DefaultRow，此处断言为 DocType
-function handleCommand(command: string, row: unknown) {
-  const doc = row as DocType
-  if (command === 'view') {
-    viewDetail(doc)
-  } else if (command === 'parse') {
-    openParseDialog(doc)
-  }
-}
-
-function viewDetail(doc: DocType) {
-  router.push(`/parser/${doc.id}`)
-}
+const schemaOptions = computed(() =>
+  schemas.value.map((s) => ({ value: String(s.id), label: s.name })),
+)
 
 async function openParseDialog(doc: DocType) {
   parseDoc.value = doc
   selectedSchemaId.value = ''
+  ocrOnly.value = false
   parseDialogVisible.value = true
 
   schemaLoading.value = true
   try {
-    const res = await schemaApi.getList({ is_active: true })
+    // 仅加载父分类 Schema，子 Schema 由抽取页面统一合并使用
+    const res = await schemaApi.getList({ only_parent: true })
     schemas.value = res.items
   } catch {
     schemas.value = []
@@ -182,22 +192,27 @@ async function openParseDialog(doc: DocType) {
 
 async function submitParse() {
   if (!parseDoc.value) return
-  if (!selectedSchemaId.value) {
-    ElMessage.error('请选择抽取 Schema')
+  // 仅 OCR 模式下跳过 Schema 校验
+  if (!ocrOnly.value && !selectedSchemaId.value) {
+    toast.warning('请选择 Schema', '请先选择抽取 Schema，或勾选「仅 OCR 解析」')
     return
   }
-
   submittingParse.value = true
   try {
     const res = await taskApi.submit({
       document_id: String(parseDoc.value.id),
-      schema_id: selectedSchemaId.value,
+      schema_id: ocrOnly.value ? undefined : selectedSchemaId.value,
     })
-    ElMessage.success('解析任务已提交')
+    toast.success(
+      '任务已提交',
+      ocrOnly.value
+        ? '已提交 OCR 解析任务（不进行结构化抽取）'
+        : `任务 ID: ${res.task_id.slice(0, 8)}…`,
+    )
     parseDialogVisible.value = false
     router.push(`/parser/${parseDoc.value.id}?task_id=${res.task_id}`)
   } catch {
-    // 错误提示已由 axios 拦截器处理
+    // 错误已处理
   } finally {
     submittingParse.value = false
   }
@@ -207,348 +222,242 @@ onMounted(fetchList)
 </script>
 
 <template>
-  <div class="documents">
-    <!-- 页头 -->
-    <div class="page-header">
-      <div>
-        <h2 class="page-title">文档管理</h2>
-        <p class="page-desc">上传技术标准文档并管理解析状态</p>
-      </div>
-      <el-button type="primary" class="btn-glow" @click="handleUpload">
-        <el-icon><Upload /></el-icon>
-        <span>上传文档</span>
-      </el-button>
+  <div>
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <PageHeader title="文档管理" description="上传技术标准文档并管理解析状态" />
+      <Button class="mb-6 shrink-0 gap-2" @click="openUploadDialog">
+        <Plus class="size-4" :stroke-width="1.5" />
+        上传文档
+      </Button>
     </div>
 
-    <!-- 上传区 -->
-    <div class="bp-card upload-zone">
-      <el-upload
-        ref="uploadRef"
-        drag
-        :auto-upload="false"
-        :show-file-list="false"
-        :on-change="handleFileChange"
-        accept="application/pdf,.pdf"
-      >
-        <el-icon class="upload-icon"><Upload /></el-icon>
-        <div class="upload-text">拖拽 PDF 文件到此处，或<span class="upload-link">点击上传</span></div>
-        <div class="upload-hint mono">支持 GB/T、ASTM、ISO 等技术标准文档（最大 50MB）</div>
-      </el-upload>
-    </div>
-
-    <!-- 搜索 -->
-    <div class="bp-card filter-bar">
-      <el-input
-        v-model="query.keyword"
-        placeholder="搜索文档标题、标准号"
-        clearable
-        @keyup.enter="handleSearch"
-      >
-        <template #prefix>
-          <el-icon><Search /></el-icon>
-        </template>
-      </el-input>
-    </div>
+    <!-- 搜索栏 -->
+    <Card class="mb-4">
+      <CardContent class="flex items-center gap-2 p-3">
+        <Search class="size-4 shrink-0 text-muted-foreground" :stroke-width="1.5" />
+        <Input
+          v-model="query.keyword"
+          placeholder="搜索文件名"
+          class="h-8 flex-1 border-0 shadow-none focus-visible:ring-0"
+          @keyup.enter="handleSearch"
+        />
+        <Button variant="outline" size="sm" class="h-8" @click="handleSearch">搜索</Button>
+      </CardContent>
+    </Card>
 
     <!-- 文档表格 -->
-    <div class="bp-card table-card">
-      <el-table v-loading="loading" :data="documents" style="width: 100%">
-        <el-table-column label="文档标题" prop="title" min-width="200" show-overflow-tooltip />
-        <el-table-column label="标准号" prop="standard_number" width="160">
-          <template #default="{ row }">
-            <span class="mono">{{ row.standard_number || '—' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="类型" prop="doc_type" width="120">
-          <template #default="{ row }">
-            <el-tag size="small" effect="plain">{{ row.doc_type }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" prop="status" width="120">
-          <template #default="{ row }">
-            <span class="mono status-tag" :class="`status-${row.status}`">{{ row.status }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="页数" prop="page_count" width="80" align="center">
-          <template #default="{ row }">
-            <span class="mono">{{ row.page_count }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="上传时间" prop="uploaded_at" width="180">
-          <template #default="{ row }">
-            <span class="mono date-cell">{{ row.uploaded_at }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
-          <template #default="{ row }">
-            <div class="action-buttons">
-              <el-dropdown trigger="click" @command="(cmd) => handleCommand(cmd, row)">
-                <el-button text size="small">
-                  <span>操作</span>
-                  <el-icon class="el-icon--right"><ArrowDown /></el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item command="view">
-                      <el-icon><View /></el-icon>
-                      查看详情
-                    </el-dropdown-item>
-                    <el-dropdown-item command="parse">
-                      <el-icon><Upload /></el-icon>
-                      开始解析
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-              <el-popconfirm
-                title="确定删除该文档？删除后不可恢复"
-                confirm-button-text="删除"
-                cancel-button-text="取消"
-                confirm-button-type="danger"
-                @confirm="handleDelete(row)"
-              >
-                <template #reference>
-                  <el-button text size="small" type="danger">
-                    <el-icon><Delete /></el-icon>
-                    <span>删除</span>
-                  </el-button>
-                </template>
-              </el-popconfirm>
-            </div>
-          </template>
-        </el-table-column>
-        <template #empty>
-          <el-empty description="暂无文档，请上传" :image-size="80" />
-        </template>
-      </el-table>
+    <Card>
+      <CardContent class="p-0">
+        <!-- 表头 -->
+        <div class="hidden grid-cols-12 gap-3 border-b border-border bg-muted/40 px-5 py-2.5 text-xs font-medium text-muted-foreground lg:grid">
+          <div class="col-span-5">文件名</div>
+          <div class="col-span-2">类型</div>
+          <div class="col-span-2">状态</div>
+          <div class="col-span-2">创建时间</div>
+          <div class="col-span-1 text-right">操作</div>
+        </div>
 
-      <!-- 分页 -->
-      <div class="pagination">
-        <el-pagination
-          v-model:current-page="query.page"
-          v-model:page-size="query.page_size"
-          :total="total"
-          layout="total, prev, pager, next"
-          background
-          @current-change="fetchList"
-        />
-      </div>
-    </div>
-
-    <!-- 上传元信息对话框 -->
-    <el-dialog
-      v-model="uploadDialogVisible"
-      title="上传文档"
-      width="520px"
-      @close="onUploadDialogClose"
-    >
-      <el-form :model="uploadForm" label-width="80px" label-position="left">
-        <el-form-item label="文件">
-          <div v-if="pendingFile" class="file-info">
-            <el-icon class="file-icon"><Document /></el-icon>
-            <span class="file-name">{{ pendingFile.name }}</span>
-            <span class="file-size mono">{{ formatFileSize(pendingFile.size) }}</span>
+        <!-- 加载态 -->
+        <div v-if="loading" class="divide-y divide-border">
+          <div v-for="i in 5" :key="i" class="px-5 py-3">
+            <Skeleton class="h-9 w-full" />
           </div>
-        </el-form-item>
-        <el-form-item label="标题" required>
-          <el-input v-model="uploadForm.title" placeholder="请输入文档标题" />
-        </el-form-item>
-        <el-form-item label="文档类型" required>
-          <el-select v-model="uploadForm.doc_type" placeholder="请选择文档类型" style="width: 100%">
-            <el-option
-              v-for="o in docTypeOptions"
-              :key="o.value"
-              :label="o.label"
-              :value="o.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="标准号">
-          <el-input
-            v-model="uploadForm.standard_number"
-            placeholder="如：GB/T 12345-2020（可选）"
-          />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="uploadDialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="uploading" @click="submitUpload">确认上传</el-button>
-      </template>
-    </el-dialog>
+        </div>
 
-    <!-- 解析 Schema 选择对话框 -->
-    <el-dialog v-model="parseDialogVisible" title="开始解析" width="480px">
-      <el-form label-width="80px" label-position="left">
-        <el-form-item label="文档">
-          <span class="parse-doc-name">{{ parseDoc?.title }}</span>
-        </el-form-item>
-        <el-form-item label="Schema" required>
-          <el-select
-            v-model="selectedSchemaId"
-            placeholder="请选择抽取 Schema"
-            style="width: 100%"
-            :loading="schemaLoading"
+        <!-- 空态 -->
+        <EmptyState
+          v-else-if="documents.length === 0"
+          :icon="FileText"
+          title="暂无文档"
+          description="点击右上角「上传文档」开始添加"
+          class="py-12"
+        />
+
+        <!-- 列表 -->
+        <ul v-else class="divide-y divide-border">
+          <li
+            v-for="doc in documents"
+            :key="doc.id"
+            class="grid grid-cols-1 gap-3 px-5 py-3 transition-colors hover:bg-muted/30 lg:grid-cols-12 lg:items-center"
           >
-            <el-option
-              v-for="schema in schemas"
-              :key="schema.id"
-              :label="schema.name"
-              :value="String(schema.id)"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="parseDialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="submittingParse" @click="submitParse">
-          提交解析
-        </el-button>
-      </template>
-    </el-dialog>
+            <div class="min-w-0 lg:col-span-5">
+              <button
+                type="button"
+                class="block w-full truncate text-left text-sm font-medium text-foreground hover:text-primary"
+                @click="viewDetail(doc)"
+              >
+                {{ doc.filename }}
+              </button>
+              <div class="text-xs text-muted-foreground">{{ formatFileSize(doc.file_size) }}</div>
+            </div>
+
+            <div class="lg:col-span-2">
+              <Badge v-if="doc.file_type" variant="outline" class="font-mono text-[10px] uppercase">
+                {{ doc.file_type }}
+              </Badge>
+              <span v-else class="text-xs text-muted-foreground">-</span>
+            </div>
+
+            <div class="lg:col-span-2">
+              <StatusBadge :status="doc.status" kind="document" />
+            </div>
+
+            <div class="font-mono text-xs text-muted-foreground lg:col-span-2">
+              {{ formatTime(doc.created_at) }}
+            </div>
+
+            <div class="flex justify-end gap-1 lg:col-span-1">
+              <Tooltip :side="'top'">
+                <template #trigger>
+                  <button
+                    type="button"
+                    class="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                    aria-label="查看"
+                    @click="viewDetail(doc)"
+                  >
+                    <Eye class="size-3.5" :stroke-width="1.5" />
+                  </button>
+                </template>
+                <span>查看详情</span>
+              </Tooltip>
+
+              <Tooltip :side="'top'">
+                <template #trigger>
+                  <button
+                    type="button"
+                    class="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+                    aria-label="解析"
+                    @click="openParseDialog(doc)"
+                  >
+                    <PlayCircle class="size-3.5" :stroke-width="1.5" />
+                  </button>
+                </template>
+                <span>开始解析</span>
+              </Tooltip>
+
+              <Tooltip :side="'top'">
+                <template #trigger>
+                  <button
+                    type="button"
+                    class="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-danger/10 hover:text-danger"
+                    aria-label="删除"
+                    @click="handleDelete(doc)"
+                  >
+                    <Trash2 class="size-3.5" :stroke-width="1.5" />
+                  </button>
+                </template>
+                <span>删除</span>
+              </Tooltip>
+            </div>
+          </li>
+        </ul>
+
+        <!-- 分页 -->
+        <div class="flex items-center justify-between border-t border-border px-5 py-3">
+          <div class="text-xs text-muted-foreground">共 {{ total }} 条</div>
+          <Pagination
+            :page="query.page"
+            :page-size="query.page_size"
+            :total="total"
+            @update:page="onPageChange"
+          />
+        </div>
+      </CardContent>
+    </Card>
+
+    <!-- 上传对话框 -->
+    <Dialog v-model:open="uploadDialogVisible" title="上传文档" description="支持 PDF 格式，最大 50MB">
+      <div class="space-y-4 pt-2">
+        <!-- 文件选择区 -->
+        <div v-if="!pendingFile">
+          <label
+            class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-8 text-center transition-colors hover:bg-muted/60 hover:border-primary"
+            :class="{ 'border-primary bg-primary/5': isDragOver }"
+            @dragover.prevent="isDragOver = true"
+            @dragleave="isDragOver = false"
+            @drop.prevent="onDrop"
+          >
+            <Upload class="size-7 text-muted-foreground" :stroke-width="1.5" />
+            <div class="text-sm font-medium text-foreground">拖拽 PDF 文件到此处</div>
+            <div class="text-xs text-muted-foreground">或点击此处选择文件</div>
+            <input type="file" accept="application/pdf,.pdf" class="hidden" @change="onFileSelect" />
+          </label>
+        </div>
+
+        <!-- 已选文件 -->
+        <div v-else class="flex items-center gap-3 rounded-md border border-border bg-muted/30 p-3">
+          <div class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+            <FileText class="size-4" :stroke-width="1.5" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="truncate text-sm font-medium text-foreground">{{ pendingFile.name }}</div>
+            <div class="font-mono text-xs text-muted-foreground">{{ formatFileSize(pendingFile.size) }}</div>
+          </div>
+          <button
+            type="button"
+            class="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            @click="removeFile"
+          >
+            <X class="size-4" :stroke-width="1.5" />
+          </button>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="flex justify-end gap-2 pt-2">
+          <Button variant="outline" :disabled="uploading" @click="uploadDialogVisible = false">
+            取消
+          </Button>
+          <Button :disabled="uploading" class="gap-2" @click="submitUpload">
+            <Check v-if="!uploading" class="size-4" :stroke-width="1.5" />
+            <span>{{ uploading ? '上传中...' : '确认上传' }}</span>
+          </Button>
+        </div>
+      </div>
+    </Dialog>
+
+    <!-- 解析对话框 -->
+    <Dialog v-model:open="parseDialogVisible" title="开始解析" :description="parseDoc?.filename">
+      <div class="space-y-4 pt-2">
+        <!-- OCR 模式开关 -->
+        <label
+          class="flex cursor-pointer items-start gap-2.5 rounded-md border border-border bg-muted/30 p-3 transition-colors hover:bg-muted/50"
+        >
+          <input
+            v-model="ocrOnly"
+            type="checkbox"
+            class="mt-0.5 size-3.5 rounded border-border text-primary focus:ring-primary"
+          />
+          <div class="flex-1">
+            <div class="text-sm font-medium text-foreground">仅 OCR 解析</div>
+            <p class="mt-0.5 text-xs text-muted-foreground">
+              仅执行 OCR 文字识别与版面分析，不依赖 Schema 进行结构化字段抽取
+            </p>
+          </div>
+        </label>
+
+        <div v-if="!ocrOnly" class="space-y-1.5">
+          <Label>抽取 Schema <span class="text-destructive">*</span></Label>
+          <Select
+            v-model="selectedSchemaId"
+            :options="schemaOptions"
+            placeholder="请选择抽取 Schema"
+          />
+          <p v-if="schemaLoading" class="text-xs text-muted-foreground">加载中...</p>
+          <p v-else-if="schemas.length === 0" class="text-xs text-destructive">
+            暂无可用 Schema，请先到「抽取 Schema」页面创建
+          </p>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <Button variant="outline" :disabled="submittingParse" @click="parseDialogVisible = false">
+            取消
+          </Button>
+          <Button :disabled="submittingParse" class="gap-2" @click="submitParse">
+            <PlayCircle v-if="!submittingParse" class="size-4" :stroke-width="1.5" />
+            <span>{{ submittingParse ? '提交中...' : '提交解析' }}</span>
+          </Button>
+        </div>
+      </div>
+    </Dialog>
   </div>
 </template>
-
-<style scoped lang="scss">
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-
-  .page-title {
-    font-size: var(--fs-xl);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .page-desc {
-    font-size: var(--fs-sm);
-    color: var(--text-secondary);
-  }
-}
-
-.upload-zone {
-  padding: 24px;
-  margin-bottom: 16px;
-
-  :deep(.el-upload-dragger) {
-    background-color: var(--bg-base);
-    border: 1px dashed var(--border-base);
-    border-radius: var(--radius-md);
-    transition: border-color var(--transition-fast);
-
-    &:hover {
-      border-color: var(--accent-primary);
-    }
-  }
-
-  .upload-icon {
-    font-size: 40px;
-    color: var(--accent-primary);
-    margin-bottom: 8px;
-  }
-
-  .upload-text {
-    color: var(--text-primary);
-    font-size: var(--fs-base);
-    margin-bottom: 4px;
-
-    .upload-link {
-      color: var(--accent-primary);
-    }
-  }
-
-  .upload-hint {
-    font-size: var(--fs-xs);
-    color: var(--text-muted);
-  }
-}
-
-.filter-bar {
-  padding: 12px 16px;
-  margin-bottom: 16px;
-}
-
-.table-card {
-  padding: 4px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px;
-}
-
-.date-cell {
-  font-size: var(--fs-xs);
-  color: var(--text-secondary);
-}
-
-.status-tag {
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-
-  &.status-completed,
-  &.status-success {
-    color: var(--accent-success);
-  }
-  &.status-failed {
-    color: var(--accent-danger);
-  }
-  &.status-parsing,
-  &.status-running {
-    color: var(--accent-primary);
-  }
-  &.status-pending,
-  &.status-queued {
-    color: var(--text-secondary);
-  }
-}
-
-// 操作列按钮布局
-.action-buttons {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-// 上传对话框文件信息
-.file-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  background: var(--bg-base);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  width: 100%;
-
-  .file-icon {
-    color: var(--accent-primary);
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
-  .file-name {
-    flex: 1;
-    font-size: var(--fs-sm);
-    color: var(--text-primary);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .file-size {
-    font-size: var(--fs-xs);
-    color: var(--text-muted);
-    flex-shrink: 0;
-  }
-}
-
-// 解析对话框文档名
-.parse-doc-name {
-  font-size: var(--fs-sm);
-  color: var(--text-primary);
-  font-weight: 500;
-}
-</style>

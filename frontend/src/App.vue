@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { TooltipProvider } from 'reka-ui'
 import { useAuthStore } from '@/stores/auth'
+import { Toaster } from '@/components/ui/toast'
 
 // 应用根组件：承载路由出口与过渡动画，并在挂载时恢复会话
 const auth = useAuthStore()
@@ -14,13 +16,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <router-view v-slot="{ Component }">
-    <transition name="fade" mode="out-in">
-      <component :is="Component" />
-    </transition>
-  </router-view>
-</template>
+  <TooltipProvider :delay-duration="300">
+    <router-view v-slot="{ Component }">
+      <transition name="fade-slide" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
 
-<style lang="scss">
-@use './styles/transitions.scss';
-</style>
+    <!-- 全局 Toast 容器 -->
+    <Toaster />
+  </TooltipProvider>
+</template>

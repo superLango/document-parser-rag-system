@@ -2,174 +2,110 @@
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import type { FormInstance, FormRules } from 'element-plus'
-import BrandLogo from '@/components/brand/BrandLogo.vue'
+import { toast } from '@/components/ui/toast'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Loader2, FileSearch } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
 const auth = useAuthStore()
 
-const formRef = ref<FormInstance>()
 const loading = ref(false)
-
 const form = reactive({
   username: '',
   password: '',
 })
 
-const rules: FormRules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-}
-
 async function handleLogin() {
-  if (!formRef.value) return
-  await formRef.value.validate(async (valid) => {
-    if (!valid) return
-    loading.value = true
-    try {
-      await auth.login(form.username, form.password)
-      const redirect = (route.query.redirect as string) || '/'
-      router.push(redirect)
-    } finally {
-      loading.value = false
-    }
-  })
+  if (!form.username || !form.password) {
+    toast.warning('请填写完整', '用户名和密码不能为空')
+    return
+  }
+  loading.value = true
+  try {
+    await auth.login(form.username, form.password)
+    toast.success('登录成功', `欢迎回来，${form.username}`)
+    const redirect = (route.query.redirect as string) || '/'
+    router.push(redirect)
+  } catch (e) {
+    // 错误已由 axios 拦截器统一 toast
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
 <template>
-  <div class="login-page">
-    <!-- 背景装饰：右侧抽象图谱网格 -->
-    <div class="bg-decor" aria-hidden="true">
-      <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <pattern id="dotgrid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="1" r="1" fill="#2563EB" fill-opacity="0.08" />
-          </pattern>
-        </defs>
-        <rect width="600" height="600" fill="url(#dotgrid)" />
-      </svg>
-    </div>
+  <div
+    class="relative flex min-h-dvh items-center justify-center overflow-hidden bg-background p-6"
+  >
+    <!-- 背景装饰：极简点阵网格 -->
+    <div
+      class="pointer-events-none absolute inset-0 opacity-50"
+      style="
+        background-image: radial-gradient(
+          circle at 1px 1px,
+          oklch(0.71 0.01 260 / 0.18) 1px,
+          transparent 0
+        );
+        background-size: 28px 28px;
+      "
+      aria-hidden="true"
+    />
 
-    <div class="login-card">
-      <!-- 品牌区 -->
-      <div class="brand">
-        <BrandLogo :size="56" />
-        <h1 class="brand-name">Hansight</h1>
-        <p class="brand-sub">文档智能解析与 RAG 系统</p>
-      </div>
+    <Card class="relative w-full max-w-sm">
+      <CardHeader class="items-center text-center">
+        <div
+          class="mb-2 flex size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+        >
+          <FileSearch class="size-6" :stroke-width="1.5" />
+        </div>
+        <CardTitle class="text-xl">Hansight</CardTitle>
+        <CardDescription>文档智能解析与 RAG 系统</CardDescription>
+      </CardHeader>
 
-      <!-- 表单 -->
-      <el-form
-        ref="formRef"
-        :model="form"
-        :rules="rules"
-        size="large"
-        @keyup.enter="handleLogin"
-      >
-        <el-form-item prop="username">
-          <el-input v-model="form.username" placeholder="用户名" />
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" placeholder="密码" show-password />
-        </el-form-item>
-        <el-button
-          type="primary"
-          class="login-btn btn-glow"
-          :loading="loading"
+      <CardContent class="space-y-4">
+        <div class="space-y-1.5">
+          <label class="text-sm font-medium text-foreground" for="login-username">用户名</label>
+          <Input
+            id="login-username"
+            v-model="form.username"
+            placeholder="请输入用户名"
+            :disabled="loading"
+            autocomplete="username"
+            @keyup.enter="handleLogin"
+          />
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-sm font-medium text-foreground" for="login-password">密码</label>
+          <Input
+            id="login-password"
+            v-model="form.password"
+            type="password"
+            placeholder="请输入密码"
+            :disabled="loading"
+            autocomplete="current-password"
+            @keyup.enter="handleLogin"
+          />
+        </div>
+
+        <Button
+          type="button"
+          class="w-full"
+          :disabled="loading"
           @click="handleLogin"
         >
-          登 录
-        </el-button>
-      </el-form>
+          <Loader2 v-if="loading" class="size-4 animate-spin" :stroke-width="1.5" />
+          <span>{{ loading ? '登录中...' : '登 录' }}</span>
+        </Button>
 
-      <div class="login-footer mono">
-        <span>Hansight · v1.0.0</span>
-      </div>
-    </div>
+        <p class="text-center text-xs text-muted-foreground">
+          Hansight · 文档智能解析与 RAG 系统
+        </p>
+      </CardContent>
+    </Card>
   </div>
 </template>
-
-<style scoped lang="scss">
-.login-page {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: linear-gradient(135deg, #EFF6FF 0%, #F8FAFC 50%, #F1F5F9 100%);
-  overflow: hidden;
-}
-
-.bg-decor {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.6;
-
-  svg {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.login-card {
-  position: relative;
-  width: 100%;
-  max-width: 400px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-base);
-  border-radius: var(--radius-xl);
-  padding: 40px 32px;
-  box-shadow: var(--shadow-xl);
-  z-index: 1;
-}
-
-.brand {
-  text-align: center;
-  margin-bottom: 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-
-  .brand-name {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-    margin: 0;
-  }
-
-  .brand-sub {
-    margin: 0;
-    font-size: var(--fs-sm);
-    color: var(--text-secondary);
-  }
-}
-
-.login-btn {
-  width: 100%;
-  margin-top: 8px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-}
-
-.login-footer {
-  margin-top: 24px;
-  text-align: center;
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-}
-
-@media (max-width: 480px) {
-  .login-card {
-    padding: 32px 24px;
-  }
-  .brand .brand-name {
-    font-size: 24px;
-  }
-}
-</style>

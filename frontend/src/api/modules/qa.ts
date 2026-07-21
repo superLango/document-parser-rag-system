@@ -35,7 +35,12 @@ export const qaApi = {
   async askStream(
     query: string,
     callbacks: AskStreamCallbacks,
-    options?: { top_k?: number; schema_id?: string },
+    options?: {
+      top_k?: number
+      doc_ids?: string[]
+      use_graph?: boolean
+      use_reranker?: boolean
+    },
   ): Promise<void> {
     const token = localStorage.getItem('token')
     const response = await fetch('/api/v1/qa/stream', {
@@ -45,9 +50,11 @@ export const qaApi = {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       body: JSON.stringify({
-        query,
+        question: query,
         top_k: options?.top_k,
-        schema_id: options?.schema_id,
+        doc_ids: options?.doc_ids,
+        use_graph: options?.use_graph ?? true,
+        use_reranker: options?.use_reranker ?? true,
       }),
     })
 

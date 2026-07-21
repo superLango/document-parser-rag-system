@@ -15,6 +15,7 @@
 import io
 import uuid
 from pathlib import Path
+from urllib.parse import quote
 from uuid import UUID
 
 from botocore.exceptions import ClientError
@@ -233,6 +234,18 @@ async def download_document(
             message=f"文档 {document_id} 不存在",
         )
 
+    # 防御性校验：minio_object_name 为空时无法下载
+    if not document.minio_object_name:
+        logger.warning(
+            "文档对象名为空，无法下载",
+            document_id=str(document_id),
+            filename=document.filename,
+        )
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
+            message="该文档未关联原始文件，可能为历史数据，请重新上传后再试",
+        )
+
     # 从存储服务下载文件内容
     try:
         content: bytes = await storage_service.download(document.minio_object_name)
@@ -251,11 +264,18 @@ async def download_document(
         filename=document.filename,
         size=len(content),
     )
+    # Content-Disposition 按 RFC 5987 编码文件名以支持中文等非 ASCII 字符
+    # 浏览器优先识别 filename*，回退到 ASCII filename
+    ascii_filename = document.filename.encode("ascii", "ignore").decode("ascii") or "document.pdf"
+    utf8_filename = quote(document.filename, safe="")
     return StreamingResponse(
         io.BytesIO(content),
         media_type="application/pdf",
         headers={
-            "Content-Disposition": f'inline; filename="{document.filename}"',
+            "Content-Disposition": (
+                f"inline; filename=\"{ascii_filename}\"; "
+                f"filename*=UTF-8''{utf8_filename}"
+            ),
         },
     )
 

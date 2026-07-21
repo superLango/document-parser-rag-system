@@ -52,7 +52,12 @@ export async function parseSSEStream(
 
 /**
  * 处理单个 SSE 事件块
- * 解析 data: 前缀的 JSON 内容，根据 type 字段分发回调
+ * 解析 data: 前缀的 JSON 内容，根据字段判断事件类型并分发回调
+ *
+ * 后端事件格式（与 backend/app/api/v1/endpoints/qa.py 对齐）：
+ * - 文本分片：``{"chunk": "..."}``
+ * - 结束标记：``{"done": true}``
+ * - 错误信息：``{"error": "..."}``
  */
 function handleEventBlock(
   block: string,
@@ -72,19 +77,15 @@ function handleEventBlock(
 
   try {
     const payload = JSON.parse(dataLines.join('\n'))
-    switch (payload.type) {
-      case 'token':
-        onChunk(payload.content ?? '')
-        break
-      case 'done':
-        onDone({ answer: payload.answer ?? '', citations: payload.citations ?? [] })
-        break
-      case 'error':
-        onError(payload.message ?? '未知错误')
-        break
-      default:
-        // 未知事件类型，忽略
-        break
+    if (typeof payload.chunk === 'string') {
+      onChunk(payload.chunk)
+    } else if (payload.done === true) {
+      onDone({
+        answer: payload.answer ?? '',
+        citations: payload.citations ?? [],
+      })
+    } else if (typeof payload.error === 'string') {
+      onError(payload.error)
     }
   } catch {
     // JSON 解析失败，忽略该事件块（如心跳注释等）

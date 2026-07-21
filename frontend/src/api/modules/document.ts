@@ -1,5 +1,5 @@
 import { http } from '@/api'
-import type { Document, DocumentCreate, Paginated } from '@/api/types'
+import type { Document, Paginated } from '@/api/types'
 
 /**
  * 文档管理接口
@@ -22,14 +22,10 @@ export const documentApi = {
   },
 
   // 上传文档（multipart/form-data）
-  upload(file: File, meta: DocumentCreate): Promise<Document> {
+  // 后端仅接收 file 字段，filename/file_size/file_type 由后端自动从文件中提取
+  upload(file: File): Promise<Document> {
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('title', meta.title)
-    formData.append('doc_type', meta.doc_type)
-    if (meta.standard_number) {
-      formData.append('standard_number', meta.standard_number)
-    }
     return http.post<Document>('/documents/', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })

@@ -1,49 +1,21 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { Button } from '@/components/ui/button'
+import { FileQuestion } from 'lucide-vue-next'
 
 const router = useRouter()
 </script>
 
 <template>
-  <div class="not-found">
-    <div class="nf-content">
-      <div class="nf-code mono">404</div>
-      <h2 class="nf-title">页面未找到</h2>
-      <p class="nf-desc">请求的路径不存在或已被移除</p>
-      <el-button type="primary" class="btn-glow" @click="router.push('/')">
-        返回仪表盘
-      </el-button>
+  <div class="flex min-h-dvh flex-col items-center justify-center gap-6 bg-background p-6 text-center">
+    <div class="flex size-16 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+      <FileQuestion class="size-8" :stroke-width="1.25" />
     </div>
+    <div class="space-y-2">
+      <p class="font-mono text-5xl font-semibold tabular-nums text-foreground">404</p>
+      <h2 class="text-xl font-medium text-foreground">页面未找到</h2>
+      <p class="text-sm text-muted-foreground">请求的路径不存在或已被移除</p>
+    </div>
+    <Button @click="router.push('/')">返回首页</Button>
   </div>
 </template>
-
-<style scoped lang="scss">
-.not-found {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nf-content {
-  text-align: center;
-}
-
-.nf-code {
-  font-size: 96px;
-  font-weight: 700;
-  color: var(--accent-primary);
-  line-height: 1;
-}
-
-.nf-title {
-  font-size: var(--fs-xl);
-  margin: 16px 0 8px;
-  color: var(--text-primary);
-}
-
-.nf-desc {
-  color: var(--text-secondary);
-  margin-bottom: 24px;
-}
-</style>
