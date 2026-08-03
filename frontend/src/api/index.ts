@@ -51,24 +51,28 @@ instance.interceptors.response.use(
   },
   async (error) => {
     const { response } = error
+    const path = window.location.pathname
+    const isLoginPage = path.includes('/login')
 
-    // 401 未授权：清除登录态并跳转登录页
-    if (response?.status === 401) {
-      localStorage.removeItem('token')
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
-      }
-    }
-
-    // 统一错误提示（Toast 系统）
+    // 统一错误提示（Toast 系统）- 先取到消息，避免下方 401 处理后无法读取
     const message =
       response?.data?.message ||
       response?.data?.detail ||
       error.message ||
       '请求失败，请稍后重试'
 
-    // 401 不重复 toast，由路由守卫处理
-    if (response?.status !== 401) {
+    // 401 未授权：清除登录态并跳转登录页
+    if (response?.status === 401) {
+      localStorage.removeItem('token')
+      if (!isLoginPage) {
+        // 非登录页的 401：静默跳转，不重复 toast（避免每个接口都弹）
+        window.location.href = '/login'
+      } else {
+        // 登录页的 401（密码错误等）：必须提示用户，否则静默失败
+        toast.error('登录失败', message)
+      }
+    } else {
+      // 非 401：统一提示
       toast.error('请求失败', message)
     }
 

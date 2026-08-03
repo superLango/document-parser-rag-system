@@ -15,7 +15,13 @@ services:
   seaweedfs:
     restart: unless-stopped
 
-  neo4j:
+  nebula-metad:
+    restart: unless-stopped
+
+  nebula-storaged:
+    restart: unless-stopped
+
+  nebula-graphd:
     restart: unless-stopped
 
   etcd:

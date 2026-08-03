@@ -1,21 +1,21 @@
 import {
-  LayoutDashboard,
-  FileText,
-  Eye,
-  Braces,
-  FileSearch,
-  BookOpen,
-  Network,
   FolderOpen,
-  ListChecks,
-  MessageSquare,
   Settings,
+  UserCircle,
+  ShieldCheck,
+  ScrollText,
+  LayoutDashboard,
+  HelpCircle,
+  Info,
   type LucideIcon,
 } from 'lucide-vue-next'
 
 /**
- * 主导航项配置
- * 与 router/index.ts 中的路由对应
+ * 主导航项配置（KB 中心架构）
+ *
+ * HansonDOC RAG 以知识库为隔离边界，所有文档/抽取/问答/配置均在知识库内进行，
+ * 因此主导航仅保留「知识库」入口与「系统设置」。进入知识库后由 KbLayout
+ * 提供二级导航（概览/文档/抽取/Schema/术语/任务/图谱/配置/问答/成员）。
  */
 export interface NavItem {
   path: string
@@ -24,71 +24,25 @@ export interface NavItem {
   description?: string
   /** 关键字，用于 Command Palette 搜索 */
   keywords?: string[]
+  /** 是否需要超级管理员权限 */
+  superuserOnly?: boolean
 }
 
+/** 主导航（所有登录用户可见） */
 export const navItems: NavItem[] = [
   {
-    path: '/',
+    path: '/dashboard',
     title: '仪表盘',
     icon: LayoutDashboard,
-    description: '系统概览与最近活动',
-    keywords: ['dashboard', 'overview', '仪表盘', '首页'],
+    description: '跨知识库全局统计与趋势',
+    keywords: ['dashboard', 'stats', '仪表盘', '统计', '趋势', '图表'],
   },
   {
-    path: '/documents',
-    title: '文档管理',
-    icon: FileText,
-    description: '上传、查看、管理待解析文档',
-    keywords: ['document', 'file', '文档', '上传'],
-  },
-  {
-    path: '/schemas',
-    title: '抽取 Schema',
-    icon: Braces,
-    description: '配置结构化抽取字段定义',
-    keywords: ['schema', 'extraction', '抽取', '模板'],
-  },
-  {
-    path: '/extraction',
-    title: '文档抽取',
-    icon: FileSearch,
-    description: '基于 LangExtract 的结构化字段抽取',
-    keywords: ['extraction', 'langextract', '抽取', '结构化'],
-  },
-  {
-    path: '/terms',
-    title: '术语库',
-    icon: BookOpen,
-    description: '管理行业术语词典与同义词',
-    keywords: ['term', 'glossary', '术语', '词典'],
-  },
-  {
-    path: '/knowledge',
-    title: '知识图谱',
-    icon: Network,
-    description: '实体关系图谱可视化与编辑',
-    keywords: ['knowledge', 'graph', '知识图谱', '实体'],
-  },
-  {
-    path: '/kb',
+    path: '/kbs',
     title: '知识库',
     icon: FolderOpen,
-    description: 'RAG 向量知识库管理',
-    keywords: ['kb', 'rag', 'knowledge base', '知识库', '向量'],
-  },
-  {
-    path: '/tasks',
-    title: '任务管理',
-    icon: ListChecks,
-    description: '查看异步任务执行状态与队列',
-    keywords: ['task', 'queue', '任务', '队列'],
-  },
-  {
-    path: '/qa',
-    title: '智能问答',
-    icon: MessageSquare,
-    description: '基于 RAG 的智能问答与引用',
-    keywords: ['qa', 'chat', '问答', '对话'],
+    description: '以知识库为隔离边界的垂直领域文档智能产品',
+    keywords: ['kb', 'rag', 'knowledge base', '知识库', '向量', '隔离', '文档', '抽取', '问答'],
   },
   {
     path: '/settings',
@@ -97,17 +51,65 @@ export const navItems: NavItem[] = [
     description: '应用偏好与系统状态',
     keywords: ['settings', 'config', '设置', '偏好'],
   },
+  {
+    path: '/profile',
+    title: '个人中心',
+    icon: UserCircle,
+    description: '个人信息与安全设置',
+    keywords: ['profile', '个人', '账户', '密码', 'avatar'],
+  },
+  {
+    path: '/help',
+    title: '帮助文档',
+    icon: HelpCircle,
+    description: '系统使用指南与常见问题',
+    keywords: ['help', 'docs', '帮助', '文档', '指南', 'faq'],
+  },
+  {
+    path: '/about',
+    title: '关于',
+    icon: Info,
+    description: '系统信息与技术栈',
+    keywords: ['about', '关于', '系统', '信息', 'version'],
+  },
 ]
+
+/** 管理员导航（仅超级管理员可见） */
+export const adminNavItems: NavItem[] = [
+  {
+    path: '/admin/users',
+    title: '用户管理',
+    icon: ShieldCheck,
+    description: '管理系统用户、角色与状态',
+    keywords: ['users', 'admin', '用户', '管理', '超管', '权限'],
+    superuserOnly: true,
+  },
+  {
+    path: '/admin/audit-logs',
+    title: '审计日志',
+    icon: ScrollText,
+    description: '查看系统操作审计记录',
+    keywords: ['audit', 'log', '审计', '日志', '操作记录'],
+    superuserOnly: true,
+  },
+]
+
+/** 所有导航项（含管理员），用于 Command Palette 搜索 */
+export const allNavItems: NavItem[] = [...navItems, ...adminNavItems]
 
 /**
  * 通过 path 查找 NavItem
  */
 export function findNavItem(path: string): NavItem | undefined {
   // 精确匹配
-  if (path === '/') return navItems.find((i) => i.path === '/')
-  // 前缀匹配（处理 /documents/123 这类子路由）
+  if (path === '/' || path === '/kbs') return navItems.find((i) => i.path === '/kbs')
+  // 管理员路径
+  if (path.startsWith('/admin')) {
+    return adminNavItems.find((i) => path.startsWith(i.path))
+  }
+  // 前缀匹配（处理 /kbs/xxx 等子路由）
   const seg = `/${path.split('/')[1]}`
-  return navItems.find((i) => i.path === seg)
+  return allNavItems.find((i) => i.path === seg)
 }
 
-export { LayoutDashboard, FileText, Eye, Braces, FileSearch, BookOpen, Network, FolderOpen, ListChecks, MessageSquare, Settings }
+export { FolderOpen, Settings, UserCircle, ShieldCheck, ScrollText, LayoutDashboard, HelpCircle, Info }

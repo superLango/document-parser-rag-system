@@ -35,6 +35,11 @@ export interface User {
   email: string
   is_active: boolean
   is_superuser?: boolean
+  full_name?: string | null
+  phone?: string | null
+  department?: string | null
+  avatar?: string | null
+  last_login_at?: string | null
   created_at: string
 }
 
@@ -99,7 +104,7 @@ export interface DocumentCreate {
 }
 
 // ---------- 解析任务 ----------
-export type TaskStatus = 'queued' | 'running' | 'success' | 'failed'
+export type TaskStatus = 'queued' | 'running' | 'started' | 'success' | 'failed'
 
 export interface Task {
   id: string
@@ -112,6 +117,8 @@ export interface Task {
   created_at: string
   error_message: string | null
   result: Record<string, unknown> | null
+  retry_count?: number
+  parent_task_id?: string | null
 }
 
 // ---------- 任务提交 ----------
@@ -119,6 +126,8 @@ export interface TaskCreateRequest {
   document_id: string
   schema_id?: string
   term_base_id?: string
+  /** OCR 引擎覆盖：paddleocr / mineru / glmocr / auto，留空走全局配置 */
+  engine?: 'paddleocr' | 'mineru' | 'glmocr' | 'auto'
 }
 
 export interface TaskSubmitResponse {
@@ -289,4 +298,172 @@ export interface DashboardStats {
   success_rate: number
   recent_documents: Document[]
   recent_tasks: Task[]
+}
+
+// ============================================================
+// 新架构：知识库（HansonDOC RAG）—— 以知识库为隔离边界
+// 对应后端 app.api.v1.endpoints.kbs / kb_config
+// ============================================================
+
+/** 知识库角色 */
+export type KbRole = 'owner' | 'admin' | 'editor' | 'viewer'
+
+/** 知识库基础信息 */
+export interface KnowledgeBase {
+  id: string
+  name: string
+  description: string | null
+  domain_code: string
+  template_code: string | null
+  owner_id: string
+  config: Record<string, unknown>
+  is_active: boolean
+  sort_order: number
+  created_at: string
+  updated_at: string | null
+  my_role?: KbRole | null
+  member_count?: number
+}
+
+/** 新建知识库请求 */
+export interface KbCreateRequest {
+  name: string
+  description?: string
+  domain_code: string
+  template_code?: string
+  config?: Record<string, unknown>
+}
+
+/** 更新知识库请求 */
+export interface KbUpdateRequest {
+  name?: string
+  description?: string
+  sort_order?: number
+}
+
+/** 知识库统计 */
+export interface KbStats {
+  kb_id: string
+  kb_name: string
+  total_documents: number
+  total_chunks: number
+  total_tasks: number
+  total_members: number
+}
+
+/** 知识库成员 */
+export interface KbMember {
+  id: string
+  kb_id: string
+  user_id: string
+  username?: string
+  email?: string
+  avatar?: string
+  role: KbRole
+  created_at: string
+}
+
+/** 领域模板摘要 */
+export interface DomainTemplateSummary {
+  code: string
+  name: string
+  description: string
+  domain_code: string
+  category_count: number
+  regex_rule_count: number
+  has_hook: boolean
+}
+
+/** 领域模板详情 */
+export interface DomainTemplateDetail extends DomainTemplateSummary {
+  categories: Record<string, unknown>[]
+  field_templates: Record<string, unknown>[]
+  regex_rules: Record<string, unknown>[]
+  dict_config: Record<string, unknown>
+  config_override: Record<string, unknown>
+}
+
+/** 应用模板结果 */
+export interface ApplyTemplateResult {
+  template_code: string
+  template_name: string
+  categories_written: number
+  field_templates_written: number
+  regex_rules_written: number
+  dict_config_written: boolean
+  config_override_merged: boolean
+  hook_script_written: boolean
+}
+
+/** KB 完整配置（合并后） */
+export interface KbConfig {
+  kb_id: string
+  config: Record<string, unknown>
+  categories: Record<string, unknown>[]
+  field_templates: Record<string, Record<string, unknown>[]>
+  regex_rules: Record<string, unknown>[]
+  dict_config: Record<string, unknown>
+  template_code: string | null
+}
+
+/** Hook 信息 */
+export interface KbHookInfo {
+  kb_id: string
+  has_hook: boolean
+  path: string
+  overridden_interfaces: string[]
+  size?: number
+  mtime?: number
+}
+
+/** Hook 脚本内容 */
+export interface KbHookContent {
+  kb_id: string
+  has_hook: boolean
+  content: string
+  overridden_interfaces: string[]
+}
+
+/** 配置校验结果 */
+export interface KbConfigValidation {
+  valid: boolean
+  errors: string[]
+  warnings: string[]
+  checks: Record<string, boolean>
+}
+
+/** 资源诊断结果 */
+export interface KbResourceVerify {
+  kb_id: string
+  steps: Record<string, { ok: boolean; detail?: string; error?: string }>
+}
+
+/** KB 备份记录 */
+export interface KbBackup {
+  id: string
+  kb_id: string
+  user_id: string
+  file_name: string
+  file_size: number
+  status: string
+  item_counts: Record<string, number>
+  created_at: string
+}
+
+/** 备份恢复统计 */
+export interface KbBackupRestoreStats {
+  documents: number
+  documents_skipped: number
+  schemas: number
+  schemas_skipped: number
+  terms: number
+  terms_skipped: number
+  domain_config: number
+}
+
+/** 新建知识库响应（含资源初始化与模板应用结果） */
+export interface KbCreateResponse {
+  knowledge_base: KnowledgeBase
+  resources: Record<string, { ok: boolean; error: string | null; skipped?: boolean }>
+  template: { applied: boolean; template_code?: string; error?: string; skipped?: boolean; reason?: string }
 }

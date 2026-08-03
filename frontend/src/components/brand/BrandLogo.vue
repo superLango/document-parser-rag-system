@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Hansight 品牌 Logo
+ * HansonDOC 品牌 Logo
  *
  * 名称由来：Han（Hanson）+ Sight（洞察）= 智能文档洞察
  *

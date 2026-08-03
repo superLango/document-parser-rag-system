@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { SelectRoot, SelectTrigger, SelectValue, SelectPortal, SelectContent, SelectViewport, SelectItem, SelectItemText, SelectItemIndicator, type SelectRootProps } from 'reka-ui'
 import { ChevronDown, Check } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
+
+const EMPTY_VALUE = '__SELECT_EMPTY__'
 
 interface Option {
   value: string
@@ -13,6 +16,7 @@ const props = withDefaults(
     options: Option[]
     placeholder?: string
     class?: string
+    modelValue?: string
   }>(),
   {},
 )
@@ -20,12 +24,28 @@ const props = withDefaults(
 const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
+
+// 内部映射：空字符串 <-> EMPTY_VALUE（reka-ui SelectItem 不允许 value=''）
+const internalModelValue = computed({
+  get: () => (props.modelValue === '' ? EMPTY_VALUE : props.modelValue ?? EMPTY_VALUE),
+  set: (v: string) => emit('update:modelValue', v === EMPTY_VALUE ? '' : v),
+})
+
+const internalOptions = computed(() =>
+  props.options.map((opt) => ({
+    ...opt,
+    value: opt.value === '' ? EMPTY_VALUE : opt.value,
+  })),
+)
 </script>
 
 <template>
   <SelectRoot
-    v-bind="props"
-    @update:model-value="emit('update:modelValue', $event)"
+    v-model="internalModelValue"
+    :disabled="props.disabled"
+    :name="props.name"
+    :required="props.required"
+    @update:model-value="(v: string) => { internalModelValue = v }"
   >
     <SelectTrigger
       :class="
@@ -54,7 +74,7 @@ const emit = defineEmits<{
       >
         <SelectViewport class="p-1">
           <SelectItem
-            v-for="opt in props.options"
+            v-for="opt in internalOptions"
             :key="opt.value"
             :value="opt.value"
             :class="

@@ -23,6 +23,7 @@
 """
 
 import asyncio
+import uuid
 
 import boto3
 from botocore.client import BaseClient
@@ -33,6 +34,14 @@ from app.core.config import settings
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
+
+
+def _kb_bucket_name(kb_id: uuid.UUID) -> str:
+    """生成某 KB 的 MinIO bucket 名（kb-{kb_id_hex}）。
+
+    与 ``kb_lifecycle.minio_bucket_name`` 保持一致命名规则。
+    """
+    return f"{settings.KB_MINIO_BUCKET_PREFIX}{kb_id.hex}"
 
 
 class StorageService:
@@ -104,11 +113,84 @@ class StorageService:
                 raise
         self._bucket_ready = True
 
+    # ============================================================
+    # 知识库隔离路由（方案 §9.3 / §A.4 最小修改）
+    # ============================================================
+    def _resolve_bucket(self, kb_id: uuid.UUID | None = None) -> str:
+        """解析目标 bucket 名。
+
+        - ``kb_id`` 为 None：返回全局 bucket（``settings.MINIO_BUCKET``，向后兼容）。
+        - ``kb_id`` 不为 None：返回该 KB 专属 bucket（``kb-{kb_id_hex}``）。
+        """
+        if kb_id is None:
+            return settings.MINIO_BUCKET
+        return _kb_bucket_name(kb_id)
+
+    async def create_kb_bucket(self, kb_id: uuid.UUID) -> str:
+        """创建 KB 专属 bucket（供 kb_lifecycle 调用）。
+
+        幂等：已存在则跳过。返回 bucket 名。
+
+        注意：独立 IAM 密钥签发需要 MinIO admin API，作为合规增强后续实现；
+        当前复用全局密钥，bucket 物理隔离已满足。knowledge_buckets 表的
+        DB 记录由调用方（kbs 端点）维护。
+        """
+        bucket = _kb_bucket_name(kb_id)
+        client = self._get_client()
+        try:
+            await asyncio.to_thread(client.head_bucket, Bucket=bucket)
+            logger.info("KB bucket 已存在", bucket=bucket, kb_id=str(kb_id))
+        except ClientError as err:
+            error_code = err.response.get("Error", {}).get("Code", "")
+            if error_code in ("404", "NoSuchBucket", "NotFound"):
+                await asyncio.to_thread(client.create_bucket, Bucket=bucket)
+                logger.info("KB bucket 已创建", bucket=bucket, kb_id=str(kb_id))
+            else:
+                raise
+        return bucket
+
+    async def destroy_kb_bucket(self, kb_id: uuid.UUID) -> str:
+        """删除 KB 专属 bucket（含全部对象，合规销毁，供 kb_lifecycle 调用）。
+
+        幂等：不存在则跳过。返回 bucket 名。
+        """
+        bucket = _kb_bucket_name(kb_id)
+        client = self._get_client()
+        try:
+            # 先列并删除全部对象，再删 bucket（S3 bucket 非空不可删）
+            paginator = client.get_paginator("list_objects_v2")
+            async for page in self._async_paginator(paginator, bucket):
+                objects = page.get("Contents", [])
+                if objects:
+                    delete_spec = {"Objects": [{"Key": o["Key"]} for o in objects]}
+                    await asyncio.to_thread(
+                        client.delete_objects, Bucket=bucket, Delete=delete_spec
+                    )
+            await asyncio.to_thread(client.delete_bucket, Bucket=bucket)
+            logger.warning("KB bucket 已删除（含全部对象）", bucket=bucket, kb_id=str(kb_id))
+        except ClientError as err:
+            error_code = err.response.get("Error", {}).get("Code", "")
+            if error_code in ("404", "NoSuchBucket", "NotFound"):
+                logger.info("KB bucket 不存在，跳过删除", bucket=bucket, kb_id=str(kb_id))
+            else:
+                raise
+        return bucket
+
+    async def _async_paginator(self, paginator, bucket: str):
+        """将同步 paginator 包装为异步生成器。"""
+        import asyncio as _asyncio
+
+        for page in paginator.paginate(Bucket=bucket):
+            # 每个 page 同步获取后 yield（list_objects 已是内存操作）
+            await _asyncio.sleep(0)
+            yield page
+
     async def upload(
         self,
         object_name: str,
         data: bytes,
         content_type: str = "application/octet-stream",
+        kb_id: uuid.UUID | None = None,
     ) -> str:
         """上传文件内容到 S3兼容存储(SeaweedFS)存储桶。
 
@@ -126,17 +208,21 @@ class StorageService:
         Raises:
             ClientError: boto3 操作失败时抛出。
         """
-        await self._ensure_bucket()
+        bucket = self._resolve_bucket(kb_id)
+        # 仅全局 bucket 需要懒创建检查；KB bucket 由 create_kb_bucket 预创建
+        if kb_id is None:
+            await self._ensure_bucket()
         client = self._get_client()
         logger.info(
             "开始上传对象",
             object_name=object_name,
             content_type=content_type,
             size=len(data),
+            bucket=bucket,
         )
         await asyncio.to_thread(
             client.put_object,
-            Bucket=settings.MINIO_BUCKET,
+            Bucket=bucket,
             Key=object_name,
             Body=data,
             ContentType=content_type,
@@ -144,13 +230,17 @@ class StorageService:
         logger.info("对象上传完成", object_name=object_name)
         return object_name
 
-    async def download(self, object_name: str) -> bytes:
+    async def download(
+        self, object_name: str, kb_id: uuid.UUID | None = None
+    ) -> bytes:
         """从 S3兼容存储(SeaweedFS)下载对象内容。
 
         将对象完整读取为字节数据返回。
 
         Args:
             object_name: 对象在存储桶中的唯一标识。
+            kb_id: 知识库 ID。None 时操作全局 bucket（向后兼容），
+                非 None 时操作该 KB 专属 bucket。
 
         Returns:
             bytes: 对象的完整字节内容。
@@ -158,10 +248,11 @@ class StorageService:
         Raises:
             ClientError: 对象不存在或下载失败时抛出。
         """
+        bucket = self._resolve_bucket(kb_id)
         client = self._get_client()
-        logger.info("开始下载对象", object_name=object_name)
+        logger.info("开始下载对象", object_name=object_name, bucket=bucket)
         response = await asyncio.to_thread(
-            client.get_object, Bucket=settings.MINIO_BUCKET, Key=object_name
+            client.get_object, Bucket=bucket, Key=object_name
         )
         try:
             content: bytes = response["Body"].read()
@@ -171,21 +262,26 @@ class StorageService:
             # 释放底层连接，避免连接泄漏
             response["Body"].close()
 
-    async def delete(self, object_name: str) -> bool:
+    async def delete(
+        self, object_name: str, kb_id: uuid.UUID | None = None
+    ) -> bool:
         """从 S3兼容存储(SeaweedFS)删除指定对象。
 
         Args:
             object_name: 对象在存储桶中的唯一标识。
+            kb_id: 知识库 ID。None 时操作全局 bucket（向后兼容），
+                非 None 时操作该 KB 专属 bucket。
 
         Returns:
             bool: 删除成功返回 True，对象不存在也返回 True（幂等）。
         """
+        bucket = self._resolve_bucket(kb_id)
         client = self._get_client()
-        logger.info("开始删除对象", object_name=object_name)
+        logger.info("开始删除对象", object_name=object_name, bucket=bucket)
         try:
             await asyncio.to_thread(
                 client.delete_object,
-                Bucket=settings.MINIO_BUCKET,
+                Bucket=bucket,
                 Key=object_name,
             )
             logger.info("对象删除完成", object_name=object_name)
@@ -199,7 +295,9 @@ class StorageService:
             logger.error("删除对象失败", object_name=object_name, error=str(err))
             raise
 
-    async def get_presigned_url(self, object_name: str, expires: int = 3600) -> str:
+    async def get_presigned_url(
+        self, object_name: str, expires: int = 3600, kb_id: uuid.UUID | None = None
+    ) -> str:
         """生成对象的预签名下载 URL。
 
         持有该 URL 的客户端可在有效期内直接下载对象，无需 S3 凭证。
@@ -207,6 +305,8 @@ class StorageService:
         Args:
             object_name: 对象在存储桶中的唯一标识。
             expires: URL 有效期（秒），默认 3600 秒（1 小时）。
+            kb_id: 知识库 ID。None 时操作全局 bucket（向后兼容），
+                非 None 时操作该 KB 专属 bucket。
 
         Returns:
             str: 预签名下载 URL。
@@ -214,12 +314,13 @@ class StorageService:
         Raises:
             ClientError: URL 生成失败时抛出。
         """
+        bucket = self._resolve_bucket(kb_id)
         client = self._get_client()
-        logger.info("生成预签名下载 URL", object_name=object_name, expires=expires)
+        logger.info("生成预签名下载 URL", object_name=object_name, expires=expires, bucket=bucket)
         url: str = await asyncio.to_thread(
             client.generate_presigned_url,
             "get_object",
-            Params={"Bucket": settings.MINIO_BUCKET, "Key": object_name},
+            Params={"Bucket": bucket, "Key": object_name},
             ExpiresIn=expires,
         )
         logger.info("预签名 URL 生成完成", object_name=object_name)

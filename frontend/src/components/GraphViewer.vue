@@ -68,12 +68,26 @@ function colorForEdge(edge: GraphEdge): string {
 }
 
 function buildElements(): ElementDefinition[] {
-  const nodeDefs: ElementDefinition[] = props.nodes.map((n) => {
-    const name = String(n.name ?? n.id)
+  // 先过滤掉 name/id 为空的无效节点
+  const validNodes = props.nodes.filter((n) => {
+    const name = n.name ?? String(n.id ?? '')
+    return name && name.trim() !== '' && name !== 'undefined' && name !== 'null'
+  })
+
+  const nodeIds = new Set<string>()
+  const nodeDefs: ElementDefinition[] = validNodes.map((n) => {
+    const name = String(n.name ?? n.id).trim()
+    // 确保 id 唯一（同名节点加后缀）
+    let id = name
+    let suffix = 1
+    while (nodeIds.has(id)) {
+      id = `${name}__${suffix++}`
+    }
+    nodeIds.add(id)
     return {
       group: 'nodes' as const,
       data: {
-        id: name,
+        id,
         label: name,
         name,
         raw: n,
@@ -81,21 +95,41 @@ function buildElements(): ElementDefinition[] {
     }
   })
 
-  // 边 id 必须唯一：source->target->type 组合
-  const edgeDefs: ElementDefinition[] = props.edges.map((e, idx) => {
-    const source = String(e.source)
-    const target = String(e.target)
-    return {
-      group: 'edges' as const,
-      data: {
-        id: `e-${idx}-${source}->${target}`,
-        source,
-        target,
-        label: e.type,
-        raw: e,
-      },
-    }
-  })
+  // 过滤掉 source/target 为空的无效边
+  const edgeDefs: ElementDefinition[] = props.edges
+    .filter((e) => {
+      const source = String(e.source ?? '').trim()
+      const target = String(e.target ?? '').trim()
+      if (!source || !target) return false
+      if (source === 'undefined' || source === 'null') return false
+      if (target === 'undefined' || target === 'null') return false
+      return true
+    })
+    .map((e, idx) => {
+      let source = String(e.source).trim()
+      let target = String(e.target).trim()
+      // 如果精确 ID 不存在，尝试用原名匹配（兼容后端返回vid与前端生成id不一致的情况）
+      if (!nodeIds.has(source)) {
+        // 查找以 source 开头的节点 id（处理 __后缀 的情况）
+        const match = [...nodeIds].find((nid) => nid === source || nid.startsWith(source + '__'))
+        if (match) source = match
+      }
+      if (!nodeIds.has(target)) {
+        const match = [...nodeIds].find((nid) => nid === target || nid.startsWith(target + '__'))
+        if (match) target = match
+      }
+      return {
+        group: 'edges' as const,
+        data: {
+          id: `e-${idx}-${source}->${target}`,
+          source,
+          target,
+          label: e.type || e.label || 'RELATED_TO',
+          raw: e,
+        },
+      }
+    })
+    .filter((e) => nodeIds.has(e.data.source) && nodeIds.has(e.data.target))
 
   return [...nodeDefs, ...edgeDefs]
 }

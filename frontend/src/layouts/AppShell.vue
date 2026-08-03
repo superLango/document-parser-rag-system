@@ -5,6 +5,7 @@ import { useAppStore } from '@/stores/app'
 import AppSidebar from './AppSidebar.vue'
 import AppTopBar from './AppTopBar.vue'
 import CommandPalette from './CommandPalette.vue'
+import ErrorBoundary from '@/components/common/ErrorBoundary.vue'
 
 /**
  * 应用主布局壳
@@ -88,11 +89,13 @@ watch(
 
       <main class="flex-1 overflow-y-auto">
         <div class="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-          <router-view v-slot="{ Component }">
-            <transition name="fade-slide" mode="out-in">
-              <component :is="Component" />
-            </transition>
-          </router-view>
+          <ErrorBoundary>
+            <router-view v-slot="{ Component }">
+              <transition name="fade-slide" mode="out-in">
+                <component :is="Component" />
+              </transition>
+            </router-view>
+          </ErrorBoundary>
         </div>
       </main>
     </div>

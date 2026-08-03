@@ -14,12 +14,12 @@ os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 
 MODELS = [
     {
-        "repo_id": "BAAI/bge-m3",
-        "local_dir": os.path.join("models", "bge-m3"),
+        "repo_id": "zai-org/GLM-OCR",
+        "local_dir": os.path.join("models", "glm-ocr"),
     },
     {
-        "repo_id": "BAAI/bge-reranker-v2-m3",
-        "local_dir": os.path.join("models", "bge-reranker-v2-m3"),
+        "repo_id": "RedHatAI/Qwen3.5-9B-FP8-dynamic",
+        "local_dir": os.path.join("models", "qwen3.5-9b-fp8"),
     },
 ]
 

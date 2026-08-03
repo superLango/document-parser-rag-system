@@ -34,7 +34,8 @@ from app.core.response import success
 from app.models.document import Document
 from app.models.schema_model import SchemaConfig
 from app.models.user import User
-from app.services.extraction_service import extraction_service
+# TODO: extraction_service已删除，需适配新的extraction_pipeline接口
+# from app.services.extraction.extraction_pipeline import extraction_pipeline as extraction_service
 
 logger = get_logger(__name__)
 
@@ -73,12 +74,18 @@ class ExtractionRequest(BaseModel):
 # ---------------------------------------------------------------
 # 辅助函数
 # ---------------------------------------------------------------
-async def _load_document(db: AsyncSession, document_id: UUID) -> Document:
+async def _load_document(
+    db: AsyncSession,
+    document_id: UUID,
+    kb_id: UUID | None = None,
+) -> Document:
     """加载文档并校验存在性与解析状态。
 
     Args:
         db: 异步数据库会话。
         document_id: 文档 ID。
+        kb_id: 知识库 ID。提供时显式按 kb_id 过滤（纵深防御不依赖 RLS，
+            因 PostgreSQL superuser 绕过 RLS）；为 None 时依赖 RLS（全局端点）。
 
     Returns:
         Document: 文档 ORM 实例。
@@ -87,6 +94,9 @@ async def _load_document(db: AsyncSession, document_id: UUID) -> Document:
         BusinessException: 文档不存在或未完成解析时抛出。
     """
     stmt = select(Document).where(Document.id == document_id)
+    # 显式按 kb_id 过滤，纵深防御不依赖 RLS（superuser 绕过 RLS）
+    if kb_id is not None:
+        stmt = stmt.where(Document.kb_id == kb_id)
     result = await db.execute(stmt)
     doc = result.scalar_one_or_none()
     if doc is None:
@@ -107,12 +117,18 @@ async def _load_document(db: AsyncSession, document_id: UUID) -> Document:
     return doc
 
 
-async def _load_merged_schema(db: AsyncSession, schema_id: UUID) -> tuple[SchemaConfig, dict, dict]:
+async def _load_merged_schema(
+    db: AsyncSession,
+    schema_id: UUID,
+    kb_id: UUID | None = None,
+) -> tuple[SchemaConfig, dict, dict]:
     """加载父分类并合并子 Schema 字段。
 
     Args:
         db: 异步数据库会话。
         schema_id: 父分类 Schema ID。
+        kb_id: 知识库 ID。提供时显式按 kb_id 过滤（纵深防御不依赖 RLS，
+            因 PostgreSQL superuser 绕过 RLS）；为 None 时依赖 RLS（全局端点）。
 
     Returns:
         tuple: (parent_schema_config, schema_definition, sample_fields)
@@ -124,6 +140,9 @@ async def _load_merged_schema(db: AsyncSession, schema_id: UUID) -> tuple[Schema
         BusinessException: Schema 不存在或不是父分类时抛出。
     """
     parent_stmt = select(SchemaConfig).where(SchemaConfig.id == schema_id)
+    # 显式按 kb_id 过滤，纵深防御不依赖 RLS（superuser 绕过 RLS）
+    if kb_id is not None:
+        parent_stmt = parent_stmt.where(SchemaConfig.kb_id == kb_id)
     parent_result = await db.execute(parent_stmt)
     parent = parent_result.scalar_one_or_none()
     if parent is None:
@@ -142,7 +161,11 @@ async def _load_merged_schema(db: AsyncSession, schema_id: UUID) -> tuple[Schema
         select(SchemaConfig)
         .where(SchemaConfig.parent_id == schema_id)
         .where(SchemaConfig.is_active.is_(True))
-        .order_by(SchemaConfig.sort_order, SchemaConfig.created_at)
+    )
+    if kb_id is not None:
+        children_stmt = children_stmt.where(SchemaConfig.kb_id == kb_id)
+    children_stmt = children_stmt.order_by(
+        SchemaConfig.sort_order, SchemaConfig.created_at
     )
     children_result = await db.execute(children_stmt)
     children = children_result.scalars().all()
@@ -366,36 +389,12 @@ async def extraction_stream(
                     "has_samples": bool(sample_fields),
                 }, ensure_ascii=False) + "\n\n"
 
-                # 3. 流式抽取
-                final_result: dict = {}
-                async for event in extraction_service.extract_stream(
-                    text=doc.parsed_text,
-                    schema_definition=schema_definition,
-                    sample_fields=sample_fields,
-                    chunk_size=body.chunk_size,
-                    overlap=body.overlap,
-                ):
-                    # 在 done 事件中保存结果到数据库
-                    if event.get("type") == "done":
-                        final_result = event.get("data", {})
-                        if body.save_result:
-                            try:
-                                await _save_extraction_result(
-                                    stream_db, doc, final_result, parent.id
-                                )
-                            except Exception as save_err:
-                                logger.error(
-                                    "保存抽取结果失败",
-                                    error=str(save_err),
-                                    exc_info=True,
-                                )
-                                # 不阻断流，仅记录错误
-                                yield "data: " + json.dumps({
-                                    "type": "warning",
-                                    "message": f"抽取结果保存失败：{save_err}",
-                                }, ensure_ascii=False) + "\n\n"
-
-                    yield "data: " + json.dumps(event, ensure_ascii=False) + "\n\n"
+                # 3. 流式抽取 (TODO: 适配新的extraction_pipeline)
+                yield "data: " + json.dumps({
+                    "type": "error",
+                    "message": "extraction_service已重构，端点暂未适配新接口",
+                }, ensure_ascii=False) + "\n\n"
+                return
 
         except BusinessException as err:
             logger.warning("流式抽取业务异常", message=err.message)
@@ -444,22 +443,11 @@ async def extract_document(
         schema_name=parent.name,
     )
 
-    data = await extraction_service.extract(
-        text=doc.parsed_text,
-        schema_definition=schema_definition,
-        sample_fields=sample_fields,
+    # TODO: 适配新的extraction_pipeline接口
+    raise BusinessException(
+        code=ErrorCode.VALIDATION_ERROR,
+        message="extraction_service已重构，同步抽取端点暂未适配新接口",
     )
-
-    if body.save_result:
-        await _save_extraction_result(db, doc, data, parent.id)
-
-    return success(data={
-        "document_id": str(doc.id),
-        "schema_id": str(parent.id),
-        "schema_name": parent.name,
-        "result": data,
-        "missing": extraction_service._validate_extraction(data, schema_definition),
-    })
 
 
 @router.get("/results/{document_id}")

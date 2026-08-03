@@ -70,3 +70,14 @@ scrape_configs:
       - targets: ["neo4j:2004"]
         labels:
           service: neo4j
+
+  # ---- vLLM 大语言模型推理服务 ----
+  # vLLM 运行在宿主机上（端口 9988），通过 host.docker.internal 访问
+  # 监控指标：prefix cache 命中率、TTFT、KV 缓存利用率、吞吐量
+  - job_name: vllm
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["host.docker.internal:9988"]
+        labels:
+          service: vllm
+          model: Qwen3.6-35B-A3B-FP8

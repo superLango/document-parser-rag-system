@@ -6,6 +6,7 @@ import { Tooltip } from '@/components/ui/tooltip'
 import AppBreadcrumb from './AppBreadcrumb.vue'
 import ThemeToggle from './ThemeToggle.vue'
 import UserMenu from './UserMenu.vue'
+import NotificationBell from '@/components/notification/NotificationBell.vue'
 
 const appStore = useAppStore()
 
@@ -94,6 +95,8 @@ function handleSidebarToggle() {
       </Tooltip>
 
       <ThemeToggle />
+
+      <NotificationBell />
 
       <div class="mx-1 h-5 w-px bg-border" />
 

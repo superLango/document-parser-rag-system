@@ -2,6 +2,7 @@ fastapi>=0.115.0
 uvicorn[standard]>=0.30.0
 pydantic>=2.5.0
 pydantic-settings>=2.1.0
+beautifulsoup4>=4.12.0
 sqlalchemy[asyncio]>=2.0.0
 asyncpg>=0.29.0
 alembic>=1.13.0
@@ -21,7 +22,7 @@ FlagEmbedding>=1.2.0
 structlog>=24.1.0
 python-multipart>=0.0.6
 httpx>=0.25.0
-mineru>=3.4.0
+mineru[core]==3.4.3
 
 # LlamaIndex 集成依赖（P0：索引层 + 查询引擎增强）
 # 仅引入 core，避免全量集成；0.11+ 使用 pydantic v2，兼容 Python 3.12+
@@ -35,3 +36,7 @@ pytest>=8.0.0
 pytest-asyncio>=0.23.0
 pytest-cov>=4.1.0
 prometheus-fastapi-instrumentator>=7.0.0
+
+# 生产级系统完善（阶段 2-4）
+openpyxl>=3.1.0
+

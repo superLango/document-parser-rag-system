@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hansight - 文档智能解析与 RAG 系统</title>
-  <meta name="description" content="企业级文档智能解析与 RAG 系统，提供文档解析、知识图谱构建、术语库管理与智能问答能力">
+  <title>HansonDOC RAG - 文档智能解析与 RAG 系统</title>
+  <meta name="description" content="以知识库为隔离边界的垂直领域文档智能产品，提供结构化抽取与 RAG 问答">
+  <!-- PWA 基础（P3-11） -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0a0a0a">
   <script>
     // 提前应用主题，避免首次渲染 FOUC
     // 必须在 <head> 中执行，先于应用 bundle
@@ -25,5 +28,16 @@
 <body>
   <div id="app"></div>
   <script type="module" src="/src/main.ts"></script>
+  <!-- 注册 Service Worker（P3-11 PWA） -->
+  <script>
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function (e) {
+          // SW 注册失败不影响主流程
+          console.warn('[PWA] Service Worker 注册失败', e);
+        });
+      });
+    }
+  </script>
 </body>
 </html>

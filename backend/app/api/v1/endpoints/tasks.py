@@ -20,7 +20,7 @@ from arq import create_pool
 from arq.connections import RedisSettings
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -29,6 +29,7 @@ from app.core.database import get_db
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
 from app.core.response import paginated, success
+from app.core.snowflake import snowflake_generator
 from app.models.document import Document
 from app.models.task import Task
 from app.models.user import User
@@ -110,13 +111,15 @@ async def submit_task(
             message=f"文档 {payload.document_id} 不存在",
         )
 
-    # 提交 arq 任务
+    # 提交 arq 任务（task_id 使用雪花算法生成全局唯一有序 ID）
     pool = await get_arq_pool()
+    job_id = snowflake_generator.generate_id_str()
     job = await pool.enqueue_job(
         "parse_document_task",
         str(payload.document_id),
         payload.schema_id,
         payload.term_base_id,
+        _job_id=job_id,
     )
 
     if job is None:
@@ -126,7 +129,7 @@ async def submit_task(
             message="任务提交失败，可能已有相同任务在执行中",
         )
 
-    # 创建任务记录
+    # 创建任务记录（id 即 arq job_id，由雪花算法生成）
     task = Task(
         id=job.job_id,
         document_id=payload.document_id,
@@ -251,13 +254,15 @@ async def retry_task(
             message=f"文档 {document_id} 不存在",
         )
 
-    # 提交 arq 任务（schema_id 与 term_base_id 原任务未存储，传 None）
+    # 提交 arq 任务（task_id 使用雪花算法生成全局唯一有序 ID）
     pool = await get_arq_pool()
+    job_id = snowflake_generator.generate_id_str()
     job = await pool.enqueue_job(
         "parse_document_task",
         str(document_id),
         None,
         None,
+        _job_id=job_id,
     )
 
     if job is None:
@@ -284,6 +289,68 @@ async def retry_task(
         document_id=str(document_id),
     )
     return success(data={"task_id": new_task.id, "status": "pending"})
+
+
+class V3ExtractionRequest(BaseModel):
+    """v3 结构化抽取任务提交请求。
+
+    Attributes:
+        task_id: 已完成五维向量入库的 OCR 任务 ID（雪花 ID）。
+    """
+
+    task_id: str
+
+
+@router.post("/v3-extract")
+async def submit_v3_extraction(
+    payload: V3ExtractionRequest,
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
+    """提交 v3 结构化抽取任务。
+
+    在文档 OCR + 五维向量入库完成后触发，执行 v3 抽取流程
+    （Phase 2 类别构建 → Phase 3 向量检索 → Phase 4 LLM 抽取）。
+
+    前置条件：
+        - task_id 对应的文档已完成 OCR + Popo 层级重建 + 五维向量入库
+        - 基础表已同步到 PostgreSQL + Milvus
+
+    结果保存路径：``{OCR_OUTPUT_DIR}/{task_id}/extraction_v3.json``
+
+    注意：v3 抽取任务不创建 Task 数据库记录（因 document_id 为 UUID 外键，
+    而 v3 抽取基于雪花 task_id），通过 arq job_id 和结果文件路径追踪。
+
+    Args:
+        payload: 请求体，含 task_id。
+
+    Returns:
+        dict: 包含 ``arq_job_id`` 与 ``source_task_id`` 的统一成功响应。
+    """
+    pool = await get_arq_pool()
+    job_id = snowflake_generator.generate_id_str()
+    job = await pool.enqueue_job(
+        "extract_v3_task",
+        payload.task_id,
+        _job_id=job_id,
+    )
+
+    if job is None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_FAILED,
+            message="v3 抽取任务提交失败，可能已有相同任务在执行中",
+        )
+
+    logger.info(
+        "v3 抽取任务已提交",
+        arq_job_id=job.job_id,
+        source_task_id=payload.task_id,
+    )
+    return success(data={
+        "arq_job_id": job.job_id,
+        "source_task_id": payload.task_id,
+        "status": "pending",
+        "result_path": f"{{OCR_OUTPUT_DIR}}/{payload.task_id}/extraction_v3.json",
+    })
 
 
 @router.get("/{task_id}/stream")

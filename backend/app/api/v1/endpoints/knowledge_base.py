@@ -27,8 +27,8 @@ from app.core.logging import get_logger
 from app.core.response import success
 from app.models.document import Document
 from app.models.user import User
-from app.services.embedding_service import embedding_service
-from app.services.vector_store import vector_store
+from app.services.embedding.embedding_service import embedding_service
+from app.services.vector.chunk_vector_store import vector_store
 
 logger = get_logger(__name__)
 

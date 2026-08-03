@@ -131,6 +131,10 @@ function handleEvent<T>(block: string, callbacks: SSECallbacks<T>): void {
     } else if (payload.event === 'error') {
       callbacks.onError?.(payload.error ?? payload.message ?? '未知错误')
     }
+    // 通知 SSE 格式：纯 data 事件（无 type/event 字段），直接回调
+    else {
+      callbacks.onChunk?.(payload)
+    }
   } catch {
     // JSON 解析失败，忽略
   }

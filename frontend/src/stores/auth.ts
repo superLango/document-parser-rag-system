@@ -16,6 +16,9 @@ export const useAuthStore = defineStore('auth', () => {
   // 是否已登录
   const isAuthenticated = computed(() => !!token.value)
 
+  // 是否超级管理员
+  const isSuperuser = computed(() => !!user.value?.is_superuser)
+
   // 用户名首字母（头像占位）
   const userInitial = computed(() => {
     const name = user.value?.username || 'U'
@@ -56,6 +59,7 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     user,
     isAuthenticated,
+    isSuperuser,
     userInitial,
     login,
     fetchUser,
@@ -69,4 +73,11 @@ interface AuthUser {
   username: string
   email: string
   is_active: boolean
+  is_superuser?: boolean
+  full_name?: string | null
+  phone?: string | null
+  department?: string | null
+  avatar?: string | null
+  last_login_at?: string | null
+  created_at: string
 }

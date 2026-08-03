@@ -101,6 +101,54 @@ def verify_token(token: str) -> dict[str, Any]:
         )
 
 
+def create_refresh_token(data: dict[str, Any]) -> str:
+    """创建 JWT 刷新令牌（P2-7 refresh token 机制）。
+
+    刷新令牌有效期长于访问令牌（默认 7 天），客户端在 access token 过期后
+    可通过 ``POST /auth/refresh`` 携带 refresh token 静默换取新的 access token，
+    避免用户重新登录。
+
+    Args:
+        data: 需要写入 JWT 载荷的自定义声明（如 ``{"sub": "alice"}``）。
+
+    Returns:
+        str: 签名后的 refresh JWT 字符串（含 ``type=refresh`` 标识）。
+    """
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(
+        days=settings.REFRESH_TOKEN_EXPIRE_DAYS
+    )
+    to_encode.update({"exp": expire, "type": "refresh"})
+    return jwt.encode(
+        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
+    )
+
+
+def verify_refresh_token(token: str) -> dict[str, Any]:
+    """解码并校验刷新令牌（P2-7）。
+
+    除常规 JWT 校验外，额外检查 ``type`` 声明必须为 ``refresh``，
+    防止 access token 被用作 refresh token（令牌用途隔离）。
+
+    Args:
+        token: 待校验的 refresh JWT 字符串。
+
+    Returns:
+        dict[str, Any]: 解码后的 JWT 载荷字典。
+
+    Raises:
+        AuthException: token 无效、过期或类型不匹配。
+    """
+    payload = verify_token(token)
+    if payload.get("type") != "refresh":
+        logger.warning("非 refresh 类型的令牌被用于刷新", token_type=payload.get("type"))
+        raise AuthException(
+            code=ErrorCode.AUTH_TOKEN_INVALID,
+            message="无效的刷新令牌",
+        )
+    return payload
+
+
 def hash_password(password: str) -> str:
     """使用 bcrypt 对明文密码进行哈希。
 

@@ -10,8 +10,9 @@ import {
   DialogDescription,
 } from 'reka-ui'
 import { Search, CornerDownLeft } from 'lucide-vue-next'
-import { navItems, type NavItem } from './navigation'
+import { navItems, adminNavItems, type NavItem } from './navigation'
 import { useAppStore } from '@/stores/app'
+import { useAuthStore } from '@/stores/auth'
 import { cn } from '@/lib/utils'
 
 /**
@@ -22,6 +23,12 @@ import { cn } from '@/lib/utils'
 
 const router = useRouter()
 const appStore = useAppStore()
+const authStore = useAuthStore()
+
+// 超管可见的完整导航列表
+const visibleNavItems = computed<NavItem[]>(() => {
+  return authStore.isSuperuser ? [...navItems, ...adminNavItems] : navItems
+})
 
 // 通过 store 双向绑定，让 TopBar 按钮也能控制开关
 const open = computed({
@@ -63,8 +70,8 @@ watch(open, (v) => {
 // 搜索结果：按 title / keywords / description 过滤
 const results = computed<NavItem[]>(() => {
   const q = query.value.trim().toLowerCase()
-  if (!q) return navItems
-  return navItems.filter((item) => {
+  if (!q) return visibleNavItems.value
+  return visibleNavItems.value.filter((item) => {
     const haystack = [
       item.title,
       item.description ?? '',
@@ -182,7 +189,7 @@ watch(query, () => {
               <span>跳转</span>
             </span>
           </div>
-          <span>Hansight Command</span>
+          <span>HansonDOC Command</span>
         </div>
       </DialogContent>
     </DialogPortal>

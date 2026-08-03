@@ -28,7 +28,7 @@ from app.core.logging import get_logger
 from app.core.response import success
 from app.models.document import Document
 from app.models.user import User
-from app.services.graph_store import graph_store
+from app.services.graph.graph_store import graph_store
 
 logger = get_logger(__name__)
 

@@ -49,12 +49,22 @@ class DocumentUpdate(BaseModel):
     Attributes:
         status: 文档处理状态。
         parsed_text: 解析后的纯文本。
+        markdown_content: Popo Markdown 内容。
+        extraction_status: 抽取状态。
+        index_status: 索引状态。
+        graph_status: 图谱状态。
+        graph_error: 图谱错误信息。
         structured_data: 结构化抽取结果。
         layout_data: 版面分析结果。
     """
 
     status: str | None = None
     parsed_text: str | None = None
+    markdown_content: str | None = None
+    extraction_status: str | None = None
+    index_status: str | None = None
+    graph_status: str | None = None
+    graph_error: str | None = None
     structured_data: dict | None = None
     layout_data: dict | None = None
 
@@ -69,6 +79,11 @@ class DocumentResponse(DocumentBase):
         id: 文档唯一标识。
         status: 文档处理状态。
         parsed_text: 解析后的纯文本，未解析时为 None。
+        markdown_content: Popo Markdown 内容。
+        extraction_status: 抽取状态（null/completed/failed）。
+        index_status: 索引状态（null/indexing/indexed/failed）。
+        graph_status: 图谱状态（null/ready/failed）。
+        graph_error: 图谱错误信息。
         structured_data: 结构化抽取结果，未解析时为 None。
         layout_data: 版面分析结果（含 merged 区域列表），未解析时为 None。
         created_at: 创建时间。
@@ -80,6 +95,11 @@ class DocumentResponse(DocumentBase):
     id: UUID
     status: str
     parsed_text: str | None = None
+    markdown_content: str | None = None
+    extraction_status: str | None = None
+    index_status: str | None = None
+    graph_status: str | None = None
+    graph_error: str | None = None
     structured_data: dict | None = None
     layout_data: dict | None = None
     created_at: datetime

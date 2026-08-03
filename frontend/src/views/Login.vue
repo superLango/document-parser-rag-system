@@ -62,7 +62,7 @@ async function handleLogin() {
         >
           <FileSearch class="size-6" :stroke-width="1.5" />
         </div>
-        <CardTitle class="text-xl">Hansight</CardTitle>
+        <CardTitle class="text-xl">HansonDOC</CardTitle>
         <CardDescription>文档智能解析与 RAG 系统</CardDescription>
       </CardHeader>
 
@@ -103,7 +103,7 @@ async function handleLogin() {
         </Button>
 
         <p class="text-center text-xs text-muted-foreground">
-          Hansight · 文档智能解析与 RAG 系统
+          HansonDOC · 文档智能解析与 RAG 系统
         </p>
       </CardContent>
     </Card>

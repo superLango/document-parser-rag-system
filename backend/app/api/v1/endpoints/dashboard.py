@@ -1,95 +1,75 @@
-"""仪表盘统计端点模块。
+"""仪表盘统计端点模块（阶段 2.1 增强）。
 
-提供系统概览统计数据，包括文档数、任务数、Schema 数、术语数与成功率。
+提供全局与 KB 内统计数据，含趋势与分布：
+- GET /dashboard/stats           全局计数汇总
+- GET /dashboard/trends           30 天文档/任务趋势
+- GET /dashboard/distribution     文档类型/任务状态/任务类型分布
+- GET /dashboard/kbs/{kb_id}/stats  KB 内计数汇总
+
+所有聚合查询委托 dashboard_service，避免 N+1。
 """
 
-from fastapi import APIRouter, Depends
-from sqlalchemy import func, select
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_active_user
+from app.api.deps import get_kb_context, require_superuser
 from app.core.database import get_db
 from app.core.response import success
-from app.models.document import Document
-from app.models.schema_model import SchemaConfig
-from app.models.task import Task
-from app.models.term import Term
 from app.models.user import User
+from app.services.dashboard_service import (
+    get_distribution,
+    get_global_stats,
+    get_kb_stats,
+    get_trends,
+)
 
 router = APIRouter(prefix="/dashboard", tags=["仪表盘"])
 
 
 @router.get("/stats")
-async def get_stats(
+async def stats(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(require_superuser),
 ) -> dict:
-    """获取仪表盘统计数据。
+    """全局统计汇总（跨所有 KB，超管视角）。
 
-    Returns:
-        dict: 包含各类计数与最近活动列表的统一成功响应。
+    全局聚合查询不按 kb_id 过滤，限制为超管访问以避免越权。
     """
-    # 文档总数
-    doc_count = await db.scalar(select(func.count()).select_from(Document))
-    # 任务总数
-    task_count = await db.scalar(select(func.count()).select_from(Task))
-    # Schema 总数
-    schema_count = await db.scalar(select(func.count()).select_from(SchemaConfig))
-    # 术语总数
-    term_count = await db.scalar(select(func.count()).select_from(Term))
+    return success(data=await get_global_stats(db))
 
-    # 成功率
-    success_count = await db.scalar(
-        select(func.count()).select_from(Task).where(Task.status == "success")
-    )
-    total_tasks = task_count or 0
-    success_rate = round((success_count / total_tasks) * 100, 1) if total_tasks > 0 else 0.0
 
-    # 最近文档（5 条）
-    recent_docs_stmt = (
-        select(Document)
-        .order_by(Document.created_at.desc())
-        .limit(5)
-    )
-    recent_docs_result = await db.execute(recent_docs_stmt)
-    recent_documents = [
-        {
-            "id": str(doc.id),
-            "title": doc.filename,
-            "file_name": doc.filename,
-            "file_size": doc.file_size,
-            "doc_type": doc.file_type,
-            "status": doc.status,
-            "uploaded_at": doc.created_at.isoformat() if doc.created_at else "",
-        }
-        for doc in recent_docs_result.scalars().all()
-    ]
+@router.get("/trends")
+async def trends(
+    days: int = Query(30, ge=1, le=365, description="趋势天数"),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_superuser),
+) -> dict:
+    """最近 N 天文档上传与任务完成趋势（超管视角）。
 
-    # 最近任务（5 条）
-    recent_tasks_stmt = (
-        select(Task)
-        .order_by(Task.created_at.desc())
-        .limit(5)
-    )
-    recent_tasks_result = await db.execute(recent_tasks_stmt)
-    recent_tasks = [
-        {
-            "id": str(task.id),
-            "document_id": str(task.document_id),
-            "status": task.status,
-            "progress": task.progress,
-            "started_at": task.created_at.isoformat() if task.created_at else None,
-            "completed_at": task.completed_at.isoformat() if task.completed_at else None,
-        }
-        for task in recent_tasks_result.scalars().all()
-    ]
+    全局聚合查询不按 kb_id 过滤，限制为超管访问以避免越权。
+    """
+    return success(data=await get_trends(db, days))
 
-    return success(data={
-        "documents_count": doc_count or 0,
-        "tasks_count": task_count or 0,
-        "schemas_count": schema_count or 0,
-        "terms_count": term_count or 0,
-        "success_rate": success_rate,
-        "recent_documents": recent_documents,
-        "recent_tasks": recent_tasks,
-    })
+
+@router.get("/distribution")
+async def distribution(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_superuser),
+) -> dict:
+    """文档类型 / 任务状态 / 任务类型分布（超管视角）。
+
+    全局聚合查询不按 kb_id 过滤，限制为超管访问以避免越权。
+    """
+    return success(data=await get_distribution(db))
+
+
+@router.get("/kbs/{kb_id}/stats")
+async def kb_stats(
+    kb_ctx=Depends(get_kb_context),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """KB 内统计汇总（viewer+，显式按 kb_id 过滤）。
+
+    通过 get_kb_context 校验成员身份并激活 RLS，避免越权访问其他 KB 统计。
+    """
+    return success(data=await get_kb_stats(db, kb_ctx.kb_id))
