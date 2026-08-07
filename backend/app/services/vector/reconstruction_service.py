@@ -175,6 +175,14 @@ class ReconstructionService:
             t_vec_encode = time.time() - t5b
             logger.info("  [6.2] 五维向量编码: %.2fs", t_vec_encode)
 
+            # 6.2.5 入库前显式确保 KB 的 BM25 模型存在（缺失则用本文档块语料生成）
+            t5b5 = time.time()
+            if kb_id is not None and child_chunks:
+                from app.services.vector.bm25_sparse import ensure_kb_bm25
+                corpus = [f"{c.content} {c.title}" for c in child_chunks]
+                ensure_kb_bm25(kb_id, corpus)
+            logger.info("  [6.2.5] 确保 KB BM25 模型: %.2fs", time.time() - t5b5)
+
             # 6.3 入库
             t5c = time.time()
             vector_count = await five_dim_vector_store.insert_chunks(child_chunks, doc_id, kb_id=kb_id)

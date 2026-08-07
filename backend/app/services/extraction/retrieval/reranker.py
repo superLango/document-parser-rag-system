@@ -40,6 +40,52 @@ from app.services.extraction.extraction_models import RetrievedChunk
 logger = get_logger(__name__)
 
 
+def _ensure_prepare_for_model(tokenizer: Any) -> None:
+    """兼容补丁：transformers 5.x 移除了 ``prepare_for_model``，而 FlagEmbedding
+    1.4.0 的 CrossEncoder 重排仍调用 ``tokenizer.prepare_for_model(...)``，导致
+    ``AttributeError: XLMRobertaTokenizer has no attribute prepare_for_model``。
+
+    为 xlm-roberta 系 tokenizer 补一个与 transformers 4.x 行为一致的实现：
+    - 单序列布局：``<s> seq0 </s>``
+    - 双序列布局：``<s> seq0 </s></s> seq1 </s>``
+    - ``truncation='only_second'``：仅截断第二段使总长不超过 ``max_length``
+
+    该补丁只影响重排路径，不改动共享 transformers 依赖，避免波及 OCR/版面/Popo。
+
+    Args:
+        tokenizer: FlagReranker 的 tokenizer 实例。
+    """
+    if hasattr(tokenizer, "prepare_for_model"):
+        return
+
+    cls_id = tokenizer.cls_token_id
+    sep_id = tokenizer.sep_token_id
+
+    def _build(token_ids_0: list[int], token_ids_1: list[int] | None) -> list[int]:
+        if token_ids_1 is None:
+            return [cls_id] + list(token_ids_0) + [sep_id]
+        return [cls_id] + list(token_ids_0) + [sep_id, sep_id] + list(token_ids_1) + [sep_id]
+
+    def prepare_for_model(token_ids_0, token_ids_1=None, **kwargs):
+        token_ids_0 = list(token_ids_0)
+        token_ids_1 = list(token_ids_1) if token_ids_1 is not None else None
+        truncation = kwargs.get("truncation")
+        max_length = kwargs.get("max_length")
+        if token_ids_1 is not None and truncation == "only_second" and max_length:
+            # 双序列固定 4 个特殊 token（<s> + 3x</s>），预留后仅截断第二段
+            budget = max_length - 4 - len(token_ids_0)
+            if budget < len(token_ids_1):
+                token_ids_1 = token_ids_1[: max(budget, 0)]
+        input_ids = _build(token_ids_0, token_ids_1)
+        return {
+            "input_ids": input_ids,
+            "attention_mask": [1] * len(input_ids),
+            "token_type_ids": [0] * len(input_ids),
+        }
+
+    tokenizer.prepare_for_model = prepare_for_model
+
+
 class RetrievalReranker:
     """检索结果重排序器。
 
@@ -66,6 +112,8 @@ class RetrievalReranker:
             from FlagEmbedding import FlagReranker
 
             self._reranker = FlagReranker(model_path, use_fp16=True)
+            # 兼容补丁：transformers 5.x 移除了 prepare_for_model，重排推理会崩溃
+            _ensure_prepare_for_model(self._reranker.tokenizer)
             self._load_error = None
             logger.info(
                 "bge-reranker 重排模型加载完成",

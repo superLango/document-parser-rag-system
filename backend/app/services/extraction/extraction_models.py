@@ -64,6 +64,10 @@ class ExtractionTarget:
     query_terms: list[str] = field(default_factory=list)
     confidence: float = 0.0
     schema: dict[str, Any] | None = None
+    # 类别描述（供 ${feature_descript} 占位符替换）
+    description: str = ""
+    # Query 术语集数据：{label: term_base_loader data}，供 ${术语集名.字段} 替换
+    term_data: dict[str, Any] = field(default_factory=dict)
 
     @property
     def item_names(self) -> list[str]:

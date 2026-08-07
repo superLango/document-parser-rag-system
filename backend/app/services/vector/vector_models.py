@@ -122,6 +122,8 @@ class ChildChunk:
     content_vector: list[float] | None = None
     type_vector: list[float] | None = None
     structural_vector: list[float] | None = None
+    # 稀疏向量（BM25，Milvus SPARSE_FLOAT_VECTOR，客户端计算后填充）
+    sparse_vector: dict[int, float] | None = None
 
     def to_milvus_row(self, doc_id: str) -> dict[str, Any]:
         """转换为 Milvus 单 Collection 数据行。
@@ -150,6 +152,8 @@ class ChildChunk:
             vec = getattr(self, f"{dim}_vector")
             if vec is not None:
                 row[f"{dim}_vector"] = vec
+        if self.sparse_vector is not None:
+            row["sparse_vector"] = self.sparse_vector
         return row
 
 

@@ -28,7 +28,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import BusinessException
 from app.core.logging import get_logger
 from app.models.extraction_config import KbExtractionConfig
-from app.models.schema_model import SchemaTemplate
+from app.models.schema_model import SchemaConfig, SchemaTemplate
 from app.services.extraction.retrieval.reranker import retrieval_reranker
 from app.services.extraction_config.defaults import (
     DEFAULT_EXTRACTION_CONFIG,
@@ -153,6 +153,33 @@ async def validate_extraction_config(
     ).scalars().all()
     if not tpl_count:
         errors.append("未配置任何启用的 Schema 模板，请先在 Schema 模板中创建模板与类别")
+    else:
+        # 3.5) Query 术语集：参与检索（in_query）的术语集必须配置条目上限（必填）
+        categories = (
+            await db.execute(
+                select(SchemaConfig).where(
+                    SchemaConfig.kb_id == kb_id,
+                    SchemaConfig.node_type == "category",
+                    SchemaConfig.is_active.is_(True),
+                )
+            )
+        ).scalars().all()
+        for cat in categories:
+            for qs in cat.query_sources or []:
+                if not qs.get("in_query", True):
+                    continue
+                missing_q = [
+                    key
+                    for key in ("query_main_limit", "query_refined_limit")
+                    if qs.get(key) in (None, "")
+                ]
+                if missing_q:
+                    errors.append(
+                        f"类别「{cat.name}」的 Query 术语集「{qs.get('label') or qs.get('term_base_id')}」"
+                        f"未配置必填参数{'、'.join(missing_q)}，"
+                        f"请在 Schema 模板类别 Query 术语集中配置主查询维/精简维条目上限"
+                    )
+
 
     # 4) Prompt 模板：必须已配置（不回退内置）
     cfg = await _config_resolver.resolve(db, kb_id)

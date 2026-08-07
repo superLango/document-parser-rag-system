@@ -24,25 +24,19 @@ Prompt 模板时直接抛 ``BusinessException``（与 Schema 一致：有执行�
 
 from __future__ import annotations
 
+import json
+import re
 from typing import Any
 
 from app.core.exceptions import BusinessException
+from app.core.logging import get_logger
+from app.services.extraction.rule_engine.term_base_loader import term_base_loader
+
+logger = get_logger(__name__)
 
 
 class ConfigPromptRenderer:
     """从 ``ExtractionDomainConfig`` 渲染抽取 Prompt。"""
-
-    # ------------------------------------------------------------------
-    # 变量替换
-    # ------------------------------------------------------------------
-    @staticmethod
-    def _render(text: str, variables: dict[str, Any]) -> str:
-        """替换 ``${var}`` 占位符。"""
-        if not text:
-            return text
-        for key, val in variables.items():
-            text = text.replace(f"${{{key}}}", str(val))
-        return text
 
     # ------------------------------------------------------------------
     # 类别抽取 Prompt
@@ -82,7 +76,16 @@ class ConfigPromptRenderer:
             )
         system, user = resolved
 
-        variables = {
+        # 字段名 -> 字段定义（供 ${字段名} / ${字段名.子属性} 替换）
+        field_map: dict[str, dict[str, Any]] = {
+            f.get("name"): f
+            for f in (target.fields or [])
+            if f.get("name")
+        }
+        schema_json = json.dumps(target.schema, ensure_ascii=False) if target.schema else ""
+
+        # 系统参数（对齐前端 PromptEditor「测试组装」可替换的占位符）
+        system_values: dict[str, Any] = {
             "feature": target.feature,
             "category_name": target.feature,
             "context": context,
@@ -91,8 +94,67 @@ class ConfigPromptRenderer:
             "whitelist_section": whitelist,
             "prev_brands_section": prev_brands,
             "query_terms": "、".join(target.query_terms or []),
+            "feature_descript": target.description,
+            "return_type": target.return_type or "array",
+            "prev_brands": prev_brands,
+            "schema": schema_json,
         }
-        return self._render(system, variables), self._render(user, variables)
+
+        def _sub(match: re.Match) -> str:
+            raw = match.group(1).strip()
+            # 术语集 / 字段子属性：${xxx.yyy}
+            if "." in raw:
+                label, attr = raw.split(".", 1)
+                # 术语集字段：${术语集label.字段}
+                if label in (target.term_data or {}):
+                    vals = term_base_loader.get_group_values(target.term_data[label], attr)
+                    if vals:
+                        return f"[{', '.join(vals)}]"
+                    return match.group(0)
+                # 字段子属性
+                if label in field_map:
+                    f = field_map[label]
+                    attr_val = {
+                        "类型": f.get("type", ""),
+                        "必填": "是" if f.get("required") else "否",
+                        "描述": f.get("description", ""),
+                        "示例": f.get("example", "") or "",
+                        "枚举": "",
+                        "术语集": "",
+                    }.get(attr)
+                    if attr_val is not None:
+                        return str(attr_val)
+                return match.group(0)
+            # 字段名：仅代入字段名称
+            if raw in field_map:
+                return raw
+            # 系统参数
+            if raw in system_values:
+                return str(system_values[raw])
+            return match.group(0)
+
+        def _render(text: str) -> str:
+            if not text:
+                return text
+            return re.sub(r"\$\{([^{}]+)\}", _sub, text)
+
+        rendered_system = _render(system)
+        rendered_user = _render(user)
+
+        # 【调试】打印渲染出的完整 system/user prompt（Prompt 获取结果）
+        logger.info(
+            "【Prompt 渲染输出】类别抽取 Prompt（system + user 完整内容）",
+            extra={
+                "feature": target.feature,
+                "template_id": target.template_id,
+                "category_id": target.category_id,
+                "field_defs": field_defs,
+                "format_instruction": format_instruction,
+                "system_prompt": rendered_system,
+                "user_prompt": rendered_user,
+            },
+        )
+        return rendered_system, rendered_user
 
     # ------------------------------------------------------------------
     # 字段定义文本（从 target.fields 构建，不读 YAML）

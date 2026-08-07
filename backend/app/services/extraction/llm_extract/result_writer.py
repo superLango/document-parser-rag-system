@@ -74,6 +74,25 @@ class ResultWriter:
         result_path = self.get_result_path(task_id)
         result_path.parent.mkdir(parents=True, exist_ok=True)
 
+        # 【调试】结果保存进入：打印本次待保存的完整抽取结果摘要
+        logger.info(
+            "【结果保存·进入】待写盘抽取结果",
+            extra={
+                "task_id": task_id,
+                "path": str(result_path),
+                "category_count": len(result.categories),
+                "categories": [
+                    {
+                        "feature": c.feature,
+                        "record_count": len(c.records),
+                        "rejected_count": len(c.rejected),
+                        "records": [json.dumps(r, ensure_ascii=False, default=str) for r in c.records],
+                    }
+                    for c in result.categories
+                ],
+            },
+        )
+
         # 填充 summary（总数、活跃/剔除 feature）
         total_records = sum(len(c.records) for c in result.categories)
         total_rejected = sum(len(c.rejected) for c in result.categories)

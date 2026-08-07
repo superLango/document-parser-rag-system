@@ -30,6 +30,7 @@ result_writer.save → {OCR_OUTPUT_DIR}/{task_id}/extract_result.json
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import time
 from typing import Any
@@ -49,6 +50,7 @@ from app.services.extraction.llm_extract.extractor_factory import extract_with_f
 from app.services.extraction.prompts.config_prompt_renderer import config_prompt_renderer
 from app.services.extraction.llm_extract.result_writer import result_writer
 from app.services.extraction.rule_engine.script_manager import script_manager
+from app.services.extraction.rule_engine.term_base_loader import term_base_loader
 from app.services.extraction_config.resolver import ExtractionConfigResolver
 
 logger = get_logger(__name__)
@@ -75,6 +77,7 @@ class ExtractionPipeline:
         task_id: str,
         doc_id: str,
         kb_id: str | None = None,
+        progress_cb: Any = None,
     ) -> ExtractionResult:
         """执行完整的 v3 抽取流程（Phase 2-4）。
 
@@ -82,6 +85,8 @@ class ExtractionPipeline:
             task_id: 任务 ID（雪花 ID，同时作为结果保存目录名）。
             doc_id: 文档 ID（五维向量库中的 doc_id 过滤条件，通常 == task_id）。
             kb_id: 知识库 ID，用于向量 Collection 隔离。
+            progress_cb: 可选进度回调 ``async (progress: int, message: str) -> None``，
+                在阶段边界被调用，供后台任务驱动进度条。为 None 时不打点。
 
         Returns:
             ExtractionResult: v3 抽取最终结果（同时已保存为 JSON 文件）。
@@ -106,6 +111,47 @@ class ExtractionPipeline:
             )
             raise BusinessException(f"解析抽取领域配置失败：{err}")
 
+        # 【调试】打印解析出的全部抽取配置项（进入 Phase 2 前）
+        logger.info(
+            "【配置解析完成】KB 抽取配置项（进入阶段前）",
+            extra={
+                "kb_id": kb_id,
+                "config_enabled": cfg.config_enabled,
+                "global_config": json.dumps(cfg.global_config, ensure_ascii=False),
+                "prompt_templates": [
+                    {
+                        "name": name,
+                        "scope": tpl.get("scope"),
+                        "schema_template_id": tpl.get("schema_template_id"),
+                        "categories": [c.get("category_id") for c in tpl.get("categories", [])],
+                    }
+                    for name, tpl in cfg.prompt_templates.items()
+                ],
+                "schema_templates": [
+                    {
+                        "id": s.get("id"),
+                        "name": s.get("name"),
+                        "category_count": len(s.get("categories", [])),
+                        "categories": [c.get("name") for c in s.get("categories", [])],
+                    }
+                    for s in cfg.schema_templates
+                ],
+                "term_bindings_count": len(cfg.term_bindings),
+                "term_bindings": [
+                    {
+                        "schema_id": k[0],
+                        "field": k[1],
+                        "term_base_id": v.get("term_base_id"),
+                        "config": v.get("config"),
+                    }
+                    for k, v in cfg.term_bindings.items()
+                ],
+                "rules_count": len(cfg.rules),
+                "rules": list(cfg.rules.keys()),
+                "llm_engine": cfg.llm.get("engine"),
+            },
+        )
+
         # 加载 LLM vLLM 服务端点（资源与配置 LLM vLLM 服务），挂到 cfg.endpoint
         try:
             from app.services.kb.kb_config_loader import kb_config_loader
@@ -129,9 +175,29 @@ class ExtractionPipeline:
             )
             raise BusinessException(f"加载 LLM vLLM 端点失败：{err}")
 
+        # 【调试】打印 LLM 服务端点与 Prompt 校验级别（进入阶段前）
+        logger.info(
+            "【LLM 端点加载完成】抽取路线 LLM 服务端点与校验级别",
+            extra={
+                "endpoint": cfg.endpoint,
+                "prompt_validation_level": cfg.prompt_validation_level,
+            },
+        )
+
         # 全局 LLM 并发信号量（所有 Phase 4 LLM 调用共享，配置驱动）
         _total_concurrency = cfg.total_llm_concurrency()
         llm_semaphore = asyncio.Semaphore(_total_concurrency)
+
+        async def _p(progress: int, message: str) -> None:
+            """阶段进度打点（可选回调）。"""
+            if progress_cb is not None:
+                try:
+                    await progress_cb(progress, message)
+                except Exception:
+                    logger.warning(
+                        "进度回调执行失败",
+                        extra={"progress": progress, "message": message, "exc_info": True},
+                    )
 
         # ------------------------------------------------------------------
         # Phase 2：类别构建（Schema 模板驱动）
@@ -145,6 +211,7 @@ class ExtractionPipeline:
             if cfg_db is not None:
                 await cfg_db.close()
         phase2_elapsed = time.time() - phase2_start
+        await _p(35, "类别构建完成")
 
         logger.info(
             "Phase 2 完成",
@@ -161,10 +228,12 @@ class ExtractionPipeline:
         # ------------------------------------------------------------------
         categories_start = time.time()
         category_schemas: dict[str, dict[str, Any]] = schemas.get("categories", {})
+        await _p(40, "开始类别抽取")
         categories = await self._extract_categories(
             doc_id, targets, category_schemas, llm_semaphore, kb_id=kb_id, cfg=cfg
         )
         categories_elapsed = time.time() - categories_start
+        await _p(85, "类别抽取完成")
 
         logger.info(
             "类别列表抽取完成",
@@ -286,7 +355,15 @@ class ExtractionPipeline:
                     raise result
                 logger.error(
                     "类别抽取异常",
-                    extra={"feature": feature_name, "error": str(result)},
+                    extra={
+                        "feature": feature_name,
+                        "error": str(result),
+                        "traceback": "".join(
+                            __import__("traceback").format_exception(
+                                type(result), result, result.__traceback__
+                            )
+                        ),
+                    },
                 )
                 # 运行时异常返回空结果，保证流程继续
                 categories.append(CategoryResult(
@@ -327,10 +404,53 @@ class ExtractionPipeline:
         start = time.time()
         schema = category_schemas.get(target.feature, {})
 
+        # 【调试】进入单个类别抽取（Phase 3+4 入参）
+        logger.info(
+            "【类别抽取·进入】",
+            extra={
+                "feature": target.feature,
+                "category_id": target.category_id,
+                "template_id": target.template_id,
+                "query_mode": target.query_mode,
+                "fixed_query": target.fixed_query,
+                "query_terms": target.query_terms,
+                "top_k": target.top_k,
+                "rerank_top_k": target.rerank_top_k,
+                "max_tokens": target.max_tokens,
+                "confidence_threshold": target.confidence_threshold,
+                "fields": [
+                    {
+                        "name": f.get("name"),
+                        "description": f.get("description"),
+                        "type": f.get("type"),
+                        "required": f.get("required"),
+                        "example": f.get("example"),
+                        "values": f.get("values"),
+                    }
+                    for f in (target.fields or [])
+                ],
+                "schema": json.dumps(schema, ensure_ascii=False),
+            },
+        )
+
         # Phase 3：向量检索
         retrieve_start = time.time()
         context = await retrieval_service.retrieve(target, doc_id, kb_id=kb_id, cfg=cfg)
         retrieve_elapsed = time.time() - retrieve_start
+
+        # 【调试】Phase 3 检索输出
+        logger.info(
+            "【类别抽取·检索输出】",
+            extra={
+                "feature": target.feature,
+                "retrieve_elapsed_sec": round(retrieve_elapsed, 3),
+                "context_text_len": len(context.text),
+                "context_text_preview": context.text[:800],
+                "chunks_count": len(context.chunks),
+                "chunks_scores": [c.score for c in context.chunks],
+                "whitelist_prompt": context.whitelist_prompt,
+            },
+        )
 
         if not context.text:
             logger.warning(
@@ -351,6 +471,19 @@ class ExtractionPipeline:
 
         # Phase 4：LLM 抽取（双线路 + 降级）
         extract_start = time.time()
+        # 预加载类别 Query 术语集数据（供 Prompt 中 ${术语集名.字段} 占位符替换）
+        if kb_id and (target.query_sources or []):
+            async with AsyncSessionLocal() as _tdb:
+                for _qs in target.query_sources or []:
+                    _label = (_qs.get("label") or "").strip()
+                    _tb_id = _qs.get("term_base_id")
+                    if not _label or not _tb_id:
+                        continue
+                    _data = await term_base_loader.load_term_base(
+                        _tdb, str(kb_id), str(_tb_id)
+                    )
+                    if _data:
+                        target.term_data[_label] = _data
         records = await extract_with_fallback(
             context=context,
             schema=schema,
@@ -359,6 +492,19 @@ class ExtractionPipeline:
             cfg=cfg,
         )
         extract_elapsed = time.time() - extract_start
+
+        # 【调试】Phase 4 LLM 抽取输出
+        logger.info(
+            "【类别抽取·LLM输出】",
+            extra={
+                "feature": target.feature,
+                "extract_elapsed_sec": round(extract_elapsed, 3),
+                "extracted_count": len(records),
+                "extracted_records": [
+                    json.dumps(r.to_dict(), ensure_ascii=False) for r in records
+                ],
+            },
+        )
 
         # 自定义脚本：抽取后处理 + 校验（脚本全权接管后处理，已移除内置管道）
         post_start = time.time()
@@ -381,6 +527,19 @@ class ExtractionPipeline:
                 )
                 rejected.extend(script_rejected)
         post_elapsed = time.time() - post_start
+
+        # 【调试】后处理 + 校验脚本输出
+        logger.info(
+            "【类别抽取·后处理输出】",
+            extra={
+                "feature": target.feature,
+                "post_elapsed_sec": round(post_elapsed, 3),
+                "kept_count": len(kept),
+                "rejected_count": len(rejected),
+                "kept_records": [json.dumps(r, ensure_ascii=False) for r in kept],
+                "rejected_records": [json.dumps(r, ensure_ascii=False) for r in rejected],
+            },
+        )
 
         total_elapsed = time.time() - start
         logger.info(

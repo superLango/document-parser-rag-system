@@ -19,6 +19,7 @@ I-O 契约（脚本统一 ``def run(args)``）：
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from sqlalchemy import select
@@ -95,21 +96,26 @@ class ScriptManager:
         kb_id: str,
         category: str,
         stage: str,
+        category_id: str | None = None,
     ) -> list[KbScript]:
         """按类别 + 阶段，从规则组加载启用脚本（按 sort_order 顺序执行）。
 
-        规则项属于某规则组（关联 Schema 模板），运行时按 ``category_name``
-        与抽取类别名（feature）匹配。未配置任何规则项时返回空列表（透传）。
+        规则项属于某规则组（关联 Schema 模板），运行时优先按 ``category_id``
+        匹配（term_base 展开类别各实例保留同一 category_id，按名匹配会失败）；
+        无 category_id 时回退按 ``category_name`` 与抽取类别名（feature）匹配。
+        未配置任何规则项时返回空列表（透传）。
         """
+        stmt = select(KbRuleGroupItem).where(
+            KbRuleGroupItem.kb_id == str(kb_id),
+            KbRuleGroupItem.stage == stage,
+        )
+        if category_id:
+            stmt = stmt.where(KbRuleGroupItem.category_id == category_id)
+        else:
+            stmt = stmt.where(KbRuleGroupItem.category_name == category)
         items = (
             await db.execute(
-                select(KbRuleGroupItem)
-                .where(
-                    KbRuleGroupItem.kb_id == str(kb_id),
-                    KbRuleGroupItem.category_name == category,
-                    KbRuleGroupItem.stage == stage,
-                )
-                .order_by(
+                stmt.order_by(
                     KbRuleGroupItem.sort_order, KbRuleGroupItem.created_at
                 )
             )
@@ -185,7 +191,12 @@ class ScriptManager:
         顺序执行；未配置任何规则时透传（原样保留）。有 ``target`` 时向命名空间
         注入 ``kb_tools`` 工具句柄（含 db，脚本可调用后处理 / 术语集访问等能力）。
         """
-        scripts = await self.load_by_category(db, kb_id, category, folder)
+        # term_base 展开类别各实例共享同一 category_id，须按 category_id 匹配规则组项；
+        # 否则按 feature 名（展开后的实例名）匹配会失败，导致脚本不生效
+        scripts = await self.load_by_category(
+            db, kb_id, category, folder,
+            category_id=target.category_id if target is not None else None,
+        )
         args: dict[str, Any] = {
             "records": records,
             "category": category,
@@ -196,6 +207,22 @@ class ScriptManager:
             inject["kb_tools"] = KbScriptTools(
                 target=target, kb_id=str(kb_id), db=db, kb_tool=kb_tool
             )
+        # 【调试】后处理/校验阶段进入：打印该类别加载的脚本与输入记录
+        logger.info(
+            f"【{folder}·进入】类别脚本处理入参",
+            extra={
+                "category": category,
+                "stage": folder,
+                "kb_id": str(kb_id),
+                "script_count": len(scripts),
+                "scripts": [
+                    {"script_id": str(s.id), "name": s.name, "folder": s.folder}
+                    for s in scripts
+                ],
+                "input_records_count": len(records),
+                "input_records": [json.dumps(r, ensure_ascii=False, default=str) for r in records],
+            },
+        )
         kept: list[dict[str, Any]] = list(records)
         rejected: list[dict[str, Any]] = []
         for s in scripts:
@@ -216,6 +243,18 @@ class ScriptManager:
                 args["records"] = kept  # 链式传递
             if isinstance(result.get("rejected"), list):
                 rejected.extend(result["rejected"])
+        # 【调试】后处理/校验阶段输出：打印处理后的保留与剔除记录
+        logger.info(
+            f"【{folder}·输出】类别脚本处理结果",
+            extra={
+                "category": category,
+                "stage": folder,
+                "kept_count": len(kept),
+                "kept_records": [json.dumps(r, ensure_ascii=False, default=str) for r in kept],
+                "rejected_count": len(rejected),
+                "rejected_records": [json.dumps(r, ensure_ascii=False, default=str) for r in rejected],
+            },
+        )
         return kept, rejected
 
 

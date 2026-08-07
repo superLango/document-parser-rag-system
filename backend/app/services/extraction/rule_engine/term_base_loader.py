@@ -50,9 +50,15 @@ class TermBaseValueLoader:
         db: AsyncSession,
         kb_id: str,
         term_base_id: str,
+        group_field: str | None = None,
     ) -> dict[str, Any] | None:
-        """加载术语集，返回 {name, source_type, column_aliases, grouped} 或 None。"""
-        cache_key = (str(kb_id), str(term_base_id))
+        """加载术语集，返回 {name, source_type, column_aliases, grouped} 或 None。
+
+        ``group_field`` 指定时按该字段（如 FEATURE）对词条分组，供 Query 术语集
+        按类别展开实例名取值；不指定时回退默认分组（api/db 按 extras.group/分组，
+        手动类型按 category）。分组字段纳入缓存 key。
+        """
+        cache_key = (str(kb_id), str(term_base_id), group_field or "")
         if cache_key in self._cache:
             return self._cache[cache_key]
 
@@ -86,13 +92,22 @@ class TermBaseValueLoader:
                 "name": base.name,
                 "source_type": base.source_type,
                 "column_aliases": base.column_aliases or {},
-                "grouped": self._group_rows(rows, base),
+                "grouped": self._group_rows(rows, base, group_field),
             }
             self._cache[cache_key] = data
             return data
 
-    def _group_rows(self, rows: list[Term], base: TermBase) -> dict[str, dict[str, list[str]]]:
-        """按 group_field 分组：{group_value: {field: [values]}}。"""
+    def _group_rows(
+        self,
+        rows: list[Term],
+        base: TermBase,
+        group_field: str | None = None,
+    ) -> dict[str, dict[str, list[str]]]:
+        """按分组字段分组：{group_value: {field: [values]}}。
+
+        ``group_field`` 指定时优先用其作为分组键（如 api/db 术语集的 FEATURE）；
+        未指定时回退默认（api/db 用 extras.group/分组，手动类型用 category）。
+        """
         grouped: dict[str, dict[str, list[str]]] = {}
         for t in rows:
             group = _ALL
@@ -101,7 +116,12 @@ class TermBaseValueLoader:
                 if cat.strip():
                     group = cat.strip()
             else:
-                group = str(t.extras.get("group") or t.extras.get("分组") or _ALL)
+                g = None
+                if group_field:
+                    g = (t.extras or {}).get(group_field)
+                if g is None:
+                    g = (t.extras or {}).get("group") or (t.extras or {}).get("分组")
+                group = str(g) if g not in (None, "") else _ALL
             bucket = grouped.setdefault(group, {})
             self._accumulate_row(bucket, t, base)
         return grouped
@@ -152,15 +172,13 @@ class TermBaseValueLoader:
         self,
         data: dict[str, Any],
         field: str,
-        group_field: str | None = None,
         group_value: str | None = None,
     ) -> list[str]:
         """取指定字段的值列表。
 
         Args:
-            data: load_term_base 返回的数据。
+            data: load_term_base 返回的数据（已按 group_field 分组）。
             field: 取值字段（新表头别名或原始字段名）。
-            group_field: 分组字段（当前仅手动类型按 category 分组）。
             group_value: 分组值（None 表示取全量）。
         """
         grouped: dict[str, dict[str, list[str]]] = data.get("grouped", {})

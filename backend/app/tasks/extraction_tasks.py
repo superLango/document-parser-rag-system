@@ -10,6 +10,7 @@
 
 import traceback
 import uuid
+from datetime import datetime
 
 from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
@@ -62,13 +63,17 @@ async def extract_document_impl(document_id: str, kb_id: str | None, ctx: dict) 
 
         await _update_progress(arq_job_id, 10, "开始抽取", kb_id=kb_id)
 
+        async def _on_progress(progress: int, message: str) -> None:
+            await _update_progress(arq_job_id, progress, message, kb_id=kb_id)
+
         result = await extraction_pipeline.run(
             task_id=arq_job_id or document_id,
             doc_id=document_id,
             kb_id=kb_id,
+            progress_cb=_on_progress,
         )
 
-        await _update_progress(arq_job_id, 80, "保存抽取结果", kb_id=kb_id)
+        await _update_progress(arq_job_id, 90, "保存抽取结果", kb_id=kb_id)
 
         async with AsyncSessionLocal() as db:
             await _activate_kb_rls(db, kb_id)
@@ -109,12 +114,59 @@ async def extract_document_impl(document_id: str, kb_id: str | None, ctx: dict) 
                         else:
                             records.append(r)
 
-                document.structured_data = {
+                # 结果按双视图结构持久化：latest_result（含 categories）供表格/JSON 双视图，
+                # 同时保留扁平 records 与历史归档，保证退出重进后结果仍在。
+                latest = result.to_dict() if hasattr(result, "to_dict") else {}
+                existing = document.structured_data or {}
+                existing = dict(existing)
+                now = datetime.utcnow().isoformat()
+                history = existing.get("history", [])
+                if not isinstance(history, list):
+                    history = []
+                old_latest = existing.get("latest_result")
+                if old_latest is not None:
+                    history.insert(0, {
+                        "result": old_latest,
+                        "schema_id": existing.get("latest_schema_id"),
+                        "schema_name": existing.get("latest_schema_name"),
+                        "extracted_at": existing.get("latest_extracted_at") or now,
+                        "archived_at": now,
+                    })
+                history = history[:50]
+
+                # 记录当前 KB 激活的 Schema 模板名（后台任务按 KB 配置抽取）
+                schema_name = existing.get("latest_schema_name")
+                schema_id = existing.get("latest_schema_id")
+                try:
+                    from app.models.schema_model import SchemaTemplate
+                    from sqlalchemy import select
+                    stmt = (
+                        select(SchemaTemplate.name, SchemaTemplate.id)
+                        .where(
+                            SchemaTemplate.kb_id == str(kb_id),
+                            SchemaTemplate.is_active.is_(True),
+                        )
+                        .limit(1)
+                    )
+                    row = (await db.execute(stmt)).first()
+                    if row is not None:
+                        schema_name = row[0]
+                        schema_id = str(row[1])
+                except Exception:
+                    pass
+
+                existing.update({
                     "records": records,
                     "doc_info": result.doc_info if hasattr(result, 'doc_info') else None,
                     "summary": result.summary if hasattr(result, 'summary') else {},
                     "timing": result.timing if hasattr(result, 'timing') else {},
-                }
+                    "latest_result": latest,
+                    "latest_schema_id": schema_id,
+                    "latest_schema_name": schema_name,
+                    "latest_extracted_at": now,
+                    "history": history,
+                })
+                document.structured_data = existing
                 if hasattr(document, 'extraction_status'):
                     document.extraction_status = "completed"
                 await db.commit()

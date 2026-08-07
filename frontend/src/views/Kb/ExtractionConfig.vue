@@ -105,13 +105,18 @@ const globalConfig = ref<Record<string, any>>({
     default_confidence_threshold: 0.35,
     context_top_k: 20,
     context_max_tokens: 28000,
-    context: { chars_per_token: 1.5 },
+    context: {
+      chars_per_token: 1.5,
+      min_keep_chars: 200,
+      truncate_marker: '\n[...内容截断...]',
+    },
     phase2: { top_k: 5, per_dim_top_k: 10 },
     query_embed: {
       content_max_chars: 2000,
       feature_repeat: 2,
       embed_max_length: 2048,
       type_query: '表格 数据结构 行列',
+      dedupe_similarity_threshold: 0.85,
     },
     weights: {
       path: 0.15,
@@ -136,6 +141,7 @@ const globalConfig = ref<Record<string, any>>({
     semantic_top_k: 5,
     match_top_k: 1,
     match_threshold: 0.9,
+    script_timeout: 10,
   },
 })
 const globalSaving = ref(false)
@@ -208,7 +214,11 @@ async function loadGlobal() {
         default_confidence_threshold: rawRetrieval.default_confidence_threshold ?? 0.35,
         context_top_k: rawRetrieval.context_top_k ?? 20,
         context_max_tokens: rawRetrieval.context_max_tokens ?? 28000,
-        context: { chars_per_token: (rawRetrieval.context || {}).chars_per_token ?? 1.5 },
+        context: {
+          chars_per_token: (rawRetrieval.context || {}).chars_per_token ?? 1.5,
+          min_keep_chars: (rawRetrieval.context || {}).min_keep_chars ?? 200,
+          truncate_marker: (rawRetrieval.context || {}).truncate_marker ?? '\n[...内容截断...]',
+        },
         phase2: {
           top_k: (rawRetrieval.phase2 || {}).top_k ?? 5,
           per_dim_top_k: (rawRetrieval.phase2 || {}).per_dim_top_k ?? 10,
@@ -218,9 +228,19 @@ async function loadGlobal() {
           feature_repeat: (rawRetrieval.query_embed || {}).feature_repeat ?? 2,
           embed_max_length: (rawRetrieval.query_embed || {}).embed_max_length ?? 2048,
           type_query: (rawRetrieval.query_embed || {}).type_query ?? '表格 数据结构 行列',
+          dedupe_similarity_threshold: (rawRetrieval.query_embed || {}).dedupe_similarity_threshold ?? 0.85,
         },
         weights: { path: 0.15, title: 0.2, content: 0.45, type: 0.05, structural: 0.15, ...(rawRetrieval.weights || {}) },
         reranker: { enabled: true, model: '', top_n: 15, ...(rawRetrieval.reranker || {}) },
+        hybrid: {
+          enabled: (rawRetrieval.hybrid || {}).enabled ?? true,
+          dense_candidate_k: (rawRetrieval.hybrid || {}).dense_candidate_k ?? 80,
+          keyword_top_k: (rawRetrieval.hybrid || {}).keyword_top_k ?? 60,
+          rrf_k: (rawRetrieval.hybrid || {}).rrf_k ?? 60,
+          dense_weight: (rawRetrieval.hybrid || {}).dense_weight ?? 1.0,
+          keyword_weight: (rawRetrieval.hybrid || {}).keyword_weight ?? 1.2,
+          keyword_min_hits: (rawRetrieval.hybrid || {}).keyword_min_hits ?? 1,
+        },
       },
       llm: {
         engine,
@@ -232,6 +252,7 @@ async function loadGlobal() {
         semantic_top_k: (content.kb_tool || {}).semantic_top_k ?? 5,
         match_top_k: (content.kb_tool || {}).match_top_k ?? 1,
         match_threshold: (content.kb_tool || {}).match_threshold ?? 0.9,
+        script_timeout: (content.kb_tool || {}).script_timeout ?? 10,
       },
     }
   } catch {
@@ -1417,6 +1438,16 @@ onMounted(async () => {
                 <Input v-model.number="globalConfig.retrieval.context.chars_per_token" type="number" step="0.1" class="mt-1" />
                 <p class="text-xs text-muted-foreground">上下文 token 估算系数（中文约 1.5 字符/token）</p>
               </div>
+              <div class="space-y-1.5 rounded-lg bg-muted/30 p-3">
+                <Label class="text-xs font-medium text-muted-foreground">上下文尾部最小保留字符</Label>
+                <Input v-model.number="globalConfig.retrieval.context.min_keep_chars" type="number" min="0" class="mt-1" />
+                <p class="text-xs text-muted-foreground">按相关性截断时上下文尾部至少保留的字符数，避免截断丢失关键信息</p>
+              </div>
+              <div class="space-y-1.5 rounded-lg bg-muted/30 p-3">
+                <Label class="text-xs font-medium text-muted-foreground">截断标记文本</Label>
+                <Input v-model="globalConfig.retrieval.context.truncate_marker" type="text" class="mt-1" />
+                <p class="text-xs text-muted-foreground">上下文截断处插入的占位标记文本，提示模型内容已截断</p>
+              </div>
             </div>
             <!-- Phase 2 类别召回参数 -->
             <div class="rounded-lg border-2 border-blue-200/50 bg-blue-50/50 p-4 dark:bg-blue-950/20">
@@ -1458,6 +1489,11 @@ onMounted(async () => {
                   <Label class="text-xs font-medium text-blue-600">type 维固定查询文本</Label>
                   <Input v-model="globalConfig.retrieval.query_embed.type_query" type="text" class="mt-1" />
                   <p class="text-xs text-muted-foreground">type 维固定查询文本（参考示例：表格 数据结构 行列，可按需修改）</p>
+                </div>
+                <div class="space-y-1 rounded-md bg-background/80 p-2">
+                  <Label class="text-xs font-medium text-blue-600">语义去重阈值</Label>
+                  <Input v-model.number="globalConfig.retrieval.query_embed.dedupe_similarity_threshold" type="number" step="0.01" min="0" max="1" class="mt-1" />
+                  <p class="text-xs text-muted-foreground">Query 词条字符级相似度去重阈值（相似度 ≥ 该值视为重复词条）</p>
                 </div>
               </div>
             </div>
@@ -1504,6 +1540,46 @@ onMounted(async () => {
                   <Label class="text-xs font-medium text-muted-foreground">重排后 top_n</Label>
                   <Input v-model.number="globalConfig.retrieval.reranker.top_n" type="number" class="mt-1" />
                   <p class="text-xs text-muted-foreground">召回后重排序保留的块数</p>
+                </div>
+              </div>
+            </div>
+            <!-- 混合检索（hybrid） -->
+            <div class="rounded-lg border-2 border-cyan-200/50 bg-cyan-50/50 p-4 dark:bg-cyan-950/20">
+              <Label class="mb-3 block text-sm font-semibold text-cyan-700 dark:text-cyan-300">混合检索（hybrid · 稠密+稀疏 BM25 · RRF 融合）</Label>
+              <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <label class="flex items-center gap-2 rounded-md bg-background/80 p-3 text-sm">
+                  <Switch v-model="globalConfig.retrieval.hybrid.enabled" />
+                  <span class="font-medium">启用混合检索</span>
+                </label>
+                <div class="space-y-1 rounded-md bg-background/80 p-2">
+                  <Label class="text-xs font-medium text-muted-foreground">稠密候选数 dense_candidate_k</Label>
+                  <Input v-model.number="globalConfig.retrieval.hybrid.dense_candidate_k" type="number" class="mt-1" />
+                  <p class="text-xs text-muted-foreground">稠密路融合前召回候选块数</p>
+                </div>
+                <div class="space-y-1 rounded-md bg-background/80 p-2">
+                  <Label class="text-xs font-medium text-muted-foreground">词法候选数 keyword_top_k</Label>
+                  <Input v-model.number="globalConfig.retrieval.hybrid.keyword_top_k" type="number" class="mt-1" />
+                  <p class="text-xs text-muted-foreground">BM25 词法路召回候选块数</p>
+                </div>
+                <div class="space-y-1 rounded-md bg-background/80 p-2">
+                  <Label class="text-xs font-medium text-muted-foreground">RRF 常数 rrf_k</Label>
+                  <Input v-model.number="globalConfig.retrieval.hybrid.rrf_k" type="number" class="mt-1" />
+                  <p class="text-xs text-muted-foreground">RRF 融合 rank 分母偏移</p>
+                </div>
+                <div class="space-y-1 rounded-md bg-background/80 p-2">
+                  <Label class="text-xs font-medium text-muted-foreground">稠密权重 dense_weight</Label>
+                  <Input v-model.number="globalConfig.retrieval.hybrid.dense_weight" type="number" step="0.1" class="mt-1" />
+                  <p class="text-xs text-muted-foreground">稠密路在 RRF 中的权重</p>
+                </div>
+                <div class="space-y-1 rounded-md bg-background/80 p-2">
+                  <Label class="text-xs font-medium text-muted-foreground">词法权重 keyword_weight</Label>
+                  <Input v-model.number="globalConfig.retrieval.hybrid.keyword_weight" type="number" step="0.1" class="mt-1" />
+                  <p class="text-xs text-muted-foreground">词法路在 RRF 中的权重</p>
+                </div>
+                <div class="space-y-1 rounded-md bg-background/80 p-2">
+                  <Label class="text-xs font-medium text-muted-foreground">词法兜底命中数 keyword_min_hits</Label>
+                  <Input v-model.number="globalConfig.retrieval.hybrid.keyword_min_hits" type="number" class="mt-1" />
+                  <p class="text-xs text-muted-foreground">类型过滤中，词法命中达到该数即保留类别（恢复强词法类别）</p>
                 </div>
               </div>
             </div>
@@ -1724,6 +1800,11 @@ onMounted(async () => {
               <div class="space-y-1.5 rounded-lg bg-muted/30 p-3">
                 <Label class="text-xs font-medium text-muted-foreground">match_record 匹配阈值</Label>
                 <Input v-model.number="globalConfig.kb_tool.match_threshold" type="number" step="0.01" min="0" max="1" class="mt-1" />
+              </div>
+              <div class="space-y-1.5 rounded-lg bg-muted/30 p-3">
+                <Label class="text-xs font-medium text-muted-foreground">脚本执行超时（秒）</Label>
+                <Input v-model.number="globalConfig.kb_tool.script_timeout" type="number" min="1" class="mt-1" />
+                <p class="text-xs text-muted-foreground">抽取后处理 / 校验脚本的单次执行超时上限（默认 10 秒），防止脚本卡死阻塞抽取</p>
               </div>
             </div>
             <p class="text-xs text-muted-foreground">

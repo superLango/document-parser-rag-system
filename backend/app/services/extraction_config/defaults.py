@@ -45,16 +45,34 @@ DEFAULT_EXTRACTION_CONFIG: dict = {
             "per_dim_top_k": 10,      # 每维独立召回的块数
         },
         # 五维查询编码常量（query_embedder）
+        # 注意：主查询维/精简维条目上限（query_main_limit/query_refined_limit）
+        # 改为在 Schema 模板类别的 Query 术语集（query_sources）中配置，不在此全局设置。
         "query_embed": {
             "content_max_chars": 2000,  # content 维 query 最大字符数
             "feature_repeat": 2,        # feature 名在 content 维重复次数
             "embed_max_length": 2048,   # 嵌入 max_length
             "type_query": "表格 数据结构 行列",  # type 维固定文本（示例，可按需修改）
             "dedupe_similarity_threshold": 0.85,  # 精简维条目语义去重相似度阈值
-            "query_main_limit": 30,     # 主查询维条目上限（类别 Query 术语集未配置时回退此全局值）
-            "query_refined_limit": 8,   # 精简维条目上限（类别 Query 术语集未配置时回退此全局值）
         },
         "reranker": {"enabled": True, "model": "", "top_n": 15},
+        # 混合检索（稠密五维 + 稀疏 BM25 词法，RRF 融合）。
+        # 稀疏路用 Milvus SPARSE_FLOAT_VECTOR（客户端 BM25 编码）。
+        # - enabled：是否启用稀疏词法路
+        # - dense_candidate_k：稠密路召回候选块数（融合前）
+        # - keyword_top_k：词法路（BM25）召回候选块数
+        # - rrf_k：RRF 融合常数（rank 分母偏移）
+        # - dense_weight / keyword_weight：稠密 / 词法路在 RRF 中的权重
+        # - keyword_min_hits：类型过滤中，词法命中数达到该值即保留类别
+        #   （恢复化学成分等强词法信号类别，即使稠密分未达阈值）
+        "hybrid": {
+            "enabled": True,
+            "dense_candidate_k": 80,
+            "keyword_top_k": 60,
+            "rrf_k": 60,
+            "dense_weight": 1.0,
+            "keyword_weight": 1.2,
+            "keyword_min_hits": 1,
+        },
     },
     # 抽取模型（按引擎分组，通过 llm.engine 切换当前引擎）
     "llm": {

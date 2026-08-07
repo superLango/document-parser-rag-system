@@ -41,12 +41,18 @@ class FeatureFilter:
         self,
         feature_hits: dict[str, list[dict[str, Any]]],
         threshold: float | None = None,
+        sparse_hits: dict[str, list[dict[str, Any]]] | None = None,
+        keyword_min_hits: int = 1,
     ) -> tuple[list[str], list[SkippedFeature]]:
         """过滤 feature，返回保留和剔除的列表。
 
         Args:
-            feature_hits: feature 名 → hybrid_search 返回的 hits 列表。
-            threshold: 置信度阈值，None 时使用配置项。
+            feature_hits: feature 名 → 稠密 hybrid_search 返回的 hits 列表。
+            threshold: 稠密置信度阈值，None 时使用配置项。
+            sparse_hits: feature 名 → 稀疏（BM25 词法）检索命中的 hits 列表。
+                仅当混合检索开启时传入；为 None 表示不做稀疏兜底。
+            keyword_min_hits: 稀疏兜底保留所需的词法命中数下限（默认 1 即
+                文档内词条字面命中即保留，用于恢复化学成分等强词法类别）。
 
         Returns:
             tuple: (kept_features, skipped_features)
@@ -64,34 +70,46 @@ class FeatureFilter:
 
         for feature, hits in feature_hits.items():
             if not hits:
-                skipped.append(SkippedFeature(
-                    feature=feature,
-                    reason="无召回",
-                    confidence=0.0,
-                ))
-                logger.debug(
-                    "feature 剔除：无召回",
-                    extra={"feature": feature},
-                )
-                continue
-
-            # 置信度 = max(hits.score)
-            confidence = max(h.get("score", 0.0) for h in hits)
-            if confidence < thresh:
-                skipped.append(SkippedFeature(
-                    feature=feature,
-                    reason=f"置信度过低（{confidence:.4f} < {thresh}）",
-                    confidence=confidence,
-                ))
-                logger.debug(
-                    "feature 剔除：置信度过低",
-                    extra={"feature": feature, "confidence": confidence, "threshold": thresh},
-                )
+                dense_conf = 0.0
             else:
-                kept.append((feature, confidence))
+                # 置信度 = max(hits.score)
+                dense_conf = max(h.get("score", 0.0) for h in hits)
+
+            if dense_conf < thresh:
+                # 稠密分未达阈值 → 尝试稀疏词法兜底：类别 query 词条在文档内
+                # 字面命中（强词法信号）即视为存在该类别（如化学成分元素符号）。
+                sparse_kept = False
+                if sparse_hits is not None:
+                    sparse = sparse_hits.get(feature) or []
+                    if len(sparse) >= max(keyword_min_hits, 1):
+                        sparse_conf = max(h.get("score", 0.0) for h in sparse)
+                        confidence = max(dense_conf, sparse_conf)
+                        kept.append((feature, confidence))
+                        sparse_kept = True
+                        logger.debug(
+                            "feature 保留：稀疏词法命中兜底",
+                            extra={
+                                "feature": feature,
+                                "dense_conf": round(dense_conf, 4),
+                                "sparse_hits": len(sparse),
+                                "keyword_min_hits": keyword_min_hits,
+                            },
+                        )
+                if not sparse_kept:
+                    skipped.append(SkippedFeature(
+                        feature=feature,
+                        reason=f"置信度过低（{dense_conf:.4f} < {thresh}）",
+                        confidence=dense_conf,
+                    ))
+                    logger.debug(
+                        "feature 剔除：置信度过低",
+                        extra={"feature": feature, "confidence": dense_conf, "threshold": thresh},
+                    )
+            else:
+                kept.append((feature, dense_conf))
                 logger.debug(
                     "feature 保留",
-                    extra={"feature": feature, "confidence": confidence},
+                    extra={"feature": feature, "confidence": dense_conf},
                 )
 
         # 按置信度降序排列

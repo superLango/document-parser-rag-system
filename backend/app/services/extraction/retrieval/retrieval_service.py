@@ -83,12 +83,30 @@ class RetrievalService:
         if context_max_tokens is None:
             raise BusinessException("未配置上下文最大 token 数 retrieval.context_max_tokens")
         reranker_cfg = retrieval_cfg.get("reranker") or {}
+        # 混合检索配置（稠密 + 稀疏 BM25；表格感知加分）
+        hybrid_cfg = retrieval_cfg.get("hybrid") or {}
         # 类别级 top_k 覆盖全局（类别→全局层级回退，均缺失即报错）
         top_k = target.top_k or retrieval_cfg.get("top_k")
         if top_k is None:
             raise BusinessException("未配置检索 top_k（retrieval.top_k 或类别级 top_k）")
         # 类别级重排序 top_n 覆盖全局（未填用全局 reranker.top_n）
         rerank_top_n = target.rerank_top_k or reranker_cfg.get("top_n") or retrieval_cfg.get("rerank_top_k")
+
+        # 【调试】Phase 3 进入：打印检索所用全部配置项
+        logger.info(
+            "【Phase 3·进入】类别检索所用配置与参数",
+            extra={
+                "feature": target.feature,
+                "top_k": top_k,
+                "per_dim_top_k": per_dim_top_k,
+                "weights": weights,
+                "context_max_tokens": context_max_tokens,
+                "reranker": reranker_cfg,
+                "rerank_top_n": rerank_top_n,
+                "hybrid": hybrid_cfg,
+                "query_terms": target.query_terms,
+            },
+        )
 
         # 1. 生成 query 向量（复用或按 query_terms 重新编码）
         if query_vectors is None:
@@ -100,7 +118,10 @@ class RetrievalService:
                 query_sources=target.query_sources,
             )
 
-        # 2. hybrid_search 五维检索
+        # 2. 构建稀疏 query（BM25 词法路，RRF 混合检索用）
+        sparse_query = self._build_sparse_query(target, hybrid_cfg, kb_id)
+
+        # 3. 混合检索（稠密五维 + 稀疏 BM25，RRF 融合）
         chunks = await hybrid_searcher.search(
             query_vectors=query_vectors,
             doc_id=doc_id,
@@ -109,12 +130,14 @@ class RetrievalService:
             per_dim_top_k=per_dim_top_k,
             weights=weights,
             kb_id=kb_id,
+            sparse_query=sparse_query,
+            hybrid_cfg=hybrid_cfg,
         )
 
-        # 3. 构建重排序用的 query 文本
+        # 4. 构建重排序用的 query 文本
         rerank_query = self._build_rerank_query(target)
 
-        # 4. reranker 重排序（可选，按配置）
+        # 5. reranker 重排序（可选，按配置；禁用时直接透传）
         reranked_chunks = await retrieval_reranker.rerank(
             query=rerank_query,
             chunks=chunks,
@@ -122,10 +145,10 @@ class RetrievalService:
             cfg=cfg,
         )
 
-        # 5. context_assembler 上下文拼接
+        # 6. context_assembler 上下文拼接
         context_text = context_assembler.assemble(reranked_chunks, max_tokens=context_max_tokens, cfg=cfg)
 
-        # 6. 构建动态白名单 prompt
+        # 7. 构建动态白名单 prompt
         whitelist_prompt = self._build_whitelist_prompt(target)
 
         elapsed = time.time() - start_time
@@ -136,6 +159,28 @@ class RetrievalService:
             chunks=reranked_chunks,
             whitelist_prompt=whitelist_prompt,
             rerank_scores=[c.score for c in reranked_chunks],
+        )
+
+        # 【调试】Phase 3 输出：检索/重排/上下文结果
+        logger.info(
+            "【Phase 3·输出】类别检索-重排-上下文结果",
+            extra={
+                "feature": target.feature,
+                "chunks_count": len(chunks),
+                "reranked_count": len(reranked_chunks),
+                "rerank_scores": [round(c.score, 4) for c in reranked_chunks],
+                "chunks": [
+                    {
+                        "score": round(c.score, 4),
+                        "path": str(c.path)[:120] if getattr(c, "path", None) else None,
+                        "text_preview": (c.content or "")[:300],
+                    }
+                    for c in reranked_chunks[:10]
+                ],
+                "context_text_len": len(context_text),
+                "context_text_preview": context_text[:600],
+                "whitelist_prompt": whitelist_prompt,
+            },
         )
 
         logger.info(
@@ -155,6 +200,33 @@ class RetrievalService:
     # ------------------------------------------------------------------
     # 内部方法
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def _build_sparse_query(
+        target: ExtractionTarget,
+        hybrid_cfg: dict,
+        kb_id: str | None,
+    ) -> dict[int, float] | None:
+        """构建稀疏（BM25）查询向量用于 RRF 混合检索。
+
+        仅当混合检索开启、KB 有已拟合的 BM25 模型、且类别有 query_terms 时
+        才返回非空稀疏向量；否则返回 None（退化为纯稠密路）。
+
+        Returns:
+            dict[int, float] | None: 稀疏查询向量；未启用时为 None。
+        """
+        if not hybrid_cfg.get("enabled"):
+            return None
+        if not kb_id or not target.query_terms:
+            return None
+        from app.services.vector.bm25_sparse import get_kb_bm25
+        kb_bm25 = get_kb_bm25(kb_id)
+        if kb_bm25 is None:
+            return None
+        sparse_query = kb_bm25.encode_query(" ".join(target.query_terms))
+        if not sparse_query:
+            return None
+        return sparse_query
 
     @staticmethod
     def _build_rerank_query(target: ExtractionTarget) -> str:

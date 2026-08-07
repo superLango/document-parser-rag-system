@@ -208,27 +208,27 @@ class QueryEmbedder:
         return val
 
     @staticmethod
-    def _query_limits(cfg: Any, query_sources: list[dict] | None) -> tuple[int, int]:
+    def _query_limits(cfg: Any, query_sources: list[dict] | None) -> tuple[int | None, int | None]:
         """从类别 Query 术语集配置归纳条目上限。
 
         每个参与 Query 的术语集可配置 ``query_main_limit``（主查询维 content 上限）
         与 ``query_refined_limit``（精简维 path/title/structural 上限）。
-        多个术语集时取最大值；类别未配置时回退全局 ``retrieval.query_embed``
-        对应的主/精简上限（类别参数 → 全局 分层回退，允许）。
+        多个术语集时取最大值；类别未配置对应上限时返回 None（不截断，零硬编码默认，
+        仅直接读取 Query 术语集配置）。
 
         Returns:
-            (refined_limit, main_limit)。
+            (refined_limit, main_limit)：均为 ``int | None``，Query 术语集未配置对应
+            上限时返回 None（调用方不截断，零硬编码默认）。
         """
-        mains: list[int] = []
-        refin: list[int] = []
+        refined_limits: list[int] = []
+        main_limits: list[int] = []
         for s in query_sources or []:
-            if s.get("query_main_limit"):
-                mains.append(int(s["query_main_limit"]))
             if s.get("query_refined_limit"):
-                refin.append(int(s["query_refined_limit"]))
-        q = cfg.query_embed() if cfg is not None else {}
-        main_limit = max(mains) if mains else int(QueryEmbedder._require_field(q, "query_main_limit"))
-        refined_limit = max(refin) if refin else int(QueryEmbedder._require_field(q, "query_refined_limit"))
+                refined_limits.append(int(s["query_refined_limit"]))
+            if s.get("query_main_limit"):
+                main_limits.append(int(s["query_main_limit"]))
+        refined_limit = max(refined_limits) if refined_limits else None
+        main_limit = max(main_limits) if main_limits else None
         return refined_limit, main_limit
 
     @staticmethod
@@ -276,9 +276,9 @@ class QueryEmbedder:
         Returns:
             list[str]: 五维 query 文本，顺序为 [path, title, content, type, structural]。
         """
-        # 精简条目（去括号、去重、取前 N 个）
-        refined_short = QueryEmbedder._refine_items(items, limit=params["refined_limit"], threshold=params["dedupe_threshold"])
-        refined_long = QueryEmbedder._refine_items(items, limit=params["main_limit"], threshold=params["dedupe_threshold"])
+        # 精简条目（去括号、去重；limit 为 None 时不截断）
+        refined_short = QueryEmbedder._refine_items(items, limit=params.get("refined_limit"), threshold=params["dedupe_threshold"])
+        refined_long = QueryEmbedder._refine_items(items, limit=params.get("main_limit"), threshold=params["dedupe_threshold"])
 
         # path/title/structural: feature + 精简条目前 refined_limit
         structural_query = f"{feature} {' '.join(refined_short)}".strip()
@@ -371,7 +371,7 @@ class QueryEmbedder:
 
             seen.add(refined)
             result.append(refined)
-            if len(result) >= limit:
+            if limit is not None and len(result) >= limit:
                 break
         return result
 

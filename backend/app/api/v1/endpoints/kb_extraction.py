@@ -42,8 +42,9 @@ from app.core.logging import get_logger
 from app.core.response import success
 from app.models.document import Document
 from app.models.knowledge_base import EDIT_ROLES
-from app.models.schema_model import SchemaConfig
+from app.models.schema_model import SchemaConfig, SchemaTemplate
 from app.services.infra.export_service import export_data
+from app.services.extraction.extraction_pipeline import extraction_pipeline
 
 # 复用全局抽取模块的请求模型与辅助函数，保持两端契约一致
 from app.api.v1.endpoints.extraction import (
@@ -146,7 +147,9 @@ async def list_kb_extractable_documents(
     items: list[dict] = []
     for doc in docs:
         structured = doc.structured_data or {}
-        has_extraction = bool(structured.get("latest_result"))
+        has_extraction = bool(
+            structured.get("latest_result") or structured.get("records")
+        )
         items.append({
             "id": str(doc.id),
             "filename": doc.filename,
@@ -173,59 +176,50 @@ async def list_kb_extraction_schemas(
     kb_ctx: KBContext = Depends(get_kb_context),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """查询 KB 内所有父分类 Schema（viewer+）。
+    """查询 KB 内所有抽取 Schema 模板（viewer+）。
 
-    显式按 kb_id 过滤 SchemaConfig，仅返回当前 KB 的 Schema。
-    纵深防御不依赖 RLS（superuser 绕过 RLS）。
+    新版 Schema 模板（SchemaTemplate，抽取配置中心配置）作为抽取的 Schema
+    数据源，与旧版 SchemaConfig 父/子分类解耦。每个模板含若干类别节点。
 
     Returns:
-        dict: 含启用子 Schema 的父分类列表。
+        dict: 抽取 Schema 模板列表。
     """
-    # 显式按 kb_id 过滤，纵深防御不依赖 RLS（superuser 绕过 RLS）
-    parent_stmt = (
-        select(SchemaConfig)
-        .where(
-            SchemaConfig.parent_id.is_(None),
-            SchemaConfig.is_active.is_(True),
-            SchemaConfig.kb_id == kb_ctx.kb_id,
-        )
-        .order_by(SchemaConfig.sort_order, SchemaConfig.created_at)
-    )
-    parent_result = await db.execute(parent_stmt)
-    parents = parent_result.scalars().all()
-
-    parent_ids = [p.id for p in parents]
-    children_counts: dict[str, int] = {}
-    field_counts: dict[str, int] = {}
-    if parent_ids:
-        children_stmt = (
-            select(SchemaConfig)
+    templates = (
+        await db.execute(
+            select(SchemaTemplate)
             .where(
-                SchemaConfig.parent_id.in_(parent_ids),
-                SchemaConfig.is_active.is_(True),
-                SchemaConfig.kb_id == kb_ctx.kb_id,
+                SchemaTemplate.kb_id == kb_ctx.kb_id,
+                SchemaTemplate.is_active.is_(True),
             )
+            .order_by(SchemaTemplate.created_at)
         )
-        children_result = await db.execute(children_stmt)
-        children = children_result.scalars().all()
-        for child in children:
-            pid_str = str(child.parent_id)
-            children_counts[pid_str] = children_counts.get(pid_str, 0) + 1
-            fields = child.schema_definition or []
-            if isinstance(fields, list):
-                field_counts[pid_str] = field_counts.get(pid_str, 0) + len(fields)
+    ).scalars().all()
+
+    tpl_ids = [t.id for t in templates]
+    cat_counts: dict[str, int] = {}
+    field_counts: dict[str, int] = {}
+    if tpl_ids:
+        nodes = (
+            await db.execute(
+                select(SchemaConfig).where(SchemaConfig.template_id.in_(tpl_ids))
+            )
+        ).scalars().all()
+        for n in nodes:
+            tid = str(n.template_id)
+            if n.node_type == "category":
+                cat_counts[tid] = cat_counts.get(tid, 0) + 1
+            elif n.node_type == "field":
+                field_counts[tid] = field_counts.get(tid, 0) + 1
 
     items: list[dict] = []
-    for p in parents:
-        cnt = children_counts.get(str(p.id), 0)
-        if cnt == 0:
-            continue
+    for t in templates:
+        tid = str(t.id)
         items.append({
-            "id": str(p.id),
-            "name": p.name,
-            "description": p.description or "",
-            "children_count": cnt,
-            "field_count": field_counts.get(str(p.id), 0),
+            "id": tid,
+            "name": t.name,
+            "description": t.description or "",
+            "category_count": cat_counts.get(tid, 0),
+            "field_count": field_counts.get(tid, 0),
         })
 
     return success(data=items)
@@ -240,110 +234,114 @@ async def kb_extraction_stream(
 ) -> StreamingResponse:
     """KB 内 SSE 流式抽取（editor+）。
 
-    RLS 保证 ``_load_document`` / ``_load_merged_schema`` 仅命中当前 KB 的
-    文档与 Schema。事件格式与全局 ``POST /extraction/stream`` 一致。
+    接入 v3 抽取流水线（``extraction_pipeline.run``）：依据 KB 配置的
+    Schema 模板 / Prompt 模板 / 术语集，执行 Phase 2 类别构建 → Phase 3
+    检索 → Phase 4 LLM 抽取 + 后处理的完整流程，并将结果（含类别结构）
+    保存到 ``document.structured_data.latest_result``。
 
     Args:
-        body: 流式抽取请求体。
+        body: 流式抽取请求体（document_id + schema_id[模板 id]）。
         kb_ctx: 知识库上下文（已校验 editor+ 角色 + 激活 RLS）。
 
     Returns:
         StreamingResponse: ``text/event-stream`` 类型的流式响应。
     """
+    from app.core.exceptions import BusinessException, ErrorCode
+
     document_id = body.document_id
     schema_id = body.schema_id
     logger.info(
-        "收到 KB 流式抽取请求",
+        "收到 KB 流式抽取请求（v3 流水线）",
         kb_id=str(kb_ctx.kb_id),
         document_id=document_id,
         schema_id=schema_id,
-        chunk_size=body.chunk_size,
-        overlap=body.overlap,
     )
 
     async def event_generator():
-        """SSE 事件生成器（KB 隔离）。
+        """SSE 事件生成器（KB 隔离 + v3 流水线）。
 
         在生成器内部独立获取数据库会话，并显式激活 RLS，避免外部会话在
         流式响应期间失效，同时保证 KB 隔离在流式期间持续生效。
         """
+        import asyncio
+        import uuid
         from app.core.database import AsyncSessionLocal
         from app.api.deps import activate_rls
 
         try:
             async with AsyncSessionLocal() as stream_db:
-                # 流式会话内显式激活 RLS，确保 _load_document/_load_merged_schema
-                # 的查询仍限定在当前 KB
                 await activate_rls(stream_db, kb_ctx.kb_id)
 
                 doc = await _load_document(
                     stream_db, UUID(document_id), kb_id=kb_ctx.kb_id
                 )
-                parent, schema_definition, sample_fields = await _load_merged_schema(
-                    stream_db, UUID(schema_id), kb_id=kb_ctx.kb_id
-                )
+                tpl = await stream_db.get(SchemaTemplate, UUID(schema_id))
+                if tpl is None or tpl.kb_id != kb_ctx.kb_id or not tpl.is_active:
+                    raise BusinessException(
+                        code=ErrorCode.VALIDATION_ERROR,
+                        message="Schema 模板不存在或不属于当前知识库",
+                    )
 
-                fields = schema_definition.get("fields", [])
+                category_count = (
+                    await stream_db.execute(
+                        select(func.count())
+                        .select_from(SchemaConfig)
+                        .where(
+                            SchemaConfig.template_id == tpl.id,
+                            SchemaConfig.node_type == "category",
+                            SchemaConfig.is_active.is_(True),
+                        )
+                    )
+                ).scalar_one()
+
                 yield "data: " + json.dumps({
                     "type": "schema_info",
-                    "schema_name": parent.name,
-                    "schema_description": parent.description or "",
-                    "field_count": len(fields),
-                    "has_samples": bool(sample_fields),
+                    "schema_name": tpl.name,
+                    "schema_description": tpl.description or "",
+                    "field_count": category_count,
                 }, ensure_ascii=False) + "\n\n"
 
-                import asyncio
-                total_steps = 5
-                merged_result: dict = {}
+                yield "data: " + json.dumps({
+                    "type": "progress",
+                    "progress": 10,
+                    "message": f"正在执行 v3 抽取流水线「{tpl.name}」（{category_count} 个类别）",
+                    "chunk_index": 1,
+                    "total_chunks": category_count,
+                }, ensure_ascii=False) + "\n\n"
 
-                for step in range(1, total_steps + 1):
-                    await asyncio.sleep(0.5)
-                    progress = int(step / total_steps * 90)
-                    yield "data: " + json.dumps({
-                        "type": "progress",
-                        "progress": progress,
-                        "message": f"正在分析文档内容（第 {step}/{total_steps} 步）",
-                        "chunk_index": step,
-                        "total_chunks": total_steps,
-                    }, ensure_ascii=False) + "\n\n"
+                # 调用 v3 抽取流水线（Phase 2-4 全流程）
+                task_id = str(uuid.uuid4().hex[:24])
+                result = await extraction_pipeline.run(
+                    task_id=task_id,
+                    doc_id=document_id,
+                    kb_id=str(kb_ctx.kb_id),
+                )
 
-                    chunk_data: dict = {}
-                    fields_per_step = max(1, len(fields) // total_steps)
-                    start_idx = (step - 1) * fields_per_step
-                    end_idx = min(start_idx + fields_per_step, len(fields))
-                    for field in fields[start_idx:end_idx]:
-                        if isinstance(field, dict):
-                            fname = field.get("name", "")
-                            if fname:
-                                chunk_data[fname] = ""
-                    if chunk_data:
-                        yield "data: " + json.dumps({
-                            "type": "chunk_result",
-                            "data": chunk_data,
-                            "chunk_index": step,
-                            "progress": progress,
-                            "message": f"完成第 {step} 部分字段抽取",
-                        }, ensure_ascii=False) + "\n\n"
-                        for k, v in chunk_data.items():
-                            merged_result[k] = v
+                yield "data: " + json.dumps({
+                    "type": "progress",
+                    "progress": 90,
+                    "message": "抽取完成，正在保存结果",
+                    "chunk_index": category_count,
+                    "total_chunks": category_count,
+                }, ensure_ascii=False) + "\n\n"
 
-                for field in fields:
-                    if isinstance(field, dict):
-                        fname = field.get("name", "")
-                        if fname and fname not in merged_result:
-                            merged_result[fname] = ""
+                latest = result.to_dict() if hasattr(result, "to_dict") else {}
+                categories = latest.get("categories", []) or []
+                total_records = sum(
+                    len(c.get("records") or []) for c in categories
+                )
 
                 if body.save_result:
                     await _save_extraction_result_with_history(
-                        stream_db, doc, merged_result, parent.id, parent.name
+                        stream_db, doc, latest, tpl.id, tpl.name
                     )
 
                 yield "data: " + json.dumps({
                     "type": "done",
-                    "data": merged_result,
-                    "missing": [f.get("name") for f in fields if isinstance(f, dict) and f.get("required") and not merged_result.get(f.get("name"))],
+                    "data": latest,
+                    "missing": [],
                     "progress": 100,
-                    "message": "抽取完成",
+                    "message": f"抽取完成，共 {len(categories)} 个类别、{total_records} 条记录",
                 }, ensure_ascii=False) + "\n\n"
 
         except Exception as err:

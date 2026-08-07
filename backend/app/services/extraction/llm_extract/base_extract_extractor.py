@@ -85,6 +85,22 @@ class BaseExtractExtractor(BaseExtractor):
             overlap=_batch["overlap"],
         )
 
+        # 【调试】BaseExtract 抽取进入：打印批处理配置与批次划分
+        logger.info(
+            "【BaseExtract·进入】抽取引擎入参与批处理配置",
+            extra={
+                "engine": "BaseExtract",
+                "feature": target.feature,
+                "context_text_len": len(context.text),
+                "batch_config": _batch,
+                "batch_count": len(batches),
+                "batch_lengths": [len(b) for b in batches],
+                "max_output_tokens": target.max_tokens,
+                "temperature": cfg.engine_temperature() if cfg is not None else None,
+                "endpoint": cfg.endpoint if cfg is not None else {},
+            },
+        )
+
         if len(batches) <= 1:
             # 短文本：单次 LLM 调用
             return await self._extract_single(
@@ -157,6 +173,22 @@ class BaseExtractExtractor(BaseExtractor):
         _max_tokens = target.max_tokens or (cfg.max_output_tokens() if cfg is not None else None)
         _temperature = cfg.engine_temperature() if cfg is not None else None
         _endpoint = cfg.endpoint if cfg is not None else {}
+
+        # 【调试】LLM 调用前：打印最终 LLM 参数与待发送 prompt 摘要
+        logger.info(
+            "【LLM 调用前】BaseExtract 发送 LLM 的最终参数",
+            extra={
+                "feature": target.feature,
+                "max_tokens": _max_tokens,
+                "temperature": _temperature,
+                "endpoint": _endpoint,
+                "engine_params": _engine_params,
+                "user_prompt_len": len(user_prompt),
+                "system_prompt_len": len(system_prompt),
+                "truncated_text_len": len(truncated_text),
+            },
+        )
+
         async with self._llm_semaphore:
             try:
                 result_data = await llm_client.chat_json(

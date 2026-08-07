@@ -16,6 +16,7 @@ import {
   Database,
   FileSearch,
   Zap,
+  Table,
 } from 'lucide-vue-next'
 import { kbApi, type KbExtractionSchema } from '@/api/modules/kb'
 import { Button } from '@/components/ui/button'
@@ -57,6 +58,52 @@ const schemaInfo = ref<{
 const extractionResult = ref<Record<string, unknown>>({})
 const missingFields = ref<string[]>([])
 const isRunning = computed(() => extractionStatus.value === 'running')
+
+// 后台抽取任务轮询（任务在 arq 后台执行，退出页面不中断）
+const extractionTaskId = ref<string | null>(null)
+let pollTimer: number | null = null
+
+// 结果展示：表格视图（父=类别，展开=动态表头记录） / JSON 视图
+const viewMode = ref<'table' | 'json'>('table')
+const expandedCats = ref<Set<string>>(new Set())
+
+const resultCategories = computed(() => {
+  const cats = extractionResult.value.categories
+  return Array.isArray(cats) ? (cats as Array<Record<string, any>>) : []
+})
+
+const resultTotalRecords = computed(() =>
+  resultCategories.value.reduce((sum, c) => sum + ((c.records as any[])?.length || 0), 0),
+)
+
+function toggleCat(feature: string) {
+  const s = new Set(expandedCats.value)
+  if (s.has(feature)) s.delete(feature)
+  else s.add(feature)
+  expandedCats.value = s
+}
+
+/** 动态表头：取该类目全部记录的字段并集（剔除内部 _ 字段） */
+function recordHeaders(cat: Record<string, any>): string[] {
+  const headers: string[] = []
+  const seen = new Set<string>()
+  for (const r of (cat.records || []) as any[]) {
+    for (const k of Object.keys(r)) {
+      if (k.startsWith('_')) continue
+      if (!seen.has(k)) {
+        seen.add(k)
+        headers.push(k)
+      }
+    }
+  }
+  return headers
+}
+
+function cellValue(v: unknown): string {
+  if (v === null || v === undefined || v === '') return '-'
+  if (typeof v === 'object') return JSON.stringify(v)
+  return String(v)
+}
 
 const currentStep = computed(() => {
   if (extractionStatus.value === 'idle') return 0
@@ -123,11 +170,14 @@ async function loadData() {
         schemaInfo.value = resultRes.latest_schema_name ? {
           schema_name: resultRes.latest_schema_name,
           schema_description: '',
-          field_count: Object.keys(resultRes.latest_result).length,
+          field_count: (resultRes.latest_result as any)?.categories?.length ?? 0,
         } : null
       }
     } catch {
     }
+
+    // 若该文档有后台抽取任务仍在执行，恢复轮询展示进度（退出再进入不丢失）
+    await resumeRunningTask()
   } catch {
     schemas.value = []
     toast.error('加载失败', '无法加载Schema列表')
@@ -140,59 +190,148 @@ function handleBack() {
   router.push({ name: 'KbExtraction', params: { kb_id: kbId.value } })
 }
 
+// ---------- 后台抽取任务轮询 ----------
+function stopPolling() {
+  if (pollTimer !== null) {
+    clearInterval(pollTimer)
+    pollTimer = null
+  }
+}
+
+function saveRunningTaskId() {
+  if (extractionTaskId.value) {
+    localStorage.setItem(`extract_task_${kbId.value}_${docId.value}`, extractionTaskId.value)
+  }
+}
+
+function clearRunningTaskId() {
+  localStorage.removeItem(`extract_task_${kbId.value}_${docId.value}`)
+}
+
+async function loadResult() {
+  try {
+    const resultRes = await kbApi.getExtractionResults(kbId.value, docId.value)
+    if (resultRes.latest_result) {
+      extractionResult.value = resultRes.latest_result
+      extractionStatus.value = 'completed'
+      progress.value = 100
+      progressMessage.value = '抽取完成'
+      if (resultRes.latest_schema_id) selectedSchemaId.value = resultRes.latest_schema_id
+      schemaInfo.value = resultRes.latest_schema_name ? {
+        schema_name: resultRes.latest_schema_name,
+        schema_description: '',
+        field_count: (resultRes.latest_result as any)?.categories?.length ?? 0,
+      } : null
+      toast.success('抽取完成', '结果已保存')
+    }
+  } catch {
+  }
+}
+
+function pollTask() {
+  if (!extractionTaskId.value) return
+  stopPolling()
+  pollTimer = window.setInterval(async () => {
+    const taskId = extractionTaskId.value
+    if (!taskId) return
+    try {
+      const t = await kbApi.getTask(kbId.value, taskId)
+      if (['success', 'completed'].includes(t.status)) {
+        stopPolling()
+        clearRunningTaskId()
+        progress.value = 100
+        progressMessage.value = '抽取完成，加载结果...'
+        await loadResult()
+      } else if (t.status === 'failed') {
+        stopPolling()
+        clearRunningTaskId()
+        extractionStatus.value = 'failed'
+        progressMessage.value = t.error_message ? `抽取失败：${t.error_message}` : '抽取失败'
+        toast.error('抽取失败', t.error_message || '抽取任务失败')
+      } else if (t.status === 'cancelled') {
+        stopPolling()
+        clearRunningTaskId()
+        extractionStatus.value = 'idle'
+        progressMessage.value = '抽取已取消'
+      } else {
+        progress.value = t.progress ?? progress.value
+        if (['queued', 'pending'].includes(t.status)) {
+          progressMessage.value = '等待后台抽取任务调度...'
+        } else {
+          progressMessage.value = '抽取进行中...'
+        }
+      }
+    } catch {
+      // 轮询瞬时失败忽略，下个周期重试
+    }
+  }, 2000)
+}
+
+async function resumeRunningTask() {
+  // 1) 优先恢复本会话发起的任务
+  const savedId = localStorage.getItem(`extract_task_${kbId.value}_${docId.value}`)
+  if (savedId) {
+    try {
+      const t = await kbApi.getTask(kbId.value, savedId)
+      if (['pending', 'queued', 'running', 'started', 'progress'].includes(t.status)) {
+        extractionTaskId.value = savedId
+        extractionStatus.value = 'running'
+        progress.value = t.progress ?? 0
+        progressMessage.value = '抽取进行中...'
+        pollTask()
+        return
+      }
+      clearRunningTaskId()
+    } catch {
+      clearRunningTaskId()
+    }
+  }
+  // 2) 回退：查询该文档最近的后台抽取任务
+  try {
+    const res = await kbApi.listTasks(kbId.value, { task_type: 'extract_document', page_size: 5 })
+    const running = res.items.find(
+      (t) =>
+        t.document_id === docId.value &&
+        ['pending', 'queued', 'running', 'started', 'progress'].includes(t.status),
+    )
+    if (running) {
+      extractionTaskId.value = running.id
+      saveRunningTaskId()
+      extractionStatus.value = 'running'
+      progress.value = running.progress ?? 0
+      progressMessage.value = '抽取进行中...'
+      pollTask()
+    }
+  } catch {
+  }
+}
+
 async function startExtraction() {
   if (!selectedSchemaId.value) {
     toast.warning('请选择Schema', '需要选择抽取Schema才能开始')
     return
   }
 
+  stopPolling()
   extractionStatus.value = 'running'
   progress.value = 0
-  progressMessage.value = '正在初始化抽取...'
+  progressMessage.value = '正在提交抽取任务...'
   schemaInfo.value = null
   extractionResult.value = {}
   missingFields.value = []
 
-  await kbApi.extractStream(
-    kbId.value,
-    {
-      document_id: docId.value,
-      schema_id: selectedSchemaId.value,
-    },
-    {
-      onSchemaInfo: (info) => {
-        schemaInfo.value = info
-        progressMessage.value = `使用 Schema「${info.schema_name}」抽取（${info.field_count} 个字段）`
-      },
-      onProgress: (data) => {
-        progress.value = data.progress
-        progressMessage.value = data.message
-      },
-      onChunkResult: (data) => {
-        for (const [k, v] of Object.entries(data.data)) {
-          if (v !== null && v !== '' && v !== undefined) {
-            extractionResult.value[k] = v
-          } else if (!(k in extractionResult.value)) {
-            extractionResult.value[k] = v
-          }
-        }
-        extractionResult.value = { ...extractionResult.value }
-      },
-      onDone: (data) => {
-        extractionResult.value = { ...data.data }
-        missingFields.value = data.missing || []
-        progress.value = 100
-        progressMessage.value = data.message || '抽取完成'
-        extractionStatus.value = 'completed'
-        toast.success('抽取完成', '结果已保存')
-      },
-      onError: (msg) => {
-        extractionStatus.value = 'failed'
-        progressMessage.value = `抽取失败：${msg}`
-        toast.error('抽取失败', msg)
-      },
-    },
-  )
+  try {
+    const res = await kbApi.enqueueExtraction(kbId.value, docId.value)
+    extractionTaskId.value = res.task_id
+    saveRunningTaskId()
+    progressMessage.value = '抽取任务已提交，正在后台执行...'
+    toast.success('任务已提交', '抽取在后台执行，可随时退出查看')
+    pollTask()
+  } catch (e: any) {
+    extractionStatus.value = 'failed'
+    progressMessage.value = `提交失败：${e?.message || '请稍后重试'}`
+    toast.error('提交失败', e?.message || '无法提交抽取任务')
+  }
 }
 
 async function loadHistory() {
@@ -217,7 +356,7 @@ function viewHistoryItem(item: (typeof historyItems.value)[0]) {
   schemaInfo.value = item.schema_name ? {
     schema_name: item.schema_name,
     schema_description: '(历史版本)',
-    field_count: Object.keys(item.result).length,
+    field_count: (item.result as any)?.categories?.length ?? 0,
   } : null
   historyDialogOpen.value = false
 }
@@ -237,12 +376,6 @@ function formatDate(dateStr: string | null | undefined): string {
   }
 }
 
-function formatValue(v: unknown): string {
-  if (v === null || v === undefined || v === '') return '-'
-  if (typeof v === 'object') return JSON.stringify(v, null, 2)
-  return String(v)
-}
-
 function selectSchema(schema: KbExtractionSchema) {
   if (isRunning.value) return
   selectedSchemaId.value = schema.id
@@ -253,6 +386,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  stopPolling()
 })
 </script>
 
@@ -373,10 +507,10 @@ onUnmounted(() => {
                     <p class="truncate text-sm font-medium" :title="schema.name">{{ schema.name }}</p>
                     <div class="mt-1.5 flex flex-wrap gap-1.5">
                       <Badge variant="secondary" class="text-[10px] bg-muted/80">
-                        {{ schema.field_count }} 字段
+                        {{ schema.category_count }} 类别
                       </Badge>
-                      <Badge v-if="schema.children_count" variant="secondary" class="text-[10px] bg-muted/80">
-                        {{ schema.children_count }} 子分类
+                      <Badge v-if="schema.field_count" variant="secondary" class="text-[10px] bg-muted/80">
+                        {{ schema.field_count }} 字段
                       </Badge>
                     </div>
                   </div>
@@ -504,9 +638,9 @@ onUnmounted(() => {
                   <Braces class="size-3.5" :stroke-width="1.5" />
                 </div>
                 抽取结果
-                <Badge v-if="Object.keys(extractionResult).length" variant="secondary" class="ml-auto gap-1 text-[10px] bg-primary/10 text-primary border-primary/20">
+                <Badge v-if="resultCategories.length" variant="secondary" class="ml-auto gap-1 text-[10px] bg-primary/10 text-primary border-primary/20">
                   <Database class="size-3" :stroke-width="2" />
-                  {{ Object.keys(extractionResult).length }} 字段
+                  {{ resultCategories.length }} 类别 · {{ resultTotalRecords }} 记录
                 </Badge>
               </CardTitle>
             </CardHeader>
@@ -530,25 +664,92 @@ onUnmounted(() => {
                 <p class="text-xs text-muted-foreground">AI 正在分析文档并提取结构化数据</p>
               </div>
 
-              <div v-if="Object.keys(extractionResult).length > 0" class="space-y-2">
-                <div
-                  v-for="[k, v] in Object.entries(extractionResult)"
-                  :key="k"
-                  class="group grid grid-cols-[140px_1fr] gap-3 rounded-xl border border-border/50 px-3.5 py-3 transition-all duration-300 hover:border-primary/30 hover:bg-gradient-to-r hover:from-primary/[0.02] hover:to-transparent"
+              <div v-if="resultCategories.length > 0" class="mb-3 flex items-center justify-end gap-1">
+                <button
+                  class="flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-medium transition-all"
+                  :class="viewMode === 'table' ? 'border-primary/40 bg-primary/10 text-primary' : 'border-border/60 bg-muted/40 text-muted-foreground hover:border-primary/30 hover:text-foreground'"
+                  @click="viewMode = 'table'"
                 >
-                  <div class="min-w-0">
-                    <p class="truncate text-xs font-semibold text-foreground/90 transition-colors group-hover:text-foreground" :title="k">{{ k }}</p>
-                    <Badge
-                      v-if="missingFields.includes(k)"
-                      variant="outline"
-                      class="mt-1.5 gap-1 text-[10px] text-warning border-warning/30 bg-warning/5"
-                    >
-                      <AlertCircle class="size-2.5" :stroke-width="2.5" />
-                      缺失
+                  <Table class="size-3.5" :stroke-width="1.5" />
+                  表格视图
+                </button>
+                <button
+                  class="flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-medium transition-all"
+                  :class="viewMode === 'json' ? 'border-primary/40 bg-primary/10 text-primary' : 'border-border/60 bg-muted/40 text-muted-foreground hover:border-primary/30 hover:text-foreground'"
+                  @click="viewMode = 'json'"
+                >
+                  <Braces class="size-3.5" :stroke-width="1.5" />
+                  JSON 视图
+                </button>
+              </div>
+
+              <!-- 表格视图：父=类别，展开=动态表头记录 -->
+              <div v-if="viewMode === 'table' && resultCategories.length > 0" class="space-y-2">
+                <div
+                  v-for="cat in resultCategories"
+                  :key="cat.feature"
+                  class="overflow-hidden rounded-xl border border-border/60 bg-card/50"
+                >
+                  <!-- 类别父行 -->
+                  <button
+                    class="group flex w-full items-center gap-3 px-3.5 py-3 text-left transition-all hover:bg-muted/40"
+                    @click="toggleCat(cat.feature)"
+                  >
+                    <div class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary transition-all group-hover:scale-105">
+                      <ChevronRight class="size-4 transition-transform duration-300" :class="expandedCats.has(cat.feature) ? 'rotate-90' : ''" :stroke-width="1.5" />
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <p class="truncate text-sm font-semibold text-foreground" :title="cat.feature">{{ cat.feature }}</p>
+                      <p class="text-xs text-muted-foreground">{{ (cat.records || []).length }} 条记录</p>
+                    </div>
+                    <Badge variant="secondary" class="text-[10px] bg-muted/80">
+                      {{ recordHeaders(cat).length }} 字段
                     </Badge>
+                  </button>
+
+                  <!-- 展开子：动态表头记录表格 -->
+                  <div
+                    v-if="expandedCats.has(cat.feature)"
+                    class="overflow-x-auto border-t border-border/50"
+                  >
+                    <table class="w-full min-w-max border-collapse text-xs">
+                      <thead>
+                        <tr class="bg-muted/50">
+                          <th
+                            v-for="h in recordHeaders(cat)"
+                            :key="h"
+                            class="whitespace-nowrap border-b border-border/40 px-3 py-2 text-left font-semibold text-muted-foreground"
+                          >
+                            {{ h }}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(rec, ri) in cat.records"
+                          :key="ri"
+                          class="transition-colors hover:bg-primary/[0.03]"
+                        >
+                          <td
+                            v-for="h in recordHeaders(cat)"
+                            :key="h"
+                            class="border-b border-border/30 px-3 py-2 align-top text-foreground/90"
+                          >
+                            {{ cellValue(rec[h]) }}
+                          </td>
+                        </tr>
+                        <tr v-if="!(cat.records || []).length">
+                          <td class="px-3 py-6 text-center text-muted-foreground">该类别无记录</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  <pre class="max-h-32 overflow-auto whitespace-pre-wrap break-all rounded-lg bg-muted/50 p-2.5 text-xs text-foreground/90 font-mono transition-colors group-hover:bg-muted/70">{{ formatValue(v) }}</pre>
                 </div>
+              </div>
+
+              <!-- JSON 视图：原始格式化结果 -->
+              <div v-if="viewMode === 'json' && resultCategories.length > 0">
+                <pre class="max-h-[520px] overflow-auto whitespace-pre-wrap break-all rounded-xl border border-border/50 bg-muted/40 p-4 text-xs font-mono text-foreground/90">{{ JSON.stringify(extractionResult, null, 2) }}</pre>
               </div>
 
               <div

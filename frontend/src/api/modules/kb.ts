@@ -1123,6 +1123,17 @@ export const kbApi = {
     return http.get(`/kbs/${kbId}/extraction/schemas`)
   },
 
+  /**
+   * 投递文档结构化抽取到后台 arq 队列，立即返回任务 id。
+   * 任务在服务端后台执行，退出页面不中断；前端轮询任务状态获取进度与结果。
+   */
+  enqueueExtraction(
+    kbId: string,
+    documentId: string,
+  ): Promise<{ task_id: string; status: string }> {
+    return http.post(`/kbs/${kbId}/documents/${documentId}/extract`)
+  },
+
   getExtractionResults(
     kbId: string,
     documentId: string,
@@ -1363,7 +1374,7 @@ export interface KbExtractionSchema {
   id: string
   name: string
   description: string
-  children_count: number
+  category_count: number
   field_count: number
 }
 

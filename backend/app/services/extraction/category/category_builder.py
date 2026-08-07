@@ -22,6 +22,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import time
 from typing import Any
@@ -85,6 +86,38 @@ class CategoryBuilder:
             },
         )
 
+        # 【调试】Phase 2 进入：打印全部抽取目标（类别展开结果）
+        logger.info(
+            "【Phase 2·类别目标】进入类别构建的完整目标列表",
+            extra={
+                "targets": [
+                    {
+                        "feature": t.feature,
+                        "category_id": t.category_id,
+                        "template_id": t.template_id,
+                        "name_source": t.name_source,
+                        "query_mode": t.query_mode,
+                        "fixed_query": t.fixed_query,
+                        "query_sources": t.query_sources,
+                        "query_terms": t.query_terms,
+                        "top_k": t.top_k,
+                        "rerank_top_k": t.rerank_top_k,
+                        "confidence_threshold": t.confidence_threshold,
+                        "fields": [
+                            {
+                                "name": f.get("name"),
+                                "description": f.get("description"),
+                                "required": f.get("required"),
+                                "values": f.get("values"),
+                            }
+                            for f in (t.fields or [])
+                        ],
+                    }
+                    for t in targets
+                ],
+            },
+        )
+
         # 2. 批量编码五维 query 向量（feature + query_terms）
         query_vectors_list = await query_embedder.encode_batch(
             targets,
@@ -94,17 +127,95 @@ class CategoryBuilder:
             t.feature: qv for t, qv in zip(targets, query_vectors_list)
         }
 
+        # 【调试】Phase 2：五维 query 编码输出
+        logger.info(
+            "【Phase 2·query编码】各类别五维 query 向量摘要",
+            extra={
+                "query_vectors": [
+                    {
+                        "feature": feat,
+                        "dims": list(qv.keys()),
+                        "dim_lengths": {k: len(v) for k, v in qv.items()},
+                    }
+                    for feat, qv in query_vectors_map.items()
+                ],
+            },
+        )
+
         # 3. 并发执行 hybrid_search（每个类别一次，top_k=5）
         feature_hits = await self._search_all_features(
             doc_id, targets, query_vectors_map, cfg, kb_id=kb_id
         )
 
-        # 4. 置信度过滤（全局默认阈值过滤，类别级阈值在保留阶段覆盖）
+        # 3.5 稀疏（BM25 词法）兜底检索（混合检索开启时）
+        hybrid_cfg = (cfg.retrieval.get("hybrid") or {}) if cfg is not None else {}
+        sparse_hits: dict[str, list[dict[str, Any]]] | None = None
+        if hybrid_cfg.get("enabled"):
+            sparse_hits = await self._search_sparse_fallback(
+                doc_id, targets, cfg, kb_id=kb_id
+            )
+
+        # 【调试】Phase 2：稀疏兜底检索输出
+        logger.info(
+            "【Phase 2·稀疏兜底】混合检索稀疏路命中（词法兜底用）",
+            extra={
+                "hybrid_enabled": bool(hybrid_cfg.get("enabled")),
+                "sparse_hits": {
+                    feat: [
+                        {"score": round(h.get("score", 0), 4), "content": str(h.get("content"))[:120]}
+                        for h in hits
+                    ]
+                    for feat, hits in (sparse_hits or {}).items()
+                },
+            },
+        )
+
+        # 【调试】Phase 2：五维检索输出
+        logger.info(
+            "【Phase 2·检索输出】各类别五维检索命中结果",
+            extra={
+                "feature_hits": {
+                    feat: [
+                        {
+                            "score": round(h.get("score", 0), 4),
+                            "dim": h.get("dim"),
+                            "path": str(h.get("path"))[:120],
+                            "content": str(h.get("content"))[:200],
+                        }
+                        for h in hits
+                    ]
+                    for feat, hits in feature_hits.items()
+                },
+            },
+        )
+
+        # 4. 置信度过滤（稠密阈值 + 稀疏词法兜底保留）
         global_threshold = None
         if cfg is not None:
             global_threshold = cfg.retrieval.get("default_confidence_threshold")
+        keyword_min_hits = int(hybrid_cfg.get("keyword_min_hits") or 1)
         kept_features, skipped = feature_filter.filter(
-            feature_hits, threshold=global_threshold
+            feature_hits,
+            threshold=global_threshold,
+            sparse_hits=sparse_hits,
+            keyword_min_hits=keyword_min_hits,
+        )
+
+        # 【调试】Phase 2：置信度过滤输出
+        logger.info(
+            "【Phase 2·过滤输出】置信度过滤结果",
+            extra={
+                "global_threshold": global_threshold,
+                "kept_features": kept_features,
+                "skipped_features": [
+                    {
+                        "feature": s.feature,
+                        "reason": s.reason,
+                        "confidence": s.confidence,
+                    }
+                    for s in skipped
+                ],
+            },
         )
 
         # 5. 构建 retained ExtractionTarget（保留的类别，类别级阈值覆盖全局）
@@ -126,6 +237,17 @@ class CategoryBuilder:
 
         # 6. 构建类别 schema（从配置字段）
         category_schemas = schema_builder.build_category_schemas(retained)
+
+        # 【调试】Phase 2：保留类别 schema 输出
+        logger.info(
+            "【Phase 2·schema输出】保留类别的 schema 定义",
+            extra={
+                "category_schemas": {
+                    feat: json.dumps(schema, ensure_ascii=False)
+                    for feat, schema in category_schemas.items()
+                },
+            },
+        )
 
         schemas = {"categories": category_schemas}
 
@@ -183,9 +305,22 @@ class CategoryBuilder:
                         continue
                     expanded += len(names) - 1
                     for name in names:
-                        targets.append(self._make_target(cat, name, base_fields, cfg))
+                        # 每个展开实例按自身类别名作为分组值，加载 Query 术语集
+                        # 分组词条（术语集配置了 group_field 时）；未配置则全量
+                        query_source_terms = await self._load_query_source_terms(
+                            cfg, db, kb_id, cat, group_value=name
+                        )
+                        targets.append(
+                            self._make_target(cat, name, base_fields, cfg, query_source_terms)
+                        )
                 else:
-                    targets.append(self._make_target(cat, cat.get("name", ""), base_fields, cfg))
+                    # 非 term_base 类别：Query 术语集全量加载（无分组）
+                    query_source_terms = await self._load_query_source_terms(
+                        cfg, db, kb_id, cat
+                    )
+                    targets.append(
+                        self._make_target(cat, cat.get("name", ""), base_fields, cfg, query_source_terms)
+                    )
 
         return targets, expanded
 
@@ -195,9 +330,15 @@ class CategoryBuilder:
         feature: str,
         fields: list[dict],
         cfg: Any = None,
+        query_source_terms: list[str] | None = None,
     ) -> ExtractionTarget:
         """由类别节点构造单个 ExtractionTarget。"""
         query_terms = self._build_query_terms(cat, cfg)
+        # 合并 Query 术语集值（item 名 / method 编码），再精简去重
+        for t in query_source_terms or []:
+            t = t.strip()
+            if t and t not in query_terms:
+                query_terms.append(t)
         # 类别名作为首个 query 词，保证空配置时仍有检索语义
         if feature and feature not in query_terms:
             query_terms.insert(0, feature)
@@ -217,7 +358,62 @@ class CategoryBuilder:
             return_type=cat.get("return_type", "array"),
             fields=fields or [],
             query_terms=query_terms,
+            description=cat.get("description", "") or "",
         )
+
+    async def _load_query_source_terms(
+        self,
+        cfg: Any,
+        db: Any,
+        kb_id: str | None,
+        cat: dict,
+        group_value: str | None = None,
+    ) -> list[str]:
+        """加载类别 Query 术语集（query_sources）参与检索的词条值。
+
+        仅处理 query 挂载的术语集（``query_sources`` 中 ``in_query=true`` 的项）。
+        遍历每个 Query 术语集，按 ``value_field`` 取值并合并去重，供
+        ``_make_target`` 组装进 ``query_terms`` 参与检索。
+
+        分组规则：术语集配置了 ``group_field``（分组字段）时按组取值，
+        ``group_value``（term_base 展开实例名）决定取哪一组词条，使每个
+        展开实例仅加载自身分组的 item/method 词条，提升检索区分度；
+        未配置 ``group_field`` 时取全量词条。
+
+        Args:
+            group_value: 分组值（term_base 展开类别各实例名），None 表示全量。
+
+        Returns:
+            list[str]: 合并后的术语集词条值。
+        """
+        terms: list[str] = []
+        if db is None:
+            return terms
+        for qs in cat.get("query_sources") or []:
+            if not qs.get("in_query", True):
+                continue
+            tb_id = qs.get("term_base_id")
+            value_field = qs.get("value_field")
+            if not tb_id or not value_field:
+                continue
+            # 术语集配置了分组字段时按该字段分组（如 FEATURE），再按 group_value 取值
+            group_field = (qs.get("group_field") or "").strip()
+            data = await term_base_loader.load_term_base(
+                db, str(kb_id), str(tb_id), group_field=group_field or None
+            )
+            if data is None:
+                continue
+            if group_field:
+                values = term_base_loader.get_group_values(
+                    data, value_field, group_value=group_value
+                )
+            else:
+                values = term_base_loader.get_group_values(data, value_field)
+            for v in values:
+                v = str(v).strip()
+                if v and v not in terms:
+                    terms.append(v)
+        return terms
 
     def _build_query_terms(self, cat: dict, cfg: Any = None) -> list[str]:
         """组装检索查询词组（fixed_query + query_sources 预置值）。
@@ -233,9 +429,9 @@ class CategoryBuilder:
                 if tok and tok not in terms:
                     terms.append(tok)
         # 术语集去重后保留条数上限：读取类别 Query 术语集配置的精简上限
-        #（类别未配置时回退全局 retrieval.query_embed.query_refined_limit）
+        #（类别未挂载 Query 术语集时为 None，不截断，零硬编码默认）
         refined_limit, _ = query_embedder._query_limits(cfg, cat.get("query_sources"))
-        if len(terms) > refined_limit:
+        if refined_limit is not None and len(terms) > refined_limit:
             terms = terms[:refined_limit]
         return terms
 
@@ -312,7 +508,11 @@ class CategoryBuilder:
         cfg: Any,
         kb_id: str | None = None,
     ) -> dict[str, list[dict[str, Any]]]:
-        """并发执行所有类别的 hybrid_search。"""
+        """并发执行所有类别的 hybrid_search（稠密）。
+
+        Returns:
+            dict: feature 名 → 稠密检索 hits 列表。
+        """
         if cfg is None:
             raise BusinessException("类别构建缺少抽取配置（cfg）")
         weights = cfg.retrieval.get("weights")
@@ -361,6 +561,64 @@ class CategoryBuilder:
             feature_hits[feature_name] = hits
 
         return feature_hits
+
+    async def _search_sparse_fallback(
+        self,
+        doc_id: str,
+        targets: list[ExtractionTarget],
+        cfg: Any,
+        kb_id: str | None = None,
+    ) -> dict[str, list[dict[str, Any]]]:
+        """并发执行所有类别的稀疏（BM25）检索，用于 Phase 2 词法兜底。
+
+        仅当混合检索开启且 KB 有 BM25 模型时返回稀疏命中；否则返回空 dict。
+        """
+        if kb_id is None:
+            return {}
+        hybrid = (cfg.retrieval.get("hybrid") or {}) if cfg is not None else {}
+        if not hybrid.get("enabled"):
+            return {}
+        from app.services.vector.bm25_sparse import get_kb_bm25
+        kb_bm25 = get_kb_bm25(kb_id)
+        if kb_bm25 is None:
+            return {}
+
+        phase2 = cfg.phase2_retrieval() if cfg is not None else {}
+        keyword_top_k = int(hybrid.get("keyword_top_k") or phase2.get("top_k") or 5)
+
+        async def search_one(target: ExtractionTarget) -> tuple[str, list[dict[str, Any]]]:
+            if not target.query_terms:
+                return target.feature, []
+            sq = kb_bm25.encode_query(" ".join(target.query_terms))
+            if not sq:
+                return target.feature, []
+            try:
+                hits = await five_dim_vector_store.sparse_search(
+                    sparse_query=sq,
+                    doc_id=doc_id,
+                    top_k=keyword_top_k,
+                    kb_id=kb_id,
+                )
+                return target.feature, hits
+            except Exception as err:
+                logger.warning(
+                    "稀疏检索失败",
+                    extra={"feature": target.feature, "error": str(err)},
+                )
+                return target.feature, []
+
+        results = await asyncio.gather(
+            *[search_one(t) for t in targets],
+            return_exceptions=True,
+        )
+        sparse_hits: dict[str, list[dict[str, Any]]] = {}
+        for result in results:
+            if isinstance(result, Exception):
+                continue
+            feature_name, hits = result
+            if hits:
+                sparse_hits[feature_name] = hits
+        return sparse_hits
 
 
 # 模块级单例

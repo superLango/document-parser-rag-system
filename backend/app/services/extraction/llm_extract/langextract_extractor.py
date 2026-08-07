@@ -28,6 +28,7 @@ vLLM OpenAI 兼容端点配置。
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 from typing import Any
 
@@ -98,6 +99,24 @@ class LangExtractExtractor(BaseExtractor):
 
         # 类别级 max_tokens 覆盖引擎分组（类别参数回退全局，不允许 env 兜底）
         _max_tokens = target.max_tokens or (cfg.max_output_tokens() if cfg is not None else None)
+
+        # 【调试】LangExtract 抽取进入：打印引擎配置与 few-shot/output_schema 摘要
+        logger.info(
+            "【LangExtract·进入】抽取引擎入参与配置",
+            extra={
+                "engine": "LangExtract",
+                "feature": target.feature,
+                "context_text_len": len(context.text),
+                "engine_params": cfg.engine_params() if cfg is not None else {},
+                "max_tokens": _max_tokens,
+                "temperature": cfg.engine_temperature() if cfg is not None else None,
+                "endpoint": cfg.endpoint if cfg is not None else {},
+                "few_shot_example_count": len(examples),
+                "few_shot_examples": [json.dumps(e, ensure_ascii=False, default=str) for e in examples],
+                "output_schema": json.dumps(output_schema, ensure_ascii=False) if output_schema else None,
+                "lang_extract_config": config,
+            },
+        )
 
         # 调用 LangExtract（受 _llm_semaphore 控制）
         async with self._llm_semaphore:
