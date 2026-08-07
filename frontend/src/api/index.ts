@@ -53,6 +53,7 @@ instance.interceptors.response.use(
     const { response } = error
     const path = window.location.pathname
     const isLoginPage = path.includes('/login')
+    const isPublicRoute = path.startsWith('/embed/')
 
     // 请求被取消（AbortController）：静默处理，不弹错误提示
     if (error.code === 'ERR_CANCELED' || error.name === 'CanceledError' || axios.isCancel(error)) {
@@ -69,6 +70,10 @@ instance.interceptors.response.use(
     // 401 未授权：清除登录态并跳转登录页
     if (response?.status === 401) {
       localStorage.removeItem('token')
+      // 公开路由（如 /embed/）不跳转登录页，静默处理
+      if (isPublicRoute) {
+        return Promise.reject(error)
+      }
       if (!isLoginPage) {
         // 非登录页的 401：静默跳转，不重复 toast（避免每个接口都弹）
         window.location.href = '/login'

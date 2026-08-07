@@ -29,6 +29,7 @@ from app.api.v1.endpoints.kb_terms import router as kb_terms_router
 from app.api.v1.endpoints.kb_term_bases import router as kb_term_bases_router
 from app.api.v1.endpoints.kbs import router as kbs_router
 from app.api.v1.endpoints.notifications import router as notifications_router
+from app.api.v1.endpoints.public_extraction import router as public_extraction_router
 from app.api.v1.endpoints.schema_templates import router as schema_templates_router
 from app.api.v1.endpoints.system import router as system_router
 from app.api.v1.endpoints.tasks import router as tasks_router
@@ -59,3 +60,4 @@ api_router.include_router(kb_search_router)
 api_router.include_router(kb_backup_router)
 api_router.include_router(schema_templates_router)
 api_router.include_router(tasks_router)
+api_router.include_router(public_extraction_router)

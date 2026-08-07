@@ -242,6 +242,25 @@ async def extract_document_task(
 
 
 @_record_metrics
+async def process_document_task(
+    ctx: dict,
+    document_id: str,
+    kb_id: str,
+) -> dict:
+    """一体化文档处理任务（arq 入口，公开接口触发）。
+
+    串联 OCR+向量入库 → 结构化抽取，全程更新 Document.process_status。
+
+    Args:
+        ctx: arq 任务上下文（含 job_id）。
+        document_id: 文档唯一标识。
+        kb_id: 知识库 ID 字符串。
+    """
+    from app.tasks.process_tasks import process_document_impl
+    return await process_document_impl(document_id, kb_id, ctx)
+
+
+@_record_metrics
 async def build_index_graph_task(
     ctx: dict,
     document_id: str,
@@ -269,6 +288,7 @@ class WorkerSettings:
     functions = [
         parse_document_task,
         extract_document_task,
+        process_document_task,
         build_index_graph_task,
         cleanup_expired_tasks_task,
         scheduled_cleanup_task,

@@ -194,6 +194,13 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/error/ServerError.vue'),
     meta: { public: true, title: '服务器错误' },
   },
+  // ---------- 嵌入式预览（免登录，供外部系统 iframe 集成） ----------
+  {
+    path: '/embed/extraction/:task_id',
+    name: 'EmbedExtractionPreview',
+    component: () => import('@/views/embed/ExtractionPreview.vue'),
+    meta: { public: true, title: '抽取结果预览' },
+  },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

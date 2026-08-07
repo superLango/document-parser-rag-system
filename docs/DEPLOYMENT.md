@@ -1,353 +1,473 @@
-# Hansight 部署指南
+# 部署指南
 
-本文档描述 Hansight（文档智能解析与 RAG 增强检索系统）的私有化部署流程，涵盖一键部署、服务地址、故障排查与开发环境配置。
+> 本文档描述 HansonDOC RAG 的完整部署流程，涵盖**资源部署**（基础设施服务）、**模型部署**（AI 模型 + vLLM 推理服务）与**应用部署**（后端 API + arq worker + 前端）。
 
 ---
 
-## 一、一键部署步骤
+## 目录
 
-### 1.1 环境前提
+1. [部署概述](#1-部署概述)
+2. [环境前提](#2-环境前提)
+3. [资源部署（基础设施）](#3-资源部署基础设施)
+4. [模型部署（AI 模型 + vLLM）](#4-模型部署ai-模型--vllm)
+5. [应用部署](#5-应用部署)
+6. [部署验证](#6-部署验证)
+7. [服务地址总表](#7-服务地址总表)
+8. [故障排查](#8-故障排查)
+
+---
+
+## 1. 部署概述
+
+HansonDOC RAG 采用**裸机 + GPU 直跑**部署模式：
+
+- **AI 推理服务**（vLLM）与**应用服务**（FastAPI / arq worker）直接运行于宿主机，以充分利用 GPU 显存与 CPU
+- **基础设施服务**（PostgreSQL / Redis / MinIO / Milvus / NebulaGraph）可原生安装或容器化运行
+- 全组件内网运行，数据不出网
+
+### 部署顺序
+
+```
+1. 资源部署（基础设施服务）
+       ↓
+2. 模型部署（下载模型 + 启动 vLLM）
+       ↓
+3. 应用部署（后端 + worker + 前端）
+       ↓
+4. 部署验证
+```
+
+---
+
+## 2. 环境前提
 
 | 依赖 | 最低版本 | 说明 |
 |------|----------|------|
-| Docker | 24.0+ | 容器运行时 |
-| Docker Compose | v2 | 服务编排（随 Docker 一并安装） |
 | NVIDIA Driver | 535+ | GPU 驱动，需支持 CUDA 12.x |
-| nvidia-container-toolkit | 最新 | 使容器内可访问宿主机 GPU |
+| CUDA Toolkit | 12.x | 编译 PyTorch / vLLM 所需 |
+| Python | 3.12+ | 后端 + vLLM |
+| Node.js | 20+ | 前端 |
+| pnpm | 10+ | 前端包管理 |
+| PostgreSQL | 16 | 元数据存储 |
+| Redis | 7+ | 缓存 + 任务队列 |
 
-验证 GPU 可用性：
+### GPU 验证
 
 ```bash
-# 确认宿主机 GPU 驱动正常
+# 确认 GPU 驱动与显存
 nvidia-smi
 
-# 确认 nvidia-container-toolkit 已安装并配置
-nvidia-ctk --version
-sudo nvidia-ctk runtime configure --runtime=docker
-sudo systemctl restart docker
-
-# 验证容器内可访问 GPU
-docker run --rm --gpus all nvidia/cuda:12.2.0-base-ubuntu22.04 nvidia-smi
+# 确认 CUDA 可用
+python -c "import torch; print('CUDA:', torch.cuda.is_available(), 'Devices:', torch.cuda.device_count())"
 ```
 
-### 1.2 克隆仓库并配置环境变量
-
-```bash
-git clone https://github.com/superLango/document-parser-rag-system.git
-cd document-parser-rag-system
-
-# 复制部署环境变量模板并编辑密钥
-cp deploy/.env.example deploy/.env
-vim deploy/.env
-```
-
-`deploy/.env` 中必须修改以下密钥项：
-
-| 变量 | 说明 | 示例 |
-|------|------|------|
-| `POSTGRES_PASSWORD` | PostgreSQL 数据库密码 | `MyStr0ngP@ss` |
-| `MINIO_ROOT_USER` | SeaweedFS S3 访问密钥 | `minioadmin` |
-| `MINIO_ROOT_PASSWORD` | SeaweedFS S3 访问密钥密码 | `MyMinioP@ss` |
-| `NEO4J_PASSWORD` | Neo4j 数据库密码 | `MyNeo4jP@ss` |
-| `JWT_SECRET_KEY` | JWT 签名密钥（不少于 32 字符） | `a1b2c3d4e5f6...随机字符串` |
-
-### 1.3 启动服务
-
-```bash
-# 在项目根目录执行，一键拉起全部服务
-docker compose -f deploy/docker-compose.yml up -d
-```
-
-如需同时启动开发环境覆盖配置（端口映射、调试选项等）：
-
-```bash
-docker compose -f deploy/docker-compose.yml -f deploy/docker-compose.override.yml up -d
-```
-
-### 1.4 等待健康检查并验证服务
-
-各服务定义了健康检查（healthcheck），首次启动需等待模型加载与初始化完成：
-
-```bash
-# 查看各服务状态（等待所有显示 healthy）
-docker compose -f deploy/docker-compose.yml ps
-
-# 跟踪后端启动日志（等待 "Application startup complete"）
-docker compose -f deploy/docker-compose.yml logs -f backend
-```
-
-验证服务可用性：
-
-```bash
-# 后端健康检查
-curl http://localhost:8000/health
-# 预期返回: {"status": "ok"}
-
-# 前端页面
-curl -I http://localhost
-# 预期返回: HTTP/1.1 200 OK
-
-# API 文档（Swagger UI）
-curl -I http://localhost:8000/docs
-```
-
-首次启动时后端的 `start_period` 为 60 秒（模型加载），请耐心等待。
+> 建议显存 ≥ 120G（运行 Qwen3.6-35B-A3B-FP8 + GLM-OCR + Popo + 嵌入/重排模型）。最低 40G 可降级运行较小模型。
 
 ---
 
-## 二、服务地址
+## 3. 资源部署（基础设施）
 
-部署完成后，各服务监听地址如下：
+### 3.1 PostgreSQL 16
 
-| 服务 | 端口 | URL | 默认凭证 |
-|------|------|-----|----------|
-| Frontend（前端） | 80 | http://localhost | - |
-| Backend API（后端） | 8000 | http://localhost:8000 | - |
-| PostgreSQL | 5432 | localhost:5432 | postgres / changeme |
-| Valkey（Redis 兼容） | 6379 | localhost:6379 | - |
-| SeaweedFS（S3 兼容） | 9000 | http://localhost:9000 | - |
-| Neo4j | 7474 | http://localhost:7474 | neo4j / changeme |
-| Milvus | 19530 | localhost:19530 | - |
-| Prometheus | 9090 | http://localhost:9090 | - |
-| Grafana | 3001 | http://localhost:3001 | admin / admin |
+原生安装（推荐）或容器化：
 
-> **安全提示**：上表中的默认凭证仅适用于内网测试环境。生产部署时必须在 `deploy/.env` 中替换所有密码。
+```bash
+# Ubuntu 原生安装
+sudo apt install postgresql-16
+
+# 创建数据库与用户
+sudo -u postgres psql <<'SQL'
+CREATE USER docparser WITH PASSWORD '你的强密码';
+CREATE DATABASE docparser OWNER docparser;
+SQL
+```
+
+配置 `pg_hba.conf` 允许本地连接，监听 `5432`。
+
+### 3.2 Redis
+
+```bash
+# 原生安装
+sudo apt install redis-server
+
+# 验证（db0 缓存，db1 arq 任务队列）
+redis-cli ping   # PONG
+```
+
+监听 `6379`，无需密码（内网部署）或按需配置 ACL。
+
+### 3.3 MinIO（S3 兼容对象存储）
+
+```bash
+# 容器化运行
+docker run -d --name minio \
+  -p 9000:9000 -p 9001:9001 \
+  -v /home/hanson/doc_parse_project/volumes/minio:/data \
+  -e MINIO_ROOT_USER=minioadmin \
+  -e MINIO_ROOT_PASSWORD=你的强密码 \
+  minio/minio server /data --console-address ":9001"
+```
+
+- API 端口 `9000`，控制台 `9001`
+- KB 专属 bucket（`kb-{kb_id}`）由应用首次创建 KB 时自动创建
+
+### 3.4 Milvus 2.4（+ etcd）
+
+Milvus standalone 依赖 etcd 与对象存储：
+
+```bash
+# etcd
+docker run -d --name etcd \
+  -p 2379:2379 \
+  -v /home/hanson/doc_parse_project/volumes/etcd:/etcd-data \
+  quay.io/coreos/etcd:v3.5.5 \
+  etcd -name etcd -data-dir /etcd-data
+
+# Milvus standalone
+docker run -d --name milvus \
+  -p 19530:19530 -p 9091:9091 \
+  -v /home/hanson/doc_parse_project/volumes/milvus:/var/lib/milvus \
+  milvusdb/milvus:v2.4.0 milvus run standalone
+```
+
+- API 端口 `19530`，健康检查 `9091`
+- 首次启动需 1-2 分钟初始化
+
+> Milvus 配置可参考 `deploy/milvus_config/` 目录。
+
+### 3.5 NebulaGraph
+
+NebulaGraph 由 graphd / storaged / metad 三个组件组成：
+
+```bash
+# 使用官方 docker-compose 或手动启动三组件
+# graphd 端口 9669（客户端连接），metad 9559，storaged 9779
+docker run -d --name nebula-graphd -p 9669:9669 ... vesoft/nebula-graphd
+docker run -d --name nebula-metad   -p 9559:9559 ... vesoft/nebula-metad
+docker run -d --name nebula-storaged -p 9779:9779 ... vesoft/nebula-storaged
+```
+
+- 客户端连接 graphd 端口 `9669`
+- **DDL 异步生效**：CREATE SPACE/TAG/EDGE/INDEX 后需轮询等待，应用层已实现重试机制
+- 默认凭证：`root` / `nebula`（生产环境必须修改）
+
+### 3.6 基础设施验证
+
+```bash
+psql -h localhost -U docparser -d docparser -c "SELECT 1"   # PostgreSQL
+redis-cli ping                                                # Redis
+curl http://localhost:9000/minio/health/live                  # MinIO
+curl http://localhost:9091/healthz                            # Milvus
+# NebulaGraph: 通过应用 /system/check-nebula-graph 接口验证
+```
 
 ---
 
-## 三、故障排查
+## 4. 模型部署（AI 模型 + vLLM）
 
-### 3.1 GPU 未被检测到
-
-**现象**：后端或 arq-worker 容器启动失败，日志中出现 `CUDA not available` 或 `No GPU found`。
-
-**排查步骤**：
+### 4.1 下载 AI 模型
 
 ```bash
-# 1. 确认宿主机 GPU 驱动正常
-nvidia-smi
-
-# 2. 确认 nvidia-container-toolkit 已安装
-nvidia-ctk --version
-# 若未安装：
-# sudo apt-get install -y nvidia-container-toolkit
-# sudo nvidia-ctk runtime configure --runtime=docker
-# sudo systemctl restart docker
-
-# 3. 确认容器内可访问 GPU
-docker run --rm --gpus all nvidia/cuda:12.2.0-base-ubuntu22.04 nvidia-smi
-
-# 4. 检查 docker-compose.yml 中 deploy.resources.reservations.devices 配置
-# 确认 device_ids 与 capabilities 设置正确
+cd /home/hanson/doc_parse_project
+python scripts/download_model.py
 ```
 
-### 3.2 后端无法启动
+使用 HF 镜像（hf-mirror.com）下载，ModelScope 作为回退。下载至 `models/` 目录：
 
-**现象**：`hansight-backend` 容器反复重启或健康检查失败。
+| 模型目录 | 用途 | 大小 |
+|----------|------|------|
+| `models/bge-m3/` | 五维文本嵌入 | ~4.3G |
+| `models/bge-reranker-v2-m3/` | CrossEncoder 精排 | ~2.2G |
+| `models/gliclass-multilang-mini/` | 零样本类别分类 | ~557M |
+| `models/glm-ocr/` | 主 OCR 引擎 | ~2.5G |
+| `models/Qwen/Qwen3.6-35B-A3B-FP8/` | 主 LLM | ~66G |
+| `models/MinerU-Popo/` | 版面分析后处理 | ~17G |
+| `models/PaddlePaddle/` | 备选 OCR | ~2.0G |
 
-**排查步骤**：
+### 4.2 创建 vLLM 虚拟环境
+
+vLLM 推荐独立虚拟环境（避免与后端依赖冲突）：
 
 ```bash
-# 1. 查看后端日志
-docker compose -f deploy/docker-compose.yml logs backend
-
-# 2. 检查 .env 文件是否配置正确
-cat deploy/.env
-# 确认 POSTGRES_PASSWORD、JWT_SECRET_KEY 等已填写
-
-# 3. 确认 PostgreSQL 已就绪
-docker compose -f deploy/docker-compose.yml ps postgres
-# 状态应为 healthy
-
-# 4. 手动测试数据库连接
-docker exec hansight-postgres pg_isready -U postgres -d docparser
-
-# 5. 检查 DATABASE_URL 环境变量
-docker exec hansight-backend env | grep DATABASE_URL
+cd /home/hanson/doc_parse_project
+python -m venv venv_model
+source venv_model/bin/activate
+pip install vllm
 ```
 
-常见原因：`.env` 中密码未修改、PostgreSQL 尚未完成初始化、数据库连接字符串格式错误。
+### 4.3 启动 vLLM 推理服务
 
-### 3.3 内存溢出（OOM）
+系统运行**三个 vLLM 服务**，需在 GPU 显存预算内分配 `gpu-memory-utilization`：
 
-**现象**：arq-worker 容器被系统 OOM Killer 杀死，`dmesg` 中出现 `Out of memory` 记录。
-
-**解决方案**：
+#### 4.3.1 GLM-OCR 服务（端口 9977）
 
 ```bash
-# 1. 减少并发任务数
-# 编辑 backend/app/tasks/arq_worker.py，降低 max_jobs：
-#   class WorkerSettings:
-#       max_jobs = 2  # 默认值，按 GPU 显存调整
-
-# 2. 限制容器内存使用（docker-compose.yml 中添加）
-#   arq-worker:
-#     deploy:
-#       resources:
-#         limits:
-#           memory: 32G
-
-# 3. 监控容器内存使用
-docker stats hansight-arq-worker
+cd /home/hanson/doc_parse_project
+source venv_model/bin/activate
+vllm serve ./models/glm-ocr \
+  --host 0.0.0.0 --port 9977 \
+  --served-model-name GLM-OCR \
+  --trust-remote-code \
+  --max-num-seqs 2 \
+  --max-num-batched-tokens 8192 \
+  --max-model-len 32768 \
+  --enable-prefix-caching \
+  --enable-chunked-prefill \
+  --gpu-memory-utilization 0.16
 ```
 
-### 3.4 Neo4j 内存不足
-
-**现象**：Neo4j 容器启动失败或频繁重启。
-
-**解决方案**：
-
-调整 `deploy/docker-compose.yml` 中 Neo4j 的堆内存配置：
-
-```yaml
-neo4j:
-  environment:
-    # 根据宿主机可用内存调整
-    NEO4J_server_memory_heap_initial__size: 4G   # 初始堆（默认 8G）
-    NEO4J_server_memory_heap_max__size: 8G       # 最大堆（默认 16G）
-    NEO4J_server_memory_pagecache_size: 4G       # 页面缓存（默认 8G）
-```
-
-### 3.5 Milvus 连接失败
-
-**现象**：后端日志中出现 `Milvus connection refused` 或 `Milvus not ready`。
-
-**排查步骤**：
+#### 4.3.2 Qwen3.6-35B 主 LLM 服务（端口 9988）
 
 ```bash
-# 1. 确认 etcd 健康检查通过（Milvus 依赖 etcd）
-docker compose -f deploy/docker-compose.yml ps etcd
-# 状态应为 healthy
-
-# 2. 确认 SeaweedFS 健康检查通过（Milvus 依赖对象存储）
-docker compose -f deploy/docker-compose.yml ps seaweedfs
-
-# 3. Milvus 首次启动较慢，等待健康检查通过
-docker compose -f deploy/docker-compose.yml ps milvus
-# 状态应为 healthy
-
-# 4. 查看 Milvus 日志
-docker compose -f deploy/docker-compose.yml logs milvus
+vllm serve ./models/Qwen/Qwen3.6-35B-A3B-FP8 \
+  --host 0.0.0.0 --port 9988 \
+  --served-model-name Qwem3.6-35B-A3B-FP8 \
+  --kv-cache-dtype fp8 \
+  --trust-remote-code \
+  --max-model-len 55000 \
+  --max-num-seqs 8 \
+  --max-num-batched-tokens 27500 \
+  --gpu-memory-utilization 0.40 \
+  --enable-prefix-caching
 ```
 
-Milvus 依赖 etcd 与 SeaweedFS，两者均健康后 Milvus 才能正常启动。首次启动可能需要 1-2 分钟。
+#### 4.3.3 MinerU-Popo 服务（端口 9999）
+
+```bash
+vllm serve ./models/MinerU-Popo \
+  --host 0.0.0.0 --port 9999 \
+  --served-model-name Popo \
+  --max-model-len 32768 \
+  --gpu-memory-utilization 0.10 \
+  --max-num-seqs 2
+```
+
+> **显存分配**：0.16 + 0.40 + 0.10 = 0.66，剩余约 34% 供 arq worker 内加载的 bge-m3 / bge-reranker / gliclass 模型使用。
+
+### 4.4 模型服务验证
+
+```bash
+# GLM-OCR
+curl http://localhost:9977/v1/models
+
+# Qwen LLM
+curl http://localhost:9988/v1/models
+
+# Popo
+curl http://localhost:9999/v1/models
+```
+
+> **关键约束**：`--served-model-name` 必须与 `backend/.env` 中的 `LLM_API_MODEL` / `GLMOCR_MODEL` / `EXTRACTION_MODEL_ID` 完全一致，否则调用 404。
 
 ---
 
-## 四、开发环境
+## 5. 应用部署
 
-### 4.1 后端开发
+### 5.1 配置环境变量
 
 ```bash
-cd backend
+cp backend/.env.example backend/.env
+vim backend/.env
+```
+
+必须配置的关键项：
+
+| 变量 | 说明 |
+|------|------|
+| `POSTGRES_PASSWORD` / `DATABASE_URL` | PostgreSQL 密码与连接串 |
+| `REDIS_URL` | Redis 连接（db0 缓存） |
+| `MINIO_ENDPOINT` / `MINIO_ACCESS_KEY` / `MINIO_SECRET_KEY` | MinIO 连接 |
+| `NEBULA_GRAPHD_HOST` / `NEBULA_USER` / `NEBULA_PASSWORD` | NebulaGraph 连接 |
+| `MILVUS_HOST` / `MILVUS_PORT` | Milvus 连接 |
+| `SECRET_KEY` | JWT 签名密钥（≥32 字符） |
+| `LLM_API_BASE` / `LLM_API_MODEL` | 主 LLM vLLM 端点（9988） |
+| `GLMOCR_SERVER_URL` / `GLMOCR_MODEL` | GLM-OCR vLLM 端点（9977） |
+| `EXTRACTION_API_BASE` / `EXTRACTION_MODEL_ID` | 抽取 LLM 端点（通常同 9988） |
+| `EMBEDDING_MODEL_PATH` | bge-m3 模型路径 |
+| `PUBLIC_KB_ID` | 公开一体化接口默认知识库 ID（可选） |
+
+> 完整配置项说明见 [CONFIGURATION.md](CONFIGURATION.md)。
+
+### 5.2 后端 API 服务
+
+```bash
+cd /home/hanson/doc_parse_project/backend
+python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+
+# 应用数据库迁移
+alembic upgrade head
+
+# 启动 API（监听 8000）
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 - API 文档：http://localhost:8000/docs
-- 热重载：代码修改后自动生效（`--reload` 参数）
-- 数据库：PostgreSQL at `localhost:5432`（需先启动基础设施服务）
+- 健康检查：http://localhost:8000/health
 
-### 4.2 前端开发
+### 5.3 arq 异步 worker
+
+worker 负责执行 OCR、抽取、图谱构建等长耗时任务，需配置 CUDA 环境：
 
 ```bash
-cd frontend
+cd /home/hanson/doc_parse_project/backend
+./start_worker.sh
+```
+
+`start_worker.sh` 已内置：
+
+- 激活 `venv` 虚拟环境
+- 设置 `CUDA_VISIBLE_DEVICES=0` / `CUDA_HOME` / `LD_LIBRARY_PATH`
+- 验证 torch CUDA 可用
+- 启动 `arq app.tasks.arq_worker.WorkerSettings`
+
+> worker 进程内加载 bge-m3 / bge-reranker / gliclass 模型，占用剩余 GPU 显存。
+
+### 5.4 前端服务
+
+```bash
+cd /home/hanson/doc_parse_project/frontend
 pnpm install
-pnpm dev
+pnpm dev          # 开发模式，端口 5174
+# 或 pnpm build && pnpm preview  # 生产构建
 ```
 
-- 开发服务器地址：http://localhost:5174
-- API 代理：开发环境通过 Vite 代理转发至后端 `localhost:8000`
+- 开发地址：http://localhost:5174
+- API 代理：Vite 开发代理转发至后端 `localhost:8000`
 
-### 4.3 数据库
+### 5.5 进程守护（生产建议）
 
-开发环境使用与生产相同的 PostgreSQL 实例（通过 Docker 部署）：
+生产环境建议用 systemd / supervisor 守护以下进程：
 
-```
-Host: localhost
-Port: 5432
-Database: docparser
-Username: postgres
-Password: deploy/.env 中 POSTGRES_PASSWORD 的值
-```
-
-数据库迁移：
-
-```bash
-cd backend
-alembic upgrade head    # 应用所有迁移
-alembic revision --autogenerate -m "描述"  # 生成新迁移
-```
-
-### 4.4 默认管理员
-
-系统预置管理员账号用于首次登录：
-
-| 字段 | 值 |
-|------|-----|
-| 用户名 | admin |
-| 密码 | admin123 |
-
-> **安全提示**：首次登录后请立即修改默认密码。
+- `uvicorn app.main:app`（API）
+- `arq app.tasks.arq_worker.WorkerSettings`（worker）
+- 3 个 `vllm serve`（推理服务）
+- `pnpm preview` 或 nginx 托管前端构建产物（前端）
 
 ---
 
-## 五、目录结构说明
+## 6. 部署验证
 
-```
-doc_parse_project/
-├── backend/                         # 后端服务（FastAPI）
-│   ├── app/
-│   │   ├── main.py                 # 应用入口，注册路由与中间件
-│   │   ├── core/                    # 核心模块：配置、数据库、安全、日志、异常、响应
-│   │   ├── api/v1/endpoints/       # API 端点：auth、documents、dashboard、schemas、terms 等
-│   │   ├── models/                  # SQLAlchemy ORM 模型
-│   │   ├── schemas/                 # Pydantic 请求/响应模型
-│   │   ├── services/                # 业务逻辑层：OCR、抽取、分块、嵌入、检索、图谱
-│   │   └── tasks/                   # arq 异步任务：文档解析、向量入库、图谱构建
-│   ├── alembic/                     # 数据库迁移脚本
-│   ├── tests/                       # pytest 测试套件
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── frontend/                        # 前端服务（Vue 3 + TypeScript）
-│   ├── src/
-│   │   ├── api/                     # API 接口封装
-│   │   ├── views/                   # 页面组件
-│   │   ├── stores/                  # Pinia 状态管理
-│   │   ├── router/                  # Vue Router 路由
-│   │   └── composables/             # 组合式函数
-│   ├── package.json
-│   └── Dockerfile
-│
-├── deploy/                          # 部署配置
-│   ├── docker-compose.yml           # 生产环境服务编排
-│   ├── docker-compose.override.yml  # 开发环境覆盖配置
-│   ├── .env.example                 # 环境变量模板
-│   ├── nginx.conf                   # Nginx 反向代理配置
-│   ├── prometheus.yml               # Prometheus 监控配置
-│   ├── valkey.conf                  # Valkey（Redis 兼容）配置
-│   ├── seaweedfs_s3.json            # SeaweedFS S3 配置
-│   └── grafana/                     # Grafana 仪表盘与数据源配置
-│
-├── docs/                            # 项目文档
-│   ├── API_CONTRACT.md              # API 契约规范
-│   └── DEPLOYMENT.md                # 本文档
-│
-├── scripts/                         # 运维脚本
-│   └── init_db.sql                  # 数据库初始化 SQL
-│
-└── models/                          # AI 模型文件（OCR / 嵌入 / 重排）
-    ├── bge-m3/                      # BGE 嵌入模型
-    ├── bge-reranker-v2-m3/          # BGE 重排模型
-    ├── MinerU-Popo/                  # 版面分析模型
-    └── PaddlePaddle/PaddleOCR-VL/   # OCR 识别模型
+### 6.1 服务健康检查
+
+```bash
+curl http://localhost:8000/health                          # 后端
+curl http://localhost:8000/api/v1/system/health             # 系统健康
+curl http://localhost:8000/api/v1/system/health/models      # 模型健康
+curl http://localhost:8000/api/v1/system/health/storage     # 存储健康
 ```
 
-### 核心目录说明
+### 6.2 端到端验证
 
-- **backend/app/api/v1/endpoints/**：REST API 端点，按资源拆分（auth、documents、dashboard、schemas、terms、knowledge_graph、qa 等），所有接口统一挂载在 `/api/v1` 前缀下。
-- **backend/app/services/**：业务逻辑层，封装 OCR 识别、版面分析、结构化抽取、文本分块、向量嵌入、知识图谱构建、RAG 检索等核心能力。
-- **backend/app/tasks/**：arq 异步任务定义，处理文档解析、向量入库、图谱构建等长耗时操作，通过 Valkey 消息队列调度。
-- **deploy/**：Docker Compose 编排文件与各中间件配置，支持一键拉起全部服务。
+1. 访问前端 http://localhost:5174，使用默认管理员登录（admin / admin123）
+2. 创建知识库 → 应用领域模板 → 配置 Schema/Prompt/术语集/LLM 端点
+3. 上传 PDF 文档 → 触发解析 → 查看抽取结果
+4. 测试 RAG 问答
+
+### 6.3 公开一体化接口验证
+
+```bash
+# 上传
+curl -X POST http://localhost:8000/api/v1/public/extraction/upload \
+  -F "file=@test.pdf" -F "kb_id=<已配置的KB_ID>"
+
+# 轮询状态（用返回的 task_id）
+curl http://localhost:8000/api/v1/public/extraction/<task_id>/status
+
+# 获取结果
+curl http://localhost:8000/api/v1/public/extraction/<task_id>/result
+
+# 预览源文件
+curl http://localhost:8000/api/v1/public/extraction/<task_id>/preview
+```
+
+---
+
+## 7. 服务地址总表
+
+| 服务 | 端口 | 地址 | 凭证 |
+|------|------|------|------|
+| 前端（开发） | 5174 | http://localhost:5174 | - |
+| 后端 API | 8000 | http://localhost:8000 | - |
+| API 文档 | 8000 | http://localhost:8000/docs | - |
+| PostgreSQL | 5432 | localhost:5432 | docparser / .env |
+| Redis | 6379 | localhost:6379 | - |
+| MinIO API | 9000 | http://localhost:9000 | .env |
+| MinIO 控制台 | 9001 | http://localhost:9001 | .env |
+| Milvus | 19530 | localhost:19530 | - |
+| NebulaGraph graphd | 9669 | localhost:9669 | root / .env |
+| vLLM GLM-OCR | 9977 | http://localhost:9977/v1 | - |
+| vLLM Qwen LLM | 9988 | http://localhost:9988/v1 | - |
+| vLLM Popo | 9999 | http://localhost:9999/v1 | - |
+| Prometheus 指标 | 8000 | http://localhost:8000/metrics | - |
+
+> 默认凭证仅适用于内网测试环境，生产部署必须在 `.env` 中替换所有密码。
+
+---
+
+## 8. 故障排查
+
+### 8.1 GPU 未被检测到
+
+```bash
+nvidia-smi                                              # 宿主机驱动
+python -c "import torch; print(torch.cuda.is_available())"  # torch CUDA
+# worker 报 CUDA 错误：检查 start_worker.sh 的 LD_LIBRARY_PATH 是否设置
+```
+
+### 8.2 vLLM 服务 404 / 模型未找到
+
+- 确认 `--served-model-name` 与 `.env` 中 `LLM_API_MODEL` / `GLMOCR_MODEL` 完全一致（大小写敏感）
+- 确认 `curl http://localhost:9988/v1/models` 返回预期模型名
+
+### 8.3 后端无法启动
+
+```bash
+# 查看日志，常见原因：
+# - .env 密码未修改 / DATABASE_URL 格式错误
+# - PostgreSQL 未就绪
+# - 数据库迁移未应用（alembic upgrade head）
+docker exec -it <pg容器> pg_isready -U docparser -d docparser
+```
+
+### 8.4 arq worker 任务不执行
+
+```bash
+# 确认 worker 进程存活
+ps aux | grep arq
+
+# 确认 Redis db1 队列可用（arq 使用 database=1）
+redis-cli -n 1 keys "arq:*"
+
+# worker 启动失败常见原因：
+# - CUDA 环境变量缺失（LD_LIBRARY_PATH）
+# - 模型路径错误（EMBEDDING_MODEL_PATH）
+# - Redis 连接失败（提交任务时报"任务队列服务不可用"）
+```
+
+### 8.5 Milvus 连接失败
+
+```bash
+# Milvus 依赖 etcd 与对象存储，需两者均健康
+docker ps | grep -E "etcd|milvus"
+docker logs milvus --tail 50
+# 首次启动较慢，等待 1-2 分钟
+```
+
+### 8.6 NebulaGraph "Schema not exist"
+
+- DDL 异步生效，CREATE SPACE/TAG/EDGE/INDEX 后不立即可用
+- 应用层已实现重试（3 次 × 2 秒间隔），偶发可重试任务
+- 确认 storaged 已 `ADD HOSTS` 并状态为 ONLINE
+
+### 8.7 内存溢出（OOM）
+
+- arq worker 加载多模型，内存占用较高
+- 降低 `EXTRACTION_MAX_CONCURRENCY` / `EXTRACTION_V3_LLM_MAX_CONCURRENCY`
+- 用 systemd 限制 worker 内存并配置 `Restart=on-failure`
+
+### 8.8 公开接口"任务队列服务不可用"
+
+- arq worker 未启动或 Redis db1 不可达
+- 上传接口 `_get_arq_pool` 连接失败即抛此错误（不静默失败）

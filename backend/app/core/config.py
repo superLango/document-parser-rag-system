@@ -422,8 +422,8 @@ class Settings(BaseSettings):
         description="GLM-OCR vLLM 服务 OpenAI 兼容端点",
     )
     GLMOCR_MODEL: str = Field(
-        default="glm-ocr",
-        description="GLM-OCR 模型名（vLLM --served-model-name）",
+        default="GLM-OCR",
+        description="GLM-OCR 模型名（vLLM --served-model-name，大小写敏感）",
     )
     GLMOCR_API_KEY: str = Field(
         default="",
@@ -652,6 +652,14 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = Field(default="*", description="允许的 CORS 来源（逗号分隔，生产环境应严格限定）")
     ADMIN_IP_WHITELIST: str = Field(default="", description="管理端 IP 白名单（逗号分隔，空=不限制）")
     AUDIT_LOG_RETENTION_DAYS: int = Field(default=90, description="审计日志保留天数")
+
+    # ---------------------------------------------------------------
+    # 一体化公开接口配置
+    # ---------------------------------------------------------------
+    PUBLIC_KB_ID: str | None = Field(
+        default=None,
+        description="公开一体化接口默认知识库ID（需预先配置好抽取配置：Schema/Prompt/术语集/LLM端点）",
+    )
 
     model_config = SettingsConfigDict(
         env_file=".env",
