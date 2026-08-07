@@ -36,7 +36,7 @@ from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
 from app.core.response import paginated, success
 from app.models.backup import KbBackup
-from app.services.backup_service import (
+from app.services.kb.backup_service import (
     create_backup,
     delete_backup,
     download_backup,

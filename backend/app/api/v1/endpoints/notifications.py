@@ -36,8 +36,8 @@ from app.core.exceptions import PermissionException, ErrorCode
 from app.core.response import paginated, success
 from app.models.notification import Notification
 from app.models.user import User
-from app.services import notification_service
-from app.services.notification_service import sse_manager
+from app.services.infra import notification_service
+from app.services.infra.notification_service import sse_manager
 
 router = APIRouter(prefix="/notifications", tags=["通知中心"])
 

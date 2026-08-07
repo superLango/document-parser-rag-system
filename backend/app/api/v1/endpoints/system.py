@@ -73,7 +73,7 @@ async def _check_milvus() -> dict:
 async def _check_minio() -> dict:
     """检查 MinIO 连接。"""
     try:
-        from app.services.storage_service import storage_service
+        from app.services.infra.storage_service import storage_service
 
         client = storage_service._get_client()
         await asyncio.to_thread(client.list_buckets)

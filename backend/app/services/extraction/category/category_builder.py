@@ -33,8 +33,8 @@ from app.services.extraction.extraction_models import (
     SkippedFeature,
 )
 from app.services.extraction.category.feature_filter import feature_filter
-from app.services.extraction.query_embedder import query_embedder
-from app.services.extraction.schema_builder import schema_builder
+from app.services.extraction.retrieval.query_embedder import query_embedder
+from app.services.extraction.category.schema_builder import schema_builder
 from app.services.extraction.rule_engine.term_base_loader import term_base_loader
 from app.services.vector.five_dim_vector_store import five_dim_vector_store
 

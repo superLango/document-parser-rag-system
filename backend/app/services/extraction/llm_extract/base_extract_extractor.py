@@ -30,7 +30,7 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.core.exceptions import BusinessException
-from app.services.extraction.llm_client import llm_client
+from app.services.extraction.llm_extract.llm_client import llm_client
 from app.services.extraction.extraction_models import (
     ExtractionTarget,
     ExtractedRecord,

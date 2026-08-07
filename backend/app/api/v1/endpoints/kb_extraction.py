@@ -43,7 +43,7 @@ from app.core.response import success
 from app.models.document import Document
 from app.models.knowledge_base import EDIT_ROLES
 from app.models.schema_model import SchemaConfig
-from app.services.export_service import export_data
+from app.services.infra.export_service import export_data
 
 # 复用全局抽取模块的请求模型与辅助函数，保持两端契约一致
 from app.api.v1.endpoints.extraction import (

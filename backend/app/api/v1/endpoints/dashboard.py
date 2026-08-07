@@ -16,7 +16,7 @@ from app.api.deps import get_kb_context, require_superuser
 from app.core.database import get_db
 from app.core.response import success
 from app.models.user import User
-from app.services.dashboard_service import (
+from app.services.infra.dashboard_service import (
     get_distribution,
     get_global_stats,
     get_kb_stats,

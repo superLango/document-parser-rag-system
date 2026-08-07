@@ -241,7 +241,7 @@ async def _alert_superadmins(
     """
     try:
         from app.models.user import User
-        from app.services.notification_service import create_notification
+        from app.services.infra.notification_service import create_notification
 
         async with db_session_factory() as db:
             result = await db.execute(

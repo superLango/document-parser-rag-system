@@ -709,7 +709,7 @@ async def _check_minio(kb_id: uuid.UUID | None = None) -> tuple[str, str, float,
     """检查 MinIO/S3 存储连通性与 bucket 存在性。"""
     start = time.time()
     try:
-        from app.services.storage_service import storage_service
+        from app.services.infra.storage_service import storage_service
         client = storage_service._get_client()
         # 检查 KB bucket 是否存在
         if kb_id:

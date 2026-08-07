@@ -31,7 +31,7 @@ from app.services.extraction.extraction_models import (
 from app.services.extraction.retrieval.context_assembler import context_assembler
 from app.services.extraction.retrieval.hybrid_searcher import hybrid_searcher
 from app.services.extraction.retrieval.reranker import retrieval_reranker
-from app.services.extraction.query_embedder import query_embedder
+from app.services.extraction.retrieval.query_embedder import query_embedder
 
 logger = get_logger(__name__)
 

@@ -235,7 +235,7 @@ class KBLifecycleManager:
     async def _verify_minio(self, kb_id: uuid.UUID) -> dict:
         """校验 MinIO KB 专属 bucket 是否存在。"""
         try:
-            from app.services.storage_service import storage_service
+            from app.services.infra.storage_service import storage_service
             bucket = storage_service._resolve_bucket(kb_id)
             client = storage_service._get_client()
             found = await asyncio.to_thread(client.head_bucket, Bucket=bucket)
@@ -262,7 +262,7 @@ class KBLifecycleManager:
     async def _verify_redis(self, kb_id: uuid.UUID) -> dict:
         """校验 Redis 连接与 KB ACL 用户是否存在。"""
         try:
-            from app.services.cache_service import cache_service
+            from app.services.infra.cache_service import cache_service
             result = await cache_service.verify_kb_acl(kb_id)
             acl = result.get("acl", "unknown")
             if acl == "exists":
@@ -346,13 +346,13 @@ class KBLifecycleManager:
                 from app.services.vector.chunk_vector_store import vector_store
                 return vector_store
             if step_name == "minio":
-                from app.services.storage_service import storage_service
+                from app.services.infra.storage_service import storage_service
                 return storage_service
             if step_name == "nebula":
                 from app.services.graph.graph_store import graph_store
                 return graph_store
             if step_name == "redis":
-                from app.services.cache_service import cache_service
+                from app.services.infra.cache_service import cache_service
                 return cache_service
         except Exception as e:  # noqa: BLE001
             logger.warning(
@@ -381,11 +381,11 @@ class KBLifecycleManager:
         logger.warning("Milvus Collections删除完成", kb_id=kb_id_str)
 
     async def _create_minio_bucket(self, kb_id: uuid.UUID) -> None:
-        from app.services.storage_service import storage_service
+        from app.services.infra.storage_service import storage_service
         await storage_service.create_kb_bucket(kb_id)
 
     async def _destroy_minio_bucket(self, kb_id: uuid.UUID) -> None:
-        from app.services.storage_service import storage_service
+        from app.services.infra.storage_service import storage_service
         await storage_service.destroy_kb_bucket(kb_id)
 
     async def _create_nebula_space(self, kb_id: uuid.UUID) -> None:
@@ -397,11 +397,11 @@ class KBLifecycleManager:
         await graph_store.drop_kb_space(kb_id)
 
     async def _create_redis_acl(self, kb_id: uuid.UUID) -> None:
-        from app.services.cache_service import cache_service
+        from app.services.infra.cache_service import cache_service
         await cache_service.create_kb_acl(kb_id)
 
     async def _destroy_redis_acl(self, kb_id: uuid.UUID) -> None:
-        from app.services.cache_service import cache_service
+        from app.services.infra.cache_service import cache_service
         await cache_service.destroy_kb_acl(kb_id)
 
     async def _create_ocr_dir(self, kb_id: uuid.UUID) -> None:

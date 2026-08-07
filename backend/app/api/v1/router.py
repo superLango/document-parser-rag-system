@@ -15,7 +15,6 @@ from app.api.v1.endpoints.audit_logs import router as audit_logs_router
 from app.api.v1.endpoints.auth import router as auth_router
 from app.api.v1.endpoints.kb_backup import router as kb_backup_router
 from app.api.v1.endpoints.dashboard import router as dashboard_router
-from app.api.v1.endpoints.documents import router as documents_router
 from app.api.v1.endpoints.extraction import router as extraction_router
 from app.api.v1.endpoints.extraction_config import router as extraction_config_router
 from app.api.v1.endpoints.kb_config import router as kb_config_router
@@ -30,14 +29,10 @@ from app.api.v1.endpoints.kb_terms import router as kb_terms_router
 from app.api.v1.endpoints.kb_term_bases import router as kb_term_bases_router
 from app.api.v1.endpoints.kbs import router as kbs_router
 from app.api.v1.endpoints.notifications import router as notifications_router
-from app.api.v1.endpoints.knowledge_base import router as kb_router
-from app.api.v1.endpoints.knowledge_graph import router as kg_router
 from app.api.v1.endpoints.schema_templates import router as schema_templates_router
 from app.api.v1.endpoints.system import router as system_router
 from app.api.v1.endpoints.tasks import router as tasks_router
-from app.api.v1.endpoints.terms import router as terms_router
 from app.api.v1.endpoints.users import router as users_router
-from app.api.v1.endpoints import qa
 
 api_router = APIRouter()
 api_router.include_router(auth_router)
@@ -46,7 +41,6 @@ api_router.include_router(audit_logs_router)
 api_router.include_router(system_router)
 api_router.include_router(notifications_router)
 api_router.include_router(dashboard_router)
-api_router.include_router(documents_router)
 api_router.include_router(extraction_router)
 api_router.include_router(extraction_config_router)
 # kb_config_router 必须在 kbs_router 之前注册：
@@ -63,9 +57,5 @@ api_router.include_router(kb_qa_router)
 api_router.include_router(kb_qa_history_router)
 api_router.include_router(kb_search_router)
 api_router.include_router(kb_backup_router)
-api_router.include_router(kb_router)
-api_router.include_router(kg_router)
 api_router.include_router(schema_templates_router)
 api_router.include_router(tasks_router)
-api_router.include_router(terms_router)
-api_router.include_router(qa.router, prefix="/qa", tags=["问答"])

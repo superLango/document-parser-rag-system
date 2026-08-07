@@ -99,7 +99,7 @@ async def _sync_ocr_parse(document: Document, db: AsyncSession) -> dict:
 
     流程：下载文件 → PDF 转图片/直接读图片 → base64 编码 → 调用 9977 vLLM → 保存结果。
     """
-    from app.services.storage_service import storage_service
+    from app.services.infra.storage_service import storage_service
 
     try:
         document.status = "processing"

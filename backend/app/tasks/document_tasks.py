@@ -43,11 +43,9 @@ from app.models.document import Document
 from app.models.knowledge_base import KnowledgeBase
 from app.models.schema_model import SchemaConfig
 from app.models.task import Task as TaskModel
-# TODO: extraction_service已删除，结构化抽取改为后续通过extract_v3_task触发
-# from app.services.extraction.extraction_pipeline import extraction_pipeline
 from app.services.ocr import ocr_service
 from app.services.ocr.postprocess import text_cleaner
-from app.services.storage_service import storage_service
+from app.services.infra.storage_service import storage_service
 from app.services.term.term_service import term_service
 
 logger = get_logger(__name__)
@@ -430,7 +428,7 @@ async def parse_document_impl(
                 # 失败时静默，不影响主流程返回。
                 if document.owner_id:
                     try:
-                        from app.services.notification_service import (
+                        from app.services.infra.notification_service import (
                             create_notification,
                         )
 
@@ -508,7 +506,7 @@ async def parse_document_impl(
                 # owner_id 与 filename；失败时静默，不影响 raise 传播。
                 if failed_doc is not None and failed_doc.owner_id:
                     try:
-                        from app.services.notification_service import (
+                        from app.services.infra.notification_service import (
                             create_notification,
                         )
 

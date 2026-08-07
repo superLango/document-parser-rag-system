@@ -365,7 +365,7 @@ async def get_knowledge_base_stats(
     db: AsyncSession = Depends(get_db),
 ) -> dict:
     """知识库统计信息（文档数、chunks数、任务数、成员数）。"""
-    from app.services.dashboard_service import get_kb_stats
+    from app.services.infra.dashboard_service import get_kb_stats
     stats = await get_kb_stats(db, kb_ctx.kb_id)
     data = {
         "kb_id": str(kb_ctx.kb_id),

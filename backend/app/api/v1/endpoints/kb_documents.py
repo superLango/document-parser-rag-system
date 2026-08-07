@@ -60,8 +60,8 @@ from app.models.document import Document
 from app.models.knowledge_base import EDIT_ROLES
 from app.models.task import Task as TaskModel
 from app.schemas.document import DocumentResponse
-from app.services.storage_service import storage_service
-from app.services.export_service import export_data
+from app.services.infra.storage_service import storage_service
+from app.services.infra.export_service import export_data
 
 logger = get_logger(__name__)
 

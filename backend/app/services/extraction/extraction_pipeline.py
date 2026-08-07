@@ -47,7 +47,7 @@ from app.services.extraction.category.category_builder import category_builder
 from app.services.extraction.retrieval.retrieval_service import retrieval_service
 from app.services.extraction.llm_extract.extractor_factory import extract_with_fallback
 from app.services.extraction.prompts.config_prompt_renderer import config_prompt_renderer
-from app.services.extraction.result_writer import result_writer
+from app.services.extraction.llm_extract.result_writer import result_writer
 from app.services.extraction.rule_engine.script_manager import script_manager
 from app.services.extraction_config.resolver import ExtractionConfigResolver
 

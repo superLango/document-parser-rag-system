@@ -34,7 +34,7 @@ from app.api.deps import (
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
 from app.core.response import paginated, success
-from app.services.qa_history_service import (
+from app.services.infra.qa_history_service import (
     create_session,
     delete_session,
     get_session,

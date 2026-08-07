@@ -40,7 +40,7 @@ from typing import Any
 from app.core.config import settings
 from app.core.logging import get_logger
 from app.services.vector.bm25_retriever import bm25_retriever
-from app.services.cache_service import rag_cache_service
+from app.services.infra.cache_service import rag_cache_service
 from app.services.embedding.embedding_service import embedding_service
 from app.services.graph.graph_store import graph_store
 from app.services.llm.llm_service import llm_service

@@ -28,11 +28,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import AI_LIMIT, DEFAULT_LIMIT, KBContext, get_db, get_kb_context, limiter
 from app.core.logging import get_logger
-from app.services.qa_history_service import add_message, ensure_session
+from app.services.infra.qa_history_service import add_message, ensure_session
 from app.services.rag.rag_service import RAGResponse, rag_service
 
-# 复用全局 qa 模块的请求/响应模型，保持两端契约一致
-from app.api.v1.endpoints.qa import CitationModel, QueryRequest, QueryResponse
+from app.schemas.qa import CitationModel, QueryRequest, QueryResponse
 
 logger = get_logger(__name__)
 
