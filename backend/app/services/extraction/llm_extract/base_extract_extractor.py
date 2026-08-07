@@ -300,7 +300,7 @@ class BaseExtractExtractor(BaseExtractor):
             brands_str = "、".join(set(prev_brands))
             prev_brands_section = f"[前批已抽取的牌号]\n{brands_str}\n\n请参考上述牌号信息。"
 
-        # 渲染 prompt（未配置模板时由渲染器生成纯指令）
+        # 渲染 prompt（类别未绑定模板时渲染器直接抛错，不做回退）
         system, user = config_prompt_renderer.render_category(
             target,
             cfg,

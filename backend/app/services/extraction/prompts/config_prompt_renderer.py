@@ -1,12 +1,9 @@
 """配置驱动 Prompt 渲染器。
 
-替代原先 ``prompts/*.yaml`` 内置模板，从抽取配置中心（``kb_prompt_templates``）
-渲染所有抽取 Prompt。模板正文使用 ``${variable}`` 占位符，由本渲染器替换。
-
-与内置 ``prompt_manager`` 的区别：
-- 模板来源：配置中心（全局配置 / Prompt 模板），不读取任何 YAML 文件。
-- 字段定义：从 ``ExtractionTarget.fields``（Schema 模板字段）构建，不再读取
-  ``field_descriptions.yaml``。
+从抽取配置中心（``kb_prompt_templates``）渲染所有抽取 Prompt，模板正文
+使用 ``${variable}`` 占位符，由本渲染器替换。**不做任何回退**：类别未绑定
+Prompt 模板时直接抛 ``BusinessException``（与 Schema 一致：有执行，没有就
+报错），不读取任何 YAML 内置模板，也不回退到 simple 全局模板。
 
 占位符变量（渲染时可用）：
 - ${feature} / ${category_name}：类别名
@@ -29,9 +26,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.core.logging import get_logger
-
-logger = get_logger(__name__)
+from app.core.exceptions import BusinessException
 
 
 class ConfigPromptRenderer:
@@ -74,23 +69,18 @@ class ConfigPromptRenderer:
             prev_brands: 前批牌号提示段。
 
         Returns:
-            (system_prompt, user_prompt) 元组；未配置模板时返回 ("", user)。
+            (system_prompt, user_prompt) 元组。
+
+        Raises:
+            BusinessException: 类别未绑定 Prompt 模板时抛错，不静默跳过、
+                不回退到任何内置/全局模板（与 Schema 一致：有执行，没有就报错）。
         """
         resolved = cfg.prompt_for_category(target.template_id, target.category_id) if cfg is not None else None
         if resolved is None:
-            logger.warning(
-                "未找到类别绑定的 Prompt 模板，跳过该类别抽取（不降级到内置 prompt）",
-                extra={
-                    "feature": target.feature,
-                    "template_id": target.template_id,
-                    "category_id": target.category_id,
-                },
+            raise BusinessException(
+                f"未配置类别「{target.feature}」的 Prompt 模板，请配置（类别必须显式绑定 Prompt 模板，不做回退）"
             )
-            # 无模板时返回空，由调用方跳过类别（prompt 全程走配置，不降级到硬编码）
-            system = ""
-            user = ""
-        else:
-            system, user = resolved
+        system, user = resolved
 
         variables = {
             "feature": target.feature,

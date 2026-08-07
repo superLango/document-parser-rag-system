@@ -280,11 +280,15 @@ class ExtractionPipeline:
         for i, result in enumerate(results):
             if isinstance(result, Exception):
                 feature_name = targets[i].feature if i < len(targets) else "unknown"
+                # 配置/业务类错误（如缺失 Prompt 模板、参数缺失）必须上报，
+                # 不作为空结果静默剔除（"有执行，没有就报错"）
+                if isinstance(result, BusinessException):
+                    raise result
                 logger.error(
                     "类别抽取异常",
                     extra={"feature": feature_name, "error": str(result)},
                 )
-                # 异常时返回空结果，保证流程继续
+                # 运行时异常返回空结果，保证流程继续
                 categories.append(CategoryResult(
                     feature=feature_name,
                     records=[],

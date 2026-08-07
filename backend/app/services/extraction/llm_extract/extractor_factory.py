@@ -97,6 +97,10 @@ async def extract_with_fallback(
             )
         return records
 
+    except BusinessException:
+        # 配置/业务类错误（如类别缺失 Prompt 模板）必须上报，不作为运行时
+        # 失败静默吞掉（与"有执行，没有就报错"策略一致）
+        raise
     except Exception as err:
         logger.error(
             "抽取失败，返回空结果",

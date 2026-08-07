@@ -92,8 +92,12 @@ async def cleanup_audit_logs(dry_run: bool = False) -> dict:
 async def cleanup_orphan_vectors(dry_run: bool = False) -> dict:
     """清理 Milvus 中的孤儿向量（doc_id 不在 documents 表）。
 
-    遍历全局 Collection（doc_chunks / doc_v2_*），检查每个分块的 doc_id
-    是否在 documents 表中存在，不存在则为孤儿。
+    遍历所有知识库的专属 Collection（``doc_chunks_{kb_id_hex}``），检查每个
+    分块的 doc_id 是否在 documents 表中存在，不存在则为孤儿并删除。
+
+    适配六层隔离模型：仅清理各 KB 的专属 Collection，不触碰全局/其他 KB 数据。
+    五维向量（``doc_five_dim_{kb_id_hex}``）与 chunk 同属一个 doc_id，随
+    chunk 清理保持一致，无需单独处理。
 
     Args:
         dry_run: True 时仅统计不删除。
@@ -101,6 +105,12 @@ async def cleanup_orphan_vectors(dry_run: bool = False) -> dict:
     Returns:
         dict: ``{"orphan_count": int, "collections_checked": list, "dry_run": bool}``。
     """
+    from pymilvus import Collection as MilvusCollection
+    from pymilvus import utility
+
+    from app.models.knowledge_base import KnowledgeBase
+    from app.services.vector.chunk_vector_store import _get_collection_name
+
     orphan_total = 0
     collections_checked: list[str] = []
 
@@ -110,51 +120,56 @@ async def cleanup_orphan_vectors(dry_run: bool = False) -> dict:
         logger.warning("vector_store 不可用，跳过孤儿向量清理")
         return {"orphan_count": 0, "collections_checked": [], "dry_run": dry_run, "skipped": True}
 
+    try:
+        vector_store._ensure_connected()
+    except Exception as err:  # noqa: BLE001
+        logger.warning("Milvus 连接失败，跳过孤儿向量清理", error=str(err))
+        return {"orphan_count": 0, "collections_checked": [], "dry_run": dry_run, "skipped": True}
+
     async with AsyncSessionLocal() as db:
+        # 获取所有知识库的 kb_id（用于定位各 KB 专属 Collection）
+        kb_result = await db.execute(select(KnowledgeBase.id))
+        kb_ids = [str(r[0]) for r in kb_result.all()]
         # 获取所有有效的 doc_id
         doc_ids_result = await db.execute(select(Document.id))
         valid_doc_ids = {str(r[0]) for r in doc_ids_result.all()}
 
-        # 检查全局 Collection（旧架构，未按 KB 隔离）
-        global_collections = ["doc_chunks", "doc_v2_items", "doc_v2_methods", "doc_v2_features", "doc_v2_projects", "doc_v2_standards"]
-        for coll_name in global_collections:
-            try:
-                if not hasattr(vector_store, "_client") or vector_store._client is None:
-                    break
-                # 尝试查询 Collection 中的所有 doc_id
-                # Milvus 查询：获取 distinct doc_id
-                results = vector_store._client.query(
-                    collection_name=coll_name,
-                    output_fields=["doc_id"],
-                    limit=16384,
-                )
-                collections_checked.append(coll_name)
+    for kb_id in kb_ids:
+        coll_name = _get_collection_name(kb_id)
+        try:
+            if not utility.has_collection(coll_name, using="chunk_store"):
+                continue
+            col = MilvusCollection(coll_name, using="chunk_store")
+            # 查询该 Collection 中的所有 doc_id
+            results = col.query(
+                expr='doc_id != ""',
+                output_fields=["doc_id"],
+                limit=16384,
+            )
+            collections_checked.append(coll_name)
 
-                orphan_doc_ids: list[str] = []
-                seen = set()
-                for row in results:
-                    doc_id = str(row.get("doc_id", ""))
-                    if doc_id and doc_id not in valid_doc_ids and doc_id not in seen:
-                        seen.add(doc_id)
-                        orphan_doc_ids.append(doc_id)
+            orphan_doc_ids: list[str] = []
+            seen = set()
+            for row in results:
+                doc_id = str(row.get("doc_id", ""))
+                if doc_id and doc_id not in valid_doc_ids and doc_id not in seen:
+                    seen.add(doc_id)
+                    orphan_doc_ids.append(doc_id)
 
-                if orphan_doc_ids and not dry_run:
-                    # 删除孤儿向量
-                    try:
-                        vector_store._client.delete(
-                            collection_name=coll_name,
-                            filter=f'doc_id in {orphan_doc_ids}',
-                        )
-                    except Exception as del_err:  # noqa: BLE001
-                        logger.warning(
-                            "删除孤儿向量失败",
-                            collection=coll_name,
-                            error=str(del_err),
-                        )
+            if orphan_doc_ids and not dry_run:
+                # 删除孤儿向量（批量过滤，仅作用于本 KB 专属 Collection）
+                try:
+                    col.delete(expr=f'doc_id in {orphan_doc_ids}')
+                except Exception as del_err:  # noqa: BLE001
+                    logger.warning(
+                        "删除孤儿向量失败",
+                        collection=coll_name,
+                        error=str(del_err),
+                    )
 
-                orphan_total += len(orphan_doc_ids)
-            except Exception as err:  # noqa: BLE001
-                logger.debug("Collection 检查跳过", collection=coll_name, error=str(err)[:100])
+            orphan_total += len(orphan_doc_ids)
+        except Exception as err:  # noqa: BLE001
+            logger.debug("Collection 检查跳过", collection=coll_name, error=str(err)[:100])
 
     logger.info("孤儿向量清理完成", orphan_count=orphan_total, collections=collections_checked, dry_run=dry_run)
     return {"orphan_count": orphan_total, "collections_checked": collections_checked, "dry_run": dry_run}

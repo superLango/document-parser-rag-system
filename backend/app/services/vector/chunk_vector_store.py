@@ -59,8 +59,8 @@ _DEFAULT_COLLECTION = "doc_chunks"
 def _get_collection_name(kb_id) -> str:
     """生成KB专属Collection名。
 
-    兼容 UUID 对象和字符串两种输入，取 hex 前 8 位作为后缀
-    （保持与历史写入数据一致）。
+    兼容 UUID 对象和字符串两种输入，取完整 32 位无连字符 hex 作为后缀
+    （与 ``kb_lifecycle._verify_milvus`` 校验命名一致，保证隔离校验不失效）。
     """
     if kb_id is None:
         return _DEFAULT_COLLECTION
@@ -69,7 +69,7 @@ def _get_collection_name(kb_id) -> str:
         kb_str = kb_id.hex
     else:
         kb_str = str(kb_id).replace("-", "")
-    return f"doc_chunks_{kb_str[:8]}"
+    return f"doc_chunks_{kb_str}"
 
 
 class ChunkVectorStore:

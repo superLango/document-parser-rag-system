@@ -45,13 +45,14 @@ _EMBEDDING_DIM = 1024
 
 DIMENSIONS = ["path", "title", "content", "type", "structural"]
 
-_DEFAULT_COLLECTION = "doc_five_dim"
+_DEFAULT_COLLECTION = settings.FIVE_DIM_VECTOR_COLLECTION
 
 
 def _get_collection_name(kb_id: str | None = None) -> str:
     if kb_id is None:
         return _DEFAULT_COLLECTION
-    return f"doc_five_dim_{kb_id[:8].replace('-', '')}"
+    # 完整 32 位无连字符 hex 后缀，保证跨 KB 隔离与命名唯一
+    return f"doc_five_dim_{kb_id.replace('-', '')}"
 
 
 class FiveDimVectorStore:

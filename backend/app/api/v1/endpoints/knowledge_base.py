@@ -20,7 +20,8 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_active_user
+from app.api.deps import get_current_active_user, get_kb_context
+from app.api.deps import KBContext
 from app.core.database import get_db
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
@@ -242,33 +243,39 @@ async def kb_stats_endpoint(
 @router.get("/search")
 async def kb_search_endpoint(
     q: str = Query(..., description="查询文本"),
+    kb_id: uuid.UUID = Query(..., description="知识库 ID（仅在该知识库隔离范围内检索）"),
     top_k: int = Query(10, ge=1, le=100, description="返回结果数量"),
-    current_user: User = Depends(get_current_active_user),
+    ctx: KBContext = Depends(get_kb_context),
 ) -> dict:
     """知识库搜索（测试用，不经过 LLM 生成）。
 
-    对查询文本进行嵌入后执行混合检索（Dense + Sparse），
-    返回原始检索结果，便于调试检索质量。
+    对查询文本进行嵌入后，在指定知识库的专属 Collection 中执行混合检索
+    （Dense + Sparse），返回原始检索结果，便于调试检索质量。
+
+    通过 ``get_kb_context`` 强制成员校验并激活 PostgreSQL RLS，检索按
+    ``ctx.kb_id`` 隔离（命中 ``doc_chunks_{kb_id_hex}`` 专属 Collection），
+    不检索任何其他知识库数据。
 
     Args:
         q: 查询文本。
+        kb_id: 知识库 ID。
         top_k: 返回结果数量，默认 10，范围 1-100。
-        current_user: 当前已认证用户。
+        ctx: 知识库上下文（含 kb_id / 角色，已激活 RLS）。
 
     Returns:
         dict: 包含检索结果的统一成功响应。
     """
-    logger.info("知识库搜索", query=q, top_k=top_k)
+    logger.info("知识库搜索", query=q, top_k=top_k, kb_id=str(ctx.kb_id))
 
     # 嵌入查询文本
     embed_result: dict = await embedding_service.embed_query(q)
     query_dense = embed_result["dense_vector"]
     query_sparse = embed_result["sparse_for_milvus"]
 
-    # 执行混合检索
+    # 执行混合检索（按 KB 专属 Collection 隔离）
     results: list[dict] = await vector_store.hybrid_search(
-        query_dense, query_sparse, top_k=top_k
+        query_dense, query_sparse, top_k=top_k, kb_id=str(ctx.kb_id)
     )
 
-    logger.info("知识库搜索完成", query=q, result_count=len(results))
+    logger.info("知识库搜索完成", query=q, result_count=len(results), kb_id=str(ctx.kb_id))
     return success(data={"query": q, "results": results, "total": len(results)})

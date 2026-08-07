@@ -201,31 +201,26 @@ class ExtractionDomainConfig:
         template_id: str | None,
         category_id: str | None,
     ) -> tuple[str, str] | None:
-        """按类别解析其绑定的 Prompt 模板。
+        """按类别解析其绑定的 Prompt 模板（精确匹配，无回退）。
 
-        解析优先级：
-        1. schema 作用域模板：schema_template_id 匹配 class 类别所属模板，
-           且 categories 中命中 category_id → 取该类别的 user_prompt。
-        2. simple 作用域模板：取第一个 simple 模板的 user_prompt。
-        3. 均未命中返回 None（由调用方决定处理）。
+        与 Schema 一致：类别必须显式绑定 Prompt 模板，未绑定时返回 None，
+        由调用方报错，**不做任何兜底/回退**（不回退到 simple 全局模板、不
+        回退到内置模板）。只有绑定到该类别所属 Schema 模板且命中
+        ``category_id`` 的类别级 user_prompt 才被采用。
 
         Returns:
-            (system_prompt, user_prompt) 或 None。
+            (system_prompt, user_prompt) 或 None（未绑定则 None）。
         """
         if not self.prompt_templates:
             return None
 
-        # 1) schema 作用域：按类别所属模板 + 类别 id 匹配
+        # 仅精确匹配：类别所属模板 + 类别 id
         if template_id and category_id:
             for _name, tpl in self.prompt_templates.items():
                 if tpl.get("schema_template_id") == template_id:
                     for c in tpl.get("categories", []):
                         if c.get("category_id") == category_id:
                             return (tpl.get("system_prompt") or "", c.get("user_prompt") or "")
-        # 2) simple 作用域：取第一个全局 simple 模板
-        for _name, tpl in self.prompt_templates.items():
-            if tpl.get("scope") == "simple":
-                return (tpl.get("system_prompt") or "", tpl.get("user_prompt") or "")
         return None
 
     def category_template_id(self, category: dict) -> str | None:

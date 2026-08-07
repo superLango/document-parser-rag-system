@@ -2,7 +2,7 @@
 
 统一管理 KB 的物理资源创建/销毁，实现六层物理隔离：
 
-1. **Milvus**：每 KB 创建 6 个 Collection（doc_chunks_{kb_id} + 五维 doc_v2_*_{kb_id}）
+1. **Milvus**：每 KB 创建 2 个 Collection（doc_chunks_{kb_id_hex} + 五维 doc_five_dim_{kb_id_hex}，五维共用一个 Collection 内含 path/title/content/type/structural 五个向量字段）
 2. **MinIO**：每 KB 创建独立 bucket（kb-{kb_id}）+ 独立 IAM 密钥（存 knowledge_buckets 表）
 3. **NebulaGraph**：每 KB 创建独立 graph space（kb_{kb_id_hex}）+ schema + 用户
 4. **Redis**：每 KB 创建 ACL 用户（kb_{kb_id_hex}）+ 授权 ~kb:{kb_id}:*
@@ -40,27 +40,6 @@ def _kb_id_hex(kb_id: uuid.UUID) -> str:
     而 Milvus/NebulaGraph/Redis 的标识符不含连字符更安全，故用 hex。
     """
     return kb_id.hex
-
-
-def milvus_collection_names(kb_id: uuid.UUID) -> dict[str, str]:
-    """生成某 KB 的 6 个 Milvus Collection 名。
-
-    Args:
-        kb_id: 知识库 ID。
-
-    Returns:
-        dict: ``{base: collection_name}``，包含 doc_chunks + 五维（path/title/content/type/structural）。
-    """
-    sep = settings.KB_MILVUS_COLLECTION_SEPARATOR
-    suffix = f"{sep}{_kb_id_hex(kb_id)}"
-    return {
-        "doc_chunks": f"doc_chunks{suffix}",
-        "path": f"doc_v2_path{suffix}",
-        "title": f"doc_v2_title{suffix}",
-        "content": f"doc_v2_content{suffix}",
-        "type": f"doc_v2_type{suffix}",
-        "structural": f"doc_v2_structural{suffix}",
-    }
 
 
 def minio_bucket_name(kb_id: uuid.UUID) -> str:
@@ -240,11 +219,16 @@ class KBLifecycleManager:
                 )
 
             sep = settings.KB_MILVUS_COLLECTION_SEPARATOR
-            expected = f"{settings.MILVUS_COLLECTION}{sep}{kb_id.hex}"
-            exists = utility.has_collection(expected, using=alias)
-            if exists:
-                return {"ok": True, "detail": f"collection {expected} 存在"}
-            return {"ok": False, "detail": f"collection {expected} 不存在"}
+            # 校验 KB 专属的两个 Collection（与两个 store 的命名完全一致）：
+            # doc_chunks_{hex} + doc_five_dim_{hex}，任一缺失即视为隔离资源不完整
+            expected_cols = [
+                f"{settings.MILVUS_COLLECTION}{sep}{kb_id.hex}",
+                f"{settings.FIVE_DIM_VECTOR_COLLECTION}{sep}{kb_id.hex}",
+            ]
+            missing = [c for c in expected_cols if not utility.has_collection(c, using=alias)]
+            if not missing:
+                return {"ok": True, "detail": f"collections {', '.join(expected_cols)} 存在"}
+            return {"ok": False, "detail": f"collections 缺失: {', '.join(missing)}"}
         except Exception as e:  # noqa: BLE001
             return {"ok": False, "detail": f"校验异常: {e}"}
 
