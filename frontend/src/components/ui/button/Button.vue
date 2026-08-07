@@ -3,12 +3,13 @@ import { computed } from 'vue'
 import { Primitive } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import { buttonVariants, type ButtonVariants } from '.'
+import type { ClassValue } from 'clsx'
 
 interface Props {
   variant?: ButtonVariants['variant']
   size?: ButtonVariants['size']
   as?: string
-  class?: string
+  class?: ClassValue
 }
 
 const props = withDefaults(defineProps<Props>(), {

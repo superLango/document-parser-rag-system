@@ -1,11 +1,13 @@
 """Few-shot 示例生成器（LangExtract 线路用）。
 
-从基础表 ``ExtractionTarget.items`` 自动生成 few-shot 示例，
-帮助 LLM 理解抽取目标。
+从 Schema 模板字段的 ``example`` 自动生成 few-shot 示例，
+帮助 LLM 理解抽取目标。配置驱动下直接基于字段定义生成。
 
-策略：基础表自动生成 + 人工字段描述
-- 从 target.items 取前 3 个 item，合成示例文本和 Extraction 对象
-- 示例文本格式："{牌号} {feature}：{item.name} {sample_value}"
+策略：字段示例生成（配置驱动）
+- 从 ``target.fields`` 收集各字段的 ``example``（支持标量 / 列表）
+- 示例文本仅由「类别名 + 字段名 示例值」拼接，不依赖写死的牌号占位
+  （材料牌号等字段本身配置了 example，自然出现在示例中）
+- 轮转窗口生成至多 ``max_examples`` 条示例（覆盖不同字段组合）
 - Extraction 对象使用类+属性模式（extraction_class + attributes）
 
 使用示例::
@@ -25,29 +27,11 @@ from app.services.extraction.extraction_models import ExtractionTarget
 
 logger = get_logger(__name__)
 
-# 示例牌号（通用占位，实际应从文档抽取）
-_SAMPLE_BRAND = "06Cr19Ni10"
-
-# 每个 item 的示例值（按 feature 提供典型值）
-_SAMPLE_VALUES: dict[str, str] = {
-    "C": "≤0.08",
-    "Si": "≤1.00",
-    "Mn": "≤2.00",
-    "P": "≤0.045",
-    "S": "≤0.030",
-    "Cr": "18.00-20.00",
-    "Ni": "8.00-11.00",
-    "Rp0.2": "≥205",
-    "Rm": "≥520",
-    "A": "≥40",
-    "HBW": "≤187",
-}
-
 
 class FewShotGenerator:
     """Few-shot 示例生成器。
 
-    从基础表自动生成 LangExtract 格式的 few-shot 示例。
+    从 Schema 模板字段的 ``example`` 自动生成 LangExtract 格式的 few-shot 示例。
     """
 
     def generate(
@@ -55,10 +39,10 @@ class FewShotGenerator:
         target: ExtractionTarget,
         max_examples: int = 3,
     ) -> list[Any]:
-        """从基础表自动生成 few-shot 示例。
+        """从 Schema 模板字段的 ``example`` 自动生成 few-shot 示例。
 
         Args:
-            target: 抽取目标（含 items）。
+            target: 抽取目标（含 fields，字段需配置 example）。
             max_examples: 最大示例数，默认 3。
 
         Returns:
@@ -70,24 +54,45 @@ class FewShotGenerator:
             logger.warning("langextract 未安装，无法生成 few-shot 示例")
             return []
 
-        examples: list[ExampleData] = []
-        for item in target.items[:max_examples]:
-            if not item.name:
+        # 收集字段示例（支持标量 / 列表，全部展开为 (字段名, 示例值)）
+        field_examples: list[tuple[str, str]] = []
+        for f in target.fields or []:
+            name = f.get("name", "")
+            if not name:
                 continue
+            ex = f.get("example")
+            if ex is None:
+                continue
+            if isinstance(ex, list):
+                for v in ex:
+                    if v is not None and str(v).strip():
+                        field_examples.append((name, str(v)))
+            elif str(ex).strip():
+                field_examples.append((name, str(ex)))
 
-            # 合成示例文本
-            sample_value = _SAMPLE_VALUES.get(item.name, "标准值")
-            sample_text = f"{_SAMPLE_BRAND} {target.feature}：{item.name} {sample_value}"
+        if not field_examples:
+            logger.warning(
+                "类别字段未配置 example，无法生成 few-shot 示例",
+                extra={"feature": target.feature},
+            )
+            return []
 
-            # 构造 Extraction 对象（类+属性模式）
+        # 轮转窗口生成示例，覆盖不同字段组合
+        examples: list[ExampleData] = []
+        window = min(max_examples, len(field_examples))
+        for i in range(window):
+            attrs: dict[str, str] = {}
+            for name, value in field_examples[i : i + window]:
+                attrs.setdefault(name, value)
+
+            parts = [target.feature]
+            for name, value in attrs.items():
+                parts.append(f"{name} {value}")
+            sample_text = "，".join(parts)
+
             extraction = Extraction(
                 extraction_class=target.feature,
-                extraction_text=_SAMPLE_BRAND,
-                attributes={
-                    "项目名称": item.name,
-                    "单位": item.unit or "",
-                    "标准要求": sample_value,
-                },
+                attributes=dict(attrs),
             )
             examples.append(ExampleData(text=sample_text, extractions=[extraction]))
 
@@ -96,6 +101,7 @@ class FewShotGenerator:
             extra={
                 "feature": target.feature,
                 "example_count": len(examples),
+                "field_examples": len(field_examples),
             },
         )
         return examples

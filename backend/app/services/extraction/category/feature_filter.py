@@ -22,7 +22,7 @@ import logging
 from typing import Any
 
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
+from app.core.exceptions import BusinessException
 from app.services.extraction.extraction_models import SkippedFeature
 
 logger = get_logger(__name__)
@@ -35,7 +35,7 @@ class FeatureFilter:
     """
 
     def __init__(self) -> None:
-        self._settings = get_extraction_settings()
+        pass
 
     def filter(
         self,
@@ -53,7 +53,11 @@ class FeatureFilter:
                 - kept_features: 保留的 feature 名列表（按置信度降序）
                 - skipped_features: 被剔除的 SkippedFeature 列表
         """
-        thresh = threshold if threshold is not None else self._settings.category_confidence_threshold
+        # 阈值由调用方从配置解析传入（类别级→全局 default_confidence_threshold），
+        # 缺失即报错，不允许 settings/env 兜底
+        if threshold is None:
+            raise BusinessException("未配置类别置信度阈值（retrieval.default_confidence_threshold）")
+        thresh = threshold
 
         kept: list[tuple[str, float]] = []  # (feature, confidence)
         skipped: list[SkippedFeature] = []

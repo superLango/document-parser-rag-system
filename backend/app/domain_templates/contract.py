@@ -11,7 +11,6 @@ from __future__ import annotations
 from app.domain_templates.base import (
     CategoryDef,
     CategoryEnumDef,
-    DictConfigDef,
     DomainTemplate,
     FieldTemplateDef,
     RegexRuleDef,
@@ -129,14 +128,6 @@ CONTRACT_TEMPLATE = DomainTemplate(
             sort_order=30,
         ),
     ],
-    dict_config=DictConfigDef(
-        enabled=False,  # 合同领域不启用基础字典同步
-        match_threshold=0.5,
-        whitelist_top_k=10,
-        validation_top_k=1,
-        validation_similarity_threshold=0.5,
-        tables_mapping={},
-    ),
     config_override={
         "extraction": {
             "output_schema_mode": "auto",

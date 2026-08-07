@@ -1,4 +1,4 @@
-"""glm-ocr 风格抽取器（线路 B）。
+"""BaseExtract 抽取器（线路 B）。
 
 移植自 glm-ocr simple_pipeline，增强文本预处理逻辑：
 - 短文本（< 8000 字符）：单次 LLM 调用，完整上下文
@@ -16,9 +16,9 @@
 
 使用示例::
 
-    from app.services.extraction.llm_extract.glmocr_extractor import GlmOcrExtractor
+    from app.services.extraction.llm_extract.base_extract_extractor import BaseExtractExtractor
 
-    extractor = GlmOcrExtractor(llm_semaphore=sem)
+    extractor = BaseExtractExtractor(llm_semaphore=sem)
     records = await extractor.extract(context, schema, target)
 """
 
@@ -29,7 +29,7 @@ import logging
 from typing import Any
 
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
+from app.core.exceptions import BusinessException
 from app.services.extraction.llm_client import llm_client
 from app.services.extraction.extraction_models import (
     ExtractionTarget,
@@ -38,28 +38,28 @@ from app.services.extraction.extraction_models import (
 )
 from app.services.extraction.llm_extract.batch_processor import batch_processor
 from app.services.extraction.llm_extract.extractor_base import BaseExtractor
-from app.services.extraction.prompts.prompt_manager import prompt_manager
+from app.services.extraction.prompts.config_prompt_renderer import config_prompt_renderer
 
 logger = get_logger(__name__)
 
 
-class GlmOcrExtractor(BaseExtractor):
-    """线路 B：glm-ocr simple_pipeline 风格直抽。
+class BaseExtractExtractor(BaseExtractor):
+    """线路 B：BaseExtract 直抽（glm-ocr simple_pipeline 风格）。
 
     短文本单次调用 / 长文本分批串行（牌号传递）。
     """
 
-    _engine_name = "glmocr"
+    _engine_name = "BaseExtract"
 
     def __init__(self, llm_semaphore: asyncio.Semaphore | None = None) -> None:
         super().__init__(llm_semaphore)
-        self._settings = get_extraction_settings()
 
     async def extract(
         self,
         context: RetrievalContext,
         schema: dict[str, Any],
         target: ExtractionTarget,
+        cfg: Any = None,
     ) -> list[ExtractedRecord]:
         """从检索上下文抽取记录（glmocr 线路）。
 
@@ -67,6 +67,7 @@ class GlmOcrExtractor(BaseExtractor):
             context: 检索上下文（含拼接文本和白名单）。
             schema: 该 feature 的 schema 定义。
             target: 抽取目标。
+            cfg: 抽取领域配置（Prompt 模板 / LLM 参数）。
 
         Returns:
             list[ExtractedRecord]: 抽取的记录列表。
@@ -75,8 +76,14 @@ class GlmOcrExtractor(BaseExtractor):
             logger.warning("上下文为空，跳过抽取", extra={"feature": target.feature})
             return []
 
-        # 文本预处理：短文本单次 / 长文本分批
-        batches = batch_processor.split(context.text)
+        # 文本预处理：短文本单次 / 长文本分批（批处理参数走配置，缺失即报错）
+        _batch = self._require_batch(cfg)
+        batches = batch_processor.split(
+            context.text,
+            threshold=_batch["single_threshold"],
+            batch_chars=_batch["batch_chars"],
+            overlap=_batch["overlap"],
+        )
 
         if len(batches) <= 1:
             # 短文本：单次 LLM 调用
@@ -85,10 +92,24 @@ class GlmOcrExtractor(BaseExtractor):
                 schema,
                 target,
                 context.whitelist_prompt,
+                cfg=cfg,
             )
         else:
             # 长文本：分批串行（牌号传递）
-            return await self._extract_batched(batches, schema, target, context.whitelist_prompt)
+            return await self._extract_batched(batches, schema, target, context.whitelist_prompt, cfg)
+
+    def _require_batch(self, cfg: Any = None) -> dict:
+        """校验 BaseExtract 批处理参数齐全并返回（缺失即报错，无硬编码回退）。"""
+        _batch = cfg.llm_batch() if cfg is not None else {}
+        _missing = [
+            k for k in ("single_threshold", "batch_chars", "overlap", "context_truncate")
+            if _batch.get(k) is None
+        ]
+        if _missing:
+            raise BusinessException(
+                f"未配置 BaseExtract 批处理参数 llm.engines.BaseExtract.batch.{'、'.join(_missing)}"
+            )
+        return _batch
 
     async def _extract_single(
         self,
@@ -97,6 +118,7 @@ class GlmOcrExtractor(BaseExtractor):
         target: ExtractionTarget,
         whitelist: str,
         prev_brands: list[str] | None = None,
+        cfg: Any = None,
     ) -> list[ExtractedRecord]:
         """单次 LLM 抽取（短文本或单批）。
 
@@ -106,26 +128,44 @@ class GlmOcrExtractor(BaseExtractor):
             target: 抽取目标。
             whitelist: 白名单 prompt。
             prev_brands: 前批抽取的牌号（跨批传递）。
+            cfg: 抽取领域配置。
 
         Returns:
             list[ExtractedRecord]: 抽取记录列表。
         """
-        # 截断保护
-        truncated_text = text[:self._settings.glmocr_context_truncate]
+        # 截断保护（批处理参数走配置，缺失即报错）
+        _batch = self._require_batch(cfg)
+        _truncate = _batch["context_truncate"]
+        truncated_text = text[:_truncate]
 
         # 构建 prompt
         system_prompt, user_prompt = self._build_prompt(
-            target, schema, truncated_text, whitelist, prev_brands
+            target, schema, truncated_text, whitelist, prev_brands, cfg
         )
 
-        # 调用 LLM（受 _llm_semaphore 控制）
+        # 未配置类别 Prompt 模板时跳过（prompt 全程走配置，不降级到内置 prompt）
+        if not user_prompt:
+            logger.warning(
+                "类别无 Prompt 模板，跳过抽取",
+                extra={"feature": target.feature},
+            )
+            return []
+
+        # 调用 LLM（受 _llm_semaphore 控制，LLM 参数走引擎分组配置）
+        _engine_params = cfg.engine_params() if cfg is not None else {}
+        # 类别级 max_tokens 覆盖引擎分组（类别参数回退全局，不允许 env 兜底）
+        _max_tokens = target.max_tokens or (cfg.max_output_tokens() if cfg is not None else None)
+        _temperature = cfg.engine_temperature() if cfg is not None else None
+        _endpoint = cfg.endpoint if cfg is not None else {}
         async with self._llm_semaphore:
             try:
                 result_data = await llm_client.chat_json(
                     prompt=user_prompt,
                     system_prompt=system_prompt,
-                    max_tokens=self._settings.llm_max_output_tokens,
-                    temperature=self._settings.llm_temperature,
+                    max_tokens=_max_tokens,
+                    temperature=_temperature,
+                    endpoint=_endpoint,
+                    engine_params=_engine_params,
                 )
             except Exception as err:
                 logger.error(
@@ -164,15 +204,12 @@ class GlmOcrExtractor(BaseExtractor):
         schema: dict[str, Any],
         target: ExtractionTarget,
         whitelist: str,
+        cfg: Any = None,
     ) -> list[ExtractedRecord]:
         """分批**并行**抽取（长文本，全批次同时压入 vLLM 等待队列）。
 
         所有批次通过 ``asyncio.gather`` 并发提交，每个批次独立调用 LLM，
         由全局 ``llm_semaphore`` 控制并发上限，vLLM 自动排队批处理。
-
-        **与串行的区别**：
-        - 串行：批次 1 → 等 LLM 返回 → 批次 2 → ...（牌号逐批传递）
-        - 并行：批次 1/2/.../N 同时提交 → vLLM 满载并发处理 → 合并去重
 
         牌号传递在并行模式下不可行，改为后处理阶段统一去重
         （``post_processor`` 的 ``_dedup`` 逻辑）。
@@ -182,13 +219,14 @@ class GlmOcrExtractor(BaseExtractor):
             schema: schema 定义。
             target: 抽取目标。
             whitelist: 白名单 prompt。
+            cfg: 抽取领域配置。
 
         Returns:
             list[ExtractedRecord]: 合并后的抽取记录列表。
         """
         # 所有批次并行提交（prev_brands=None，不传递牌号）
         tasks = [
-            self._extract_single(batch_text, schema, target, whitelist, None)
+            self._extract_single(batch_text, schema, target, whitelist, None, cfg)
             for batch_text in batches
         ]
         batch_results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -234,8 +272,9 @@ class GlmOcrExtractor(BaseExtractor):
         context: str,
         whitelist: str,
         prev_brands: list[str] | None,
+        cfg: Any = None,
     ) -> tuple[str, str]:
-        """构建抽取 prompt（复用 prompt_manager）。
+        """构建抽取 prompt（配置驱动，不再读内置 YAML）。
 
         Args:
             target: 抽取目标。
@@ -243,23 +282,17 @@ class GlmOcrExtractor(BaseExtractor):
             context: 文档上下文。
             whitelist: 白名单 prompt。
             prev_brands: 前批牌号列表。
+            cfg: 抽取领域配置。
 
         Returns:
             tuple: (system_prompt, user_prompt)
         """
-        # 构建字段定义文本（从 schema.properties 动态取字段名）
-        # 试验方法用标准编号（method_codes），fallback 到方法名称
-        properties = schema.get("result", {}).get("properties", {})
-        field_names = list(properties.keys())
-        field_defs = prompt_manager.build_field_defs_text(
-            feature=target.feature,
-            field_names=field_names,
-            items=target.item_names,
-            methods=target.method_codes or target.method_names,
-        )
+        # 字段定义文本（从 target.fields 构建）
+        field_defs = config_prompt_renderer.build_field_defs(target)
 
-        # 构建输出格式说明
-        format_instruction = self._build_format_instruction(schema)
+        # 输出格式说明由 Schema 模板 return_type 声明，不再写死；
+        # Prompt 模板通过 ${format_instruction} 占位符自行引用格式要求
+        format_instruction = ""
 
         # 构建牌号提示段
         prev_brands_section = ""
@@ -267,46 +300,15 @@ class GlmOcrExtractor(BaseExtractor):
             brands_str = "、".join(set(prev_brands))
             prev_brands_section = f"[前批已抽取的牌号]\n{brands_str}\n\n请参考上述牌号信息。"
 
-        # 构建白名单段
-        whitelist_section = whitelist or ""
-
-        # 渲染 prompt
-        schema_prompt = schema.get("prompt", "")
-        system, user = prompt_manager.render_category_prompt(
-            feature=target.feature,
-            prompt=schema_prompt,
-            field_defs=field_defs,
-            format_instruction=format_instruction,
-            context=context,
-            whitelist_section=whitelist_section,
-            prev_brands_section=prev_brands_section,
+        # 渲染 prompt（未配置模板时由渲染器生成纯指令）
+        system, user = config_prompt_renderer.render_category(
+            target,
+            cfg,
+            context,
+            field_defs,
+            format_instruction,
+            whitelist or "",
+            prev_brands_section,
         )
 
         return system, user
-
-    @staticmethod
-    def _build_format_instruction(schema: dict[str, Any]) -> str:
-        """构建输出格式说明。
-
-        Args:
-            schema: schema 定义。
-
-        Returns:
-            str: 格式说明文本。
-        """
-        result_def = schema.get("result", {})
-        result_type = result_def.get("type", "array")
-        properties = result_def.get("properties", {})
-        field_names = list(properties.keys())
-
-        if result_type == "array":
-            return (
-                "请输出 JSON 数组，每个元素为一个检测数据记录，包含以下字段：\n"
-                f"{', '.join(field_names)}\n"
-                "如果文档中没有该类别的数据，返回空数组 []。"
-            )
-        else:
-            return (
-                "请输出 JSON 对象，包含以下字段：\n"
-                f"{', '.join(field_names)}"
-            )

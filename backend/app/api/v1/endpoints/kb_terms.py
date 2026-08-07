@@ -48,6 +48,7 @@ class TermCreateRequest(BaseModel):
     category: str = ""
     standard_number: str = ""
     synonyms: list[str] = []
+    aliases: list[str] = []
 
 
 class TermUpdateRequest(BaseModel):
@@ -59,6 +60,8 @@ class TermUpdateRequest(BaseModel):
     category: str | None = None
     standard_number: str | None = None
     synonyms: list[str] | None = None
+    aliases: list[str] | None = None
+    term_base_id: str | None = None
 
 
 class TermReviewRequest(BaseModel):
@@ -80,6 +83,8 @@ def _serialize(t: Term, reviewer_name: str | None = None) -> dict:
         "category": t.category or "",
         "standard_number": t.standard_number or "",
         "synonyms": t.synonyms or [],
+        "aliases": t.aliases or [],
+        "term_base_id": str(t.term_base_id) if t.term_base_id else None,
         "status": t.status,
         "reviewed_by": str(t.reviewed_by) if t.reviewed_by else None,
         "reviewed_by_name": reviewer_name,
@@ -209,12 +214,20 @@ async def create_term(
     db: AsyncSession = Depends(get_db),
 ) -> dict:
     """创建术语（editor+）。"""
+    term_base_uuid = None
+    if body.term_base_id:
+        try:
+            term_base_uuid = UUID(body.term_base_id)
+        except ValueError:
+            term_base_uuid = None
     term = Term(
         kb_id=kb_ctx.kb_id,
+        term_base_id=term_base_uuid,
         term_name=body.term,
         standard_name=body.english_term or None,
         definition=body.definition or None,
         synonyms=body.synonyms or None,
+        aliases=body.aliases or None,
         status="active",
         category=body.category or None,
         standard_number=body.standard_number or None,
@@ -247,6 +260,7 @@ async def batch_import(
             standard_name=item.english_term or None,
             definition=item.definition or None,
             synonyms=item.synonyms or None,
+            aliases=item.aliases or None,
             status="active",
             category=item.category or None,
             standard_number=item.standard_number or None,
@@ -293,6 +307,13 @@ async def update_term(
         term.standard_number = body.standard_number or None
     if body.synonyms is not None:
         term.synonyms = body.synonyms
+    if body.aliases is not None:
+        term.aliases = body.aliases
+    if body.term_base_id is not None:
+        try:
+            term.term_base_id = UUID(body.term_base_id) if body.term_base_id else None
+        except ValueError:
+            pass
     await db.commit()
     await db.refresh(term)
     return success(data=_serialize(term))

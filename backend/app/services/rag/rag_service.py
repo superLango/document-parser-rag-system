@@ -422,6 +422,110 @@ class RAGService:
             rerank_count=rerank_count,
         )
 
+    async def retrieve(
+        self,
+        question: str,
+        top_k: int = 5,
+        doc_ids: list[str] | None = None,
+        use_graph: bool = True,
+        use_reranker: bool = True,
+        kb_id: uuid.UUID | None = None,
+    ) -> tuple[str, list[Citation], QueryAnalysis]:
+        """执行检索阶段（不含LLM生成），返回上下文、citations和查询分析。
+
+        用于流式问答场景：先完成检索和重排得到上下文与引用来源，
+        再调用llm_service.stream_generate逐块输出，最后在SSE done事件中
+        回传citations供前端立即显示，无需等待历史持久化。
+
+        Args:
+            question: 用户问题文本。
+            top_k: 最终返回的文档片段数量。
+            doc_ids: 限定检索的文档 ID 列表。
+            use_graph: 是否启用知识图谱检索。
+            use_reranker: 是否启用重排。
+            kb_id: 知识库 ID。
+
+        Returns:
+            tuple: (context_str, citations_list, query_analysis)
+        """
+        analysis_task = asyncio.create_task(self._understand_query(question))
+        embed_task = asyncio.create_task(embedding_service.embed_query(question))
+        analysis, precomputed_embed = await asyncio.gather(
+            analysis_task, embed_task, return_exceptions=True
+        )
+        if isinstance(analysis, Exception):
+            logger.warning("意图分析异常，使用兜底", error=str(analysis))
+            analysis = QueryAnalysis(
+                intent="general", rewritten_query=question,
+                entities=[], sub_queries=[], confidence=0.0,
+            )
+        if isinstance(precomputed_embed, Exception):
+            logger.warning("预计算嵌入失败，将现场嵌入", error=str(precomputed_embed))
+            precomputed_embed = None
+
+        if kb_id is None and analysis.intent in ("summarization", "comparison"):
+            li_result = await self._try_llamaindex_query(
+                question, analysis.intent, top_k, analysis.sub_queries
+            )
+            if li_result is not None and li_result.answer:
+                citations = [
+                    Citation(
+                        document_id=c.get("document_id", ""),
+                        chunk_id=c.get("chunk_id", ""),
+                        content=c.get("content", ""),
+                        score=c.get("score", 0.0),
+                        source=c.get("source", "llamaindex"),
+                    )
+                    for c in li_result.citations
+                ]
+                return li_result.answer, citations, analysis
+
+        if analysis.intent in ("general", "document_search") and precomputed_embed is not None:
+            hyde_doc = await query_service.hyde_rewrite(question)
+            if hyde_doc is not None:
+                try:
+                    hyde_embed = await embedding_service.embed_query(hyde_doc)
+                    precomputed_embed = hyde_embed
+                except Exception as err:
+                    logger.warning("HyDE 嵌入失败，回退原始查询嵌入", error=str(err))
+
+        retrieval_query = analysis.rewritten_query or question
+        pool_size = settings.RAG_RERANK_POOL
+
+        vector_results, graph_data = await self._parallel_retrieve(
+            retrieval_query, question, analysis, pool_size, doc_ids, use_graph,
+            precomputed_embed=precomputed_embed, kb_id=kb_id,
+        )
+
+        if vector_results is None:
+            return "", [], analysis
+
+        retrieval_count = len(vector_results)
+
+        if not vector_results:
+            context = self._build_context([], graph_data, question)
+            citations = []
+            return context, citations, analysis
+
+        final_chunks, rerank_count = await self._rerank(
+            retrieval_query, vector_results, top_k, use_reranker,
+            original_question=question,
+        )
+
+        context = self._build_context(final_chunks, graph_data, question)
+        citations = self._build_citations(final_chunks)
+
+        logger.info(
+            "RAG 检索完成（流式模式）",
+            question=question[:100],
+            intent=analysis.intent,
+            retrieval_count=retrieval_count,
+            rerank_count=rerank_count,
+            citation_count=len(citations),
+        )
+
+        return context, citations, analysis
+
     async def query_stream(
         self,
         question: str,
@@ -455,46 +559,19 @@ class RAGService:
         Yields:
             str: LLM 生成的文本分片，调用方应累加拼接为完整输出。
         """
-        # 1. 查询理解
-        analysis = await self._understand_query(question)
-
-        # 1.5 LlamaIndex 路径流式输出（summarization/comparison 意图）
-        # 知识库隔离：LlamaIndex 索引为全局构建，KB 查询时跳过
-        if kb_id is None and analysis.intent in ("summarization", "comparison"):
-            li_result = await self._try_llamaindex_query(
-                question, analysis.intent, top_k, analysis.sub_queries
-            )
-            if li_result is not None and li_result.answer:
-                # 将完整答案按句子分块 yield，模拟流式输出
-                async for chunk in self._stream_chunks(li_result.answer):
-                    yield chunk
-                return
-            # LlamaIndex 不可用或失败，降级到 Milvus 流式路径
-
-        # 2. 并行检索
-        retrieval_query = analysis.rewritten_query or question
-        pool_size = settings.RAG_RERANK_POOL
-
-        vector_results, graph_data = await self._parallel_retrieve(
-            retrieval_query, question, analysis, pool_size, doc_ids, use_graph,
-            kb_id=kb_id,
+        context, citations, analysis = await self.retrieve(
+            question, top_k, doc_ids, use_graph, use_reranker, kb_id
         )
 
-        # 向量检索失败时返回错误信息
-        if vector_results is None:
+        if not context and not citations:
             yield "抱歉，向量检索失败，无法获取相关文档。"
             return
 
-        # 3. 重排
-        final_chunks, _ = await self._rerank(
-            retrieval_query, vector_results, top_k, use_reranker,
-            original_question=question,
-        )
+        if context and citations and all(c.source == "llamaindex" for c in citations):
+            async for chunk in self._stream_chunks(context):
+                yield chunk
+            return
 
-        # 4. 上下文组装
-        context = self._build_context(final_chunks, graph_data, question)
-
-        # 5. 流式生成（使用意图模板）
         template_suffix = _INTENT_ANSWER_TEMPLATES.get(analysis.intent, "")
         stream_system_prompt = _SYSTEM_PROMPT + template_suffix if template_suffix else _SYSTEM_PROMPT
         try:

@@ -56,6 +56,21 @@ logger = get_logger(__name__)
 _TASK_EXPIRE_DAYS: int = 7
 
 
+class TaskCancelledError(Exception):
+    """任务已被用户取消的异常。"""
+    pass
+
+
+async def _check_task_cancelled(db: AsyncSession, task_id: str | None) -> None:
+    """检查任务是否已被用户取消（状态为 failed），如果是则抛出 TaskCancelledError。"""
+    if task_id is None:
+        return
+    task = await db.get(TaskModel, task_id)
+    if task is not None and task.status == "failed":
+        logger.info("任务已被用户取消，终止执行", task_id=task_id)
+        raise TaskCancelledError("任务已被用户取消")
+
+
 async def _activate_kb_rls(db: AsyncSession, kb_id: str | None) -> None:
     """在 worker 独立会话内激活 PostgreSQL RLS（方案 §9.1）。
 
@@ -104,10 +119,11 @@ async def _update_progress(
             task = result.scalar_one_or_none()
             if task:
                 task.progress = progress
-                task.status = "progress"
+                task.status = "running"
+                if task.started_at is None:
+                    task.started_at = datetime.now()
                 await db.commit()
     except Exception as exc:
-        # 进度更新失败不应影响主流程，仅记录日志
         logger.warning("更新任务进度失败", task_id=task_id, error=str(exc))
 
 
@@ -140,12 +156,14 @@ async def _update_task_status(
             result = await db.execute(stmt)
             task = result.scalar_one_or_none()
             if task:
-                task.status = status
                 if status == "completed":
+                    task.status = "success"
                     task.progress = 100
                     task.completed_at = datetime.now()
-                elif status == "failed" and error:
-                    task.error_message = error[:2000]
+                else:
+                    task.status = status
+                    if status == "failed" and error:
+                        task.error_message = error[:2000]
                 await db.commit()
     except Exception as exc:
         logger.warning(
@@ -218,6 +236,9 @@ async def parse_document_impl(
                     message=f"文档不存在: {document_id}",
                     code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
                 )
+
+            # 【取消检查】任务开始前检查是否已被用户取消
+            await _check_task_cancelled(db, task_id)
 
             # 标记为处理中
             document.status = "processing"
@@ -395,29 +416,9 @@ async def parse_document_impl(
                 )
 
                 # ----------------------------------------------------------
-                # 阶段 6：条件触发结构化抽取任务（KB配置了抽取类别时）
-                # ----------------------------------------------------------
-                from app.models.kb_domain_config import KbCategory
-                if kb_id:
-                    cat_count = await db.scalar(
-                        select(func.count(KbCategory.id)).where(KbCategory.kb_id == kb_uuid)
-                    )
-                    if cat_count and cat_count > 0:
-                        pool: ArqRedis = ctx["redis"]
-                        await pool.enqueue_job(
-                            "extract_document_task", document_id, str(kb_uuid)
-                        )
-                        logger.info(
-                            "已投递抽取任务(KB配置了%d个抽取类别)",
-                            cat_count, document_id=document_id,
-                        )
-                    else:
-                        logger.info(
-                            "KB未配置抽取类别，跳过抽取任务", document_id=document_id,
-                        )
-
-                # ----------------------------------------------------------
-                # 阶段 7：完成（进度 100%）
+                # 阶段 6：完成（进度 100%）
+                # 注意：结构化抽取任务由用户在抽取页面手动触发，不在此处自动投递
+                # 向量索引和图谱构建由"构建图谱"按钮独立触发
                 # ----------------------------------------------------------
                 await _update_progress(task_id, 100, "解析完成", kb_id=kb_id)
                 # 标记任务终态为完成（前端据 status==='completed' 感知完成）
@@ -459,6 +460,21 @@ async def parse_document_impl(
                     "structured_fields": 0,  # 结构化抽取由独立的 extract_document_task 执行
                     "term_replacements": len(replacements),
                 }
+
+            except TaskCancelledError:
+                # 任务被用户取消：不标记文档失败，优雅退出
+                logger.info("任务被用户取消，终止解析流程", document_id=document_id, task_id=task_id)
+                await db.rollback()
+                # 文档状态恢复为 ready（取消前可能被设为 processing）
+                try:
+                    await _activate_kb_rls(db, kb_id)
+                    cancelled_doc = await db.get(Document, doc_uuid)
+                    if cancelled_doc is not None and cancelled_doc.status == "processing":
+                        cancelled_doc.status = "ready"
+                        await db.commit()
+                except Exception:
+                    pass
+                return {"document_id": document_id, "status": "cancelled", "message": "任务已取消"}
 
             except Exception as exc:
                 # 异常处理：标记文档为失败，回滚后写入错误状态

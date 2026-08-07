@@ -1,12 +1,10 @@
 """航天航空检测标准抽取领域模板（material_testing）。
 
-本模板是当前项目的主领域配置，将 ``extraction_schemas.py`` /
-``project_dict_service.py`` / ``field_template.py`` 中的硬编码配置项
-提取为可配置数据，作为新建材料检测知识库的默认配置。
+本模板是当前项目的主领域配置，将 ``extraction_schemas.py`` / ``field_template.py``
+中的硬编码配置项提取为可配置数据，作为新建材料检测知识库的默认配置。
 
 覆盖的硬编码源：
 - ``extraction_schemas.py``: EXTRACTION_OUTPUT_SCHEMAS 注册表 + 各类 enum
-- ``project_dict_service.py``: 三类候选项目正则（元素符号/力学符号/中文项目名）
 - ``extraction_v2/config.py``: RECALL_FILTER_DYNAMIC_THRESHOLDS 等阈值
 - ``field_template.py``: DEFAULT_FIELD_TEMPLATE
 
@@ -18,15 +16,13 @@ from __future__ import annotations
 from app.domain_templates.base import (
     CategoryDef,
     CategoryEnumDef,
-    DictConfigDef,
     DomainTemplate,
     FieldTemplateDef,
     RegexRuleDef,
 )
 
 # ============================================================
-# 化学成分项目（来自 sm_item WHERE feature='化学成分'）
-# 对齐 extraction_schemas.py 的 CHEMICAL_ITEMS
+# 化学成分项目（对齐 extraction_schemas.py 的 CHEMICAL_ITEMS）
 # ============================================================
 CHEMICAL_ITEMS = [
     "C", "Si", "Mn", "P", "S", "Cr", "Ni", "Mo",
@@ -69,7 +65,7 @@ TEMPERATURES_GAS = ["不适用"]
 
 
 # ============================================================
-# 候选项目正则（对齐 project_dict_service.py 的三类正则）
+# 候选项目正则（元素符号/力学符号/中文项目名三类）
 # ============================================================
 # 注意：dataclass 字段中含反斜杠的正则需用原始字符串或双反斜杠
 ELEMENT_PATTERN = (
@@ -217,32 +213,6 @@ MATERIAL_TESTING_TEMPLATE = DomainTemplate(
             sort_order=30,
         ),
     ],
-    dict_config=DictConfigDef(
-        enabled=True,
-        match_threshold=0.6,
-        whitelist_top_k=20,
-        validation_top_k=1,
-        validation_similarity_threshold=0.6,
-        tables_mapping={
-            "sm_feature": {"name_field": "NAME", "id_field": "ID", "flag_field": "FLAG"},
-            "sm_item": {
-                "name_field": "NAME",
-                "id_field": "id",
-                "english_name_field": "ENGLISH_NAME",
-                "alias_field": "ITEM_ALIAS",
-                "unit_field": "UNIT",
-                "feature_field": "FEATURE",
-            },
-            "sm_method": {
-                "name_field": "NAME",
-                "id_field": "ID",
-                "type_field": "TYPE",
-                "code_field": "METHOD_CODE",
-                "range_field": "RANGE",
-                "feature_field": "FEATURE",
-            },
-        },
-    ),
     config_override={
         "extraction": {
             "output_schema_mode": "auto",

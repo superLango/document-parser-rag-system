@@ -6,7 +6,7 @@ Create Date: 2026-08-02
 
 本基线迁移将 alembic 版本表标记为已就绪。阶段 1 的全部表
 （users/knowledge_bases/kb_members/documents/tasks/schema_configs/terms/
-audit_logs/password_reset_tokens/password_history/base_tables/kb_domain_config
+audit_logs/password_reset_tokens/password_history/kb_domain_config
 等）已通过手动 ALTER TABLE / CREATE TABLE 落库，此处不再重复创建，
 仅作为后续迁移的起点。
 

@@ -2,13 +2,15 @@
 import { computed } from 'vue'
 import { badgeVariants, type BadgeVariants } from '.'
 import { cn } from '@/lib/utils'
+import type { ClassValue } from 'clsx'
 
 const props = defineProps<{
   variant?: BadgeVariants['variant']
-  class?: string
+  size?: BadgeVariants['size']
+  class?: ClassValue
 }>()
 
-const classes = computed(() => cn(badgeVariants({ variant: props.variant }), props.class))
+const classes = computed(() => cn(badgeVariants({ variant: props.variant, size: props.size }), props.class))
 </script>
 
 <template>

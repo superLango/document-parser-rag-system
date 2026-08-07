@@ -54,6 +54,11 @@ instance.interceptors.response.use(
     const path = window.location.pathname
     const isLoginPage = path.includes('/login')
 
+    // 请求被取消（AbortController）：静默处理，不弹错误提示
+    if (error.code === 'ERR_CANCELED' || error.name === 'CanceledError' || axios.isCancel(error)) {
+      return Promise.reject(error)
+    }
+
     // 统一错误提示（Toast 系统）- 先取到消息，避免下方 401 处理后无法读取
     const message =
       response?.data?.message ||

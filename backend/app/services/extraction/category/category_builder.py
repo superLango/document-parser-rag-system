@@ -1,26 +1,22 @@
-"""Phase 2 类别构建主流程。
+"""Phase 2 类别构建主流程（配置驱动）。
 
-从 sm_feature 全量出发，用每个 feature 的 item+method 作为 query 检索
-doc_five_dim，有召回且置信度达标则保留该 feature。
+从配置中心的 Schema 模板加载类别（配置驱动，由术语集承载），
+用类别名 + Query 术语集作为 query 检索 doc_five_dim，有召回且置信度达标则保留。
 
-流程：
-1. base_data.loader 加载全量 features + 每个 feature 的 items/methods
-2. query_embedder 批量编码五维 query 向量（1 次 embed 调用）
-3. 并发执行 hybrid_search（每个 feature 一次，top_k=5 快速检索）
-4. feature_filter 置信度过滤
-5. schema_builder 构建三类 schema（基础信息/类别列表/热处理制度）
-6. 返回 (targets, skipped_features, schemas)
-
-性能：
-- 批量编码：所有 feature 的五维 query 通过 1 次 embed 调用完成
-- 并发检索：feature 间并发 hybrid_search（通过 asyncio.gather）
-- 目标耗时：< 10s
+配置驱动要点：
+- 类别来源：``cfg.schema_templates`` 中 is_active=True 的类别节点。
+- 名称展开：``name_source=term_base`` 的类别按术语集字段值循环生成多个类别实例。
+- 字段值：从术语绑定（term/dataset）解析可选值，供 schema 构建与白名单注入。
+- Query 词组：由 ``fixed_query`` + ``query_sources``（Query 术语集）组装。
+- 置信度阈值 / top_k：类别级覆盖全局默认。
 
 使用示例::
 
     from app.services.extraction.category.category_builder import category_builder
 
-    targets, skipped, schemas = await category_builder.build(doc_id)
+    targets, skipped, schemas = await category_builder.build(
+        doc_id, kb_id=kb_id, cfg=cfg, db=db
+    )
 """
 
 from __future__ import annotations
@@ -31,218 +27,328 @@ import time
 from typing import Any
 
 from app.core.logging import get_logger
-from app.services.base_data.loader import base_table_loader
-from app.services.extraction.extraction_config import get_extraction_settings
+from app.core.exceptions import BusinessException
 from app.services.extraction.extraction_models import (
     ExtractionTarget,
-    ItemInfo,
-    MethodInfo,
     SkippedFeature,
 )
 from app.services.extraction.category.feature_filter import feature_filter
 from app.services.extraction.query_embedder import query_embedder
 from app.services.extraction.schema_builder import schema_builder
+from app.services.extraction.rule_engine.term_base_loader import term_base_loader
 from app.services.vector.five_dim_vector_store import five_dim_vector_store
 
 logger = get_logger(__name__)
 
-# Phase 2 类别检索的 top_k（只需判断有无召回，取少量结果即可）
-_PHASE2_TOP_K = 5
-
 
 class CategoryBuilder:
-    """Phase 2 类别构建器。
+    """Phase 2 类别构建器（Schema 模板驱动）。
 
-    编排三表加载 → 批量 query 编码 → 并发检索 → 过滤 → schema 构建。
+    编排 Schema 模板加载 → 类别展开 → 术语集取值 → 批量 query 编码 →
+    并发检索 → 过滤 → schema 构建。
     """
 
     def __init__(self) -> None:
-        self._settings = get_extraction_settings()
+        pass
 
     async def build(
         self,
         doc_id: str,
         kb_id: str | None = None,
+        cfg: Any = None,
+        db: Any = None,
     ) -> tuple[list[ExtractionTarget], list[SkippedFeature], dict[str, Any]]:
-        """构建抽取目标（Phase 2 主入口）。
+        """构建抽取目标（Phase 2 主入口，配置驱动）。
 
         Args:
             doc_id: 文档 ID（用于 hybrid_search 的 doc_id 过滤）。
             kb_id: 知识库 ID，用于向量 Collection 隔离。
+            cfg: ExtractionDomainConfig（由 pipeline 解析后传入）。
+            db: 数据库会话（用于术语集取值）。
 
         Returns:
             tuple: (targets, skipped_features, schemas)
-                - targets: 保留的 ExtractionTarget 列表（含 items/methods/schema/confidence）
-                - skipped_features: 被剔除的 feature 列表
-                - schemas: dict，含 "doc_info" / "heat_treatment" 两个 schema
+                - targets: 保留的 ExtractionTarget 列表（含 fields/query_terms/schema）
+                - skipped_features: 被剔除的 category 列表
+                - schemas: dict，含 "categories" 键
         """
         start_time = time.time()
 
-        # 1. 加载全量 features
-        features = await base_table_loader.load_all_features()
-        feature_names = [f.name for f in features if f.name]
+        # 1. 从 Schema 模板加载类别并展开为目标
+        targets, expanded_count = await self._build_targets(cfg, db, kb_id)
         logger.info(
-            "Phase 2 开始：加载 features",
-            extra={"doc_id": doc_id, "feature_count": len(feature_names)},
+            "Phase 2 开始：加载 Schema 类别",
+            extra={
+                "doc_id": doc_id,
+                "target_count": len(targets),
+                "expanded_count": expanded_count,
+            },
         )
 
-        # 2. 加载每个 feature 的 items 和 methods（并发）
-        items_map, methods_map = await self._load_items_and_methods(feature_names)
-
-        # 3. 批量编码五维 query 向量
-        query_texts: list[tuple[str, list[str], list[str]]] = []
-        for feature_name in feature_names:
-            item_names = [it.name for it in items_map.get(feature_name, [])]
-            method_names = [m.name for m in methods_map.get(feature_name, [])]
-            query_texts.append((feature_name, item_names, method_names))
-
-        query_vectors_list = await query_embedder.encode_batch(query_texts)
+        # 2. 批量编码五维 query 向量（feature + query_terms）
+        query_vectors_list = await query_embedder.encode_batch(
+            targets,
+            cfg=cfg,
+        )
         query_vectors_map: dict[str, dict[str, list[float]]] = {
-            fn: qv for fn, qv in zip(feature_names, query_vectors_list)
+            t.feature: qv for t, qv in zip(targets, query_vectors_list)
         }
 
-        # 4. 并发执行 hybrid_search（每个 feature 一次，top_k=5）
+        # 3. 并发执行 hybrid_search（每个类别一次，top_k=5）
         feature_hits = await self._search_all_features(
-            doc_id, feature_names, query_vectors_map, kb_id=kb_id
+            doc_id, targets, query_vectors_map, cfg, kb_id=kb_id
         )
 
-        # 5. 置信度过滤
-        kept_features, skipped = feature_filter.filter(feature_hits)
+        # 4. 置信度过滤（全局默认阈值过滤，类别级阈值在保留阶段覆盖）
+        global_threshold = None
+        if cfg is not None:
+            global_threshold = cfg.retrieval.get("default_confidence_threshold")
+        kept_features, skipped = feature_filter.filter(
+            feature_hits, threshold=global_threshold
+        )
 
-        # 6. 构建 ExtractionTarget（保留的 feature）
-        targets: list[ExtractionTarget] = []
-        for feature_name in kept_features:
-            target = ExtractionTarget(
-                feature=feature_name,
-                items=items_map.get(feature_name, []),
-                methods=methods_map.get(feature_name, []),
-                confidence=feature_filter.get_confidence(feature_name),
-            )
-            targets.append(target)
+        # 5. 构建 retained ExtractionTarget（保留的类别，类别级阈值覆盖全局）
+        retained: list[ExtractionTarget] = []
+        for t in targets:
+            if t.feature not in kept_features:
+                continue
+            confidence = feature_filter.get_confidence(t.feature)
+            category_threshold = t.confidence_threshold
+            if category_threshold is not None and confidence < category_threshold:
+                skipped.append(SkippedFeature(
+                    feature=t.feature,
+                    reason=f"类别级置信度过低（{confidence:.4f} < {category_threshold}）",
+                    confidence=confidence,
+                ))
+                continue
+            t.confidence = confidence
+            retained.append(t)
 
-        # 7. 构建三类 schema
-        doc_info_schema = schema_builder.build_doc_info_schema()
-        category_schemas = schema_builder.build_category_schemas(targets)
-        heat_treatment_schema = schema_builder.build_heat_treatment_schema(feature_names)
+        # 6. 构建类别 schema（从配置字段）
+        category_schemas = schema_builder.build_category_schemas(retained)
 
-        schemas = {
-            "doc_info": doc_info_schema,
-            "categories": category_schemas,
-            "heat_treatment": heat_treatment_schema,
-        }
+        schemas = {"categories": category_schemas}
 
         elapsed = time.time() - start_time
         logger.info(
             "Phase 2 完成",
             extra={
                 "doc_id": doc_id,
-                "total_features": len(feature_names),
-                "kept_features": len(targets),
+                "total_targets": len(targets),
+                "kept_features": len(retained),
                 "skipped_features": len(skipped),
                 "elapsed_sec": round(elapsed, 2),
             },
         )
 
-        return targets, skipped, schemas
+        return retained, skipped, schemas
 
     # ------------------------------------------------------------------
-    # 内部方法
+    # 目标构建
     # ------------------------------------------------------------------
-
-    async def _load_items_and_methods(
+    async def _build_targets(
         self,
-        feature_names: list[str],
-    ) -> tuple[dict[str, list[ItemInfo]], dict[str, list[MethodInfo]]]:
-        """并发加载所有 feature 的 items 和 methods。
-
-        Args:
-            feature_names: feature 名列表。
+        cfg: Any,
+        db: Any,
+        kb_id: str | None,
+    ) -> tuple[list[ExtractionTarget], int]:
+        """从 Schema 模板构建原始目标列表（含 term_base 名称展开与字段取值）。
 
         Returns:
-            tuple: (items_map, methods_map)
-                - items_map: feature 名 → ItemInfo 列表
-                - methods_map: feature 名 → MethodInfo 列表
+            (targets, expanded_count)：展开后的目标数与因 term_base 展开产生的增量数。
         """
+        targets: list[ExtractionTarget] = []
+        expanded = 0
 
-        async def load_one(feature_name: str) -> tuple[str, list[ItemInfo], list[MethodInfo]]:
-            items_orm = await base_table_loader.load_items_by_feature(feature_name)
-            methods_orm = await base_table_loader.load_methods_by_feature(feature_name)
-            items = [ItemInfo.from_orm(it) for it in items_orm]
-            methods = [MethodInfo.from_orm(m) for m in methods_orm]
-            return feature_name, items, methods
+        if cfg is None:
+            logger.warning("未传入抽取配置，Phase 2 无类别可构建")
+            return targets, expanded
 
-        # 限制并发数，避免对 PG 造成过大压力
-        semaphore = asyncio.Semaphore(10)
-        results = await asyncio.gather(
-            *[self._load_with_semaphore(semaphore, load_one, fn) for fn in feature_names],
-            return_exceptions=True,
+        for template in cfg.schema_templates:
+            for cat in template.get("categories", []):
+                if not cat.get("is_active", True):
+                    continue
+                if cat.get("extraction_strategy") == "never":
+                    continue
+
+                base_fields = await self._enrich_fields(cfg, db, kb_id, cat)
+
+                if cat.get("name_source") == "term_base":
+                    names = await self._expand_names(cfg, db, kb_id, cat)
+                    if not names:
+                        logger.warning(
+                            "名称术语集为空，跳过类别",
+                            extra={"category": cat.get("name", "")},
+                        )
+                        continue
+                    expanded += len(names) - 1
+                    for name in names:
+                        targets.append(self._make_target(cat, name, base_fields, cfg))
+                else:
+                    targets.append(self._make_target(cat, cat.get("name", ""), base_fields, cfg))
+
+        return targets, expanded
+
+    def _make_target(
+        self,
+        cat: dict,
+        feature: str,
+        fields: list[dict],
+        cfg: Any = None,
+    ) -> ExtractionTarget:
+        """由类别节点构造单个 ExtractionTarget。"""
+        query_terms = self._build_query_terms(cat, cfg)
+        # 类别名作为首个 query 词，保证空配置时仍有检索语义
+        if feature and feature not in query_terms:
+            query_terms.insert(0, feature)
+        return ExtractionTarget(
+            feature=feature,
+            category_id=cat.get("id"),
+            template_id=cat.get("template_id"),
+            name_source=cat.get("name_source", "manual"),
+            name_term_base_id=cat.get("name_term_base_id"),
+            query_mode=cat.get("query_mode", "fixed"),
+            fixed_query=cat.get("fixed_query"),
+            query_sources=cat.get("query_sources") or [],
+            confidence_threshold=cat.get("confidence_threshold"),
+            top_k=cat.get("top_k"),
+            rerank_top_k=cat.get("rerank_top_k"),
+            max_tokens=cat.get("max_tokens"),
+            return_type=cat.get("return_type", "array"),
+            fields=fields or [],
+            query_terms=query_terms,
         )
 
-        items_map: dict[str, list[ItemInfo]] = {}
-        methods_map: dict[str, list[MethodInfo]] = {}
-        for result in results:
-            if isinstance(result, Exception):
-                logger.warning("加载 feature items/methods 失败", extra={"error": str(result)})
-                continue
-            feature_name, items, methods = result
-            items_map[feature_name] = items
-            methods_map[feature_name] = methods
+    def _build_query_terms(self, cat: dict, cfg: Any = None) -> list[str]:
+        """组装检索查询词组（fixed_query + query_sources 预置值）。
 
-        return items_map, methods_map
+        实际术语集值在检索时按需加载（见 query_terms 的运行时补充），
+        此处先收集 fixed_query 的分词与类别描述。
+        """
+        terms: list[str] = []
+        fixed = cat.get("fixed_query")
+        if fixed:
+            for tok in fixed.replace("，", " ").replace(",", " ").split():
+                tok = tok.strip()
+                if tok and tok not in terms:
+                    terms.append(tok)
+        # 术语集去重后保留条数上限：读取类别 Query 术语集配置的精简上限
+        #（类别未配置时回退全局 retrieval.query_embed.query_refined_limit）
+        refined_limit, _ = query_embedder._query_limits(cfg, cat.get("query_sources"))
+        if len(terms) > refined_limit:
+            terms = terms[:refined_limit]
+        return terms
 
-    @staticmethod
-    async def _load_with_semaphore(
-        semaphore: asyncio.Semaphore,
-        func: Any,
-        *args: Any,
-    ) -> Any:
-        """通过信号量限制并发执行的协程。"""
-        async with semaphore:
-            return await func(*args)
+    async def _expand_names(
+        self,
+        cfg: Any,
+        db: Any,
+        kb_id: str | None,
+        cat: dict,
+    ) -> list[str]:
+        """按名称术语集字段值展开类别名。"""
+        term_base_id = cat.get("name_term_base_id")
+        field = cat.get("name_term_field")
+        if not term_base_id or not field or db is None:
+            return []
+        data = await term_base_loader.load_term_base(db, str(kb_id), str(term_base_id))
+        if data is None:
+            return []
+        return term_base_loader.get_group_values(data, field)
 
+    async def _enrich_fields(
+        self,
+        cfg: Any,
+        db: Any,
+        kb_id: str | None,
+        cat: dict,
+    ) -> list[dict]:
+        """为类别字段富化可选值（从术语绑定 term 解析）。
+
+        Returns:
+            list[dict]: 字段列表，每项含 name/description/type/required/example/values。
+        """
+        category_id = cat.get("id")
+        enriched: list[dict] = []
+        for f in cat.get("fields", []):
+            f = dict(f)
+            binding = None
+            if cfg is not None and category_id:
+                binding = cfg.term_bindings.get((category_id, f.get("name")))
+            f["values"] = await self._resolve_binding_values(cfg, db, kb_id, binding)
+            enriched.append(f)
+        return enriched
+
+    async def _resolve_binding_values(
+        self,
+        cfg: Any,
+        db: Any,
+        kb_id: str | None,
+        binding: dict | None,
+    ) -> list[str]:
+        """从术语绑定解析字段可选值（异步加载术语集）。"""
+        if not binding:
+            return []
+        # term 绑定：从术语集字段值加载（系统无数据集概念，仅术语集）
+        term_base_id = binding.get("term_base_id")
+        if not term_base_id or db is None:
+            return []
+        value_field = (binding.get("config") or {}).get("value_field", "term_name")
+        data = await term_base_loader.load_term_base(
+            db, str(kb_id), str(term_base_id)
+        )
+        if data is None:
+            return []
+        return term_base_loader.get_group_values(data, value_field)
+
+    # ------------------------------------------------------------------
+    # 检索与过滤
+    # ------------------------------------------------------------------
     async def _search_all_features(
         self,
         doc_id: str,
-        feature_names: list[str],
+        targets: list[ExtractionTarget],
         query_vectors_map: dict[str, dict[str, list[float]]],
+        cfg: Any,
         kb_id: str | None = None,
     ) -> dict[str, list[dict[str, Any]]]:
-        """并发执行所有 feature 的 hybrid_search。
+        """并发执行所有类别的 hybrid_search。"""
+        if cfg is None:
+            raise BusinessException("类别构建缺少抽取配置（cfg）")
+        weights = cfg.retrieval.get("weights")
+        if not weights:
+            raise BusinessException("未配置检索权重 retrieval.weights")
 
-        Args:
-            doc_id: 文档 ID。
-            feature_names: feature 名列表。
-            query_vectors_map: feature 名 → 五维 query 向量。
-            kb_id: 知识库 ID。
+        # Phase 2 类别召回参数（cfg.retrieval.phase2，缺失即报错，无硬编码回退）
+        phase2 = cfg.phase2_retrieval() if cfg is not None else {}
+        if phase2.get("top_k") is None or phase2.get("per_dim_top_k") is None:
+            raise BusinessException("未配置检索参数 retrieval.phase2.top_k / per_dim_top_k")
+        phase2_top_k = int(phase2["top_k"])
+        phase2_per_dim_top_k = int(phase2["per_dim_top_k"])
 
-        Returns:
-            dict: feature 名 → hits 列表。
-        """
-        weights = self._settings.hybrid_search_weights
-
-        async def search_one(feature_name: str) -> tuple[str, list[dict[str, Any]]]:
-            query_vectors = query_vectors_map.get(feature_name)
+        async def search_one(target: ExtractionTarget) -> tuple[str, list[dict[str, Any]]]:
+            query_vectors = query_vectors_map.get(target.feature)
             if not query_vectors:
-                return feature_name, []
+                return target.feature, []
             try:
                 hits = await five_dim_vector_store.hybrid_search(
                     query_vectors=query_vectors,
                     doc_id=doc_id,
-                    top_k=_PHASE2_TOP_K,
-                    per_dim_top_k=_PHASE2_TOP_K * 2,
+                    top_k=phase2_top_k,
+                    per_dim_top_k=phase2_per_dim_top_k,
                     weights=weights,
                     kb_id=kb_id,
                 )
-                return feature_name, hits
+                return target.feature, hits
             except Exception as err:
                 logger.warning(
                     "hybrid_search 失败",
-                    extra={"feature": feature_name, "error": str(err)},
+                    extra={"feature": target.feature, "error": str(err)},
                 )
-                return feature_name, []
+                return target.feature, []
 
         results = await asyncio.gather(
-            *[search_one(fn) for fn in feature_names],
+            *[search_one(t) for t in targets],
             return_exceptions=True,
         )
 

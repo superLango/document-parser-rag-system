@@ -6,7 +6,7 @@
 数据流向：
     DomainTemplate（本模块）
         ↓ domain_template_service.init_kb_from_template
-    KbCategory / KbCategoryEnum / KbFieldTemplate / KbRegexRule / KbDictConfig
+    KbCategory / KbCategoryEnum / KbFieldTemplate / KbRegexRule
         ↓ kb_config_loader.KBConfigLoader.load
     KBConfig（运行时配置对象）
         ↓ 抽取 / RAG / OCR 等服务消费
@@ -80,7 +80,7 @@ class FieldTemplateDef:
 class RegexRuleDef:
     """候选项目正则规则定义。
 
-    对应 ``KbRegexRule`` 表，替代 ``project_dict_service.py`` 中硬编码的三类正则。
+    对应 ``KbRegexRule`` 表，承载候选项目的三类正则。
 
     Attributes:
         name: 规则名（如 "化学元素符号"）。
@@ -93,36 +93,6 @@ class RegexRuleDef:
     pattern: str
     description: str = ""
     sort_order: int = 0
-
-
-@dataclass
-class DictConfigDef:
-    """基础字典同步与校验配置定义。
-
-    对应 ``KbDictConfig`` 表，替代 ``extraction_v2/config.py`` 与
-    ``project_dict_service.py`` 中的硬编码字典同步与校验参数。
-
-    Attributes:
-        enabled: 是否启用基础字典同步与校验。
-        sync_url: 基础数据源同步 URL（None=用全局 settings.PROJECT_DICT_SYNC_URL）。
-        sync_api_key: 同步接口密钥。
-        sync_cron: 定时同步 cron 表达式。
-        match_threshold: 项目匹配相似度阈值。
-        whitelist_top_k: 动态白名单召回数。
-        validation_top_k: 抽取后校验召回数。
-        validation_similarity_threshold: 校验相似度阈值。
-        tables_mapping: 三表（feature/item/method）字段映射 JSON。
-    """
-
-    enabled: bool = True
-    sync_url: str | None = None
-    sync_api_key: str | None = None
-    sync_cron: str | None = None
-    match_threshold: float = 0.6
-    whitelist_top_k: int = 20
-    validation_top_k: int = 1
-    validation_similarity_threshold: float = 0.6
-    tables_mapping: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -140,7 +110,6 @@ class DomainTemplate:
         categories: 抽取类别定义列表。
         field_templates: 字段模板列表（doc_info / category_data）。
         regex_rules: 候选项目正则规则列表。
-        dict_config: 基础字典配置。
         config_override: KB config JSON 覆盖项（合并到 ``KnowledgeBase.config``）。
         hook_template: 初始 Hook 脚本内容（写入 ``app/kb_hooks/{kb_id}/hooks.py``）。
             None=不创建 Hook 文件，使用默认逻辑。
@@ -153,7 +122,6 @@ class DomainTemplate:
     categories: list[CategoryDef] = field(default_factory=list)
     field_templates: list[FieldTemplateDef] = field(default_factory=list)
     regex_rules: list[RegexRuleDef] = field(default_factory=list)
-    dict_config: DictConfigDef = field(default_factory=DictConfigDef)
     config_override: dict[str, Any] = field(default_factory=dict)
     hook_template: str | None = None
 
@@ -208,13 +176,6 @@ class DomainTemplate:
                 }
                 for r in self.regex_rules
             ],
-            "dict_config": {
-                "enabled": self.dict_config.enabled,
-                "match_threshold": self.dict_config.match_threshold,
-                "whitelist_top_k": self.dict_config.whitelist_top_k,
-                "validation_top_k": self.dict_config.validation_top_k,
-                "validation_similarity_threshold": self.dict_config.validation_similarity_threshold,
-            },
             "config_override": self.config_override,
             "has_hook": self.hook_template is not None,
         }

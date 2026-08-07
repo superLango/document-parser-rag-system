@@ -65,22 +65,18 @@ class ExtractionSettings:
     def llm_top_k(self) -> int:
         return settings.EXTRACTION_V3_LLM_TOP_K
 
-    @property
-    def llm_timeout(self) -> int:
-        return settings.EXTRACTION_V3_LLM_TIMEOUT
-
     # ------------------------------------------------------------------
     # 抽取引擎
     # ------------------------------------------------------------------
 
     @property
     def extraction_engine(self) -> str:
-        """当前抽取引擎：glmocr / langextract。"""
+        """当前抽取引擎（配置驱动，BaseExtract / LangExtract）。"""
         return settings.EXTRACTION_V3_EXTRACTION_ENGINE
 
     @property
     def fallback_to_glmocr(self) -> bool:
-        """LangExtract 失败时是否降级到 glmocr。"""
+        """LangExtract 失败时是否降级到 BaseExtract。"""
         return settings.EXTRACTION_V3_EXTRACTION_FALLBACK_TO_GLMOCR
 
     # ------------------------------------------------------------------
@@ -203,11 +199,11 @@ class ExtractionSettings:
         """根据引擎动态计算 feature 间并发。
 
         - LangExtract：category_concurrency（8），8×3=24 匹配 LLM 并发
-        - glmocr：llm_max_concurrency（24），24×1=24 匹配 LLM 并发
+        - BaseExtract：llm_max_concurrency（24），24×1=24 匹配 LLM 并发
         """
-        if self.extraction_engine == "langextract":
+        if self.extraction_engine == "LangExtract":
             return self.category_concurrency
-        # glmocr 线路类别内串行，可提高类别间并发
+        # BaseExtract 线路类别内串行，可提高类别间并发
         return self.llm_max_concurrency
 
 

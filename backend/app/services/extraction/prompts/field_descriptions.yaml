@@ -9,7 +9,7 @@
 
 项目名称:
   description: "从{feature}类别的item列表匹配：{items前20个}，按语义匹配非字面匹配"
-  enum_source: items  # enum 从 sm_item.NAME 列表取
+  enum_source: items  # enum 取自配置中心 term_base 类别展开的 item 列表
   required: true
 
 单位:
@@ -20,7 +20,7 @@
 
 试验方法:
   description: "从{feature}类别的method列表匹配：{method_codes}，有年代号保留，无年代号取最新"
-  enum_source: methods  # enum 从 sm_method.NAME 列表取
+  enum_source: methods  # enum 取自配置中心 term_base 类别展开的 method 列表
 
 试验温度:
   description: "试验温度，如 室温、20℃、650℃、-196℃。从文档中对应的试验温度列或表头中提取"

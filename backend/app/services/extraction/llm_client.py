@@ -32,7 +32,7 @@ from typing import Any
 from openai import AsyncOpenAI
 
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
+from app.core.exceptions import BusinessException
 
 logger = get_logger(__name__)
 
@@ -56,30 +56,47 @@ class ExtractionLLMClient:
         return cls._instance
 
     def __init__(self) -> None:
-        """初始化 AsyncOpenAI 客户端（懒加载，首次调用时创建）。"""
-        self._client: AsyncOpenAI | None = None
-        self._settings = get_extraction_settings()
+        """初始化客户端池（懒加载，首次调用时创建）。"""
+        self._clients: dict[tuple, AsyncOpenAI] = {}
 
-    def _ensure_client(self) -> AsyncOpenAI:
-        """确保 AsyncOpenAI 客户端已创建（懒加载）。
+    def _ensure_client(
+        self,
+        base_url: str | None = None,
+        api_key: str | None = None,
+        timeout: float | None = None,
+    ) -> AsyncOpenAI:
+        """确保 AsyncOpenAI 客户端已创建（懒加载，按端点缓存）。
 
         **无超时设计**：大表格/大批次的 LLM 输出 token 量大（如化学成分 200+ 条
         记录的 JSON），推理时间可能超过 5 分钟。移除超时避免请求被中断重试，
         所有请求压入 vLLM 等待队列，由 ``llm_semaphore`` 控制并发上限。
+        仅当通过 ``timeout`` 显式配置时才启用超时。
+
+        Args:
+            base_url: OpenAI 兼容端点；None 时使用全局 settings。
+            api_key: API Key；None 时使用全局 settings。
+            timeout: 请求超时秒数；None 表示无超时（默认）。
+
+        Returns:
+            AsyncOpenAI: 对应端点的客户端实例。
         """
-        if self._client is None:
-            self._client = AsyncOpenAI(
-                base_url=self._settings.llm_api_base,
-                api_key=self._settings.llm_api_key,
-                timeout=None,  # 无超时：大输出 token 场景不中断
+        # LLM 端点由调用方从配置解析传入，缺失即报错（不允许 settings/env 兜底）
+        if not base_url:
+            raise BusinessException("未配置抽取 LLM 端点 base_url")
+        api_key = api_key or "EMPTY"  # 本地 vLLM 惯例占位符，非配置回退
+        key = (base_url, api_key, timeout)
+        if key not in self._clients:
+            self._clients[key] = AsyncOpenAI(
+                base_url=base_url,
+                api_key=api_key,
+                timeout=timeout,  # None=无超时：大输出 token 场景不中断
                 max_retries=0,  # 不重试：vLLM 自己处理排队
             )
             logger.info(
                 "v3 抽取 LLM 客户端已初始化",
-                base_url=self._settings.llm_api_base,
-                model=self._settings.llm_model,
+                base_url=base_url,
             )
-        return self._client
+        return self._clients[key]
 
     async def chat(
         self,
@@ -88,10 +105,12 @@ class ExtractionLLMClient:
         max_tokens: int | None = None,
         temperature: float | None = None,
         top_p: float | None = None,
+        endpoint: dict | None = None,
+        engine_params: dict | None = None,
     ) -> str:
-        """生成文本回复（glmocr 线路核心方法）。
+        """生成文本回复（BaseExtract 线路核心方法）。
 
-        通过 vLLM OpenAI 兼容接口调用，默认使用 glmocr 线路参数：
+        通过 vLLM OpenAI 兼容接口调用，默认使用 BaseExtract 线路参数：
         temperature=0.0、top_p=0.1、enable_thinking=False。
 
         Args:
@@ -100,30 +119,53 @@ class ExtractionLLMClient:
             max_tokens: 生成最大 token 数，默认使用配置项。
             temperature: 采样温度，默认 0.0。
             top_p: top_p 采样，默认 0.1。
+            endpoint: KB 专属端点 {base_url, api_key, model}；None 时用全局 settings。
+            engine_params: 当前引擎分组参数（top_k / enable_thinking / timeout）。
 
         Returns:
             str: 模型生成的文本内容。
         """
-        client = self._ensure_client()
-        settings = self._settings
+        base_url = (endpoint or {}).get("base_url")
+        api_key = (endpoint or {}).get("api_key")
+        model = (endpoint or {}).get("model")
+        if not base_url or not model:
+            raise BusinessException("未配置抽取 LLM 端点（api_base/model），请在资源与配置中填写")
+        # 超时：仅当引擎分组显式配置时启用（默认 None=无超时）
+        raw_timeout = (engine_params or {}).get("timeout")
+        timeout = float(raw_timeout) if raw_timeout is not None else None
+        client = self._ensure_client(base_url=base_url, api_key=api_key, timeout=timeout)
 
         messages: list[dict[str, str]] = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
 
-        # glmocr 线路 LLM 参数
-        # Qwen3.6-35B-A3B 是通用 MoE 大模型，不需要 thinking 模式即可处理复杂抽取任务
+        # BaseExtract 线路 LLM 参数（引擎分组配置，缺失即报错，无 settings/env 兜底）
+        _ep = engine_params or {}
+        _top_p = top_p if top_p is not None else _ep.get("top_p")
+        if _top_p is None:
+            raise BusinessException("未配置引擎分组参数 llm.engines.BaseExtract.top_p")
+        _top_k = _ep.get("top_k")
+        if _top_k is None:
+            raise BusinessException("未配置引擎分组参数 llm.engines.BaseExtract.top_k")
+        _enable_thinking = _ep.get("enable_thinking")
+        if _enable_thinking is None:
+            raise BusinessException("未配置引擎分组参数 llm.engines.BaseExtract.enable_thinking")
+        if max_tokens is None:
+            raise BusinessException("未配置采样 max_tokens（引擎分组 llm.engines.<engine>.max_tokens 或类别级 max_tokens）")
+        if temperature is None:
+            raise BusinessException("未配置采样温度（引擎分组 llm.engines.<engine>.temperature）")
+
         response = await client.chat.completions.create(
-            model=settings.llm_model,
+            model=model,
             messages=messages,
-            max_tokens=max_tokens or settings.llm_max_output_tokens,
-            temperature=temperature if temperature is not None else settings.llm_temperature,
-            top_p=top_p if top_p is not None else settings.llm_top_p,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=_top_p,
             stream=False,
             extra_body={
-                "top_k": settings.llm_top_k,
-                "chat_template_kwargs": {"enable_thinking": False},
+                "top_k": _top_k,
+                "chat_template_kwargs": {"enable_thinking": _enable_thinking},
             },
         )
 
@@ -142,8 +184,10 @@ class ExtractionLLMClient:
         system_prompt: str | None = None,
         max_tokens: int | None = None,
         temperature: float | None = None,
+        endpoint: dict | None = None,
+        engine_params: dict | None = None,
     ) -> dict[str, Any] | list[dict[str, Any]]:
-        """生成 JSON 并解析（glmocr 线路 JSON 抽取）。
+        """生成 JSON 并解析（BaseExtract 线路 JSON 抽取）。
 
         调用 ``chat`` 生成文本，随后通过三级容错解析 JSON：
         1. 直接 json.loads
@@ -155,6 +199,8 @@ class ExtractionLLMClient:
             system_prompt: 可选的系统提示词。
             max_tokens: 生成最大 token 数。
             temperature: 采样温度。
+            endpoint: KB 专属端点；None 时用全局 settings。
+            engine_params: 引擎分组参数。
 
         Returns:
             dict | list: 解析后的 JSON 对象（字典或列表）。
@@ -167,6 +213,8 @@ class ExtractionLLMClient:
             system_prompt=system_prompt,
             max_tokens=max_tokens,
             temperature=temperature,
+            endpoint=endpoint,
+            engine_params=engine_params,
         )
         return self.parse_json(text)
 

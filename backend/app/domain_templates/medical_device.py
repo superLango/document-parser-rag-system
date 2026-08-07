@@ -12,7 +12,6 @@ from __future__ import annotations
 from app.domain_templates.base import (
     CategoryDef,
     CategoryEnumDef,
-    DictConfigDef,
     DomainTemplate,
     FieldTemplateDef,
     RegexRuleDef,
@@ -129,14 +128,6 @@ MEDICAL_DEVICE_TEMPLATE = DomainTemplate(
             sort_order=20,
         ),
     ],
-    dict_config=DictConfigDef(
-        enabled=False,  # 医疗器械领域默认不启用基础字典同步（无统一数据源）
-        match_threshold=0.55,
-        whitelist_top_k=15,
-        validation_top_k=1,
-        validation_similarity_threshold=0.55,
-        tables_mapping={},
-    ),
     config_override={
         "extraction": {
             "output_schema_mode": "auto",

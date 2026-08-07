@@ -35,7 +35,6 @@ from app.models.backup import KbBackup
 from app.models.document import Document
 from app.models.kb_domain_config import (
     KbCategory,
-    KbDictConfig,
     KbFieldTemplate,
     KbRegexRule,
 )
@@ -218,32 +217,10 @@ async def create_backup(
         for f in field_templates
     ]
 
-    dict_configs = (
-        await db.execute(
-            select(KbDictConfig).where(KbDictConfig.kb_id == kb_id)
-        )
-    ).scalars().all()
-    dict_data = [
-        {
-            "id": str(dc.id),
-            "enabled": dc.enabled,
-            "sync_url": dc.sync_url,
-            "sync_api_key": dc.sync_api_key,
-            "sync_cron": dc.sync_cron,
-            "match_threshold": dc.match_threshold,
-            "whitelist_top_k": dc.whitelist_top_k,
-            "validation_top_k": dc.validation_top_k,
-            "validation_similarity_threshold": dc.validation_similarity_threshold,
-            "tables_mapping": dc.tables_mapping,
-        }
-        for dc in dict_configs
-    ]
-
     domain_config = {
         "categories": categories_data,
         "regex_rules": regex_data,
         "field_templates": fields_data,
-        "dict_configs": dict_data,
     }
 
     # 2. 构造 manifest
@@ -255,7 +232,6 @@ async def create_backup(
         "categories": len(categories_data),
         "regex_rules": len(regex_data),
         "field_templates": len(fields_data),
-        "dict_configs": len(dict_data),
     }
     manifest = {
         "backup_version": "1.0",
@@ -499,7 +475,6 @@ async def restore_backup(
     await db.execute(sa_delete(KbCategory).where(KbCategory.kb_id == kb_id))
     await db.execute(sa_delete(KbRegexRule).where(KbRegexRule.kb_id == kb_id))
     await db.execute(sa_delete(KbFieldTemplate).where(KbFieldTemplate.kb_id == kb_id))
-    await db.execute(sa_delete(KbDictConfig).where(KbDictConfig.kb_id == kb_id))
 
     for cat_data in domain_data.get("categories", []):
         db.add(
@@ -533,28 +508,10 @@ async def restore_backup(
                 prompt=ft_data.get("prompt"),
             )
         )
-    for dc_data in domain_data.get("dict_configs", []):
-        db.add(
-            KbDictConfig(
-                kb_id=kb_id,
-                enabled=dc_data.get("enabled", True),
-                sync_url=dc_data.get("sync_url"),
-                sync_api_key=dc_data.get("sync_api_key"),
-                sync_cron=dc_data.get("sync_cron"),
-                match_threshold=dc_data.get("match_threshold", 0.6),
-                whitelist_top_k=dc_data.get("whitelist_top_k", 20),
-                validation_top_k=dc_data.get("validation_top_k", 1),
-                validation_similarity_threshold=dc_data.get(
-                    "validation_similarity_threshold", 0.6
-                ),
-                tables_mapping=dc_data.get("tables_mapping", {}),
-            )
-        )
     stats["domain_config"] = (
         len(domain_data.get("categories", []))
         + len(domain_data.get("regex_rules", []))
         + len(domain_data.get("field_templates", []))
-        + len(domain_data.get("dict_configs", []))
     )
 
     logger.info(

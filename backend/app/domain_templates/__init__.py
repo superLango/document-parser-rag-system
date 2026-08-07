@@ -2,8 +2,7 @@
 
 提供内置领域模板，支持通过模板快速初始化知识库领域配置，替代手工逐项配置。
 新建知识库时指定 ``template_code``，由 ``domain_template_service`` 将模板
-配置写入 ``kb_categories`` / ``kb_field_templates`` / ``kb_regex_rules`` /
-``kb_dict_configs`` 等表。
+配置写入 ``kb_categories`` / ``kb_field_templates`` / ``kb_regex_rules`` 等表。
 
 内置模板（4 个）：
 - ``material_testing``：航天航空检测标准抽取（材料检测，默认领域）
@@ -22,7 +21,6 @@
 from app.domain_templates.base import (
     CategoryDef,
     CategoryEnumDef,
-    DictConfigDef,
     DomainTemplate,
     FieldTemplateDef,
     RegexRuleDef,
@@ -64,7 +62,6 @@ def list_templates() -> list[DomainTemplate]:
 __all__ = [
     "CategoryDef",
     "CategoryEnumDef",
-    "DictConfigDef",
     "DomainTemplate",
     "FieldTemplateDef",
     "RegexRuleDef",

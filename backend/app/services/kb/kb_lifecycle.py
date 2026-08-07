@@ -21,7 +21,7 @@
 - 各资源步骤独立 try/except，单个失败不阻断整体；
 - ``_safe_step`` 捕获 ``AttributeError`` 时降级为 WARNING（防御 service 接口未对齐），
   当前各 service 的 KB 方法均已实现（vector_store / five_dimension_index /
-  project_dict_store / storage_service / graph_store / cache_service）。
+  storage_service / graph_store / cache_service）。
 """
 
 import asyncio
@@ -386,8 +386,6 @@ class KBLifecycleManager:
         chunk_vector_store.create_kb_collection(kb_id_str)
         from app.services.vector.five_dim_vector_store import five_dim_vector_store
         five_dim_vector_store.create_kb_collection(kb_id_str)
-        from app.services.project_dict.project_dict_store import project_dict_store
-        await project_dict_store.create_kb_collections(kb_id)
         logger.info("Milvus Collections创建完成", kb_id=kb_id_str)
 
     async def _destroy_milvus_collections(self, kb_id: uuid.UUID) -> None:
@@ -396,8 +394,6 @@ class KBLifecycleManager:
         chunk_vector_store.drop_kb_collection(kb_id_str)
         from app.services.vector.five_dim_vector_store import five_dim_vector_store
         five_dim_vector_store.drop_kb_collection(kb_id_str)
-        from app.services.project_dict.project_dict_store import project_dict_store
-        await project_dict_store.drop_kb_collections(kb_id)
         logger.warning("Milvus Collections删除完成", kb_id=kb_id_str)
 
     async def _create_minio_bucket(self, kb_id: uuid.UUID) -> None:

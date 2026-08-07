@@ -34,7 +34,6 @@ class KbConfigResponse(BaseModel):
         default_factory=dict, description="字段模板（doc_info / category_data）"
     )
     regex_rules: list[dict[str, Any]] = Field(default_factory=list, description="正则规则列表")
-    dict_config: dict[str, Any] = Field(default_factory=dict, description="字典配置")
     template_code: str | None = Field(None, description="初始化所用模板编码")
 
 
@@ -84,7 +83,6 @@ class DomainTemplateDetail(BaseModel):
     categories: list[dict[str, Any]]
     field_templates: list[dict[str, Any]]
     regex_rules: list[dict[str, Any]]
-    dict_config: dict[str, Any]
     config_override: dict[str, Any]
     has_hook: bool
 
@@ -103,7 +101,6 @@ class ApplyTemplateResult(BaseModel):
     categories_written: int
     field_templates_written: int
     regex_rules_written: int
-    dict_config_written: bool
     config_override_merged: bool
     hook_script_written: bool
 
@@ -216,22 +213,6 @@ class KbFieldTemplateResponse(BaseModel):
     prompt: str | None = None
 
 
-class KbDictConfigResponse(BaseModel):
-    """字典配置响应。"""
-
-    model_config = ConfigDict(from_attributes=True)
-
-    id: UUID
-    enabled: bool
-    sync_url: str | None = None
-    sync_cron: str | None = None
-    match_threshold: float
-    whitelist_top_k: int
-    validation_top_k: int
-    validation_similarity_threshold: float
-    tables_mapping: dict[str, Any]
-
-
 # ============================================================
 # 配置校验与资源诊断
 # ============================================================
@@ -253,3 +234,52 @@ class KbResourceVerifyResult(BaseModel):
     steps: dict[str, dict[str, Any]] = Field(
         description="各资源步骤状态 {step: {ok, detail/error}}"
     )
+
+
+class ServiceCheckResult(BaseModel):
+    """单个服务校验结果。"""
+
+    name: str = Field(description="服务名称，如 minio、milvus、nebula、llm、redis、ocr_vllm、popo_vllm")
+    display_name: str = Field(description="服务显示名称")
+    status: str = Field(description="校验状态: ok / error / warning")
+    message: str = Field(description="校验结果消息")
+    response_time_ms: float = Field(default=0, description="响应时间（毫秒）")
+    details: dict[str, Any] = Field(default_factory=dict, description="额外详情")
+
+
+class ServicesDiagnoseResult(BaseModel):
+    """所有服务一键诊断结果。"""
+
+    kb_id: UUID
+    total: int = Field(description="总服务数")
+    ok_count: int = Field(description="正常数量")
+    error_count: int = Field(description="错误数量")
+    warning_count: int = Field(description="警告数量")
+    services: list[ServiceCheckResult] = Field(description="各服务校验结果列表")
+    checked_at: datetime = Field(description="校验时间")
+
+
+class ServiceConfigItem(BaseModel):
+    """单个服务配置项。"""
+
+    key: str = Field(description="配置键名")
+    label: str = Field(description="配置显示名")
+    type: str = Field(description="配置类型: string / number / boolean / password")
+    value: Any = Field(description="当前值")
+    default: Any = Field(default=None, description="默认值")
+    required: bool = Field(default=False, description="是否必填")
+    placeholder: str | None = Field(default=None, description="占位提示")
+    description: str | None = Field(default=None, description="配置说明")
+
+
+class ServiceConfigSection(BaseModel):
+    """服务配置节。"""
+
+    name: str = Field(description="服务标识名")
+    display_name: str = Field(description="服务显示名称")
+    description: str = Field(description="服务描述")
+    icon: str | None = Field(default=None, description="图标名")
+    category: str = Field(description="分类: storage / vector / graph / llm / model / cache")
+    configurable: bool = Field(default=True, description="是否可配置（诊断通过后才可配置）")
+    fields: list[ServiceConfigItem] = Field(description="配置项列表")
+    last_status: dict | None = Field(default=None, description="上次校验结果状态")

@@ -34,6 +34,7 @@ import { Switch } from '@/components/ui/switch'
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Pagination } from '@/components/ui/pagination'
+import { confirm } from '@/composables/useConfirm'
 
 const loading = ref(true)
 const users = ref<User[]>([])
@@ -202,7 +203,7 @@ async function submitReset() {
 }
 
 async function deleteUser(user: User) {
-  if (!confirm(`确定删除用户「${user.username}」？此操作为软删除，可联系 DBA 恢复。`)) return
+  if (!await confirm({ title: `确定删除用户「${user.username}」？`, description: '此操作为软删除，可联系 DBA 恢复。', variant: 'danger', confirmText: '删除' })) return
   try {
     await usersApi.delete(user.id)
     toast.success('已删除', user.username)

@@ -199,16 +199,16 @@ function buildStyle(): StylesheetJsonBlock[] {
 
 const coseLayoutOptions: CoseLayoutOptions = {
   name: 'cose',
-  animate: true,
-  animationDuration: 600,
+  animate: false, // 关闭动画，直接展示最终布局，避免长时间动画阻塞
   padding: 30,
   randomize: true,
-  componentSpacing: 80,
-  nodeRepulsion: 8000,
-  idealEdgeLength: 100,
+  componentSpacing: 100,
+  nodeRepulsion: 6000,
+  idealEdgeLength: 80,
   edgeElasticity: 0.45,
   gravity: 0.25,
-  numIter: 1500,
+  numIter: 300, // 从1500减少到300，大幅降低布局计算时间
+  coolingFactor: 0.95, // 添加冷却因子加速收敛
 }
 
 function applyLayout() {
@@ -265,10 +265,14 @@ watch(
   () => [props.nodes, props.edges],
   async () => {
     if (!cy) return
-    cy.elements().remove()
-    cy.add(buildElements())
-    applyLayout()
-    refreshHighlight()
+    // 使用 setTimeout 异步执行，避免阻塞UI线程
+    setTimeout(() => {
+      if (!cy) return
+      cy.elements().remove()
+      cy.add(buildElements())
+      applyLayout()
+      refreshHighlight()
+    }, 0)
   },
   { deep: false },
 )
@@ -281,8 +285,11 @@ watch(
 
 onMounted(async () => {
   await nextTick()
-  initCytoscape()
-  refreshHighlight()
+  // 使用 setTimeout 延迟初始化，让页面先完成其他内容的渲染，避免阻塞路由切换
+  setTimeout(() => {
+    initCytoscape()
+    refreshHighlight()
+  }, 50)
 })
 
 onBeforeUnmount(() => {

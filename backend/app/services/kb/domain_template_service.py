@@ -10,9 +10,8 @@
     3. 写入 kb_categories + kb_category_enums
     4. 写入 kb_field_templates
     5. 写入 kb_regex_rules
-    6. 写入 kb_dict_configs
-    7. 合并模板 config_override 到 KnowledgeBase.config
-    8. 若模板含 hook_template，写入 ``app/kb_hooks/{kb_id}/hooks.py``
+    6. 合并模板 config_override 到 KnowledgeBase.config
+    7. 若模板含 hook_template，写入 ``app/kb_hooks/{kb_id}/hooks.py``
 
 事务策略：
 - 配置写入在单个事务内完成，失败回滚
@@ -36,7 +35,6 @@ from app.domain_templates import TEMPLATES, get_template, list_templates
 from app.models.kb_domain_config import (
     KbCategory,
     KbCategoryEnum,
-    KbDictConfig,
     KbFieldTemplate,
     KbRegexRule,
 )
@@ -120,7 +118,6 @@ async def init_kb_from_template(
     cat_count = await _write_categories(db, kb_id, tpl.categories)
     ft_count = await _write_field_templates(db, kb_id, tpl.field_templates)
     rr_count = await _write_regex_rules(db, kb_id, tpl.regex_rules)
-    await _write_dict_config(db, kb_id, tpl.dict_config)
 
     # 3. 合并 config_override 到 KnowledgeBase.config
     config_merged = await _merge_config_override(db, kb_id, tpl.config_override)
@@ -148,7 +145,6 @@ async def init_kb_from_template(
         "categories_written": cat_count,
         "field_templates_written": ft_count,
         "regex_rules_written": rr_count,
-        "dict_config_written": True,
         "config_override_merged": config_merged,
         "hook_script_written": hook_written,
     }
@@ -164,7 +160,7 @@ async def _clear_kb_domain_config(db: AsyncSession, kb_id: uuid.UUID) -> None:
     """清理 KB 的旧领域配置（幂等）。
 
     按外键依赖顺序删除：先删 enum（依赖 category）→ category →
-    field_template / regex_rule / dict_config。
+    field_template / regex_rule。
 
     Args:
         db: 异步数据库会话。
@@ -181,7 +177,6 @@ async def _clear_kb_domain_config(db: AsyncSession, kb_id: uuid.UUID) -> None:
     await db.execute(delete(KbCategory).where(KbCategory.kb_id == kb_id))
     await db.execute(delete(KbFieldTemplate).where(KbFieldTemplate.kb_id == kb_id))
     await db.execute(delete(KbRegexRule).where(KbRegexRule.kb_id == kb_id))
-    await db.execute(delete(KbDictConfig).where(KbDictConfig.kb_id == kb_id))
 
     logger.debug("已清理 KB 旧领域配置", kb_id=str(kb_id), old_categories=len(cat_ids))
 
@@ -267,28 +262,6 @@ async def _write_regex_rules(
         )
         count += 1
     return count
-
-
-async def _write_dict_config(
-    db: AsyncSession,
-    kb_id: uuid.UUID,
-    dict_config_def,
-) -> None:
-    """写基础字典同步与校验配置。"""
-    db.add(
-        KbDictConfig(
-            kb_id=kb_id,
-            enabled=dict_config_def.enabled,
-            sync_url=dict_config_def.sync_url,
-            sync_api_key=dict_config_def.sync_api_key,
-            sync_cron=dict_config_def.sync_cron,
-            match_threshold=dict_config_def.match_threshold,
-            whitelist_top_k=dict_config_def.whitelist_top_k,
-            validation_top_k=dict_config_def.validation_top_k,
-            validation_similarity_threshold=dict_config_def.validation_similarity_threshold,
-            tables_mapping=dict(dict_config_def.tables_mapping),
-        )
-    )
 
 
 async def _merge_config_override(

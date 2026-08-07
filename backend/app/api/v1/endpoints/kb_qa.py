@@ -168,23 +168,50 @@ async def kb_query_stream(
     )
 
     async def event_generator():
-        """SSE 事件生成器（KB 隔离 + 历史持久化）。"""
+        """SSE 事件生成器（KB 隔离 + 历史持久化 + citations返回）。"""
         full_answer: list[str] = []
         session_id_str: str | None = body.session_id
+        citations_list: list[CitationModel] = []
         try:
-            async for chunk in rag_service.query_stream(
+            from app.services.rag.rag_service import _SYSTEM_PROMPT, _INTENT_ANSWER_TEMPLATES
+            from app.services.llm.llm_service import llm_service
+
+            context, rag_citations, analysis = await rag_service.retrieve(
                 question=body.question,
                 top_k=body.top_k,
                 doc_ids=body.doc_ids,
                 use_graph=body.use_graph,
                 use_reranker=body.use_reranker,
                 kb_id=kb_ctx.kb_id,
-            ):
-                full_answer.append(chunk)
-                payload: dict = {"chunk": chunk}
-                yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+            )
 
-            # 流式完成后持久化到会话历史（独立会话，避免流式期间会话失效）
+            if not context:
+                yield f"data: {json.dumps({'error': '向量检索失败，无法获取相关文档'}, ensure_ascii=False)}\n\n"
+                return
+
+            is_llamaindex = context and rag_citations and all(c.source == "llamaindex" for c in rag_citations)
+
+            citations_list = [
+                CitationModel(**asdict(c)) for c in rag_citations
+            ]
+
+            template_suffix = _INTENT_ANSWER_TEMPLATES.get(analysis.intent, "")
+            stream_system_prompt = _SYSTEM_PROMPT + template_suffix if template_suffix else _SYSTEM_PROMPT
+
+            if is_llamaindex:
+                async for chunk in rag_service._stream_chunks(context):
+                    full_answer.append(chunk)
+                    payload: dict = {"chunk": chunk}
+                    yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+            else:
+                async for chunk in llm_service.stream_generate(
+                    prompt=context,
+                    system_prompt=stream_system_prompt,
+                ):
+                    full_answer.append(chunk)
+                    payload = {"chunk": chunk}
+                    yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+
             try:
                 from app.core.database import AsyncSessionLocal
                 from app.api.deps import activate_rls
@@ -194,7 +221,6 @@ async def kb_query_stream(
                     session = await ensure_session(
                         hist_db, kb_ctx.kb_id, kb_ctx.user.id, session_id_str
                     )
-                    # 显式按 kb_id 过滤会话，纵深防御不依赖 RLS（superuser 绕过 RLS）
                     await add_message(
                         hist_db, session.id, "user", body.question, kb_id=kb_ctx.kb_id
                     )
@@ -203,6 +229,7 @@ async def kb_query_stream(
                         session.id,
                         "assistant",
                         "".join(full_answer),
+                        citations=[c.model_dump() for c in citations_list],
                         kb_id=kb_ctx.kb_id,
                     )
                     await hist_db.commit()
@@ -210,7 +237,12 @@ async def kb_query_stream(
             except Exception as persist_err:
                 logger.warning("流式问答历史持久化失败", error=str(persist_err))
 
-            yield f"data: {json.dumps({'done': True, 'session_id': session_id_str}, ensure_ascii=False)}\n\n"
+            done_payload: dict = {
+                'done': True,
+                'session_id': session_id_str,
+                'citations': [c.model_dump() for c in citations_list],
+            }
+            yield f"data: {json.dumps(done_payload, ensure_ascii=False)}\n\n"
         except Exception as err:
             logger.error(
                 "KB 流式问答查询失败",

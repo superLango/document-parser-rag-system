@@ -93,10 +93,9 @@ async def main():
     print(f"  总记录数: {result.summary.get('total_records', 0)}")
     print(f"  总剔除数: {result.summary.get('total_rejected', 0)}")
     print(f"  活跃类别: {result.summary.get('active_features', [])}")
-    print(f"  热处理记录: {result.summary.get('heat_treatment_count', 0)}")
 
     # Check result file
-    result_path = Path(f"data/ocr_data/{task_id}/extraction_v3.json")
+    result_path = Path(f"data/ocr_data/{task_id}/extract_result.json")
     if result_path.exists():
         print(f"\n✅ 结果文件已保存: {result_path}")
         print(f"   文件大小: {result_path.stat().st_size} bytes")

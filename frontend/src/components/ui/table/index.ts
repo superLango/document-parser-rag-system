@@ -27,22 +27,31 @@ const wrap = (tag: string, baseClass: string) =>
 
 export const Table = wrap(
   'div',
-  'w-full caption-bottom overflow-auto',
+  'w-full caption-bottom overflow-auto rounded-xl border border-border bg-card/50 shadow-sm',
 )
-export const TableHeader = wrap('thead', '[&_tr]:border-b')
-export const TableBody = wrap('tbody', '[&_tr:last-child]:border-0')
-export const TableFooter = wrap('tfoot', 'border-t bg-muted/50 font-medium [&>tr]:last:border-b-0')
+export const TableHeader = wrap(
+  'thead',
+  '[&_tr]:border-b [&_tr]:border-border/80 [&_tr]:bg-muted/30',
+)
+export const TableBody = wrap(
+  'tbody',
+  '[&_tr:last-child]:border-0 [&_tr:nth-child(even)]:bg-muted/20',
+)
+export const TableFooter = wrap(
+  'tfoot',
+  'border-t border-border/80 bg-muted/50 font-medium [&>tr]:last:border-b-0',
+)
 export const TableRow = wrap(
   'tr',
-  'border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
+  'border-b border-border/60 transition-all duration-150 hover:bg-accent/60 data-[state=selected]:bg-primary/10 hover:shadow-sm',
 )
 export const TableHead = wrap(
   'th',
-  'h-10 px-3 text-left align-middle text-xs font-medium uppercase tracking-wide text-muted-foreground [&:has([role=checkbox])]:pr-0',
+  'h-11 px-4 text-left align-middle text-xs font-semibold uppercase tracking-wider text-muted-foreground [&:has([role=checkbox])]:pr-0',
 )
 export const TableCell = wrap(
   'td',
-  'p-3 align-middle text-sm [&:has([role=checkbox])]:pr-0',
+  'p-4 align-middle text-sm [&:has([role=checkbox])]:pr-0 transition-colors duration-150',
 )
 export const TableCaption = wrap(
   'caption',

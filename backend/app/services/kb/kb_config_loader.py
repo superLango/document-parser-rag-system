@@ -5,8 +5,8 @@
 1. **全局默认**（``DEFAULT_KB_CONFIG``）：从 ``app.core.config.settings`` 派生，
    与现有硬编码配置项对齐，保证默认 KB 行为等价
 2. **KB 覆盖**（``KnowledgeBase.config`` JSON）：用户在配置中心调整的参数
-3. **领域配置表**（``kb_categories`` / ``kb_field_templates`` / ``kb_regex_rules``
-   / ``kb_dict_configs``）：替代 ``extraction_schemas.py`` 等硬编码
+3. **领域配置表**（``kb_categories`` / ``kb_field_templates`` / ``kb_regex_rules``）：
+   替代 ``extraction_schemas.py`` 等硬编码
 
 合并产物为 ``KBConfig`` 对象，供抽取流程、RAG、OCR 等服务按 KB 配置执行。
 
@@ -27,7 +27,6 @@ from app.core.logging import get_logger
 from app.models.kb_domain_config import (
     KbCategory,
     KbCategoryEnum,
-    KbDictConfig,
     KbFieldTemplate,
     KbRegexRule,
 )
@@ -88,14 +87,6 @@ def _build_default_config() -> dict[str, Any]:
             "light_model": settings.LLM_LIGHT_MODEL,
             "enable_cache": True,
         },
-        # 字典配置（默认值，KB 专属 kb_dict_configs 表覆盖）
-        "dict": {
-            "enabled": True,
-            "match_threshold": 0.6,
-            "whitelist_top_k": 20,
-            "validation_top_k": 1,
-            "validation_similarity_threshold": 0.6,
-        },
     }
 
 
@@ -115,11 +106,10 @@ class KBConfig:
 
     Attributes:
         kb_id: 知识库 ID。
-        config: 合并后的扁平配置字典（含 ocr/vector/extraction/qa/dict 各节）。
+        config: 合并后的扁平配置字典（含 ocr/vector/extraction/qa 各节）。
         categories: 抽取类别列表（从 kb_categories 表加载）。
         field_templates: 字段模板（doc_info / category_data）。
         regex_rules: 候选项目正则规则。
-        dict_config: 基础字典同步与校验配置。
     """
 
     kb_id: uuid.UUID
@@ -127,7 +117,6 @@ class KBConfig:
     categories: list[dict] = field(default_factory=list)
     field_templates: dict[str, list] = field(default_factory=dict)
     regex_rules: list[dict] = field(default_factory=list)
-    dict_config: dict[str, Any] = field(default_factory=dict)
 
     # ---- 便捷访问器 ----
     @property
@@ -145,10 +134,6 @@ class KBConfig:
     @property
     def qa(self) -> dict[str, Any]:
         return self.config.get("qa", {})
-
-    @property
-    def dict_section(self) -> dict[str, Any]:
-        return self.config.get("dict", {})
 
     def get(self, *keys: str, default: Any = None) -> Any:
         """按层级路径取配置值，如 ``cfg.get("extraction", "passes")``。"""
@@ -205,11 +190,6 @@ class KBConfigLoader:
         categories = await self._load_categories(db, kb_id)
         field_templates = await self._load_field_templates(db, kb_id)
         regex_rules = await self._load_regex_rules(db, kb_id)
-        dict_config = await self._load_dict_config(db, kb_id)
-
-        # 字典配置表覆盖默认 dict 节
-        if dict_config:
-            _deep_merge(merged["dict"], dict_config)
 
         logger.debug(
             "KB 配置已加载",
@@ -224,7 +204,6 @@ class KBConfigLoader:
             categories=categories,
             field_templates=field_templates,
             regex_rules=regex_rules,
-            dict_config=dict_config,
         )
 
     # ---- 领域配置表加载 ----
@@ -288,24 +267,6 @@ class KBConfigLoader:
             }
             for r in result.scalars()
         ]
-
-    async def _load_dict_config(self, db: AsyncSession, kb_id: uuid.UUID) -> dict[str, Any]:
-        """加载基础字典同步与校验配置。显式按 kb_id 过滤。"""
-        stmt = select(KbDictConfig).where(KbDictConfig.kb_id == kb_id)
-        result = await db.execute(stmt)
-        dc = result.scalar_one_or_none()
-        if dc is None:
-            return {}
-        return {
-            "enabled": dc.enabled,
-            "sync_url": dc.sync_url,
-            "sync_cron": dc.sync_cron,
-            "match_threshold": dc.match_threshold,
-            "whitelist_top_k": dc.whitelist_top_k,
-            "validation_top_k": dc.validation_top_k,
-            "validation_similarity_threshold": dc.validation_similarity_threshold,
-            "tables_mapping": dc.tables_mapping if isinstance(dc.tables_mapping, dict) else {},
-        }
 
 
 # ============================================================

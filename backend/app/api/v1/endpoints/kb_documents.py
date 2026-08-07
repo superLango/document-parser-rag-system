@@ -55,6 +55,7 @@ from app.core.database import get_db
 from app.core.exceptions import BusinessException, ErrorCode, SystemException
 from app.core.logging import get_logger
 from app.core.response import paginated, success
+from app.core.snowflake import snowflake_generator
 from app.models.document import Document
 from app.models.knowledge_base import EDIT_ROLES
 from app.models.task import Task as TaskModel
@@ -406,9 +407,10 @@ async def get_ocr_text(
     kb_ctx: KBContext = Depends(get_kb_context),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """获取文档 OCR 解析文本与结构化数据（任意成员）。
+    """获取文档 OCR 解析文本与 Popo 后处理 JSON（任意成员）。
 
-    返回 parsed_text、layout_data（bbox）、structured_data（json），供前端查看页面使用。
+    返回 parsed_text（Markdown）、layout_data（版面块）、popo_json（Popo 处理后的完整 JSON），
+    structured_data 保留兼容但文档查看页优先展示 popo_json。
     """
     document = await db.get(Document, document_id)
     if document is None or document.kb_id != kb_ctx.kb_id:
@@ -416,11 +418,42 @@ async def get_ocr_text(
             code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
             message=f"文档 {document_id} 不存在",
         )
+
+    # 读取 Popo 处理后的 JSON（与 viewer-data 逻辑一致）
+    popo_json = None
+    markdown_content = document.markdown_content or document.parsed_text or ""
+    layout_data = document.layout_data or {}
+    try:
+        from app.services.vector.reconstruction_service import reconstruction_service
+
+        ocr_output_dir = layout_data.get("output_dir", "")
+        if ocr_output_dir:
+            task_dir = Path(ocr_output_dir)
+        else:
+            task_dir = reconstruction_service._get_task_dir(
+                str(document_id), kb_id=str(kb_ctx.kb_id)
+            )
+
+        if not markdown_content:
+            md_path = task_dir / "reconstructed.md"
+            if md_path.exists():
+                markdown_content = md_path.read_text(encoding="utf-8")
+
+        popo_output_dir = task_dir / "popo_output"
+        if popo_output_dir.exists():
+            json_files = list(popo_output_dir.glob("*.json"))
+            if json_files:
+                with json_files[0].open("r", encoding="utf-8") as f:
+                    popo_json = json.load(f)
+    except Exception as exc:
+        logger.warning("读取 Popo 输出失败", document_id=str(document_id), error=str(exc))
+
     return success(data={
         "document_id": str(document.id),
         "filename": document.filename,
-        "parsed_text": document.parsed_text or "",
-        "layout_data": document.layout_data,
+        "parsed_text": markdown_content,
+        "layout_data": layout_data,
+        "popo_json": popo_json,
         "structured_data": document.structured_data,
         "status": document.status,
         "file_type": document.file_type,
@@ -451,14 +484,21 @@ async def extract_document(
             message=f"文档未完成解析，当前状态: {document.status}",
         )
 
+    # 提交抽取前对知识库抽取配置做完整校验（任一配置缺失/无效即报错，直到全部通过）
+    from app.services.extraction_config.config_validator import ensure_extraction_config_valid
+
+    await ensure_extraction_config_valid(db, kb_ctx.kb_id)
+
     document.extraction_status = None
     await db.commit()
 
     pool = await _get_arq_pool()
+    job_id = snowflake_generator.generate_id_str()
     job = await pool.enqueue_job(
         "extract_document_task",
         str(document_id),
         str(kb_ctx.kb_id),
+        _job_id=job_id,
     )
     if job is None:
         raise BusinessException(
@@ -466,13 +506,24 @@ async def extract_document(
             message="抽取任务提交失败，可能已有相同任务在执行中",
         )
 
+    task = TaskModel(
+        id=job.job_id,
+        kb_id=kb_ctx.kb_id,
+        document_id=document_id,
+        task_type="extract_document",
+        status="pending",
+        progress=0,
+    )
+    db.add(task)
+    await db.commit()
+
     logger.info(
         "KB 文档抽取任务已提交",
         kb_id=str(kb_ctx.kb_id),
         document_id=str(document_id),
         job_id=job.job_id,
     )
-    return success(data={"job_id": job.job_id, "status": "pending"})
+    return success(data={"task_id": job.job_id, "status": "pending"})
 
 
 @router.post("/{document_id}/build-index-graph", status_code=201)
@@ -505,10 +556,12 @@ async def build_index_graph(
     await db.commit()
 
     pool = await _get_arq_pool()
+    job_id = snowflake_generator.generate_id_str()
     job = await pool.enqueue_job(
         "build_index_graph_task",
         str(document_id),
         str(kb_ctx.kb_id),
+        _job_id=job_id,
     )
     if job is None:
         raise BusinessException(
@@ -516,13 +569,24 @@ async def build_index_graph(
             message="索引构建任务提交失败，可能已有相同任务在执行中",
         )
 
+    task = TaskModel(
+        id=job.job_id,
+        kb_id=kb_ctx.kb_id,
+        document_id=document_id,
+        task_type="build_index_graph",
+        status="pending",
+        progress=0,
+    )
+    db.add(task)
+    await db.commit()
+
     logger.info(
         "KB 文档索引/图谱构建任务已提交",
         kb_id=str(kb_ctx.kb_id),
         document_id=str(document_id),
         job_id=job.job_id,
     )
-    return success(data={"job_id": job.job_id, "status": "pending"})
+    return success(data={"task_id": job.job_id, "status": "pending"})
 
 
 @router.get("/{document_id}/viewer-data")

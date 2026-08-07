@@ -3,9 +3,9 @@
  * 移动端底部导航栏（KB 内）。
  *
  * 在 lg 以下显示，提供 5 个主要 KB 功能的快捷入口：
- *   概览 / 文档 / 抽取 / 问答 / 配置
+ *   概览 / 文档解析 / 结构化抽取 / 知识问答 / 资源与配置
  *
- * 其他次要页面（Schema/术语/任务/图谱/成员）可通过概览页快速入口访问。
+ * 其他次要页面（Schema/专业术语集/任务列表/知识图谱/知识库成员）可通过概览页快速入口访问。
  * 桌面端（lg+）由 KbLayout 的侧边导航覆盖全部 11 项，本组件隐藏。
  */
 import { useRoute } from 'vue-router'
@@ -21,10 +21,10 @@ const route = useRoute()
 
 const tabs = [
   { name: 'KbOverview', label: '概览', icon: LayoutDashboard },
-  { name: 'KbDocuments', label: '文档', icon: FileText },
-  { name: 'KbExtraction', label: '抽取', icon: FileSearch },
-  { name: 'KbQA', label: '问答', icon: MessageSquare },
-  { name: 'KbConfig', label: '配置', icon: Settings },
+  { name: 'KbDocuments', label: '文档解析', icon: FileText },
+  { name: 'KbExtraction', label: '结构化抽取', icon: FileSearch },
+  { name: 'KbQA', label: '知识问答', icon: MessageSquare },
+  { name: 'KbConfig', label: '资源与配置', icon: Settings },
 ] as const
 </script>
 

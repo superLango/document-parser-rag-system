@@ -223,24 +223,6 @@ class PromptManager:
         descriptions = self.load_field_descriptions()
         return descriptions.get(field_name, {"description": field_name})
 
-    @staticmethod
-    def get_temperature_rules() -> str:
-        """获取温度区分规则文本（glmocr / langextract 两线路共享）。
-
-        与 category_glmocr.yaml 的 [温度区分规则] 段保持一致，
-        供 LangExtract 线路注入 prompt_description，确保两线路行为对齐。
-
-        Returns:
-            str: 温度区分规则多行文本。
-        """
-        return (
-            "- 高温拉伸：只抽取试验温度明确为高温（如650℃、800℃等>100℃）的数据，不抽取室温数据\n"
-            "- 低温拉伸：只抽取试验温度明确为低温（如-196℃、-70℃等<0℃）的数据，不抽取室温数据\n"
-            "- 室温拉伸：抽取试验温度为室温、常温或20℃左右的数据\n"
-            "- 试验温度字段必须从文档对应的温度列或表头中提取，不能凭空猜测\n"
-            "- 如果文档中没有明确温度信息，默认按室温处理"
-        )
-
     def build_field_defs_text(
         self,
         feature: str,

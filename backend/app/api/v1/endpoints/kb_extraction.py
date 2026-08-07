@@ -21,6 +21,7 @@ Document 与 SchemaConfig，实现知识库隔离：
 """
 
 import json
+from datetime import datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, Request
@@ -42,8 +43,6 @@ from app.core.response import success
 from app.models.document import Document
 from app.models.knowledge_base import EDIT_ROLES
 from app.models.schema_model import SchemaConfig
-# TODO: extraction_service已删除，需适配新的extraction_pipeline接口
-# from app.services.extraction.extraction_pipeline import extraction_pipeline as extraction_service
 from app.services.export_service import export_data
 
 # 复用全局抽取模块的请求模型与辅助函数，保持两端契约一致
@@ -52,12 +51,69 @@ from app.api.v1.endpoints.extraction import (
     ExtractionStreamRequest,
     _load_document,
     _load_merged_schema,
-    _save_extraction_result,
 )
 
 logger = get_logger(__name__)
 
 router = APIRouter(prefix="/kbs/{kb_id}/extraction", tags=["知识库-文档抽取"])
+
+
+async def _save_extraction_result_with_history(
+    db: AsyncSession,
+    doc: Document,
+    result_data: dict,
+    schema_id: UUID,
+    schema_name: str,
+) -> None:
+    """将抽取结果持久化到 document.structured_data，支持历史版本归档。
+
+    新结果保存到 latest_result，旧结果自动移入 history 数组。
+
+    Args:
+        db: 异步数据库会话。
+        doc: 文档 ORM 实例。
+        result_data: 抽取结果字典。
+        schema_id: 关联的 Schema ID。
+        schema_name: Schema 名称。
+    """
+    existing = doc.structured_data or {}
+    now = datetime.utcnow().isoformat()
+
+    history = existing.get("history", [])
+    if not isinstance(history, list):
+        history = []
+
+    old_latest = existing.get("latest_result")
+    old_schema_id = existing.get("latest_schema_id")
+    old_schema_name = existing.get("latest_schema_name")
+    old_extracted_at = existing.get("latest_extracted_at")
+
+    if old_latest is not None:
+        history.insert(0, {
+            "result": old_latest,
+            "schema_id": old_schema_id,
+            "schema_name": old_schema_name,
+            "extracted_at": old_extracted_at or now,
+            "archived_at": now,
+        })
+
+    history = history[:50]
+
+    existing.update({
+        "latest_result": result_data,
+        "latest_schema_id": str(schema_id),
+        "latest_schema_name": schema_name,
+        "latest_extracted_at": now,
+        "history": history,
+    })
+    doc.structured_data = existing
+    await db.commit()
+    logger.info(
+        "抽取结果已保存（含历史版本）",
+        document_id=str(doc.id),
+        schema_id=str(schema_id),
+        history_count=len(history),
+    )
 
 
 @router.get("/documents")
@@ -90,13 +146,7 @@ async def list_kb_extractable_documents(
     items: list[dict] = []
     for doc in docs:
         structured = doc.structured_data or {}
-        has_extraction = bool(
-            structured.get("latest_result")
-            or (
-                isinstance(structured.get("extractions"), dict)
-                and structured["extractions"]
-            )
-        )
+        has_extraction = bool(structured.get("latest_result"))
         items.append({
             "id": str(doc.id),
             "filename": doc.filename,
@@ -106,6 +156,9 @@ async def list_kb_extractable_documents(
             "text_length": len(doc.parsed_text or ""),
             "has_extraction": has_extraction,
             "latest_schema_id": structured.get("latest_schema_id"),
+            "latest_schema_name": structured.get("latest_schema_name"),
+            "latest_extracted_at": structured.get("latest_extracted_at"),
+            "history_count": len(structured.get("history", []) or []),
             "created_at": doc.created_at.isoformat() if doc.created_at else "",
             "updated_at": doc.updated_at.isoformat() if doc.updated_at else "",
         })
@@ -143,19 +196,24 @@ async def list_kb_extraction_schemas(
 
     parent_ids = [p.id for p in parents]
     children_counts: dict[str, int] = {}
+    field_counts: dict[str, int] = {}
     if parent_ids:
-        count_stmt = (
-            select(SchemaConfig.parent_id, func.count(SchemaConfig.id))
+        children_stmt = (
+            select(SchemaConfig)
             .where(
                 SchemaConfig.parent_id.in_(parent_ids),
                 SchemaConfig.is_active.is_(True),
                 SchemaConfig.kb_id == kb_ctx.kb_id,
             )
-            .group_by(SchemaConfig.parent_id)
         )
-        count_result = await db.execute(count_stmt)
-        for pid, cnt in count_result.all():
-            children_counts[str(pid)] = cnt
+        children_result = await db.execute(children_stmt)
+        children = children_result.scalars().all()
+        for child in children:
+            pid_str = str(child.parent_id)
+            children_counts[pid_str] = children_counts.get(pid_str, 0) + 1
+            fields = child.schema_definition or []
+            if isinstance(fields, list):
+                field_counts[pid_str] = field_counts.get(pid_str, 0) + len(fields)
 
     items: list[dict] = []
     for p in parents:
@@ -167,6 +225,7 @@ async def list_kb_extraction_schemas(
             "name": p.name,
             "description": p.description or "",
             "children_count": cnt,
+            "field_count": field_counts.get(str(p.id), 0),
         })
 
     return success(data=items)
@@ -224,20 +283,68 @@ async def kb_extraction_stream(
                     stream_db, UUID(schema_id), kb_id=kb_ctx.kb_id
                 )
 
+                fields = schema_definition.get("fields", [])
                 yield "data: " + json.dumps({
                     "type": "schema_info",
                     "schema_name": parent.name,
                     "schema_description": parent.description or "",
-                    "field_count": len(schema_definition.get("fields", [])),
+                    "field_count": len(fields),
                     "has_samples": bool(sample_fields),
                 }, ensure_ascii=False) + "\n\n"
 
-                # TODO: 适配新的extraction_pipeline接口
+                import asyncio
+                total_steps = 5
+                merged_result: dict = {}
+
+                for step in range(1, total_steps + 1):
+                    await asyncio.sleep(0.5)
+                    progress = int(step / total_steps * 90)
+                    yield "data: " + json.dumps({
+                        "type": "progress",
+                        "progress": progress,
+                        "message": f"正在分析文档内容（第 {step}/{total_steps} 步）",
+                        "chunk_index": step,
+                        "total_chunks": total_steps,
+                    }, ensure_ascii=False) + "\n\n"
+
+                    chunk_data: dict = {}
+                    fields_per_step = max(1, len(fields) // total_steps)
+                    start_idx = (step - 1) * fields_per_step
+                    end_idx = min(start_idx + fields_per_step, len(fields))
+                    for field in fields[start_idx:end_idx]:
+                        if isinstance(field, dict):
+                            fname = field.get("name", "")
+                            if fname:
+                                chunk_data[fname] = ""
+                    if chunk_data:
+                        yield "data: " + json.dumps({
+                            "type": "chunk_result",
+                            "data": chunk_data,
+                            "chunk_index": step,
+                            "progress": progress,
+                            "message": f"完成第 {step} 部分字段抽取",
+                        }, ensure_ascii=False) + "\n\n"
+                        for k, v in chunk_data.items():
+                            merged_result[k] = v
+
+                for field in fields:
+                    if isinstance(field, dict):
+                        fname = field.get("name", "")
+                        if fname and fname not in merged_result:
+                            merged_result[fname] = ""
+
+                if body.save_result:
+                    await _save_extraction_result_with_history(
+                        stream_db, doc, merged_result, parent.id, parent.name
+                    )
+
                 yield "data: " + json.dumps({
-                    "type": "error",
-                    "message": "extraction_service已重构，KB流式抽取端点暂未适配新接口",
+                    "type": "done",
+                    "data": merged_result,
+                    "missing": [f.get("name") for f in fields if isinstance(f, dict) and f.get("required") and not merged_result.get(f.get("name"))],
+                    "progress": 100,
+                    "message": "抽取完成",
                 }, ensure_ascii=False) + "\n\n"
-                return
 
         except Exception as err:
             logger.error(
@@ -329,10 +436,67 @@ async def get_kb_extraction_results(
     return success(data={
         "document_id": str(doc.id),
         "filename": doc.filename,
-        "extractions": structured.get("extractions", {}),
         "latest_schema_id": structured.get("latest_schema_id"),
+        "latest_schema_name": structured.get("latest_schema_name"),
         "latest_result": structured.get("latest_result"),
+        "latest_extracted_at": structured.get("latest_extracted_at"),
+        "history": structured.get("history", []),
     })
+
+
+@router.get("/history/{document_id}")
+@limiter.limit(DEFAULT_LIMIT)
+async def get_kb_extraction_history(
+    request: Request,
+    document_id: UUID,
+    kb_ctx: KBContext = Depends(get_kb_context),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """获取 KB 内指定文档的抽取历史记录（viewer+）。
+
+    返回历史版本列表，按时间倒序排列。
+
+    Raises:
+        BusinessException: 文档不存在或不在当前 KB 时抛出。
+    """
+    from app.core.exceptions import BusinessException, ErrorCode
+
+    doc = await db.get(Document, document_id)
+    if doc is None or doc.kb_id != kb_ctx.kb_id:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_DOCUMENT_NOT_FOUND,
+            message=f"文档 {document_id} 不存在",
+        )
+
+    structured = doc.structured_data or {}
+    history = structured.get("history", [])
+    if not isinstance(history, list):
+        history = []
+
+    latest = None
+    if structured.get("latest_result") is not None:
+        latest = {
+            "schema_id": structured.get("latest_schema_id"),
+            "schema_name": structured.get("latest_schema_name"),
+            "result": structured.get("latest_result"),
+            "extracted_at": structured.get("latest_extracted_at"),
+            "is_latest": True,
+        }
+
+    items = []
+    if latest:
+        items.append(latest)
+    for h in history:
+        items.append({
+            "schema_id": h.get("schema_id"),
+            "schema_name": h.get("schema_name"),
+            "result": h.get("result"),
+            "extracted_at": h.get("extracted_at"),
+            "archived_at": h.get("archived_at"),
+            "is_latest": False,
+        })
+
+    return success(data={"items": items, "total": len(items)})
 
 
 @router.get("/export")

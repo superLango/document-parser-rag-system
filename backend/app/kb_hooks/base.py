@@ -6,7 +6,7 @@
 标准 Hook 接口（全部可选，缺失回退默认）：
 
     async def extract_candidates(text: str, regex_rules: list[dict], **ctx) -> list[str]:
-        '''从文本提取候选项目名。替代 project_dict_service 硬编码正则。'''
+        '''从文本提取候选项目名（由配置的 regex_rules 驱动）。'''
 
     def build_category_schema(category: dict, **ctx) -> dict | None:
         '''构造类别的 output_schema。返回 None 用默认 schema 生成逻辑。'''
@@ -138,7 +138,7 @@ class KbHookBase:
         return deduped
 
     def category_match(self, item_name: str, category: str, **ctx: Any) -> bool:
-        """默认类别匹配：返回 True，由 project_dict_service 向量检索负责精确校验。"""
+        """默认类别匹配：返回 True（由术语集/规则负责精确校验）。"""
         return True
 
     def build_doc_info_prompt(self, doc_info_fields: list[dict], **ctx: Any) -> str:

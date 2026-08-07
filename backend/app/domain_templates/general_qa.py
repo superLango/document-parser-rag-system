@@ -7,14 +7,12 @@
 - 无类别定义（categories 为空，抽取流程不触发）
 - 无字段模板（field_templates 为空）
 - 无正则规则（regex_rules 为空）
-- 禁用基础字典同步（dict_config.enabled=False）
 - 侧重 RAG 配置（向量检索参数、问答 LLM 参数）
 """
 
 from __future__ import annotations
 
 from app.domain_templates.base import (
-    DictConfigDef,
     DomainTemplate,
 )
 
@@ -30,14 +28,6 @@ GENERAL_QA_TEMPLATE = DomainTemplate(
     categories=[],  # 通用问答不进行结构化抽取
     field_templates=[],
     regex_rules=[],
-    dict_config=DictConfigDef(
-        enabled=False,  # 通用问答不启用基础字典
-        match_threshold=0.5,
-        whitelist_top_k=10,
-        validation_top_k=1,
-        validation_similarity_threshold=0.5,
-        tables_mapping={},
-    ),
     config_override={
         "ocr": {
             "enable_popo": True,

@@ -7,7 +7,7 @@
     ExtractionTarget（Phase 2 输出）
         → RetrievalContext（Phase 3 输出）
         → list[ExtractedRecord]（Phase 4 输出）
-        → CategoryResult / HeatTreatmentResult（后处理后）
+        → CategoryResult（后处理后）
         → ExtractionResult（最终结果）
 """
 
@@ -18,128 +18,62 @@ from typing import Any
 
 
 # ------------------------------------------------------------------
-# 基础表数据（从 base_data.loader 加载，Phase 2 使用）
-# ------------------------------------------------------------------
-
-
-@dataclass
-class ItemInfo:
-    """sm_item 检测项目信息（字典形式，便于序列化）。
-
-    Attributes:
-        name: 标准项目名（sm_item.NAME）。
-        english_name: 英文名。
-        aliases: 别名列表（ITEM_ALIAS 拆分）。
-        unit: 标准单位。
-        feature: 所属大类名。
-    """
-
-    name: str
-    english_name: str = ""
-    aliases: list[str] = field(default_factory=list)
-    unit: str = ""
-    feature: str = ""
-
-    @classmethod
-    def from_orm(cls, orm_obj: Any) -> ItemInfo:
-        """从 SmItem ORM 对象构造。
-
-        Args:
-            orm_obj: SmItem ORM 实例。
-        """
-        aliases: list[str] = []
-        if orm_obj.item_alias:
-            aliases = [s.strip() for s in orm_obj.item_alias.split(",") if s.strip()]
-        return cls(
-            name=orm_obj.name,
-            english_name=orm_obj.english_name or "",
-            aliases=aliases,
-            unit=orm_obj.unit or "",
-            feature=orm_obj.feature,
-        )
-
-    def to_dict(self) -> dict[str, Any]:
-        """转为字典（用于白名单 prompt 注入）。"""
-        return {
-            "name": self.name,
-            "english_name": self.english_name,
-            "aliases": self.aliases,
-            "unit": self.unit,
-            "feature": self.feature,
-        }
-
-
-@dataclass
-class MethodInfo:
-    """sm_method 检测方法信息。
-
-    Attributes:
-        name: 方法全名。
-        method_code: 标准号（如 GB/T 223.7-2002）。
-        feature: 方法分类（sm_method.FEATURE）。
-    """
-
-    name: str
-    method_code: str = ""
-    feature: str = ""
-
-    @classmethod
-    def from_orm(cls, orm_obj: Any) -> MethodInfo:
-        """从 SmMethod ORM 对象构造。"""
-        return cls(
-            name=orm_obj.name or "",
-            method_code=orm_obj.method_code or "",
-            feature=orm_obj.feature or "",
-        )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "name": self.name,
-            "method_code": self.method_code,
-            "feature": self.feature,
-        }
-
-
-# ------------------------------------------------------------------
 # Phase 2 输出：ExtractionTarget
 # ------------------------------------------------------------------
 
 
 @dataclass
 class ExtractionTarget:
-    """单个 feature 的抽取目标（Phase 2 输出，Phase 3/4 输入）。
+    """单个抽取类别目标（Phase 2 输出，Phase 3/4 输入）。
 
-    一个 ExtractionTarget 对应一个保留的 feature（项目大类），
-    包含该 feature 下的全部 items 和 methods，以及 schema 定义。
+    配置驱动架构下，一个 ExtractionTarget 对应 Schema 模板中的一个类别
+    （term_base 名称来源可展开为多个实例）。类别标题、查询、字段及其可选值
+    均来自抽取配置中心。
 
     Attributes:
-        feature: 项目大类名（sm_feature.NAME）。
-        items: 该 feature 下的检测项目列表。
-        methods: 该 feature 关联的检测方法列表。
-        confidence: Phase 2 检索置信度（max score）。
-        schema: 该 feature 的 schema 定义（由 schema_builder 构建后填入）。
+        feature: 类别名（展示名）。
+        category_id: SchemaConfig 类别节点 ID。
+        name_source: 名称来源（manual / term_base）。
+        name_term_base_id: term_base 名称来源的术语集 ID。
+        query_mode: 查询模式（当前固定 fixed）。
+        fixed_query: 类别级固定查询文本。
+        query_sources: Query 术语集配置（[{label, term_base_id, group_field, value_field, in_query, dedupe}]）。
+        confidence_threshold: 类别级置信度阈值（可覆盖全局）。
+        top_k: 类别级检索 top_k（可覆盖全局）。
+        return_type: 返回类型（array / object）。
+        fields: 类别字段定义（[{name, type, description, example, required, values: [可选值]}]）。
+        query_terms: 检索查询词组（由 fixed_query + Query 术语集值组装）。
+        confidence: Phase 2 检索置信度。
+        schema: 该类别的 schema 定义（由 schema_builder 构建后填入）。
     """
 
     feature: str
-    items: list[ItemInfo] = field(default_factory=list)
-    methods: list[MethodInfo] = field(default_factory=list)
+    category_id: str | None = None
+    template_id: str | None = None
+    name_source: str = "manual"
+    name_term_base_id: str | None = None
+    query_mode: str = "fixed"
+    fixed_query: str | None = None
+    query_sources: list[dict] = field(default_factory=list)
+    confidence_threshold: float | None = None
+    top_k: int | None = None
+    rerank_top_k: int | None = None
+    max_tokens: int | None = None
+    return_type: str = "array"
+    fields: list[dict] = field(default_factory=list)
+    query_terms: list[str] = field(default_factory=list)
     confidence: float = 0.0
     schema: dict[str, Any] | None = None
 
     @property
     def item_names(self) -> list[str]:
-        """标准项目名列表（用于 enum 约束）。"""
-        return [it.name for it in self.items if it.name]
-
-    @property
-    def method_names(self) -> list[str]:
-        """方法名列表（用于 enum 约束）。"""
-        return [m.name for m in self.methods if m.name]
-
-    @property
-    def method_codes(self) -> list[str]:
-        """方法标准号列表（用于年代号匹配）。"""
-        return [m.method_code for m in self.methods if m.method_code]
+        """所有字段可选值的扁平合并（兼容下游白名单 / 枚举注入）。"""
+        names: list[str] = []
+        for f in self.fields:
+            for v in f.get("values", []) or []:
+                if v and v not in names:
+                    names.append(v)
+        return names
 
 
 # ------------------------------------------------------------------
@@ -221,17 +155,19 @@ class ExtractedRecord:
     _reject_reason: str = ""
 
     def to_dict(self) -> dict[str, Any]:
-        """转为输出字典（剔除内部字段）。"""
-        result = dict(self.data)
-        if self._unverified:
-            result["_unverified"] = True
-        if self._reject_reason:
-            result["_reject_reason"] = self._reject_reason
-        return result
+        """转为输出字典（剔除所有 `_` 开头的内部字段）。
+
+        归一化 / 跨类校验阶段写入的 ``_normalize_score`` / ``_normalize_type`` /
+        ``_method_year_filled`` 以及 ``_unverified`` / ``_reject_reason`` 等
+        内部标记仅用于调试与测试面板，不进入最终抽取结果。
+        """
+        return {
+            k: v for k, v in self.data.items() if not k.startswith("_")
+        }
 
 
 # ------------------------------------------------------------------
-# 最终结果：CategoryResult / HeatTreatmentResult / ExtractionResult
+# 最终结果：CategoryResult / ExtractionResult
 # ------------------------------------------------------------------
 
 
@@ -249,19 +185,6 @@ class CategoryResult:
     feature: str
     records: list[dict[str, Any]] = field(default_factory=list)
     rejected: list[dict[str, Any]] = field(default_factory=list)
-    timing: dict[str, float] = field(default_factory=dict)
-
-
-@dataclass
-class HeatTreatmentResult:
-    """热处理制度抽取结果。
-
-    Attributes:
-        records: 热处理记录列表。
-        timing: 耗时。
-    """
-
-    records: list[dict[str, Any]] = field(default_factory=list)
     timing: dict[str, float] = field(default_factory=dict)
 
 
@@ -285,23 +208,18 @@ class ExtractionResult:
     """v3 抽取最终结果（result_writer 序列化为此结构）。
 
     Attributes:
-        doc_info: 标准基本信息（标准名称、标准编号）。
         categories: 各类别抽取结果。
-        heat_treatment: 热处理制度结果。
         summary: 汇总信息（总数、活跃 feature、剔除 feature）。
         timing: 总体各阶段耗时。
     """
 
-    doc_info: dict[str, Any] = field(default_factory=dict)
     categories: list[CategoryResult] = field(default_factory=list)
-    heat_treatment: HeatTreatmentResult = field(default_factory=HeatTreatmentResult)
     summary: dict[str, Any] = field(default_factory=dict)
     timing: dict[str, float] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """转为可序列化的字典（用于 JSON 保存）。"""
         return {
-            "doc_info": self.doc_info,
             "categories": [
                 {
                     "feature": c.feature,
@@ -311,10 +229,6 @@ class ExtractionResult:
                 }
                 for c in self.categories
             ],
-            "heat_treatment": {
-                "records": self.heat_treatment.records,
-                "timing": self.heat_treatment.timing,
-            },
             "summary": self.summary,
             "timing": self.timing,
         }

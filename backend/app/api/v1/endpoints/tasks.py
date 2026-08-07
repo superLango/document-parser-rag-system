@@ -25,6 +25,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_active_user, get_pagination_params
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
@@ -45,18 +46,24 @@ _arq_pool = None
 
 async def get_arq_pool():
     """获取 arq Redis 连接池单例。
-
-    首次调用时创建连接池并缓存，后续直接返回单例。
-    arq 使用 database=1 作为任务队列（与原 Celery broker 一致）。
-
-    Returns:
-        ArqRedis: arq Redis 连接池实例。
+    复用 REDIS_URL 中的主机/端口/密码，固定使用 database=1 作为任务队列（与缓存 db=0 分离）。
     """
     global _arq_pool
     if _arq_pool is None:
-        _arq_pool = await create_pool(
-            RedisSettings(host="localhost", port=6379, database=1)
-        )
+        from urllib.parse import urlparse
+        parsed = urlparse(settings.REDIS_URL)
+        host = parsed.hostname or "localhost"
+        port = parsed.port or 6379
+        password = parsed.password
+
+        redis_settings_kwargs = {
+            "host": host,
+            "port": port,
+            "database": 1,  # arq 任务队列固定使用 db=1
+        }
+        if password:
+            redis_settings_kwargs["password"] = password
+        _arq_pool = await create_pool(RedisSettings(**redis_settings_kwargs))
     return _arq_pool
 
 
@@ -133,6 +140,8 @@ async def submit_task(
     task = Task(
         id=job.job_id,
         document_id=payload.document_id,
+        kb_id=document.kb_id,
+        task_type="parse_document",
         status="pending",
         progress=0,
     )
@@ -276,8 +285,12 @@ async def retry_task(
     new_task = Task(
         id=job.job_id,
         document_id=document_id,
+        kb_id=document.kb_id,
+        task_type=task.task_type or "parse_document",
         status="pending",
         progress=0,
+        retry_count=(task.retry_count or 0) + 1,
+        parent_task_id=task_id,
     )
     db.add(new_task)
     await db.commit()
@@ -313,9 +326,8 @@ async def submit_v3_extraction(
 
     前置条件：
         - task_id 对应的文档已完成 OCR + Popo 层级重建 + 五维向量入库
-        - 基础表已同步到 PostgreSQL + Milvus
 
-    结果保存路径：``{OCR_OUTPUT_DIR}/{task_id}/extraction_v3.json``
+    结果保存路径：``{OCR_OUTPUT_DIR}/{task_id}/extract_result.json``
 
     注意：v3 抽取任务不创建 Task 数据库记录（因 document_id 为 UUID 外键，
     而 v3 抽取基于雪花 task_id），通过 arq job_id 和结果文件路径追踪。
@@ -349,7 +361,7 @@ async def submit_v3_extraction(
         "arq_job_id": job.job_id,
         "source_task_id": payload.task_id,
         "status": "pending",
-        "result_path": f"{{OCR_OUTPUT_DIR}}/{payload.task_id}/extraction_v3.json",
+        "result_path": f"{{OCR_OUTPUT_DIR}}/{payload.task_id}/extract_result.json",
     })
 
 

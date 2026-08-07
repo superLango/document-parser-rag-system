@@ -23,7 +23,7 @@ import time
 from typing import Any
 
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
+from app.core.exceptions import BusinessException
 from app.services.extraction.extraction_models import (
     ExtractionTarget,
     RetrievalContext,
@@ -44,7 +44,7 @@ class RetrievalService:
     """
 
     def __init__(self) -> None:
-        self._settings = get_extraction_settings()
+        pass
 
     async def retrieve(
         self,
@@ -52,27 +52,52 @@ class RetrievalService:
         doc_id: str,
         query_vectors: dict[str, list[float]] | None = None,
         kb_id: str | None = None,
+        cfg: Any = None,
     ) -> RetrievalContext:
-        """执行单个 feature 的完整检索流程。
+        """执行单个 feature 的完整检索流程（配置驱动）。
 
         Args:
-            target: 该 feature 的抽取目标（含 items/methods）。
+            target: 该 feature 的抽取目标（含 query_terms/fields）。
             doc_id: 文档 ID。
             query_vectors: 可选，复用 Phase 2 的五维 query 向量。
-                为 None 时重新编码。
+                为 None 时按 target.query_terms 重新编码。
             kb_id: 知识库 ID，用于向量 Collection 隔离。
+            cfg: 抽取领域配置（全局检索参数）。
 
         Returns:
             RetrievalContext: 检索上下文（含拼接文本和白名单 prompt）。
         """
         start_time = time.time()
 
-        # 1. 生成 query 向量（复用或重新编码）
+        # 全局检索参数（retrieval 区块，缺失即报错，不允许 settings/env 兜底）
+        if cfg is None:
+            raise BusinessException("检索缺少抽取配置（cfg）")
+        retrieval_cfg = cfg.retrieval or {}
+        per_dim_top_k = retrieval_cfg.get("per_dim_top_k")
+        if per_dim_top_k is None:
+            raise BusinessException("未配置检索参数 retrieval.per_dim_top_k")
+        weights = retrieval_cfg.get("weights")
+        if not weights:
+            raise BusinessException("未配置检索权重 retrieval.weights")
+        context_max_tokens = retrieval_cfg.get("context_max_tokens")
+        if context_max_tokens is None:
+            raise BusinessException("未配置上下文最大 token 数 retrieval.context_max_tokens")
+        reranker_cfg = retrieval_cfg.get("reranker") or {}
+        # 类别级 top_k 覆盖全局（类别→全局层级回退，均缺失即报错）
+        top_k = target.top_k or retrieval_cfg.get("top_k")
+        if top_k is None:
+            raise BusinessException("未配置检索 top_k（retrieval.top_k 或类别级 top_k）")
+        # 类别级重排序 top_n 覆盖全局（未填用全局 reranker.top_n）
+        rerank_top_n = target.rerank_top_k or reranker_cfg.get("top_n") or retrieval_cfg.get("rerank_top_k")
+
+        # 1. 生成 query 向量（复用或按 query_terms 重新编码）
         if query_vectors is None:
             query_vectors = await query_embedder.encode_category_query(
                 feature=target.feature,
-                items=target.item_names,
-                methods=target.method_names,
+                items=target.query_terms,
+                methods=[],
+                cfg=cfg,
+                query_sources=target.query_sources,
             )
 
         # 2. hybrid_search 五维检索
@@ -80,20 +105,25 @@ class RetrievalService:
             query_vectors=query_vectors,
             doc_id=doc_id,
             feature=target.feature,
+            top_k=top_k,
+            per_dim_top_k=per_dim_top_k,
+            weights=weights,
             kb_id=kb_id,
         )
 
         # 3. 构建重排序用的 query 文本
         rerank_query = self._build_rerank_query(target)
 
-        # 4. reranker 重排序（可选）
+        # 4. reranker 重排序（可选，按配置）
         reranked_chunks = await retrieval_reranker.rerank(
             query=rerank_query,
             chunks=chunks,
+            top_k=rerank_top_n,
+            cfg=cfg,
         )
 
         # 5. context_assembler 上下文拼接
-        context_text = context_assembler.assemble(reranked_chunks)
+        context_text = context_assembler.assemble(reranked_chunks, max_tokens=context_max_tokens, cfg=cfg)
 
         # 6. 构建动态白名单 prompt
         whitelist_prompt = self._build_whitelist_prompt(target)
@@ -113,6 +143,7 @@ class RetrievalService:
             extra={
                 "feature": target.feature,
                 "doc_id": doc_id,
+                "top_k": top_k,
                 "chunks": len(chunks),
                 "reranked": len(reranked_chunks),
                 "context_chars": len(context_text),
@@ -120,96 +151,6 @@ class RetrievalService:
             },
         )
         return context
-
-    async def retrieve_doc_info(
-        self,
-        doc_id: str,
-        query_text: str = "标准名称 标准编号 文件编号",
-        kb_id: str | None = None,
-    ) -> RetrievalContext:
-        """执行基础信息检索（第一部分，不依赖 feature）。
-
-        Args:
-            doc_id: 文档 ID。
-            query_text: 检索文本，默认 "标准名称 标准编号 文件编号"。
-                包含"文件编号"以覆盖企标文档（如 LSAM-JD01-0016）。
-            kb_id: 知识库 ID，用于向量 Collection 隔离。
-
-        Returns:
-            RetrievalContext: 检索上下文。
-        """
-        # 基础信息用通用文本检索
-        query_vectors = await query_embedder.encode_text_query(query_text)
-
-        chunks = await hybrid_searcher.search(
-            query_vectors=query_vectors,
-            doc_id=doc_id,
-            feature="doc_info",
-            top_k=10,
-            kb_id=kb_id,
-        )
-
-        # 基础信息不需要重排序（少量结果即可）
-        context_text = context_assembler.assemble(chunks, max_tokens=5000)
-
-        return RetrievalContext(
-            feature="doc_info",
-            text=context_text,
-            chunks=chunks,
-        )
-
-    async def retrieve_heat_treatment(
-        self,
-        doc_id: str,
-        features_list: list[str],
-        kb_id: str | None = None,
-    ) -> RetrievalContext:
-        """执行热处理制度检索（第三部分）。
-
-        用热处理专业关键词构建 query，而非 feature 列表（feature 列表会
-        稀释"热处理制度"语义，导致召回检验方法章节而非热处理制度章节）。
-        features_list 仅用于后续 prompt 的"项目大类"enum 约束，不参与检索。
-
-        Args:
-            doc_id: 文档 ID。
-            features_list: feature 名列表（仅用于 prompt enum 约束，不参与检索）。
-            kb_id: 知识库 ID，用于向量 Collection 隔离。
-
-        Returns:
-            RetrievalContext: 检索上下文。
-        """
-        # 用热处理专业关键词构建 query（重复"热处理制度"增强语义权重）
-        query_text = (
-            "热处理制度 热处理制度 固溶处理 时效处理 退火 淬火 "
-            "保温温度 保温时间 升温速率 降温速率 出炉温度 "
-            "冷却介质 空冷 水冷 油冷 炉冷 装炉温度"
-        )
-        query_vectors = await query_embedder.encode_text_query(query_text)
-
-        chunks = await hybrid_searcher.search(
-            query_vectors=query_vectors,
-            doc_id=doc_id,
-            feature="heat_treatment",
-            top_k=30,
-            kb_id=kb_id,
-        )
-
-        # 热处理制度重排序（用精简 query，增大 top_k 确保热处理内容不被剔除）
-        # 热处理制度内容常被归到"交货状态"等章节，排名靠后，需更大 top_k
-        rerank_query = "热处理制度 固溶 时效 保温 冷却"
-        reranked = await retrieval_reranker.rerank(
-            query=rerank_query,
-            chunks=chunks,
-            top_k=20,
-        )
-
-        context_text = context_assembler.assemble(reranked, max_tokens=20000)
-
-        return RetrievalContext(
-            feature="heat_treatment",
-            text=context_text,
-            chunks=reranked,
-        )
 
     # ------------------------------------------------------------------
     # 内部方法
@@ -230,9 +171,7 @@ class RetrievalService:
         """
         parts = [target.feature]
         if target.item_names:
-            parts.append(" ".join(target.item_names[:20]))
-        if target.method_names:
-            parts.append(" ".join(target.method_names[:8]))
+            parts.append(" ".join(target.item_names))
         return " ".join(parts)
 
     @staticmethod
@@ -250,14 +189,6 @@ class RetrievalService:
         if target.item_names:
             lines.append("[项目白名单]")
             lines.append(f"项目名称必须从以下列表中选取：{'、'.join(target.item_names)}")
-            lines.append("")
-
-        # 试验方法白名单用标准编号（method_codes），fallback 到方法名称
-        method_enum = target.method_codes or target.method_names
-        if method_enum:
-            lines.append("[方法白名单]")
-            lines.append(f"试验方法必须从以下列表中选取（标准编号）：{'、'.join(method_enum)}")
-            lines.append("有年代号的保留，无年代号的取列表中对应方法的最新年代号。")
             lines.append("")
 
         if not lines:

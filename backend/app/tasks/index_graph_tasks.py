@@ -32,7 +32,7 @@ async def build_index_graph_impl(document_id: str, kb_id: str | None, ctx: dict)
     Raises:
         Exception: 构建过程中失败时重新抛出。
     """
-    from app.tasks.document_tasks import _activate_kb_rls, _update_progress, _update_task_status
+    from app.tasks.document_tasks import _activate_kb_rls, _check_task_cancelled, _update_progress, _update_task_status, TaskCancelledError
 
     arq_job_id = ctx.get("job_id") if isinstance(ctx, dict) else None
 
@@ -53,6 +53,10 @@ async def build_index_graph_impl(document_id: str, kb_id: str | None, ctx: dict)
                 raise Exception(f"文档不存在: {document_id}")
             if document.status != "completed":
                 raise Exception(f"文档未完成解析，当前状态: {document.status}")
+
+            # 【取消检查】任务开始前检查是否已被用户取消
+            await _check_task_cancelled(db, arq_job_id)
+
             document.index_status = "indexing"
             await db.commit()
             # 从layout_data中获取OCR输出目录（包含task_id）
@@ -162,6 +166,19 @@ async def build_index_graph_impl(document_id: str, kb_id: str | None, ctx: dict)
             "document_id": document_id,
             "graph_status": graph_status,
         }
+
+    except TaskCancelledError:
+        logger.info("索引/图谱构建任务被用户取消，终止执行", document_id=document_id, task_id=arq_job_id)
+        try:
+            async with AsyncSessionLocal() as db:
+                await _activate_kb_rls(db, kb_id)
+                document = await db.get(Document, doc_uuid)
+                if document:
+                    document.index_status = "ready"
+                    await db.commit()
+        except Exception:
+            pass
+        return {"status": "cancelled", "document_id": document_id, "message": "任务已取消"}
 
     except Exception as e:
         logger.error(

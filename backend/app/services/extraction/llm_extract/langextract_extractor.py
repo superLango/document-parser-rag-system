@@ -3,7 +3,7 @@
 使用 LangExtract 框架 + output_schema 强约束 + 类别内并发。
 
 设计要点：
-1. 通过 FewShotGenerator 从基础表自动生成 examples
+1. 通过 FewShotGenerator 从 Schema 模板字段 example 自动生成 examples
 2. 通过 OutputSchemaBuilder 构造 XGrammar 强约束 schema
 3. asyncio.to_thread 包装同步 langextract.extract 调用
 4. 类别内并发：max_workers=3，langextract 内部分块并行处理
@@ -31,8 +31,8 @@ import asyncio
 import logging
 from typing import Any
 
+from app.core.exceptions import BusinessException
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
 from app.services.extraction.extraction_models import (
     ExtractionTarget,
     ExtractedRecord,
@@ -41,7 +41,7 @@ from app.services.extraction.extraction_models import (
 from app.services.extraction.llm_extract.extractor_base import BaseExtractor
 from app.services.extraction.llm_extract.few_shot_generator import few_shot_generator
 from app.services.extraction.llm_extract.output_schema_builder import output_schema_builder
-from app.services.extraction.prompts.prompt_manager import prompt_manager
+from app.services.extraction.prompts.config_prompt_renderer import config_prompt_renderer
 
 logger = get_logger(__name__)
 
@@ -57,13 +57,13 @@ class LangExtractExtractor(BaseExtractor):
 
     def __init__(self, llm_semaphore: asyncio.Semaphore | None = None) -> None:
         super().__init__(llm_semaphore)
-        self._settings = get_extraction_settings()
 
     async def extract(
         self,
         context: RetrievalContext,
         schema: dict[str, Any],
         target: ExtractionTarget,
+        cfg: Any = None,
     ) -> list[ExtractedRecord]:
         """从检索上下文抽取记录（LangExtract 线路）。
 
@@ -71,6 +71,7 @@ class LangExtractExtractor(BaseExtractor):
             context: 检索上下文。
             schema: schema 定义。
             target: 抽取目标。
+            cfg: 抽取领域配置（Prompt 模板 / LLM 参数）。
 
         Returns:
             list[ExtractedRecord]: 抽取记录列表。
@@ -79,17 +80,24 @@ class LangExtractExtractor(BaseExtractor):
             logger.warning("上下文为空，跳过抽取", extra={"feature": target.feature})
             return []
 
-        # 生成 few-shot 示例
-        examples = few_shot_generator.generate(target)
+        # 生成 few-shot 示例（示例数走引擎分组 max_examples，缺失即报错，无硬编码回退）
+        _ep = cfg.engine_params() if cfg is not None else {}
+        _max_examples = _ep.get("max_examples")
+        if _max_examples is None:
+            raise BusinessException("未配置引擎分组参数 llm.engines.LangExtract.max_examples")
+        examples = few_shot_generator.generate(target, max_examples=int(_max_examples))
 
         # 构建 output_schema
         output_schema = output_schema_builder.build(target)
 
-        # 构建 prompt description
-        prompt_description = self._build_prompt_description(target, schema)
+        # 渲染 prompt（配置驱动，走 Prompt 模板；未配置模板时报错提示）
+        prompt_description = self._build_prompt_description(target, cfg, context)
 
-        # 构建 LangExtract config
-        config = self._build_config()
+        # 构建 LangExtract config（配置驱动，缺失即报错）
+        config = self._build_config(cfg)
+
+        # 类别级 max_tokens 覆盖引擎分组（类别参数回退全局，不允许 env 兜底）
+        _max_tokens = target.max_tokens or (cfg.max_output_tokens() if cfg is not None else None)
 
         # 调用 LangExtract（受 _llm_semaphore 控制）
         async with self._llm_semaphore:
@@ -102,6 +110,8 @@ class LangExtractExtractor(BaseExtractor):
                     output_schema,
                     context.whitelist_prompt,
                     config,
+                    cfg,
+                    _max_tokens,
                 )
             except Exception as err:
                 logger.error(
@@ -133,6 +143,8 @@ class LangExtractExtractor(BaseExtractor):
         output_schema: dict[str, Any] | None,
         whitelist: str,
         config: dict[str, Any],
+        cfg: Any = None,
+        max_tokens: int | None = None,
     ) -> Any:
         """同步调用 langextract.extract（在线程池中执行）。
 
@@ -142,7 +154,9 @@ class LangExtractExtractor(BaseExtractor):
             examples: few-shot 示例。
             output_schema: output_schema 定义。
             whitelist: 白名单 prompt（作为 additional_context）。
-            config: LangExtract 配置。
+            config: LangExtract 配置（含 max_workers 等）。
+            cfg: 抽取领域配置（LLM 参数）。
+            max_tokens: 采样 max_tokens（类别级/引擎分组/全局，已由调用方解析）。
 
         Returns:
             langextract 抽取结果。
@@ -159,31 +173,59 @@ class LangExtractExtractor(BaseExtractor):
         # 同时通过 extra_body 关闭 thinking mode：Qwen3.6 的 thinking 与 XGrammar
         # 结构化输出约束冲突，会导致生成卡死（单请求 >120s 无法完成），
         # 关闭后单请求 ~10s 正常完成（已实测验证）。
+        _engine_params = cfg.engine_params() if cfg is not None else {}
+        _endpoint = cfg.endpoint if cfg is not None else {}
+        # max_tokens 由调用方解析（类别级/引擎分组），此处直接使用
+        _max_workers = config["max_workers"]
+        _enable_thinking = _engine_params.get("enable_thinking")
+        _temperature = cfg.engine_temperature() if cfg is not None else None
+        # 输出格式 / 围栏输出（引擎分组配置，缺失即报错，无硬编码回退）
+        _ft = (_engine_params.get("format_type") or "").lower()
+        if _ft not in ("json", "yaml"):
+            raise BusinessException("未配置引擎分组参数 llm.engines.LangExtract.format_type（json/yaml）")
+        _format_type = FormatType.YAML if _ft == "yaml" else FormatType.JSON
+        _fence_output = _engine_params.get("fence_output")
+        if _fence_output is None:
+            raise BusinessException("未配置引擎分组参数 llm.engines.LangExtract.fence_output")
+        # LLM 端点（kb.config.extraction 服务，缺失即报错）
+        if not _endpoint.get("model") or not _endpoint.get("base_url"):
+            raise BusinessException("未配置抽取 LLM 端点（api_base/model），请在资源与配置中填写")
         model = OpenAILanguageModel(
-            model_id=self._settings.llm_model,
-            api_key=self._settings.llm_api_key or "EMPTY",
-            base_url=self._settings.llm_api_base,
-            format_type=FormatType.JSON,
-            temperature=0.1,
-            max_workers=self._settings.langextract_max_workers,
-            max_tokens=self._settings.llm_max_output_tokens,
-            extra_body={"chat_template_kwargs": {"enable_thinking": False}},
+            model_id=_endpoint.get("model"),
+            api_key=_endpoint.get("api_key") or "EMPTY",
+            base_url=_endpoint.get("base_url"),
+            format_type=_format_type,
+            # 引擎温度：仅引擎分组自有配置，缺失已由提交前校验拦截
+            temperature=_temperature,
+            max_workers=_max_workers,
+            max_tokens=_max_tokens,
+            extra_body={"chat_template_kwargs": {"enable_thinking": _enable_thinking}},
         )
+
+        # Prompt 校验级别（kb.config.extraction.prompt_validation_level，缺失即报错）
+        _pvl_str = (cfg.prompt_validation_level if cfg is not None else "") or ""
+        _pvl = {
+            "off": PromptValidationLevel.OFF,
+            "warning": PromptValidationLevel.WARNING,
+            "error": PromptValidationLevel.ERROR,
+        }.get(_pvl_str)
+        if _pvl is None:
+            raise BusinessException("未配置 Prompt 校验级别 prompt_validation_level（off/warning/error）")
 
         result = lx_extract(
             text,
             prompt_description=prompt_description,
             examples=examples,
             model=model,
-            format_type=FormatType.JSON,
-            fence_output=False,
+            format_type=_format_type,
+            fence_output=_fence_output,
             output_schema=output_schema,
             additional_context=whitelist,
-            extraction_passes=self._settings.langextract_passes,
-            context_window_chars=self._settings.langextract_context_window_chars,
-            max_char_buffer=self._settings.langextract_max_char_buffer,
-            max_workers=self._settings.langextract_max_workers,
-            prompt_validation_level=PromptValidationLevel.WARNING,
+            extraction_passes=config["extraction_passes"],
+            context_window_chars=config["context_window_chars"],
+            max_char_buffer=config["max_char_buffer"],
+            max_workers=_max_workers,
+            prompt_validation_level=_pvl,
             show_progress=False,
         )
         return result
@@ -191,116 +233,59 @@ class LangExtractExtractor(BaseExtractor):
     def _build_prompt_description(
         self,
         target: ExtractionTarget,
-        schema: dict[str, Any],
+        cfg: Any = None,
+        context: RetrievalContext | None = None,
     ) -> str:
-        """构建 LangExtract prompt description（与 glmocr 线路注入对齐）。
+        """构建 LangExtract prompt description（配置驱动）。
 
-        将原先简单拼接的 prompt description 增强为与 glmocr user_template
-        一致的结构化注入，确保两线路获得同等的语义引导：
-
-        - [任务类别]：feature 名
-        - [抽取要求]：schema 定义的 prompt
-        - [项目与方法白名单]：**显式注入** target 的 item_names 和 method_codes，
-          强约束模型只抽取白名单内的项目和方法，避免生成后剔除浪费 token。
-          此段直接写入 prompt 主体（而非 additional_context），确保模型优先遵守。
-        - [温度区分规则]：与 glmocr 共享的温度规则（prompt_manager.get_temperature_rules）
-        - [字段定义]：从 field_descriptions.yaml 构建（build_field_defs_text），
-          试验方法用 method_codes（标准编号），与 glmocr 一致
-        - [输出要求]：紧凑 JSON 输出要求
+        Prompt 来源与 BaseExtract 一致，走 ``config_prompt_renderer.render_category``
+        （Prompt 模板）。未配置模板时抛错提示，不再写死回退文本。
 
         Args:
             target: 抽取目标。
-            schema: schema 定义。
+            cfg: 抽取领域配置。
+            context: 检索上下文（含白名单 / 前批牌号）。
 
         Returns:
-            str: 结构化 prompt description。
+            str: prompt description（渲染后的 user_prompt）。
         """
-        schema_prompt = schema.get("prompt", f"请抽取{target.feature}相关的检测数据记录。")
+        field_defs = config_prompt_renderer.build_field_defs(target)
+        whitelist = context.whitelist_prompt if context is not None else ""
 
-        # 项目与方法白名单（显式注入 prompt 主体，强约束模型生成范围）
-        whitelist_section = self._build_whitelist_section(target)
-
-        # 字段定义（从 field_descriptions.yaml 构建，与 glmocr 一致，用 method_codes）
-        properties = schema.get("result", {}).get("properties", {})
-        field_names = list(properties.keys())
-        field_defs = prompt_manager.build_field_defs_text(
-            feature=target.feature,
-            field_names=field_names,
-            items=target.item_names,
-            methods=target.method_codes or target.method_names,
+        # 输出格式说明由 Schema 模板 return_type 声明，Prompt 模板通过占位符引用
+        system, user = config_prompt_renderer.render_category(
+            target,
+            cfg,
+            context.text if context is not None else "",
+            field_defs,
+            "",
+            whitelist,
+            "",
         )
 
-        # 温度区分规则（与 glmocr 共享）
-        temp_rules = prompt_manager.get_temperature_rules()
+        if not user:
+            raise BusinessException(
+                f"未配置类别「{target.feature}」的 Prompt 模板，请配置！"
+            )
+        return user
 
-        # 紧凑 JSON 输出要求（与 glmocr prompt 对齐）
-        compact_rule = (
-            "请输出紧凑 JSON 结果（不要包含多余空格、换行或缩进），不要包含任何解释文字。"
-            "确保所有字符串都正确闭合，不要在字符串值中包含换行符。"
-        )
-
-        parts = [
-            f"[任务类别]\n{target.feature}",
-            f"[抽取要求]\n{schema_prompt}",
-            f"[项目与方法白名单]\n{whitelist_section}",
-            f"[温度区分规则]\n{temp_rules}",
-            f"[字段定义]\n{field_defs}",
-            f"[输出要求]\n{compact_rule}",
-        ]
-        return "\n\n".join(parts)
-
-    @staticmethod
-    def _build_whitelist_section(target: ExtractionTarget) -> str:
-        """构建项目与方法白名单约束段（注入 prompt 主体）。
-
-        与 retrieval_service._build_whitelist_prompt 逻辑一致，但措辞更强硬，
-        明确告知模型"只抽取以下项目，其他项目一律不要抽取"，
-        避免模型生成非白名单项目后再通过后处理剔除，浪费 token。
+    def _build_config(self, cfg: Any = None) -> dict[str, Any]:
+        """构建 LangExtract 配置字典（配置驱动，缺失即报错，无 env 兜底）。
 
         Args:
-            target: 抽取目标。
-
-        Returns:
-            str: 白名单约束文本。
-        """
-        lines: list[str] = []
-
-        if target.item_names:
-            items_str = "、".join(target.item_names)
-            lines.append(
-                f"项目名称只能从以下列表中选取，不得生成列表以外的项目：\n{items_str}"
-            )
-            lines.append(
-                "如果文档中没有上述项目的数据，返回空数组，不要抽取其他类别的项目。"
-            )
-            lines.append("")
-
-        # 试验方法白名单用标准编号（method_codes），fallback 到方法名称
-        method_enum = target.method_codes or target.method_names
-        if method_enum:
-            methods_str = "、".join(method_enum)
-            lines.append(
-                f"试验方法只能从以下列表中选取（标准编号）：\n{methods_str}"
-            )
-            lines.append("有年代号的保留，无年代号的取列表中对应方法的最新年代号。")
-            lines.append("")
-
-        if not lines:
-            return "（本类别无项目和方法白名单约束）"
-
-        return "\n".join(lines)
-
-    def _build_config(self) -> dict[str, Any]:
-        """构建 LangExtract 配置字典。
+            cfg: 抽取领域配置。
 
         Returns:
             dict: 配置字典。
         """
+        # 类别内并发（within_category）映射为 max_workers
+        _ep = cfg.engine_params() if cfg is not None else {}
+        max_workers = cfg.within_category_concurrency() if cfg is not None else None
         return {
-            "extraction_passes": self._settings.langextract_passes,
-            "context_window_chars": self._settings.langextract_context_window_chars,
-            "max_char_buffer": self._settings.langextract_max_char_buffer,
-            "max_workers": self._settings.langextract_max_workers,
+            "extraction_passes": _ep.get("passes"),
+            "context_window_chars": _ep.get("context_window_chars"),
+            "max_char_buffer": _ep.get("max_char_buffer"),
+            "max_workers": max_workers,
         }
 
     def _parse_extractions(
@@ -345,7 +330,10 @@ class LangExtractExtractor(BaseExtractor):
                 # Extraction 对象格式：extraction_text 为文本，attributes 为字段值
                 data: dict[str, Any] = {}
                 if item.extraction_text:
-                    data["材料牌号"] = item.extraction_text
+                    # 主标识字段名取自 Schema 模板配置字段（缺失则跳过，不写死"材料牌号"）
+                    _pk = self._primary_field_name(target)
+                    if _pk:
+                        data[_pk] = item.extraction_text
                 if hasattr(item, "attributes") and item.attributes:
                     data.update(item.attributes)
                 records.append(ExtractedRecord(
@@ -362,3 +350,14 @@ class LangExtractExtractor(BaseExtractor):
             },
         )
         return records
+
+    def _primary_field_name(self, target: ExtractionTarget) -> str | None:
+        """主标识字段名（Schema 模板配置字段）。
+
+        取首个必填字段；无必填字段则取首个字段；无字段返回 None。
+        """
+        fields = target.fields or []
+        for f in fields:
+            if f.get("required") and f.get("name"):
+                return f["name"]
+        return fields[0].get("name") if fields else None

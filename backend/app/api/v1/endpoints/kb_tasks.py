@@ -43,6 +43,7 @@ from app.api.deps import (
     require_role,
 )
 from app.core.database import get_db
+from app.core.config import settings
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
 from app.core.response import paginated, success
@@ -58,12 +59,30 @@ _arq_pool = None
 
 
 async def get_arq_pool():
-    """获取 arq Redis 连接池单例（带超时保护）。"""
+    """获取 arq Redis 连接池单例（带超时保护）。
+    复用 REDIS_URL 中的主机/端口/密码，固定使用 database=1 作为任务队列（与缓存 db=0 分离）。
+    """
     global _arq_pool
     if _arq_pool is None:
         try:
+            # 从 REDIS_URL 解析连接参数，任务队列固定使用 database=1
+            from urllib.parse import urlparse
+            parsed = urlparse(settings.REDIS_URL)
+            host = parsed.hostname or "localhost"
+            port = parsed.port or 6379
+            password = parsed.password
+
+            redis_settings_kwargs = {
+                "host": host,
+                "port": port,
+                "database": 1,  # arq 任务队列固定使用 db=1
+                "conn_timeout": 3,
+            }
+            if password:
+                redis_settings_kwargs["password"] = password
+
             _arq_pool = await asyncio.wait_for(
-                create_pool(RedisSettings(host="localhost", port=6379, database=1, conn_timeout=3)),
+                create_pool(RedisSettings(**redis_settings_kwargs)),
                 timeout=5.0,
             )
         except (asyncio.TimeoutError, ConnectionError, OSError) as exc:
@@ -221,6 +240,23 @@ async def submit_parse_task(
             message=f"文档 {document_id} 不存在",
         )
 
+    # 提交解析前对知识库抽取配置做完整校验（任一配置缺失/无效即报错，直到全部通过）
+    from app.services.extraction_config.config_validator import ensure_extraction_config_valid
+
+    await ensure_extraction_config_valid(db, kb_ctx.kb_id)
+
+    # 重新解析时重置文档状态，清空之前的解析结果
+    document.status = "pending"
+    document.parsed_text = None
+    document.structured_data = None
+    document.layout_data = None
+    document.markdown_content = None
+    document.index_status = None
+    document.graph_status = None
+    document.extraction_status = None
+    document.error_message = None
+    await db.flush()
+
     # 投递 arq 任务，透传 kb_id
     pool = await get_arq_pool()
     job_id = snowflake_generator.generate_id_str()
@@ -244,6 +280,7 @@ async def submit_parse_task(
         id=job.job_id,
         kb_id=kb_ctx.kb_id,
         document_id=document_id,
+        task_type="parse_document",
         status="pending",
         progress=0,
     )
@@ -380,12 +417,11 @@ async def cancel_task(
     kb_ctx: KBContext = Depends(require_role(*EDIT_ROLES)),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """取消任务（editor+）。
+    """取消/暂停任务（editor+）。
 
-    将处于 pending/started/progress 状态的任务标记为 failed（取消）。
-    arq 任务的实际终止依赖 job.abort，此处先标记数据库状态。
+    将处于 pending/queued/started/running/progress 状态的任务标记为 failed（取消）。
+    尝试通过 arq abort 终止正在执行的任务，失败则仅标记数据库状态。
     """
-    # 显式按 kb_id 过滤，纵深防御不依赖 RLS（superuser 绕过 RLS）
     task = (
         await db.execute(
             select(Task).where(
@@ -399,22 +435,26 @@ async def cancel_task(
             code=ErrorCode.BUSINESS_TASK_NOT_FOUND,
             message=f"任务 {task_id} 不存在",
         )
-    if task.status not in ("pending", "started", "progress"):
+    cancellable_statuses = ("pending", "queued", "started", "running", "progress")
+    if task.status not in cancellable_statuses:
         raise BusinessException(
             code=ErrorCode.BUSINESS_TASK_FAILED,
             message=f"任务当前状态为 {task.status}，无法取消",
         )
 
-    # 尝试 abort arq job（失败不阻断，仅记录）
     try:
         pool = await get_arq_pool()
         job = await pool.job(task_id)
         if job is not None:
-            await pool.abort(task_id)
-    except Exception as exc:  # noqa: BLE001
+            try:
+                await job.abort(timeout=3)
+            except Exception:
+                try:
+                    await pool.abort_job(task_id)
+                except Exception:
+                    pass
+    except Exception as exc:
         logger.warning("arq 任务取消失败", task_id=task_id, error=str(exc))
-
-    from datetime import datetime, timezone
 
     task.status = "failed"
     task.error_message = "用户手动取消"
@@ -455,11 +495,15 @@ async def get_task(
         data={
             "id": task.id,
             "document_id": str(task.document_id) if task.document_id else None,
+            "task_type": task.task_type,
             "status": task.status,
             "progress": task.progress,
             "result": task.result,
             "error_message": task.error_message,
+            "retry_count": task.retry_count,
+            "parent_task_id": task.parent_task_id,
             "created_at": task.created_at.isoformat() if task.created_at else None,
+            "started_at": task.started_at.isoformat() if task.started_at else None,
             "completed_at": task.completed_at.isoformat() if task.completed_at else None,
         }
     )
@@ -473,19 +517,11 @@ async def retry_task(
     kb_ctx: KBContext = Depends(require_role(*EDIT_ROLES)),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """重试失败任务（editor+）。
+    """重试任务（editor+）。
 
-    重新投递解析任务，并重置 Task 记录状态。
-
-    Args:
-        task_id: 任务唯一标识。
-        kb_ctx: 知识库上下文。
-        db: 异步数据库会话。
-
-    Raises:
-        BusinessException: 任务不存在或非失败状态时抛出。
+    支持对 success 和 failed 状态的任务重新投递，根据 task_type 分发到对应 arq 任务函数。
+    重置 Task 记录状态为 pending。
     """
-    # 显式按 kb_id 过滤，纵深防御不依赖 RLS（superuser 绕过 RLS）
     task = (
         await db.execute(
             select(Task).where(
@@ -499,23 +535,45 @@ async def retry_task(
             code=ErrorCode.BUSINESS_TASK_FAILED,
             message=f"任务 {task_id} 不存在",
         )
-    if task.status != "failed":
+    if task.status not in ("success", "failed", "completed"):
         raise BusinessException(
             code=ErrorCode.BUSINESS_TASK_FAILED,
-            message="仅失败任务可重试",
+            message=f"任务当前状态为 {task.status}，仅成功或失败任务可重试",
         )
 
-    # 重新投递 arq 任务，透传 kb_id
+    # 重试同样需通过抽取配置完整性校验
+    from app.services.extraction_config.config_validator import ensure_extraction_config_valid
+
+    await ensure_extraction_config_valid(db, kb_ctx.kb_id)
+
+    task_type_to_func = {
+        "parse_document": "parse_document_task",
+        "parse": "parse_document_task",
+        "extract_document": "extract_document_task",
+        "extraction": "extract_document_task",
+        "build_index_graph": "build_index_graph_task",
+    }
+    func_name = task_type_to_func.get(task.task_type, "parse_document_task")
+
     pool = await get_arq_pool()
     new_job_id = snowflake_generator.generate_id_str()
-    job = await pool.enqueue_job(
-        "parse_document_task",
-        str(task.document_id),
-        None,  # retry 不携带原 schema_id（简化，后续可扩展存储）
-        None,
-        str(kb_ctx.kb_id),
-        _job_id=new_job_id,
-    )
+
+    if func_name == "parse_document_task":
+        job = await pool.enqueue_job(
+            func_name,
+            str(task.document_id),
+            None,
+            None,
+            str(kb_ctx.kb_id),
+            _job_id=new_job_id,
+        )
+    else:
+        job = await pool.enqueue_job(
+            func_name,
+            str(task.document_id),
+            str(kb_ctx.kb_id),
+            _job_id=new_job_id,
+        )
 
     if job is None:
         raise BusinessException(
@@ -523,21 +581,73 @@ async def retry_task(
             message="重试任务提交失败",
         )
 
-    # 重置任务状态
-    task.status = "pending"
-    task.progress = 0
-    task.error_message = None
-    task.completed_at = None
+    new_task = Task(
+        id=new_job_id,
+        kb_id=kb_ctx.kb_id,
+        document_id=task.document_id,
+        task_type=task.task_type if task.task_type in ("parse_document", "extract_document", "build_index_graph") else "parse_document",
+        status="pending",
+        progress=0,
+        parent_task_id=task_id,
+        retry_count=(task.retry_count or 0) + 1,
+    )
+    db.add(new_task)
     await db.commit()
 
     logger.info(
         "KB 任务已重试",
         kb_id=str(kb_ctx.kb_id),
-        task_id=new_job_id,
+        old_task_id=task_id,
+        new_task_id=new_job_id,
+        task_type=new_task.task_type,
         document_id=str(task.document_id),
         user_id=str(kb_ctx.user.id),
     )
     return success(data={"task_id": new_job_id, "status": "pending"})
+
+
+@router.delete("/tasks/{task_id}")
+@limiter.limit(UPLOAD_LIMIT)
+async def delete_task(
+    task_id: str,
+    request: Request,
+    kb_ctx: KBContext = Depends(require_role(*EDIT_ROLES)),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """删除任务记录（editor+）。
+
+    仅允许删除 success/completed/failed 状态的任务，运行中的任务需先取消。
+    """
+    task = (
+        await db.execute(
+            select(Task).where(
+                Task.id == task_id,
+                Task.kb_id == kb_ctx.kb_id,
+            )
+        )
+    ).scalar_one_or_none()
+    if task is None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_NOT_FOUND,
+            message=f"任务 {task_id} 不存在",
+        )
+    deletable_statuses = ("success", "completed", "failed")
+    if task.status not in deletable_statuses:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_TASK_FAILED,
+            message=f"任务当前状态为 {task.status}，请先取消再删除",
+        )
+
+    await db.delete(task)
+    await db.commit()
+
+    logger.info(
+        "KB 任务已删除",
+        kb_id=str(kb_ctx.kb_id),
+        task_id=task_id,
+        user_id=str(kb_ctx.user.id),
+    )
+    return success(message="任务已删除")
 
 
 # ============================================================
@@ -567,6 +677,11 @@ async def batch_parse_documents(
 
     循环校验文档归属并投递 arq 任务，单条失败不阻断其余。
     """
+    # 提交前对知识库抽取配置做完整校验（任一配置缺失/无效即报错，直到全部通过）
+    from app.services.extraction_config.config_validator import ensure_extraction_config_valid
+
+    await ensure_extraction_config_valid(db, kb_ctx.kb_id)
+
     pool = await get_arq_pool()
     results: list[dict] = []
     for doc_id in body.document_ids:
@@ -587,7 +702,7 @@ async def batch_parse_documents(
             if job is None:
                 results.append({"document_id": str(doc_id), "ok": False, "error": "任务提交失败", "task_id": None})
                 continue
-            task = Task(id=job.job_id, kb_id=kb_ctx.kb_id, document_id=doc_id, status="pending", progress=0)
+            task = Task(id=job.job_id, kb_id=kb_ctx.kb_id, document_id=doc_id, task_type="parse_document", status="pending", progress=0)
             db.add(task)
             results.append({"document_id": str(doc_id), "ok": True, "error": None, "task_id": job.job_id})
         except Exception as err:  # noqa: BLE001
@@ -605,12 +720,23 @@ async def batch_retry_tasks(
     kb_ctx: KBContext = Depends(require_role(*EDIT_ROLES)),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """批量重试失败任务（editor+）。"""
+    """批量重试任务（editor+），支持 success/failed/completed 状态。"""
+    # 重试同样需通过抽取配置完整性校验
+    from app.services.extraction_config.config_validator import ensure_extraction_config_valid
+
+    await ensure_extraction_config_valid(db, kb_ctx.kb_id)
+
     pool = await get_arq_pool()
+    task_type_to_func = {
+        "parse_document": "parse_document_task",
+        "parse": "parse_document_task",
+        "extract_document": "extract_document_task",
+        "extraction": "extract_document_task",
+        "build_index_graph": "build_index_graph_task",
+    }
     results: list[dict] = []
     for task_id in body.task_ids:
         try:
-            # 显式按 kb_id 过滤，纵深防御不依赖 RLS（superuser 绕过 RLS）
             task = (
                 await db.execute(
                     select(Task).where(
@@ -622,25 +748,42 @@ async def batch_retry_tasks(
             if task is None:
                 results.append({"task_id": task_id, "ok": False, "error": "任务不存在"})
                 continue
-            if task.status != "failed":
+            if task.status not in ("success", "failed", "completed"):
                 results.append({"task_id": task_id, "ok": False, "error": f"任务状态为 {task.status}，不可重试"})
                 continue
+            func_name = task_type_to_func.get(task.task_type, "parse_document_task")
             new_job_id = snowflake_generator.generate_id_str()
-            job = await pool.enqueue_job(
-                "parse_document_task",
-                str(task.document_id),
-                None,
-                None,
-                str(kb_ctx.kb_id),
-                _job_id=new_job_id,
-            )
+            if func_name == "parse_document_task":
+                job = await pool.enqueue_job(
+                    func_name,
+                    str(task.document_id),
+                    None,
+                    None,
+                    str(kb_ctx.kb_id),
+                    _job_id=new_job_id,
+                )
+            else:
+                job = await pool.enqueue_job(
+                    func_name,
+                    str(task.document_id),
+                    str(kb_ctx.kb_id),
+                    _job_id=new_job_id,
+                )
             if job is None:
                 results.append({"task_id": task_id, "ok": False, "error": "重试提交失败"})
                 continue
-            task.status = "pending"
-            task.progress = 0
-            task.error_message = None
-            task.completed_at = None
+            new_task_type = task.task_type if task.task_type in ("parse_document", "extract_document", "build_index_graph") else "parse_document"
+            new_task = Task(
+                id=new_job_id,
+                kb_id=kb_ctx.kb_id,
+                document_id=task.document_id,
+                task_type=new_task_type,
+                status="pending",
+                progress=0,
+                parent_task_id=task_id,
+                retry_count=(task.retry_count or 0) + 1,
+            )
+            db.add(new_task)
             results.append({"task_id": task_id, "ok": True, "error": None, "new_task_id": new_job_id})
         except Exception as err:  # noqa: BLE001
             results.append({"task_id": task_id, "ok": False, "error": str(err)[:200]})

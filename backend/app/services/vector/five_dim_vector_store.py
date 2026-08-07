@@ -252,9 +252,9 @@ class FiveDimVectorStore:
         self,
         query_vectors: dict[str, list[float]],
         doc_id: str,
-        top_k: int = 20,
-        per_dim_top_k: int = 30,
-        weights: dict[str, float] | None = None,
+        top_k: int,
+        per_dim_top_k: int,
+        weights: dict[str, float],
         ef: int = 64,
         kb_id: str | None = None,
     ) -> list[dict[str, Any]]:
@@ -262,14 +262,9 @@ class FiveDimVectorStore:
 
         collection = self._get_collection(kb_id)
 
-        default_weights: dict[str, float] = {
-            "path": 0.15,
-            "title": 0.20,
-            "content": 0.45,
-            "type": 0.05,
-            "structural": 0.15,
-        }
-        weights = weights or default_weights
+        # 权重由调用方从配置显式传入（缺失即报错，不做硬编码默认兜底）
+        if not weights:
+            raise ValueError("未提供五维检索权重 weights（应由调用方从 retrieval.weights 配置传入）")
 
         search_requests: list[AnnSearchRequest] = []
         weight_values: list[float] = []

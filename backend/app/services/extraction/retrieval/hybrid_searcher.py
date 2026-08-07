@@ -20,7 +20,7 @@ import logging
 from typing import Any
 
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
+from app.core.exceptions import BusinessException
 from app.services.extraction.extraction_models import RetrievedChunk
 from app.services.vector.five_dim_vector_store import five_dim_vector_store
 
@@ -35,7 +35,7 @@ class HybridSearcher:
     """
 
     def __init__(self) -> None:
-        self._settings = get_extraction_settings()
+        pass
 
     async def search(
         self,
@@ -62,10 +62,16 @@ class HybridSearcher:
         Returns:
             list[RetrievedChunk]: 检索结果，按 score 降序。
         """
-        settings = self._settings
-        _top_k = top_k or settings.retrieval_top_k
-        _per_dim_top_k = per_dim_top_k or settings.retrieval_per_dim_top_k
-        _weights = weights or settings.hybrid_search_weights
+        # 检索参数由调用方从配置解析传入，缺失即报错（不允许 settings/env 兜底）
+        if top_k is None:
+            raise BusinessException("未配置检索 top_k（retrieval.top_k 或类别级 top_k）")
+        if per_dim_top_k is None:
+            raise BusinessException("未配置检索 per_dim_top_k（retrieval.per_dim_top_k）")
+        if not weights:
+            raise BusinessException("未配置检索权重（retrieval.weights）")
+        _top_k = top_k
+        _per_dim_top_k = per_dim_top_k
+        _weights = weights
 
         hits = await five_dim_vector_store.hybrid_search(
             query_vectors=query_vectors,

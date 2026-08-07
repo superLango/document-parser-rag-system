@@ -17,7 +17,7 @@ const emit = defineEmits<{
 <template>
   <TabsRoot
     v-bind="props"
-    @update:model-value="emit('update:modelValue', $event)"
+    @update:model-value="emit('update:modelValue', $event as string)"
     :class="cn('flex flex-col gap-3', props.class)"
   >
     <slot />

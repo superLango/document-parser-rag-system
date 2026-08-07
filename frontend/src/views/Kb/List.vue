@@ -14,17 +14,14 @@ import {
   RefreshCw,
   Loader2,
   FileText,
-  Users,
   Settings,
 } from 'lucide-vue-next'
 import { kbApi } from '@/api/modules/kb'
 import type { KnowledgeBase, KbRole } from '@/api/types'
-import { toast } from '@/components/ui/toast'
 import { PageHeader } from '@/components/ui/page-header'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 
@@ -72,10 +69,10 @@ const roleLabel: Record<KbRole, string> = {
   viewer: '查看者',
 }
 const roleColor: Record<KbRole, string> = {
-  owner: 'bg-primary/10 text-primary',
-  admin: 'bg-success/10 text-success',
-  editor: 'bg-warning/10 text-warning',
-  viewer: 'bg-muted text-muted-foreground',
+  owner: 'bg-primary/12 text-primary border-primary/20',
+  admin: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+  editor: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+  viewer: 'bg-muted text-muted-foreground border-border/50',
 }
 
 function formatTime(value: string | undefined): string {
@@ -155,34 +152,34 @@ onMounted(fetchKbs)
       <Card
         v-for="kb in filteredKbs"
         :key="kb.id"
-        class="cursor-pointer transition-all hover:border-primary/40 hover:shadow-md"
+        class="group cursor-pointer border-border/60 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
         @click="enterKb(kb)"
       >
         <CardContent class="p-5">
           <!-- 头部：图标 + 名称 + 状态 -->
           <div class="mb-3 flex items-start justify-between gap-2">
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-3">
               <div
-                class="flex size-10 shrink-0 items-center justify-center rounded-md"
-                :class="kb.is_active ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'"
+                class="flex size-11 shrink-0 items-center justify-center rounded-lg transition-all duration-200 group-hover:scale-105 group-hover:shadow-sm"
+                :class="kb.is_active ? 'bg-primary/10 text-primary shadow-sm shadow-primary/10' : 'bg-muted text-muted-foreground'"
               >
                 <Database class="size-5" :stroke-width="1.5" />
               </div>
               <div class="min-w-0">
-                <p class="truncate font-semibold text-foreground" :title="kb.name">{{ kb.name }}</p>
-                <p class="font-mono text-[10px] text-muted-foreground">{{ kb.domain_code }}</p>
+                <p class="truncate font-semibold text-foreground transition-colors" :title="kb.name">{{ kb.name }}</p>
+                <p class="font-mono text-[10px] text-muted-foreground/80">{{ kb.domain_code }}</p>
               </div>
             </div>
             <div class="flex shrink-0 items-center gap-1">
               <span
                 v-if="!kb.is_active"
-                class="rounded bg-danger/10 px-1.5 py-0.5 text-[10px] text-danger"
+                class="rounded-md bg-red-500/10 px-1.5 py-0.5 text-[10px] font-medium text-red-600 dark:text-red-400 border border-red-500/20"
               >
                 停用
               </span>
               <span
                 v-if="kb.my_role"
-                class="rounded px-1.5 py-0.5 text-[10px] font-medium"
+                class="rounded-md px-2 py-0.5 text-[10px] font-medium border"
                 :class="roleColor[kb.my_role as KbRole]"
               >
                 {{ roleLabel[kb.my_role as KbRole] }}
@@ -191,17 +188,21 @@ onMounted(fetchKbs)
           </div>
 
           <!-- 描述 -->
-          <p class="mb-4 line-clamp-2 min-h-[2.5rem] text-sm text-muted-foreground">
+          <p class="mb-4 line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed text-muted-foreground/90">
             {{ kb.description || '暂无描述' }}
           </p>
 
-          <!-- 底部：模板 + 创建时间 -->
-          <div class="flex items-center justify-between text-[11px] text-muted-foreground">
-            <div class="flex items-center gap-2">
-              <Badge v-if="kb.template_code" variant="secondary" class="text-[10px]">
-                {{ kb.template_code }}
-              </Badge>
-              <span>{{ formatTime(kb.created_at) }}</span>
+          <!-- 底部：模板 + 创建时间 + 元数据 -->
+          <div class="flex items-center justify-between text-[11px] text-muted-foreground/70">
+            <div class="flex items-center gap-3">
+              <span v-if="kb.template_code" class="flex items-center gap-1">
+                <Settings class="size-3" :stroke-width="1.5" />
+                <span class="font-mono">{{ kb.template_code }}</span>
+              </span>
+              <span class="flex items-center gap-1">
+                <FileText class="size-3" :stroke-width="1.5" />
+                {{ formatTime(kb.created_at) }}
+              </span>
             </div>
           </div>
         </CardContent>

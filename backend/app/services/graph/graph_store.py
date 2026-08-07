@@ -40,6 +40,7 @@ Schema 设计（每 space 统一）：
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import re
 import uuid
@@ -121,6 +122,18 @@ class GraphStore:
 
     def __init__(self) -> None:
         """初始化图谱存储封装，不连接 NebulaGraph（懒加载）。"""
+
+    @staticmethod
+    async def _run_sync(func, *args, **kwargs):
+        """在线程池中执行同步阻塞函数，避免阻塞 asyncio 事件循环。
+
+        所有 NebulaGraph 同步操作（session.execute、time.sleep、连接建立等）
+        都必须通过此方法执行，防止阻塞整个 FastAPI 服务。
+        """
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(
+            None, lambda: func(*args, **kwargs)
+        )
 
     # ============================================================
     # 连接管理
@@ -345,59 +358,68 @@ class GraphStore:
         KB 创建流程的其他步骤（Milvus/MinIO/Redis）不受影响，
         后续图谱读写时若服务恢复会自动创建 schema。
         """
-        space = _space_name(kb_id)
-        if not self._try_connect():
-            logger.warning(
-                "NebulaGraph 不可用，跳过 KB graph space 创建（优雅降级）",
-                kb_id=str(kb_id), space=space,
-            )
-            return
-        self._ensure_schema(space)
-        logger.info("KB graph space 已就绪", kb_id=str(kb_id), space=space)
+        def _do_create():
+            space = _space_name(kb_id)
+            if not self._try_connect():
+                logger.warning(
+                    "NebulaGraph 不可用，跳过 KB graph space 创建（优雅降级）",
+                    kb_id=str(kb_id), space=space,
+                )
+                return
+            self._ensure_schema(space)
+            logger.info("KB graph space 已就绪", kb_id=str(kb_id), space=space)
+
+        await self._run_sync(_do_create)
 
     async def drop_kb_space(self, kb_id: uuid.UUID) -> None:
         """删除 KB 专属 graph space（合规销毁，幂等）。
 
         NebulaGraph 不可用时优雅降级：记录警告并返回，不抛异常。
         """
-        space = _space_name(kb_id)
-        if not self._try_connect():
-            logger.warning(
-                "NebulaGraph 不可用，跳过 KB graph space 删除（优雅降级）",
-                kb_id=str(kb_id), space=space,
-            )
-            return
-        session = self._get_session()
-        try:
+        def _do_drop():
+            space = _space_name(kb_id)
+            if not self._try_connect():
+                logger.warning(
+                    "NebulaGraph 不可用，跳过 KB graph space 删除（优雅降级）",
+                    kb_id=str(kb_id), space=space,
+                )
+                return
+            session = self._get_session()
             try:
-                self._exec(session, f"DROP SPACE IF EXISTS `{space}`;")
-            except RuntimeError as err:
-                logger.warning("KB graph space 删除失败", space=space, error=str(err))
-            GraphStore._schema_initialized.discard(space)
-            logger.warning("KB graph space 已删除", kb_id=str(kb_id), space=space)
-        finally:
-            session.release()
+                try:
+                    self._exec(session, f"DROP SPACE IF EXISTS `{space}`;")
+                except RuntimeError as err:
+                    logger.warning("KB graph space 删除失败", space=space, error=str(err))
+                GraphStore._schema_initialized.discard(space)
+                logger.warning("KB graph space 已删除", kb_id=str(kb_id), space=space)
+            finally:
+                session.release()
+
+        await self._run_sync(_do_drop)
 
     async def verify_kb_space(self, kb_id: uuid.UUID) -> dict:
         """校验 KB 专属 graph space 是否存在。"""
-        space = _space_name(kb_id)
-        if not self._try_connect():
-            return {"space": space, "status": "nebula_unavailable"}
-        session = self._get_session()
-        try:
-            resp = session.execute("SHOW SPACES;")
-            spaces = []
-            if resp.is_succeeded():
-                for row in resp.rows():
-                    for v in row.values:
-                        try:
-                            spaces.append(v.get_sVal().decode())
-                        except Exception:  # noqa: BLE001
-                            pass
-            exists = space in spaces
-            return {"space": space, "status": "exists" if exists else "missing"}
-        finally:
-            session.release()
+        def _do_verify():
+            space = _space_name(kb_id)
+            if not self._try_connect():
+                return {"space": space, "status": "nebula_unavailable"}
+            session = self._get_session()
+            try:
+                resp = session.execute("SHOW SPACES;")
+                spaces = []
+                if resp.is_succeeded():
+                    for row in resp.rows():
+                        for v in row.values:
+                            try:
+                                spaces.append(v.get_sVal().decode())
+                            except Exception:  # noqa: BLE001
+                                pass
+                exists = space in spaces
+                return {"space": space, "status": "exists" if exists else "missing"}
+            finally:
+                session.release()
+
+        return await self._run_sync(_do_verify)
 
     # ============================================================
     # 节点/边 CRUD
@@ -415,40 +437,43 @@ class GraphStore:
         Returns:
             dict: 节点信息，含 vid、label 及属性。
         """
-        safe_label = self._validate_label(label)
-        name = properties.get("name", "")
-        if not name:
-            raise ValueError("properties 必须包含非空 name 字段")
+        def _do_create():
+            safe_label = self._validate_label(label)
+            name = properties.get("name", "")
+            if not name:
+                raise ValueError("properties 必须包含非空 name 字段")
 
-        # NebulaGraph 不可用时优雅降级：记录警告并返回空结果，不阻断主流程
-        if not self._try_connect():
-            logger.warning(
-                "NebulaGraph 不可用，跳过节点创建",
-                label=safe_label, name=name,
+            # NebulaGraph 不可用时优雅降级：记录警告并返回空结果，不阻断主流程
+            if not self._try_connect():
+                logger.warning(
+                    "NebulaGraph 不可用，跳过节点创建",
+                    label=safe_label, name=name,
+                )
+                return {"id": "", "label": safe_label, **properties, "_skipped": True}
+
+            space = _space_name(kb_id)
+            self._ensure_schema(space)
+            vid = _vid(safe_label, name)
+            ntype = _nql_escape(properties.get("type", ""))
+            doc_id = _nql_escape(properties.get("doc_id", ""))
+            name_esc = _nql_escape(name)
+            label_esc = _nql_escape(safe_label)
+
+            nql = (
+                f'USE `{space}`; INSERT VERTEX {_ENTITY_TAG}'
+                f'(name, type, doc_id, label) VALUES '
+                f'"{vid}":("{name_esc}","{ntype}","{doc_id}","{label_esc}");'
             )
-            return {"id": "", "label": safe_label, **properties, "_skipped": True}
+            session = self._get_session()
+            try:
+                self._exec(session, nql)
+            finally:
+                session.release()
 
-        space = _space_name(kb_id)
-        self._ensure_schema(space)
-        vid = _vid(safe_label, name)
-        ntype = _nql_escape(properties.get("type", ""))
-        doc_id = _nql_escape(properties.get("doc_id", ""))
-        name_esc = _nql_escape(name)
-        label_esc = _nql_escape(safe_label)
+            logger.info("节点创建/更新完成", label=safe_label, name=name, space=space)
+            return {"id": vid, "label": safe_label, **properties}
 
-        nql = (
-            f'USE `{space}`; INSERT VERTEX {_ENTITY_TAG}'
-            f'(name, type, doc_id, label) VALUES '
-            f'"{vid}":("{name_esc}","{ntype}","{doc_id}","{label_esc}");'
-        )
-        session = self._get_session()
-        try:
-            self._exec(session, nql)
-        finally:
-            session.release()
-
-        logger.info("节点创建/更新完成", label=safe_label, name=name, space=space)
-        return {"id": vid, "label": safe_label, **properties}
+        return await self._run_sync(_do_create)
 
     async def create_relation(
         self,
@@ -474,54 +499,57 @@ class GraphStore:
         Returns:
             dict: 关系信息。
         """
-        safe_head_label = self._validate_label(head_label)
-        safe_tail_label = self._validate_label(tail_label)
-        safe_rel_type = self._validate_label(relation_type)
+        def _do_create():
+            safe_head_label = self._validate_label(head_label)
+            safe_tail_label = self._validate_label(tail_label)
+            safe_rel_type = self._validate_label(relation_type)
 
-        props = properties or {}
+            props = properties or {}
 
-        # NebulaGraph 不可用时优雅降级
-        if not self._try_connect():
-            logger.warning(
-                "NebulaGraph 不可用，跳过关系创建",
-                head=head_name, relation=safe_rel_type, tail=tail_name,
+            # NebulaGraph 不可用时优雅降级
+            if not self._try_connect():
+                logger.warning(
+                    "NebulaGraph 不可用，跳过关系创建",
+                    head=head_name, relation=safe_rel_type, tail=tail_name,
+                )
+                return {
+                    "head": head_name,
+                    "relation": safe_rel_type,
+                    "tail": tail_name,
+                    "_skipped": True,
+                }
+
+            space = _space_name(kb_id)
+            self._ensure_schema(space)
+
+            head_vid = _vid(safe_head_label, head_name)
+            tail_vid = _vid(safe_tail_label, tail_name)
+            rel_doc = _nql_escape(props.get("doc_id", ""))
+            head_label_esc = _nql_escape(safe_head_label)
+            tail_label_esc = _nql_escape(safe_tail_label)
+            rel_type_esc = _nql_escape(safe_rel_type)
+
+            nql = (
+                f'USE `{space}`; '
+                f'INSERT VERTEX {_ENTITY_TAG}(name, type, doc_id, label) VALUES '
+                f'"{head_vid}":("{_nql_escape(head_name)}","","","{head_label_esc}"),'
+                f'"{tail_vid}":("{_nql_escape(tail_name)}","","","{tail_label_esc}"); '
+                f'INSERT EDGE {_RELATES_EDGE}(rel_type, doc_id) VALUES '
+                f'"{head_vid}"->"{tail_vid}":("{rel_type_esc}","{rel_doc}");'
             )
-            return {
-                "head": head_name,
-                "relation": safe_rel_type,
-                "tail": tail_name,
-                "_skipped": True,
-            }
+            session = self._get_session()
+            try:
+                self._exec(session, nql)
+            finally:
+                session.release()
 
-        space = _space_name(kb_id)
-        self._ensure_schema(space)
+            logger.info(
+                "关系创建/更新完成",
+                head=head_name, relation=safe_rel_type, tail=tail_name, space=space,
+            )
+            return {"head": head_name, "relation": safe_rel_type, "tail": tail_name}
 
-        head_vid = _vid(safe_head_label, head_name)
-        tail_vid = _vid(safe_tail_label, tail_name)
-        rel_doc = _nql_escape(props.get("doc_id", ""))
-        head_label_esc = _nql_escape(safe_head_label)
-        tail_label_esc = _nql_escape(safe_tail_label)
-        rel_type_esc = _nql_escape(safe_rel_type)
-
-        nql = (
-            f'USE `{space}`; '
-            f'INSERT VERTEX {_ENTITY_TAG}(name, type, doc_id, label) VALUES '
-            f'"{head_vid}":("{_nql_escape(head_name)}","","","{head_label_esc}"),'
-            f'"{tail_vid}":("{_nql_escape(tail_name)}","","","{tail_label_esc}"); '
-            f'INSERT EDGE {_RELATES_EDGE}(rel_type, doc_id) VALUES '
-            f'"{head_vid}"->"{tail_vid}":("{rel_type_esc}","{rel_doc}");'
-        )
-        session = self._get_session()
-        try:
-            self._exec(session, nql)
-        finally:
-            session.release()
-
-        logger.info(
-            "关系创建/更新完成",
-            head=head_name, relation=safe_rel_type, tail=tail_name, space=space,
-        )
-        return {"head": head_name, "relation": safe_rel_type, "tail": tail_name}
+        return await self._run_sync(_do_create)
 
     async def batch_create(
         self,
@@ -540,81 +568,84 @@ class GraphStore:
         Returns:
             dict: 创建统计。
         """
-        space = _space_name(kb_id)
+        def _do_batch():
+            space = _space_name(kb_id)
 
-        # NebulaGraph 不可用时优雅降级：返回零统计，不阻断解析流程
-        if not self._try_connect():
-            logger.warning(
-                "NebulaGraph 不可用，跳过批量创建",
-                space=space,
-                nodes=len(nodes), relations=len(relations),
+            # NebulaGraph 不可用时优雅降级：返回零统计，不阻断解析流程
+            if not self._try_connect():
+                logger.warning(
+                    "NebulaGraph 不可用，跳过批量创建",
+                    space=space,
+                    nodes=len(nodes), relations=len(relations),
+                )
+                return {
+                    "nodes_created": 0,
+                    "relations_created": 0,
+                    "_skipped": True,
+                }
+
+            self._ensure_schema(space)
+
+            node_count = 0
+            rel_count = 0
+            session = self._get_session()
+            try:
+                # 批量插入节点
+                if nodes:
+                    vertex_values: list[str] = []
+                    for n in nodes:
+                        label = self._validate_label(n["label"])
+                        props = n["properties"]
+                        name = props.get("name", "")
+                        if not name:
+                            continue
+                        vid = _vid(label, name)
+                        vertex_values.append(
+                            f'"{vid}":("{_nql_escape(name)}",'
+                            f'"{_nql_escape(props.get("type", ""))}",'
+                            f'"{_nql_escape(props.get("doc_id", ""))}",'
+                            f'"{_nql_escape(label)}")'
+                        )
+                        node_count += 1
+                    if vertex_values:
+                        nql = (
+                            f'USE `{space}`; INSERT VERTEX {_ENTITY_TAG}'
+                            f'(name, type, doc_id, label) VALUES '
+                            f'{",".join(vertex_values)};'
+                        )
+                        self._exec(session, nql)
+
+                # 批量插入边
+                if relations:
+                    edge_values: list[str] = []
+                    for r in relations:
+                        hl = self._validate_label(r["head_label"])
+                        tl = self._validate_label(r["tail_label"])
+                        rt = self._validate_label(r["relation"])
+                        hvid = _vid(hl, r["head_name"])
+                        tvid = _vid(tl, r["tail_name"])
+                        rdoc = _nql_escape((r.get("properties") or {}).get("doc_id", ""))
+                        edge_values.append(
+                            f'"{hvid}"->"{tvid}":("{_nql_escape(rt)}","{rdoc}")'
+                        )
+                        rel_count += 1
+                    if edge_values:
+                        nql = (
+                            f'USE `{space}`; INSERT EDGE {_RELATES_EDGE}'
+                            f'(rel_type, doc_id) VALUES '
+                            f'{",".join(edge_values)};'
+                        )
+                        self._exec(session, nql)
+            finally:
+                session.release()
+
+            logger.info(
+                "批量创建完成",
+                nodes_created=node_count, relations_created=rel_count, space=space,
             )
-            return {
-                "nodes_created": 0,
-                "relations_created": 0,
-                "_skipped": True,
-            }
+            return {"nodes_created": node_count, "relations_created": rel_count}
 
-        self._ensure_schema(space)
-
-        node_count = 0
-        rel_count = 0
-        session = self._get_session()
-        try:
-            # 批量插入节点
-            if nodes:
-                vertex_values: list[str] = []
-                for n in nodes:
-                    label = self._validate_label(n["label"])
-                    props = n["properties"]
-                    name = props.get("name", "")
-                    if not name:
-                        continue
-                    vid = _vid(label, name)
-                    vertex_values.append(
-                        f'"{vid}":("{_nql_escape(name)}",'
-                        f'"{_nql_escape(props.get("type", ""))}",'
-                        f'"{_nql_escape(props.get("doc_id", ""))}",'
-                        f'"{_nql_escape(label)}")'
-                    )
-                    node_count += 1
-                if vertex_values:
-                    nql = (
-                        f'USE `{space}`; INSERT VERTEX {_ENTITY_TAG}'
-                        f'(name, type, doc_id, label) VALUES '
-                        f'{",".join(vertex_values)};'
-                    )
-                    self._exec(session, nql)
-
-            # 批量插入边
-            if relations:
-                edge_values: list[str] = []
-                for r in relations:
-                    hl = self._validate_label(r["head_label"])
-                    tl = self._validate_label(r["tail_label"])
-                    rt = self._validate_label(r["relation"])
-                    hvid = _vid(hl, r["head_name"])
-                    tvid = _vid(tl, r["tail_name"])
-                    rdoc = _nql_escape((r.get("properties") or {}).get("doc_id", ""))
-                    edge_values.append(
-                        f'"{hvid}"->"{tvid}":("{_nql_escape(rt)}","{rdoc}")'
-                    )
-                    rel_count += 1
-                if edge_values:
-                    nql = (
-                        f'USE `{space}`; INSERT EDGE {_RELATES_EDGE}'
-                        f'(rel_type, doc_id) VALUES '
-                        f'{",".join(edge_values)};'
-                    )
-                    self._exec(session, nql)
-        finally:
-            session.release()
-
-        logger.info(
-            "批量创建完成",
-            nodes_created=node_count, relations_created=rel_count, space=space,
-        )
-        return {"nodes_created": node_count, "relations_created": rel_count}
+        return await self._run_sync(_do_batch)
 
     # ============================================================
     # 查询接口
@@ -622,73 +653,63 @@ class GraphStore:
     async def get_subgraph(
         self, entity_name: str, max_hops: int = 2, kb_id=None
     ) -> dict:
-        """获取实体周边子图（GET SUBGRAPH）。
-
-        Args:
-            entity_name: 中心实体名称。
-            max_hops: 最大跳数，默认 2（限制 1-5）。
-            kb_id: 知识库 ID。None 时查询全局 space。
-
-        Returns:
-            dict: ``{"nodes": [...], "edges": [...]}``，服务不可用时返回空子图。
-        """
-        if not self._try_connect():
-            return {"nodes": [], "edges": []}
-
-        hops = max(1, min(max_hops, 5))
-        space = _space_name(kb_id)
-        self._ensure_schema(space)
-
-        # 中心实体 VID 难以从 name 反推（label 未知），用 name 索引查找
-        session = self._get_session()
-        try:
-            # 先查中心节点 vid
-            lookup_nql = (
-                f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} '
-                f'WHERE {_ENTITY_TAG}.name == "{_nql_escape(entity_name)}" '
-                f'YIELD id(vertex) AS vid, {_ENTITY_TAG}.name AS name, '
-                f'{_ENTITY_TAG}.label AS label, {_ENTITY_TAG}.type AS type;'
-            )
-            resp = session.execute(lookup_nql)
-            if not resp.is_succeeded() or not resp.rows():
+        """获取实体周边子图（GET SUBGRAPH）。"""
+        def _do_query():
+            if not self._try_connect():
                 return {"nodes": [], "edges": []}
 
-            center_vid = self._cell_str(resp.rows()[0].values[0])
-            center_node = self._row_to_node(resp.rows()[0], None)
+            hops = max(1, min(max_hops, 5))
+            space = _space_name(kb_id)
+            self._ensure_schema(space)
 
-            # GET SUBGRAPH 取 N 跳子图
-            sub_nql = (
-                f'USE `{space}`; GET SUBGRAPH {hops} STEPS FROM "{center_vid}" '
-                f'BOTH {_RELATES_EDGE} YIELD VERTICES AS nodes, EDGES AS edges;'
-            )
-            resp = session.execute(sub_nql)
+            session = self._get_session()
+            try:
+                lookup_nql = (
+                    f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} '
+                    f'WHERE {_ENTITY_TAG}.name == "{_nql_escape(entity_name)}" '
+                    f'YIELD id(vertex) AS vid, {_ENTITY_TAG}.name AS name, '
+                    f'{_ENTITY_TAG}.label AS label, {_ENTITY_TAG}.type AS type;'
+                )
+                resp = session.execute(lookup_nql)
+                if not resp.is_succeeded() or not resp.rows():
+                    return {"nodes": [], "edges": []}
 
-            nodes: list[dict] = [center_node]
-            edges: list[dict] = []
-            seen_vids: set[str] = {center_vid}
+                center_vid = self._cell_str(resp.rows()[0].values[0])
+                center_node = self._row_to_node(resp.rows()[0], None)
 
-            if resp.is_succeeded():
-                for row in resp.rows():
-                    nodes_raw = self._cell_list(row.values[0])
-                    edges_raw = self._cell_list(row.values[1])
-                    for v in nodes_raw:
-                        node = self._vertex_to_node(v)
-                        if node and node["id"] not in seen_vids:
-                            seen_vids.add(node["id"])
-                            nodes.append(node)
-                    for e in edges_raw:
-                        edge = self._edge_to_dict(e)
-                        if edge:
-                            edges.append(edge)
-        finally:
-            session.release()
+                sub_nql = (
+                    f'USE `{space}`; GET SUBGRAPH {hops} STEPS FROM "{center_vid}" '
+                    f'BOTH {_RELATES_EDGE} YIELD VERTICES AS nodes, EDGES AS edges;'
+                )
+                resp = session.execute(sub_nql)
 
-        logger.info(
-            "子图查询完成",
-            entity=entity_name, max_hops=hops,
-            node_count=len(nodes), edge_count=len(edges), space=space,
-        )
-        return {"nodes": nodes, "edges": edges}
+                nodes: list[dict] = [center_node]
+                edges: list[dict] = []
+                seen_vids: set[str] = {center_vid}
+
+                if resp.is_succeeded():
+                    for row in resp.rows():
+                        nodes_raw = self._cell_list(row.values[0])
+                        edges_raw = self._cell_list(row.values[1])
+                        for v in nodes_raw:
+                            node = self._vertex_to_node(v)
+                            if node and node["id"] not in seen_vids:
+                                seen_vids.add(node["id"])
+                                nodes.append(node)
+                        for e in edges_raw:
+                            edge = self._edge_to_dict(e)
+                            if edge:
+                                edges.append(edge)
+                logger.info(
+                    "子图查询完成",
+                    entity=entity_name, max_hops=hops,
+                    node_count=len(nodes), edge_count=len(edges), space=space,
+                )
+                return {"nodes": nodes, "edges": edges}
+            finally:
+                session.release()
+
+        return await self._run_sync(_do_query)
 
     async def search_nodes(
         self,
@@ -697,240 +718,201 @@ class GraphStore:
         limit: int = 50,
         kb_id=None,
     ) -> list[dict]:
-        """搜索节点（LOOKUP + 可选 name CONTAINS）。
-
-        Args:
-            label: 节点标签过滤，None 时不限。
-            name: 名称模糊匹配关键词，None 时不限。
-            limit: 返回最大数量。
-            kb_id: 知识库 ID。None 时查询全局 space。
-
-        Returns:
-            list[dict]: 匹配节点列表，每项含 id、name、labels、type。
-        """
-        if not self._try_connect():
-            return []
-
-        space = _space_name(kb_id)
-        self._ensure_schema(space)
-        safe_label = self._validate_label(label) if label else None
-
-        # 构造 LOOKUP 条件
-        # NebulaGraph 不支持 CONTAINS/LIKE 模糊匹配，用 STARTS WITH 实现前缀匹配；
-        # 若需全文搜索需集成 Elasticsearch 全文索引（后续增强）
-        conds: list[str] = []
-        if safe_label:
-            conds.append(f'{_ENTITY_TAG}.label == "{safe_label}"')
-        if name:
-            conds.append(f'{_ENTITY_TAG}.name STARTS WITH "{_nql_escape(name)}"')
-        where = f"WHERE {' AND '.join(conds)}" if conds else ""
-
-        nql = (
-            f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} {where} '
-            f'YIELD id(vertex) AS vid, {_ENTITY_TAG}.name AS name, '
-            f'{_ENTITY_TAG}.label AS label, {_ENTITY_TAG}.type AS type '
-            f'| ORDER BY $-.name | LIMIT {int(limit)};'
-        )
-        session = self._get_session()
-        try:
-            resp = session.execute(nql)
-            if not resp.is_succeeded():
-                logger.warning("search_nodes 执行失败", error=resp.error_msg())
+        """搜索节点（LOOKUP + 可选 name 前缀匹配）。"""
+        def _do_search():
+            if not self._try_connect():
                 return []
-            results: list[dict] = []
-            for row in resp.rows():
-                results.append(self._row_to_node(row, None))
-        finally:
-            session.release()
 
-        return results
+            space = _space_name(kb_id)
+            self._ensure_schema(space)
+            safe_label = self._validate_label(label) if label else None
 
-    async def delete_by_doc(self, doc_id: str, kb_id=None) -> int:
-        """删除文档相关的所有节点和边（LOOKUP + DELETE VERTEX WITH EDGE）。
+            conds: list[str] = []
+            if safe_label:
+                conds.append(f'{_ENTITY_TAG}.label == "{safe_label}"')
+            if name:
+                conds.append(f'{_ENTITY_TAG}.name STARTS WITH "{_nql_escape(name)}"')
+            where = f"WHERE {' AND '.join(conds)}" if conds else ""
 
-        NebulaGraph 不可用时优雅降级（返回 0），不抛出异常，
-        确保文档删除流程不被图谱服务中断阻断。
-
-        Args:
-            doc_id: 待删除的文档 ID。
-            kb_id: 知识库 ID。None 时操作全局 space。
-
-        Returns:
-            int: 删除的节点数（近似），服务不可用时返回 0。
-        """
-        if not self._try_connect():
-            logger.warning(
-                "NebulaGraph 不可用，跳过图谱节点删除",
-                doc_id=doc_id,
+            nql = (
+                f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} {where} '
+                f'YIELD id(vertex) AS vid, {_ENTITY_TAG}.name AS name, '
+                f'{_ENTITY_TAG}.label AS label, {_ENTITY_TAG}.type AS type '
+                f'| ORDER BY $-.name | LIMIT {int(limit)};'
             )
-            return 0
-
-        space = _space_name(kb_id)
-        self._ensure_schema(space)
-
-        # 先统计待删除节点数
-        count_nql = (
-            f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} '
-            f'WHERE {_ENTITY_TAG}.doc_id == "{_nql_escape(doc_id)}" '
-            f'YIELD id(vertex) AS vid | YIELD count($-.vid) AS c;'
-        )
-        del_nql = (
-            f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} '
-            f'WHERE {_ENTITY_TAG}.doc_id == "{_nql_escape(doc_id)}" '
-            f'YIELD id(vertex) AS vid | DELETE VERTEX $-.vid WITH EDGE;'
-        )
-        # 生产级保护：LOOKUP 可能因 schema 刚创建未同步而报 "Schema not exist"
-        # 重试 3 次，每次间隔 2 秒，确保 schema 在 storaged 同步后能正常删除
-        import time
-        deleted = 0
-        for attempt in range(3):
             session = self._get_session()
             try:
-                resp = session.execute(count_nql)
-                if not resp.is_succeeded() and "Schema not exist" in (resp.error_msg() or ""):
-                    logger.warning(
-                        "LOOKUP 等待 schema 同步重试",
-                        doc_id=doc_id, attempt=attempt + 1, space=space,
-                    )
-                    session.release()
-                    time.sleep(2.0)
-                    continue
-                if resp.is_succeeded() and resp.rows():
-                    deleted = self._cell_int(resp.rows()[0].values[0])
-                # 执行删除（即使 count=0 也执行，确保幂等）
-                del_resp = session.execute(del_nql)
-                if not del_resp.is_succeeded() and "Schema not exist" in (del_resp.error_msg() or ""):
-                    session.release()
-                    time.sleep(2.0)
-                    continue
-                break
+                resp = session.execute(nql)
+                if not resp.is_succeeded():
+                    logger.warning("search_nodes 执行失败", error=resp.error_msg())
+                    return []
+                results: list[dict] = []
+                for row in resp.rows():
+                    results.append(self._row_to_node(row, None))
+                return results
             finally:
                 session.release()
 
-        logger.info("按 doc_id 删除节点完成", doc_id=doc_id, deleted=deleted, space=space)
-        return deleted
+        return await self._run_sync(_do_search)
+
+    async def delete_by_doc(self, doc_id: str, kb_id=None) -> int:
+        """删除文档相关的所有节点和边。"""
+        import time
+
+        def _do_delete():
+            if not self._try_connect():
+                logger.warning(
+                    "NebulaGraph 不可用，跳过图谱节点删除", doc_id=doc_id,
+                )
+                return 0
+
+            space = _space_name(kb_id)
+            self._ensure_schema(space)
+
+            count_nql = (
+                f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} '
+                f'WHERE {_ENTITY_TAG}.doc_id == "{_nql_escape(doc_id)}" '
+                f'YIELD id(vertex) AS vid | YIELD count($-.vid) AS c;'
+            )
+            del_nql = (
+                f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} '
+                f'WHERE {_ENTITY_TAG}.doc_id == "{_nql_escape(doc_id)}" '
+                f'YIELD id(vertex) AS vid | DELETE VERTEX $-.vid WITH EDGE;'
+            )
+            deleted = 0
+            for attempt in range(3):
+                session = self._get_session()
+                try:
+                    resp = session.execute(count_nql)
+                    if not resp.is_succeeded() and "Schema not exist" in (resp.error_msg() or ""):
+                        logger.warning(
+                            "LOOKUP 等待 schema 同步重试",
+                            doc_id=doc_id, attempt=attempt + 1, space=space,
+                        )
+                        session.release()
+                        time.sleep(2.0)
+                        continue
+                    if resp.is_succeeded() and resp.rows():
+                        deleted = self._cell_int(resp.rows()[0].values[0])
+                    del_resp = session.execute(del_nql)
+                    if not del_resp.is_succeeded() and "Schema not exist" in (del_resp.error_msg() or ""):
+                        session.release()
+                        time.sleep(2.0)
+                        continue
+                    break
+                finally:
+                    session.release()
+
+            logger.info("按 doc_id 删除节点完成", doc_id=doc_id, deleted=deleted, space=space)
+            return deleted
+
+        return await self._run_sync(_do_delete)
 
     async def get_stats(self, kb_id=None) -> dict:
-        """获取图统计信息（节点/关系/标签）。
+        """获取图统计信息（节点/关系/标签）。"""
+        def _do_stats():
+            if not self._try_connect():
+                return {"total_nodes": 0, "total_relations": 0, "node_labels": []}
 
-        Args:
-            kb_id: 知识库 ID。None 时统计全局 space。
+            space = _space_name(kb_id)
+            self._ensure_schema(space)
+            stats: dict[str, Any] = {"total_nodes": 0, "total_relations": 0, "node_labels": []}
 
-        Returns:
-            dict: ``{"total_nodes", "total_relations", "node_labels"}``，
-                服务不可用时返回零值。
-        """
-        if not self._try_connect():
-            return {"total_nodes": 0, "total_relations": 0, "node_labels": []}
+            session = self._get_session()
+            try:
+                resp = session.execute(
+                    f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} YIELD id(vertex) AS vid '
+                    f'| YIELD count($-.vid) AS c;'
+                )
+                if resp.is_succeeded() and resp.rows():
+                    stats["total_nodes"] = self._cell_int(resp.rows()[0].values[0])
 
-        space = _space_name(kb_id)
-        self._ensure_schema(space)
-        stats: dict[str, Any] = {"total_nodes": 0, "total_relations": 0, "node_labels": []}
+                resp = session.execute(
+                    f'USE `{space}`; LOOKUP ON {_RELATES_EDGE} YIELD edge AS e '
+                    f'| YIELD count($-.e) AS c;'
+                )
+                if resp.is_succeeded() and resp.rows():
+                    stats["total_relations"] = self._cell_int(resp.rows()[0].values[0])
 
-        session = self._get_session()
-        try:
-            # 节点数
-            resp = session.execute(
-                f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} YIELD id(vertex) AS vid '
-                f'| YIELD count($-.vid) AS c;'
-            )
-            if resp.is_succeeded() and resp.rows():
-                stats["total_nodes"] = self._cell_int(resp.rows()[0].values[0])
+                resp = session.execute(
+                    f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} '
+                    f'YIELD {_ENTITY_TAG}.label AS label | YIELD distinct($-.label) AS label;'
+                )
+                if resp.is_succeeded():
+                    labels: list[str] = []
+                    for row in resp.rows():
+                        labels.append(self._cell_str(row.values[0]))
+                    stats["node_labels"] = labels
+            finally:
+                session.release()
 
-            # 关系数
-            resp = session.execute(
-                f'USE `{space}`; LOOKUP ON {_RELATES_EDGE} YIELD edge AS e '
-                f'| YIELD count($-.e) AS c;'
-            )
-            if resp.is_succeeded() and resp.rows():
-                stats["total_relations"] = self._cell_int(resp.rows()[0].values[0])
+            return stats
 
-            # 标签（distinct label 属性）
-            resp = session.execute(
-                f'USE `{space}`; LOOKUP ON {_ENTITY_TAG} '
-                f'YIELD {_ENTITY_TAG}.label AS label | YIELD distinct($-.label) AS label;'
-            )
-            if resp.is_succeeded():
-                labels: list[str] = []
-                for row in resp.rows():
-                    labels.append(self._cell_str(row.values[0]))
-                stats["node_labels"] = labels
-        finally:
-            session.release()
-
-        return stats
+        return await self._run_sync(_do_stats)
 
     async def get_graph(self, limit: int = 50, kb_id=None) -> dict:
-        """获取知识图谱（限制节点数，MATCH 查询）。
+        """获取知识图谱（限制节点数，MATCH 查询）。"""
+        def _do_get_graph():
+            if not self._try_connect():
+                return {"nodes": [], "edges": []}
 
-        Args:
-            limit: 最大返回节点数。
-            kb_id: 知识库 ID。None 时查询全局 space。
+            space = _space_name(kb_id)
+            self._ensure_schema(space)
+            nlimit = max(1, int(limit))
 
-        Returns:
-            dict: ``{"nodes": [...], "edges": [...]}``，服务不可用时返回空。
-        """
-        if not self._try_connect():
-            return {"nodes": [], "edges": []}
+            nodes: list[dict] = []
+            edges: list[dict] = []
+            session = self._get_session()
+            try:
+                resp = session.execute(
+                    f'USE `{space}`; MATCH (n:{_ENTITY_TAG}) RETURN id(n) AS vid, '
+                    f'n.{_ENTITY_TAG}.name AS name, n.{_ENTITY_TAG}.label AS label, '
+                    f'n.{_ENTITY_TAG}.type AS type '
+                    f'LIMIT {nlimit};'
+                )
+                if resp.is_succeeded():
+                    for row in resp.rows():
+                        vid = self._cell_str(row.values[0])
+                        name = self._cell_str(row.values[1])
+                        label = self._cell_str(row.values[2])
+                        ntype = self._cell_str(row.values[3])
+                        if not name:
+                            continue
+                        nodes.append({
+                            "id": vid,
+                            "name": name,
+                            "labels": [label] if label else [_ENTITY_TAG],
+                            "type": ntype,
+                        })
 
-        space = _space_name(kb_id)
-        self._ensure_schema(space)
-        nlimit = max(1, int(limit))
+                resp = session.execute(
+                    f'USE `{space}`; MATCH (a:{_ENTITY_TAG})-[r:{_RELATES_EDGE}]->(b:{_ENTITY_TAG}) '
+                    f'RETURN a.{_ENTITY_TAG}.name AS source, b.{_ENTITY_TAG}.name AS target, '
+                    f'r.rel_type AS rel_type '
+                    f'LIMIT {nlimit};'
+                )
+                if resp.is_succeeded():
+                    for row in resp.rows():
+                        source = self._cell_str(row.values[0])
+                        target = self._cell_str(row.values[1])
+                        rel_type = self._cell_str(row.values[2])
+                        if not source or not target:
+                            continue
+                        edges.append({
+                            "source": source,
+                            "target": target,
+                            "type": rel_type or "RELATED_TO",
+                        })
+            finally:
+                session.release()
 
-        nodes: list[dict] = []
-        edges: list[dict] = []
-        session = self._get_session()
-        try:
-            # 节点：NebulaGraph 3.x 必须用 n.TagName.prop 访问属性，否则返回 NULL
-            resp = session.execute(
-                f'USE `{space}`; MATCH (n:{_ENTITY_TAG}) RETURN id(n) AS vid, '
-                f'n.{_ENTITY_TAG}.name AS name, n.{_ENTITY_TAG}.label AS label, '
-                f'n.{_ENTITY_TAG}.type AS type '
-                f'LIMIT {nlimit};'
+            logger.info(
+                "全局图谱查询完成",
+                node_count=len(nodes), edge_count=len(edges), space=space,
             )
-            if resp.is_succeeded():
-                for row in resp.rows():
-                    vid = self._cell_str(row.values[0])
-                    name = self._cell_str(row.values[1])
-                    label = self._cell_str(row.values[2])
-                    ntype = self._cell_str(row.values[3])
-                    if not name:
-                        continue
-                    nodes.append({
-                        "id": vid,
-                        "name": name,
-                        "labels": [label] if label else [_ENTITY_TAG],
-                        "type": ntype,
-                    })
+            return {"nodes": nodes, "edges": edges}
 
-            # 关系：边属性用 r.prop（NebulaGraph 3.x 中边只有一个 EDGE type，
-            # 不能用 r.EdgeName.prop 前缀，必须直接 r.prop）；节点属性需要 n.TagName.prop
-            resp = session.execute(
-                f'USE `{space}`; MATCH (a:{_ENTITY_TAG})-[r:{_RELATES_EDGE}]->(b:{_ENTITY_TAG}) '
-                f'RETURN a.{_ENTITY_TAG}.name AS source, b.{_ENTITY_TAG}.name AS target, '
-                f'r.rel_type AS rel_type '
-                f'LIMIT {nlimit};'
-            )
-            if resp.is_succeeded():
-                for row in resp.rows():
-                    source = self._cell_str(row.values[0])
-                    target = self._cell_str(row.values[1])
-                    rel_type = self._cell_str(row.values[2])
-                    if not source or not target:
-                        continue
-                    edges.append({
-                        "source": source,
-                        "target": target,
-                        "type": rel_type or "RELATED_TO",
-                    })
-        finally:
-            session.release()
-
-        logger.info(
-            "全局图谱查询完成",
-            node_count=len(nodes), edge_count=len(edges), space=space,
-        )
-        return {"nodes": nodes, "edges": edges}
+        return await self._run_sync(_do_get_graph)
 
     async def insert_document_graph(
         self,

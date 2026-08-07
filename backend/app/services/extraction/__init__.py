@@ -1,6 +1,6 @@
 """v3 结构化抽取模块（干净独立，不复用 v1/v2 代码）。
 
-以 services/vector/ 五维向量为底座，基础表驱动类别构建，双线路 LLM 抽取。
+以 services/vector/ 五维向量为底座，配置中心 Schema 模板驱动类别构建，双线路 LLM 抽取。
 
 模块组成：
 - config: ExtractionSettings（EXTRACTION_V3_* 配置封装）
@@ -35,9 +35,6 @@ from app.services.extraction.extraction_models import (
     CategoryResult,
     ExtractionResult,
     ExtractionTarget,
-    HeatTreatmentResult,
-    ItemInfo,
-    MethodInfo,
     RetrievedChunk,
     RetrievalContext,
     SkippedFeature,
@@ -63,13 +60,10 @@ __all__ = [
     "ExtractionLLMClient",
     "llm_client",
     # models
-    "ItemInfo",
-    "MethodInfo",
     "ExtractionTarget",
     "RetrievedChunk",
     "RetrievalContext",
     "CategoryResult",
-    "HeatTreatmentResult",
     "ExtractionResult",
     "SkippedFeature",
     # query_embedder

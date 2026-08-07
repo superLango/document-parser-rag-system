@@ -199,24 +199,6 @@ async def scheduled_cleanup_task(ctx: dict) -> dict:
 
 
 @_record_metrics
-async def sync_project_dict_task(ctx: dict) -> dict:
-    """检测项目字典（三元基础表）定时同步任务。
-
-    调用外部接口拉取全量基础表数据，更新 PostgreSQL + Milvus 向量索引。
-    执行时间由 ``PROJECT_DICT_SYNC_CRON_HOUR/MINUTE`` 配置（默认每天 3:00）。
-    """
-    from app.tasks.dict_sync_tasks import sync_project_dict_impl
-    return await sync_project_dict_impl()
-
-
-@_record_metrics
-async def rebuild_dict_vector_index_task(ctx: dict) -> dict:
-    """基础表向量索引重建任务（手动触发，用于 PG 数据变更后同步 Milvus）。"""
-    from app.tasks.dict_sync_tasks import rebuild_dict_vector_index_impl
-    return await rebuild_dict_vector_index_impl()
-
-
-@_record_metrics
 async def warmup_prompt_cache_task(ctx: dict) -> dict:
     """Prompt 缓存预热任务（低峰期触发，提升 prefix cache 命中率）。
 
@@ -290,8 +272,6 @@ class WorkerSettings:
         build_index_graph_task,
         cleanup_expired_tasks_task,
         scheduled_cleanup_task,
-        sync_project_dict_task,
-        rebuild_dict_vector_index_task,
         warmup_prompt_cache_task,
         extract_v3_task,
     ]
@@ -305,26 +285,18 @@ class WorkerSettings:
     handle_signals = False
 
     # 任务超时（秒，等价于 task_time_limit=3600）
-    # 基础表同步涉及大量向量化，超时放宽到 7200 秒
     job_timeout = 7200
 
     # 定时任务（等价于 Celery beat_schedule）
     cron_jobs = [
-        # 清理过期任务：每天 1:00（调整至 1 点，避免与基础表同步 2 点冲突）
+        # 清理过期任务：每天 1:00
         cron(cleanup_expired_tasks_task, hour=1, minute=0),
-        # Prompt 缓存预热：每天 1:30（在基础表同步之前，低峰期触发）
+        # Prompt 缓存预热：每天 1:30（低峰期触发）
         # 向 vLLM 发送所有类别的静态 prompt 前缀，驻留 KV cache 提升命中率
         cron(
             warmup_prompt_cache_task,
             hour=settings.EXTRACTION_PROMPT_CACHE_WARMUP_CRON_HOUR,
             minute=30,
-        ),
-        # 基础表定时同步：默认每天 2:00（拉取三表 + 重建 Milvus 向量索引）
-        # 执行时间可通过 PROJECT_DICT_SYNC_CRON_HOUR/MINUTE 环境变量调整
-        cron(
-            sync_project_dict_task,
-            hour=settings.PROJECT_DICT_SYNC_CRON_HOUR,
-            minute=settings.PROJECT_DICT_SYNC_CRON_MINUTE,
         ),
         # 全量资源清理：每天 3:00（过期任务/审计归档/孤儿向量/孤儿图谱/临时文件）
         cron(scheduled_cleanup_task, hour=3, minute=0),

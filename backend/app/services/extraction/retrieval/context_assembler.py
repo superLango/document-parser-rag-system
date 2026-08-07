@@ -26,13 +26,10 @@ import logging
 from typing import Any
 
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
+from app.core.exceptions import BusinessException
 from app.services.extraction.extraction_models import RetrievedChunk
 
 logger = get_logger(__name__)
-
-# 中文 token 估算系数：约 1.5 字符/token（保守估计）
-_CHARS_PER_TOKEN = 1.5
 
 
 class ContextAssembler:
@@ -42,24 +39,34 @@ class ContextAssembler:
     """
 
     def __init__(self) -> None:
-        self._settings = get_extraction_settings()
+        pass
 
     def assemble(
         self,
         chunks: list[RetrievedChunk],
         max_tokens: int | None = None,
+        cfg: Any = None,
     ) -> str:
         """将检索块拼接为上下文文本。
 
         Args:
             chunks: 检索块列表（已按相关性排序）。
             max_tokens: 上下文最大 token 数，None 时使用配置项。
+            cfg: ExtractionDomainConfig（token 估算系数与块数截断上限，可为 None）。
 
         Returns:
             str: 拼接后的上下文文本。
         """
-        _max_tokens = max_tokens or self._settings.context_max_tokens
-        char_limit = int(_max_tokens * _CHARS_PER_TOKEN)
+        if cfg is None:
+            raise BusinessException("上下文拼接缺少抽取配置（cfg）")
+        if max_tokens is None:
+            raise BusinessException("未配置上下文最大 token 数 retrieval.context_max_tokens")
+        _max_tokens = max_tokens
+        # token 估算系数 / 截断参数（配置驱动，缺失即报错）
+        chars_per_token = cfg.context_chars_per_token()
+        char_limit = int(_max_tokens * chars_per_token)
+        min_keep_chars = cfg.context_min_keep_chars()
+        truncate_marker = cfg.context_truncate_marker()
 
         if not chunks:
             return ""
@@ -67,10 +74,15 @@ class ContextAssembler:
         # 1. 按 chunk_id 去重（同子块只保留一次，同章节不同子块都保留）
         deduped = self._dedup_by_chunk_id(chunks)
 
-        # 2. 按 hierarchy_path 分组（保持相关性顺序）
+        # 2. 拼接块数截断上限（cfg.context_top_k()，None 表示不截断）
+        context_top_k = cfg.context_top_k()
+        if context_top_k is not None:
+            deduped = deduped[:context_top_k]
+
+        # 3. 按 hierarchy_path 分组（保持相关性顺序）
         grouped = self._group_by_path(deduped)
 
-        # 3. 拼接文本，控制 token 上限
+        # 4. 拼接文本，控制 token 上限
         parts: list[str] = []
         total_chars = 0
         used_paths: set[str] = set()
@@ -93,8 +105,9 @@ class ContextAssembler:
             if total_chars + len(chunk_text) > char_limit:
                 # 截断最后一个块以填满剩余空间
                 remaining = char_limit - total_chars
-                if remaining > 200:  # 至少保留 200 字符才有价值
-                    chunk_text = chunk_text[:remaining] + "\n[...内容截断...]"
+                # 至少保留 min_keep_chars 字符才有价值（否则丢弃该块）
+                if remaining > min_keep_chars:
+                    chunk_text = chunk_text[:remaining] + truncate_marker
                     parts.append(chunk_text)
                     total_chars += len(chunk_text)
                 break
@@ -110,7 +123,7 @@ class ContextAssembler:
                 "input_chunks": len(chunks),
                 "deduped_chunks": len(deduped),
                 "context_chars": len(context),
-                "estimated_tokens": int(len(context) / _CHARS_PER_TOKEN),
+                "estimated_tokens": int(len(context) / chars_per_token),
                 "max_tokens": _max_tokens,
             },
         )

@@ -22,15 +22,12 @@ const authStore = useAuthStore()
 
 const collapsed = computed(() => appStore.sidebarCollapsed && !props.isDrawer)
 
-// 超管可见管理员导航
 const visibleAdminItems = computed(() =>
   authStore.isSuperuser ? adminNavItems : [],
 )
 
-// 当前激活项
 const activePath = computed(() => {
   if (route.path === '/') return '/'
-  // 管理员路径精确前缀匹配
   if (route.path.startsWith('/admin')) {
     return adminNavItems.find((i) => route.path.startsWith(i.path))?.path ?? ''
   }
@@ -42,10 +39,10 @@ const activePath = computed(() => {
   <aside
     :class="
       cn(
-        'flex h-full flex-col border-r border-border bg-card text-card-foreground',
+        'flex h-full flex-col border-r border-border/60 bg-card/80 backdrop-blur-sm text-card-foreground relative',
         collapsed ? 'w-[var(--sidebar-collapsed-width)]' : 'w-[var(--sidebar-width)]',
         props.isDrawer ? 'w-[var(--sidebar-width)] shadow-2xl' : '',
-        'transition-[width] duration-200 ease-out',
+        'transition-[width] duration-300 ease-[var(--ease-spring)]',
         props.class,
       )
     "
@@ -54,15 +51,18 @@ const activePath = computed(() => {
     <div
       :class="
         cn(
-          'flex h-14 items-center gap-2.5 border-b border-border',
+          'flex h-14 items-center gap-2.5 border-b border-border/40 relative z-10',
           collapsed ? 'justify-center px-0' : 'px-5',
         )
       "
     >
-      <BrandLogo :size="28" />
+      <div class="relative">
+        <BrandLogo :size="28" />
+        <div class="absolute -inset-1 rounded-lg bg-primary/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
       <span
         v-if="!collapsed"
-        class="text-[17px] font-semibold tracking-tight text-foreground"
+        class="text-[17px] font-semibold tracking-tight text-foreground transition-all duration-200"
       >
         HansonDOC
       </span>
@@ -70,12 +70,18 @@ const activePath = computed(() => {
 
     <!-- 导航菜单 -->
     <nav
-      :class="cn('flex-1 overflow-y-auto overflow-x-hidden py-3', collapsed ? 'px-2' : 'px-3')"
+      :class="cn('flex-1 overflow-y-auto overflow-x-hidden py-4', collapsed ? 'px-2' : 'px-3')"
       aria-label="主导航"
     >
       <!-- 主导航 -->
       <ul class="flex flex-col gap-0.5">
-        <li v-for="item in navItems" :key="item.path">
+        <li v-for="item in navItems" :key="item.path" class="relative">
+          <!-- 活动指示器条 -->
+          <span
+            v-if="!collapsed && activePath === item.path"
+            class="nav-indicator nav-indicator-active"
+          />
+
           <Tooltip
             v-if="collapsed"
             :side="'right'"
@@ -86,15 +92,23 @@ const activePath = computed(() => {
                 :to="item.path"
                 :class="
                   cn(
-                    'group flex h-9 items-center rounded-md text-sm transition-colors',
+                    'group relative flex h-10 items-center rounded-lg text-sm transition-all duration-200',
                     collapsed ? 'justify-center px-0' : 'gap-3 px-3',
                     activePath === item.path
-                      ? 'bg-primary/10 font-medium text-primary'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                      ? 'bg-primary/10 text-primary font-medium shadow-sm shadow-primary/10'
+                      : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground hover:translate-x-0.5',
                   )
                 "
               >
-                <component :is="item.icon" class="size-4 shrink-0" :stroke-width="1.5" />
+                <component
+                  :is="item.icon"
+                  :stroke-width="activePath === item.path ? 2 : 1.5"
+                  :class="cn(
+                    'shrink-0 transition-all duration-200',
+                    collapsed ? 'size-5' : 'size-[18px]',
+                    activePath === item.path ? 'text-primary' : 'group-hover:text-foreground',
+                  )"
+                />
                 <span v-if="!collapsed" class="truncate">{{ item.title }}</span>
               </router-link>
             </template>
@@ -106,15 +120,23 @@ const activePath = computed(() => {
             :to="item.path"
             :class="
               cn(
-                'group flex h-9 items-center rounded-md text-sm transition-colors',
+                'group relative flex h-10 items-center rounded-lg text-sm transition-all duration-200',
                 collapsed ? 'justify-center px-0' : 'gap-3 px-3',
                 activePath === item.path
-                  ? 'bg-primary/10 font-medium text-primary'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                  ? 'bg-primary/10 text-primary font-medium shadow-sm shadow-primary/10'
+                  : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground hover:translate-x-0.5',
               )
             "
           >
-            <component :is="item.icon" class="size-4 shrink-0" :stroke-width="1.5" />
+            <component
+              :is="item.icon"
+              :stroke-width="activePath === item.path ? 2 : 1.5"
+              :class="cn(
+                'shrink-0 transition-all duration-200',
+                collapsed ? 'size-5' : 'size-[18px]',
+                activePath === item.path ? 'text-primary' : 'group-hover:text-foreground',
+              )"
+            />
             <span v-if="!collapsed" class="truncate">{{ item.title }}</span>
           </router-link>
         </li>
@@ -125,16 +147,27 @@ const activePath = computed(() => {
         <div
           :class="
             cn(
-              'mt-4 mb-1 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60',
-              collapsed && 'px-0 text-center',
+              'mt-6 mb-2 flex items-center gap-2',
+              collapsed ? 'justify-center px-0' : 'px-3',
             )
           "
         >
-          <span v-if="!collapsed">系统管理</span>
-          <span v-else>·</span>
+          <div class="h-px flex-1 bg-border/60" />
+          <span
+            v-if="!collapsed"
+            class="text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground/50"
+          >
+            系统管理
+          </span>
+          <div v-if="collapsed" class="h-px w-4 bg-border/60" />
         </div>
         <ul class="flex flex-col gap-0.5">
-          <li v-for="item in visibleAdminItems" :key="item.path">
+          <li v-for="item in visibleAdminItems" :key="item.path" class="relative">
+            <span
+              v-if="!collapsed && activePath === item.path"
+              class="nav-indicator nav-indicator-active"
+            />
+
             <Tooltip
               v-if="collapsed"
               :side="'right'"
@@ -145,15 +178,23 @@ const activePath = computed(() => {
                   :to="item.path"
                   :class="
                     cn(
-                      'group flex h-9 items-center rounded-md text-sm transition-colors',
+                      'group relative flex h-10 items-center rounded-lg text-sm transition-all duration-200',
                       collapsed ? 'justify-center px-0' : 'gap-3 px-3',
                       activePath === item.path
-                        ? 'bg-primary/10 font-medium text-primary'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                        ? 'bg-primary/10 text-primary font-medium shadow-sm shadow-primary/10'
+                        : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground hover:translate-x-0.5',
                     )
                   "
                 >
-                  <component :is="item.icon" class="size-4 shrink-0" :stroke-width="1.5" />
+                  <component
+                    :is="item.icon"
+                    :stroke-width="activePath === item.path ? 2 : 1.5"
+                    :class="cn(
+                      'shrink-0 transition-all duration-200',
+                      collapsed ? 'size-5' : 'size-[18px]',
+                      activePath === item.path ? 'text-primary' : 'group-hover:text-foreground',
+                    )"
+                  />
                   <span v-if="!collapsed" class="truncate">{{ item.title }}</span>
                 </router-link>
               </template>
@@ -165,15 +206,23 @@ const activePath = computed(() => {
               :to="item.path"
               :class="
                 cn(
-                  'group flex h-9 items-center rounded-md text-sm transition-colors',
+                  'group relative flex h-10 items-center rounded-lg text-sm transition-all duration-200',
                   collapsed ? 'justify-center px-0' : 'gap-3 px-3',
                   activePath === item.path
-                    ? 'bg-primary/10 font-medium text-primary'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                    ? 'bg-primary/10 text-primary font-medium shadow-sm shadow-primary/10'
+                    : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground hover:translate-x-0.5',
                 )
               "
             >
-              <component :is="item.icon" class="size-4 shrink-0" :stroke-width="1.5" />
+              <component
+                :is="item.icon"
+                :stroke-width="activePath === item.path ? 2 : 1.5"
+                :class="cn(
+                  'shrink-0 transition-all duration-200',
+                  collapsed ? 'size-5' : 'size-[18px]',
+                  activePath === item.path ? 'text-primary' : 'group-hover:text-foreground',
+                )"
+              />
               <span v-if="!collapsed" class="truncate">{{ item.title }}</span>
             </router-link>
           </li>
@@ -185,13 +234,21 @@ const activePath = computed(() => {
     <div
       :class="
         cn(
-          'border-t border-border py-3 text-xs text-muted-foreground',
+          'border-t border-border/40 py-3 text-xs text-muted-foreground/70',
           collapsed ? 'px-0 text-center' : 'px-5',
         )
       "
     >
-      <span v-if="!collapsed">HansonDOC 控制台</span>
-      <span v-else class="text-[10px]">·</span>
+      <div
+        v-if="!collapsed"
+        class="flex items-center gap-2"
+      >
+        <div class="size-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
+        <span>HansonDOC 控制台</span>
+      </div>
+      <div v-else class="flex justify-center">
+        <div class="size-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
+      </div>
     </div>
   </aside>
 </template>

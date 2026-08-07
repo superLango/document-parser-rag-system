@@ -42,13 +42,19 @@
 
 from __future__ import annotations
 
+import asyncio
+import time
 import uuid
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, Path
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from sqlalchemy.orm.attributes import flag_modified
+
 from app.api.deps import KBContext, get_kb_context, require_role
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
@@ -56,7 +62,6 @@ from app.core.response import success
 from app.models.kb_domain_config import (
     KbCategory,
     KbCategoryEnum,
-    KbDictConfig,
     KbFieldTemplate,
     KbRegexRule,
 )
@@ -75,6 +80,10 @@ from app.schemas.kb_config import (
     KbHookReloadResult,
     KbHookUpdate,
     KbResourceVerifyResult,
+    ServiceCheckResult,
+    ServiceConfigItem,
+    ServiceConfigSection,
+    ServicesDiagnoseResult,
 )
 from app.services.kb.domain_template_service import (
     get_template_detail,
@@ -84,9 +93,18 @@ from app.services.kb.domain_template_service import (
 from app.services.kb.kb_config_loader import kb_config_loader
 from app.services.kb.kb_lifecycle import kb_lifecycle
 
+from enum import Enum
+
 logger = get_logger(__name__)
 
 # 合法的 config 节名
+class ConfigSectionEnum(str, Enum):
+    ocr = "ocr"
+    vector = "vector"
+    extraction = "extraction"
+    qa = "qa"
+    dict = "dict"
+
 _VALID_SECTIONS = frozenset({"ocr", "vector", "extraction", "qa", "dict"})
 
 router = APIRouter(prefix="/kbs", tags=["知识库配置中心"])
@@ -141,7 +159,6 @@ async def get_kb_config(
         categories=cfg.categories,
         field_templates=cfg.field_templates,
         regex_rules=cfg.regex_rules,
-        dict_config=cfg.dict_config,
         template_code=kb_ctx.kb.template_code,
     )
     return success(data=resp.model_dump())
@@ -149,19 +166,14 @@ async def get_kb_config(
 
 @router.get("/{kb_id}/config/{section}", response_model_exclude_none=True)
 async def get_kb_config_section(
-    section: str,
+    section: ConfigSectionEnum,
     kb_ctx: KBContext = Depends(get_kb_context),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
     """获取知识库某节配置（ocr/vector/extraction/qa/dict）。"""
-    if section not in _VALID_SECTIONS:
-        raise BusinessException(
-            code=ErrorCode.VALIDATION_ERROR,
-            message=f"非法配置节 '{section}'，合法值: {sorted(_VALID_SECTIONS)}",
-        )
     cfg = await kb_config_loader.load(kb_ctx.kb_id, db, kb=kb_ctx.kb)
-    section_data = cfg.config.get(section, {})
-    return success(data={"section": section, "config": section_data})
+    section_data = cfg.config.get(section.value, {})
+    return success(data={"section": section.value, "config": section_data})
 
 
 @router.put("/{kb_id}/config", response_model_exclude_none=True)
@@ -194,21 +206,17 @@ async def update_kb_config(
 
 @router.put("/{kb_id}/config/{section}", response_model_exclude_none=True)
 async def update_kb_config_section(
-    section: str,
+    section: ConfigSectionEnum,
     payload: KbConfigSectionUpdate,
     kb_ctx: KBContext = Depends(require_role(*MANAGE_ROLES)),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
     """更新知识库某节配置。"""
-    if section not in _VALID_SECTIONS:
-        raise BusinessException(
-            code=ErrorCode.VALIDATION_ERROR,
-            message=f"非法配置节 '{section}'，合法值: {sorted(_VALID_SECTIONS)}",
-        )
+    section_key = section.value
     existing = kb_ctx.kb.config if isinstance(kb_ctx.kb.config, dict) else {}
-    if section not in existing or not isinstance(existing.get(section), dict):
-        existing[section] = {}
-    existing[section] = _deep_merge_dicts(existing[section], payload.section)
+    if section_key not in existing or not isinstance(existing.get(section_key), dict):
+        existing[section_key] = {}
+    existing[section_key] = _deep_merge_dicts(existing[section_key], payload.section)
     kb_ctx.kb.config = existing
     await db.commit()
     await db.refresh(kb_ctx.kb)
@@ -216,10 +224,10 @@ async def update_kb_config_section(
     logger.info(
         "KB config 节已更新",
         kb_id=str(kb_ctx.kb_id),
-        section=section,
+        section=section_key,
         user_id=str(kb_ctx.user.id),
     )
-    return success(data={"section": section, "config": existing[section]}, message="配置节已更新")
+    return success(data={"section": section_key, "config": existing[section_key]}, message="配置节已更新")
 
 
 # ============================================================
@@ -521,16 +529,6 @@ async def list_field_templates(
     return success(data={"items": items, "total": len(items)})
 
 
-@router.get("/{kb_id}/domain/dict-config", response_model_exclude_none=True)
-async def get_dict_config(
-    kb_ctx: KBContext = Depends(get_kb_context),
-    db: AsyncSession = Depends(get_db),
-) -> dict:
-    """获取字典配置。"""
-    cfg = await kb_config_loader.load(kb_ctx.kb_id, db, kb=kb_ctx.kb)
-    return success(data=cfg.dict_config if cfg.dict_config else {"enabled": False})
-
-
 # ============================================================
 # 配置校验与资源诊断
 # ============================================================
@@ -600,6 +598,481 @@ async def verify_kb_resources(
     """物理资源完整性诊断。"""
     steps = await kb_lifecycle.verify_kb_resources(kb_ctx.kb_id)
     resp = KbResourceVerifyResult(kb_id=kb_ctx.kb_id, steps=steps)
+    return success(data=resp.model_dump())
+
+
+# ============================================================
+# 服务连接校验与服务配置管理
+# ============================================================
+
+# 服务定义：服务名 -> 显示名、分类、图标、配置字段
+_SERVICE_DEFINITIONS: dict[str, dict] = {
+    "minio": {
+        "display_name": "MinIO 对象存储",
+        "description": "文档文件与备份存储",
+        "icon": "HardDrive",
+        "category": "storage",
+        "fields": [
+            {"key": "endpoint", "label": "服务端点", "type": "string", "default": settings.MINIO_ENDPOINT, "required": True, "placeholder": "localhost:9000"},
+            {"key": "access_key", "label": "Access Key", "type": "string", "default": settings.MINIO_ACCESS_KEY, "required": True},
+            {"key": "secret_key", "label": "Secret Key", "type": "password", "default": settings.MINIO_SECRET_KEY, "required": True},
+            {"key": "secure", "label": "启用 HTTPS", "type": "boolean", "default": settings.MINIO_SECURE},
+        ],
+    },
+    "milvus": {
+        "display_name": "Milvus 向量数据库",
+        "description": "文档向量索引与检索",
+        "icon": "Search",
+        "category": "vector",
+        "fields": [
+            {"key": "host", "label": "主机地址", "type": "string", "default": settings.MILVUS_HOST, "required": True, "placeholder": "localhost"},
+            {"key": "port", "label": "端口", "type": "number", "default": settings.MILVUS_PORT, "required": True},
+            {"key": "collection", "label": "默认 Collection", "type": "string", "default": settings.MILVUS_COLLECTION},
+        ],
+    },
+    "nebula": {
+        "display_name": "NebulaGraph 图谱数据库",
+        "description": "知识图谱存储与查询",
+        "icon": "Network",
+        "category": "graph",
+        "fields": [
+            {"key": "graphd_host", "label": "Graphd 主机", "type": "string", "default": settings.NEBULA_GRAPHD_HOST, "required": True, "placeholder": "localhost"},
+            {"key": "graphd_port", "label": "Graphd 端口", "type": "number", "default": settings.NEBULA_GRAPHD_PORT, "required": True},
+            {"key": "user", "label": "用户名", "type": "string", "default": settings.NEBULA_USER, "required": True},
+            {"key": "password", "label": "密码", "type": "password", "default": settings.NEBULA_PASSWORD},
+            {"key": "space_prefix", "label": "Space 前缀", "type": "string", "default": settings.NEBULA_SPACE_PREFIX},
+        ],
+    },
+    "redis": {
+        "display_name": "Redis 缓存",
+        "description": "缓存与会话存储",
+        "icon": "Database",
+        "category": "cache",
+        "fields": [
+            {"key": "url", "label": "连接 URL", "type": "string", "default": settings.REDIS_URL, "required": True, "placeholder": "redis://localhost:6379/0"},
+        ],
+    },
+    "llm_vllm": {
+        "display_name": "LLM vLLM (9988)",
+        "description": "通用大语言模型服务（兼作结构化抽取端点）",
+        "icon": "Brain",
+        "category": "llm",
+        "fields": [
+            {"key": "api_base", "label": "API Base URL", "type": "string", "default": settings.LLM_API_BASE, "required": True, "placeholder": "http://localhost:9988/v1"},
+            {"key": "model", "label": "模型名称", "type": "string", "default": settings.LLM_API_MODEL, "required": True},
+            {"key": "api_key", "label": "API Key", "type": "password", "default": settings.EXTRACTION_V3_LLM_API_KEY, "placeholder": "sk-... 或 EMPTY"},
+        ],
+    },
+    "ocr_vllm": {
+        "display_name": "OCR vLLM (9977)",
+        "description": "GLM-OCR 文档识别服务",
+        "icon": "FileText",
+        "category": "llm",
+        "fields": [
+            {"key": "server_url", "label": "API Base URL", "type": "string", "default": settings.GLMOCR_SERVER_URL, "required": True, "placeholder": "http://localhost:9977/v1"},
+            {"key": "model", "label": "模型名称", "type": "string", "default": settings.GLMOCR_MODEL, "required": True},
+        ],
+    },
+    "popo_vllm": {
+        "display_name": "Popo vLLM (9999)",
+        "description": "Popo 专用模型服务",
+        "icon": "Sparkles",
+        "category": "llm",
+        "fields": [
+            {"key": "api_base", "label": "API Base URL", "type": "string", "default": "http://localhost:9999/v1", "required": True, "placeholder": "http://localhost:9999/v1"},
+            {"key": "model", "label": "模型名称", "type": "string", "default": "popo-model"},
+        ],
+    },
+    "layout_model": {
+        "display_name": "版面分析模型",
+        "description": "PP-DocLayoutV3 文档版面检测",
+        "icon": "LayoutGrid",
+        "category": "model",
+        "fields": [
+            {"key": "enabled", "label": "启用版面分析", "type": "boolean", "default": True},
+        ],
+    },
+    "embedding_model": {
+        "display_name": "Embedding 模型",
+        "description": "bge-m3 文本向量化模型",
+        "icon": "Hash",
+        "category": "model",
+        "fields": [
+            {"key": "model_path", "label": "模型路径", "type": "string", "default": settings.EMBEDDING_MODEL_PATH},
+            {"key": "batch_size", "label": "批量大小", "type": "number", "default": settings.EMBEDDING_BATCH_SIZE},
+        ],
+    },
+}
+
+
+async def _check_minio(kb_id: uuid.UUID | None = None) -> tuple[str, str, float, dict]:
+    """检查 MinIO/S3 存储连通性与 bucket 存在性。"""
+    start = time.time()
+    try:
+        from app.services.storage_service import storage_service
+        client = storage_service._get_client()
+        # 检查 KB bucket 是否存在
+        if kb_id:
+            bucket_name = f"{settings.KB_MINIO_BUCKET_PREFIX}{kb_id.hex}"
+            await asyncio.to_thread(client.head_bucket, Bucket=bucket_name)
+            msg = f"Bucket '{bucket_name}' 可访问"
+        else:
+            await asyncio.to_thread(client.list_buckets)
+            msg = "MinIO 服务连接正常"
+        return "ok", msg, (time.time() - start) * 1000, {"endpoint": settings.MINIO_ENDPOINT}
+    except Exception as exc:
+        return "error", f"连接失败: {str(exc)[:200]}", (time.time() - start) * 1000, {}
+
+
+async def _check_milvus(kb_id: uuid.UUID | None = None) -> tuple[str, str, float, dict]:
+    """检查 Milvus 向量库连通性。"""
+    start = time.time()
+    try:
+        from pymilvus import connections, utility
+        alias = "config_check"
+        if not connections.has_connection(alias):
+            connections.connect(
+                alias=alias,
+                host=settings.MILVUS_HOST,
+                port=str(settings.MILVUS_PORT),
+                timeout=3,
+            )
+        collections = utility.list_collections(using=alias)
+        connections.disconnect(alias)
+        return "ok", f"连接正常，共 {len(collections)} 个 collection", (time.time() - start) * 1000, {
+            "host": f"{settings.MILVUS_HOST}:{settings.MILVUS_PORT}",
+            "collections": collections[:10],
+        }
+    except Exception as exc:
+        return "error", f"连接失败: {str(exc)[:200]}", (time.time() - start) * 1000, {}
+
+
+async def _check_nebula(kb_id: uuid.UUID | None = None) -> tuple[str, str, float, dict]:
+    """检查 NebulaGraph 图数据库连通性。"""
+    start = time.time()
+    try:
+        from app.services.graph.graph_store import graph_store
+        connected = await asyncio.to_thread(graph_store._try_connect)
+        if not connected:
+            return "warning", "连接可用但未能获取详情（图谱功能将降级）", (time.time() - start) * 1000, {}
+        space_count = 0
+        try:
+            session = await asyncio.to_thread(graph_store._get_session)
+            try:
+                resp = await asyncio.to_thread(session.execute, "SHOW SPACES;")
+                if resp.is_succeeded():
+                    space_count = len(resp.rows())
+            finally:
+                await asyncio.to_thread(session.release)
+        except Exception:
+            pass
+        return "ok", f"连接正常，共 {space_count} 个 graph space", (time.time() - start) * 1000, {
+            "host": f"{settings.NEBULA_GRAPHD_HOST}:{settings.NEBULA_GRAPHD_PORT}",
+        }
+    except Exception as exc:
+        return "warning", f"连接失败（图谱功能将优雅降级）: {str(exc)[:150]}", (time.time() - start) * 1000, {}
+
+
+async def _check_redis(kb_id: uuid.UUID | None = None) -> tuple[str, str, float, dict]:
+    """检查 Redis 缓存连通性。"""
+    start = time.time()
+    try:
+        import redis.asyncio as aioredis
+        client = aioredis.from_url(settings.REDIS_URL, socket_connect_timeout=2)
+        pong = await client.ping()
+        await client.aclose()
+        return "ok", "PONG" if pong else "Ping 返回异常", (time.time() - start) * 1000, {}
+    except Exception as exc:
+        return "error", f"连接失败: {str(exc)[:200]}", (time.time() - start) * 1000, {}
+
+
+async def _check_llm(port: int, service_name: str) -> tuple[str, str, float, dict]:
+    """检查 vLLM LLM 服务连通性（简单 health 检查）。"""
+    start = time.time()
+    try:
+        import httpx
+        async with httpx.AsyncClient(timeout=5) as client:
+            resp = await client.get(f"http://localhost:{port}/health")
+            if resp.status_code < 500:
+                return "ok", f"{service_name} 服务响应正常 (HTTP {resp.status_code})", (time.time() - start) * 1000, {
+                    "endpoint": f"http://localhost:{port}",
+                }
+            return "error", f"服务返回错误状态: HTTP {resp.status_code}", (time.time() - start) * 1000, {}
+    except Exception as exc:
+        return "error", f"连接失败: {str(exc)[:200]}", (time.time() - start) * 1000, {}
+
+
+async def _check_layout_model() -> tuple[str, str, float, dict]:
+    """检查版面分析模型可用性。"""
+    start = time.time()
+    try:
+        from app.services.ocr import ocr_service
+        available = await asyncio.to_thread(ocr_service.is_layout_model_available)
+        if available:
+            from app.services.ocr.ocr_config import ocr_config
+            return "ok", f"PP-DocLayoutV3 模型可用", (time.time() - start) * 1000, {
+                "model_dir": ocr_config.layout_model_dir,
+            }
+        return "warning", "版面分析模型未加载，将使用整页 OCR", (time.time() - start) * 1000, {}
+    except Exception as exc:
+        return "warning", f"模型检查失败（将跳过版面分析）: {str(exc)[:150]}", (time.time() - start) * 1000, {}
+
+
+async def _check_embedding_model() -> tuple[str, str, float, dict]:
+    """检查 Embedding 模型（懒加载，只检查配置）。"""
+    start = time.time()
+    import os
+    model_path = settings.EMBEDDING_MODEL_PATH
+    if os.path.exists(model_path):
+        return "ok", f"bge-m3 模型路径存在（懒加载）", (time.time() - start) * 1000, {"model_path": model_path}
+    return "warning", f"模型路径不存在: {model_path}", (time.time() - start) * 1000, {}
+
+
+_SERVICE_CHECKS: dict[str, callable] = {
+    "minio": _check_minio,
+    "milvus": _check_milvus,
+    "nebula": _check_nebula,
+    "redis": _check_redis,
+    "llm_vllm": lambda kb_id: _check_llm(9988, "LLM"),
+    "ocr_vllm": lambda kb_id: _check_llm(9977, "OCR vLLM"),
+    "popo_vllm": lambda kb_id: _check_llm(9999, "Popo vLLM"),
+    "layout_model": lambda kb_id: _check_layout_model(),
+    "embedding_model": lambda kb_id: _check_embedding_model(),
+}
+
+
+@router.get("/{kb_id}/services", response_model_exclude_none=True)
+async def list_service_configs(
+    kb_ctx: KBContext = Depends(get_kb_context),
+) -> dict:
+    """获取所有服务的配置列表（含默认值与当前 KB 覆盖值、持久化校验状态）。"""
+    kb_config = kb_ctx.kb.config if isinstance(kb_ctx.kb.config, dict) else {}
+    service_configs = kb_config.get("services", {})
+    services_status = kb_config.get("services_status", {})
+    services_map = services_status.get("services", {})
+
+    sections = []
+    for svc_name, svc_def in _SERVICE_DEFINITIONS.items():
+        svc_overrides = service_configs.get(svc_name, {})
+        svc_status = services_map.get(svc_name)
+        fields = []
+        for f in svc_def["fields"]:
+            current_value = svc_overrides.get(f["key"], f["default"])
+            fields.append(ServiceConfigItem(
+                key=f["key"],
+                label=f["label"],
+                type=f["type"],
+                value=current_value,
+                default=f.get("default"),
+                required=f.get("required", False),
+                placeholder=f.get("placeholder"),
+                description=f.get("description"),
+            ).model_dump())
+        sections.append(ServiceConfigSection(
+            name=svc_name,
+            display_name=svc_def["display_name"],
+            description=svc_def["description"],
+            icon=svc_def.get("icon"),
+            category=svc_def["category"],
+            configurable=True,
+            fields=fields,
+            last_status=svc_status,
+        ).model_dump())
+
+    return success(data={
+        "services": sections,
+        "last_diagnose": {
+            "checked_at": services_status.get("checked_at"),
+            "total": services_status.get("total", 0),
+            "ok_count": services_status.get("ok_count", 0),
+            "error_count": services_status.get("error_count", 0),
+            "warning_count": services_status.get("warning_count", 0),
+        } if services_status else None,
+    })
+
+
+@router.get("/{kb_id}/services/status", response_model_exclude_none=True)
+async def get_services_status(
+    kb_ctx: KBContext = Depends(get_kb_context),
+) -> dict:
+    """获取持久化的服务诊断状态（供概览页等页面读取）。"""
+    kb_config = kb_ctx.kb.config if isinstance(kb_ctx.kb.config, dict) else {}
+    services_status = kb_config.get("services_status")
+    if not services_status:
+        return success(data={
+            "checked_at": None,
+            "total": len(_SERVICE_DEFINITIONS),
+            "ok_count": 0,
+            "error_count": 0,
+            "warning_count": 0,
+            "services": [],
+            "never_checked": True,
+        })
+    return success(data={**services_status, "never_checked": False})
+
+
+@router.put("/{kb_id}/services/{service_name}", response_model_exclude_none=True)
+async def update_service_config(
+    service_name: str,
+    payload: dict,
+    kb_ctx: KBContext = Depends(require_role(*MANAGE_ROLES)),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """更新单个服务的配置（仅保存该服务的覆盖项）。"""
+    if service_name not in _SERVICE_DEFINITIONS:
+        raise BusinessException(
+            code=ErrorCode.VALIDATION_ERROR,
+            message=f"未知服务: {service_name}，合法值: {sorted(_SERVICE_DEFINITIONS.keys())}",
+        )
+
+    existing = kb_ctx.kb.config if isinstance(kb_ctx.kb.config, dict) else {}
+    services_config = dict(existing.get("services", {}))
+    # 只保存非默认值的覆盖项
+    svc_def = _SERVICE_DEFINITIONS[service_name]
+    overrides = {}
+    for f in svc_def["fields"]:
+        key = f["key"]
+        if key in payload and payload[key] != f.get("default"):
+            overrides[key] = payload[key]
+    services_config[service_name] = overrides
+    new_config = dict(existing)
+    new_config["services"] = services_config
+    kb_ctx.kb.config = new_config
+    flag_modified(kb_ctx.kb, "config")
+    await db.commit()
+
+    logger.info(
+        "服务配置已更新",
+        kb_id=str(kb_ctx.kb_id),
+        service=service_name,
+        user_id=str(kb_ctx.user.id),
+    )
+    return success(data={"service": service_name, "config": overrides}, message=f"{svc_def['display_name']} 配置已保存")
+
+
+@router.post("/{kb_id}/services/{service_name}/validate", response_model_exclude_none=True)
+async def validate_single_service(
+    service_name: str,
+    kb_ctx: KBContext = Depends(require_role(*MANAGE_ROLES)),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """校验单个服务连接状态，并更新持久化诊断结果。"""
+    if service_name not in _SERVICE_CHECKS:
+        raise BusinessException(
+            code=ErrorCode.VALIDATION_ERROR,
+            message=f"未知服务: {service_name}",
+        )
+
+    svc_def = _SERVICE_DEFINITIONS.get(service_name, {})
+    check_fn = _SERVICE_CHECKS[service_name]
+    try:
+        status, message, rt_ms, details = await asyncio.wait_for(
+            check_fn(kb_ctx.kb_id), timeout=10.0
+        )
+    except asyncio.TimeoutError:
+        status, message, rt_ms, details = "error", "校验超时（10s）", 10000, {}
+
+    result = ServiceCheckResult(
+        name=service_name,
+        display_name=svc_def.get("display_name", service_name),
+        status=status,
+        message=message,
+        response_time_ms=rt_ms,
+        details=details,
+    )
+
+    # 更新持久化诊断结果中的单个服务状态
+    existing = kb_ctx.kb.config if isinstance(kb_ctx.kb.config, dict) else {}
+    services_status = dict(existing.get("services_status", {}))
+    services_map = dict(services_status.get("services", {}))
+    services_map[service_name] = result.model_dump()
+    # 重新统计
+    ok_count = sum(1 for s in services_map.values() if s.get("status") == "ok")
+    error_count = sum(1 for s in services_map.values() if s.get("status") == "error")
+    warning_count = sum(1 for s in services_map.values() if s.get("status") == "warning")
+    new_services_status = {
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+        "total": len(services_map),
+        "ok_count": ok_count,
+        "error_count": error_count,
+        "warning_count": warning_count,
+        "services": services_map,
+    }
+    new_config = dict(existing)
+    new_config["services_status"] = new_services_status
+    kb_ctx.kb.config = new_config
+    flag_modified(kb_ctx.kb, "config")
+    await db.commit()
+
+    return success(data=result.model_dump())
+
+
+@router.post("/{kb_id}/diagnose", response_model_exclude_none=True)
+async def diagnose_all_services(
+    kb_ctx: KBContext = Depends(require_role(*MANAGE_ROLES)),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """一键诊断所有服务连接状态（依次检查，带超时保护），并持久化诊断结果。"""
+    results = []
+    ok_count = 0
+    error_count = 0
+    warning_count = 0
+
+    for svc_name, svc_def in _SERVICE_DEFINITIONS.items():
+        check_fn = _SERVICE_CHECKS.get(svc_name)
+        if not check_fn:
+            continue
+        try:
+            status, message, rt_ms, details = await asyncio.wait_for(
+                check_fn(kb_ctx.kb_id), timeout=10.0
+            )
+        except asyncio.TimeoutError:
+            status, message, rt_ms, details = "error", "校验超时（10s）", 10000, {}
+        except Exception as exc:
+            status, message, rt_ms, details = "error", f"校验异常: {str(exc)[:200]}", 0, {}
+
+        if status == "ok":
+            ok_count += 1
+        elif status == "warning":
+            warning_count += 1
+        else:
+            error_count += 1
+
+        results.append(ServiceCheckResult(
+            name=svc_name,
+            display_name=svc_def["display_name"],
+            status=status,
+            message=message,
+            response_time_ms=rt_ms,
+            details=details,
+        ).model_dump())
+
+    checked_at = datetime.now(timezone.utc)
+    resp = ServicesDiagnoseResult(
+        kb_id=kb_ctx.kb_id,
+        total=len(results),
+        ok_count=ok_count,
+        error_count=error_count,
+        warning_count=warning_count,
+        services=results,
+        checked_at=checked_at,
+    )
+
+    # 持久化诊断结果到 KB config
+    existing = kb_ctx.kb.config if isinstance(kb_ctx.kb.config, dict) else {}
+    new_config = dict(existing)
+    new_config["services_status"] = {
+        "checked_at": checked_at.isoformat(),
+        "total": len(results),
+        "ok_count": ok_count,
+        "error_count": error_count,
+        "warning_count": warning_count,
+        "services": {s["name"]: s for s in results},
+    }
+    kb_ctx.kb.config = new_config
+    flag_modified(kb_ctx.kb, "config")
+    await db.commit()
+
     return success(data=resp.model_dump())
 
 

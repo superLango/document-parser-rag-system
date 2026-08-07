@@ -288,9 +288,9 @@ async def delete_knowledge_base(
     #    否则 db.delete(kb) 会触发 ForeignKeyViolationError。
     #    物理资源（MinIO/Milvus 等）已在步骤 1 销毁，此处仅清 DB 记录。
     #    删除顺序遵循依赖关系：先删子表（引用 documents/terms 的表），再删父表。
-    #    已知 NO ACTION 外键（10 表）：
+    #    已知 NO ACTION 外键（7 表）：
     #      documents / tasks / kb_backups / qa_sessions / schema_configs /
-    #      terms / term_mappings / sm_feature / sm_item / sm_method
+    #      terms / term_mappings
     #    其中 tasks.document_id → documents、term_mappings.term_id → terms 亦为 NO ACTION。
     from sqlalchemy import text as _text
 
@@ -304,9 +304,6 @@ async def delete_knowledge_base(
         "kb_backups",       # 引用 knowledge_bases(kb_id)
         "qa_sessions",      # 引用 knowledge_bases(kb_id)，CASCADE 清理 qa_messages
         "schema_configs",   # 引用 knowledge_bases(kb_id)
-        "sm_feature",       # 基础字典 KB 专属覆盖记录
-        "sm_item",
-        "sm_method",
     ]
     for tbl in _cleanup_order:
         # 用 savepoint 隔离每个表删除：某表不存在 kb_id 列或删除失败时，
@@ -367,42 +364,13 @@ async def get_knowledge_base_stats(
     kb_ctx: KBContext = Depends(get_kb_context),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """知识库统计信息（文档数、任务数、成员数）。
-
-    向量分块数需查询 Milvus，此处仅返回 DB 统计；chunks 字段由前端
-    调用向量统计端点或后续阶段补充。
-    """
-    kb_id = kb_ctx.kb_id
-    # 文档数（显式按 kb_id 过滤，纵深防御不依赖 RLS：superuser 绕过 RLS）
-    doc_count: int = (
-        await db.execute(
-            select(func.count())
-            .select_from(Document)
-            .where(Document.kb_id == kb_id)
-        )
-    ).scalar_one()
-    # 任务数（显式按 kb_id 过滤）
-    task_count: int = (
-        await db.execute(
-            select(func.count())
-            .select_from(Task)
-            .where(Task.kb_id == kb_id)
-        )
-    ).scalar_one()
-    # 成员数
-    member_count: int = (
-        await db.execute(
-            select(func.count()).select_from(KbMember).where(KbMember.kb_id == kb_id)
-        )
-    ).scalar_one()
-
+    """知识库统计信息（文档数、chunks数、任务数、成员数）。"""
+    from app.services.dashboard_service import get_kb_stats
+    stats = await get_kb_stats(db, kb_ctx.kb_id)
     data = {
-        "kb_id": str(kb_id),
+        "kb_id": str(kb_ctx.kb_id),
         "kb_name": kb_ctx.kb.name,
-        "total_documents": doc_count,
-        "total_chunks": 0,  # 阶段 2 接入 vector_store.count(kb_id)
-        "total_tasks": task_count,
-        "total_members": member_count,
+        **stats,
     }
     return success(data=data)
 

@@ -142,24 +142,33 @@ onMounted(fetchAll)
     </PageHeader>
 
     <!-- 统计卡片 -->
-    <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-      <Card v-for="card in statCards" :key="card.label">
-        <CardContent class="flex items-center gap-3 p-3">
-          <div class="flex size-10 shrink-0 items-center justify-center rounded-md" :class="card.color">
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+      <Card
+        v-for="card in statCards"
+        :key="card.label"
+        class="hover:shadow-md hover:border-primary/20 transition-all duration-200 hover:-translate-y-0.5"
+      >
+        <CardContent class="flex items-center gap-3 p-4">
+          <div
+            class="flex size-11 shrink-0 items-center justify-center rounded-lg shadow-sm transition-transform duration-200"
+            :class="card.color"
+          >
             <component :is="card.icon" class="size-5" :stroke-width="1.5" />
           </div>
           <div class="min-w-0">
-            <p class="text-xs text-muted-foreground">{{ card.label }}</p>
-            <p v-if="loading" class="mt-1"><Skeleton class="h-6 w-12" /></p>
-            <p v-else class="text-xl font-semibold text-foreground">{{ card.value }}</p>
+            <p class="text-xs text-muted-foreground/80">{{ card.label }}</p>
+            <p v-if="loading" class="mt-1"><Skeleton class="h-7 w-14 rounded-md" /></p>
+            <p v-else class="text-2xl font-semibold tracking-tight text-foreground tabular-nums">
+              {{ card.value }}
+            </p>
           </div>
         </CardContent>
       </Card>
     </div>
 
     <!-- 趋势图 -->
-    <Card class="mt-4">
-      <CardContent class="p-4">
+    <Card class="mt-5">
+      <CardContent class="p-5">
         <div class="mb-3 flex items-center justify-between">
           <div>
             <h3 class="text-sm font-medium text-foreground">30 天趋势</h3>
@@ -178,9 +187,9 @@ onMounted(fetchAll)
     </Card>
 
     <!-- 分布图 -->
-    <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div class="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
       <Card>
-        <CardContent class="p-4">
+        <CardContent class="p-5">
           <div class="mb-3">
             <h3 class="text-sm font-medium text-foreground">文档类型分布</h3>
             <p class="text-xs text-muted-foreground">按文件扩展名统计</p>
@@ -193,7 +202,7 @@ onMounted(fetchAll)
         </CardContent>
       </Card>
       <Card>
-        <CardContent class="p-4">
+        <CardContent class="p-5">
           <div class="mb-3">
             <h3 class="text-sm font-medium text-foreground">任务状态分布</h3>
             <p class="text-xs text-muted-foreground">按任务当前状态统计</p>

@@ -23,7 +23,7 @@ import re
 from typing import Any
 
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
+from app.core.exceptions import BusinessException
 
 logger = get_logger(__name__)
 
@@ -48,7 +48,7 @@ class BatchProcessor:
     """
 
     def __init__(self) -> None:
-        self._settings = get_extraction_settings()
+        pass
 
     def split(
         self,
@@ -68,9 +68,16 @@ class BatchProcessor:
         Returns:
             list[str]: 批次列表。短文本返回单批。
         """
-        _threshold = threshold or self._settings.large_table_threshold
-        _batch_chars = batch_chars or self._settings.large_table_batch_chars
-        _overlap = overlap or self._settings.batch_overlap_chars
+        # 分批参数由调用方从配置解析传入（BaseExtract batch 参数），缺失即报错
+        if threshold is None:
+            raise BusinessException("未配置 BaseExtract 批处理参数 batch.single_threshold")
+        if batch_chars is None:
+            raise BusinessException("未配置 BaseExtract 批处理参数 batch.batch_chars")
+        if overlap is None:
+            raise BusinessException("未配置 BaseExtract 批处理参数 batch.overlap")
+        _threshold = threshold
+        _batch_chars = batch_chars
+        _overlap = overlap
 
         if not text or len(text) <= _threshold:
             return [text] if text else []

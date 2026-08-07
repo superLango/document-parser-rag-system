@@ -22,7 +22,7 @@ import {
 } from 'lucide-vue-next'
 import { kbApi } from '@/api/modules/kb'
 import { useKbStore } from '@/stores/kb'
-import type { KbStats, KbResourceVerify } from '@/api/types'
+import type { KbStats, ServiceCheckResult } from '@/api/types'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -34,7 +34,15 @@ const kb = kbStore.currentKb
 
 const stats = ref<KbStats | null>(null)
 const statsLoading = ref(true)
-const resourceVerify = ref<KbResourceVerify | null>(null)
+const servicesStatus = ref<{
+  checked_at: string | null
+  total: number
+  ok_count: number
+  error_count: number
+  warning_count: number
+  services: ServiceCheckResult[]
+  never_checked: boolean
+} | null>(null)
 const verifyLoading = ref(false)
 
 const statCards = [
@@ -45,10 +53,10 @@ const statCards = [
 ]
 
 const quickActions = [
-  { name: 'KbDocuments', label: '文档管理', icon: FileText, description: '上传与管理文档' },
+  { name: 'KbDocuments', label: '文档解析', icon: FileText, description: '上传与解析文档' },
   { name: 'KbExtraction', label: '结构化抽取', icon: FileSearch, description: '配置抽取类别与执行抽取' },
-  { name: 'KbConfig', label: '配置中心', icon: Settings, description: 'OCR/向量/抽取/问答配置' },
-  { name: 'KbQA', label: '智能问答', icon: MessageSquare, description: '基于 RAG 的问答' },
+  { name: 'KbConfig', label: '资源与配置', icon: Settings, description: 'OCR/向量/抽取/问答配置' },
+  { name: 'KbQA', label: '知识问答', icon: MessageSquare, description: '基于 RAG 的问答' },
 ]
 
 async function fetchStats() {
@@ -63,13 +71,39 @@ async function fetchStats() {
   }
 }
 
-async function fetchResourceVerify() {
+async function fetchServicesStatus() {
+  if (!kb) return
+  try {
+    const result = await kbApi.getServicesStatus(kb.id)
+    // 将 services 对象转为数组
+    const servicesList = Array.isArray(result.services)
+      ? result.services
+      : Object.values(result.services)
+    servicesStatus.value = {
+      ...result,
+      services: servicesList,
+    }
+  } catch {
+    servicesStatus.value = null
+  }
+}
+
+async function runDiagnose() {
   if (!kb) return
   verifyLoading.value = true
   try {
-    resourceVerify.value = await kbApi.verifyResources(kb.id)
+    const result = await kbApi.diagnoseAllServices(kb.id)
+    servicesStatus.value = {
+      checked_at: result.checked_at,
+      total: result.total,
+      ok_count: result.ok_count,
+      error_count: result.error_count,
+      warning_count: result.warning_count,
+      services: result.services,
+      never_checked: false,
+    }
   } catch {
-    resourceVerify.value = null
+    // 诊断失败不清除已有状态
   } finally {
     verifyLoading.value = false
   }
@@ -81,13 +115,14 @@ function goTo(routeName: string) {
 
 onMounted(() => {
   fetchStats()
+  fetchServicesStatus()
 })
 </script>
 
 <template>
   <div v-if="kb" class="space-y-6">
     <!-- 知识库信息 -->
-    <Card>
+    <Card class="rounded-xl shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/20 hover:-translate-y-0.5">
       <CardContent class="p-5">
         <div class="flex items-start justify-between gap-4">
           <div class="flex-1 min-w-0">
@@ -107,15 +142,22 @@ onMounted(() => {
 
     <!-- 统计卡片 -->
     <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-      <Card v-for="card in statCards" :key="card.key">
+      <Card
+        v-for="card in statCards"
+        :key="card.key"
+        class="rounded-xl shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20"
+      >
         <CardContent class="flex items-center gap-3 p-4">
-          <div class="flex size-10 shrink-0 items-center justify-center rounded-md" :class="card.color">
+          <div
+            class="flex size-11 shrink-0 items-center justify-center rounded-lg shadow-sm transition-all duration-200 hover:scale-110"
+            :class="card.color"
+          >
             <component :is="card.icon" class="size-5" :stroke-width="1.5" />
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-xs text-muted-foreground">{{ card.label }}</p>
-            <Skeleton v-if="statsLoading" class="mt-1 h-6 w-16" />
-            <p v-else class="font-mono text-2xl font-semibold text-foreground">
+            <p class="text-xs text-muted-foreground/80">{{ card.label }}</p>
+            <Skeleton v-if="statsLoading" class="mt-1 h-6 w-16 rounded-md" />
+            <p v-else class="text-2xl font-semibold tracking-tight text-foreground tabular-nums">
               {{ stats?.[card.key] ?? 0 }}
             </p>
           </div>
@@ -130,64 +172,73 @@ onMounted(() => {
         <Card
           v-for="action in quickActions"
           :key="action.name"
-          class="cursor-pointer transition-all hover:border-primary/40 hover:shadow-sm"
+          class="group cursor-pointer rounded-xl shadow-sm transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
           @click="goTo(action.name)"
         >
           <CardContent class="p-4">
-            <div class="mb-2 flex size-9 items-center justify-center rounded-md bg-primary/10 text-primary">
-              <component :is="action.icon" class="size-4" :stroke-width="1.5" />
+            <div class="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/15 group-hover:shadow-md">
+              <component :is="action.icon" class="size-5" :stroke-width="1.5" />
             </div>
-            <p class="text-sm font-medium text-foreground">{{ action.label }}</p>
+            <p class="text-sm font-medium text-foreground transition-colors">{{ action.label }}</p>
             <p class="mt-0.5 text-xs text-muted-foreground">{{ action.description }}</p>
           </CardContent>
         </Card>
       </div>
     </div>
 
-    <!-- 资源诊断 -->
-    <Card>
+    <!-- 服务诊断 -->
+    <Card class="rounded-xl shadow-sm transition-all duration-200 hover:shadow-md">
       <CardContent class="p-5">
         <div class="mb-4 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <h3 class="text-sm font-medium text-foreground">物理资源诊断</h3>
-            <Badge v-if="resourceVerify && !verifyLoading" variant="secondary" class="text-[10px]">
-              {{ Object.values(resourceVerify.steps).filter((s) => s.ok).length }}/{{ Object.keys(resourceVerify.steps).length }} 正常
+            <h3 class="text-sm font-medium text-foreground">服务状态诊断</h3>
+            <Badge v-if="servicesStatus && !servicesStatus.never_checked && !verifyLoading" variant="secondary" class="text-[10px]">
+              {{ servicesStatus.ok_count }}/{{ servicesStatus.total }} 正常
+              <span v-if="servicesStatus.checked_at" class="ml-1 text-muted-foreground">
+                ({{ new Date(servicesStatus.checked_at).toLocaleString('zh-CN') }})
+              </span>
             </Badge>
           </div>
-          <Button variant="outline" size="sm" :disabled="verifyLoading" @click="fetchResourceVerify">
+          <Button variant="outline" size="sm" :disabled="verifyLoading" @click="runDiagnose">
             <RefreshCw v-if="!verifyLoading" class="size-3.5" :stroke-width="1.5" />
             <Loader2 v-else class="size-3.5 animate-spin" :stroke-width="1.5" />
-            诊断
+            {{ servicesStatus?.never_checked ? '一键诊断' : '重新诊断' }}
           </Button>
         </div>
 
         <div v-if="verifyLoading" class="space-y-2">
-          <Skeleton v-for="i in 5" :key="i" class="h-8 w-full" />
+          <Skeleton v-for="i in 5" :key="i" class="h-9 w-full rounded-lg" />
         </div>
 
-        <div v-else-if="resourceVerify" class="space-y-2">
+        <div v-else-if="servicesStatus && !servicesStatus.never_checked" class="space-y-2">
           <div
-            v-for="(step, name) in resourceVerify.steps"
-            :key="name"
-            class="flex items-center justify-between rounded-md border border-border px-3 py-2"
+            v-for="svc in servicesStatus.services"
+            :key="svc.name"
+            class="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2.5 transition-all duration-200 hover:border-primary/20 hover:bg-primary/5 hover:shadow-sm hover:-translate-y-0.5"
           >
-            <span class="text-sm text-foreground">{{ name }}</span>
+            <div class="flex flex-col">
+              <span class="text-sm text-foreground">{{ svc.display_name || svc.name }}</span>
+              <span v-if="svc.message" class="text-xs text-muted-foreground">{{ svc.message }}</span>
+            </div>
             <div class="flex items-center gap-2">
               <component
-                :is="step.ok ? CheckCircle2 : step.error ? XCircle : AlertTriangle"
-                class="size-4"
-                :class="step.ok ? 'text-success' : step.error ? 'text-danger' : 'text-warning'"
+                :is="svc.status === 'ok' ? CheckCircle2 : svc.status === 'warning' ? AlertTriangle : XCircle"
+                class="size-4 transition-transform duration-200 hover:scale-110"
+                :class="svc.status === 'ok' ? 'text-success' : svc.status === 'warning' ? 'text-warning' : 'text-danger'"
                 :stroke-width="1.5"
               />
-              <span class="text-xs" :class="step.ok ? 'text-success' : 'text-danger'">
-                {{ step.ok ? '正常' : '异常' }}
+              <span
+                class="text-xs font-medium"
+                :class="svc.status === 'ok' ? 'text-success' : svc.status === 'warning' ? 'text-warning' : 'text-danger'"
+              >
+                {{ svc.status === 'ok' ? '正常' : svc.status === 'warning' ? '警告' : '异常' }}
               </span>
             </div>
           </div>
         </div>
 
         <p v-else class="py-4 text-center text-sm text-muted-foreground">
-          点击「诊断」检查物理资源完整性
+          点击「一键诊断」检查所有服务连接状态
         </p>
       </CardContent>
     </Card>

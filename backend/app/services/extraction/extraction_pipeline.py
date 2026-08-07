@@ -4,20 +4,13 @@
 
 ```
 Phase 2 类别构建
-    base_data 加载三表 → 五维 query 批量编码 → 并发 hybrid_search →
-    置信度过滤 → 构建 ExtractionTargets + 三类 schema
-        ↓
-Phase 3+4 标准基本信息（单次，专用 prompt）
-    retrieve_doc_info → render_doc_info_prompt → llm_client.chat_json
+    五维 query 批量编码 → 并发 hybrid_search →
+    置信度过滤 → 构建 ExtractionTargets + 类别 schema
         ↓
 Phase 3+4 类别列表（并发，extractor 双线路）
     并发 retrieve → extract_with_fallback → post_processor
         ↓
-Phase 3+4 热处理制度（单次，专用 prompt）
-    retrieve_heat_treatment → render_heat_treatment_prompt →
-    llm_client.chat_json → post_processor（仅去重）
-        ↓
-result_writer.save → {OCR_OUTPUT_DIR}/{task_id}/extraction_v3.json
+result_writer.save → {OCR_OUTPUT_DIR}/{task_id}/extract_result.json
 ```
 
 并发模型：
@@ -31,7 +24,7 @@ result_writer.save → {OCR_OUTPUT_DIR}/{task_id}/extraction_v3.json
     from app.services.extraction.extraction_pipeline import extraction_pipeline
 
     result = await extraction_pipeline.run(task_id="abc123", doc_id="abc123")
-    # 结果已保存到 {OCR_OUTPUT_DIR}/{task_id}/extraction_v3.json
+    # 结果已保存到 {OCR_OUTPUT_DIR}/{task_id}/extract_result.json
 """
 
 from __future__ import annotations
@@ -41,28 +34,27 @@ import logging
 import time
 from typing import Any
 
+from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
-from app.services.extraction.extraction_config import get_extraction_settings
-from app.services.extraction.llm_client import llm_client
+from app.core.exceptions import BusinessException
 from app.services.extraction.extraction_models import (
     CategoryResult,
     ExtractionResult,
     ExtractionTarget,
-    ExtractedRecord,
-    HeatTreatmentResult,
     SkippedFeature,
 )
 from app.services.extraction.category.category_builder import category_builder
 from app.services.extraction.retrieval.retrieval_service import retrieval_service
 from app.services.extraction.llm_extract.extractor_factory import extract_with_fallback
-from app.services.extraction.llm_extract.post_processor import post_processor
-from app.services.extraction.prompts.prompt_manager import prompt_manager
+from app.services.extraction.prompts.config_prompt_renderer import config_prompt_renderer
 from app.services.extraction.result_writer import result_writer
+from app.services.extraction.rule_engine.script_manager import script_manager
+from app.services.extraction_config.resolver import ExtractionConfigResolver
 
 logger = get_logger(__name__)
 
-# 标准基本信息抽取的 max_tokens（只需抽取名称和编号，输出很短）
-_DOC_INFO_MAX_TOKENS = 2048
+# 配置解析器
+_config_resolver = ExtractionConfigResolver()
 
 
 class ExtractionPipeline:
@@ -76,7 +68,7 @@ class ExtractionPipeline:
     """
 
     def __init__(self) -> None:
-        self._settings = get_extraction_settings()
+        pass
 
     async def run(
         self,
@@ -100,14 +92,58 @@ class ExtractionPipeline:
             extra={"task_id": task_id, "doc_id": doc_id, "kb_id": kb_id},
         )
 
-        # 全局 LLM 并发信号量（所有 Phase 4 LLM 调用共享）
-        llm_semaphore = asyncio.Semaphore(self._settings.llm_max_concurrency)
+        # 解析 KB 抽取领域配置（Schema 模板 / Prompt 模板 / 全局配置 / 术语绑定）
+        # 配置缺失即报错，不允许静默回退内置默认
+        if not kb_id:
+            raise BusinessException("缺少知识库上下文（kb_id），无法解析抽取配置")
+        cfg_db = AsyncSessionLocal()
+        try:
+            cfg = await _config_resolver.resolve(cfg_db, kb_id)
+        except Exception as err:
+            logger.error(
+                "解析抽取领域配置失败",
+                extra={"kb_id": kb_id, "error": str(err), "exc_info": True},
+            )
+            raise BusinessException(f"解析抽取领域配置失败：{err}")
+
+        # 加载 LLM vLLM 服务端点（资源与配置 LLM vLLM 服务），挂到 cfg.endpoint
+        try:
+            from app.services.kb.kb_config_loader import kb_config_loader
+
+            kb_cfg = await kb_config_loader.load(kb_id, cfg_db)
+            _llm_svc = (kb_cfg.config.get("services") or {}).get("llm_vllm") or {}
+            if _llm_svc.get("api_base") or _llm_svc.get("model"):
+                cfg.endpoint = {
+                    "base_url": _llm_svc.get("api_base"),
+                    "api_key": _llm_svc.get("api_key"),
+                    "model": _llm_svc.get("model"),
+                }
+            # Prompt 校验级别（kb.config.extraction，由抽取配置提供）
+            _ext_cfg = (kb_cfg.config.get("extraction") or {})
+            if _ext_cfg.get("prompt_validation_level"):
+                cfg.prompt_validation_level = _ext_cfg.get("prompt_validation_level")
+        except Exception as err:
+            logger.error(
+                "加载 LLM vLLM 端点失败",
+                extra={"kb_id": kb_id, "error": str(err), "exc_info": True},
+            )
+            raise BusinessException(f"加载 LLM vLLM 端点失败：{err}")
+
+        # 全局 LLM 并发信号量（所有 Phase 4 LLM 调用共享，配置驱动）
+        _total_concurrency = cfg.total_llm_concurrency()
+        llm_semaphore = asyncio.Semaphore(_total_concurrency)
 
         # ------------------------------------------------------------------
-        # Phase 2：类别构建
+        # Phase 2：类别构建（Schema 模板驱动）
         # ------------------------------------------------------------------
         phase2_start = time.time()
-        targets, skipped, schemas = await category_builder.build(doc_id, kb_id=kb_id)
+        try:
+            targets, skipped, schemas = await category_builder.build(
+                doc_id, kb_id=kb_id, cfg=cfg, db=cfg_db
+            )
+        finally:
+            if cfg_db is not None:
+                await cfg_db.close()
         phase2_elapsed = time.time() - phase2_start
 
         logger.info(
@@ -121,28 +157,12 @@ class ExtractionPipeline:
         )
 
         # ------------------------------------------------------------------
-        # Phase 3+4：标准基本信息抽取（单次，专用 prompt）
-        # ------------------------------------------------------------------
-        doc_info_start = time.time()
-        doc_info = await self._extract_doc_info(doc_id, llm_semaphore, kb_id=kb_id)
-        doc_info_elapsed = time.time() - doc_info_start
-
-        logger.info(
-            "标准基本信息抽取完成",
-            extra={
-                "task_id": task_id,
-                "doc_info_keys": list(doc_info.keys()),
-                "elapsed_sec": round(doc_info_elapsed, 2),
-            },
-        )
-
-        # ------------------------------------------------------------------
         # Phase 3+4：类别列表抽取（并发）
         # ------------------------------------------------------------------
         categories_start = time.time()
         category_schemas: dict[str, dict[str, Any]] = schemas.get("categories", {})
         categories = await self._extract_categories(
-            doc_id, targets, category_schemas, llm_semaphore, kb_id=kb_id
+            doc_id, targets, category_schemas, llm_semaphore, kb_id=kb_id, cfg=cfg
         )
         categories_elapsed = time.time() - categories_start
 
@@ -153,24 +173,6 @@ class ExtractionPipeline:
                 "category_count": len(categories),
                 "total_records": sum(len(c.records) for c in categories),
                 "elapsed_sec": round(categories_elapsed, 2),
-            },
-        )
-
-        # ------------------------------------------------------------------
-        # Phase 3+4：热处理制度抽取（单次，专用 prompt）
-        # ------------------------------------------------------------------
-        heat_start = time.time()
-        heat_treatment = await self._extract_heat_treatment(
-            doc_id, targets, llm_semaphore, kb_id=kb_id
-        )
-        heat_elapsed = time.time() - heat_start
-
-        logger.info(
-            "热处理制度抽取完成",
-            extra={
-                "task_id": task_id,
-                "heat_records": len(heat_treatment.records),
-                "elapsed_sec": round(heat_elapsed, 2),
             },
         )
 
@@ -197,14 +199,10 @@ class ExtractionPipeline:
             )
 
         result = ExtractionResult(
-            doc_info=doc_info,
             categories=non_empty_categories,
-            heat_treatment=heat_treatment,
             timing={
                 "phase2_category_build": round(phase2_elapsed, 2),
-                "doc_info_extraction": round(doc_info_elapsed, 2),
                 "categories_extraction": round(categories_elapsed, 2),
-                "heat_treatment_extraction": round(heat_elapsed, 2),
                 "total": round(total_elapsed, 2),
             },
         )
@@ -225,69 +223,6 @@ class ExtractionPipeline:
         return result
 
     # ------------------------------------------------------------------
-    # 标准基本信息抽取（第一部分）
-    # ------------------------------------------------------------------
-
-    async def _extract_doc_info(
-        self,
-        doc_id: str,
-        llm_semaphore: asyncio.Semaphore,
-        kb_id: str | None = None,
-    ) -> dict[str, Any]:
-        """抽取标准基本信息（标准名称、标准编号）。
-
-        使用专用 prompt 模板（phase4_doc_info.yaml），单次 LLM 调用，
-        返回 object 类型（单条 dict）。
-
-        Args:
-            doc_id: 文档 ID。
-            llm_semaphore: LLM 调用总并发信号量。
-            kb_id: 知识库 ID。
-
-        Returns:
-            dict: 含 "标准名称" / "标准编号" 的字典。
-        """
-        try:
-            # Phase 3：检索基础信息上下文
-            context = await retrieval_service.retrieve_doc_info(doc_id, kb_id=kb_id)
-
-            if not context.text:
-                logger.warning("基础信息检索上下文为空", extra={"doc_id": doc_id})
-                return {}
-
-            # 构建专用 prompt
-            system_prompt, user_prompt = prompt_manager.render_doc_info_prompt(
-                context.text
-            )
-
-            # Phase 4：单次 LLM 调用
-            async with llm_semaphore:
-                data = await llm_client.chat_json(
-                    prompt=user_prompt,
-                    system_prompt=system_prompt,
-                    max_tokens=_DOC_INFO_MAX_TOKENS,
-                    temperature=0.0,
-                )
-
-            # data 应为 dict（object 类型）
-            if isinstance(data, dict):
-                return data
-            if isinstance(data, list) and data:
-                # 兼容 LLM 返回数组的情况，取首项
-                first = data[0]
-                return first if isinstance(first, dict) else {}
-
-            logger.warning("基础信息抽取结果格式异常", extra={"type": type(data).__name__})
-            return {}
-
-        except Exception as err:
-            logger.error(
-                "基础信息抽取失败",
-                extra={"doc_id": doc_id, "error": str(err)},
-            )
-            return {}
-
-    # ------------------------------------------------------------------
     # 类别列表抽取（第二部分，并发）
     # ------------------------------------------------------------------
 
@@ -298,6 +233,7 @@ class ExtractionPipeline:
         category_schemas: dict[str, dict[str, Any]],
         llm_semaphore: asyncio.Semaphore,
         kb_id: str | None = None,
+        cfg: Any = None,
     ) -> list[CategoryResult]:
         """并发抽取所有类别的检测数据记录。
 
@@ -310,6 +246,7 @@ class ExtractionPipeline:
             category_schemas: feature 名 → schema 定义。
             llm_semaphore: LLM 调用总并发信号量。
             kb_id: 知识库 ID。
+            cfg: 抽取领域配置。
 
         Returns:
             list[CategoryResult]: 各类别抽取结果（含通过和剔除的记录）。
@@ -317,15 +254,19 @@ class ExtractionPipeline:
         if not targets:
             return []
 
-        category_semaphore = asyncio.Semaphore(
-            self._settings.effective_category_concurrency
-        )
+        # 类别间调度并发（配置驱动，引擎感知，缺失即报错，无 settings 兜底）
+        if cfg is None:
+            raise BusinessException("类别抽取缺少抽取配置（cfg）")
+        _engine = cfg.llm_engine()
+        _cat_concurrency = cfg.category_concurrency(_engine)
+        category_semaphore = asyncio.Semaphore(_cat_concurrency)
 
         async def extract_one(target: ExtractionTarget) -> CategoryResult:
             """单个 feature 的完整抽取流程（含信号量控制）。"""
             async with category_semaphore:
                 return await self._extract_single_category(
-                    doc_id, target, category_schemas, llm_semaphore, kb_id=kb_id
+                    doc_id, target, category_schemas, llm_semaphore,
+                    kb_id=kb_id, cfg=cfg,
                 )
 
         # 并发执行所有 feature 的抽取
@@ -364,6 +305,7 @@ class ExtractionPipeline:
         category_schemas: dict[str, dict[str, Any]],
         llm_semaphore: asyncio.Semaphore,
         kb_id: str | None = None,
+        cfg: Any = None,
     ) -> CategoryResult:
         """单个 feature 的完整抽取流程（Phase 3 检索 → Phase 4 抽取 → 后处理）。
 
@@ -373,6 +315,7 @@ class ExtractionPipeline:
             category_schemas: 全部 feature 的 schema 字典。
             llm_semaphore: LLM 调用总并发信号量。
             kb_id: 知识库 ID。
+            cfg: 抽取领域配置。
 
         Returns:
             CategoryResult: 该类别的抽取结果（含 timing）。
@@ -382,7 +325,7 @@ class ExtractionPipeline:
 
         # Phase 3：向量检索
         retrieve_start = time.time()
-        context = await retrieval_service.retrieve(target, doc_id, kb_id=kb_id)
+        context = await retrieval_service.retrieve(target, doc_id, kb_id=kb_id, cfg=cfg)
         retrieve_elapsed = time.time() - retrieve_start
 
         if not context.text:
@@ -409,12 +352,30 @@ class ExtractionPipeline:
             schema=schema,
             target=target,
             llm_semaphore=llm_semaphore,
+            cfg=cfg,
         )
         extract_elapsed = time.time() - extract_start
 
-        # 后处理：归一化 + 年代号 + 跨类校验 + 去重
+        # 自定义脚本：抽取后处理 + 校验（脚本全权接管后处理，已移除内置管道）
         post_start = time.time()
-        kept, rejected = await post_processor.process(records, target)
+        kept = [r.to_dict() for r in records]
+        rejected: list[dict[str, Any]] = []
+        if kb_id:
+            _kb_tool = cfg.kb_tool() if cfg is not None else {}
+            _script_timeout = _kb_tool.get("script_timeout")
+            if _script_timeout is None:
+                raise BusinessException("未配置脚本执行超时 kb_tool.script_timeout")
+            async with AsyncSessionLocal() as rule_db:
+                kept, script_rejected = await script_manager.apply_records(
+                    rule_db, kb_id, "post", kept, target.feature, doc_id,
+                    target=target, kb_tool=_kb_tool, timeout=_script_timeout,
+                )
+                rejected.extend(script_rejected)
+                kept, script_rejected = await script_manager.apply_records(
+                    rule_db, kb_id, "validation", kept, target.feature, doc_id,
+                    target=target, kb_tool=_kb_tool, timeout=_script_timeout,
+                )
+                rejected.extend(script_rejected)
         post_elapsed = time.time() - post_start
 
         total_elapsed = time.time() - start
@@ -442,135 +403,6 @@ class ExtractionPipeline:
                 "total": round(total_elapsed, 2),
             },
         )
-
-    # ------------------------------------------------------------------
-    # 热处理制度抽取（第三部分）
-    # ------------------------------------------------------------------
-
-    async def _extract_heat_treatment(
-        self,
-        doc_id: str,
-        targets: list[ExtractionTarget],
-        llm_semaphore: asyncio.Semaphore,
-        kb_id: str | None = None,
-    ) -> HeatTreatmentResult:
-        """抽取热处理制度数据。
-
-        使用专用 prompt 模板（phase4_heat_treatment.yaml），单次 LLM 调用，
-        返回 array 类型（多条记录）。后处理仅做去重（无项目名归一化和跨类校验）。
-
-        Args:
-            doc_id: 文档 ID。
-            targets: 保留的 ExtractionTarget 列表（用于构建 feature 列表）。
-            llm_semaphore: LLM 调用总并发信号量。
-            kb_id: 知识库 ID。
-
-        Returns:
-            HeatTreatmentResult: 热处理制度抽取结果。
-        """
-        start = time.time()
-        feature_names = [t.feature for t in targets]
-
-        try:
-            # Phase 3：检索热处理制度上下文
-            context = await retrieval_service.retrieve_heat_treatment(
-                doc_id, feature_names, kb_id=kb_id
-            )
-
-            if not context.text:
-                logger.warning(
-                    "热处理制度检索上下文为空",
-                    extra={"doc_id": doc_id},
-                )
-                return HeatTreatmentResult(
-                    records=[],
-                    timing={"total": round(time.time() - start, 2)},
-                )
-
-            # 构建专用 prompt
-            features_list_str = "、".join(feature_names)
-            system_prompt, user_prompt = prompt_manager.render_heat_treatment_prompt(
-                context.text, features_list_str
-            )
-
-            # Phase 4：单次 LLM 调用
-            async with llm_semaphore:
-                data = await llm_client.chat_json(
-                    prompt=user_prompt,
-                    system_prompt=system_prompt,
-                    max_tokens=self._settings.llm_max_output_tokens,
-                    temperature=self._settings.llm_temperature,
-                )
-
-            # 解析记录（array 类型）
-            records = self._parse_heat_treatment_records(data)
-
-            # 后处理：仅去重（热处理制度无项目名，跨类校验会全部保留）
-            heat_target = ExtractionTarget(feature="热处理制度")
-            kept, _rejected = await post_processor.process(records, heat_target)
-
-            total_elapsed = time.time() - start
-            logger.info(
-                "热处理制度抽取完成",
-                extra={
-                    "doc_id": doc_id,
-                    "raw_records": len(records),
-                    "kept_records": len(kept),
-                    "elapsed_sec": round(total_elapsed, 2),
-                },
-            )
-
-            return HeatTreatmentResult(
-                records=kept,
-                timing={
-                    "retrieval_and_extraction": round(total_elapsed, 2),
-                    "total": round(total_elapsed, 2),
-                },
-            )
-
-        except Exception as err:
-            logger.error(
-                "热处理制度抽取失败",
-                extra={"doc_id": doc_id, "error": str(err)},
-            )
-            return HeatTreatmentResult(
-                records=[],
-                timing={
-                    "error": -1.0,
-                    "total": round(time.time() - start, 2),
-                },
-            )
-
-    @staticmethod
-    def _parse_heat_treatment_records(data: Any) -> list[ExtractedRecord]:
-        """将 LLM 输出解析为热处理制度记录列表。
-
-        处理两种输出格式：
-        - list[dict]：标准数组输出，每项为一条记录
-        - dict：单条记录（兼容 LLM 返回 object 的情况）
-
-        Args:
-            data: LLM 输出的 JSON 数据。
-
-        Returns:
-            list[ExtractedRecord]: 热处理制度记录列表。
-        """
-        records: list[ExtractedRecord] = []
-
-        if isinstance(data, list):
-            for item in data:
-                if isinstance(item, dict):
-                    records.append(ExtractedRecord(
-                        feature="热处理制度",
-                        data=dict(item),
-                    ))
-        elif isinstance(data, dict):
-            records.append(ExtractedRecord(
-                feature="热处理制度",
-                data=dict(data),
-            ))
-
-        return records
 
 
 # 模块级单例

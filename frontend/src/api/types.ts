@@ -104,11 +104,11 @@ export interface DocumentCreate {
 }
 
 // ---------- 解析任务 ----------
-export type TaskStatus = 'queued' | 'running' | 'started' | 'success' | 'failed'
+export type TaskStatus = 'pending' | 'queued' | 'running' | 'started' | 'progress' | 'success' | 'completed' | 'failed'
 
 export interface Task {
   id: string
-  document_id: string
+  document_id: string | null
   task_type: string
   status: TaskStatus
   progress: number
@@ -459,6 +459,51 @@ export interface KbBackupRestoreStats {
   terms: number
   terms_skipped: number
   domain_config: number
+}
+
+/** 单个服务校验结果 */
+export interface ServiceCheckResult {
+  name: string
+  display_name: string
+  status: 'ok' | 'error' | 'warning'
+  message: string
+  response_time_ms: number
+  details?: Record<string, unknown>
+}
+
+/** 一键诊断所有服务结果 */
+export interface ServicesDiagnoseResult {
+  kb_id: string
+  total: number
+  ok_count: number
+  error_count: number
+  warning_count: number
+  services: ServiceCheckResult[]
+  checked_at: string
+}
+
+/** 服务配置项 */
+export interface ServiceConfigItem {
+  key: string
+  label: string
+  type: 'string' | 'number' | 'boolean' | 'password'
+  value: unknown
+  default?: unknown
+  required?: boolean
+  placeholder?: string
+  description?: string
+}
+
+/** 服务配置节 */
+export interface ServiceConfigSection {
+  name: string
+  display_name: string
+  description: string
+  icon?: string
+  category: 'storage' | 'vector' | 'graph' | 'llm' | 'model' | 'cache'
+  configurable: boolean
+  fields: ServiceConfigItem[]
+  last_status?: ServiceCheckResult
 }
 
 /** 新建知识库响应（含资源初始化与模板应用结果） */

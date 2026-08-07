@@ -599,7 +599,7 @@ class LLMService:
     ) -> AsyncGenerator[str, None]:
         """以流式方式生成文本，按 chunk 增量返回。
 
-        API 模式下通过 Ollama /api/chat ``stream=true`` 真流式输出，
+        API 模式下通过 vLLM OpenAI 兼容 /chat/completions 真流式输出，
         每个 token 即时推送（首字延迟 < 1s），适合 SSE 场景实现真实
         打字机效果。
 

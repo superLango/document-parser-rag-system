@@ -130,32 +130,37 @@ async def get_distribution(db: AsyncSession) -> dict[str, list[dict]]:
 
 
 async def get_kb_stats(db: AsyncSession, kb_id) -> dict[str, Any]:
-    """KB 内统计（RLS 已按 kb_id 过滤，额外显式过滤防御）。"""
+    """KB 内统计（RLS 已按 kb_id 过滤，额外显式过滤防御）。
+
+    返回字段与前端 Overview.vue 期望的 KbStats 类型一致：
+    - total_documents: 文档数
+    - total_chunks: 向量分块数（从 Milvus 统计，失败则返回 0）
+    - total_tasks: 任务数
+    - total_members: 成员数
+    """
+    from app.models.knowledge_base import KbMember
+
     doc_count = await db.scalar(
         select(func.count()).select_from(Document).where(Document.kb_id == kb_id)
     )
     task_count = await db.scalar(
         select(func.count()).select_from(Task).where(Task.kb_id == kb_id)
     )
-    schema_count = await db.scalar(
-        select(func.count())
-        .select_from(SchemaConfig)
-        .where(SchemaConfig.kb_id == kb_id)
+    member_count = await db.scalar(
+        select(func.count()).select_from(KbMember).where(KbMember.kb_id == kb_id)
     )
-    term_count = await db.scalar(
-        select(func.count()).select_from(Term).where(Term.kb_id == kb_id)
-    )
-    success_count = await db.scalar(
-        select(func.count())
-        .select_from(Task)
-        .where(Task.kb_id == kb_id, Task.status == "success")
-    )
-    total = task_count or 0
-    success_rate = round((success_count / total) * 100, 1) if total else 0.0
+
+    # 从 Milvus 获取 chunk 数（失败时返回 0，不影响整体统计）
+    chunk_count = 0
+    try:
+        from app.services.vector.chunk_vector_store import chunk_vector_store
+        chunk_count = await chunk_vector_store.count_kb(kb_id)
+    except Exception:
+        pass
+
     return {
-        "documents_count": doc_count or 0,
-        "tasks_count": total,
-        "schemas_count": schema_count or 0,
-        "terms_count": term_count or 0,
-        "success_rate": success_rate,
+        "total_documents": doc_count or 0,
+        "total_chunks": chunk_count,
+        "total_tasks": task_count or 0,
+        "total_members": member_count or 0,
     }

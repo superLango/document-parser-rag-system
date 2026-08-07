@@ -18,6 +18,9 @@ import type {
   KbResourceVerify,
   KbBackup,
   KbBackupRestoreStats,
+  ServiceCheckResult,
+  ServicesDiagnoseResult,
+  ServiceConfigSection,
 } from '@/api/types'
 
 /**
@@ -115,6 +118,48 @@ export const kbApi = {
 
   verifyResources(kbId: string): Promise<KbResourceVerify> {
     return http.get<KbResourceVerify>(`/kbs/${kbId}/resources/verify`)
+  },
+
+  // ---------- 服务配置与诊断 ----------
+  listServiceConfigs(kbId: string): Promise<{
+    services: ServiceConfigSection[]
+    last_diagnose?: {
+      checked_at: string | null
+      total: number
+      ok_count: number
+      error_count: number
+      warning_count: number
+    } | null
+  }> {
+    return http.get(`/kbs/${kbId}/services`)
+  },
+
+  updateServiceConfig(
+    kbId: string,
+    serviceName: string,
+    config: Record<string, unknown>,
+  ): Promise<{ service: string; config: Record<string, unknown> }> {
+    return http.put(`/kbs/${kbId}/services/${serviceName}`, config)
+  },
+
+  validateService(kbId: string, serviceName: string): Promise<ServiceCheckResult> {
+    return http.post<ServiceCheckResult>(`/kbs/${kbId}/services/${serviceName}/validate`)
+  },
+
+  diagnoseAllServices(kbId: string): Promise<ServicesDiagnoseResult> {
+    return http.post<ServicesDiagnoseResult>(`/kbs/${kbId}/diagnose`)
+  },
+
+  getServicesStatus(kbId: string): Promise<{
+    checked_at: string | null
+    total: number
+    ok_count: number
+    error_count: number
+    warning_count: number
+    services: ServiceCheckResult[] | Record<string, ServiceCheckResult>
+    never_checked: boolean
+  }> {
+    return http.get(`/kbs/${kbId}/services/status`)
   },
 
   // ---------- 领域配置表 ----------
@@ -228,7 +273,7 @@ export const kbApi = {
     })
   },
 
-  /** 获取文档 OCR 解析文本、布局数据与结构化数据 */
+  /** 获取文档 OCR 解析文本、Popo JSON、布局数据 */
   getOcrText(
     kbId: string,
     docId: string,
@@ -237,6 +282,7 @@ export const kbApi = {
     filename: string
     parsed_text: string
     layout_data: any[] | null
+    popo_json: Record<string, any> | null
     structured_data: Record<string, any> | null
     status: string
     file_type: string
@@ -298,7 +344,7 @@ export const kbApi = {
 
   listTasks(
     kbId: string,
-    params?: { page?: number; page_size?: number; status?: string },
+    params?: { page?: number; page_size?: number; status?: string; task_type?: string },
   ): Promise<Paginated<Task>> {
     return http.get<Paginated<Task>>(`/kbs/${kbId}/tasks`, { params })
   },
@@ -309,6 +355,10 @@ export const kbApi = {
 
   retryTask(kbId: string, taskId: string): Promise<unknown> {
     return http.post(`/kbs/${kbId}/tasks/${taskId}/retry`)
+  },
+
+  deleteTask(kbId: string, taskId: string): Promise<unknown> {
+    return http.delete(`/kbs/${kbId}/tasks/${taskId}`)
   },
 
   /** 批量重试失败任务 */
@@ -337,63 +387,6 @@ export const kbApi = {
     success_rate: number
   }> {
     return http.get(`/kbs/${kbId}/tasks/stats`)
-  },
-
-  // ---------- Schema 管理（KB 内隔离） ----------
-  listSchemas(
-    kbId: string,
-    params?: { page?: number; page_size?: number; parent_id?: string; only_parent?: boolean },
-  ): Promise<Paginated<Record<string, unknown>>> {
-    return http.get<Paginated<Record<string, unknown>>>(`/kbs/${kbId}/schemas`, { params })
-  },
-
-  listSchemaCategories(kbId: string): Promise<Record<string, unknown>[]> {
-    return http.get(`/kbs/${kbId}/schemas/categories`)
-  },
-
-  listSchemaChildren(kbId: string, parentId: string, onlyActive = false): Promise<Record<string, unknown>[]> {
-    return http.get(`/kbs/${kbId}/schemas/${parentId}/children`, {
-      params: { only_active: onlyActive },
-    })
-  },
-
-  getMergedSchema(kbId: string, parentId: string): Promise<Record<string, unknown>> {
-    return http.get(`/kbs/${kbId}/schemas/${parentId}/merged`)
-  },
-
-  createSchema(
-    kbId: string,
-    data: {
-      name: string
-      description?: string
-      doc_type?: string
-      fields?: Record<string, unknown>[]
-      sample_fields?: Record<string, unknown>
-      parent_id?: string
-      is_active?: boolean
-      sort_order?: number
-    },
-  ): Promise<Record<string, unknown>> {
-    return http.post(`/kbs/${kbId}/schemas`, data)
-  },
-
-  updateSchema(kbId: string, schemaId: string, data: Record<string, unknown>): Promise<Record<string, unknown>> {
-    return http.put(`/kbs/${kbId}/schemas/${schemaId}`, data)
-  },
-
-  deleteSchema(kbId: string, schemaId: string): Promise<unknown> {
-    return http.delete(`/kbs/${kbId}/schemas/${schemaId}`)
-  },
-
-  toggleSchemaActive(kbId: string, schemaId: string, isActive: boolean): Promise<unknown> {
-    return http.patch(`/kbs/${kbId}/schemas/${schemaId}/active`, { is_active: isActive })
-  },
-
-  copySchema(kbId: string, schemaId: string, newName: string, newParentId?: string): Promise<Record<string, unknown>> {
-    return http.post(`/kbs/${kbId}/schemas/${schemaId}/copy`, {
-      new_name: newName,
-      new_parent_id: newParentId,
-    })
   },
 
   // ---------- 术语库管理（KB 内隔离） ----------
@@ -452,24 +445,487 @@ export const kbApi = {
     return http.delete(`/kbs/${kbId}/terms/${termId}`)
   },
 
+  // ---------- 术语集管理（KB 内隔离） ----------
+  listTermBases(kbId: string): Promise<{ items: TermBase[]; total: number }> {
+    return http.get(`/kbs/${kbId}/term-bases`)
+  },
+
+  createTermBase(
+    kbId: string,
+    data: {
+      name: string
+      description?: string
+      source_type?: 'manual' | 'api' | 'db'
+      source_config?: Record<string, any>
+      columns?: Array<Record<string, any>>
+      column_aliases?: Record<string, string>
+      auto_import?: boolean
+      import_data?: Array<Record<string, any>>
+    },
+  ): Promise<TermBase & { imported?: number }> {
+    return http.post(`/kbs/${kbId}/term-bases`, data)
+  },
+
+  updateTermBase(
+    kbId: string,
+    baseId: string,
+    data: {
+      name?: string
+      description?: string
+      source_config?: Record<string, any>
+      columns?: Array<Record<string, any>>
+      column_aliases?: Record<string, string>
+      sync_enabled?: boolean
+    },
+  ): Promise<TermBase> {
+    return http.put(`/kbs/${kbId}/term-bases/${baseId}`, data)
+  },
+
+  deleteTermBase(kbId: string, baseId: string): Promise<unknown> {
+    return http.delete(`/kbs/${kbId}/term-bases/${baseId}`)
+  },
+
+  /** 测试API数据源连接（不保存） */
+  testTermBaseApi(
+    kbId: string,
+    config: {
+      url: string
+      method: 'GET' | 'POST' | 'PUT' | 'DELETE'
+      params?: Array<{ key: string; value: string; in_location: string; enabled: boolean }>
+      headers?: Record<string, string>
+      body?: string
+      json_path?: string
+      timeout?: number
+    },
+  ): Promise<{
+    status_code: number
+    raw_response: any
+    extracted_rows: any[]
+    total_rows: number
+    columns: Array<{ name: string; type: string; label: string }>
+  }> {
+    return http.post(`/kbs/${kbId}/term-bases/test-api`, config)
+  },
+
+  /** 测试数据库连接（不保存） */
+  testTermBaseDb(
+    kbId: string,
+    config: {
+      db_type: 'mysql'
+      host: string
+      port?: number
+      user: string
+      password: string
+      database: string
+      charset?: string
+    },
+  ): Promise<{ connected: boolean; version: string; message: string }> {
+    return http.post(`/kbs/${kbId}/term-bases/test-db`, config)
+  },
+
+  /** 获取数据库表列表 */
+  listDbTables(
+    kbId: string,
+    config: {
+      db_type: 'mysql'
+      host: string
+      port?: number
+      user: string
+      password: string
+      database: string
+      charset?: string
+    },
+  ): Promise<{ tables: string[] }> {
+    return http.post(`/kbs/${kbId}/term-bases/db-tables`, config)
+  },
+
+  /** 预览SQL查询结果（前5条） */
+  previewSql(
+    kbId: string,
+    config: {
+      db_type: 'mysql'
+      host: string
+      port?: number
+      user: string
+      password: string
+      database: string
+      charset?: string
+      mode: 'table' | 'sql'
+      table?: string
+      sql_query?: string
+    },
+  ): Promise<{
+    rows: any[]
+    columns: Array<{ name: string; type: string; label: string }>
+    total_preview: number
+    sql: string
+  }> {
+    return http.post(`/kbs/${kbId}/term-bases/preview-sql`, config)
+  },
+
+  /** 从已配置的数据源同步术语 */
+  syncTermBase(
+    kbId: string,
+    baseId: string,
+  ): Promise<{ imported: number; synced_at: string }> {
+    return http.post(`/kbs/${kbId}/term-bases/${baseId}/sync`)
+  },
+
+  importTermBaseJson(kbId: string, baseId: string, file: File): Promise<{ imported: number }> {
+    const formData = new FormData()
+    formData.append('file', file)
+    return http.post(`/kbs/${kbId}/term-bases/${baseId}/import-json`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
+
+  importTermBaseFromSource(
+    kbId: string,
+    baseId: string,
+    data: { source_type: 'feature' | 'item' | 'method' | 'term_category'; category_filter?: string },
+  ): Promise<{ imported: number }> {
+    return http.post(`/kbs/${kbId}/term-bases/${baseId}/import-from-source`, data)
+  },
+
+  listTermBaseTerms(
+    kbId: string,
+    baseId: string,
+    params?: { page?: number; page_size?: number; keyword?: string; search_field?: string },
+  ): Promise<Paginated<TermBaseTerm>> {
+    return http.get<Paginated<TermBaseTerm>>(`/kbs/${kbId}/term-bases/${baseId}/terms`, { params })
+  },
+
+  batchSaveTermBaseTerms(
+    kbId: string,
+    baseId: string,
+    data: {
+      items: Array<{
+        id?: string
+        term: string
+        english_term?: string
+        aliases?: string[]
+        definition?: string
+        category?: string
+        synonyms?: string[]
+      }>
+      deleted_ids?: string[]
+    },
+  ): Promise<{ created: number; updated: number; deleted: number }> {
+    return http.put(`/kbs/${kbId}/term-bases/${baseId}/terms/batch`, data)
+  },
+
+  // ---------- Schema 模板（KB 内隔离，三层结构） ----------
+  listSchemaTemplates(kbId: string): Promise<Record<string, unknown>[]> {
+    return http.get(`/kbs/${kbId}/schema-templates`)
+  },
+
+  createSchemaTemplate(
+    kbId: string,
+    data: { name: string; description?: string; is_active?: boolean },
+  ): Promise<Record<string, unknown>> {
+    return http.post(`/kbs/${kbId}/schema-templates`, data)
+  },
+
+  getSchemaTemplate(kbId: string, templateId: string): Promise<Record<string, unknown>> {
+    return http.get(`/kbs/${kbId}/schema-templates/${templateId}`)
+  },
+
+  updateSchemaTemplate(
+    kbId: string,
+    templateId: string,
+    data: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    return http.put(`/kbs/${kbId}/schema-templates/${templateId}`, data)
+  },
+
+  deleteSchemaTemplate(kbId: string, templateId: string): Promise<unknown> {
+    return http.delete(`/kbs/${kbId}/schema-templates/${templateId}`)
+  },
+
+  createSchemaCategory(
+    kbId: string,
+    templateId: string,
+    data: {
+      name: string
+      description?: string
+      return_type?: string
+      extraction_strategy?: string
+      query_mode?: string
+      fixed_query?: string | null
+      confidence_threshold?: number | null
+      top_k?: number | null
+      datasets?: Record<string, unknown>[]
+      is_active?: boolean
+      sort_order?: number
+      name_source?: string
+      name_term_base_id?: string | null
+      name_term_field?: string | null
+      query_sources?: Record<string, unknown>[]
+    },
+  ): Promise<Record<string, unknown>> {
+    return http.post(`/kbs/${kbId}/schema-templates/${templateId}/categories`, data)
+  },
+
+  updateSchemaCategory(
+    kbId: string,
+    templateId: string,
+    categoryId: string,
+    data: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    return http.put(`/kbs/${kbId}/schema-templates/${templateId}/categories/${categoryId}`, data)
+  },
+
+  deleteSchemaCategory(kbId: string, templateId: string, categoryId: string): Promise<unknown> {
+    return http.delete(`/kbs/${kbId}/schema-templates/${templateId}/categories/${categoryId}`)
+  },
+
+  createSchemaField(
+    kbId: string,
+    templateId: string,
+    categoryId: string,
+    data: {
+      name: string
+      type?: string
+      description?: string
+      example?: string | null
+      required?: boolean
+      sort_order?: number
+    },
+  ): Promise<Record<string, unknown>> {
+    return http.post(`/kbs/${kbId}/schema-templates/${templateId}/categories/${categoryId}/fields`, data)
+  },
+
+  updateSchemaField(
+    kbId: string,
+    templateId: string,
+    categoryId: string,
+    fieldId: string,
+    data: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    return http.put(`/kbs/${kbId}/schema-templates/${templateId}/categories/${categoryId}/fields/${fieldId}`, data)
+  },
+
+  deleteSchemaField(
+    kbId: string,
+    templateId: string,
+    categoryId: string,
+    fieldId: string,
+  ): Promise<unknown> {
+    return http.delete(`/kbs/${kbId}/schema-templates/${templateId}/categories/${categoryId}/fields/${fieldId}`)
+  },
+
+  // ---------- 抽取配置中心（KB 内隔离） ----------
+  getExtractionConfig(kbId: string): Promise<Record<string, unknown>> {
+    return http.get(`/kbs/${kbId}/extraction-config`)
+  },
+
+  getExtractionGlobal(kbId: string): Promise<Record<string, unknown>> {
+    return http.get(`/kbs/${kbId}/extraction-config/global`)
+  },
+
+  saveExtractionGlobal(
+    kbId: string,
+    data: { enabled?: boolean; content?: Record<string, unknown> },
+  ): Promise<Record<string, unknown>> {
+    return http.put(`/kbs/${kbId}/extraction-config/global`, data)
+  },
+
+  listExtractionPrompts(kbId: string): Promise<{ items: Record<string, unknown>[] }> {
+    return http.get(`/kbs/${kbId}/extraction-config/prompts`)
+  },
+
+  getExtractionPrompt(kbId: string, promptId: string): Promise<Record<string, unknown>> {
+    return http.get(`/kbs/${kbId}/extraction-config/prompts/${promptId}`)
+  },
+
+  createExtractionPrompt(
+    kbId: string,
+    data: {
+      name: string
+      description?: string
+      scope?: string
+      system_prompt?: string
+      user_prompt?: string
+      schema_template_id?: string | null
+      category_ids?: string[]
+      is_active?: boolean
+    },
+  ): Promise<Record<string, unknown>> {
+    return http.post(`/kbs/${kbId}/extraction-config/prompts`, data)
+  },
+
+  updateExtractionPrompt(
+    kbId: string,
+    promptId: string,
+    data: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    return http.put(`/kbs/${kbId}/extraction-config/prompts/${promptId}`, data)
+  },
+
+  saveExtractionPrompt(
+    kbId: string,
+    promptId: string,
+    data: {
+      system_prompt?: string
+      user_prompt?: string
+      categories?: { category_id: string; user_prompt: string }[]
+      is_active?: boolean
+    },
+  ): Promise<Record<string, unknown>> {
+    return http.put(`/kbs/${kbId}/extraction-config/prompts/${promptId}/save`, data)
+  },
+
+  deleteExtractionPrompt(kbId: string, promptId: string): Promise<unknown> {
+    return http.delete(`/kbs/${kbId}/extraction-config/prompts/${promptId}`)
+  },
+
+  listExtractionRules(kbId: string): Promise<{ items: Record<string, unknown>[] }> {
+    return http.get(`/kbs/${kbId}/extraction-config/rules`)
+  },
+
+  getExtractionRuleRegistry(
+    kbId: string,
+  ): Promise<{ stages: Record<string, string[]>; rules: Record<string, Record<string, unknown>> }> {
+    return http.get(`/kbs/${kbId}/extraction-config/rules/registry`)
+  },
+
+  saveExtractionRules(
+    kbId: string,
+    items: Record<string, unknown>[],
+  ): Promise<{ message: string }> {
+    return http.put(`/kbs/${kbId}/extraction-config/rules`, items)
+  },
+
+  getScriptIO(kbId: string): Promise<{ folders: Record<string, Record<string, unknown>> }> {
+    return http.get(`/kbs/${kbId}/extraction-config/scripts/io`)
+  },
+
+  listScripts(kbId: string, folder?: string): Promise<{ items: Record<string, unknown>[] }> {
+    const q = folder ? `?folder=${folder}` : ''
+    return http.get(`/kbs/${kbId}/extraction-config/scripts${q}`)
+  },
+
+  createScript(kbId: string, data: Record<string, unknown>): Promise<{ id: string }> {
+    return http.post(`/kbs/${kbId}/extraction-config/scripts`, data)
+  },
+
+  updateScript(kbId: string, scriptId: string, data: Record<string, unknown>): Promise<{ message: string }> {
+    return http.put(`/kbs/${kbId}/extraction-config/scripts/${scriptId}`, data)
+  },
+
+  deleteScript(kbId: string, scriptId: string): Promise<{ message: string }> {
+    return http.delete(`/kbs/${kbId}/extraction-config/scripts/${scriptId}`)
+  },
+
+  runScript(
+    kbId: string,
+    data: Record<string, unknown>,
+  ): Promise<{ ok: boolean; result?: Record<string, unknown>; error?: string }> {
+    return http.post(`/kbs/${kbId}/extraction-config/scripts/run`, data)
+  },
+
+  listRuleGroups(kbId: string): Promise<{ items: Record<string, unknown>[] }> {
+    return http.get(`/kbs/${kbId}/extraction-config/rule-groups`)
+  },
+
+  createRuleGroup(
+    kbId: string,
+    data: { name?: string; schema_template_id: string; description?: string },
+  ): Promise<{ id: string }> {
+    return http.post(`/kbs/${kbId}/extraction-config/rule-groups`, data)
+  },
+
+  getRuleGroup(kbId: string, groupId: string): Promise<Record<string, unknown>> {
+    return http.get(`/kbs/${kbId}/extraction-config/rule-groups/${groupId}`)
+  },
+
+  saveRuleGroupItems(
+    kbId: string,
+    groupId: string,
+    data: {
+      category_id: string
+      category_name?: string
+      items: Record<string, unknown>[]
+    },
+  ): Promise<{ message: string }> {
+    return http.put(`/kbs/${kbId}/extraction-config/rule-groups/${groupId}/items`, data)
+  },
+
+  deleteRuleGroup(kbId: string, groupId: string): Promise<{ message: string }> {
+    return http.delete(`/kbs/${kbId}/extraction-config/rule-groups/${groupId}`)
+  },
+
+  listExtractionValidation(kbId: string): Promise<{ items: Record<string, unknown>[] }> {
+    return http.get(`/kbs/${kbId}/extraction-config/validation`)
+  },
+
+  saveExtractionValidation(
+    kbId: string,
+    items: Record<string, unknown>[],
+  ): Promise<{ message: string }> {
+    return http.put(`/kbs/${kbId}/extraction-config/validation`, items)
+  },
+
+  listExtractionBindings(kbId: string): Promise<{ items: Record<string, unknown>[] }> {
+    return http.get(`/kbs/${kbId}/extraction-config/bindings`)
+  },
+
+  saveExtractionBindings(
+    kbId: string,
+    items: Record<string, unknown>[],
+  ): Promise<{ message: string }> {
+    return http.put(`/kbs/${kbId}/extraction-config/bindings`, items)
+  },
+
+  listExtractionVersions(kbId: string): Promise<{ items: Record<string, unknown>[] }> {
+    return http.get(`/kbs/${kbId}/extraction-config/versions`)
+  },
+
+  createExtractionVersion(
+    kbId: string,
+    data: { name: string; description?: string },
+  ): Promise<Record<string, unknown>> {
+    return http.post(`/kbs/${kbId}/extraction-config/versions`, data)
+  },
+
+  rollbackExtractionVersion(kbId: string, versionId: string): Promise<{ message: string }> {
+    return http.post(`/kbs/${kbId}/extraction-config/versions/${versionId}/rollback`)
+  },
+
+  deleteExtractionVersion(kbId: string, versionId: string): Promise<{ message: string }> {
+    return http.delete(`/kbs/${kbId}/extraction-config/versions/${versionId}`)
+  },
+
+  getExtractionVersionDetail(kbId: string, versionId: string): Promise<Record<string, unknown>> {
+    return http.get(`/kbs/${kbId}/extraction-config/versions/${versionId}`)
+  },
+
+  diffExtractionVersion(
+    kbId: string,
+    versionId: string,
+  ): Promise<{ version: number; name: string; diff: Record<string, unknown> }> {
+    return http.get(`/kbs/${kbId}/extraction-config/versions/${versionId}/diff`)
+  },
+
   // ---------- 知识图谱（KB 内隔离） ----------
-  getGraph(kbId: string, limit = 50): Promise<{ nodes: Record<string, unknown>[]; edges: Record<string, unknown>[] }> {
-    return http.get(`/kbs/${kbId}/graph`, { params: { limit } })
+  getGraph(kbId: string, limit = 50, config?: any): Promise<{ nodes: Record<string, unknown>[]; edges: Record<string, unknown>[] }> {
+    return http.get(`/kbs/${kbId}/graph`, { params: { limit }, ...config })
   },
 
   searchGraphNodes(
     kbId: string,
     params: { label?: string; name?: string; limit?: number },
+    config?: any,
   ): Promise<{ nodes: Record<string, unknown>[]; edges: Record<string, unknown>[]; total: number }> {
-    return http.get(`/kbs/${kbId}/graph/search`, { params })
+    return http.get(`/kbs/${kbId}/graph/search`, { params, ...config })
   },
 
-  getSubgraph(kbId: string, entity: string, maxHops = 2): Promise<{ nodes: Record<string, unknown>[]; edges: Record<string, unknown>[] }> {
-    return http.get(`/kbs/${kbId}/graph/subgraph`, { params: { entity, max_hops: maxHops } })
+  getSubgraph(kbId: string, entity: string, maxHops = 2, config?: any): Promise<{ nodes: Record<string, unknown>[]; edges: Record<string, unknown>[] }> {
+    return http.get(`/kbs/${kbId}/graph/subgraph`, { params: { entity, max_hops: maxHops }, ...config })
   },
 
-  graphStats(kbId: string): Promise<Record<string, unknown>> {
-    return http.get(`/kbs/${kbId}/graph/stats`)
+  graphStats(kbId: string, config?: any): Promise<Record<string, unknown>> {
+    return http.get(`/kbs/${kbId}/graph/stats`, config)
   },
 
   buildGraph(kbId: string, documentId: string): Promise<{ task_id: string; status: string }> {
@@ -644,7 +1100,7 @@ export const kbApi = {
           try {
             const evt = JSON.parse(payload)
             if (evt.chunk) callbacks.onChunk?.(evt.chunk)
-            if (evt.done) callbacks.onDone?.(evt.session_id)
+            if (evt.done) callbacks.onDone?.(evt.session_id, evt.citations)
             if (evt.error) callbacks.onError?.(evt.error)
           } catch {
             // 忽略非 JSON 事件块
@@ -673,11 +1129,20 @@ export const kbApi = {
   ): Promise<{
     document_id: string
     filename: string
-    extractions: Record<string, { result: Record<string, unknown> }>
     latest_schema_id: string | null
+    latest_schema_name: string | null
     latest_result: Record<string, unknown> | null
+    latest_extracted_at: string | null
+    history: Array<Record<string, unknown>>
   }> {
     return http.get(`/kbs/${kbId}/extraction/results/${documentId}`)
+  },
+
+  getExtractionHistory(
+    kbId: string,
+    documentId: string,
+  ): Promise<{ items: KbExtractionHistoryItem[]; total: number }> {
+    return http.get(`/kbs/${kbId}/extraction/history/${documentId}`)
   },
 
   /** 导出抽取结果（Excel/CSV/JSON），返回 Blob */
@@ -836,7 +1301,7 @@ export interface KbQaCitation {
 export interface KbQaStreamCallbacks {
   onChunk?: (content: string) => void
   /** 流式完成，sessionId 为后端回传的会话 ID（用于多轮对话关联） */
-  onDone?: (sessionId?: string) => void
+  onDone?: (sessionId?: string, citations?: KbQaCitation[]) => void
   onError?: (message: string) => void
 }
 
@@ -886,6 +1351,9 @@ export interface KbExtractableDocument {
   text_length: number
   has_extraction: boolean
   latest_schema_id?: string | null
+  latest_schema_name?: string | null
+  latest_extracted_at?: string | null
+  history_count?: number
   created_at: string
   updated_at: string | null
 }
@@ -896,6 +1364,17 @@ export interface KbExtractionSchema {
   name: string
   description: string
   children_count: number
+  field_count: number
+}
+
+/** 抽取历史记录项 */
+export interface KbExtractionHistoryItem {
+  schema_id: string | null
+  schema_name: string | null
+  result: Record<string, unknown>
+  extracted_at: string | null
+  archived_at?: string | null
+  is_latest: boolean
 }
 
 /** KB 流式抽取事件回调 */
@@ -927,4 +1406,38 @@ export interface KbExtractionStreamCallbacks {
   }) => void
   onWarning?: (data: { message: string }) => void
   onError?: (message: string) => void
+}
+
+/** 术语集（统一术语集，支持 manual/api/db 三种数据源） */
+export interface TermBase {
+  id: string
+  kb_id: string
+  name: string
+  description: string
+  source_type: 'manual' | 'api' | 'db'
+  source_config: Record<string, any>
+  columns: Array<{ name: string; type: string; label: string }>
+  column_aliases: Record<string, string>
+  sync_enabled: boolean
+  last_synced_at: string | null
+  term_count: number
+  created_at: string
+  updated_at: string | null
+}
+
+/** 术语集中的术语项 */
+export interface TermBaseTerm {
+  id: string
+  term_base_id: string | null
+  term: string
+  english_term: string
+  aliases: string[]
+  definition: string
+  category: string
+  synonyms: string[]
+  extras: Record<string, any>
+  standard_number?: string
+  status: string
+  created_at: string
+  updated_at: string | null
 }

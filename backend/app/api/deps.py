@@ -193,7 +193,6 @@ def get_pagination_params(
 # 2. 必须显式加入成员才能访问（决策 #4），superuser 可跨 KB 访问（决策 #6）。
 # 3. 通过 set_config('app.current_kb', kb_id, true) 激活 PostgreSQL RLS：
 #    - 业务表策略：kb_id::text = current_setting('app.current_kb', true)
-#    - 基础三表策略：kb_id IS NULL OR kb_id::text = current_setting(...)
 #    - set_config 第三个参数 true 等价于 SET LOCAL，仅在当前事务生效
 #    - 参数化绑定，避免 SQL 注入；kb_id 必为 uuid.UUID（FastAPI 类型转换保证）
 # 4. 当前若以 PostgreSQL 超级用户连接，RLS 被 FORCE 后 table owner 受约束、

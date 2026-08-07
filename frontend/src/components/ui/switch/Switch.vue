@@ -1,21 +1,40 @@
 <script setup lang="ts">
 import { SwitchRoot, SwitchThumb, type SwitchRootProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
+import type { ClassValue } from 'clsx'
 
 const props = withDefaults(
-  defineProps<SwitchRootProps & { class?: string }>(),
+  defineProps<
+    SwitchRootProps & {
+      class?: ClassValue
+      modelValue?: boolean
+    }
+  >(),
   {},
 )
 
 const emit = defineEmits<{
   'update:checked': [value: boolean]
+  'update:modelValue': [value: boolean]
 }>()
+
+// reka-ui 的 SwitchRoot 使用 modelValue / update:modelValue 作为受控接口
+// （checked 是其内部计算属性，非 prop/事件）。这里同时触发两个事件，
+// 以兼容 v-model（update:modelValue）和历史 update:checked 用法。
+function onChange(val: boolean) {
+  emit('update:modelValue', val)
+  emit('update:checked', val)
+}
 </script>
 
 <template>
   <SwitchRoot
-    v-bind="props"
-    @update:checked="emit('update:checked', $event)"
+    :model-value="modelValue ?? false"
+    :disabled="disabled"
+    :name="name"
+    :required="required"
+    :value="value"
+    @update:model-value="onChange($event as boolean)"
     :class="
       cn(
         'peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors',

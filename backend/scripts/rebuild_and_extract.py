@@ -130,13 +130,7 @@ async def run_extraction() -> None:
 
     print(f"\n总记录数: {total_records}")
 
-    if result.heat_treatment:
-        ht_records = result.heat_treatment.get("records", []) if isinstance(result.heat_treatment, dict) else []
-        print(f"热处理制度: {len(ht_records)} 条")
-    else:
-        print("热处理制度: 0 条")
-
-    print(f"\n结果文件: {Path(settings.OCR_OUTPUT_DIR) / TASK_ID / 'extraction_v3.json'}")
+    print(f"\n结果文件: {Path(settings.OCR_OUTPUT_DIR) / TASK_ID / 'extract_result.json'}")
 
 
 async def main() -> None:

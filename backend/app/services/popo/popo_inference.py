@@ -107,9 +107,9 @@ def _load_model():
 
 
 def _is_vllm_backend() -> bool:
-    """是否使用 vLLM 后端。"""
+    """是否使用 vLLM 后端（默认使用 vLLM，Popo 服务运行在 9999 端口）。"""
     import os
-    return os.environ.get("POPO_INFERENCE_BACKEND", "transformers") == "vllm"
+    return os.environ.get("POPO_INFERENCE_BACKEND", "vllm") == "vllm"
 
 
 def _generate(prompt: str, base64_image: str | None) -> str:

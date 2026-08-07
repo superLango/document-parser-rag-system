@@ -6,7 +6,6 @@
 
 前置条件：
     - 文档已通过 OCR + Popo 层级重建 + 五维向量入库（``reconstruction_service``）
-    - 基础表已同步到 PostgreSQL + Milvus（``sync_project_dict_task``）
 """
 
 import traceback
@@ -36,7 +35,7 @@ async def extract_document_impl(document_id: str, kb_id: str | None, ctx: dict) 
     Raises:
         Exception: 抽取过程中失败时重新抛出。
     """
-    from app.tasks.document_tasks import _activate_kb_rls, _update_progress, _update_task_status
+    from app.tasks.document_tasks import _activate_kb_rls, _check_task_cancelled, _update_progress, _update_task_status, TaskCancelledError
 
     arq_job_id = ctx.get("job_id") if isinstance(ctx, dict) else None
 
@@ -57,6 +56,9 @@ async def extract_document_impl(document_id: str, kb_id: str | None, ctx: dict) 
                 raise Exception(f"文档不存在: {document_id}")
             if document.status != "completed":
                 raise Exception(f"文档未完成解析，当前状态: {document.status}")
+
+            # 【取消检查】任务开始前检查是否已被用户取消
+            await _check_task_cancelled(db, arq_job_id)
 
         await _update_progress(arq_job_id, 10, "开始抽取", kb_id=kb_id)
 
@@ -133,6 +135,10 @@ async def extract_document_impl(document_id: str, kb_id: str | None, ctx: dict) 
             "total_records": result.summary.get("total_records", 0) if hasattr(result, 'summary') else 0,
             "timing": result.timing if hasattr(result, 'timing') else {},
         }
+
+    except TaskCancelledError:
+        logger.info("抽取任务被用户取消，终止执行", document_id=document_id, task_id=arq_job_id)
+        return {"document_id": document_id, "status": "cancelled", "message": "任务已取消"}
 
     except Exception as exc:
         logger.error(

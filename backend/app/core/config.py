@@ -379,10 +379,8 @@ class Settings(BaseSettings):
         description="Ollama 模式下的请求超时秒数",
     )
     # 方案 11：文档大类识别阈值
-    PROJECT_DICT_DOC_DETECT_MIN_HITS: int = Field(
-        default=2,
-        description="文档大类识别最小命中次数（低于此值视为噪声，不纳入文档涉及大类）",
-    )
+    # （基础三表已移除，由术语集替代，相关阈值不再需要）
+    # PROJECT_DICT_DOC_DETECT_MIN_HITS 已移除
 
     # ---------------------------------------------------------------
     # OCR 配置（GLM-OCR 自托管模式）
@@ -473,48 +471,9 @@ class Settings(BaseSettings):
     # Redis 连接参数复用 REDIS_URL 中的主机与端口配置。
 
     # ---------------------------------------------------------------
-    # 检测项目字典（三元基础表）配置
+    # Milvus 五维向量集合配置（基础三表已移除，由术语集替代）
+    # 原检测项目字典（三元基础表）同步/白名单/向量集合配置已移除
     # ---------------------------------------------------------------
-    # 外部同步接口：定时任务调用此接口拉取三张基础表全量数据，
-    # 据此更新本地 PostgreSQL sm_feature/sm_item/sm_method 表 + Milvus project_dict 集合。
-    # 接口返回 {"code": 1, "message": "success", "data": [
-    #   {"sm_feature": [...]}, {"sm_item": [...]}, {"sm_method": [...]}
-    # ]}
-    PROJECT_DICT_SYNC_URL: str = Field(
-        default="http://out.dev.lcdp:35002/oapi/aiDocParse/getBaseTableData",
-        description="基础表外部同步接口 URL（定时任务调用，为空则跳过同步）",
-    )
-    PROJECT_DICT_SYNC_API_KEY: str = Field(
-        default="",
-        description="基础表同步接口的 Bearer Token（可选，置于 Authorization 头）",
-    )
-    PROJECT_DICT_SYNC_TIMEOUT: int = Field(
-        default=60,
-        description="基础表同步接口请求超时秒数",
-    )
-    # 定时任务执行时间（默认每天凌晨 2 点）
-    PROJECT_DICT_SYNC_CRON_HOUR: int = Field(
-        default=2,
-        description="基础表定时同步的小时（24h 制，默认 2）",
-    )
-    PROJECT_DICT_SYNC_CRON_MINUTE: int = Field(
-        default=0,
-        description="基础表定时同步的分钟（默认 0）",
-    )
-    # Milvus 基础表向量集合（与 doc_chunks 隔离，独立管理）
-    MILVUS_PROJECT_DICT_COLLECTION: str = Field(
-        default="project_dict",
-        description="Milvus 基础表向量集合名（存储 sm_item 检测项目向量，用于动态白名单检索）",
-    )
-    # 动态白名单生成参数
-    PROJECT_DICT_WHITELIST_TOP_K: int = Field(
-        default=15,
-        description="动态白名单每大类检索返回的项目数（注入 prompt 的白名单规模）",
-    )
-    PROJECT_DICT_MATCH_THRESHOLD: float = Field(
-        default=0.70,
-        description="基础表向量匹配阈值（cosine similarity，低于此值视为未匹配）",
-    )
 
     # ---------------------------------------------------------------
     # v3 结构化抽取配置（EXTRACTION_V3_* 前缀，独立于 v1/v2）
@@ -563,17 +522,13 @@ class Settings(BaseSettings):
         default=20,
         description="v3 抽取 top_k（glmocr 线路 extra_body 参数）",
     )
-    EXTRACTION_V3_LLM_TIMEOUT: int = Field(
-        default=300,
-        description="v3 单次 LLM 请求超时秒数",
-    )
 
     # 抽取引擎选择
     EXTRACTION_V3_EXTRACTION_ENGINE: str = Field(
-        default="glmocr",
+        default="BaseExtract",
         description=(
-            "v3 抽取引擎：glmocr=线路 B（短/长文本分流+分批串行，小模型上更稳定）；"
-            "langextract=线路 A（output_schema 强约束+类别内并发，质量更高）"
+            "v3 抽取引擎：BaseExtract=线路 B（短/长文本分流+分批串行，小模型上更稳定）；"
+            "LangExtract=线路 A（output_schema 强约束+类别内并发，质量更高）"
         ),
     )
     EXTRACTION_V3_EXTRACTION_FALLBACK_TO_GLMOCR: bool = Field(
