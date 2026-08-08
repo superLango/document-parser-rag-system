@@ -130,6 +130,15 @@ const globalConfig = ref<Record<string, any>>({
       model: '',
       top_n: 15,
     },
+    hybrid: {
+      enabled: true,
+      dense_candidate_k: 80,
+      keyword_top_k: 60,
+      rrf_k: 60,
+      dense_weight: 1.0,
+      keyword_weight: 1.2,
+      keyword_min_hits: 1,
+    },
   },
   llm: {
     engine: 'BaseExtract',
