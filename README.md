@@ -84,6 +84,7 @@ pnpm dev               # http://localhost:5174
 | [qa/results/TEST_COVERAGE.md](qa/results/TEST_COVERAGE.md) | P0 覆盖率统计表 |
 | [docs/LIGHTRAG_COMPARISON.md](docs/LIGHTRAG_COMPARISON.md) | LightRAG × 原版系统全方位对比与可借鉴清单 |
 | [docs/MAINFLOW_PLAN.md](docs/MAINFLOW_PLAN.md) | 主流程技术方案 V2（PG 一体化 + 自建解析 + 队列健壮化） |
+| [docs/DOCUMENT_PARSING_PLAN.md](docs/DOCUMENT_PARSING_PLAN.md) | 文档解析开发方案（PDF-Extract-Kit + GLM-OCR，含待确认清单） |
 | [docs/GLOSSARY.md](docs/GLOSSARY.md) | 业务常量与自定义术语对照表 |
 
 ## 目录概览
