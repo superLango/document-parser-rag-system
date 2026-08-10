@@ -160,3 +160,41 @@ async def test_kb_pagination_bounds(client, super_token):
     assert (await client.get("/api/v1/kb?page=0", headers=h)).status_code == 400
     assert (await client.get("/api/v1/kb?page_size=101", headers=h)).status_code == 400
     assert (await client.get("/api/v1/kb?page=1&page_size=100", headers=h)).status_code == 200
+
+
+async def test_create_kb_members_duplicate_and_self(client, super_token):
+    """创建时初始成员含重复/自己：KB 仍创建成功，失败项被收集，无 500。"""
+    h = {"Authorization": f"Bearer {super_token}"}
+    me = (await client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {super_token}"})).json()["data"]
+    other = (await _make_user(client, super_token))[0]
+    resp = await client.post(
+        "/api/v1/kb",
+        headers=h,
+        json={
+            "name": "成员异常库",
+            "domain_code": "general",
+            "members": [
+                {"username": other, "role": "viewer"},
+                {"username": other, "role": "editor"},
+                {"username": me["username"], "role": "viewer"},
+            ],
+        },
+    )
+    assert resp.status_code == 200
+    data = resp.json()["data"]
+    assert other in data["invited"]  # 去重后仅邀请一次
+    assert len(data["failed_invites"]) == 1
+    assert data["failed_invites"][0]["username"] == me["username"]
+
+
+async def test_create_kb_members_invalid_role(client, super_token):
+    resp = await client.post(
+        "/api/v1/kb",
+        headers={"Authorization": f"Bearer {super_token}"},
+        json={
+            "name": "非法角色库",
+            "domain_code": "general",
+            "members": [{"username": "admin", "role": "owner"}],
+        },
+    )
+    assert resp.status_code == 400

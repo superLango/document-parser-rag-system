@@ -21,6 +21,7 @@ export const kbApi = {
     description?: string
     domain_code?: string
     template_code?: string
+    members?: { username: string; role: KbRole }[]
   }): Promise<KbItem> {
     return http.post<KbItem>('/kb', data)
   },

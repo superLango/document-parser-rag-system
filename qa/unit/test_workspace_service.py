@@ -244,3 +244,24 @@ async def test_api_key_expired_rejected(db_session):
         datetime.now(timezone.utc) - timedelta(hours=1),
     )
     assert await workspace_service.authenticate_api_key(db_session, secret) is None
+
+
+async def test_create_kb_with_members_collects_failures(db_session):
+    owner = await _user(db_session, "kb_seed_owner")
+    target = await _user(db_session, "kb_seed_target")
+    kb, invited, failed = await kb_service.create_kb_with_members(
+        db_session,
+        owner,
+        KbCreate(
+            name="种子成员",
+            domain_code="general",
+            members=[
+                {"username": target.username, "role": "editor"},
+                {"username": "ghost_user_zzz", "role": "viewer"},
+                {"username": owner.username, "role": "viewer"},
+            ],
+        ),
+    )
+    assert target.username in invited
+    assert len(failed) == 2
+    assert kb.id is not None

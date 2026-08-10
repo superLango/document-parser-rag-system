@@ -147,6 +147,8 @@ export interface KbItem {
   updated_at: string | null
   my_role: KbRole | null
   member_count: number
+  invited?: string[]
+  failed_invites?: { username: string; error: string }[]
 }
 
 export interface KbMemberItem {

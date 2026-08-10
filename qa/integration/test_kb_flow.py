@@ -252,3 +252,43 @@ async def test_pending_registration_and_approval(client, super_token):
         assert kbs.status_code == 200
     finally:
         settings.REGISTRATION_DEFAULT_PENDING = original
+
+
+async def test_create_kb_with_members_api(client, super_token):
+    """创建知识库时批量邀请初始成员，失败项收集不阻断创建。"""
+    h = {"Authorization": f"Bearer {super_token}"}
+    member_name, member_id = await _make_user(client, super_token)
+    created = await client.post(
+        "/api/v1/kb",
+        headers=h,
+        json={
+            "name": "创建即邀请",
+            "domain_code": "general",
+            "members": [
+                {"username": member_name, "role": "editor"},
+                {"username": "ghost_user_zzz", "role": "viewer"},
+            ],
+        },
+    )
+    assert created.status_code == 200, created.text
+    data = created.json()["data"]
+    assert member_name in data["invited"]
+    assert any(f["username"] == "ghost_user_zzz" for f in data["failed_invites"])
+
+    members = (
+        await client.get(f"/api/v1/kb/{data['id']}/members", headers=h)
+    ).json()["data"]
+    invited = [m for m in members if m["user_id"] == member_id]
+    assert invited and invited[0]["status"] == "invited"
+
+    member_token = await _login(client, member_name)
+    mine = (
+        await client.get("/api/v1/kb/invitations/mine", headers={"Authorization": f"Bearer {member_token}"})
+    ).json()["data"]
+    assert any(inv["kb_id"] == data["id"] for inv in mine)
+    await client.post(
+        f"/api/v1/kb/invitations/{mine[0]['token']}/accept",
+        headers={"Authorization": f"Bearer {member_token}"},
+    )
+    detail = await client.get(f"/api/v1/kb/{data['id']}", headers=h)
+    assert detail.json()["data"]["member_count"] == 2

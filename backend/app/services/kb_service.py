@@ -187,6 +187,26 @@ async def create_kb(db: AsyncSession, user: User, data) -> KnowledgeBase:
     return kb
 
 
+async def create_kb_with_members(
+    db: AsyncSession, user: User, data
+) -> tuple[KnowledgeBase, list[str], list[dict]]:
+    """创建知识库并批量邀请初始成员；失败项收集返回，不阻断创建。"""
+    kb = await create_kb(db, user, data)
+    invited: list[str] = []
+    failed: list[dict] = []
+    seen: set[str] = set()
+    for seed in data.members or []:
+        if seed.username in seen:
+            continue
+        seen.add(seed.username)
+        try:
+            await invite_member(db, user, kb.id, seed.username, seed.role, None)
+            invited.append(seed.username)
+        except Exception as exc:  # 单成员失败不影响整体创建
+            failed.append({"username": seed.username, "error": str(exc)[:200]})
+    return kb, invited, failed
+
+
 async def get_kb(db: AsyncSession, user: User, kb_id: uuid.UUID) -> dict:
     kb = await _get_kb(db, kb_id)
     if not user.is_superuser:

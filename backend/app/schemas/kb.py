@@ -5,7 +5,19 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.models.knowledge_base import ALL_ROLES
+from app.models.knowledge_base import ALL_ROLES, ROLE_OWNER
+
+
+class KbMemberSeed(BaseModel):
+    username: str = Field(min_length=1, max_length=50)
+    role: str = "viewer"
+
+    @field_validator("role")
+    @classmethod
+    def _validate_role(cls, v: str) -> str:
+        if v not in ALL_ROLES or v == ROLE_OWNER:
+            raise ValueError("不能通过邀请授予所有者角色")
+        return v
 
 
 class KbCreate(BaseModel):
@@ -14,6 +26,7 @@ class KbCreate(BaseModel):
     domain_code: str = Field(default="general", min_length=1, max_length=64)
     template_code: str | None = Field(default=None, max_length=64)
     config: dict = Field(default_factory=dict)
+    members: list[KbMemberSeed] = Field(default_factory=list, max_length=50)
 
 
 class KbUpdate(BaseModel):
@@ -64,8 +77,8 @@ class KbInviteCreate(BaseModel):
     @field_validator("role")
     @classmethod
     def _validate_role(cls, v: str) -> str:
-        if v not in ALL_ROLES:
-            raise ValueError(f"非法角色：{v}，可选 {sorted(ALL_ROLES)}")
+        if v not in ALL_ROLES or v == ROLE_OWNER:
+            raise ValueError("不能通过邀请授予所有者角色")
         return v
 
 

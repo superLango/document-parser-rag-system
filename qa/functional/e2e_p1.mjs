@@ -105,8 +105,8 @@ await scenario('L3M10-02', 'M10', async () => {
 
   await page.goto(`${BASE}/kb`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(700)
-  const row = page.locator('tr', { hasText: `E2E知识库_${stamp}` })
-  await row.getByTitle('成员管理').click()
+  const card = page.locator('main .rounded-xl', { hasText: `E2E知识库_${stamp}` }).first()
+  await card.getByRole('button', { name: '成员' }).click()
   await page.waitForTimeout(500)
   await page.fill('#invite-username', invitee)
   await page.getByRole('button', { name: '发送邀请' }).click()
@@ -139,6 +139,51 @@ await scenario('L3M10-02', 'M10', async () => {
     throw new Error(`成员数未增加：${detail.body.data.member_count}`)
   }
   await ctx2.close()
+})
+
+// ---------- M10 新建时初始成员管理 ----------
+await scenario('L3M10-04', 'M10', async () => {
+  const invitee = `kb_seed_member_${stamp}`
+  const created = await api('POST', '/users', {
+    username: invitee, password: 'Test@1234', role_codes: ['member'], full_name: '初始成员',
+  }, token)
+  createdUsers.push(created.body.data.id)
+
+  await sessionLogin(page, 'admin', 'admin123')
+  await page.goto(`${BASE}/kb`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(700)
+  await page.getByText('新建知识库').click()
+  await page.waitForTimeout(300)
+  await page.fill('#kb-name', `E2E初始成员库_${stamp}`)
+  await page.fill('#kb-desc', '创建时邀请成员')
+  const memberInput = page.getByPlaceholder('输入成员用户名')
+  await memberInput.fill(invitee)
+  await page.locator('select').first().selectOption('admin')
+  await page.getByRole('button', { name: '添加', exact: true }).click()
+  await page.waitForTimeout(300)
+  if (!(await page.getByText(`@${invitee}`).first().isVisible().catch(() => false))) {
+    throw new Error('初始成员未加入待邀请列表')
+  }
+  await page.getByRole('button', { name: '创建知识库' }).click()
+  await page.waitForTimeout(1000)
+  if (!(await page.getByText('已向 1 位成员发送邀请').first().isVisible().catch(() => false))) {
+    throw new Error('创建时邀请未提示成功')
+  }
+  await page.screenshot({ path: `${OUT}p1_kb_cards.png` })
+  const list = await api('GET', '/kb?keyword=' + encodeURIComponent(`E2E初始成员库_${stamp}`), null, token)
+  createdKbs.push(list.body.data.items[0].id)
+
+  // 接收方在我的邀请中可见
+  const ctx3 = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const p3 = await ctx3.newPage()
+  attachErrors(p3, 'seed-invitee')
+  await sessionLogin(p3, invitee, 'Test@1234')
+  await p3.goto(`${BASE}/kb/invitations`, { waitUntil: 'networkidle' })
+  await p3.waitForTimeout(800)
+  if (!(await p3.getByText(`E2E初始成员库_${stamp}`).first().isVisible().catch(() => false))) {
+    throw new Error('初始成员邀请未出现在我的邀请')
+  }
+  await ctx3.close()
 })
 
 // ---------- M10 成员可见性隔离 ----------

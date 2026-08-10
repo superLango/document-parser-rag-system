@@ -48,8 +48,13 @@ async def create_kb(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_not_pending),
 ) -> dict:
-    kb = await kb_service.create_kb(db, current_user, body)
-    return success(data=await kb_service.get_kb(db, current_user, kb.id))
+    kb, invited, failed = await kb_service.create_kb_with_members(
+        db, current_user, body
+    )
+    data = await kb_service.get_kb(db, current_user, kb.id)
+    data["invited"] = invited
+    data["failed_invites"] = failed
+    return success(data=data)
 
 
 @router.get("/invitations/mine")
