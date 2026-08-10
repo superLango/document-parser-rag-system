@@ -1,13 +1,12 @@
 import type { FormEvent } from 'react'
 import { useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Crown, Trash2 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { Crown } from 'lucide-react'
 import { kbApi } from '@/api/modules/kb'
 import { ApiError } from '@/api/client'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Dialog } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { PageHeader } from '@/components/PageHeader'
 import { Select } from '@/components/ui/select'
@@ -15,16 +14,21 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/toast'
 import { UserCombobox } from '@/components/UserCombobox'
 import { useAuthStore } from '@/stores/auth'
-import type { KbMemberItem, KbRole, UserSearchItem } from '@/api/types'
+import type { KbRole, UserSearchItem } from '@/api/types'
 import { useKbDetail } from './KbDetailLayout'
+
+const roleLabels: Record<string, string> = {
+  owner: '所有者',
+  admin: '管理员',
+  editor: '编辑者',
+  viewer: '查看者',
+}
 
 export default function KbMembersPage() {
   const { kb, refetch } = useKbDetail()
   const user = useAuthStore((s) => s.user)
   const { toast } = useToast()
-  const queryClient = useQueryClient()
   const canManage = user?.is_superuser || kb.my_role === 'owner' || kb.my_role === 'admin'
-  const isOwner = user?.is_superuser || kb.my_role === 'owner'
 
   const { data: members, isLoading, refetch: refetchMembers } = useQuery({
     queryKey: ['kb-members', kb.id],
@@ -33,7 +37,6 @@ export default function KbMembersPage() {
   const [selected, setSelected] = useState<UserSearchItem | null>(null)
   const [role, setRole] = useState<KbRole>('viewer')
   const [submitting, setSubmitting] = useState(false)
-  const [transferTarget, setTransferTarget] = useState<KbMemberItem | null>(null)
 
   async function handleAdd(e: FormEvent) {
     e.preventDefault()
@@ -52,48 +55,12 @@ export default function KbMembersPage() {
     }
   }
 
-  async function changeRole(member: KbMemberItem, nextRole: KbRole) {
-    try {
-      await kbApi.setMemberRole(kb.id, member.user_id, nextRole)
-      toast('success', '角色已更新')
-      void refetchMembers()
-    } catch (err) {
-      toast('error', '更新失败', err instanceof ApiError ? err.message : '请稍后重试')
-    }
-  }
-
-  async function removeMember(member: KbMemberItem) {
-    try {
-      await kbApi.removeMember(kb.id, member.user_id)
-      toast('success', '成员已移除')
-      void refetchMembers()
-      void refetch()
-      void queryClient.invalidateQueries({ queryKey: ['kb-list'] })
-    } catch (err) {
-      toast('error', '移除失败', err instanceof ApiError ? err.message : '请稍后重试')
-    }
-  }
-
-  async function handleTransfer() {
-    if (!transferTarget) return
-    try {
-      await kbApi.transfer(kb.id, transferTarget.user_id)
-      toast('success', '所有权已转移', `所有者已变更为 @${transferTarget.username}`)
-      setTransferTarget(null)
-      void refetchMembers()
-      void refetch()
-      void queryClient.invalidateQueries({ queryKey: ['kb-list'] })
-    } catch (err) {
-      toast('error', '转移失败', err instanceof ApiError ? err.message : '请稍后重试')
-    }
-  }
-
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="成员"
         title="知识库成员"
-        description="按角色管理成员访问权限，所有者可通过转移变更"
+        description="当前阶段支持添加成员；角色调整、移除与所有权转移将在后续阶段开放"
       />
 
       {canManage ? (
@@ -127,7 +94,7 @@ export default function KbMembersPage() {
           ) : (
             <div className="divide-y divide-border">
               {(members ?? []).map((member) => (
-                <div key={member.id} className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center">
+                <div key={member.id} className="flex items-center gap-3 px-4 py-3">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 text-sm font-semibold text-primary-strong">
                     {(member.full_name || member.username || 'U').slice(0, 1).toUpperCase()}
                   </span>
@@ -135,11 +102,6 @@ export default function KbMembersPage() {
                     <p className="flex items-center gap-1.5 text-sm font-medium">
                       {member.full_name || member.username}
                       {member.role === 'owner' ? <Crown className="h-3.5 w-3.5 text-warning" /> : null}
-                      {member.status === 'invited' ? (
-                        <Badge variant="warning">待接受</Badge>
-                      ) : (
-                        <Badge variant="success">已加入</Badge>
-                      )}
                     </p>
                     <p className="truncate text-xs text-muted-foreground">
                       @{member.username}
@@ -147,33 +109,10 @@ export default function KbMembersPage() {
                       {member.email ? ` · ${member.email}` : ''}
                     </p>
                   </div>
-                  {member.status === 'active' && member.role !== 'owner' && canManage ? (
-                    <>
-                      <Select
-                        className="w-28"
-                        value={member.role}
-                        onChange={(e) => changeRole(member, e.target.value as KbRole)}
-                      >
-                        <option value="viewer">查看者</option>
-                        <option value="editor">编辑者</option>
-                        <option value="admin">管理员</option>
-                      </Select>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="移除"
-                        className="text-destructive"
-                        onClick={() => removeMember(member)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </>
-                  ) : null}
-                  {isOwner && member.status === 'active' && member.role !== 'owner' ? (
-                    <Button variant="outline" size="sm" onClick={() => setTransferTarget(member)}>
-                      转移所有权
-                    </Button>
-                  ) : null}
+                  <Badge variant="outline">{roleLabels[member.role] ?? member.role}</Badge>
+                  <Badge variant={member.status === 'active' ? 'success' : 'warning'}>
+                    {member.status === 'active' ? '已加入' : '待接受'}
+                  </Badge>
                 </div>
               ))}
               {(members ?? []).length === 0 ? (
@@ -183,19 +122,6 @@ export default function KbMembersPage() {
           )}
         </CardContent>
       </Card>
-
-      <Dialog
-        open={transferTarget !== null}
-        onOpenChange={(open) => { if (!open) setTransferTarget(null) }}
-        title="转移所有权"
-        description={`确认将「${kb.name}」的所有权转移给 @${transferTarget?.username ?? ''}？转移后你将变为管理员。`}
-        footer={
-          <>
-            <Button variant="outline" onClick={() => setTransferTarget(null)}>取消</Button>
-            <Button onClick={() => void handleTransfer()}>确认转移</Button>
-          </>
-        }
-      />
     </div>
   )
 }

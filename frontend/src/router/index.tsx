@@ -26,6 +26,8 @@ import RolesPage from '@/views/admin/RolesPage'
 import AuditLogsPage from '@/views/admin/AuditLogsPage'
 import NotFoundPage from '@/views/NotFoundPage'
 import ForbiddenPage from '@/views/ForbiddenPage'
+import HelpPage from '@/views/HelpPage'
+import AboutPage from '@/views/AboutPage'
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const location = useLocation()
@@ -79,6 +81,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'profile', element: <ProfilePage /> },
+      { path: 'help', element: <HelpPage /> },
+      { path: 'about', element: <AboutPage /> },
       { path: 'pending', element: <PendingPage /> },
       { path: 'kb', element: <KnowledgeBasesPage /> },
       { path: 'kb/invitations', element: <InvitationsPage /> },

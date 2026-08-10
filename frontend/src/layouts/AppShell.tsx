@@ -14,6 +14,8 @@ import {
   Inbox,
   Building2,
   KeyRound,
+  BookOpen,
+  Info,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth'
 import { hasPermission, isPending } from '@/stores/rbac'
@@ -28,6 +30,8 @@ const titleMap: Record<string, string> = {
   '/kb/invitations': '我的邀请',
   '/workspaces': '工作空间',
   '/api-keys': 'API 密钥',
+  '/help': '帮助文档',
+  '/about': '关于',
   '/admin/users': '用户管理',
   '/admin/roles': '角色管理',
   '/admin/audit-logs': '审计日志',
@@ -41,6 +45,8 @@ const eyebrowMap: Record<string, string> = {
   '/kb/invitations': '资源',
   '/workspaces': '组织',
   '/api-keys': '开发者',
+  '/help': '系统',
+  '/about': '系统',
   '/admin/users': '系统管理',
   '/admin/roles': '系统管理',
   '/admin/audit-logs': '系统管理',
@@ -195,6 +201,11 @@ export default function AppShell({ children }: { children: ReactNode }) {
           ) : null}
         </>
       ) : null}
+      <p className="mb-1 mt-4 px-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+        其他
+      </p>
+      <NavItem to="/help" label="帮助文档" icon={BookOpen} />
+      <NavItem to="/about" label="关于" icon={Info} />
     </nav>
   )
 

@@ -232,12 +232,18 @@ await scenario('L3M10-07', 'M10', async () => {
   if (!(await page.getByText('已加入').first().isVisible().catch(() => false))) {
     throw new Error('接受后成员页未显示已加入')
   }
+  // 当前阶段仅支持添加：成员行不应出现角色下拉、移除或转移所有权操作
   const memberRow = page.locator('div.px-4', { hasText: `@${invitee}` }).last()
-  await memberRow.locator('select').selectOption('editor')
-  await page.waitForTimeout(700)
-  if (!(await page.getByText('角色已更新').first().isVisible().catch(() => false))) {
-    throw new Error('角色调整未提示成功')
+  if ((await memberRow.locator('select').count()) !== 0) {
+    throw new Error('成员页不应出现角色下拉')
   }
+  if (await page.getByRole('button', { name: '转移所有权' }).count()) {
+    throw new Error('成员页不应出现转移所有权')
+  }
+  if (await memberRow.getByTitle('移除').count()) {
+    throw new Error('成员页不应出现移除操作')
+  }
+  await page.screenshot({ path: `${OUT}p1_kb_members_readonly.png` })
 })
 
 await scenario('L3M10-08', 'M10', async () => {
@@ -312,6 +318,35 @@ await scenario('L3M12-01', 'M12', async () => {
   if (!(await page.getByText('欢迎回来').first().isVisible().catch(() => false))) {
     throw new Error('审批后 pending 用户未进入工作台')
   }
+})
+
+// ---------- M8 帮助文档与关于 ----------
+await scenario('L3M8-03', 'M8', async () => {
+  await sessionLogin(page, 'admin', 'admin123')
+  await page.goto(`${BASE}/help`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(800)
+  for (const t of ['帮助文档', '登录与工作台', '知识库（卡片入口）', '资源与外部访问令牌']) {
+    if (!(await page.getByText(t, { exact: false }).first().isVisible().catch(() => false))) {
+      throw new Error(`帮助文档缺少：${t}`)
+    }
+  }
+  const imgs = await page.locator('main img').count()
+  if (imgs < 3) throw new Error(`帮助文档截图不足：${imgs}`)
+  await page.screenshot({ path: `${OUT}p1_help.png` })
+})
+
+await scenario('L3M8-04', 'M8', async () => {
+  await page.goto(`${BASE}/about`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(900)
+  for (const t of ['关于', '应用信息', 'HansonDOC RAG', '运行环境与功能特性']) {
+    if (!(await page.getByText(t, { exact: false }).first().isVisible().catch(() => false))) {
+      throw new Error(`关于页缺少：${t}`)
+    }
+  }
+  if (!(await page.getByText('v3.0.0').first().isVisible().catch(() => false))) {
+    throw new Error('关于页未显示版本号')
+  }
+  await page.screenshot({ path: `${OUT}p1_about.png` })
 })
 
 // ---------- 清理 ----------

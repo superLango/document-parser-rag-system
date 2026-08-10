@@ -1,0 +1,88 @@
+export interface HelpSection {
+  id: string
+  title: string
+  description: string
+  image: string
+  steps: string[]
+}
+
+export const helpSections: HelpSection[] = [
+  {
+    id: 'login-dashboard',
+    title: '登录与工作台',
+    description: '登录系统后进入工作台，查看项目信息、用户统计与最近活动。',
+    image: '/help/dashboard.png',
+    steps: [
+      '访问登录页，输入用户名与密码（默认管理员 admin / admin123，首次登录后请修改密码）',
+      '登录成功自动进入工作台，可查看用户总数、今日操作与近 7 天登录趋势',
+      '顶部右侧菜单可进入个人中心或退出登录',
+    ],
+  },
+  {
+    id: 'profile',
+    title: '个人中心',
+    description: '管理账户资料、头像与登录密码。',
+    image: '/help/profile.png',
+    steps: [
+      '点击右上角用户菜单 → 个人信息',
+      '修改姓名、邮箱、手机号、部门与头像 URL 后点击“保存资料”',
+      '在“修改密码”中按密码策略设置新密码（不能与最近 5 次重复）',
+    ],
+  },
+  {
+    id: 'users-roles',
+    title: '用户与角色权限',
+    description: '系统管理员可管理用户、角色与权限矩阵。',
+    image: '/help/roles.png',
+    steps: [
+      '用户管理：新建用户（可分配角色）、编辑、启停、重置密码、待审批用户审批',
+      '角色管理：查看内置角色（超级管理员/管理员/普通成员/待审批），自定义角色与权限矩阵',
+      '成员/普通用户看不到系统管理菜单',
+    ],
+  },
+  {
+    id: 'kb',
+    title: '知识库（卡片入口）',
+    description: '以知识库为隔离边界，创建知识库并管理初始成员。',
+    image: '/help/kb-cards.png',
+    steps: [
+      '左侧菜单进入“知识库”，所有知识库以卡片展示',
+      '点击“新建知识库”，填写名称与描述',
+      '初始成员：搜索系统现有用户并选择权限，可添加多人；创建后自动发送邀请',
+      '点击卡片进入知识库内部工作区',
+    ],
+  },
+  {
+    id: 'kb-overview-members',
+    title: '知识库概览与成员',
+    description: '知识库内部概览与成员添加（当前阶段仅支持添加成员）。',
+    image: '/help/kb-overview.png',
+    steps: [
+      '进入知识库后，左侧菜单为知识库内部功能，默认展示概览',
+      '概览页展示活跃成员、待接受邀请与快捷入口',
+      '“知识库成员”页：搜索系统现有用户添加成员，受邀用户在我的邀请中接受后变为已加入',
+    ],
+  },
+  {
+    id: 'kb-resources',
+    title: '资源与外部访问令牌',
+    description: '修改知识库基础信息，管理外部系统访问令牌。',
+    image: '/help/kb-external.png',
+    steps: [
+      '知识库内“资源与配置”可修改名称与描述',
+      '“外部访问令牌”用于供外部系统调用本知识库（预留）',
+      '开启“启用外部访问”，需要时点击“重新生成”获取一次性完整令牌',
+    ],
+  },
+  {
+    id: 'workspace-keys',
+    title: '工作空间与 API 密钥',
+    description: '以工作空间组织群组并集授权；API 密钥供脚本与集成调用。',
+    image: '/help/workspaces.png',
+    steps: [
+      '工作空间：创建空间、添加成员、创建群组（部门），群组可对知识库按角色授权（并集生效）',
+      'API 密钥：创建后仅展示一次，可限定作用域；撤销后立即失效',
+      '审计日志页支持导出 CSV（仅超级管理员）',
+    ],
+  },
+]

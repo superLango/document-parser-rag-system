@@ -46,7 +46,7 @@ export default function KbResourcesPage() {
   async function toggleExternal(next: boolean) {
     try {
       await kbApi.updateExternal(kb.id, { enabled: next })
-      toast('success', next ? '外部联动已开启' : '外部联动已关闭')
+      toast('success', next ? '外部访问已开启' : '外部访问已关闭')
       void refetchExternal()
     } catch (err) {
       toast('error', '更新失败', err instanceof ApiError ? err.message : '请稍后重试')
@@ -106,10 +106,10 @@ export default function KbResourcesPage() {
           <div>
             <CardTitle className="flex items-center gap-2">
               <Link2 className="h-4 w-4 text-primary" />
-              外部联动
+              外部访问令牌
             </CardTitle>
             <CardDescription>
-              供外部系统调用本知识库的访问令牌；公开上传/嵌入接口将在文档解析阶段启用
+              供外部系统调用本知识库的访问令牌（预留）；公开上传/嵌入接口将在文档解析阶段启用
             </CardDescription>
           </div>
           <Badge variant={external?.enabled ? 'success' : 'outline'}>
@@ -124,7 +124,7 @@ export default function KbResourcesPage() {
               <label className="flex items-center justify-between rounded-xl border border-border bg-muted/30 px-4 py-3">
                 <div>
                   <p className="text-sm font-medium">启用外部访问</p>
-                  <p className="text-xs text-muted-foreground">允许外部系统通过令牌访问该知识库</p>
+                  <p className="text-xs text-muted-foreground">允许外部系统通过令牌调用本知识库（接口随文档解析阶段开放）</p>
                 </div>
                 <input
                   type="checkbox"
