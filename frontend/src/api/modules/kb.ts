@@ -1,5 +1,6 @@
 import { http } from '@/api/client'
 import type {
+  KbGroupGrantItem,
   KbInvitationItem,
   KbItem,
   KbMemberItem,
@@ -70,5 +71,14 @@ export const kbApi = {
   },
   transfer(kbId: string, targetUserId: string): Promise<unknown> {
     return http.post(`/kb/${kbId}/transfer`, { target_user_id: targetUserId })
+  },
+  listGroupGrants(kbId: string): Promise<KbGroupGrantItem[]> {
+    return http.get<KbGroupGrantItem[]>(`/kb/${kbId}/groups`)
+  },
+  grantGroup(kbId: string, groupId: string, role: KbRole): Promise<unknown> {
+    return http.post(`/kb/${kbId}/groups`, { group_id: groupId, role })
+  },
+  revokeGroup(kbId: string, groupId: string): Promise<unknown> {
+    return http.delete(`/kb/${kbId}/groups/${groupId}`)
   },
 }

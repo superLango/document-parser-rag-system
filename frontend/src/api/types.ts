@@ -176,6 +176,71 @@ export interface KbInvitationItem {
   created_at: string
 }
 
+export interface Workspace {
+  id: string
+  name: string
+  code: string
+  description: string | null
+  owner_id: string
+  config: Record<string, unknown>
+  is_active: boolean
+  created_at: string
+  my_role: 'owner' | 'admin' | 'editor' | 'viewer' | null
+  member_count: number
+}
+
+export interface WorkspaceMemberItem {
+  id: string
+  workspace_id: string
+  user_id: string
+  username: string | null
+  full_name: string | null
+  role: 'owner' | 'admin' | 'editor' | 'viewer'
+  status: string
+  created_at: string
+}
+
+export interface GroupItem {
+  id: string
+  workspace_id: string
+  name: string
+  code: string
+  description: string | null
+  created_at: string
+  member_count: number
+}
+
+export interface GroupMemberItem {
+  group_id: string
+  user_id: string
+  username: string | null
+  full_name: string | null
+  created_at: string
+}
+
+export interface KbGroupGrantItem {
+  id: string
+  kb_id: string
+  group_id: string
+  group_name: string
+  group_code: string
+  workspace_name: string
+  role: 'admin' | 'editor' | 'viewer'
+  created_at: string
+}
+
+export interface ApiKeyItem {
+  id: string
+  name: string
+  key_prefix: string
+  scopes: string[]
+  expires_at: string | null
+  last_used_at: string | null
+  created_at: string
+  revoked_at: string | null
+  secret?: string
+}
+
 export interface HealthCheck {
   status: 'healthy' | 'unhealthy' | 'unavailable' | 'degraded' | 'timeout'
   error?: string

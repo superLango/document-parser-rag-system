@@ -1,0 +1,340 @@
+created_at,action,username,resource_type,resource_id,method,path,status_code,ip,details
+2026-08-10T07:28:25.757684+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:28:24.869638+00:00,api_key.revoke,admin,api_key,,DELETE,http://localhost:8000/api/v1/api-keys/4377139b-4707-43a0-81b4-8de8701a94d1,200,127.0.0.1,
+2026-08-10T07:28:23.238382+00:00,api_key.create,admin,api_key,,POST,http://localhost:8000/api/v1/api-keys,200,127.0.0.1,"{'body': {'name': 'E2E密钥_msmwt9a9', 'scopes': ['user.view'], 'expires_at': None}}"
+2026-08-10T07:28:20.075667+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:28:19.867555+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:28:18.411603+00:00,kb.group_grant,admin,kb,155be49c-cf10-4ddb-ae4c-a396d60a2736,POST,http://localhost:8000/api/v1/kb/155be49c-cf10-4ddb-ae4c-a396d60a2736/groups,200,127.0.0.1,"{'body': {'role': 'editor', 'group_id': 'e630abb9-8ca9-45fb-8550-2377cf777e5e'}}"
+2026-08-10T07:28:16.520414+00:00,workspace.group_member_add,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/da73dcf9-d500-444f-80c7-c37e7f825b75/groups/e630abb9-8ca9-45fb-8550-2377cf777e5e/members,200,127.0.0.1,{'body': {'username': 'grp_member_msmwt9a9'}}
+2026-08-10T07:28:14.907423+00:00,workspace.group_create,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/da73dcf9-d500-444f-80c7-c37e7f825b75/groups,200,127.0.0.1,"{'body': {'code': 'e2e_grp_msmwt9a9', 'name': 'E2E研发组', 'description': None}}"
+2026-08-10T07:28:12.903353+00:00,kb.create,admin,kb,,POST,http://127.0.0.1:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'E2E授权库_msmwt9a9', 'config': {}, 'description': None, 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T07:28:12.890886+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'grp_member_msmwt9a9', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T07:28:11.588644+00:00,workspace.member_add,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/da73dcf9-d500-444f-80c7-c37e7f825b75/members,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'ws_member_msmwt9a9'}}"
+2026-08-10T07:28:09.555044+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'ws_member_msmwt9a9', 'full_name': '工作空间成员', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T07:28:08.341957+00:00,workspace.create,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces,200,127.0.0.1,"{'body': {'code': 'e2e_ws_msmwt9a9', 'name': 'E2E工作空间_msmwt9a9', 'config': {}, 'description': None}}"
+2026-08-10T07:28:04.827718+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:28:04.625531+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:27:49.116395+00:00,workspace.delete,admin,workspace,,DELETE,http://127.0.0.1:8000/api/v1/workspaces/6487cb5c-4e10-4821-a01e-e1448754b22e,200,127.0.0.1,
+2026-08-10T07:27:49.100707+00:00,user.delete,admin,user,ee0e207d-2869-41ba-bde5-07f92d5ec98a,DELETE,http://127.0.0.1:8000/api/v1/users/ee0e207d-2869-41ba-bde5-07f92d5ec98a,200,127.0.0.1,
+2026-08-10T07:27:49.091717+00:00,user.delete,admin,user,36be630b-4400-4498-9e55-c1c7b49514f8,DELETE,http://127.0.0.1:8000/api/v1/users/36be630b-4400-4498-9e55-c1c7b49514f8,200,127.0.0.1,
+2026-08-10T07:27:49.084419+00:00,kb.delete,admin,kb,5da5cda7-1c3d-446f-b4f4-3a53dd4035e3,DELETE,http://127.0.0.1:8000/api/v1/kb/5da5cda7-1c3d-446f-b4f4-3a53dd4035e3,200,127.0.0.1,
+2026-08-10T07:27:49.077002+00:00,api_key.revoke,admin,api_key,,DELETE,http://127.0.0.1:8000/api/v1/api-keys/15ddd423-8877-4c51-a8d0-aa8f2601bcb9,200,127.0.0.1,
+2026-08-10T07:27:46.056501+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:27:45.157577+00:00,api_key.revoke,admin,api_key,,DELETE,http://localhost:8000/api/v1/api-keys/15ddd423-8877-4c51-a8d0-aa8f2601bcb9,200,127.0.0.1,
+2026-08-10T07:27:43.471820+00:00,api_key.create,admin,api_key,,POST,http://localhost:8000/api/v1/api-keys,200,127.0.0.1,"{'body': {'name': 'E2E密钥_msmwsej2', 'scopes': ['user.view'], 'expires_at': None}}"
+2026-08-10T07:27:40.233463+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:27:40.022911+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:27:38.506307+00:00,kb.group_grant,admin,kb,5da5cda7-1c3d-446f-b4f4-3a53dd4035e3,POST,http://localhost:8000/api/v1/kb/5da5cda7-1c3d-446f-b4f4-3a53dd4035e3/groups,200,127.0.0.1,"{'body': {'role': 'viewer', 'group_id': 'bf536bc9-3661-4357-b386-9fb16a18af9d'}}"
+2026-08-10T07:27:36.611235+00:00,workspace.group_member_add,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/6487cb5c-4e10-4821-a01e-e1448754b22e/groups/bf536bc9-3661-4357-b386-9fb16a18af9d/members,200,127.0.0.1,{'body': {'username': 'grp_member_msmwsej2'}}
+2026-08-10T07:27:35.012761+00:00,workspace.group_create,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/6487cb5c-4e10-4821-a01e-e1448754b22e/groups,200,127.0.0.1,"{'body': {'code': 'e2e_grp_msmwsej2', 'name': 'E2E研发组', 'description': None}}"
+2026-08-10T07:27:33.021527+00:00,kb.create,admin,kb,,POST,http://127.0.0.1:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'E2E授权库_msmwsej2', 'config': {}, 'description': None, 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T07:27:33.009793+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'grp_member_msmwsej2', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T07:27:31.701864+00:00,workspace.member_add,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/6487cb5c-4e10-4821-a01e-e1448754b22e/members,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'ws_member_msmwsej2'}}"
+2026-08-10T07:27:29.745741+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'ws_member_msmwsej2', 'full_name': '工作空间成员', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T07:27:28.506933+00:00,workspace.create,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces,200,127.0.0.1,"{'body': {'code': 'e2e_ws_msmwsej2', 'name': 'E2E工作空间_msmwsej2', 'config': {}, 'description': None}}"
+2026-08-10T07:27:24.924534+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:27:24.723126+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:26:22.719333+00:00,workspace.delete,admin,workspace,,DELETE,http://127.0.0.1:8000/api/v1/workspaces/b9df841f-9b31-4775-a979-1cc9c8c47ae7,200,127.0.0.1,
+2026-08-10T07:26:22.707397+00:00,user.delete,admin,user,9fb0eef6-596c-4921-a82d-f0b1b845c306,DELETE,http://127.0.0.1:8000/api/v1/users/9fb0eef6-596c-4921-a82d-f0b1b845c306,200,127.0.0.1,
+2026-08-10T07:26:22.699084+00:00,user.delete,admin,user,e8f69bc8-e2f3-4cfa-bd08-0925556293f7,DELETE,http://127.0.0.1:8000/api/v1/users/e8f69bc8-e2f3-4cfa-bd08-0925556293f7,200,127.0.0.1,
+2026-08-10T07:26:22.693478+00:00,kb.delete,admin,kb,238a55bd-a9bc-462e-b320-f509b6cca996,DELETE,http://127.0.0.1:8000/api/v1/kb/238a55bd-a9bc-462e-b320-f509b6cca996,200,127.0.0.1,
+2026-08-10T07:26:19.661656+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:25:46.796198+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:25:45.395415+00:00,kb.group_grant,admin,kb,238a55bd-a9bc-462e-b320-f509b6cca996,POST,http://localhost:8000/api/v1/kb/238a55bd-a9bc-462e-b320-f509b6cca996/groups,200,127.0.0.1,"{'body': {'role': 'viewer', 'group_id': '48b8b823-be19-43b6-bce4-0884fcff5f1a'}}"
+2026-08-10T07:25:43.534100+00:00,workspace.group_member_add,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/b9df841f-9b31-4775-a979-1cc9c8c47ae7/groups/48b8b823-be19-43b6-bce4-0884fcff5f1a/members,200,127.0.0.1,{'body': {'username': 'grp_member_msmwpz5h'}}
+2026-08-10T07:25:41.910204+00:00,workspace.group_create,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/b9df841f-9b31-4775-a979-1cc9c8c47ae7/groups,200,127.0.0.1,"{'body': {'code': 'e2e_grp_msmwpz5h', 'name': 'E2E研发组', 'description': None}}"
+2026-08-10T07:25:39.928409+00:00,kb.create,admin,kb,,POST,http://127.0.0.1:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'E2E授权库_msmwpz5h', 'config': {}, 'description': None, 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T07:25:39.917382+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'grp_member_msmwpz5h', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T07:25:38.656314+00:00,workspace.member_add,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/b9df841f-9b31-4775-a979-1cc9c8c47ae7/members,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'ws_member_msmwpz5h'}}"
+2026-08-10T07:25:36.621057+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'ws_member_msmwpz5h', 'full_name': '工作空间成员', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T07:25:35.350956+00:00,workspace.create,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces,200,127.0.0.1,"{'body': {'code': 'e2e_ws_msmwpz5h', 'name': 'E2E工作空间_msmwpz5h', 'config': {}, 'description': None}}"
+2026-08-10T07:25:31.696128+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:25:31.495100+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:25:10.432434+00:00,workspace.delete,admin,workspace,,DELETE,http://127.0.0.1:8000/api/v1/workspaces/3e5caca9-4adc-4dc1-8129-f86add1df0d8,200,127.0.0.1,
+2026-08-10T07:25:10.414139+00:00,user.delete,admin,user,b454530a-b940-49a7-8754-9c52a684726c,DELETE,http://127.0.0.1:8000/api/v1/users/b454530a-b940-49a7-8754-9c52a684726c,200,127.0.0.1,
+2026-08-10T07:25:10.407384+00:00,user.delete,admin,user,af401a5c-73e6-4d93-b1d1-0ac92a2834ff,DELETE,http://127.0.0.1:8000/api/v1/users/af401a5c-73e6-4d93-b1d1-0ac92a2834ff,200,127.0.0.1,
+2026-08-10T07:25:10.398479+00:00,kb.delete,admin,kb,4a8b9bfa-1210-4591-8105-77ddc0455645,DELETE,http://127.0.0.1:8000/api/v1/kb/4a8b9bfa-1210-4591-8105-77ddc0455645,200,127.0.0.1,
+2026-08-10T07:25:07.305550+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:24:34.405310+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:24:03.157627+00:00,workspace.group_create,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/3e5caca9-4adc-4dc1-8129-f86add1df0d8/groups,200,127.0.0.1,"{'body': {'code': 'e2e_grp_msmwnv16', 'name': 'E2E研发组', 'description': None}}"
+2026-08-10T07:24:01.137109+00:00,kb.create,admin,kb,,POST,http://127.0.0.1:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'E2E授权库_msmwnv16', 'config': {}, 'description': None, 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T07:24:01.123157+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'grp_member_msmwnv16', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T07:23:59.824908+00:00,workspace.member_add,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces/3e5caca9-4adc-4dc1-8129-f86add1df0d8/members,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'ws_member_msmwnv16'}}"
+2026-08-10T07:23:57.806789+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'ws_member_msmwnv16', 'full_name': '工作空间成员', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T07:23:56.596369+00:00,workspace.create,admin,workspace,,POST,http://localhost:8000/api/v1/workspaces,200,127.0.0.1,"{'body': {'code': 'e2e_ws_msmwnv16', 'name': 'E2E工作空间_msmwnv16', 'config': {}, 'description': None}}"
+2026-08-10T07:23:53.025961+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:23:52.836882+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:13:15.651367+00:00,api_key.revoke,admin,api_key,,DELETE,http://127.0.0.1:8000/api/v1/api-keys/22b6a489-4a2a-4ca4-a97c-fd2195f98490,200,127.0.0.1,
+2026-08-10T07:13:15.644126+00:00,kb.delete,admin,kb,d9bd661f-52d3-4d50-8b54-72426fb76685,DELETE,http://127.0.0.1:8000/api/v1/kb/d9bd661f-52d3-4d50-8b54-72426fb76685,200,127.0.0.1,
+2026-08-10T07:13:15.632614+00:00,workspace.delete,admin,workspace,,DELETE,http://127.0.0.1:8000/api/v1/workspaces/71fe0c90-6559-4933-886a-f936f6ebb58c,200,127.0.0.1,
+2026-08-10T07:13:15.618953+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:13:04.135229+00:00,kb.update,tester,kb,d9bd661f-52d3-4d50-8b54-72426fb76685,PUT,http://127.0.0.1:8000/api/v1/kb/d9bd661f-52d3-4d50-8b54-72426fb76685,403,127.0.0.1,"{'body': {'name': 'P2授权知识库改', 'config': None, 'description': None, 'domain_code': None, 'template_code': None}, 'error': '需要管理员或所有者权限'}"
+2026-08-10T07:13:04.122484+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:13:03.923812+00:00,kb.group_grant,admin,kb,d9bd661f-52d3-4d50-8b54-72426fb76685,POST,http://127.0.0.1:8000/api/v1/kb/d9bd661f-52d3-4d50-8b54-72426fb76685/groups,200,127.0.0.1,"{'body': {'role': 'editor', 'group_id': '9859ea61-1826-44fe-b8ad-bee7d58b9445'}}"
+2026-08-10T07:13:03.882591+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:12:29.593981+00:00,kb.group_grant,admin,kb,d9bd661f-52d3-4d50-8b54-72426fb76685,POST,http://127.0.0.1:8000/api/v1/kb/d9bd661f-52d3-4d50-8b54-72426fb76685/groups,500,127.0.0.1,"{'body': {'role': 'editor', 'group_id': '9859ea61-1826-44fe-b8ad-bee7d58b9445'}, 'error': ""module 'app.services.kb_service' has no attribute 'grant_kb_to_group'""}"
+2026-08-10T07:12:29.581453+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:12:20.873261+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:11:39.945473+00:00,api_key.create,admin,api_key,,POST,http://127.0.0.1:8000/api/v1/api-keys,200,127.0.0.1,"{'body': {'name': 'smoke', 'scopes': ['user.view'], 'expires_at': None}}"
+2026-08-10T07:11:39.937446+00:00,kb.group_grant,admin,kb,d9bd661f-52d3-4d50-8b54-72426fb76685,POST,http://127.0.0.1:8000/api/v1/kb/d9bd661f-52d3-4d50-8b54-72426fb76685/groups,500,127.0.0.1,"{'body': {'role': 'editor', 'group_id': '9859ea61-1826-44fe-b8ad-bee7d58b9445'}, 'error': ""module 'app.services.kb_service' has no attribute 'grant_kb_to_group'""}"
+2026-08-10T07:11:39.927936+00:00,kb.create,admin,kb,,POST,http://127.0.0.1:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'P2授权知识库', 'config': {}, 'description': None, 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T07:11:39.916826+00:00,workspace.group_member_add,admin,workspace,,POST,http://127.0.0.1:8000/api/v1/workspaces/71fe0c90-6559-4933-886a-f936f6ebb58c/groups/9859ea61-1826-44fe-b8ad-bee7d58b9445/members,200,127.0.0.1,{'body': {'username': 'tester'}}
+2026-08-10T07:11:39.910330+00:00,workspace.group_create,admin,workspace,,POST,http://127.0.0.1:8000/api/v1/workspaces/71fe0c90-6559-4933-886a-f936f6ebb58c/groups,200,127.0.0.1,"{'body': {'code': 'rd_group', 'name': '研发组', 'description': None}}"
+2026-08-10T07:11:39.902485+00:00,workspace.create,admin,workspace,,POST,http://127.0.0.1:8000/api/v1/workspaces,200,127.0.0.1,"{'body': {'code': 'p2_smoke', 'name': 'P2冒烟', 'config': {}, 'description': 'smoke'}}"
+2026-08-10T07:11:39.868692+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:05:09.094157+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T07:04:59.010401+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:57.621722+00:00,user.delete,admin,user,3fe2ebdd-cf0c-4cd1-90c9-606f90454fb4,DELETE,http://127.0.0.1:8000/api/v1/users/3fe2ebdd-cf0c-4cd1-90c9-606f90454fb4,200,127.0.0.1,
+2026-08-10T06:51:57.612793+00:00,user.delete,admin,user,aafd6978-1dc6-4a04-986a-f945a9181f9f,DELETE,http://127.0.0.1:8000/api/v1/users/aafd6978-1dc6-4a04-986a-f945a9181f9f,200,127.0.0.1,
+2026-08-10T06:51:57.607189+00:00,user.delete,admin,user,0d1267af-d7d9-4d2a-b598-f539acc72b56,DELETE,http://127.0.0.1:8000/api/v1/users/0d1267af-d7d9-4d2a-b598-f539acc72b56,400,127.0.0.1,{'error': '用户 0d1267af-d7d9-4d2a-b598-f539acc72b56 不存在'}
+2026-08-10T06:51:57.602506+00:00,user.delete,admin,user,b2c21f82-ded2-42c4-b792-175682b13098,DELETE,http://127.0.0.1:8000/api/v1/users/b2c21f82-ded2-42c4-b792-175682b13098,200,127.0.0.1,
+2026-08-10T06:51:57.596555+00:00,user.delete,admin,user,6e83e550-ba14-48af-a8e4-bbb7a54d542b,DELETE,http://127.0.0.1:8000/api/v1/users/6e83e550-ba14-48af-a8e4-bbb7a54d542b,200,127.0.0.1,
+2026-08-10T06:51:57.591644+00:00,user.delete,admin,user,2680f0e9-a4c1-4fd3-bea0-31c3b80935ab,DELETE,http://127.0.0.1:8000/api/v1/users/2680f0e9-a4c1-4fd3-bea0-31c3b80935ab,200,127.0.0.1,
+2026-08-10T06:51:57.586040+00:00,user.delete,admin,user,c37e0a2d-cf6a-4768-905a-cd48cba19e4d,DELETE,http://127.0.0.1:8000/api/v1/users/c37e0a2d-cf6a-4768-905a-cd48cba19e4d,200,127.0.0.1,
+2026-08-10T06:51:57.578556+00:00,role.delete,admin,role,,DELETE,http://127.0.0.1:8000/api/v1/roles/845238b6-e11b-4513-84a8-080ff0b56390,400,127.0.0.1,{'error': '角色 845238b6-e11b-4513-84a8-080ff0b56390 不存在'}
+2026-08-10T06:51:54.135938+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:53.938188+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:53.739939+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:51:53.490082+00:00,auth.change_password,pwd_user_msmvhh7b,user,,POST,http://localhost:8000/api/v1/auth/change-password,200,127.0.0.1,
+2026-08-10T06:51:49.764491+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:49.576642+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'pwd_user_msmvhh7b', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:48.573429+00:00,auth.update_profile,profile_user_msmvhh7b,user,,PUT,http://localhost:8000/api/v1/auth/profile,200,127.0.0.1,
+2026-08-10T06:51:45.679618+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:45.491663+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'profile_user_msmvhh7b', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:41.957556+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:41.078385+00:00,role.delete,admin,role,,DELETE,http://localhost:8000/api/v1/roles/845238b6-e11b-4513-84a8-080ff0b56390,200,127.0.0.1,
+2026-08-10T06:51:38.455372+00:00,role.set_permissions,admin,role,,PUT,http://localhost:8000/api/v1/roles/845238b6-e11b-4513-84a8-080ff0b56390/permissions,200,127.0.0.1,"{'body': {'permission_codes': ['user.view', 'audit.view']}}"
+2026-08-10T06:51:35.722990+00:00,role.create,admin,role,,POST,http://localhost:8000/api/v1/roles,200,127.0.0.1,"{'body': {'code': 'ui_role_msmvhh7b', 'name': 'UI自定义角色', 'description': None}}"
+2026-08-10T06:51:32.133518+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:31.233552+00:00,user.delete,admin,user,0d1267af-d7d9-4d2a-b598-f539acc72b56,DELETE,http://localhost:8000/api/v1/users/0d1267af-d7d9-4d2a-b598-f539acc72b56,200,127.0.0.1,
+2026-08-10T06:51:29.396667+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'del_user_msmvhh7b', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:29.190922+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:28.861701+00:00,user.reset_password,admin,user,b2c21f82-ded2-42c4-b792-175682b13098,POST,http://localhost:8000/api/v1/users/b2c21f82-ded2-42c4-b792-175682b13098/reset-password,200,127.0.0.1,
+2026-08-10T06:51:26.363198+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'reset_user_msmvhh7b', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:25.467701+00:00,user.toggle_active,admin,user,6e83e550-ba14-48af-a8e4-bbb7a54d542b,PATCH,http://localhost:8000/api/v1/users/6e83e550-ba14-48af-a8e4-bbb7a54d542b/active,200,127.0.0.1,
+2026-08-10T06:51:25.413067+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:51:24.708280+00:00,user.toggle_active,admin,user,6e83e550-ba14-48af-a8e4-bbb7a54d542b,PATCH,http://localhost:8000/api/v1/users/6e83e550-ba14-48af-a8e4-bbb7a54d542b/active,200,127.0.0.1,
+2026-08-10T06:51:23.283190+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'toggle_user_msmvhh7b', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:22.184675+00:00,user.update,admin,user,2680f0e9-a4c1-4fd3-bea0-31c3b80935ab,PUT,http://localhost:8000/api/v1/users/2680f0e9-a4c1-4fd3-bea0-31c3b80935ab,200,127.0.0.1,"{'body': {'email': None, 'notes': None, 'phone': None, 'full_name': '已编辑用户', 'is_active': True, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:20.313591+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'edit_user_msmvhh7b', 'full_name': '待编辑', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:19.254065+00:00,user.create,admin,user,,POST,http://localhost:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'ui_user_msmvhh7b', 'full_name': 'UI用户', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:15.633070+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:12.769610+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:12.572081+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'member_msmvhh7b', 'full_name': 'E2E成员', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:51:10.915971+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:08.103421+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:05.106817+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:51:00.099355+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:58.793387+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:50:58.589815+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:50:56.633533+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:55.366375+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:45.553929+00:00,user.delete,admin,user,5168a375-8192-46ce-bc51-d3c96b1fdce8,DELETE,http://127.0.0.1:8000/api/v1/users/5168a375-8192-46ce-bc51-d3c96b1fdce8,200,127.0.0.1,
+2026-08-10T06:50:45.543953+00:00,user.delete,admin,user,59981844-8b4c-401a-9727-da6918a0d352,DELETE,http://127.0.0.1:8000/api/v1/users/59981844-8b4c-401a-9727-da6918a0d352,200,127.0.0.1,
+2026-08-10T06:50:45.537572+00:00,user.delete,admin,user,d13aab3c-a871-46d3-a19b-14ce2a18119b,DELETE,http://127.0.0.1:8000/api/v1/users/d13aab3c-a871-46d3-a19b-14ce2a18119b,200,127.0.0.1,
+2026-08-10T06:50:45.530096+00:00,kb.delete,admin,kb,53c199b0-69f8-4c8b-8dab-ca5dc359f601,DELETE,http://127.0.0.1:8000/api/v1/kb/53c199b0-69f8-4c8b-8dab-ca5dc359f601,200,127.0.0.1,
+2026-08-10T06:50:43.094732+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:42.094635+00:00,user.approve,admin,user,5168a375-8192-46ce-bc51-d3c96b1fdce8,POST,http://localhost:8000/api/v1/users/5168a375-8192-46ce-bc51-d3c96b1fdce8/approve,200,127.0.0.1,
+2026-08-10T06:50:39.207764+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:36.543186+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:36.346235+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'pending_msmvgqct', 'full_name': '待审批用户', 'department': None, 'role_codes': ['pending'], 'is_superuser': False}}"
+2026-08-10T06:50:33.297701+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:33.100041+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'kb_outsider_msmvgqct', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:50:31.975977+00:00,kb.invite_accept,kb_invitee_msmvgqct,kb,,POST,http://localhost:8000/api/v1/kb/invitations/pAHlzHz-uPQeMAdHGFsgVvSk8kLr4ccQgDA9BdB3ddE/accept,200,127.0.0.1,
+2026-08-10T06:50:28.884815+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:27.558793+00:00,kb.invite,admin,kb,53c199b0-69f8-4c8b-8dab-ca5dc359f601,POST,http://localhost:8000/api/v1/kb/53c199b0-69f8-4c8b-8dab-ca5dc359f601/invitations,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'kb_invitee_msmvgqct', 'expires_at': None}}"
+2026-08-10T06:50:25.561345+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'kb_invitee_msmvgqct', 'full_name': '邀请对象', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:50:24.314051+00:00,kb.create,admin,kb,,POST,http://localhost:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'E2E知识库_msmvgqct', 'config': {}, 'description': 'P1 功能验证', 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T06:50:20.773254+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:20.571976+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:05.273286+00:00,user.delete,admin,user,7792b7c4-3cf8-40b4-8e9a-3bbb89a7ab68,DELETE,http://127.0.0.1:8000/api/v1/users/7792b7c4-3cf8-40b4-8e9a-3bbb89a7ab68,200,127.0.0.1,
+2026-08-10T06:50:05.265196+00:00,user.delete,admin,user,68c7b84d-a007-4af3-af41-4ff4920da5f3,DELETE,http://127.0.0.1:8000/api/v1/users/68c7b84d-a007-4af3-af41-4ff4920da5f3,200,127.0.0.1,
+2026-08-10T06:50:05.256998+00:00,user.delete,admin,user,166ac52a-4315-4496-9d72-16428ef1c0a3,DELETE,http://127.0.0.1:8000/api/v1/users/166ac52a-4315-4496-9d72-16428ef1c0a3,200,127.0.0.1,
+2026-08-10T06:50:05.249712+00:00,kb.delete,admin,kb,4383942a-7f46-4252-a40b-cd4f3c83bfef,DELETE,http://127.0.0.1:8000/api/v1/kb/4383942a-7f46-4252-a40b-cd4f3c83bfef,200,127.0.0.1,
+2026-08-10T06:50:02.736071+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:50:01.751345+00:00,user.approve,admin,user,7792b7c4-3cf8-40b4-8e9a-3bbb89a7ab68,POST,http://localhost:8000/api/v1/users/7792b7c4-3cf8-40b4-8e9a-3bbb89a7ab68/approve,200,127.0.0.1,
+2026-08-10T06:49:58.895971+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:56.199106+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:56.001104+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'pending_msmvfv7n', 'full_name': '待审批用户', 'department': None, 'role_codes': ['pending'], 'is_superuser': False}}"
+2026-08-10T06:49:52.865081+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:52.664572+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'kb_outsider_msmvfv7n', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:49:51.552288+00:00,kb.invite_accept,kb_invitee_msmvfv7n,kb,,POST,http://localhost:8000/api/v1/kb/invitations/L8cRi8XU6Y8KyvYmrtV2miWTdlRzioZL1IdfRvRwHoU/accept,200,127.0.0.1,
+2026-08-10T06:49:48.456929+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:47.162651+00:00,kb.invite,admin,kb,4383942a-7f46-4252-a40b-cd4f3c83bfef,POST,http://localhost:8000/api/v1/kb/4383942a-7f46-4252-a40b-cd4f3c83bfef/invitations,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'kb_invitee_msmvfv7n', 'expires_at': None}}"
+2026-08-10T06:49:45.224465+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'kb_invitee_msmvfv7n', 'full_name': '邀请对象', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:49:44.008447+00:00,kb.create,admin,kb,,POST,http://localhost:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'E2E知识库_msmvfv7n', 'config': {}, 'description': 'P1 功能验证', 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T06:49:40.424482+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:40.224213+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:28.623381+00:00,user.delete,admin,user,76870a74-e302-41c8-a1b1-df56cebc3635,DELETE,http://127.0.0.1:8000/api/v1/users/76870a74-e302-41c8-a1b1-df56cebc3635,200,127.0.0.1,
+2026-08-10T06:49:28.616822+00:00,user.delete,admin,user,6c88698c-dd6c-42fa-a94a-51696edd78f0,DELETE,http://127.0.0.1:8000/api/v1/users/6c88698c-dd6c-42fa-a94a-51696edd78f0,200,127.0.0.1,
+2026-08-10T06:49:28.610134+00:00,user.delete,admin,user,844996b5-f2ec-4d8c-949f-5b02957fc242,DELETE,http://127.0.0.1:8000/api/v1/users/844996b5-f2ec-4d8c-949f-5b02957fc242,200,127.0.0.1,
+2026-08-10T06:49:28.603393+00:00,kb.delete,admin,kb,61e4271a-2836-45dc-b88e-3e16fc43968c,DELETE,http://127.0.0.1:8000/api/v1/kb/61e4271a-2836-45dc-b88e-3e16fc43968c,200,127.0.0.1,
+2026-08-10T06:49:26.199850+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:25.199213+00:00,user.approve,admin,user,76870a74-e302-41c8-a1b1-df56cebc3635,POST,http://localhost:8000/api/v1/users/76870a74-e302-41c8-a1b1-df56cebc3635/approve,200,127.0.0.1,
+2026-08-10T06:49:22.318590+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:19.607010+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:19.408074+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'pending_msmvf2xy', 'full_name': '待审批用户', 'department': None, 'role_codes': ['pending'], 'is_superuser': False}}"
+2026-08-10T06:49:16.349210+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:16.152906+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'kb_outsider_msmvf2xy', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:49:15.043338+00:00,kb.invite_accept,kb_invitee_msmvf2xy,kb,,POST,http://localhost:8000/api/v1/kb/invitations/QNmMJHcUvvaQgQXhWVK-hylGTxcWysyPDtxxbkACsVE/accept,200,127.0.0.1,
+2026-08-10T06:49:11.892764+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:10.598229+00:00,kb.invite,admin,kb,61e4271a-2836-45dc-b88e-3e16fc43968c,POST,http://localhost:8000/api/v1/kb/61e4271a-2836-45dc-b88e-3e16fc43968c/invitations,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'kb_invitee_msmvf2xy', 'expires_at': None}}"
+2026-08-10T06:49:08.591384+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'kb_invitee_msmvf2xy', 'full_name': '邀请对象', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:49:07.345727+00:00,kb.create,admin,kb,,POST,http://localhost:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'E2E知识库_msmvf2xy', 'config': {}, 'description': 'P1 功能验证', 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T06:49:03.782822+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:49:03.580807+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:48:31.333361+00:00,user.delete,admin,user,61382ed5-48aa-4f95-9cbc-01bf09ba3957,DELETE,http://127.0.0.1:8000/api/v1/users/61382ed5-48aa-4f95-9cbc-01bf09ba3957,200,127.0.0.1,
+2026-08-10T06:48:31.324797+00:00,user.delete,admin,user,910aad33-695a-44b4-aa61-0697cf646e3e,DELETE,http://127.0.0.1:8000/api/v1/users/910aad33-695a-44b4-aa61-0697cf646e3e,200,127.0.0.1,
+2026-08-10T06:48:31.317680+00:00,user.delete,admin,user,70fda455-8727-4986-b278-a8d1e19be8eb,DELETE,http://127.0.0.1:8000/api/v1/users/70fda455-8727-4986-b278-a8d1e19be8eb,200,127.0.0.1,
+2026-08-10T06:48:31.306026+00:00,kb.delete,admin,kb,f6b71eb7-0bd0-4afe-a2ff-a4fe2d1fbaac,DELETE,http://127.0.0.1:8000/api/v1/kb/f6b71eb7-0bd0-4afe-a2ff-a4fe2d1fbaac,200,127.0.0.1,
+2026-08-10T06:48:28.895824+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:48:28.696982+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'pending_msmvdzta', 'full_name': '待审批用户', 'department': None, 'role_codes': ['pending'], 'is_superuser': False}}"
+2026-08-10T06:48:25.694706+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:48:25.493374+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'kb_outsider_msmvdzta', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:48:24.375030+00:00,kb.invite_accept,kb_invitee_msmvdzta,kb,,POST,http://localhost:8000/api/v1/kb/invitations/2qQkH0_Ed56JJJQo0u4XrT0zAdCUWsdCNc1pvF9uAxU/accept,200,127.0.0.1,
+2026-08-10T06:48:21.232143+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:48:19.885105+00:00,kb.invite,admin,kb,f6b71eb7-0bd0-4afe-a2ff-a4fe2d1fbaac,POST,http://localhost:8000/api/v1/kb/f6b71eb7-0bd0-4afe-a2ff-a4fe2d1fbaac/invitations,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'kb_invitee_msmvdzta', 'expires_at': None}}"
+2026-08-10T06:48:17.896223+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'kb_invitee_msmvdzta', 'full_name': '邀请对象', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:48:16.629932+00:00,kb.create,admin,kb,,POST,http://localhost:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'E2E知识库_msmvdzta', 'config': {}, 'description': 'P1 功能验证', 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T06:48:13.085192+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:48:12.883828+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:38:55.966560+00:00,kb.invite_accept,tester,kb,,POST,http://127.0.0.1:8000/api/v1/kb/invitations/CkzAXEZMD_lHBLcDLp2ad2xmUQjJWEInWRDg1aswVkY/accept,200,127.0.0.1,
+2026-08-10T06:38:55.951512+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:38:55.740503+00:00,kb.invite,admin,kb,c4998377-b71a-4917-b569-c58ac8a0bd77,POST,http://127.0.0.1:8000/api/v1/kb/c4998377-b71a-4917-b569-c58ac8a0bd77/invitations,200,127.0.0.1,"{'body': {'role': 'viewer', 'username': 'tester', 'expires_at': None}}"
+2026-08-10T06:38:55.717778+00:00,kb.create,admin,kb,,POST,http://127.0.0.1:8000/api/v1/kb,200,127.0.0.1,"{'body': {'name': 'P1冒烟知识库', 'config': {}, 'description': 'smoke', 'domain_code': 'general', 'template_code': None}}"
+2026-08-10T06:38:55.687631+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:24:20.967923+00:00,user.toggle_superuser,admin,user,b844943a-0bd9-414e-9103-97d783d481af,PATCH,http://localhost:8000/api/v1/users/b844943a-0bd9-414e-9103-97d783d481af/superuser,200,127.0.0.1,
+2026-08-10T06:24:19.569340+00:00,user.toggle_superuser,admin,user,b844943a-0bd9-414e-9103-97d783d481af,PATCH,http://localhost:8000/api/v1/users/b844943a-0bd9-414e-9103-97d783d481af/superuser,200,127.0.0.1,
+2026-08-10T06:17:52.642786+00:00,user.delete,admin,user,76df20cf-0968-42d2-862b-16ef2e56db0e,DELETE,http://127.0.0.1:8000/api/v1/users/76df20cf-0968-42d2-862b-16ef2e56db0e,200,127.0.0.1,
+2026-08-10T06:17:52.633511+00:00,user.delete,admin,user,d804ebf3-f29a-4763-aed7-72dd00c3c1c6,DELETE,http://127.0.0.1:8000/api/v1/users/d804ebf3-f29a-4763-aed7-72dd00c3c1c6,200,127.0.0.1,
+2026-08-10T06:17:52.625388+00:00,user.delete,admin,user,fc821bc9-b5c8-46f7-acfb-c48cab98091b,DELETE,http://127.0.0.1:8000/api/v1/users/fc821bc9-b5c8-46f7-acfb-c48cab98091b,400,127.0.0.1,{'error': '用户 fc821bc9-b5c8-46f7-acfb-c48cab98091b 不存在'}
+2026-08-10T06:17:52.619585+00:00,user.delete,admin,user,70eb6410-1c2b-44ba-9dda-9c295741a94b,DELETE,http://127.0.0.1:8000/api/v1/users/70eb6410-1c2b-44ba-9dda-9c295741a94b,200,127.0.0.1,
+2026-08-10T06:17:52.613584+00:00,user.delete,admin,user,b6dcca5f-941d-4c54-a98e-0a6e2192b451,DELETE,http://127.0.0.1:8000/api/v1/users/b6dcca5f-941d-4c54-a98e-0a6e2192b451,200,127.0.0.1,
+2026-08-10T06:17:52.607134+00:00,user.delete,admin,user,8738516a-1e7e-4f0d-8804-0138639ccd0a,DELETE,http://127.0.0.1:8000/api/v1/users/8738516a-1e7e-4f0d-8804-0138639ccd0a,200,127.0.0.1,
+2026-08-10T06:17:52.599087+00:00,user.delete,admin,user,e05788fa-de4b-41cc-b65e-a28dfee66896,DELETE,http://127.0.0.1:8000/api/v1/users/e05788fa-de4b-41cc-b65e-a28dfee66896,200,127.0.0.1,
+2026-08-10T06:17:52.590026+00:00,role.delete,admin,role,,DELETE,http://127.0.0.1:8000/api/v1/roles/4f13541c-5016-4faf-8361-3b8247b409cc,400,127.0.0.1,{'error': '角色 4f13541c-5016-4faf-8361-3b8247b409cc 不存在'}
+2026-08-10T06:17:49.122118+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:48.923144+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:48.722652+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:17:48.476959+00:00,auth.change_password,pwd_user_msmu9mw0,user,,POST,http://localhost:8000/api/v1/auth/change-password,200,127.0.0.1,
+2026-08-10T06:17:44.819683+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:44.620378+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'pwd_user_msmu9mw0', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:43.624116+00:00,auth.update_profile,profile_user_msmu9mw0,user,,PUT,http://localhost:8000/api/v1/auth/profile,200,127.0.0.1,
+2026-08-10T06:17:40.728985+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:40.530300+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'profile_user_msmu9mw0', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:37.003849+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:36.114242+00:00,role.delete,admin,role,,DELETE,http://localhost:8000/api/v1/roles/4f13541c-5016-4faf-8361-3b8247b409cc,200,127.0.0.1,
+2026-08-10T06:17:33.455620+00:00,role.set_permissions,admin,role,,PUT,http://localhost:8000/api/v1/roles/4f13541c-5016-4faf-8361-3b8247b409cc/permissions,200,127.0.0.1,"{'body': {'permission_codes': ['user.view', 'audit.view']}}"
+2026-08-10T06:17:30.647682+00:00,role.create,admin,role,,POST,http://localhost:8000/api/v1/roles,200,127.0.0.1,"{'body': {'code': 'ui_role_msmu9mw0', 'name': 'UI自定义角色', 'description': None}}"
+2026-08-10T06:17:26.915673+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:26.015596+00:00,user.delete,admin,user,fc821bc9-b5c8-46f7-acfb-c48cab98091b,DELETE,http://localhost:8000/api/v1/users/fc821bc9-b5c8-46f7-acfb-c48cab98091b,200,127.0.0.1,
+2026-08-10T06:17:24.119998+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'del_user_msmu9mw0', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:23.914949+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:23.576295+00:00,user.reset_password,admin,user,70eb6410-1c2b-44ba-9dda-9c295741a94b,POST,http://localhost:8000/api/v1/users/70eb6410-1c2b-44ba-9dda-9c295741a94b/reset-password,200,127.0.0.1,
+2026-08-10T06:17:21.113485+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'reset_user_msmu9mw0', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:20.202337+00:00,user.toggle_active,admin,user,b6dcca5f-941d-4c54-a98e-0a6e2192b451,PATCH,http://localhost:8000/api/v1/users/b6dcca5f-941d-4c54-a98e-0a6e2192b451/active,200,127.0.0.1,
+2026-08-10T06:17:20.150800+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:17:19.434054+00:00,user.toggle_active,admin,user,b6dcca5f-941d-4c54-a98e-0a6e2192b451,PATCH,http://localhost:8000/api/v1/users/b6dcca5f-941d-4c54-a98e-0a6e2192b451/active,200,127.0.0.1,
+2026-08-10T06:17:18.036173+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'toggle_user_msmu9mw0', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:16.935756+00:00,user.update,admin,user,8738516a-1e7e-4f0d-8804-0138639ccd0a,PUT,http://localhost:8000/api/v1/users/8738516a-1e7e-4f0d-8804-0138639ccd0a,200,127.0.0.1,"{'body': {'email': None, 'notes': None, 'phone': None, 'full_name': '已编辑用户', 'is_active': True, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:15.019003+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'edit_user_msmu9mw0', 'full_name': '待编辑', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:13.964256+00:00,user.create,admin,user,,POST,http://localhost:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'ui_user_msmu9mw0', 'full_name': 'UI用户', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:10.351490+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:07.493322+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:07.296515+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'member_msmu9mw0', 'full_name': 'E2E成员', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:17:05.655658+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:17:02.782778+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:16:59.742264+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:16:54.684674+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:16:53.306410+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:16:53.100904+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:16:51.191818+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:16:49.887527+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:16:28.286081+00:00,user.delete,admin,user,49086c11-0ad1-4e35-bfff-3750aa7fddc2,DELETE,http://127.0.0.1:8000/api/v1/users/49086c11-0ad1-4e35-bfff-3750aa7fddc2,200,127.0.0.1,
+2026-08-10T06:16:28.277236+00:00,user.delete,admin,user,c7c43594-f780-41b5-b824-3cfe4cc97b7b,DELETE,http://127.0.0.1:8000/api/v1/users/c7c43594-f780-41b5-b824-3cfe4cc97b7b,200,127.0.0.1,
+2026-08-10T06:16:28.267223+00:00,user.delete,admin,user,df53d6e1-d4d1-40f7-b8cc-92c1e5c5a82c,DELETE,http://127.0.0.1:8000/api/v1/users/df53d6e1-d4d1-40f7-b8cc-92c1e5c5a82c,400,127.0.0.1,{'error': '用户 df53d6e1-d4d1-40f7-b8cc-92c1e5c5a82c 不存在'}
+2026-08-10T06:16:28.260783+00:00,user.delete,admin,user,02108fca-e1e9-4065-a264-73adecf80919,DELETE,http://127.0.0.1:8000/api/v1/users/02108fca-e1e9-4065-a264-73adecf80919,200,127.0.0.1,
+2026-08-10T06:16:28.252271+00:00,user.delete,admin,user,db1f6588-8355-415c-af4a-1206d83d0cfd,DELETE,http://127.0.0.1:8000/api/v1/users/db1f6588-8355-415c-af4a-1206d83d0cfd,200,127.0.0.1,
+2026-08-10T06:16:28.243256+00:00,user.delete,admin,user,914e1720-eea2-4eb1-8c21-96eec8a910b3,DELETE,http://127.0.0.1:8000/api/v1/users/914e1720-eea2-4eb1-8c21-96eec8a910b3,200,127.0.0.1,
+2026-08-10T06:16:28.234371+00:00,user.delete,admin,user,d7dd1589-1e16-4441-8cee-438a98f72f4b,DELETE,http://127.0.0.1:8000/api/v1/users/d7dd1589-1e16-4441-8cee-438a98f72f4b,200,127.0.0.1,
+2026-08-10T06:16:10.192749+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:16:09.994186+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:16:09.735138+00:00,auth.change_password,pwd_user_msmu6dmf,user,,POST,http://localhost:8000/api/v1/auth/change-password,200,127.0.0.1,
+2026-08-10T06:16:06.167905+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:16:05.970641+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'pwd_user_msmu6dmf', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:16:04.947762+00:00,auth.update_profile,profile_user_msmu6dmf,user,,PUT,http://localhost:8000/api/v1/auth/profile,200,127.0.0.1,
+2026-08-10T06:16:01.954835+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:16:01.755792+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'profile_user_msmu6dmf', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:15:58.012238+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:15:09.057540+00:00,user.delete,admin,user,df53d6e1-d4d1-40f7-b8cc-92c1e5c5a82c,DELETE,http://localhost:8000/api/v1/users/df53d6e1-d4d1-40f7-b8cc-92c1e5c5a82c,200,127.0.0.1,
+2026-08-10T06:15:07.172598+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'del_user_msmu6dmf', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:15:06.837129+00:00,user.reset_password,admin,user,02108fca-e1e9-4065-a264-73adecf80919,POST,http://localhost:8000/api/v1/users/02108fca-e1e9-4065-a264-73adecf80919/reset-password,200,127.0.0.1,
+2026-08-10T06:15:04.391707+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'reset_user_msmu6dmf', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:15:03.481104+00:00,user.toggle_active,admin,user,db1f6588-8355-415c-af4a-1206d83d0cfd,PATCH,http://localhost:8000/api/v1/users/db1f6588-8355-415c-af4a-1206d83d0cfd/active,200,127.0.0.1,
+2026-08-10T06:15:02.058210+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'toggle_user_msmu6dmf', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:15:00.958083+00:00,user.update,admin,user,914e1720-eea2-4eb1-8c21-96eec8a910b3,PUT,http://localhost:8000/api/v1/users/914e1720-eea2-4eb1-8c21-96eec8a910b3,200,127.0.0.1,"{'body': {'email': None, 'notes': None, 'phone': None, 'full_name': '已编辑用户', 'is_active': True, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:14:59.076604+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'edit_user_msmu6dmf', 'full_name': '待编辑', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:14:58.074206+00:00,user.create,admin,user,,POST,http://localhost:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'ui_user_msmu6dmf', 'full_name': 'UI用户', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:14:54.460598+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:14:51.569162+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:14:51.370599+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'member_msmu6dmf', 'full_name': 'E2E成员', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:14:49.697898+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:14:46.829890+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:14:43.702009+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:14:21.343665+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:14:21.139371+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:14:19.195501+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:14:17.912507+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:13:45.089731+00:00,user.delete,admin,user,9340f590-6029-4f20-ad2a-dbd0f6499bfc,DELETE,http://127.0.0.1:8000/api/v1/users/9340f590-6029-4f20-ad2a-dbd0f6499bfc,200,127.0.0.1,
+2026-08-10T06:13:45.082803+00:00,user.delete,admin,user,2d6d1647-eb7f-4c55-8ede-d451144a58a9,DELETE,http://127.0.0.1:8000/api/v1/users/2d6d1647-eb7f-4c55-8ede-d451144a58a9,200,127.0.0.1,
+2026-08-10T06:13:45.074954+00:00,user.delete,admin,user,a6187c9d-1fab-44a0-879a-ca97d0d0baad,DELETE,http://127.0.0.1:8000/api/v1/users/a6187c9d-1fab-44a0-879a-ca97d0d0baad,400,127.0.0.1,{'error': '用户 a6187c9d-1fab-44a0-879a-ca97d0d0baad 不存在'}
+2026-08-10T06:13:45.068306+00:00,user.delete,admin,user,19d88503-cf65-4c93-8f22-3ec6d7ce9afb,DELETE,http://127.0.0.1:8000/api/v1/users/19d88503-cf65-4c93-8f22-3ec6d7ce9afb,200,127.0.0.1,
+2026-08-10T06:13:45.059288+00:00,user.delete,admin,user,ecc94052-a8cc-4944-a65b-e3216c8a02bb,DELETE,http://127.0.0.1:8000/api/v1/users/ecc94052-a8cc-4944-a65b-e3216c8a02bb,200,127.0.0.1,
+2026-08-10T06:13:45.053144+00:00,user.delete,admin,user,220d1a01-4033-4b53-b53c-29d9967255c2,DELETE,http://127.0.0.1:8000/api/v1/users/220d1a01-4033-4b53-b53c-29d9967255c2,200,127.0.0.1,
+2026-08-10T06:13:45.048901+00:00,user.delete,admin,user,b2517207-af68-4934-8f67-831bbb311571,DELETE,http://127.0.0.1:8000/api/v1/users/b2517207-af68-4934-8f67-831bbb311571,200,127.0.0.1,
+2026-08-10T06:13:45.035324+00:00,role.delete,admin,role,,DELETE,http://127.0.0.1:8000/api/v1/roles/414f9ac0-30d8-42e1-bee2-cef7ad214382,400,127.0.0.1,{'error': '角色 414f9ac0-30d8-42e1-bee2-cef7ad214382 不存在'}
+2026-08-10T06:13:42.178248+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:13:24.947698+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'pwd_user_msmu2nfo', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:13:08.807381+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'profile_user_msmu2nfo', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:13:05.829614+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:13:03.980859+00:00,role.delete,admin,role,,DELETE,http://localhost:8000/api/v1/roles/414f9ac0-30d8-42e1-bee2-cef7ad214382,200,127.0.0.1,
+2026-08-10T06:13:01.257213+00:00,role.set_permissions,admin,role,,PUT,http://localhost:8000/api/v1/roles/414f9ac0-30d8-42e1-bee2-cef7ad214382/permissions,200,127.0.0.1,"{'body': {'permission_codes': ['user.view', 'audit.view']}}"
+2026-08-10T06:12:58.434191+00:00,role.create,admin,role,,POST,http://localhost:8000/api/v1/roles,200,127.0.0.1,"{'body': {'code': 'ui_role_msmu2nfo', 'name': 'UI自定义角色', 'description': None}}"
+2026-08-10T06:12:55.414616+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:12:53.569931+00:00,user.delete,admin,user,a6187c9d-1fab-44a0-879a-ca97d0d0baad,DELETE,http://localhost:8000/api/v1/users/a6187c9d-1fab-44a0-879a-ca97d0d0baad,200,127.0.0.1,
+2026-08-10T06:12:51.735678+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'del_user_msmu2nfo', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:12:51.529526+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:12:51.209467+00:00,user.reset_password,admin,user,19d88503-cf65-4c93-8f22-3ec6d7ce9afb,POST,http://localhost:8000/api/v1/users/19d88503-cf65-4c93-8f22-3ec6d7ce9afb/reset-password,200,127.0.0.1,
+2026-08-10T06:12:48.696688+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'reset_user_msmu2nfo', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:12:47.797283+00:00,user.toggle_active,admin,user,ecc94052-a8cc-4944-a65b-e3216c8a02bb,PATCH,http://localhost:8000/api/v1/users/ecc94052-a8cc-4944-a65b-e3216c8a02bb/active,200,127.0.0.1,
+2026-08-10T06:12:47.744984+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:12:47.036165+00:00,user.toggle_active,admin,user,ecc94052-a8cc-4944-a65b-e3216c8a02bb,PATCH,http://localhost:8000/api/v1/users/ecc94052-a8cc-4944-a65b-e3216c8a02bb/active,200,127.0.0.1,
+2026-08-10T06:12:45.576602+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'toggle_user_msmu2nfo', 'full_name': None, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:12:44.497040+00:00,user.update,admin,user,220d1a01-4033-4b53-b53c-29d9967255c2,PUT,http://localhost:8000/api/v1/users/220d1a01-4033-4b53-b53c-29d9967255c2,200,127.0.0.1,"{'body': {'email': None, 'notes': None, 'phone': None, 'full_name': '已编辑用户', 'is_active': True, 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:12:42.668975+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'edit_user_msmu2nfo', 'full_name': '待编辑', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:12:41.639560+00:00,user.create,admin,user,,POST,http://localhost:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'ui_user_msmu2nfo', 'full_name': 'UI用户', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:12:38.658908+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:12:21.522491+00:00,user.create,admin,user,,POST,http://127.0.0.1:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': None, 'phone': None, 'password': '***', 'username': 'member_msmu2nfo', 'full_name': 'E2E成员', 'department': None, 'role_codes': ['member'], 'is_superuser': False}}"
+2026-08-10T06:11:28.832364+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:11:27.529455+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:11:27.325116+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T06:11:25.339894+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T06:11:24.009721+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:58:53.051410+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:58:52.827926+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:58:20.329050+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:58:14.372967+00:00,auth.login,,user,,POST,http://127.0.0.1:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:44:18.680514+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:44:02.058371+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:43:49.304935+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:34:40.136110+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:33:02.617895+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:32:49.902145+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:15:35.716167+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:13:25.686864+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:11:51.706936+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:11:28.471018+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:09:58.613929+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,
+2026-08-10T05:09:45.598946+00:00,user.create,admin,user,,POST,http://localhost:8000/api/v1/users,200,127.0.0.1,"{'body': {'email': 'tester@example.com', 'phone': None, 'password': '***', 'username': 'tester', 'full_name': '测试用户', 'department': '研发部', 'is_superuser': False}}"
+2026-08-10T05:09:45.389416+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,401,127.0.0.1,{'error': '用户名或密码错误'}
+2026-08-10T05:09:45.151301+00:00,auth.login,,user,,POST,http://localhost:8000/api/v1/auth/login,200,127.0.0.1,

@@ -12,6 +12,8 @@ import {
   FileSearch,
   Database,
   Inbox,
+  Building2,
+  KeyRound,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth'
 import { hasPermission, isPending } from '@/stores/rbac'
@@ -24,6 +26,8 @@ const titleMap: Record<string, string> = {
   '/pending': '待审批',
   '/kb': '知识库',
   '/kb/invitations': '我的邀请',
+  '/workspaces': '工作空间',
+  '/api-keys': 'API 密钥',
   '/admin/users': '用户管理',
   '/admin/roles': '角色管理',
   '/admin/audit-logs': '审计日志',
@@ -35,6 +39,8 @@ const eyebrowMap: Record<string, string> = {
   '/pending': '账户',
   '/kb': '资源',
   '/kb/invitations': '资源',
+  '/workspaces': '组织',
+  '/api-keys': '开发者',
   '/admin/users': '系统管理',
   '/admin/roles': '系统管理',
   '/admin/audit-logs': '系统管理',
@@ -165,6 +171,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
           <NavItem to="/" label="工作台" icon={LayoutDashboard} end />
           <NavItem to="/kb" label="知识库" icon={Database} />
           <NavItem to="/kb/invitations" label="我的邀请" icon={Inbox} />
+          <NavItem to="/workspaces" label="工作空间" icon={Building2} />
+          <NavItem to="/api-keys" label="API 密钥" icon={KeyRound} />
         </>
       ) : null}
       <NavItem to="/profile" label="个人中心" icon={UserIcon} />

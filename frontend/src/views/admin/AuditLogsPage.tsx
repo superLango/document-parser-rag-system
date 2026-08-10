@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Activity, ClipboardList, Eye, Filter, Users } from 'lucide-react'
-import { auditApi } from '@/api/modules/audit'
+import { Activity, ClipboardList, Download, Eye, Filter, Users } from 'lucide-react'
+import { auditApi, exportAuditCsv } from '@/api/modules/audit'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,9 +21,15 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatDateTime } from '@/lib/utils'
+import { useAuthStore } from '@/stores/auth'
+import { hasPermission } from '@/stores/rbac'
+import { useToast } from '@/components/ui/toast'
 import type { AuditLog } from '@/api/types'
 
 export default function AuditLogsPage() {
+  const user = useAuthStore((s) => s.user)
+  const { toast } = useToast()
+  const canExport = hasPermission(user, 'audit.export')
   const [page, setPage] = useState(1)
   const [pageSize] = useState(20)
   const [action, setAction] = useState('')
@@ -55,6 +61,26 @@ export default function AuditLogsPage() {
       }),
   })
 
+  async function handleExport() {
+    try {
+      const blob = await exportAuditCsv({
+        action: action || undefined,
+        resource_type: resourceType || undefined,
+        start_date: startDate || undefined,
+        end_date: endDate || undefined,
+      })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `audit_${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '_')}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+      toast('success', '导出成功', '审计日志 CSV 已开始下载')
+    } catch (err) {
+      toast('error', '导出失败', err instanceof Error ? err.message : '请稍后重试')
+    }
+  }
+
   const statusVariant = (code: number | null): 'success' | 'destructive' | 'warning' | 'outline' => {
     if (code === null || code < 400) return 'success'
     if (code < 500) return 'warning'
@@ -63,7 +89,18 @@ export default function AuditLogsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="审计日志" description="系统全部敏感操作留痕，仅超级管理员可见" />
+      <PageHeader
+        title="审计日志"
+        description="系统全部敏感操作留痕，仅超级管理员可见"
+        actions={
+          canExport ? (
+            <Button variant="secondary" onClick={() => void handleExport()}>
+              <Download className="h-4 w-4" />
+              导出 CSV
+            </Button>
+          ) : null
+        }
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="近 7 天操作" value={stats?.total ?? 0} hint="审计记录总数" icon={Activity} tone="green" />

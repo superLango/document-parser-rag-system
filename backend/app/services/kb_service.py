@@ -24,7 +24,9 @@ from app.models.knowledge_base import (
     KbMember,
     KnowledgeBase,
 )
+from app.models.workspace import GroupMember, KbGroupAccess
 from app.models.user import User
+from app.services.workspace_service import effective_kb_role
 
 logger = get_logger(__name__)
 
@@ -54,6 +56,16 @@ async def _require_member(
     if member is None:
         raise PermissionException(message="您不是该知识库成员")
     return member
+
+
+async def _require_effective_member(
+    db: AsyncSession, kb_id: uuid.UUID, user: User
+) -> str:
+    """按并集授权计算有效角色；无任何访问权限则拒绝。"""
+    role = await effective_kb_role(db, user.id, kb_id)
+    if role is None:
+        raise PermissionException(message="您不是该知识库成员")
+    return role
 
 
 async def _get_kb(db: AsyncSession, kb_id: uuid.UUID) -> KnowledgeBase:
@@ -89,7 +101,17 @@ async def list_visible_kbs(
             )
             .scalar_subquery()
         )
-        cond = or_(KnowledgeBase.owner_id == user.id, KnowledgeBase.id.in_(sub))
+        group_sub = (
+            select(KbGroupAccess.kb_id)
+            .join(GroupMember, GroupMember.group_id == KbGroupAccess.group_id)
+            .where(GroupMember.user_id == user.id)
+            .scalar_subquery()
+        )
+        cond = or_(
+            KnowledgeBase.owner_id == user.id,
+            KnowledgeBase.id.in_(sub),
+            KnowledgeBase.id.in_(group_sub),
+        )
         base = base.where(cond)
         count_base = count_base.where(cond)
     if keyword:
@@ -109,8 +131,7 @@ async def list_visible_kbs(
     for kb in kbs:
         my_role = None
         if not user.is_superuser:
-            member = await _get_member(db, kb.id, user.id)
-            my_role = member.role if member else None
+            my_role = await effective_kb_role(db, user.id, kb.id)
         member_count = (
             await db.execute(
                 select(func.count())
@@ -171,7 +192,7 @@ async def get_kb(db: AsyncSession, user: User, kb_id: uuid.UUID) -> dict:
     if not user.is_superuser:
         await _require_member(db, kb_id, user)
     my_role = (
-        (await _get_member(db, kb_id, user.id)).role
+        await effective_kb_role(db, user.id, kb_id)
         if not user.is_superuser
         else ROLE_OWNER
     )
@@ -201,8 +222,8 @@ async def get_kb(db: AsyncSession, user: User, kb_id: uuid.UUID) -> dict:
 async def update_kb(db: AsyncSession, user: User, kb_id: uuid.UUID, data) -> KnowledgeBase:
     kb = await _get_kb(db, kb_id)
     if not user.is_superuser:
-        member = await _require_member(db, kb_id, user)
-        if member.role not in MANAGE_ROLES:
+        role = await _require_effective_member(db, kb_id, user)
+        if role not in MANAGE_ROLES:
             raise PermissionException(message="需要管理员或所有者权限")
     if data.name is not None:
         kb.name = data.name
@@ -222,8 +243,8 @@ async def update_kb(db: AsyncSession, user: User, kb_id: uuid.UUID, data) -> Kno
 async def delete_kb(db: AsyncSession, user: User, kb_id: uuid.UUID) -> None:
     kb = await _get_kb(db, kb_id)
     if not user.is_superuser:
-        member = await _require_member(db, kb_id, user)
-        if member.role not in MANAGE_ROLES:
+        role = await _require_effective_member(db, kb_id, user)
+        if role not in MANAGE_ROLES:
             raise PermissionException(message="需要管理员或所有者权限")
     kb.deleted_at = _now()
     kb.is_active = False
@@ -271,8 +292,8 @@ async def invite_member(
 ) -> KbInvitation:
     kb = await _get_kb(db, kb_id)
     if not inviter.is_superuser:
-        member = await _require_member(db, kb_id, inviter)
-        if member.role not in MANAGE_ROLES:
+        operator_role = await _require_effective_member(db, kb_id, inviter)
+        if operator_role not in MANAGE_ROLES:
             raise PermissionException(message="需要管理员或所有者权限")
     target = (
         await db.execute(
@@ -425,8 +446,8 @@ async def revoke_invitation(
 ) -> None:
     kb = await _get_kb(db, kb_id)
     if not operator.is_superuser:
-        member = await _require_member(db, kb_id, operator)
-        if member.role not in MANAGE_ROLES:
+        role = await _require_effective_member(db, kb_id, operator)
+        if role not in MANAGE_ROLES:
             raise PermissionException(message="需要管理员或所有者权限")
     invitation = (
         await db.execute(
@@ -455,8 +476,8 @@ async def update_member_role(
 ) -> None:
     kb = await _get_kb(db, kb_id)
     if not operator.is_superuser:
-        operator_member = await _require_member(db, kb_id, operator)
-        if operator_member.role not in MANAGE_ROLES:
+        operator_role = await _require_effective_member(db, kb_id, operator)
+        if operator_role not in MANAGE_ROLES:
             raise PermissionException(message="需要管理员或所有者权限")
     target = await _get_member(db, kb_id, target_user_id)
     if target is None:
@@ -472,8 +493,8 @@ async def remove_member(
 ) -> None:
     kb = await _get_kb(db, kb_id)
     if not operator.is_superuser:
-        operator_member = await _require_member(db, kb_id, operator)
-        if operator_member.role not in MANAGE_ROLES and operator.id != target_user_id:
+        operator_role = await _require_effective_member(db, kb_id, operator)
+        if operator_role not in MANAGE_ROLES and operator.id != target_user_id:
             raise PermissionException(message="需要管理员或所有者权限")
     target = await _get_member(db, kb_id, target_user_id)
     if target is None:
@@ -504,8 +525,8 @@ async def transfer_ownership(
 ) -> None:
     kb = await _get_kb(db, kb_id)
     if not operator.is_superuser:
-        operator_member = await _require_member(db, kb_id, operator)
-        if operator_member.role != ROLE_OWNER:
+        operator_role = await _require_effective_member(db, kb_id, operator)
+        if operator_role != ROLE_OWNER:
             raise PermissionException(message="仅所有者可转移知识库")
     target = await _get_member(db, kb_id, target_user_id)
     if target is None:

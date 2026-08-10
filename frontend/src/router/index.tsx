@@ -13,6 +13,8 @@ import DashboardPage from '@/views/DashboardPage'
 import ProfilePage from '@/views/ProfilePage'
 import PendingPage from '@/views/PendingPage'
 import KnowledgeBasesPage from '@/views/KnowledgeBasesPage'
+import WorkspacesPage from '@/views/WorkspacesPage'
+import ApiKeysPage from '@/views/ApiKeysPage'
 import InvitationsPage from '@/views/InvitationsPage'
 import UsersPage from '@/views/admin/UsersPage'
 import RolesPage from '@/views/admin/RolesPage'
@@ -75,6 +77,8 @@ export const router = createBrowserRouter([
       { path: 'pending', element: <PendingPage /> },
       { path: 'kb', element: <KnowledgeBasesPage /> },
       { path: 'kb/invitations', element: <InvitationsPage /> },
+      { path: 'workspaces', element: <WorkspacesPage /> },
+      { path: 'api-keys', element: <ApiKeysPage /> },
       {
         path: 'admin/users',
         element: (

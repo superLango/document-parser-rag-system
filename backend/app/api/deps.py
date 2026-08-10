@@ -3,7 +3,7 @@
 import uuid
 from typing import Awaitable, Callable
 
-from fastapi import Depends, Query
+from fastapi import Depends, Query, Request
 from fastapi.security import HTTPBearer
 from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,6 +29,7 @@ from app.models.knowledge_base import (
 from app.models.rbac import ROLE_PENDING, ROLE_SUPER_ADMIN
 from app.models.user import User
 from app.services.rbac_service import get_user_permissions, get_user_roles
+from app.services.workspace_service import authenticate_api_key
 
 logger = get_logger(__name__)
 
@@ -43,6 +44,7 @@ DEFAULT_LIMIT = "60/minute"
 
 
 async def get_current_user(
+    request: Request,
     token: str = Depends(bearer_scheme),
     db: AsyncSession = Depends(get_db),
 ) -> User:
@@ -50,6 +52,16 @@ async def get_current_user(
         raise AuthException(
             code=ErrorCode.AUTH_TOKEN_INVALID, message="未提供访问令牌"
         )
+    # API Key 认证（P2）：hd_ 前缀
+    if token.credentials.startswith("hd_"):
+        result = await authenticate_api_key(db, token.credentials)
+        if result is None:
+            raise AuthException(
+                code=ErrorCode.AUTH_TOKEN_INVALID, message="API Key 无效或已失效"
+            )
+        api_user, scopes = result
+        request.state.api_key_scopes = scopes
+        return api_user
     payload = verify_token(token.credentials)
     username: str | None = payload.get("sub")
     if username is None:
@@ -111,12 +123,16 @@ def require_permission(*permission_codes: str) -> Callable[..., Awaitable[User]]
         raise ValueError("权限点编码不能为空")
 
     async def _check(
+        request: Request,
         current_user: User = Depends(get_current_active_user),
         db: AsyncSession = Depends(get_db),
     ) -> User:
         if not permission_codes:
             return current_user
         perms = await get_user_permissions(db, current_user.id)
+        api_scopes = getattr(request.state, "api_key_scopes", None)
+        if api_scopes:
+            perms = perms.intersection(api_scopes)
         if not any(code in perms for code in permission_codes):
             raise PermissionException(
                 code=ErrorCode.AUTH_PERMISSION_DENIED,

@@ -17,7 +17,8 @@ from app.schemas.kb import (
     KbTransferRequest,
     KbUpdate,
 )
-from app.services import kb_service
+from app.schemas.workspace import KbGroupGrant
+from app.services import kb_service, workspace_service
 
 router = APIRouter(prefix="/kb", tags=["知识库"])
 
@@ -152,6 +153,43 @@ async def revoke_invitation(
 ) -> dict:
     await kb_service.revoke_invitation(db, current_user, kb_id, invitation_id)
     return success(message="邀请已撤销")
+
+
+@router.get("/{kb_id}/groups")
+async def list_kb_groups(
+    kb_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    return success(data=await workspace_service.list_kb_groups(db, current_user, kb_id))
+
+
+@router.post("/{kb_id}/groups")
+@audit_action(action="kb.group_grant", resource_type="kb")
+async def grant_kb_to_group(
+    kb_id: uuid.UUID,
+    body: KbGroupGrant,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    await workspace_service.grant_kb_to_group(
+        db, current_user, kb_id, body.group_id, body.role
+    )
+    return success(message="群组授权已更新")
+
+
+@router.delete("/{kb_id}/groups/{group_id}")
+@audit_action(action="kb.group_revoke", resource_type="kb")
+async def revoke_kb_from_group(
+    kb_id: uuid.UUID,
+    group_id: uuid.UUID,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    await workspace_service.revoke_kb_from_group(db, current_user, kb_id, group_id)
+    return success(message="群组授权已撤销")
 
 
 @router.put("/{kb_id}/members/{user_id}")
