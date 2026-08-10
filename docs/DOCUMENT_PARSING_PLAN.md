@@ -268,12 +268,34 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
 7. 历史隐患修复：REG-15（RLS 空 `app.user_id` 报错 → 006 迁移 + `hansondoc_current_user()`）；
    上传接口统一 task_id，避免原始文件与产物目录不一致导致删除残留。
 
-### Phase 3：GLM-OCR 拦截层
+### Phase 3：GLM-OCR 拦截层（已完成，见实现记录）
 
 - 目标：正文/表格/公式图块全部走 GLM-OCR。
 - 交付：OCRBackend + GLMOCRBackend、并发（页4×块8）、块级重试与错误记录（U13）。
 - 验收：三类图块抽样人工核对正确率；GLM-OCR 注入失败场景按 U13 语义记录并失败；
   五层测试通过。
+
+**Phase 3 实现记录（2026-08-10）**
+
+1. **DocLayout-YOLO 权重**：`models/doclayout_yolo/doclayout_yolo.pt`
+   （opendatalab/PDF-Extract-Kit-1.0 的 `doclayout_yolo_docstructbench_imgsz1280_2501.pt`，
+   SHA256=`1b152460888dc30be6db7f5dfab28bde3dcc999e5202f46187a764a1699c80be`，39.77MB）。
+   models/ 已被 .gitignore 忽略，权重仅保留本地。
+2. **真实版面推理**：DocLayoutEngine 采用 torch.load（weights_only=False，来源可信且
+   SHA256 锁定）→ `model.float().eval()` → letterbox(1280) → forward 取 `one2one` 分支 →
+   NMS → 坐标还原。依赖锁定 `doclayout_yolo==0.0.4` + `ultralytics==8.1.47`（REG-16/17）。
+3. **OCRBackend**：`backend/app/services/ocr_backend/`，唯一实现 GLMOCRBackend
+   （vLLM 9977 OpenAI 兼容 chat/completions，U6/U7）。块级重试 2 次（U13），
+   图片最长边 2048px 等比缩放（U6 实测参数），max_tokens=4096。
+4. **并发**：页并发 4 × 页内块并发 8（U11），线程池实现；
+   规则引擎文本块（文本层来源）不重复 OCR。
+5. **失败语义（U13）**：块级失败记录到 `ocr_failures`；`PARSEKIT_OCR_FAILURE_POLICY`
+   =partial（默认，任务 completed/process_status=partial）或 failed（抛 OcrStageError，
+   任务 failed）。无回退、无开关。
+6. **页眉过滤（REG-18）**：DocLayout 版面块同样执行页边距过滤（top≤16%/bottom≥84%，
+   封面页保留），避免页眉被识别为表格混入 OCR 产物。
+7. **产物**：result.md 表格输出 HTML、公式输出 LaTeX（`$$...$$`）；
+   layout.json schema_version=1.1，新增 `ocr` 与 `ocr_failures` 字段。
 
 ### Phase 4：后处理与产物落库
 

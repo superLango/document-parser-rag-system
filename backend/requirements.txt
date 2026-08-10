@@ -21,3 +21,13 @@ pytest-asyncio>=0.23.0
 pytest-cov>=4.1.0
 ruff>=0.6.0
 mypy>=1.10.0
+
+# ---------- 文档解析（Phase 2/3） ----------
+pymupdf>=1.24.0
+Pillow>=10.0.0
+opencv-python>=4.9.0
+torch>=2.13.0
+torchvision>=0.28.0
+ultralytics==8.1.47
+doclayout_yolo==0.0.4
+dill>=0.3.9

@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[4]
 
 from app.core.config import settings
 from app.core.logging import get_logger
@@ -12,6 +15,7 @@ from .assemble import assemble_markdown
 from .errors import InvalidParseOptions
 from .header_footer import EraseOptions, apply_header_footer_erase
 from .layout import DocLayoutEngine, RuleLayoutEngine
+from .ocr import run_ocr_stage
 from .reading_order import sort_reading_order
 from .render import render_pdf
 from .types import LayoutBlock, RenderPage
@@ -25,16 +29,18 @@ class ParseOptions:
 
     dpi: int = 200
     layout_engine: str = "rule"
-    layout_model_dir: str = "./models/doclayout_yolo"
+    layout_model_dir: str = str(PROJECT_ROOT / "models" / "doclayout_yolo")
     header_footer_mode: str = "rule"
     partial_on_page_failure: bool = True
     page_concurrency: int = 4
     block_concurrency: int = 8
     title_font_threshold: float = 14.0
     image_min_area: float = 800.0
+    ocr_enabled: bool = True
+    ocr_failure_policy: str = "partial"  # partial | failed（U13）
 
     @classmethod
-    def from_settings(cls) -> "ParseOptions":
+    def from_settings(cls) -> ParseOptions:
         return cls(
             dpi=settings.PARSEKIT_DPI,
             layout_engine=settings.PARSEKIT_LAYOUT_ENGINE,
@@ -45,18 +51,21 @@ class ParseOptions:
             block_concurrency=settings.PARSEKIT_BLOCK_CONCURRENCY,
             title_font_threshold=settings.PARSEKIT_TITLE_FONT_THRESHOLD,
             image_min_area=settings.PARSEKIT_IMAGE_MIN_AREA,
+            ocr_enabled=settings.PARSEKIT_OCR_ENABLED,
+            ocr_failure_policy=settings.PARSEKIT_OCR_FAILURE_POLICY,
         )
 
 
 @dataclass(slots=True)
 class ParseResult:
-    """解析产物（Phase 2）。"""
+    """解析产物（Phase 2 + Phase 3 OCR）。"""
 
     markdown: str
     layout: dict
     pages: list[dict] = field(default_factory=list)
     stats: dict = field(default_factory=dict)
     page_failures: list[dict] = field(default_factory=list)
+    ocr_failures: list[dict] = field(default_factory=list)
 
 
 def _validate_options(options: ParseOptions) -> None:
@@ -71,6 +80,32 @@ def _validate_options(options: ParseOptions) -> None:
             f"未知页眉页脚方案：{options.header_footer_mode}"
             "（U3 评测后仅保留方案 A：rule）"
         )
+    if options.ocr_failure_policy not in ("partial", "failed"):
+        raise InvalidParseOptions(
+            f"未知 OCR 失败策略：{options.ocr_failure_policy}"
+            "（可选 partial|failed，U13）"
+        )
+
+
+def _drop_margin_blocks(
+    page_layouts: list[list[LayoutBlock]],
+    pages: list[RenderPage],
+    top_ratio: float = 0.16,
+    bottom_ratio: float = 0.84,
+) -> int:
+    """对版面块执行与文本层一致的页边距过滤（封面页保留，方案 A 规则）。"""
+    dropped = 0
+    for page, blocks in zip(pages, page_layouts):
+        if page.page_index == 1:
+            continue
+        kept = []
+        for block in blocks:
+            if block.bbox.y1 <= top_ratio or block.bbox.y0 >= bottom_ratio:
+                dropped += 1
+                continue
+            kept.append(block)
+        page_layouts[page.page_index - 1] = kept
+    return dropped
 
 
 def _get_layout_engine(options: ParseOptions):
@@ -87,6 +122,7 @@ def _build_layout_json(
     pages: list[RenderPage],
     options: ParseOptions,
     failures: list[dict],
+    ocr_failures: list[dict] | None = None,
 ) -> dict:
     """layout.json 契约（U9：path/title/type/structural 预留）。"""
     page_entries = []
@@ -119,13 +155,19 @@ def _build_layout_json(
             }
         )
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "producer": "parsekit",
         "layout_engine": options.layout_engine,
         "header_footer_mode": options.header_footer_mode,
         "page_count": len(pages),
         "pages": page_entries,
         "page_failures": failures,
+        "ocr_failures": ocr_failures or [],
+        "ocr": {
+            "enabled": bool(options.ocr_enabled and options.layout_engine == "doclayout"),
+            "backend": "glm-ocr" if options.ocr_enabled and options.layout_engine == "doclayout" else None,
+            "failure_policy": options.ocr_failure_policy,
+        },
     }
 
 
@@ -156,12 +198,40 @@ def parse_pdf(
 
     engine = _get_layout_engine(opts)
     page_layouts = engine.analyze(pages)
+    # DocLayout 引擎单页失败并入页面级 failures（U11）
+    if hasattr(engine, "failures"):
+        failures.extend(engine.failures or [])
+    # 版面块页边距过滤（与方案 A 文本层规则一致，避免页眉被 OCR 进正文）
+    margin_dropped = _drop_margin_blocks(page_layouts, pages)
+
+    ocr_failures: list[dict] = []
+    if opts.ocr_enabled and opts.layout_engine == "doclayout":
+        from app.services.ocr_backend.glmocr import get_ocr_backend
+
+        backend = get_ocr_backend()
+        page_layouts, ocr_failures = run_ocr_stage(
+            pages,
+            page_layouts,
+            backend,
+            page_concurrency=opts.page_concurrency,
+            block_concurrency=opts.block_concurrency,
+        )
+        if ocr_failures and opts.ocr_failure_policy == "failed":
+            from .errors import OcrStageError
+
+            first = ocr_failures[0]
+            raise OcrStageError(
+                "GLM-OCR 块识别失败且策略为 failed（U13）："
+                f"page={first.get('page_index')} type={first.get('block_type')} "
+                f"error={first.get('error')}"
+            )
+
     ordered_layouts = [sort_reading_order(blocks) for blocks in page_layouts]
     all_ordered = [b for blocks in ordered_layouts for b in blocks]
     markdown = assemble_markdown(all_ordered)
 
     layout_json = _build_layout_json(
-        ordered_layouts, pages, opts, failures
+        ordered_layouts, pages, opts, failures, ocr_failures
     )
     elapsed = round(time.monotonic() - started, 3)
     stats = {
@@ -171,12 +241,23 @@ def parse_pdf(
         "blocks": len(all_ordered),
         "erased_blocks": len(erase_result.erased),
         "page_failures": len(failures),
+        "margin_blocks_dropped": margin_dropped,
+        "ocr_blocks": sum(
+            1
+            for blocks in page_layouts
+            for b in blocks
+            if (b.structural or {}).get("ocr_source") == "glm-ocr"
+        ),
+        "ocr_failures": len(ocr_failures),
+        "ocr_enabled": bool(opts.ocr_enabled and opts.layout_engine == "doclayout"),
         "elapsed_seconds": elapsed,
     }
     logger.info(
         "parsekit 解析完成",
         pages=len(pages),
         blocks=len(all_ordered),
+        ocr_blocks=stats["ocr_blocks"],
+        ocr_failures=len(ocr_failures),
         elapsed=elapsed,
     )
     return ParseResult(
@@ -194,4 +275,5 @@ def parse_pdf(
         ],
         stats=stats,
         page_failures=failures,
+        ocr_failures=ocr_failures,
     )

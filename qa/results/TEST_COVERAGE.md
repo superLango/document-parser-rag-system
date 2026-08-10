@@ -1,9 +1,9 @@
-# P0+P1+P2 + 文档解析 Phase 1/2 测试覆盖率统计表
+# P0+P1+P2 + 文档解析 Phase 1/2/3 测试覆盖率统计表
 
 统计口径：覆盖率 = 实际通过用例数 / 计划用例数；单模块通过率必须 ≥95%。
 模块全覆盖判定 = 该模块在五层中至少覆盖 3 个层，且所有用例通过。
 
-## 逐模块×层用例数（M1-M18）
+## 逐模块×层用例数（M1-M19）
 
 | 模块 | L1 单测 | L2 集成 | L3 功能 | L4 边界 | L5 安全 | 用例总数 | 覆盖层数 | 是否全覆盖 |
 |------|--------:|--------:|--------:|--------:|--------:|---------:|---------:|:----------:|
@@ -24,20 +24,21 @@
 | M15 API 密钥 | 2 | 1 | 1 | 2 | 2 | 8 | 5 | 是 |
 | M16 审计导出 | 0 | 2 | 1 | 1 | 1 | 5 | 4 | 是 |
 | M17 文档解析任务骨架（Phase 1） | 0 | 6 | 1 | 3 | 3 | 13 | 4 | 是 |
-| M18 文档解析管线（Phase 2） | 15 | 7 | 4 | 11 | 8 | 45 | 5 | 是 |
-| **合计（去重）** | **82** | **67** | **40** | **51** | **38** | **277** | — | **是** |
+| M18 文档解析管线（Phase 2 + 真实权重补测） | 19 | 7 | 4 | 11 | 8 | 49 | 5 | 是 |
+| M19 GLM-OCR 拦截层（Phase 3） | 11 | 4 | 2 | 6 | 5 | 28 | 5 | 是 |
+| **合计（去重）** | **97** | **71** | **42** | **57** | **43** | **309** | — | **是** |
 
 > 合计含 1 条跨模块复计（L1M9-01 与 L1M3-07 同一幂等种子测试）；
-> pytest 232（P0/P1/P2 + Phase1/Phase2）+ Playwright E2E 40（P0 20 + P1 11 + P2 5 + 解析 Phase2 4）
-> + 迁移脚本 5 = 277。
+> pytest 262（P0/P1/P2 + Phase1/Phase2/Phase3）+ Playwright E2E 42
+> （P0 20 + P1 11 + P2 5 + 解析 Phase2 4 + Phase3 2）+ 迁移脚本 5 = 309。
 
 ## 覆盖率结论
 
-- 计划用例数：277
-- 实际通过：277（100%）
+- 计划用例数：309
+- 实际通过：309（100%）
 - 失败/阻塞：0
-- 模块全覆盖：17/17（100%）
-- **结论：覆盖率 100% ≥ 95%，P0+P1+P2 + 文档解析 Phase 1/2 测试完成。**
+- 模块全覆盖：18/18（100%）
+- **结论：覆盖率 100% ≥ 95%，P0+P1+P2 + 文档解析 Phase 1/2/3 测试完成。**
 
 ## 并发用例清单（铁律第 4 条）
 
@@ -55,6 +56,8 @@
 | L4M18-05 | 同一 KB 并发上传 5 份真实 PDF | 通过 |
 | L4M18-06 | 并发重解析（服务层咨询锁） | 通过 |
 | L4M18-07 | 并发重解析 API 冒烟 | 通过 |
+| L4M19-01 | OCR 全部超时失败记录 | 通过 |
+| L4M19-03 | 16 块并发 OCR | 通过 |
 
 ## 历史隐患复测（铁律第 5 条）
 
@@ -75,14 +78,18 @@
 | REG-13 | Vite 代理 `/api` 误拦截 `/api-keys` | 代理前缀改为 `/api/` | 通过 |
 | REG-14 | 邀请/初始成员可授予 owner 角色 | KbInviteCreate/KbMemberSeed 禁止 owner | 通过 |
 | REG-15 | RLS 空 app.user_id 强转 uuid 报错 | 006 迁移 + hansondoc_current_user() 返回 NULL | 通过 |
+| REG-16 | DocLayout-YOLO 权重为 fp16 且含自定义 Detect 头 | 加载后 model.float() + weights_only=False（来源可信已锁 SHA256） | 通过 |
+| REG-17 | doclayout_yolo 0.0.4 与 ultralytics 8.4 不兼容（Conv.bn） | 固定 ultralytics==8.1.47 并采用手动推理（letterbox→forward→NMS） | 通过 |
+| REG-18 | 页眉版面块被识别为表格混入 OCR 产物 | 版面块页边距过滤（top≤16%/bottom≥84%，封面保留） | 通过 |
 
 ## 产物清单
 
 - 用例文档：[qa/TEST_CASES.md](../TEST_CASES.md)
 - 测试铁律：[qa/TESTING_PROCESS.md](../TESTING_PROCESS.md)
 - 后端测试：`qa/unit`、`qa/integration`、`qa/boundary`、`qa/security`
-- 前端 E2E：`qa/functional/e2e_p0.mjs`、`e2e_p1.mjs`、`e2e_p2.mjs`、`e2e_phase2.mjs`
+- 前端 E2E：`qa/functional/e2e_p0.mjs`、`e2e_p1.mjs`、`e2e_p2.mjs`、`e2e_phase2.mjs`、`e2e_phase3.mjs`
 - 迁移验证：`qa/migration/verify_migration.sh`
-- 截图归档：`qa/results/p0_*.png`、`p1_*.png`、`p2_*.png`、`parsing_phase2_*.png`
+- 截图归档：`qa/results/p0_*.png`、`p1_*.png`、`p2_*.png`、`parsing_phase2_*.png`、`parsing_phase3_*.png`
+- DocLayout-YOLO 权重：`models/doclayout_yolo/doclayout_yolo.pt`（SHA256 `1b152460...c80be`，不入 Git）
 - U3 A/B 评测：`qa/evaluation/header_footer_ab/`（report.md、annotations.json、enhanced_strategy.py 归档）
 - 历史脚本归档：`qa/legacy/`

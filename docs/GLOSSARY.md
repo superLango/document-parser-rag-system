@@ -35,3 +35,10 @@
 | 资源 ACL | 单个资源上的访问控制 | 成员表 + 角色 + 状态 + 有效期 |
 | 邀请单（Invitation） | 带 token/角色/过期时间的加入凭证 | 参考 Dify/Open WebUI 邀请与审批 |
 | Pending | 待审批账号状态 | 可登录但仅访问个人中心与审批页 |
+| parsekit | 文档解析管线（渲染→擦除→版面→顺序→OCR→拼装） | `backend/app/services/parsekit/` |
+| DocLayout-YOLO 权重 | 版面分析模型权重（DocStructBench 2501 版） | `models/doclayout_yolo/doclayout_yolo.pt`，SHA256 锁定，不入 Git |
+| GLMOCRBackend | 唯一 OCR 后端（vLLM 9977 OpenAI 兼容） | `backend/app/services/ocr_backend/glmocr.py` |
+| ocr_failures | OCR 块级失败记录 | layout.json `ocr_failures`；任务 partial/failed 依据（U13） |
+| OCR 失败策略 | `PARSEKIT_OCR_FAILURE_POLICY` | partial（默认）/ failed |
+| 页边距过滤 | 版面块/文本层页边距擦除规则 | top≤16%、bottom≥84%，封面页保留 |
+| one2one 分支 | DocLayout-YOLO 推理输出分支 | 手动推理取该分支 + NMS |

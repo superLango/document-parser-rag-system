@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.logging import get_logger
 from app.models.document import Document, DocumentTask, TaskDeadLetter, TaskOutbox
 from app.services import storage
-from app.services.parsekit import ParseOptions, ParsekitError, parse_pdf
+from app.services.parsekit import ParsekitError, ParseOptions, parse_pdf
 
 logger = get_logger(__name__)
 
@@ -337,7 +337,11 @@ async def run_parse_task(
     except Exception as exc:
         raise RuntimeError(f"解析产物落库失败：{exc}") from exc
 
-    partial = bool(result.page_failures) and options.partial_on_page_failure
+    partial = (
+        bool(result.page_failures) and options.partial_on_page_failure
+    ) or (
+        bool(result.ocr_failures) and options.ocr_failure_policy == "partial"
+    )
     document.page_count = len(result.pages)
     document.markdown_path = keys["markdown"]
     document.layout_path = keys["layout"]
@@ -353,6 +357,8 @@ async def run_parse_task(
         "blocks": result.stats.get("blocks", 0),
         "erased_blocks": result.stats.get("erased_blocks", 0),
         "page_failures": result.page_failures,
+        "ocr_failures": result.ocr_failures,
+        "ocr_blocks": result.stats.get("ocr_blocks", 0),
         "partial": partial,
         "completed_at": _now().isoformat(),
     }

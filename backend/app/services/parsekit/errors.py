@@ -21,5 +21,9 @@ class LayoutModelUnavailable(ParsekitError):
     """DocLayout-YOLO 权重/运行依赖缺失。"""
 
 
+class OcrStageError(ParsekitError):
+    """OCR 阶段失败（U13：策略 failed 时抛出）。"""
+
+
 class InvalidParseOptions(ParsekitError):
     """解析参数非法。"""

@@ -15,6 +15,7 @@
 from .errors import (
     InvalidParseOptions,
     LayoutModelUnavailable,
+    OcrStageError,
     PageParseError,
     ParsekitError,
     PdfRenderError,
@@ -24,6 +25,7 @@ from .pipeline import ParseOptions, ParseResult, parse_pdf
 __all__ = [
     "InvalidParseOptions",
     "LayoutModelUnavailable",
+    "OcrStageError",
     "PageParseError",
     "ParseOptions",
     "ParseResult",

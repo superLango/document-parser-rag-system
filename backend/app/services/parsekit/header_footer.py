@@ -11,7 +11,7 @@ from dataclasses import dataclass
 
 from app.core.logging import get_logger
 
-from .types import BBox, EraseResult, ErasedBlock, RenderPage, TextBlock
+from .types import BBox, ErasedBlock, EraseResult, RenderPage, TextBlock
 
 logger = get_logger(__name__)
 

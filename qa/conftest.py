@@ -15,6 +15,8 @@ os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"] = "60"
 os.environ["STORAGE_DRIVER"] = "local"
 os.environ["LOCAL_STORAGE_DIR"] = "/tmp/hansondoc_phase1_test"
 os.environ["TASK_EXECUTOR"] = "sync"
+os.environ["PARSEKIT_LAYOUT_ENGINE"] = "rule"
+os.environ["PARSEKIT_OCR_ENABLED"] = "false"
 
 import uuid
 

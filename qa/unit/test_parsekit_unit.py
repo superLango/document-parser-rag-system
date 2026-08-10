@@ -264,7 +264,7 @@ async def test_layout_json_u9_contract():
     data = make_pdf([[{"text": "Heading One", "x": 200, "y": 100, "size": 24}]])
     result = parse_pdf(data, options=ParseOptions(dpi=100, layout_engine="rule"))
     layout = result.layout
-    assert layout["schema_version"] == "1.0"
+    assert layout["schema_version"] == "1.1"
     assert layout["page_count"] == 1
     page = layout["pages"][0]
     assert page["path"] == "pages/page-0001.png"

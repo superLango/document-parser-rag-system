@@ -23,6 +23,8 @@ def _render_block(block: LayoutBlock) -> list[str]:
             return [content, ""]
         return [f"<!-- table: page {block.page_index} -->", ""]
     if block.type in ("formula", "equation"):
+        if content:
+            return [f"$${content}$$", ""]
         return [f"<!-- formula: page {block.page_index} -->", ""]
     if block.type == "image":
         return [f"<!-- image: page {block.page_index} -->", ""]

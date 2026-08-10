@@ -49,7 +49,7 @@ class BBox:
     def area(self) -> float:
         return self.width * self.height
 
-    def normalized(self, width: float, height: float) -> "BBox":
+    def normalized(self, width: float, height: float) -> BBox:
         w = max(width, 1.0)
         h = max(height, 1.0)
         return BBox(
@@ -62,7 +62,7 @@ class BBox:
     def as_list(self) -> list[float]:
         return [self.x0, self.y0, self.x1, self.y1]
 
-    def overlap_ratio(self, other: "BBox") -> float:
+    def overlap_ratio(self, other: BBox) -> float:
         """本框被 other 覆盖的面积占比（0..1）。"""
         if self.area <= 0:
             return 0.0

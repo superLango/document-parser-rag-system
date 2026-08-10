@@ -5122,3 +5122,406 @@
 - 断言：partial 模式 len(pages)==1 且 failures[0].page_index==2
 - 断言：非 partial 模式抛 PdfRenderError
 【回归判定标准】通过=两断言成立；失败=任一不成立
+
+
+# M18 真实权重补测 + M19 GLM-OCR（Phase 3）用例全集（六要素格式）
+
+### L1M18-16（M18）
+
+【前置条件】models/doclayout_yolo/doclayout_yolo.pt 已部署
+【操作步骤】
+1. 读取权重并计算 SHA256
+【预期结果】哈希与官方 LFS oid 一致
+【断言校验规则】
+- 断言：文件存在
+- 断言：SHA256==1b152460...c80be
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M18-17（M18）
+
+【前置条件】权重已部署
+【操作步骤】
+1. 实例化 DocLayoutEngine 并加载
+【预期结果】CPU 可加载，names 含 10 类且 title=0
+【断言校验规则】
+- 断言：加载成功
+- 断言：names[0]=="title"
+- 断言：len(names)==10
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M18-18（M18）
+
+【前置条件】生成 1 页 PDF
+【操作步骤】
+1. 真实引擎单页推理
+【预期结果】输出 doclayout 版面块且 bbox 归一化
+【断言校验规则】
+- 断言：blocks 非空
+- 断言：bbox∈[0,1]
+- 断言：source=="doclayout"
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M18-19（M18）
+
+【前置条件】可注入单页推理失败
+【操作步骤】
+1. monkeypatch _infer_page 抛错并 analyze
+【预期结果】页面失败记录到 engine.failures 且该页 blocks 为空
+【断言校验规则】
+- 断言：blocks==[]
+- 断言：failures 含 page_index==1
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-01（M19）
+
+【前置条件】fake GLM-OCR 客户端
+【操作步骤】
+1. 调用 ocr_block_sync(text)
+【预期结果】返回识别文本且请求负载合规
+【断言校验规则】
+- 断言：返回 "OK"
+- 断言：payload 含 model/messages/max_tokens/temperature
+- 断言：image_url 为 data:image/png
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-02（M19）
+
+【前置条件】fake 客户端先返回空内容后成功
+【操作步骤】
+1. 调用 ocr_block_sync
+【预期结果】空内容触发重试，第 3 次成功
+【断言校验规则】
+- 断言：返回 "x"
+- 断言：调用次数==3
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-03（M19）
+
+【前置条件】fake 客户端连续 HTTP 5xx
+【操作步骤】
+1. 调用 ocr_block_sync
+【预期结果】重试 2 次后抛 OcrBlockError
+【断言校验规则】
+- 断言：异常类型正确
+- 断言：调用次数==3
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-04（M19）
+
+【前置条件】4096px 大图
+【操作步骤】
+1. prepare_image(max_edge=2048)
+【预期结果】图片等比缩至长边≤2048；小图不放大
+【断言校验规则】
+- 断言：大图长边≤2048
+- 断言：64px 小图保持 64
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-05（M19）
+
+【前置条件】无
+【操作步骤】
+1. 校验 prompt 映射
+【预期结果】table→HTML、formula→LaTeX、text→正文、title→标题
+【断言校验规则】
+- 断言：四类 prompt 均含对应关键字
+【回归判定标准】通过=断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-06（M19）
+
+【前置条件】200px 测试图
+【操作步骤】
+1. crop_block 正常/越界 bbox
+【预期结果】裁剪尺寸正确且越界安全
+【断言校验规则】
+- 断言：正常裁剪 80x80
+- 断言：越界裁剪 200x200
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-07（M19）
+
+【前置条件】8 块 mock OCR 延迟 0.15s
+【操作步骤】
+1. run_ocr_stage(page_concurrency=2, block_concurrency=8)
+【预期结果】8 块并发完成，耗时<0.8s
+【断言校验规则】
+- 断言：failures==[]
+- 断言：全部块 ocr_source==glm-ocr
+- 断言：耗时<0.8s
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-08（M19）
+
+【前置条件】mock backend 对 table 抛错
+【操作步骤】
+1. run_ocr_stage
+【预期结果】失败写入 failures 且块标记 ocr_failed
+【断言校验规则】
+- 断言：failures 长度 1 且 type==table
+- 断言：块 structural.ocr_failed 存在
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-09（M19）
+
+【前置条件】公式块 content="E=mc^2"
+【操作步骤】
+1. assemble_markdown
+【预期结果】输出 $$E=mc^2$$
+【断言校验规则】
+- 断言："$$E=mc^2$$" in md
+【回归判定标准】通过=断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-10（M19）
+
+【前置条件】无
+【操作步骤】
+1. ParseOptions(ocr_failure_policy="unknown") 并 parse_pdf
+【预期结果】抛 InvalidParseOptions
+【断言校验规则】
+- 断言：异常类型正确
+【回归判定标准】通过=断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L1M19-11（M19）
+
+【前置条件】规则引擎文本块
+【操作步骤】
+1. run_ocr_stage(source=text)
+【预期结果】不重复 OCR，保留文本层内容
+【断言校验规则】
+- 断言：backend.calls==0
+- 断言：content 不变
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L2M19-01（M19）
+
+【前置条件】真实 doclayout + fake OCR backend
+【操作步骤】
+1. 解析 LSAM 样本（dpi=100）
+【预期结果】OCR 块>0、无失败、markdown 含 OCR 文本、layout 1.1
+【断言校验规则】
+- 断言：ocr_blocks>0
+- 断言：ocr_failures==[]
+- 断言：markdown 含 OCR 文本
+- 断言：schema_version=="1.1" 且 ocr.backend==glm-ocr
+【回归判定标准】通过=四断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L2M19-02（M19）
+
+【前置条件】服务层 monkeypatch parse_pdf 返回 ocr_failures
+【操作步骤】
+1. run_parse_task
+【预期结果】任务 completed 且 process_status=partial，checkpoint 记录 OCR 失败
+【断言校验规则】
+- 断言：result.partial is True
+- 断言：process_status=="partial"
+- 断言：status=="completed"
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L2M19-03（M19）
+
+【前置条件】fake backend 全部失败
+【操作步骤】
+1. policy=partial 解析 → 返回失败记录
+2. policy=failed 解析
+【预期结果】partial 返回 ocr_failures；failed 抛 OcrStageError
+【断言校验规则】
+- 断言：partial 时 failures>0
+- 断言：failed 时抛 OcrStageError
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L2M19-04（M19）
+
+【前置条件】9977 GLM-OCR 服务可用（不可用则跳过）
+【操作步骤】
+1. 真实解析 LSAM（doclayout+OCR）
+【预期结果】0 失败，markdown 含正文/表格且不含页眉
+【断言校验规则】
+- 断言：ocr_failures==[]
+- 断言："优质 GH4169" in md
+- 断言："Page 1 of 10" not in md
+- 断言："<table" in md
+【回归判定标准】通过=四断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L3M19-01（M19）
+
+【前置条件】前端/后端/GLM-OCR 运行中
+【操作步骤】
+1. 上传 LSAM 样本
+2. 等待 completed
+3. 预览 Markdown
+【预期结果】预览含 GLM-OCR 标题与表格 HTML，无页眉泄漏
+【断言校验规则】
+- 断言：含 "优质 GH4169"
+- 断言：含 "<table"
+- 断言：不含 "Page 1 of 10"
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L3M19-02（M19）
+
+【前置条件】同前
+【操作步骤】
+1. 上传第二份样本 462a
+2. 等待 completed
+3. 预览
+【预期结果】OCR 产物完整（分页标记+长度）
+【断言校验规则】
+- 断言：文本长度≥200
+- 断言：含 "<!-- page:"
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L4M19-01（M19）
+
+【前置条件】mock backend 全部抛超时
+【操作步骤】
+1. 解析 LSAM
+【预期结果】所有块失败并记录，每块至少调用一次
+【断言校验规则】
+- 断言：ocr_failures>0
+- 断言：失败错误含 timeout
+- 断言：唯一块数==失败数
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L4M19-02（M19）
+
+【前置条件】服务层 monkeypatch parse_pdf 抛 OcrStageError
+【操作步骤】
+1. run_parse_task 后 fail_task
+【预期结果】任务 failed
+【断言校验规则】
+- 断言：run_parse_task 抛 RuntimeError
+- 断言：status==failed
+- 断言：process_status==failed
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L4M19-03（M19）
+
+【前置条件】16 块 mock OCR 延迟 0.1s
+【操作步骤】
+1. run_ocr_stage(page=4, block=8)
+【预期结果】全部成功无重复，耗时<1s
+【断言校验规则】
+- 断言：calls==16
+- 断言：唯一块数==16
+- 断言：耗时<1s
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L4M19-04（M19）
+
+【前置条件】5000px 大图
+【操作步骤】
+1. prepare_image(max_edge=2048)
+【预期结果】缩放后长边≤2048
+【断言校验规则】
+- 断言：长边≤2048
+【回归判定标准】通过=断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L4M19-05（M19）
+
+【前置条件】真实引擎 + monkeypatch 第 2 页推理失败
+【操作步骤】
+1. parse_pdf(doclayout, ocr off)
+【预期结果】页面级失败记录，解析仍完成
+【断言校验规则】
+- 断言：page_failures 长度 1
+- 断言：stage==layout
+- 断言：stats.page_failures==1
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L4M19-06（M19）
+
+【前置条件】mock backend 返回 200KB 超长内容
+【操作步骤】
+1. 解析 LSAM
+【预期结果】超长内容原样写入产物且无失败
+【断言校验规则】
+- 断言：ocr_failures==[]
+- 断言：markdown 长度>100000
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L5M19-01（M19）
+
+【前置条件】捕获 OCR 请求客户端
+【操作步骤】
+1. 调用 ocr_block_sync
+【预期结果】请求负载仅含白名单字段且 URL 无凭据
+【断言校验规则】
+- 断言：payload keys 精确匹配
+- 断言：无 Authorization/password/api_key
+- 断言：URL 不含 @
+【回归判定标准】通过=三断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L5M19-02（M19）
+
+【前置条件】fake 客户端返回 502
+【操作步骤】
+1. 调用并捕获 OcrBlockError
+【预期结果】错误消息不含图片 data/base64
+【断言校验规则】
+- 断言："data:image" not in message
+- 断言："base64" not in message
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L5M19-03（M19）
+
+【前置条件】viewer 成员
+【操作步骤】
+1. viewer 调 reparse
+【预期结果】403
+【断言校验规则】
+- 断言：status==403
+【回归判定标准】通过=断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L5M19-04（M19）
+
+【前置条件】外部非成员
+【操作步骤】
+1. 访问 markdown/layout
+【预期结果】403
+【断言校验规则】
+- 断言：markdown 403
+- 断言：layout 403
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+
+
+### L5M19-05（M19）
+
+【前置条件】OCR 返回含 <script> 文本
+【操作步骤】
+1. assemble_markdown
+2. 检查前端预览组件
+【预期结果】原样进入纯文本产物，前端用 <pre> 展示不渲染
+【断言校验规则】
+- 断言：markdown 含 <script>
+- 断言：KbDocumentsPage 含 <pre
+【回归判定标准】通过=两断言成立；失败=任一断言不成立或出现未预期异常
+

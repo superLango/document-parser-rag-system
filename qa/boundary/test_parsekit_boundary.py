@@ -117,8 +117,10 @@ async def test_encrypted_pdf_failed(client, super_token):
 # ---------- L4M18-04 doclayout 权重缺失 ----------
 async def test_doclayout_missing_weights_failed(client, super_token):
     kb = await _create_kb(client, super_token, "L4权重缺失")
-    original = settings.PARSEKIT_LAYOUT_ENGINE
+    original_engine = settings.PARSEKIT_LAYOUT_ENGINE
+    original_dir = settings.PARSEKIT_LAYOUT_MODEL_DIR
     settings.PARSEKIT_LAYOUT_ENGINE = "doclayout"
+    settings.PARSEKIT_LAYOUT_MODEL_DIR = "/nonexistent/doclayout_yolo"
     try:
         resp = await _upload(client, super_token, kb["id"], "w.pdf", _simple_pdf())
         assert resp.status_code == 200
@@ -126,7 +128,8 @@ async def test_doclayout_missing_weights_failed(client, super_token):
         detail = await _wait_status(client, super_token, kb["id"], doc["id"], target="failed")
         assert "DocLayout-YOLO 权重未部署" in detail["error"]["message"]
     finally:
-        settings.PARSEKIT_LAYOUT_ENGINE = original
+        settings.PARSEKIT_LAYOUT_ENGINE = original_engine
+        settings.PARSEKIT_LAYOUT_MODEL_DIR = original_dir
 
 
 # ---------- L4M18-05 并发上传 5 份 ----------

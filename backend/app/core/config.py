@@ -1,6 +1,7 @@
 """应用配置模块（pydantic-settings）。"""
 
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -73,8 +74,10 @@ class Settings(BaseSettings):
     DOCUMENT_MAX_SIZE_MB: int = 100
 
     # ---------- 文档解析管线（Phase 2 parsekit） ----------
-    PARSEKIT_LAYOUT_ENGINE: str = "rule"  # rule（开发/测试） | doclayout（生产，需权重）
-    PARSEKIT_LAYOUT_MODEL_DIR: str = "./models/doclayout_yolo"
+    PARSEKIT_LAYOUT_ENGINE: str = "doclayout"  # doclayout（生产，权重已部署） | rule（快速/测试）
+    PARSEKIT_LAYOUT_MODEL_DIR: str = str(
+        Path(__file__).resolve().parents[3] / "models" / "doclayout_yolo"
+    )
     PARSEKIT_DPI: int = 200
     PARSEKIT_HEADER_FOOTER_MODE: str = "rule"  # A/B 择优后的胜出方案
     PARSEKIT_PAGE_CONCURRENCY: int = 4
@@ -82,6 +85,17 @@ class Settings(BaseSettings):
     PARSEKIT_PARTIAL_ON_PAGE_FAILURE: bool = True
     PARSEKIT_TITLE_FONT_THRESHOLD: float = 14.0
     PARSEKIT_IMAGE_MIN_AREA: float = 800.0
+    PARSEKIT_OCR_ENABLED: bool = True
+    PARSEKIT_OCR_FAILURE_POLICY: str = "partial"  # partial | failed（U13）
+
+    # ---------- GLM-OCR（Phase 3，U6/U7/U13） ----------
+    GLMOCR_SERVER_URL: str = "http://127.0.0.1:9977/v1/chat/completions"
+    GLMOCR_MODEL: str = "GLM-OCR"
+    GLMOCR_MAX_TOKENS: int = 4096
+    GLMOCR_TIMEOUT_SECONDS: int = 120
+    GLMOCR_RETRIES: int = 2
+    GLMOCR_MAX_EDGE: int = 2048
+    GLMOCR_MIN_EDGE: int = 32
 
     # ---------- 审计与可观测性 ----------
     AUDIT_LOG_RETENTION_DAYS: int = 90

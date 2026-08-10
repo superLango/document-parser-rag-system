@@ -45,6 +45,7 @@
 | M16 | 审计导出 | CSV 导出、权限控制、空结果 | 否 |
 | M17 | 文档解析任务骨架（Phase 1） | 上传/列表/详情/删除/任务状态机/Outbox/RLS | 是（并发上传/Outbox 并发认领） |
 | M18 | 文档解析管线（Phase 2） | 渲染/页眉页脚擦除（U3 A/B）/版面分析/阅读顺序/Markdown 拼装/产物接口/重解析/RLS | 是（并发上传/并发重解析/单页失败 partial） |
+| M19 | GLM-OCR 拦截层（Phase 3） | OCRBackend/GLMOCRBackend、块级重试与 U13 错误记录、页4×块8 并发、DocLayout-YOLO 真实权重 | 是（并发 OCR/超时重试/单页失败） |
 
 ## 2. 用例编号规则
 
