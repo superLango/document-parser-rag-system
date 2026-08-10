@@ -147,6 +147,11 @@ def put_object(key: str, data: bytes, content_type: str | None = None) -> None:
     get_storage_driver().put(key, data, content_type=content_type)
 
 
+def delete_prefix(key: str) -> None:
+    """删除对象前缀（Phase 4：U14 中间产物清理）。"""
+    get_storage_driver().delete_prefix(key)
+
+
 def get_object(key: str) -> bytes:
     """读取对象（Phase 2：解析管线读取原始 PDF/产物）。"""
     return get_storage_driver().get(key)

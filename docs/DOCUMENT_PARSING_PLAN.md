@@ -297,12 +297,26 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
 7. **产物**：result.md 表格输出 HTML、公式输出 LaTeX（`$$...$$`）；
    layout.json schema_version=1.1，新增 `ocr` 与 `ocr_failures` 字段。
 
-### Phase 4：后处理与产物落库
+### Phase 4：后处理与产物落库（已完成，见实现记录）
 
 - 目标：结构化 Markdown + layout.json（含 U9 预留字段）落库/落 MinIO。
 - 交付：rebuild 模块（标题层级/图文关联）、页面预览产物、7 天清理任务（U14）。
 - 验收：产物字段契约测试；清理任务验证；跨页表格合并标记字段落位（U8 记录）；
   五层测试通过。
+
+**Phase 4 实现记录（2026-08-10）**
+
+1. **rebuild 模块**：`backend/app/services/parsekit/rebuild.py`（旧版 Popo 迁移）：
+   build_tree（标题栈式层级、图注/表注关联、结构树）、render_tree（层级 Markdown）、
+   mark_cross_page_tables（U8 标记，仅记录不合并）。
+2. **产物契约**：layout.json schema_version=1.2，新增 `rebuild.document_tree` 与
+   `cross_page_tables_note`；块级 `structural.table_cross_page` 落位（U8）。
+3. **页面预览**：`GET /kb/{kb}/documents/{id}/pages/{page_index}`（viewer+），
+   前端预览对话框增加页面缩略图与上一页/下一页（E2E 覆盖）。
+4. **7 天清理（U14）**：`cleanup_expired_pages`（行级锁 FOR UPDATE SKIP LOCKED，
+   REG-19）删除 `pages/` 中间产物、更新 layout.json（path=null、cleaned=true）、
+   记录 `documents.pages_cleaned_at`（迁移 007）；保留 result.md/layout.json；
+   arq 每日 03:00 cron 执行；保留天数 `PARSEKIT_INTERMEDIATE_RETENTION_DAYS`。
 
 ### Phase 5：前端完整化
 

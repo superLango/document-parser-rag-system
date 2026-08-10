@@ -178,6 +178,22 @@ async def delete_document(
     return success(message="文档已删除")
 
 
+@router.get("/{document_id}/pages/{page_index}")
+async def get_document_page(
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    page_index: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> Response:
+    """页面预览 PNG（viewer+；已清理/越界 400）。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    data = await document_service.get_page_image(
+        db, kb_id, document_id, page_index
+    )
+    return Response(content=data, media_type="image/png")
+
+
 @router.get("/{document_id}/markdown")
 async def get_document_markdown(
     kb_id: uuid.UUID,

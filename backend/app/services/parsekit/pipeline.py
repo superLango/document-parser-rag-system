@@ -17,6 +17,7 @@ from .header_footer import EraseOptions, apply_header_footer_erase
 from .layout import DocLayoutEngine, RuleLayoutEngine
 from .ocr import run_ocr_stage
 from .reading_order import sort_reading_order
+from .rebuild import build_tree, mark_cross_page_tables
 from .render import render_pdf
 from .types import LayoutBlock, RenderPage
 
@@ -123,6 +124,7 @@ def _build_layout_json(
     options: ParseOptions,
     failures: list[dict],
     ocr_failures: list[dict] | None = None,
+    document_tree: dict | None = None,
 ) -> dict:
     """layout.json 契约（U9：path/title/type/structural 预留）。"""
     page_entries = []
@@ -155,7 +157,7 @@ def _build_layout_json(
             }
         )
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "producer": "parsekit",
         "layout_engine": options.layout_engine,
         "header_footer_mode": options.header_footer_mode,
@@ -167,6 +169,11 @@ def _build_layout_json(
             "enabled": bool(options.ocr_enabled and options.layout_engine == "doclayout"),
             "backend": "glm-ocr" if options.ocr_enabled and options.layout_engine == "doclayout" else None,
             "failure_policy": options.ocr_failure_policy,
+        },
+        "rebuild": {
+            "enabled": True,
+            "document_tree": document_tree or {"type": "root", "children": []},
+            "cross_page_tables_note": "U8：跨页表格合并暂缓，仅记录 table_cross_page 标记",
         },
     }
 
@@ -230,8 +237,12 @@ def parse_pdf(
     all_ordered = [b for blocks in ordered_layouts for b in blocks]
     markdown = assemble_markdown(all_ordered)
 
+    # Phase 4：U8 跨页表格标记（仅记录）+ 结构树重建（标题层级/图文关联）
+    cross_page_tables = mark_cross_page_tables(ordered_layouts)
+    document_tree = build_tree(all_ordered)
+
     layout_json = _build_layout_json(
-        ordered_layouts, pages, opts, failures, ocr_failures
+        ordered_layouts, pages, opts, failures, ocr_failures, document_tree
     )
     elapsed = round(time.monotonic() - started, 3)
     stats = {
@@ -250,6 +261,12 @@ def parse_pdf(
         ),
         "ocr_failures": len(ocr_failures),
         "ocr_enabled": bool(opts.ocr_enabled and opts.layout_engine == "doclayout"),
+        "cross_page_tables": cross_page_tables,
+        "rebuild": {
+            "title_count": document_tree.get("stats", {}).get("title_count", 0),
+            "image_caption_links": document_tree.get("stats", {}).get("image_caption_links", 0),
+            "table_caption_links": document_tree.get("stats", {}).get("table_caption_links", 0),
+        },
         "elapsed_seconds": elapsed,
     }
     logger.info(

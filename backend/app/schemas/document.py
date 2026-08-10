@@ -20,6 +20,7 @@ class DocumentOut(BaseModel):
     page_count: int = 0
     markdown_path: str | None = None
     layout_path: str | None = None
+    pages_cleaned_at: datetime | None = None
     error: dict | None = None
     created_at: datetime
     updated_at: datetime | None = None

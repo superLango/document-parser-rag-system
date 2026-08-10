@@ -2,7 +2,7 @@
 
 import json
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import func, or_, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -19,6 +19,14 @@ PARSE_STAGES = ["rendering", "layout", "ocr", "rebuild"]
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def _ocr_base_from_object_key(object_key: str) -> str | None:
+    """从原始对象键推导 ocr 产物目录前缀。"""
+    parts = object_key.split("/")
+    if len(parts) >= 4 and parts[1] == "originals":
+        return f"{parts[0]}/ocr/{parts[2]}/"
+    return None
 
 
 def _artifact_keys(kb_id: uuid.UUID, task_id: str) -> dict:
@@ -208,6 +216,91 @@ async def get_document(
             code=ErrorCode.BUSINESS_NOT_FOUND, message="文档不存在"
         )
     return doc
+
+
+async def get_page_image(
+    db: AsyncSession,
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    page_index: int,
+) -> bytes:
+    """读取页面预览 PNG（Phase 4；已清理/越界时抛业务异常）。"""
+    from app.core.exceptions import BusinessException, ErrorCode, ValidationException
+
+    document = await get_document(db, kb_id, document_id)
+    if document.pages_cleaned_at is not None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_NOT_FOUND,
+            message="页面中间产物已按保留策略清理",
+        )
+    if page_index < 1 or page_index > document.page_count:
+        raise ValidationException(message="页码越界")
+    base = _ocr_base_from_object_key(document.object_key)
+    if not base:
+        raise ValidationException(message="页面产物路径缺失")
+    key = f"{base}pages/page-{page_index:04d}.png"
+    try:
+        return storage.get_object(key)
+    except Exception as exc:
+        raise ValidationException(message="页面图片不存在或已清理") from exc
+
+
+async def cleanup_expired_pages(
+    db: AsyncSession,
+    retention_days: int | None = None,
+) -> int:
+    """U14：清理超过保留期的 pages 中间产物（保留 result.md/layout.json）。"""
+    from app.core.config import settings
+
+    days = (
+        settings.PARSEKIT_INTERMEDIATE_RETENTION_DAYS
+        if retention_days is None
+        else retention_days
+    )
+    if days <= 0:
+        raise ValueError("中间产物保留天数必须大于 0")
+    cutoff = _now() - timedelta(days=days)
+    rows = (
+        await db.execute(
+            select(Document)
+            .where(
+                Document.status == "completed",
+                Document.pages_cleaned_at.is_(None),
+                Document.updated_at < cutoff,
+                Document.deleted_at.is_(None),
+            )
+            .with_for_update(skip_locked=True)
+        )
+    ).scalars().all()
+    cleaned = 0
+    for document in rows:
+        base = _ocr_base_from_object_key(document.object_key)
+        if not base:
+            continue
+        try:
+            storage.delete_prefix(f"{base}pages/")
+            layout_key = f"{base}layout.json"
+            layout = json.loads(storage.get_object(layout_key).decode("utf-8"))
+            for page in layout.get("pages", []):
+                page["path"] = None
+                page["cleaned"] = True
+            storage.put_object(
+                layout_key,
+                json.dumps(layout, ensure_ascii=False).encode("utf-8"),
+                "application/json",
+            )
+            document.pages_cleaned_at = _now()
+            document.updated_at = _now()
+            cleaned += 1
+        except Exception as exc:  # noqa: BLE001 - 单文档清理失败跳过不中断（U14）
+            logger.warning(
+                "页面中间产物清理失败，跳过",
+                document_id=str(document.id),
+                error=str(exc)[:200],
+            )
+    await db.commit()
+    logger.info("页面中间产物清理完成", cleaned=cleaned, retention_days=days)
+    return cleaned
 
 
 async def delete_document(

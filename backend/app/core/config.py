@@ -87,6 +87,7 @@ class Settings(BaseSettings):
     PARSEKIT_IMAGE_MIN_AREA: float = 800.0
     PARSEKIT_OCR_ENABLED: bool = True
     PARSEKIT_OCR_FAILURE_POLICY: str = "partial"  # partial | failed（U13）
+    PARSEKIT_INTERMEDIATE_RETENTION_DAYS: int = 7  # U14：pages 中间产物保留天数
 
     # ---------- GLM-OCR（Phase 3，U6/U7/U13） ----------
     GLMOCR_SERVER_URL: str = "http://127.0.0.1:9977/v1/chat/completions"

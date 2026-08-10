@@ -51,6 +51,10 @@ export default function KbDocumentsPage() {
   const [previewDoc, setPreviewDoc] = useState<DocumentItem | null>(null)
   const [previewText, setPreviewText] = useState('')
   const [previewLoading, setPreviewLoading] = useState(false)
+  const [previewPage, setPreviewPage] = useState(1)
+  const [previewPageUrl, setPreviewPageUrl] = useState<string | null>(null)
+  const [pageLoading, setPageLoading] = useState(false)
+  const pageUrlRef = useRef<string | null>(null)
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['kb-documents', kb.id, page, search],
@@ -91,10 +95,33 @@ export default function KbDocumentsPage() {
     }
   }
 
+  async function loadPreviewPage(doc: DocumentItem, pageIndex: number) {
+    setPageLoading(true)
+    try {
+      const url = await documentsApi.page(kb.id, doc.id, pageIndex)
+      if (pageUrlRef.current) URL.revokeObjectURL(pageUrlRef.current)
+      pageUrlRef.current = url
+      setPreviewPageUrl(url)
+      setPreviewPage(pageIndex)
+    } catch (err) {
+      setPreviewPageUrl(null)
+      toast('error', '页面预览失败', err instanceof ApiError ? err.message : '页面可能已清理')
+    } finally {
+      setPageLoading(false)
+    }
+  }
+
   async function openPreview(doc: DocumentItem) {
     setPreviewDoc(doc)
     setPreviewText('')
     setPreviewLoading(true)
+    setPreviewPage(1)
+    setPreviewPageUrl(null)
+    if (pageUrlRef.current) {
+      URL.revokeObjectURL(pageUrlRef.current)
+      pageUrlRef.current = null
+    }
+    void loadPreviewPage(doc, 1)
     try {
       const text = await documentsApi.markdown(kb.id, doc.id)
       setPreviewText(text)
@@ -268,6 +295,41 @@ export default function KbDocumentsPage() {
         description={previewDoc ? `${previewDoc.filename} · ${previewDoc.page_count ?? 0} 页` : undefined}
         className="max-w-3xl"
       >
+        <div className="mb-4 rounded-xl border border-border bg-muted/40 p-3">
+          {pageLoading ? (
+            <Skeleton className="h-52 w-full rounded-lg" />
+          ) : previewPageUrl ? (
+            <img
+              src={previewPageUrl}
+              alt={`第 ${previewPage} 页预览`}
+              data-testid="page-preview"
+              className="mx-auto max-h-72 rounded-lg border border-border bg-white object-contain"
+            />
+          ) : (
+            <p className="py-10 text-center text-xs text-muted-foreground">页面预览不可用（可能已清理）</p>
+          )}
+          <div className="mt-3 flex items-center justify-between">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={!previewDoc || previewPage <= 1 || pageLoading}
+              onClick={() => previewDoc && void loadPreviewPage(previewDoc, previewPage - 1)}
+            >
+              上一页
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              第 {previewPage} / {previewDoc?.page_count ?? 0} 页
+            </span>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={!previewDoc || previewPage >= (previewDoc.page_count ?? 0) || pageLoading}
+              onClick={() => previewDoc && void loadPreviewPage(previewDoc, previewPage + 1)}
+            >
+              下一页
+            </Button>
+          </div>
+        </div>
         {previewLoading ? (
           <div className="py-10 text-center text-sm text-muted-foreground">产物加载中...</div>
         ) : previewText ? (

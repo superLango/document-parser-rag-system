@@ -1,6 +1,7 @@
 """arq Worker：文档解析任务 + Outbox 分发（Phase 1）。"""
 
 import uuid
+from typing import ClassVar
 
 from arq import cron
 from arq.connections import RedisSettings
@@ -47,6 +48,15 @@ async def parse_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
         await db.close()
 
 
+async def cleanup_expired_parse_pages(ctx: dict) -> int:
+    """U14：每日清理超过保留期的 pages 中间产物。"""
+    db = await _superuser_session()
+    try:
+        return await document_service.cleanup_expired_pages(db)
+    finally:
+        await db.close()
+
+
 async def dispatch_outbox(ctx: dict) -> int:
     """扫描 pending outbox → 入队 arq → 标记 enqueued。"""
     db = await _superuser_session()
@@ -79,12 +89,13 @@ async def dispatch_outbox(ctx: dict) -> int:
 
 
 class WorkerSettings:
-    functions = [parse_document_task]
-    cron_jobs = [
+    functions: ClassVar[list] = [parse_document_task]
+    cron_jobs: ClassVar[list] = [
         cron(
             dispatch_outbox,
             second=range(0, 60, max(1, settings.TASK_DISPATCH_INTERVAL_SECONDS)),
-        )
+        ),
+        cron(cleanup_expired_parse_pages, hour=3, minute=0),
     ]
     redis_settings = RedisSettings.from_dsn(settings.REDIS_URL)
     max_jobs = 10

@@ -111,7 +111,7 @@ async def test_six_samples_produce_artifacts(client, super_token):
         )
         assert layout.status_code == 200
         body = layout.json()["data"]
-        assert body["schema_version"] == "1.1"
+        assert body["schema_version"] == "1.2"
         assert body["page_count"] == detail["page_count"]
         assert len(body["pages"]) == detail["page_count"]
 

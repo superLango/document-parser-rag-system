@@ -62,7 +62,7 @@ async def test_pipeline_doclayout_with_fake_ocr(monkeypatch):
     assert result.ocr_failures == []
     assert len(backend.calls) == result.stats["ocr_blocks"]
     assert "OCR识别文本-table" in result.markdown or "OCR识别文本-text" in result.markdown
-    assert result.layout["schema_version"] == "1.1"
+    assert result.layout["schema_version"] == "1.2"
     assert result.layout["ocr"]["backend"] == "glm-ocr"
 
 

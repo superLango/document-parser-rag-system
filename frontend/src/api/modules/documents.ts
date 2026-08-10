@@ -42,6 +42,15 @@ export const documentsApi = {
   layout(kbId: string, documentId: string): Promise<Record<string, unknown>> {
     return http.get<Record<string, unknown>>(`/kb/${kbId}/documents/${documentId}/layout`)
   },
+  async page(kbId: string, documentId: string, pageIndex: number): Promise<string> {
+    const token = getAccessToken()
+    const resp = await axios.get(`/api/v1/kb/${kbId}/documents/${documentId}/pages/${pageIndex}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      responseType: 'blob',
+      timeout: 30000,
+    })
+    return URL.createObjectURL(resp.data as Blob)
+  },
   reparse(kbId: string, documentId: string): Promise<{ document: DocumentItem; task: DocumentTaskItem }> {
     return http.post<{ document: DocumentItem; task: DocumentTaskItem }>(`/kb/${kbId}/documents/${documentId}/reparse`)
   },

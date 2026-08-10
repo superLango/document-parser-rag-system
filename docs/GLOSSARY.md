@@ -42,3 +42,8 @@
 | OCR 失败策略 | `PARSEKIT_OCR_FAILURE_POLICY` | partial（默认）/ failed |
 | 页边距过滤 | 版面块/文本层页边距擦除规则 | top≤16%、bottom≥84%，封面页保留 |
 | one2one 分支 | DocLayout-YOLO 推理输出分支 | 手动推理取该分支 + NMS |
+| rebuild / document_tree | 版面重建与结构树产物 | `backend/app/services/parsekit/rebuild.py`；layout.json `rebuild.document_tree` |
+| table_cross_page | 跨页表格标记（U8，仅记录不合并） | 块级 `structural.table_cross_page` |
+| pages_cleaned_at | 页面中间产物清理时间（U14） | `documents.pages_cleaned_at`（迁移 007） |
+| 页面预览 | 单页 PNG 读取接口 | `GET /kb/{kb}/documents/{id}/pages/{page}` |
+| 中间产物保留期 | pages 中间产物保留天数 | `PARSEKIT_INTERMEDIATE_RETENTION_DAYS=7` |
