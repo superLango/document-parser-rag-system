@@ -26,7 +26,7 @@ from app.models.knowledge_base import (
     KbMember,
     ROLE_OWNER,
 )
-from app.models.rbac import ROLE_SUPER_ADMIN
+from app.models.rbac import ROLE_PENDING, ROLE_SUPER_ADMIN
 from app.models.user import User
 from app.services.rbac_service import get_user_permissions, get_user_roles
 
@@ -88,6 +88,20 @@ async def require_superuser(
     raise PermissionException(
         code=ErrorCode.AUTH_PERMISSION_DENIED, message="需要超级管理员权限"
     )
+
+
+async def require_not_pending(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db),
+) -> User:
+    """拦截待审批账号：仅允许访问个人中心与审批相关页面。"""
+    roles = await get_user_roles(db, current_user.id)
+    if len(roles) == 1 and roles[0].code == ROLE_PENDING:
+        raise PermissionException(
+            code=ErrorCode.AUTH_PERMISSION_DENIED,
+            message="账号待审批，请等待管理员审核",
+        )
+    return current_user
 
 
 def require_permission(*permission_codes: str) -> Callable[..., Awaitable[User]]:

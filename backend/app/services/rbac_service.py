@@ -85,20 +85,25 @@ async def ensure_rbac_seed(db: AsyncSession) -> None:
     for user in users:
         await ensure_user_default_role(db, user)
 
-    if changed:
-        await db.commit()
+    # 始终提交：回填 user_roles 也必须持久化（历史隐患：changed=False 时丢失回填）
+    await db.commit()
     logger.info("RBAC 种子数据已就绪")
 
 
 async def ensure_user_default_role(
-    db: AsyncSession, user: User, *, is_superuser: bool | None = None
+    db: AsyncSession,
+    user: User,
+    *,
+    is_superuser: bool | None = None,
+    role_code: str | None = None,
 ) -> None:
     """确保用户至少有一个系统角色；无角色时按超管标志回填。"""
-    role_code = (
-        ROLE_SUPER_ADMIN
-        if (user.is_superuser if is_superuser is None else is_superuser)
-        else "member"
-    )
+    if role_code is None:
+        role_code = (
+            ROLE_SUPER_ADMIN
+            if (user.is_superuser if is_superuser is None else is_superuser)
+            else "member"
+        )
     role = await _get_role_by_code(db, role_code)
     if role is None:
         if role_code in SYSTEM_ROLE_INFO:

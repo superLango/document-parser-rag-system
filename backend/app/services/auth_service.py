@@ -169,7 +169,11 @@ async def register(
             code=ErrorCode.BUSINESS_USER_EXISTS, message=f"用户名已存在：{username}"
         )
     db.add(PasswordHistory(user_id=user.id, hashed_password=user.hashed_password))
-    await rbac_service.ensure_user_default_role(db, user)
+    await rbac_service.ensure_user_default_role(
+        db,
+        user,
+        role_code="pending" if settings.REGISTRATION_DEFAULT_PENDING else None,
+    )
     await db.commit()
     await db.refresh(user)
     return user

@@ -3,6 +3,7 @@
 import asyncio
 import functools
 import uuid
+from datetime import datetime
 from typing import Any, Callable
 
 from app.core.logging import get_logger
@@ -18,6 +19,8 @@ _SENSITIVE_FIELDS = frozenset({
 
 
 def _sanitize_payload(payload: Any) -> Any:
+    if isinstance(payload, (uuid.UUID, datetime)):
+        return str(payload)
     if isinstance(payload, dict):
         return {
             k: ("***" if k.lower() in _SENSITIVE_FIELDS else _sanitize_payload(v))

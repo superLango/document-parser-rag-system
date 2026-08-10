@@ -14,6 +14,13 @@ export function hasAnyPermission(user: User | null, codes: string[]): boolean {
   return codes.some((code) => hasPermission(user, code))
 }
 
+export function isPending(user: User | null): boolean {
+  if (!user) return false
+  if (user.is_superuser) return false
+  const roles = user.roles ?? []
+  return roles.length === 1 && roles[0].code === 'pending'
+}
+
 export function roleBadgeName(user: User | null): string {
   if (!user) return '未登录'
   const role = user.roles?.[0]

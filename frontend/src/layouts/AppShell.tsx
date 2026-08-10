@@ -10,15 +10,20 @@ import {
   User as UserIcon,
   Users,
   FileSearch,
+  Database,
+  Inbox,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth'
-import { hasPermission } from '@/stores/rbac'
+import { hasPermission, isPending } from '@/stores/rbac'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 
 const titleMap: Record<string, string> = {
   '/': '工作台',
   '/profile': '个人中心',
+  '/pending': '待审批',
+  '/kb': '知识库',
+  '/kb/invitations': '我的邀请',
   '/admin/users': '用户管理',
   '/admin/roles': '角色管理',
   '/admin/audit-logs': '审计日志',
@@ -27,6 +32,9 @@ const titleMap: Record<string, string> = {
 const eyebrowMap: Record<string, string> = {
   '/': '概览',
   '/profile': '账户',
+  '/pending': '账户',
+  '/kb': '资源',
+  '/kb/invitations': '资源',
   '/admin/users': '系统管理',
   '/admin/roles': '系统管理',
   '/admin/audit-logs': '系统管理',
@@ -152,7 +160,13 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
   const nav = (
     <nav className="space-y-1 px-3">
-      <NavItem to="/" label="工作台" icon={LayoutDashboard} end />
+      {!isPending(user) ? (
+        <>
+          <NavItem to="/" label="工作台" icon={LayoutDashboard} end />
+          <NavItem to="/kb" label="知识库" icon={Database} />
+          <NavItem to="/kb/invitations" label="我的邀请" icon={Inbox} />
+        </>
+      ) : null}
       <NavItem to="/profile" label="个人中心" icon={UserIcon} />
       {hasPermission(user, 'user.view') || hasPermission(user, 'role.view') || hasPermission(user, 'audit.view') ? (
         <>

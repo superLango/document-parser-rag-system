@@ -15,6 +15,7 @@
 - 用户登录（JWT 双令牌、失败锁定、限流）与注册（可配置关闭）
 - 个人中心（资料更新、密码修改、密码强度/历史校验、角色徽章展示）
 - 角色管理（系统角色/自定义角色、权限矩阵、用户角色分配、菜单/路由按权限点过滤）
+- 知识库资源级 ACL（P1）：知识库成员/邀请接受/角色调整/所有权转移、注册默认 pending 与管理员审批
 - 超级管理员用户管理（CRUD/启停/超管切换/重置密码/软删除）
 - 审计日志（敏感操作留痕、脱敏、筛选、统计、详情）
 - 工作台（项目信息、用户统计、登录趋势、最近活动）
@@ -34,7 +35,8 @@ bash qa/migration/verify_migration.sh
 cd backend && .venv/bin/python -m pytest -q
 
 # 3. 前端功能场景 E2E（需前后端已启动）
-node qa/functional/e2e_p0.mjs
+node qa/functional/e2e_p0.mjs   # P0 回归
+node qa/functional/e2e_p1.mjs   # P1 知识库/邀请/待审批
 ```
 
 测试铁律、模块清单与覆盖率门槛见 [qa/TESTING_PROCESS.md](qa/TESTING_PROCESS.md)。

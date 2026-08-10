@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_active_user, require_permission
+from app.api.deps import require_not_pending, require_permission
 from app.core.database import get_db
 from app.core.response import success
 from app.models.user import User
@@ -15,9 +15,9 @@ router = APIRouter(prefix="/dashboard", tags=["工作台"])
 @router.get("/overview")
 async def overview_endpoint(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(require_not_pending),
 ) -> dict:
-    """工作台概览（登录后主页面数据源）。"""
+    """工作台概览（登录后主页面数据源，待审批账号不可见）。"""
     return success(data=await overview(db, current_user))
 
 

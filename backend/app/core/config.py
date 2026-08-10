@@ -46,6 +46,8 @@ class Settings(BaseSettings):
     LOGIN_MAX_FAILURES: int = 5
     LOGIN_LOCK_MINUTES: int = 30
     AUTH_LIMIT: str = "5/minute"
+    INVITATION_EXPIRE_HOURS: int = 72
+    REGISTRATION_DEFAULT_PENDING: bool = False
     RESET_TOKEN_EXPIRE_MINUTES: int = 30
 
     # ---------- 注册与初始管理员 ----------

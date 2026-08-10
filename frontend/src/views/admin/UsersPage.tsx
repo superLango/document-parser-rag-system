@@ -202,6 +202,16 @@ export default function UsersPage() {
     }
   }
 
+  async function approvePending(user: User) {
+    try {
+      await usersApi.approve(user.id)
+      toast('success', '用户已审批通过', `${user.username} 已成为普通成员`)
+      invalidate()
+    } catch (err) {
+      toast('error', '审批失败', err instanceof ApiError ? err.message : '请稍后重试')
+    }
+  }
+
   function openEdit(user: User) {
     setEditing(user)
     setForm({
@@ -314,7 +324,10 @@ export default function UsersPage() {
                             ? [{ id: '', code: 'super_admin', name: '超管', is_system: true } as RoleBrief]
                             : [{ id: '', code: 'member', name: '普通用户', is_system: true } as RoleBrief]
                         ).map((r) => (
-                          <Badge key={r.code} variant={r.code === 'super_admin' ? 'success' : 'outline'}>
+                          <Badge
+                            key={r.code}
+                            variant={r.code === 'super_admin' ? 'success' : r.code === 'pending' ? 'warning' : 'outline'}
+                          >
                             {r.code === 'super_admin' ? <ShieldCheck className="h-3 w-3" /> : null}
                             {r.name}
                           </Badge>
@@ -331,6 +344,17 @@ export default function UsersPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-1">
+                        {user.roles?.some((r) => r.code === 'pending') ? (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            title="审批通过"
+                            className="text-success"
+                            onClick={() => approvePending(user)}
+                          >
+                            <ShieldCheck className="h-4 w-4" />
+                          </Button>
+                        ) : null}
                         <Button variant="ghost" size="icon" title="编辑" onClick={() => openEdit(user)}>
                           <Pencil className="h-4 w-4" />
                         </Button>

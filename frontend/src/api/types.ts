@@ -132,6 +132,50 @@ export interface SystemInfo {
   timestamp: string
 }
 
+export type KbRole = 'owner' | 'admin' | 'editor' | 'viewer'
+
+export interface KbItem {
+  id: string
+  name: string
+  description: string | null
+  domain_code: string
+  template_code: string | null
+  owner_id: string
+  config: Record<string, unknown>
+  is_active: boolean
+  created_at: string
+  updated_at: string | null
+  my_role: KbRole | null
+  member_count: number
+}
+
+export interface KbMemberItem {
+  id: string
+  kb_id: string
+  user_id: string
+  username: string | null
+  full_name: string | null
+  role: KbRole
+  status: 'active' | 'invited' | 'removed'
+  invited_by: string | null
+  expires_at: string | null
+  created_at: string
+}
+
+export interface KbInvitationItem {
+  id: string
+  token: string
+  kb_id: string
+  kb_name: string | null
+  inviter_id: string
+  inviter_username: string | null
+  invitee_id: string
+  role: KbRole
+  status: 'pending' | 'accepted' | 'revoked'
+  expires_at: string | null
+  created_at: string
+}
+
 export interface HealthCheck {
   status: 'healthy' | 'unhealthy' | 'unavailable' | 'degraded' | 'timeout'
   error?: string

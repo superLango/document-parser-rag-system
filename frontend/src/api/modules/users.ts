@@ -52,6 +52,9 @@ export const usersApi = {
   ): Promise<{ id: string; roles: import('@/api/types').RoleBrief[] }> {
     return http.put(`/users/${userId}/roles`, { role_codes: roleCodes })
   },
+  approve(userId: string): Promise<{ id: string; roles: import('@/api/types').RoleBrief[] }> {
+    return http.post(`/users/${userId}/approve`)
+  },
   resetPassword(userId: string, newPassword: string): Promise<unknown> {
     return http.post(`/users/${userId}/reset-password`, { new_password: newPassword })
   },

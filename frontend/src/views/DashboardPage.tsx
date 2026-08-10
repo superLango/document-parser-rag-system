@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import {
   Activity,
   ArrowRight,
@@ -32,6 +32,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { StatCard } from '@/components/StatCard'
 import { cn, formatDateTime } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth'
+import { isPending } from '@/stores/rbac'
 
 const actionMeta: Record<string, { label: string; icon: typeof Activity }> = {
   'auth.login': { label: '登录', icon: LogIn },
@@ -56,6 +57,7 @@ export default function DashboardPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard-overview'],
     queryFn: dashboardApi.overview,
+    enabled: !isPending(user),
   })
 
   const today = new Date().toLocaleDateString('zh-CN', {
@@ -64,6 +66,10 @@ export default function DashboardPage() {
     day: 'numeric',
     weekday: 'long',
   })
+
+  if (isPending(user)) {
+    return <Navigate to="/pending" replace />
+  }
 
   return (
     <div className="space-y-6">

@@ -139,6 +139,27 @@ async def toggle_superuser(
     return success(data={"id": str(user.id), "is_superuser": user.is_superuser})
 
 
+@router.post("/{user_id}/approve")
+@audit_action(action="user.approve", resource_type="user")
+async def approve_user(
+    user_id: uuid.UUID,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_permission("user.manage")),
+) -> dict:
+    user = await user_service.get_user(db, user_id)
+    roles = await rbac_service.assign_user_roles(
+        db, current_user, user, ["member"]
+    )
+    return success(
+        data={
+            "id": str(user.id),
+            "roles": [RoleBrief.model_validate(r).model_dump() for r in roles],
+        },
+        message="用户已审批通过",
+    )
+
+
 @router.post("/{user_id}/reset-password")
 @audit_action(action="user.reset_password", resource_type="user")
 async def admin_reset_password(
