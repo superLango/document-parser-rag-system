@@ -1,43 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HansonDOC RAG - 文档智能解析与 RAG 系统</title>
-  <meta name="description" content="以知识库为隔离边界的垂直领域文档智能产品，提供结构化抽取与 RAG 问答">
-  <!-- PWA 基础（P3-11） -->
-  <link rel="manifest" href="/manifest.webmanifest">
-  <meta name="theme-color" content="#0a0a0a">
-  <script>
-    // 提前应用主题，避免首次渲染 FOUC
-    // 必须在 <head> 中执行，先于应用 bundle
-    (function () {
-      try {
-        var mode = localStorage.getItem('theme-mode') || 'system';
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var theme = mode === 'system' ? (prefersDark ? 'dark' : 'light') : mode;
-        var root = document.documentElement;
-        if (theme === 'dark') root.classList.add('dark');
-        root.style.colorScheme = theme;
-      } catch (e) {
-        // localStorage 不可用时静默失败
-      }
-    })();
-  </script>
-</head>
-<body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.ts"></script>
-  <!-- 注册 Service Worker（P3-11 PWA） -->
-  <script>
-    if ('serviceWorker' in navigator && location.protocol === 'https:') {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').catch(function (e) {
-          // SW 注册失败不影响主流程
-          console.warn('[PWA] Service Worker 注册失败', e);
-        });
-      });
-    }
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10B981" />
+    <title>HansonDOC RAG</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

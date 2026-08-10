@@ -1,24 +1,26 @@
 # ===== Python =====
 __pycache__/
 *.py[cod]
-*$py.class
 *.so
 .Python
 venv/
 .venv/
 venv_model/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+htmlcov/
+.coverage
 
 # ===== Node =====
 node_modules/
 dist/
 dist-ssr/
 .vite/
-frontend/_*.mjs
-package-lock.json
+*.tsbuildinfo
+pnpm-debug.log*
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 
 # ===== Environment =====
 .env
@@ -38,52 +40,23 @@ backend/logs/
 # ===== Backup =====
 .backup/
 
-# ===== Large binaries (data files, not source code) =====
+# ===== Large binaries =====
 *.whl
 *.tar.gz
 *.zip
 
-# ===== Download artifacts (wget/curl -O with = in URL) =====
-=*
-
-# ===== Test documents (root level only) =====
-/LSAM-JD01-0016*.pdf
-test_standard_doc/
-
-# ===== IDE =====
+# ===== IDE / OS =====
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
+.DS_Store
+Thumbs.db
 
-# ===== AI assistant / Trae IDE =====
+# ===== AI assistant / Codex =====
 .agents/
 .claude/
 .trae/
 skills-lock.json
-
-# ===== OS =====
-.DS_Store
-Thumbs.db
-
-# ===== Test / Coverage =====
-.pytest_cache/
-.coverage
-htmlcov/
-.mypy_cache/
-.ruff_cache/
-
-# ===== Alembic (keep versions, exclude temp) =====
-# alembic/versions/ is tracked
-
-# ===== Debug / temporary scripts (root level and scripts/) =====
-/create_test_doc.py
-/extraction_result_*.json
-/e2e_*.log
-/v3_*.log
-backend/scripts/debug_*.py
-backend/scripts/check_*.py
-backend/scripts/compare_*.py
-backend/scripts/crop_*.py
-scripts/rag_evaluation.py
+.codex/
