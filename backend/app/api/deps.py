@@ -179,6 +179,24 @@ async def activate_rls(db: AsyncSession, kb_id: uuid.UUID) -> None:
     )
 
 
+async def activate_kb_context(
+    db: AsyncSession, kb_id: uuid.UUID, user: User
+) -> None:
+    """设置 KB 请求上下文（RLS 策略依赖）：current_kb / user_id / is_superuser。"""
+    await db.execute(
+        text("SELECT set_config('app.current_kb', :kb_id, true)"),
+        {"kb_id": str(kb_id)},
+    )
+    await db.execute(
+        text("SELECT set_config('app.user_id', :user_id, true)"),
+        {"user_id": str(user.id)},
+    )
+    await db.execute(
+        text("SELECT set_config('app.is_superuser', :value, true)"),
+        {"value": "true" if user.is_superuser else "false"},
+    )
+
+
 async def get_kb_context(
     kb_id: uuid.UUID,
     current_user: User = Depends(get_current_active_user),
@@ -212,7 +230,7 @@ async def get_kb_context(
                 code=ErrorCode.AUTH_PERMISSION_DENIED,
                 message=f"无权访问知识库「{kb.name}」",
             )
-    await activate_rls(db, kb_id)
+    await activate_kb_context(db, kb_id, current_user)
     return KBContext(
         kb_id=kb_id,
         kb=kb,

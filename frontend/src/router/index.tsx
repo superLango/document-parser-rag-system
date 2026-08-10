@@ -17,6 +17,7 @@ import KbDetailLayout from '@/views/kb/KbDetailLayout'
 import KbOverviewPage from '@/views/kb/KbOverviewPage'
 import KbMembersPage from '@/views/kb/KbMembersPage'
 import KbResourcesPage from '@/views/kb/KbResourcesPage'
+import KbDocumentsPage from '@/views/kb/KbDocumentsPage'
 import KbPlaceholderPage from '@/views/kb/KbPlaceholderPage'
 import WorkspacesPage from '@/views/WorkspacesPage'
 import ApiKeysPage from '@/views/ApiKeysPage'
@@ -127,7 +128,7 @@ export const router = createBrowserRouter([
     element: <KbDetailRoute />,
     children: [
       { index: true, element: <KbOverviewPage /> },
-      { path: 'documents', element: <KbPlaceholderPage title="文档解析" description="文档上传、OCR 与版面重建（迁移阶段开放）" /> },
+      { path: 'documents', element: <KbDocumentsPage /> },
       { path: 'vector-search', element: <KbPlaceholderPage title="向量搜索" description="向量检索与混合检索调试（迁移阶段开放）" /> },
       { path: 'extraction', element: <KbPlaceholderPage title="结构化抽取" description="Schema 驱动的结构化抽取（迁移阶段开放）" /> },
       { path: 'extraction-config', element: <KbPlaceholderPage title="抽取配置·专业术语集" description="Schema/Prompt 模板与术语集管理（迁移阶段开放）" /> },

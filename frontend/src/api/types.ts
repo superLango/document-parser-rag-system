@@ -182,6 +182,38 @@ export interface KbOverviewStats {
   tasks: number
 }
 
+export interface DocumentItem {
+  id: string
+  kb_id: string
+  filename: string
+  file_type: string | null
+  file_size: number
+  sha256: string
+  status: string
+  process_status: string
+  page_count: number
+  markdown_path: string | null
+  layout_path: string | null
+  error: Record<string, unknown> | null
+  created_at: string
+  updated_at: string | null
+}
+
+export interface DocumentTaskItem {
+  id: string
+  kb_id: string
+  document_id: string
+  task_id: string
+  type: string
+  status: string
+  attempts: number
+  heartbeat_at: string | null
+  checkpoint: Record<string, unknown>
+  error: Record<string, unknown> | null
+  created_at: string
+  updated_at: string | null
+}
+
 export interface KbExternalConfig {
   enabled: boolean
   token_prefix: string

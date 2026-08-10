@@ -12,6 +12,9 @@ os.environ["ADMIN_PASSWORD"] = "admin123"
 os.environ["ALLOW_REGISTRATION"] = "true"
 os.environ["SECRET_KEY"] = "qa_test_secret_key_at_least_32_chars_123456"
 os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"] = "60"
+os.environ["STORAGE_DRIVER"] = "local"
+os.environ["LOCAL_STORAGE_DIR"] = "/tmp/hansondoc_phase1_test"
+os.environ["TASK_EXECUTOR"] = "sync"
 
 import uuid
 

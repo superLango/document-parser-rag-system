@@ -56,6 +56,22 @@ class Settings(BaseSettings):
     ADMIN_USERNAME: str = "admin"
     ADMIN_PASSWORD: str = "admin123"
 
+    # ---------- 对象存储（Phase 1） ----------
+    STORAGE_DRIVER: str = "minio"  # minio | local
+    LOCAL_STORAGE_DIR: str = "./data/storage"
+    MINIO_ENDPOINT: str = "127.0.0.1:9000"
+    MINIO_ACCESS_KEY: str = "minioadmin"
+    MINIO_SECRET_KEY: str = "minioadmin"
+    MINIO_SECURE: bool = False
+    MINIO_BUCKET_PREFIX: str = "hansondoc"
+
+    # ---------- 任务编排（Phase 1） ----------
+    TASK_EXECUTOR: str = "sync"  # sync（开发） | arq（生产，需 Redis）
+    TASK_DISPATCH_INTERVAL_SECONDS: int = 2
+    TASK_MAX_ATTEMPTS: int = 3
+    TASK_HEARTBEAT_SECONDS: int = 10
+    DOCUMENT_MAX_SIZE_MB: int = 100
+
     # ---------- 审计与可观测性 ----------
     AUDIT_LOG_RETENTION_DAYS: int = 90
     ENABLE_METRICS: bool = False

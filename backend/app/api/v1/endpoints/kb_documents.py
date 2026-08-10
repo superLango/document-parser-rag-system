@@ -1,0 +1,177 @@
+"""Phase 1 知识库文档端点：上传/列表/详情/任务/删除。"""
+
+import asyncio
+import hashlib
+import uuid
+
+from fastapi import APIRouter, Depends, Query, Request, UploadFile
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.api.deps import (
+    UPLOAD_LIMIT,
+    activate_kb_context,
+    get_pagination_params,
+    limiter,
+    require_not_pending,
+)
+from app.core.config import settings
+from app.core.database import get_db
+from app.core.exceptions import ValidationException
+from app.core.response import paginated, success
+from app.middleware.audit_log import audit_action
+from app.models.user import User
+from app.schemas.document import DocumentOut, DocumentTaskOut, UploadDocumentOut
+from app.services import document_service, kb_service, storage
+
+router = APIRouter(prefix="/kb/{kb_id}/documents", tags=["知识库文档"])
+
+EDIT_ROLES = frozenset({"owner", "admin", "editor"})
+
+
+async def _kb_access(
+    kb_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    data = await kb_service.get_kb(db, current_user, kb_id)
+    await activate_kb_context(db, kb_id, current_user)
+    return data
+
+
+def _require_editor(kb: dict) -> None:
+    if kb.get("my_role") not in EDIT_ROLES:
+        from app.core.exceptions import PermissionException
+
+        raise PermissionException(message="需要编辑者及以上权限")
+
+
+@router.post("")
+@limiter.limit(UPLOAD_LIMIT)
+@audit_action(action="document.upload", resource_type="document")
+async def upload_document(
+    kb_id: uuid.UUID,
+    request: Request,
+    file: UploadFile,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    kb = await _kb_access(kb_id, db=db, current_user=current_user)
+    _require_editor(kb)
+
+    filename = (file.filename or "document.pdf").strip()
+    if not filename.lower().endswith(".pdf"):
+        raise ValidationException(message="仅支持 PDF 文件")
+    if len(filename.encode("utf-8")) > 255:
+        raise ValidationException(message="文件名过长")
+
+    max_bytes = settings.DOCUMENT_MAX_SIZE_MB * 1024 * 1024
+    chunks: list[bytes] = []
+    size = 0
+    while chunk := await file.read(1024 * 1024):
+        size += len(chunk)
+        if size > max_bytes:
+            raise ValidationException(
+                message=f"文件超过 {settings.DOCUMENT_MAX_SIZE_MB}MB 限制"
+            )
+        chunks.append(chunk)
+    data = b"".join(chunks)
+    if not data:
+        raise ValidationException(message="文件为空")
+    sha256 = hashlib.sha256(data).hexdigest()
+
+    task_id = str(uuid.uuid4())
+    object_key = await storage.put_original(kb_id, task_id, filename, data)
+    try:
+        document, task = await document_service.create_document(
+            db,
+            kb_id,
+            filename=filename,
+            file_type="pdf",
+            file_size=size,
+            sha256=sha256,
+            object_key=object_key,
+        )
+    except Exception:
+        await storage.delete_document_objects(kb_id, object_key)
+        raise
+    if settings.TASK_EXECUTOR == "sync":
+        from app.tasks.sync_executor import execute_sync_task
+
+        asyncio.create_task(execute_sync_task(str(document.id), str(kb_id)))
+    return success(
+        data=UploadDocumentOut(
+            document=DocumentOut.model_validate(document),
+            task=DocumentTaskOut.model_validate(task),
+        ).model_dump(),
+        message="文档已上传，解析任务已创建",
+    )
+
+
+@router.get("")
+async def list_documents(
+    kb_id: uuid.UUID,
+    keyword: str | None = Query(None),
+    pagination: dict = Depends(get_pagination_params),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    items, total = await document_service.list_documents(
+        db,
+        kb_id,
+        keyword,
+        pagination["page"],
+        pagination["page_size"],
+    )
+    return paginated(
+        [DocumentOut.model_validate(d).model_dump() for d in items],
+        total,
+        pagination["page"],
+        pagination["page_size"],
+    )
+
+
+@router.get("/tasks")
+async def list_tasks(
+    kb_id: uuid.UUID,
+    pagination: dict = Depends(get_pagination_params),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    items, total = await document_service.list_tasks(
+        db, kb_id, pagination["page"], pagination["page_size"]
+    )
+    return paginated(
+        [DocumentTaskOut.model_validate(t).model_dump() for t in items],
+        total,
+        pagination["page"],
+        pagination["page_size"],
+    )
+
+
+@router.get("/{document_id}")
+async def get_document(
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    document = await document_service.get_document(db, kb_id, document_id)
+    return success(data=DocumentOut.model_validate(document).model_dump())
+
+
+@router.delete("/{document_id}")
+@audit_action(action="document.delete", resource_type="document")
+async def delete_document(
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    kb = await _kb_access(kb_id, db=db, current_user=current_user)
+    _require_editor(kb)
+    await document_service.delete_document(db, kb_id, document_id)
+    return success(message="文档已删除")

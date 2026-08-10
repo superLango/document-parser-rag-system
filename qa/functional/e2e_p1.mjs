@@ -377,6 +377,41 @@ await scenario('L3M8-04', 'M8', async () => {
   await page.screenshot({ path: `${OUT}p1_about.png` })
 })
 
+// ---------- M17 文档解析 Phase 1 ----------
+await scenario('L3M17-01', 'M17', async () => {
+  const kb = await api('POST', '/kb', {
+    name: `E2E文档库_${stamp}`, domain_code: 'general',
+  }, token)
+  createdKbs.push(kb.body.data.id)
+  const kbId = kb.body.data.id
+  await sessionLogin(page, 'admin', 'admin123')
+  await page.goto(`${BASE}/kb/${kbId}/documents`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(800)
+  if (!(await page.locator('main').getByText('文档解析').first().isVisible().catch(() => false))) {
+    throw new Error('文档解析页未渲染')
+  }
+  await page.setInputFiles(
+    'input[type="file"]',
+    '/home/grainuser/hansonDoc_RAG/test_doc/a62820a10c1c33f40ede554498d7bdf1.pdf',
+  )
+  await page.waitForTimeout(1200)
+  if (!(await page.getByText('文档已上传').first().isVisible().catch(() => false))) {
+    throw new Error('上传未提示成功')
+  }
+  await page.waitForFunction(
+    () => document.body.innerText.includes('已完成'),
+    { timeout: 15000 },
+  )
+  await page.screenshot({ path: `${OUT}p1_documents.png` })
+  await page.getByTitle('删除').click()
+  await page.waitForTimeout(400)
+  await page.getByRole('button', { name: '确认删除' }).click()
+  await page.waitForTimeout(800)
+  if (!(await page.getByText('文档已删除').first().isVisible().catch(() => false))) {
+    throw new Error('删除未提示成功')
+  }
+})
+
 // ---------- 清理 ----------
 for (const kbId of createdKbs) {
   await api('DELETE', `/kb/${kbId}`, null, token).catch(() => undefined)

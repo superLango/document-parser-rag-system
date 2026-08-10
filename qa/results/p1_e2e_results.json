@@ -1,6 +1,6 @@
 {
-  "total": 10,
-  "passed": 10,
+  "total": 11,
+  "passed": 11,
   "failed": 0,
   "consoleErrors": [],
   "results": [
@@ -52,6 +52,11 @@
     {
       "id": "L3M8-04",
       "module": "M8",
+      "status": "PASS"
+    },
+    {
+      "id": "L3M17-01",
+      "module": "M17",
       "status": "PASS"
     }
   ]

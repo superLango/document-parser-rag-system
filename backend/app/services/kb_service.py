@@ -210,7 +210,7 @@ async def create_kb_with_members(
 async def get_kb(db: AsyncSession, user: User, kb_id: uuid.UUID) -> dict:
     kb = await _get_kb(db, kb_id)
     if not user.is_superuser:
-        await _require_member(db, kb_id, user)
+        role = await _require_effective_member(db, kb_id, user)
     my_role = (
         await effective_kb_role(db, user.id, kb_id)
         if not user.is_superuser
@@ -276,7 +276,7 @@ async def list_members(
 ) -> list[dict]:
     kb = await _get_kb(db, kb_id)
     if not user.is_superuser:
-        await _require_member(db, kb_id, user)
+        await _require_effective_member(db, kb_id, user)
     rows = (
         await db.execute(
             select(KbMember, User.username, User.full_name, User.department, User.email)
