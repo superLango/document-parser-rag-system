@@ -7,6 +7,18 @@ import uuid
 from sqlalchemy import text
 
 
+
+def _pdf(text: str = "hello") -> bytes:
+    """生成真实最小 PDF（Phase 2 起解析管线要求真实 PDF）。"""
+    import pymupdf
+
+    doc = pymupdf.open()
+    page = doc.new_page()
+    page.insert_text((72, 72), text, fontsize=12)
+    data = doc.tobytes()
+    doc.close()
+    return data
+
 async def _unique(prefix: str) -> str:
     return f"{prefix}_{uuid.uuid4().hex[:8]}"
 
@@ -76,7 +88,7 @@ async def _wait_status(client, token, kb_id, doc_id, target="completed", timeout
 async def test_upload_list_get_tasks_delete_flow(client, super_token):
     token = super_token
     kb = await _create_kb(client, token, "Phase1闭环")
-    files = {"file": ("sample.pdf", b"%PDF-1.4 fake pdf content", "application/pdf")}
+    files = {"file": ("sample.pdf", _pdf("Phase1 flow"), "application/pdf")}
     uploaded = await client.post(
         f"/api/v1/kb/{kb['id']}/documents",
         headers={"Authorization": f"Bearer {token}"},
@@ -132,7 +144,7 @@ async def test_document_permissions(client, super_token):
 
     vh = {"Authorization": f"Bearer {viewer_token}"}
     oh = {"Authorization": f"Bearer {owner_token}"}
-    files = {"file": ("v.pdf", b"%PDF viewer", "application/pdf")}
+    files = {"file": ("v.pdf", _pdf("viewer"), "application/pdf")}
     assert (
         await client.post(f"/api/v1/kb/{kb['id']}/documents", headers=vh, files=files)
     ).status_code == 403
@@ -253,13 +265,16 @@ async def test_rls_enforced_for_non_superuser_role(client, super_token, db_sessi
     assert role is None
 
 
-async def test_outbox_claim_and_sync_executor(client, super_token):
+async def test_outbox_claim_and_sync_executor(client, super_token, db_session):
     """Outbox 落库 + sync 执行器闭环；并发 claim 不重复。"""
-    from sqlalchemy import select
+    from sqlalchemy import delete, select
 
     from app.core.database import AsyncSessionLocal
     from app.models.document import Document, TaskOutbox
     from app.services import document_service, storage
+
+    await db_session.execute(delete(TaskOutbox).where(TaskOutbox.status == "pending"))
+    await db_session.commit()
 
     kb = await _create_kb(client, super_token, "Phase1队列")
     async with AsyncSessionLocal() as db:
@@ -268,7 +283,7 @@ async def test_outbox_claim_and_sync_executor(client, super_token):
             text("SELECT set_config('app.current_kb', :kb, true)"), {"kb": kb["id"]}
         )
         object_key = await storage.put_original(
-            uuid.UUID(kb["id"]), str(uuid.uuid4()), "q.pdf", b"%PDF q"
+            uuid.UUID(kb["id"]), str(uuid.uuid4()), "q.pdf", _pdf("queue")
         )
         doc, task = await document_service.create_document(
             db,

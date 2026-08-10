@@ -72,6 +72,17 @@ class Settings(BaseSettings):
     TASK_HEARTBEAT_SECONDS: int = 10
     DOCUMENT_MAX_SIZE_MB: int = 100
 
+    # ---------- 文档解析管线（Phase 2 parsekit） ----------
+    PARSEKIT_LAYOUT_ENGINE: str = "rule"  # rule（开发/测试） | doclayout（生产，需权重）
+    PARSEKIT_LAYOUT_MODEL_DIR: str = "./models/doclayout_yolo"
+    PARSEKIT_DPI: int = 200
+    PARSEKIT_HEADER_FOOTER_MODE: str = "rule"  # A/B 择优后的胜出方案
+    PARSEKIT_PAGE_CONCURRENCY: int = 4
+    PARSEKIT_BLOCK_CONCURRENCY: int = 8
+    PARSEKIT_PARTIAL_ON_PAGE_FAILURE: bool = True
+    PARSEKIT_TITLE_FONT_THRESHOLD: float = 14.0
+    PARSEKIT_IMAGE_MIN_AREA: float = 800.0
+
     # ---------- 审计与可观测性 ----------
     AUDIT_LOG_RETENTION_DAYS: int = 90
     ENABLE_METRICS: bool = False

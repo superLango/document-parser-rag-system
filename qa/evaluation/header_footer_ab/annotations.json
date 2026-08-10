@@ -1,0 +1,40 @@
+{
+  "method": "区域级基准标注（top/bottom 归一化矩形 + 封面排除）；依据样本实际版面观察填写 manual_notes",
+  "default": {
+    "top_rect": [
+      0.0,
+      0.0,
+      1.0,
+      0.16
+    ],
+    "bottom_rect": [
+      0.0,
+      0.84,
+      1.0,
+      1.0
+    ],
+    "exclude_pages": [
+      1
+    ]
+  },
+  "samples": {
+    "462a2e2857face94b2c800d3a8492740.pdf": {
+      "manual_notes": "页2-13 顶部两条页眉（公司名+生效日期+Page X of 12 / 文件编号+Rev.B）；页脚无文本；封面保留"
+    },
+    "GB-T1220-2007 不锈钢棒.pdf": {
+      "manual_notes": "扫描件，正文为整页图片，无文本层；页眉页脚以图片形式存在，规则引擎不擦除图片区域"
+    },
+    "GJB3325A-2019.pdf": {
+      "manual_notes": "扫描件，整页图片+底部图块；无文本层"
+    },
+    "LSAM-JD01-0016  优质GH4169合金锻制棒材.pdf": {
+      "manual_notes": "页2-11 顶部两条页眉（公司名+生效日期+Page X of 10 / 文件编号+Rev.B）；封面保留"
+    },
+    "a62820a10c1c33f40ede554498d7bdf1.pdf": {
+      "manual_notes": "页2-12 顶部两条页眉（公司名+生效日期+Page X of 11 / 文件编号+Rev.A）"
+    },
+    "c8f1e134282d41dcc40b5243f4e9a98d.pdf": {
+      "manual_notes": "页2-14 顶部两条页眉（公司名+生效日期+Page X of 13 / 文件编号+Rev.B）"
+    }
+  }
+}

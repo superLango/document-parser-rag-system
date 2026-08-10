@@ -4,7 +4,7 @@ import asyncio
 import hashlib
 import uuid
 
-from fastapi import APIRouter, Depends, Query, Request, UploadFile
+from fastapi import APIRouter, Depends, Query, Request, Response, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import (
@@ -90,6 +90,7 @@ async def upload_document(
             file_size=size,
             sha256=sha256,
             object_key=object_key,
+            task_id=task_id,
         )
     except Exception:
         await storage.delete_document_objects(kb_id, object_key)
@@ -175,3 +176,76 @@ async def delete_document(
     _require_editor(kb)
     await document_service.delete_document(db, kb_id, document_id)
     return success(message="文档已删除")
+
+
+@router.get("/{document_id}/markdown")
+async def get_document_markdown(
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> Response:
+    """查看解析 Markdown 产物（viewer+）。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    document = await document_service.get_document(db, kb_id, document_id)
+    if not document.markdown_path:
+        raise ValidationException(message="文档暂无解析产物")
+    try:
+        content = storage.get_object(document.markdown_path)
+    except Exception as exc:
+        raise ValidationException(message="解析产物读取失败") from exc
+    return Response(
+        content=content.decode("utf-8", errors="replace"),
+        media_type="text/markdown; charset=utf-8",
+    )
+
+
+@router.get("/{document_id}/layout")
+async def get_document_layout(
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    """查看版面结构 layout.json（viewer+）。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    document = await document_service.get_document(db, kb_id, document_id)
+    if not document.layout_path:
+        raise ValidationException(message="文档暂无版面产物")
+    try:
+        content = storage.get_object(document.layout_path)
+    except Exception as exc:
+        raise ValidationException(message="版面产物读取失败") from exc
+    import json
+
+    layout = json.loads(content.decode("utf-8"))
+    return success(data=layout)
+
+
+@router.post("/{document_id}/reparse")
+@audit_action(action="document.reparse", resource_type="document")
+async def reparse_document(
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    """重新解析（editor+，幂等：同一文档同时只有一个活动任务）。"""
+    kb = await _kb_access(kb_id, db=db, current_user=current_user)
+    _require_editor(kb)
+    task_id = str(uuid.uuid4())
+    document, task = await document_service.reset_document_for_reparse(
+        db, kb_id, document_id, task_id
+    )
+    if settings.TASK_EXECUTOR == "sync":
+        from app.tasks.sync_executor import execute_sync_task
+
+        asyncio.create_task(execute_sync_task(str(document.id), str(kb_id)))
+    return success(
+        data=UploadDocumentOut(
+            document=DocumentOut.model_validate(document),
+            task=DocumentTaskOut.model_validate(task),
+        ).model_dump(),
+        message="重新解析任务已创建",
+    )

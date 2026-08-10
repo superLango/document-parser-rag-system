@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { FileText, RefreshCcw, Trash2, UploadCloud } from 'lucide-react'
+import { Eye, FileText, RefreshCcw, Trash2, UploadCloud } from 'lucide-react'
 import { documentsApi } from '@/api/modules/documents'
 import { ApiError } from '@/api/client'
 import { Badge } from '@/components/ui/badge'
@@ -48,6 +48,9 @@ export default function KbDocumentsPage() {
   const [search, setSearch] = useState('')
   const [uploading, setUploading] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<DocumentItem | null>(null)
+  const [previewDoc, setPreviewDoc] = useState<DocumentItem | null>(null)
+  const [previewText, setPreviewText] = useState('')
+  const [previewLoading, setPreviewLoading] = useState(false)
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['kb-documents', kb.id, page, search],
@@ -85,6 +88,38 @@ export default function KbDocumentsPage() {
     } finally {
       setUploading(false)
       if (fileRef.current) fileRef.current.value = ''
+    }
+  }
+
+  async function openPreview(doc: DocumentItem) {
+    setPreviewDoc(doc)
+    setPreviewText('')
+    setPreviewLoading(true)
+    try {
+      const text = await documentsApi.markdown(kb.id, doc.id)
+      setPreviewText(text)
+    } catch (err) {
+      setPreviewText('')
+      toast('error', '预览失败', err instanceof ApiError ? err.message : '请稍后重试')
+    } finally {
+      setPreviewLoading(false)
+    }
+  }
+
+  async function handleReparse(doc: DocumentItem) {
+    if (doc.status === 'parsing' || doc.status === 'queued') {
+      toast('error', '文档正在解析中', '请等待当前任务结束后再重新解析')
+      return
+    }
+    try {
+      await documentsApi.reparse(kb.id, doc.id)
+      toast('success', '重新解析已启动', `已为「${doc.filename}」创建新任务`)
+      invalidate()
+      setTimeout(() => {
+        void refetch()
+      }, 1500)
+    } catch (err) {
+      toast('error', '重新解析失败', err instanceof ApiError ? err.message : '请稍后重试')
     }
   }
 
@@ -180,17 +215,41 @@ export default function KbDocumentsPage() {
                       </p>
                     </div>
                     <Badge variant={meta.variant}>{meta.label}</Badge>
-                    {canManage ? (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="删除"
-                        className="text-destructive"
-                        onClick={() => setDeleteTarget(doc)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    ) : null}
+                    <div className="flex shrink-0 items-center gap-1">
+                      {doc.status === 'completed' ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="查看 Markdown 产物"
+                          data-testid={`preview-${doc.id}`}
+                          onClick={() => void openPreview(doc)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      ) : null}
+                      {canManage && doc.status !== 'parsing' && doc.status !== 'queued' && doc.status !== 'deleted' ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="重新解析"
+                          data-testid={`reparse-${doc.id}`}
+                          onClick={() => void handleReparse(doc)}
+                        >
+                          <RefreshCcw className="h-4 w-4" />
+                        </Button>
+                      ) : null}
+                      {canManage ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="删除"
+                          className="text-destructive"
+                          onClick={() => setDeleteTarget(doc)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      ) : null}
+                    </div>
                   </div>
                 )
               })}
@@ -201,6 +260,24 @@ export default function KbDocumentsPage() {
           ) : null}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={previewDoc !== null}
+        onOpenChange={(open) => { if (!open) setPreviewDoc(null) }}
+        title="Markdown 产物"
+        description={previewDoc ? `${previewDoc.filename} · ${previewDoc.page_count ?? 0} 页` : undefined}
+        className="max-w-3xl"
+      >
+        {previewLoading ? (
+          <div className="py-10 text-center text-sm text-muted-foreground">产物加载中...</div>
+        ) : previewText ? (
+          <pre className="max-h-[58vh] overflow-auto whitespace-pre-wrap rounded-xl bg-muted/60 p-4 font-mono text-xs leading-relaxed text-foreground">
+            {previewText}
+          </pre>
+        ) : (
+          <div className="py-10 text-center text-sm text-muted-foreground">暂无产物内容</div>
+        )}
+      </Dialog>
 
       <Dialog
         open={deleteTarget !== null}

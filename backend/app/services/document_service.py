@@ -1,14 +1,16 @@
-"""Phase 1 文档服务：上传记录、任务/Outbox、解析占位流程、删除。"""
+"""文档服务：上传记录、任务/Outbox、parsekit 解析流水线、删除与重解析。"""
 
+import json
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import get_logger
 from app.models.document import Document, DocumentTask, TaskDeadLetter, TaskOutbox
 from app.services import storage
+from app.services.parsekit import ParseOptions, ParsekitError, parse_pdf
 
 logger = get_logger(__name__)
 
@@ -17,6 +19,15 @@ PARSE_STAGES = ["rendering", "layout", "ocr", "rebuild"]
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def _artifact_keys(kb_id: uuid.UUID, task_id: str) -> dict:
+    base = f"kb-{kb_id.hex}/ocr/{task_id}"
+    return {
+        "base": base,
+        "markdown": f"{base}/result.md",
+        "layout": f"{base}/layout.json",
+    }
 
 
 async def create_document(
@@ -28,8 +39,9 @@ async def create_document(
     file_size: int,
     sha256: str,
     object_key: str,
+    task_id: str | None = None,
 ) -> tuple[Document, DocumentTask]:
-    task_id = str(uuid.uuid4())
+    task_id = task_id or str(uuid.uuid4())
     document = Document(
         kb_id=kb_id,
         filename=filename,
@@ -42,6 +54,85 @@ async def create_document(
     )
     db.add(document)
     await db.flush()
+    task = DocumentTask(
+        kb_id=kb_id,
+        document_id=document.id,
+        task_id=task_id,
+        type="document_parse",
+        status="queued",
+        checkpoint={},
+    )
+    db.add(task)
+    await db.flush()
+    db.add(
+        TaskOutbox(
+            task_id=task_id,
+            type="document_parse",
+            payload={
+                "document_id": str(document.id),
+                "kb_id": str(kb_id),
+            },
+            status="pending",
+        )
+    )
+    await db.commit()
+    await db.refresh(document)
+    await db.refresh(task)
+    return document, task
+
+
+async def reset_document_for_reparse(
+    db: AsyncSession,
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    task_id: str,
+) -> tuple[Document, DocumentTask]:
+    """重置文档并创建新解析任务（幂等：咨询锁 + 活动任务检查）。"""
+    from app.core.exceptions import BusinessException, ErrorCode
+
+    # 咨询锁串行化同一文档的重解析，避免并发创建两个任务
+    await db.execute(
+        text("SELECT pg_advisory_xact_lock(hashtext(:key))"),
+        {"key": f"reparse:{document_id}"},
+    )
+    document = (
+        await db.execute(
+            select(Document)
+            .where(
+                Document.id == document_id,
+                Document.kb_id == kb_id,
+                Document.deleted_at.is_(None),
+            )
+            .with_for_update()
+        )
+    ).scalar_one_or_none()
+    if document is None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_NOT_FOUND, message="文档不存在"
+        )
+    active = (
+        await db.execute(
+            select(func.count())
+            .select_from(DocumentTask)
+            .where(
+                DocumentTask.document_id == document_id,
+                DocumentTask.status.in_(("queued", "running")),
+            )
+        )
+    ).scalar_one()
+    if active > 0:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_NOT_FOUND,
+            message="文档已有解析任务进行中，请稍后重试",
+        )
+
+    document.status = "queued"
+    document.process_status = "queued"
+    document.page_count = 0
+    document.markdown_path = None
+    document.layout_path = None
+    document.error = None
+    document.updated_at = _now()
     task = DocumentTask(
         kb_id=kb_id,
         document_id=document.id,
@@ -179,20 +270,10 @@ async def mark_outbox(
     await db.commit()
 
 
-async def _update_task(
-    db: AsyncSession, task: DocumentTask, **fields
-) -> None:
-    for key, value in fields.items():
-        setattr(task, key, value)
-    task.updated_at = _now()
-    await db.commit()
-    await db.refresh(task)
-
-
 async def run_parse_task(
     db: AsyncSession, document_id: uuid.UUID, kb_id: uuid.UUID
 ) -> dict:
-    """Phase 1 解析占位实现：驱动状态机与 checkpoint，真实解析后续阶段替换。"""
+    """Phase 2 解析流水线：渲染→擦除→版面→顺序→拼装→产物落库。"""
     document = await get_document(db, kb_id, document_id)
     task = (
         await db.execute(
@@ -210,29 +291,82 @@ async def run_parse_task(
     task.heartbeat_at = _now()
     await db.commit()
 
+    options = ParseOptions.from_settings()
+    checkpoint_meta = {
+        "engine": options.layout_engine,
+        "header_footer_mode": options.header_footer_mode,
+        "dpi": options.dpi,
+    }
     done: list[str] = []
     for stage in PARSE_STAGES:
         document.process_status = stage
         document.status = "parsing"
         done.append(stage)
-        task.checkpoint = {"stages": list(done), "stub": True}
+        task.checkpoint = {**checkpoint_meta, "stages": list(done)}
         task.heartbeat_at = _now()
         task.updated_at = _now()
         document.updated_at = _now()
         await db.commit()
 
+    try:
+        pdf_bytes = storage.get_object(document.object_key)
+    except Exception as exc:
+        raise RuntimeError(f"读取原始 PDF 失败：{exc}") from exc
+
+    try:
+        result = parse_pdf(pdf_bytes, options=options)
+    except ParsekitError as exc:
+        raise RuntimeError(str(exc)) from exc
+
+    keys = _artifact_keys(kb_id, task.task_id)
+    try:
+        storage.put_object(
+            keys["markdown"], result.markdown.encode("utf-8"), "text/markdown"
+        )
+        storage.put_object(
+            keys["layout"],
+            json.dumps(result.layout, ensure_ascii=False).encode("utf-8"),
+            "application/json",
+        )
+        for page in result.pages:
+            storage.put_object(
+                f"{keys['base']}/{page['path']}",
+                page["image_bytes"],
+                "image/png",
+            )
+    except Exception as exc:
+        raise RuntimeError(f"解析产物落库失败：{exc}") from exc
+
+    partial = bool(result.page_failures) and options.partial_on_page_failure
+    document.page_count = len(result.pages)
+    document.markdown_path = keys["markdown"]
+    document.layout_path = keys["layout"]
     document.status = "completed"
-    document.process_status = "completed"
+    document.process_status = "partial" if partial else "completed"
+    document.error = None
     task.status = "completed"
+    task.error = None
     task.checkpoint = {
+        **checkpoint_meta,
         "stages": PARSE_STAGES,
-        "stub": True,
+        "page_count": len(result.pages),
+        "blocks": result.stats.get("blocks", 0),
+        "erased_blocks": result.stats.get("erased_blocks", 0),
+        "page_failures": result.page_failures,
+        "partial": partial,
         "completed_at": _now().isoformat(),
     }
+    task.heartbeat_at = _now()
+    task.updated_at = _now()
+    document.updated_at = _now()
     await db.commit()
     await db.refresh(document)
     await db.refresh(task)
-    return {"task_id": task.task_id, "status": "completed"}
+    return {
+        "task_id": task.task_id,
+        "status": task.status,
+        "partial": partial,
+    }
 
 
 async def fail_task(

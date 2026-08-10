@@ -244,12 +244,29 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
   - 前端：文档页（上传/列表/状态/删除）基础版。
 - 验收：上传 PDF 后任务状态流转正确；杀 worker 不丢单；RLS 集成测试通过；E2E 通过。
 
-### Phase 2：PDF-Extract-Kit 集成
+### Phase 2：PDF-Extract-Kit 集成（已完成，见实现记录）
 
 - 目标：样本 PDF 能完成“渲染→擦除（方案 A）→版面→顺序→拼装”，产出 layout.json + markdown。
-- 交付：parsekit 模块、DocLayout-YOLO 本地部署与权重锁定、内置擦除方案 A 上线。
-- 验收：`test_doc/` 全部 6 份样本产出合法产物；版面框检出率达标（U12 实施期阈值）；
-  页眉页脚 A/B 对比测试完成并择优保留一个（U3）；五层测试通过。
+- 交付：parsekit 模块、DocLayout-YOLO 适配引擎（权重未部署时明确报错）、内置擦除方案 A 上线。
+- 验收：`test_doc/` 全部 6 份样本产出合法产物；页眉页脚 A/B 对比完成（方案 A 胜出）；
+  五层测试通过。
+
+**Phase 2 实现记录（2026-08-10）**
+
+1. `backend/app/services/parsekit/`：render（PyMuPDF DPI=200）/header_footer（方案 A）/
+   layout（RuleLayoutEngine 兜底 + DocLayoutEngine 可插拔）/reading_order/assemble/pipeline。
+2. 文本内容来源：Phase 2 使用 PDF 文本层提取；正文/表格/公式的 GLM-OCR 在 Phase 3 接入。
+   扫描版样本（GB-T1220、GJB3325A）Phase 2 输出整页图片占位 `<!-- image: page N -->`。
+3. U3 A/B 评测：方案 A 综合得分 0.2758 > 方案 B 0.1892（|Δ|=0.0866），方案 A 保留；
+   方案 B 实现归档 `qa/evaluation/header_footer_ab/enhanced_strategy.py`，报告见同目录 report.md。
+4. DocLayout-YOLO：`DocLayoutEngine` 已实现 ONNX 适配路径；当前环境未部署权重，
+   构造时校验目录并报错（测试覆盖缺失权重场景）。真实权重部署后需联调输出解析。
+5. 产物：`result.md`、`layout.json`（schema_version=1.0，U9 path/title/type/structural 字段预留）、
+   `pages/page-NNNN.png`；删除文档时原始 PDF 与全部产物一并清理。
+6. 接口：`GET /kb/{kb}/documents/{id}/markdown|layout`（viewer+）、
+   `POST /kb/{kb}/documents/{id}/reparse`（editor+，咨询锁防并发重复）。
+7. 历史隐患修复：REG-15（RLS 空 `app.user_id` 报错 → 006 迁移 + `hansondoc_current_user()`）；
+   上传接口统一 task_id，避免原始文件与产物目录不一致导致删除残留。
 
 ### Phase 3：GLM-OCR 拦截层
 

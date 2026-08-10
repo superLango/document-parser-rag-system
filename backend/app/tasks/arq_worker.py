@@ -22,7 +22,7 @@ async def _superuser_session():
 
 
 async def parse_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
-    """Phase 1 解析任务（占位流水线，真实解析后续阶段替换）。"""
+    """文档解析任务：parsekit Phase 2 流水线（渲染→擦除→版面→拼装）。"""
     db = await _superuser_session()
     try:
         await db.execute(

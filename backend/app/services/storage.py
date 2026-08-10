@@ -142,6 +142,16 @@ def document_object_key(kb_id: uuid.UUID, task_id: str, filename: str) -> str:
     return f"kb-{kb_id.hex}/originals/{task_id}/{safe_name}"
 
 
+def put_object(key: str, data: bytes, content_type: str | None = None) -> None:
+    """写入对象（Phase 2：解析产物落库）。"""
+    get_storage_driver().put(key, data, content_type=content_type)
+
+
+def get_object(key: str) -> bytes:
+    """读取对象（Phase 2：解析管线读取原始 PDF/产物）。"""
+    return get_storage_driver().get(key)
+
+
 async def put_original(
     kb_id: uuid.UUID, task_id: str, filename: str, data: bytes
 ) -> str:
@@ -152,8 +162,22 @@ async def put_original(
 
 
 async def delete_document_objects(kb_id: uuid.UUID, object_key: str) -> None:
+    """删除原始 PDF 及该任务的全部解析产物（result.md/layout.json/pages）。"""
     driver = get_storage_driver()
-    try:
-        driver.delete(object_key)
-    except Exception as exc:
-        logger.warning("删除对象失败", object_key=object_key, error=str(exc)[:200])
+    parts = object_key.split("/")
+    ocr_prefix = None
+    if len(parts) >= 4 and parts[1] == "originals":
+        ocr_prefix = f"{parts[0]}/ocr/{parts[2]}/"
+    targets = [object_key]
+    if ocr_prefix:
+        targets.append(ocr_prefix)
+    for key in targets:
+        try:
+            if key.endswith("/"):
+                driver.delete_prefix(key)
+            else:
+                driver.delete(key)
+        except Exception as exc:
+            logger.warning(
+                "删除对象失败", object_key=key, error=str(exc)[:200]
+            )

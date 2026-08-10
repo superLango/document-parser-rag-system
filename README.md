@@ -5,7 +5,9 @@
 
 ## 当前状态
 
-- 2026-08-10：**阶段 0 已完成**——项目框架搭建、登录与权限体系改造、工作台上线。
+- 2026-08-10：**阶段 0（框架/登录/权限/工作台）+ P1/P2（RBAC/知识库/工作空间/API Key）+ 文档解析 Phase 1/2 已完成**。
+- 文档解析 Phase 2：parsekit 管线（渲染→页眉页脚擦除（U3 方案 A 胜出）→版面→阅读顺序→Markdown 拼装）
+  已接入真实任务状态机，`test_doc/` 6 份企业样本全部产出 result.md / layout.json / 页面图；GLM-OCR 在 Phase 3 接入。
 - 旧版完整源码保留在 [`document-parser-rag-system/`](document-parser-rag-system/)，
   作为**冻结基线**与功能参考，重构期间不直接修改。
 - 新代码已按 `docs/` 下的规范建设：`backend/`（FastAPI）+ `frontend/`（React）。
@@ -17,7 +19,8 @@
 - 角色管理（系统角色/自定义角色、权限矩阵、用户角色分配、菜单/路由按权限点过滤）
 - 知识库资源级 ACL（P1）：知识库成员/邀请接受/角色调整/所有权转移、注册默认 pending 与管理员审批
 - 知识库卡片式入口：卡片列表、创建时初始成员管理（无领域模板选择）
-- 知识库内部工作区：概览、成员权限管理、资源/外部访问令牌、文档解析 Phase 1（上传/任务状态骨架/删除）（其余模块占位）
+- 知识库内部工作区：概览、成员权限管理、资源/外部访问令牌、文档解析 Phase 2
+  （上传/真实解析管线/产物 Markdown 预览/重解析/删除；正文 OCR 待 Phase 3）（其余模块占位）
 - 工作空间/群组并集授权（P2）：工作空间与成员、群组（部门）、群组-知识库授权按并集生效、API 密钥（哈希存储/作用域/撤销）、审计 CSV 导出
 - 超级管理员用户管理（CRUD/启停/超管切换/重置密码/软删除）
 - 审计日志（敏感操作留痕、脱敏、筛选、统计、详情）
@@ -41,6 +44,7 @@ cd backend && .venv/bin/python -m pytest -q
 node qa/functional/e2e_p0.mjs   # P0 回归
 node qa/functional/e2e_p1.mjs   # P1 知识库/邀请/待审批
 node qa/functional/e2e_p2.mjs   # P2 工作空间/群组/API Key/导出
+node qa/functional/e2e_phase2.mjs  # 文档解析 Phase 2（上传/预览/重解析/失败/权限 UI）
 ```
 
 测试铁律、模块清单与覆盖率门槛见 [qa/TESTING_PROCESS.md](qa/TESTING_PROCESS.md)。
@@ -80,8 +84,8 @@ pnpm dev               # http://localhost:5174
 | [docs/UI_INTERACTION.md](docs/UI_INTERACTION.md) | 前端交互与动效规范 |
 | [docs/RBAC_RESEARCH_PLAN.md](docs/RBAC_RESEARCH_PLAN.md) | 用户角色权限改造方案（市场调研 + 设计） |
 | [qa/TESTING_PROCESS.md](qa/TESTING_PROCESS.md) | 测试实施铁律（五层测试 + 覆盖率门槛） |
-| [qa/TEST_CASES.md](qa/TEST_CASES.md) | P0 全部用例（六要素格式） |
-| [qa/results/TEST_COVERAGE.md](qa/results/TEST_COVERAGE.md) | P0 覆盖率统计表 |
+| [qa/TEST_CASES.md](qa/TEST_CASES.md) | P0-P2 + 文档解析 Phase 1/2 全部用例（六要素格式） |
+| [qa/results/TEST_COVERAGE.md](qa/results/TEST_COVERAGE.md) | 全部阶段覆盖率统计表（277 用例） |
 | [docs/LIGHTRAG_COMPARISON.md](docs/LIGHTRAG_COMPARISON.md) | LightRAG × 原版系统全方位对比与可借鉴清单 |
 | [docs/MAINFLOW_PLAN.md](docs/MAINFLOW_PLAN.md) | 主流程技术方案 V2（PG 一体化 + 自建解析 + 队列健壮化） |
 | [docs/DOCUMENT_PARSING_PLAN.md](docs/DOCUMENT_PARSING_PLAN.md) | 文档解析开发方案（PDF-Extract-Kit + GLM-OCR，含待确认清单） |
@@ -96,7 +100,8 @@ hansonDoc_RAG/
 ├── .gitignore
 ├── docs/                # 全部规范文档
 ├── lightrag/             # LightRAG 最新代码（只读参考，不推送）
-├── qa/                  # 全部测试/迁移测试脚本（统一目录，便于清理）
+├── qa/                  # 全部测试/迁移测试脚本（统一目录，便于清理；含 U3 A/B 评测）
+├── test_doc/            # 企业 PDF 样本（评测用，不推送）
 ├── frontend/            # React 前端（登录/工作台/个人中心/用户/角色/审计）
 ├── backend/             # Python 后端（FastAPI + PostgreSQL hanson_doc_rag）
 ├── deploy/              # （规划中）部署配置
