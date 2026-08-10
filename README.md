@@ -80,6 +80,7 @@ pnpm dev               # http://localhost:5174
 | [qa/TESTING_PROCESS.md](qa/TESTING_PROCESS.md) | 测试实施铁律（五层测试 + 覆盖率门槛） |
 | [qa/TEST_CASES.md](qa/TEST_CASES.md) | P0 全部用例（六要素格式） |
 | [qa/results/TEST_COVERAGE.md](qa/results/TEST_COVERAGE.md) | P0 覆盖率统计表 |
+| [docs/LIGHTRAG_COMPARISON.md](docs/LIGHTRAG_COMPARISON.md) | LightRAG × 原版系统全方位对比与可借鉴清单 |
 | [docs/GLOSSARY.md](docs/GLOSSARY.md) | 业务常量与自定义术语对照表 |
 
 ## 目录概览
@@ -90,6 +91,7 @@ hansonDoc_RAG/
 ├── AGENTS.md            # AI 协作与工程规范入口
 ├── .gitignore
 ├── docs/                # 全部规范文档
+├── lightrag/             # LightRAG 最新代码（只读参考，不推送）
 ├── qa/                  # 全部测试/迁移测试脚本（统一目录，便于清理）
 ├── frontend/            # React 前端（登录/工作台/个人中心/用户/角色/审计）
 ├── backend/             # Python 后端（FastAPI + PostgreSQL hanson_doc_rag）
