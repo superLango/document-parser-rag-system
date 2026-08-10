@@ -43,8 +43,12 @@ def _is_page_number(text: str, patterns: tuple[str, ...]) -> bool:
     return any(re.search(p, text) for p in patterns)
 
 
-def _in_margin(bbox: BBox, options: EraseOptions) -> bool:
-    return bbox.y1 <= options.top_ratio or bbox.y0 >= options.bottom_ratio
+def _margin_zone(bbox: BBox, options: EraseOptions) -> str:
+    if bbox.y1 <= options.top_ratio:
+        return "top"
+    if bbox.y0 >= options.bottom_ratio:
+        return "bottom"
+    return ""
 
 
 def _collect_repeated_margin_texts(
@@ -57,7 +61,7 @@ def _collect_repeated_margin_texts(
             continue
         for block in page.text_blocks:
             nb = block.bbox.normalized(page.width, page.height)
-            if not _in_margin(nb, options):
+            if not _margin_zone(nb, options):
                 continue
             key = _norm(block.text)
             if not key:
@@ -81,13 +85,16 @@ def _erase_page(
     erased: list[ErasedBlock] = []
     for block in page.text_blocks:
         nb = block.bbox.normalized(page.width, page.height)
-        if not _in_margin(nb, options):
+        zone = _margin_zone(nb, options)
+        if not zone:
             kept.append(block)
             continue
         reasons: list[str] = []
+        # 页码证据（顶部/底部页边距内，正文长句含“第 X 页”属罕见场景）
         if _is_page_number(block.text, options.page_number_patterns):
             reasons.append("page_number")
-        if _norm(block.text) in repeated:
+        # 顶部重复文本视为页眉；底部仅接受页码证据，避免表格底行被误删
+        if zone == "top" and _norm(block.text) in repeated:
             reasons.append("repeated")
         if not reasons:
             kept.append(block)

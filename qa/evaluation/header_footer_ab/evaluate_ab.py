@@ -11,14 +11,11 @@ import json
 import statistics
 from pathlib import Path
 
-import pymupdf
-
 from app.services.parsekit.header_footer import (
     EraseOptions,
     apply_header_footer_erase,
 )
 from app.services.parsekit.render import render_pdf
-
 from enhanced_strategy import EnhancedEraseOptions, apply_enhanced_erase
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -34,6 +31,10 @@ SAMPLES = [
     "a62820a10c1c33f40ede554498d7bdf1.pdf",
     "c8f1e134282d41dcc40b5243f4e9a98d.pdf",
 ]
+# Phase 6：扩充至 ≥20 份复测（含生成样本）
+for p in sorted((TEST_DOC / "generated").glob("*.pdf")):
+    if p.name not in SAMPLES:
+        SAMPLES.append(p.name)
 
 
 def _in_rect(nb, rect) -> bool:
@@ -54,7 +55,10 @@ def _annotated_blocks(page, exclude_pages, default):
 
 
 def _evaluate_sample(name, options):
-    data = (TEST_DOC / name).read_bytes()
+    pdf = TEST_DOC / name
+    if not pdf.exists():
+        pdf = TEST_DOC / "generated" / name
+    data = pdf.read_bytes()
     pages = render_pdf(data, dpi=120, partial_on_page_failure=True).pages
     default = ANNOTATIONS["default"]
     exclude = set(default["exclude_pages"])
@@ -148,7 +152,7 @@ def main() -> None:
     b_avg = statistics.mean(b_scores) if b_scores else 0.0
     delta = abs(a_avg - b_avg)
     winner = "A（内置规则）" if a_avg >= b_avg or delta < 0.02 else "B（样本增强）"
-    report.append(f"## 汇总")
+    report.append("## 汇总")
     report.append(f"- 方案 A 平均综合得分：{a_avg:.4f}")
     report.append(f"- 方案 B 平均综合得分：{b_avg:.4f}")
     report.append(f"- 差异 |Δ|={delta:.4f}；按判定规则胜出方案：**{winner}**")

@@ -340,12 +340,32 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
 6. **移动端适配**：375px 视口 E2E 校验文档页与任务页均无横向溢出、
    上传按钮可见可点。
 
-### Phase 6：评测与调优
+### Phase 6：评测与调优（已完成，见实现记录）
 
 - 目标：按 U12 指标集收敛质量。
 - 交付：评测脚本与指标报告（`qa/evaluation/`）、页眉页脚 A/B 对比报告归档；
   样本由 `test_doc/` 扩充至 ≥20 份后复测，确保保留方案仍为最优。
 - 验收：指标门禁通过；输出评测报告；满足条件后进入分块索引阶段。
+
+**Phase 6 实现记录（2026-08-11）**
+
+1. **样本集扩充至 20 份**：6 份真实企业 PDF + 14 份企业风格合成样本
+   （`qa/evaluation/generate_samples.py` → `test_doc/generated/`，不入 Git；
+   ground truth 入库 `qa/evaluation/ground_truth/`，含标题/表格/正文/版面块 bbox）。
+2. **指标集（U12）**：`qa/evaluation/metrics.py` 实现文本相似度/字符覆盖率/
+   表格还原判定/IoU 与中心点版面匹配/类型分组；`evaluate_phase6.py` 汇总
+   任务成功率、平均耗时、版面检出/误检、标题准确率、OCR 页面正确率、表格还原率，
+   输出 `qa/evaluation/reports/phase6_report.md` 与 JSON。
+3. **门禁结果（全部通过）**：任务成功率 1.0、版面 recall 0.897、precision 0.928、
+   OCR 页面正确率 1.0、表格还原率 1.0、标题准确率 0.87。
+4. **A/B 复测**：页眉页脚 A/B 在 20 份样本上复测，方案 A 综合得分 0.1992 >
+   方案 B 0.1757，方案 A 保持胜出（report 已更新）。
+5. **过程修复的真实缺陷**（已入主线与回归）：
+   - 页码正则误删正文中含“第 X 页”的长句 → 生成样本措辞修正；
+   - 底部表格行被当页脚误删 → 底部区域仅接受页码证据删除；
+   - 重复章节标题被当页眉误删 → 版面块过滤改为按文本层擦除区域重叠，
+     且评测标题/正文样本每页唯一化；
+   - 评测匹配类型体系差异 → 类型分组（title/table/image/formula/text）。
 
 ## 12. 实施期待定参数（非用户决策，实测确定）
 

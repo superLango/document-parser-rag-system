@@ -5,7 +5,7 @@
 
 ## 当前状态
 
-- 2026-08-11：**阶段 0（框架/登录/权限/工作台）+ P1/P2（RBAC/知识库/工作空间/API Key）+ 文档解析 Phase 1-5 已完成**。
+- 2026-08-11：**阶段 0（框架/登录/权限/工作台）+ P1/P2（RBAC/知识库/工作空间/API Key）+ 文档解析 Phase 1-6 已完成**。
 - 文档解析 Phase 2/3：parsekit 管线（渲染→页眉页脚擦除（U3 方案 A 胜出）→DocLayout-YOLO 真实版面→阅读顺序→
   GLM-OCR（vLLM 9977）→Markdown 拼装）已接入真实任务状态机；`test_doc/` 样本可产出含 OCR 文本/表格 HTML/LaTeX 的
   result.md、layout.json（v1.2，含结构树与 U8 跨页表格标记）与页面图；提供页面缩略图预览与
@@ -21,8 +21,9 @@
 - 角色管理（系统角色/自定义角色、权限矩阵、用户角色分配、菜单/路由按权限点过滤）
 - 知识库资源级 ACL（P1）：知识库成员/邀请接受/角色调整/所有权转移、注册默认 pending 与管理员审批
 - 知识库卡片式入口：卡片列表、创建时初始成员管理（无领域模板选择）
-- 知识库内部工作区：概览、成员权限管理、资源/外部访问令牌、文档解析 Phase 5
-  （上传弹窗与校验/解析进度/表格列表/Markdown 与页面预览/layout 调试视图/任务列表/重解析/删除/7 天中间产物清理；分块索引与结构化抽取待后续阶段）（其余模块占位）
+- 知识库内部工作区：概览、成员权限管理、资源/外部访问令牌、文档解析 Phase 6
+  （上传弹窗与校验/解析进度/表格列表/Markdown 与页面预览/layout 调试视图/任务列表/重解析/删除/7 天中间产物清理；
+  评测集 20 份 + U12 指标门禁全通过；分块索引与结构化抽取待后续阶段）（其余模块占位）
 - 工作空间/群组并集授权（P2）：工作空间与成员、群组（部门）、群组-知识库授权按并集生效、API 密钥（哈希存储/作用域/撤销）、审计 CSV 导出
 - 超级管理员用户管理（CRUD/启停/超管切换/重置密码/软删除）
 - 审计日志（敏感操作留痕、脱敏、筛选、统计、详情）
@@ -52,6 +53,9 @@ node qa/functional/e2e_phase4.mjs  # 文档解析 Phase 4（页面缩略图预�
 node qa/functional/e2e_phase5.mjs  # 文档解析 Phase 5（上传弹窗/进度/预览/layout 调试/任务列表/移动端）
 node qa/functional/e2e_phase5_boundary.mjs   # Phase 5 前端边界（文件校验/搜索/移动端）
 node qa/functional/e2e_phase5_security.mjs   # Phase 5 权限 UI 与越权
+node qa/functional/evaluate_phase6.mjs  # Phase 6 评测 CLI 功能测试
+# Phase 6 评测（真实 doclayout + GLM-OCR，约 1-3 分钟）
+cd backend && PYTHONPATH=. .venv/bin/python ../qa/evaluation/evaluate_phase6.py --subset all
 ```
 
 测试铁律、模块清单与覆盖率门槛见 [qa/TESTING_PROCESS.md](qa/TESTING_PROCESS.md)。
@@ -92,7 +96,7 @@ pnpm dev               # http://localhost:5174
 | [docs/RBAC_RESEARCH_PLAN.md](docs/RBAC_RESEARCH_PLAN.md) | 用户角色权限改造方案（市场调研 + 设计） |
 | [qa/TESTING_PROCESS.md](qa/TESTING_PROCESS.md) | 测试实施铁律（五层测试 + 覆盖率门槛） |
 | [qa/TEST_CASES.md](qa/TEST_CASES.md) | P0-P2 + 文档解析 Phase 1/2 全部用例（六要素格式） |
-| [qa/results/TEST_COVERAGE.md](qa/results/TEST_COVERAGE.md) | 全部阶段覆盖率统计表（356 用例） |
+| [qa/results/TEST_COVERAGE.md](qa/results/TEST_COVERAGE.md) | 全部阶段覆盖率统计表（376 用例） |
 | [docs/LIGHTRAG_COMPARISON.md](docs/LIGHTRAG_COMPARISON.md) | LightRAG × 原版系统全方位对比与可借鉴清单 |
 | [docs/MAINFLOW_PLAN.md](docs/MAINFLOW_PLAN.md) | 主流程技术方案 V2（PG 一体化 + 自建解析 + 队列健壮化） |
 | [docs/DOCUMENT_PARSING_PLAN.md](docs/DOCUMENT_PARSING_PLAN.md) | 文档解析开发方案（PDF-Extract-Kit + GLM-OCR，含待确认清单） |

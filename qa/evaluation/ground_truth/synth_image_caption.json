@@ -1,0 +1,139 @@
+{
+  "kind": "image",
+  "layout_blocks": [
+    {
+      "page": 1,
+      "type": "title",
+      "bbox": [
+        80,
+        66,
+        416,
+        94
+      ]
+    },
+    {
+      "page": 1,
+      "type": "image",
+      "bbox": [
+        90,
+        130,
+        420,
+        330
+      ]
+    },
+    {
+      "page": 1,
+      "type": "image_caption",
+      "bbox": [
+        90,
+        330,
+        420,
+        348
+      ]
+    },
+    {
+      "page": 2,
+      "type": "title",
+      "bbox": [
+        80,
+        66,
+        416,
+        94
+      ]
+    },
+    {
+      "page": 2,
+      "type": "image",
+      "bbox": [
+        90,
+        130,
+        420,
+        330
+      ]
+    },
+    {
+      "page": 2,
+      "type": "image_caption",
+      "bbox": [
+        90,
+        330,
+        420,
+        348
+      ]
+    }
+  ],
+  "titles": [
+    {
+      "text": "5 金相组织图（第 1 页）",
+      "page": 1,
+      "level": 1,
+      "bbox": [
+        80,
+        66,
+        416,
+        94
+      ]
+    },
+    {
+      "text": "5 金相组织图（第 2 页）",
+      "page": 2,
+      "level": 1,
+      "bbox": [
+        80,
+        66,
+        416,
+        94
+      ]
+    }
+  ],
+  "tables": [],
+  "texts": [],
+  "header_footers": [
+    {
+      "text": "江苏合盛材料有限公司 内部文件",
+      "page": 1,
+      "role": "header",
+      "bbox": [
+        55,
+        30,
+        540,
+        48
+      ]
+    },
+    {
+      "text": "第 X 页 共 Y 页",
+      "page": 1,
+      "role": "footer",
+      "bbox": [
+        55,
+        808,
+        540,
+        826
+      ]
+    },
+    {
+      "text": "江苏合盛材料有限公司 内部文件",
+      "page": 2,
+      "role": "header",
+      "bbox": [
+        55,
+        30,
+        540,
+        48
+      ]
+    },
+    {
+      "text": "第 X 页 共 Y 页",
+      "page": 2,
+      "role": "footer",
+      "bbox": [
+        55,
+        808,
+        540,
+        826
+      ]
+    }
+  ],
+  "sample": "synth_image_caption.pdf",
+  "pages": 2
+}

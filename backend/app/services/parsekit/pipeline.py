@@ -88,20 +88,41 @@ def _validate_options(options: ParseOptions) -> None:
         )
 
 
-def _drop_margin_blocks(
+def _drop_erased_overlap_blocks(
     page_layouts: list[list[LayoutBlock]],
     pages: list[RenderPage],
-    top_ratio: float = 0.16,
-    bottom_ratio: float = 0.84,
+    erased_blocks: list,
 ) -> int:
-    """对版面块执行与文本层一致的页边距过滤（封面页保留，方案 A 规则）。"""
+    """按文本层已擦除页眉页脚区域过滤版面块（REG-18 精化）。
+
+    仅删除与页眉页脚文本块区域重叠的版面块，避免误删顶部真实标题。
+    """
+    from collections import defaultdict
+
+    by_page: dict[int, list] = defaultdict(list)
+    for erased in erased_blocks:
+        by_page[erased.page_index].append(erased.bbox)
     dropped = 0
     for page, blocks in zip(pages, page_layouts):
-        if page.page_index == 1:
-            continue
+        erased_boxes = by_page.get(page.page_index, [])
         kept = []
         for block in blocks:
-            if block.bbox.y1 <= top_ratio or block.bbox.y0 >= bottom_ratio:
+            overlap = False
+            for box in erased_boxes:
+                if block.bbox.overlap_ratio(box) <= 0.15 and box.overlap_ratio(block.bbox) <= 0.15:
+                    continue
+                # 底部页脚区只删除文本类块，避免跨页表格/图片与页脚重叠被误删
+                if box.y0 >= 0.84 and block.type not in (
+                    "text",
+                    "aside_text",
+                    "footnote",
+                    "header",
+                    "footer",
+                ):
+                    continue
+                overlap = True
+                break
+            if overlap:
                 dropped += 1
                 continue
             kept.append(block)
@@ -208,8 +229,10 @@ def parse_pdf(
     # DocLayout 引擎单页失败并入页面级 failures（U11）
     if hasattr(engine, "failures"):
         failures.extend(engine.failures or [])
-    # 版面块页边距过滤（与方案 A 文本层规则一致，避免页眉被 OCR 进正文）
-    margin_dropped = _drop_margin_blocks(page_layouts, pages)
+    # 版面块按文本层已擦除区域过滤（避免页眉被 OCR 进正文，且不误删顶部标题）
+    margin_dropped = _drop_erased_overlap_blocks(
+        page_layouts, pages, erase_result.erased
+    )
 
     ocr_failures: list[dict] = []
     if opts.ocr_enabled and opts.layout_engine == "doclayout":

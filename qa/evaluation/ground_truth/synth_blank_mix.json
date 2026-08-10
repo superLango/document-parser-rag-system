@@ -1,0 +1,74 @@
+{
+  "kind": "mixed",
+  "layout_blocks": [
+    {
+      "page": 1,
+      "type": "title",
+      "bbox": [
+        80,
+        66,
+        248,
+        94
+      ]
+    },
+    {
+      "page": 1,
+      "type": "text",
+      "bbox": [
+        90,
+        116.0,
+        520,
+        150.0
+      ]
+    },
+    {
+      "page": 2,
+      "type": "text",
+      "bbox": [
+        80,
+        50,
+        200,
+        70
+      ]
+    }
+  ],
+  "titles": [
+    {
+      "text": "7 空白页样本",
+      "page": 1,
+      "level": 1,
+      "bbox": [
+        80,
+        66,
+        248,
+        94
+      ]
+    }
+  ],
+  "tables": [],
+  "texts": [
+    {
+      "text": "本页为正常内容页。",
+      "page": 1,
+      "bbox": [
+        90,
+        116.0,
+        520,
+        150.0
+      ]
+    },
+    {
+      "text": "（本页空白）",
+      "page": 2,
+      "bbox": [
+        80,
+        50,
+        200,
+        70
+      ]
+    }
+  ],
+  "header_footers": [],
+  "sample": "synth_blank_mix.pdf",
+  "pages": 2
+}

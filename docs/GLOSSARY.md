@@ -51,3 +51,7 @@
 | 解析进度条 | 解析中阶段进度展示 | rendering→layout→ocr→rebuild，2s 轮询 |
 | layout 调试视图 | layout.json 可视化调试 | 块统计 + 结构树 + schema 1.2 |
 | 任务列表页 | KB 内任务表格 | `/kb/:kbId/tasks`，含文档 filename |
+| 合成评测样本 | Phase 6 生成的企业风格 PDF（含 GT） | `test_doc/generated/`（不入 Git）；GT 在 `qa/evaluation/ground_truth/` |
+| U12 指标集 | 评测指标：任务成功率/版面检出误检/标题准确率/OCR 页面正确率/表格还原率 | 门禁阈值见 `evaluate_phase6.py` GATES |
+| 版面块类型分组 | 评测匹配时类型归一（title/table/image/formula/text） | `metrics.type_group` |
+| 门禁 | 指标未达标即 FAIL 并输出调优项 | `qa/evaluation/reports/phase6_report.md` |
