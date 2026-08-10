@@ -318,12 +318,27 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
    记录 `documents.pages_cleaned_at`（迁移 007）；保留 result.md/layout.json；
    arq 每日 03:00 cron 执行；保留天数 `PARSEKIT_INTERMEDIATE_RETENTION_DAYS`。
 
-### Phase 5：前端完整化
+### Phase 5：前端完整化（已完成，见实现记录）
 
 - 目标：文档解析页全功能（上传/进度/结果预览/重新解析/删除）。
-- 交付：文档列表卡片或表格、上传弹窗（≤100MB、PDF 校验）、进度展示、
-  结果 Markdown 预览、layout 调试视图（可后置）、重解析/删除。
+- 交付：文档列表表格、上传弹窗（≤100MB、PDF 校验）、进度展示、
+  结果 Markdown 预览、layout 调试视图、重解析/删除、任务列表页。
 - 验收：E2E 全流程通过；控制台无错误、无横向溢出；移动端适配。
+
+**Phase 5 实现记录（2026-08-11）**
+
+1. **上传弹窗**：Dialog 内选择文件（显示文件名/大小），前端即时校验
+   PDF 类型、空文件、≤100MB；确认上传禁用/加载态；成功后自动轮询列表。
+2. **进度展示**：解析中显示阶段进度条（rendering→layout→ocr→rebuild）与
+   阶段文案；列表 2s 自动轮询，完成后停止。
+3. **表格化列表**：文档列表升级为表格（文档/大小/上传时间/状态/操作），
+   移动端横向滚动容器，无页面级横向溢出。
+4. **layout 调试视图**：预览弹窗内“查看版面”打开 layout.json（含块统计
+   与 schema 1.2 结构树），作为调试产物。
+5. **任务列表页**：`/kb/:kbId/tasks` 由占位替换为真实任务表格；后端 tasks
+   接口补充文档 filename 字段（schema/join 增强）。
+6. **移动端适配**：375px 视口 E2E 校验文档页与任务页均无横向溢出、
+   上传按钮可见可点。
 
 ### Phase 6：评测与调优
 

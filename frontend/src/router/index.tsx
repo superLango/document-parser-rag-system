@@ -18,6 +18,7 @@ import KbOverviewPage from '@/views/kb/KbOverviewPage'
 import KbMembersPage from '@/views/kb/KbMembersPage'
 import KbResourcesPage from '@/views/kb/KbResourcesPage'
 import KbDocumentsPage from '@/views/kb/KbDocumentsPage'
+import KbTasksPage from '@/views/kb/KbTasksPage'
 import KbPlaceholderPage from '@/views/kb/KbPlaceholderPage'
 import WorkspacesPage from '@/views/WorkspacesPage'
 import ApiKeysPage from '@/views/ApiKeysPage'
@@ -132,7 +133,7 @@ export const router = createBrowserRouter([
       { path: 'vector-search', element: <KbPlaceholderPage title="向量搜索" description="向量检索与混合检索调试（迁移阶段开放）" /> },
       { path: 'extraction', element: <KbPlaceholderPage title="结构化抽取" description="Schema 驱动的结构化抽取（迁移阶段开放）" /> },
       { path: 'extraction-config', element: <KbPlaceholderPage title="抽取配置·专业术语集" description="Schema/Prompt 模板与术语集管理（迁移阶段开放）" /> },
-      { path: 'tasks', element: <KbPlaceholderPage title="任务列表" description="异步任务状态与日志（迁移阶段开放）" /> },
+      { path: 'tasks', element: <KbTasksPage /> },
       { path: 'graph', element: <KbPlaceholderPage title="知识图谱" description="实体关系图谱与子图查询（迁移阶段开放）" /> },
       { path: 'qa', element: <KbPlaceholderPage title="知识问答" description="混合检索问答与溯源（迁移阶段开放）" /> },
       { path: 'resources', element: <KbResourcesPage /> },

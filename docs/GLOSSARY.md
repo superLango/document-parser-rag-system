@@ -47,3 +47,7 @@
 | pages_cleaned_at | 页面中间产物清理时间（U14） | `documents.pages_cleaned_at`（迁移 007） |
 | 页面预览 | 单页 PNG 读取接口 | `GET /kb/{kb}/documents/{id}/pages/{page}` |
 | 中间产物保留期 | pages 中间产物保留天数 | `PARSEKIT_INTERMEDIATE_RETENTION_DAYS=7` |
+| 上传弹窗 | Phase 5 文档上传 Dialog | ≤100MB、PDF 类型、空文件前端即时校验 |
+| 解析进度条 | 解析中阶段进度展示 | rendering→layout→ocr→rebuild，2s 轮询 |
+| layout 调试视图 | layout.json 可视化调试 | 块统计 + 结构树 + schema 1.2 |
+| 任务列表页 | KB 内任务表格 | `/kb/:kbId/tasks`，含文档 filename |

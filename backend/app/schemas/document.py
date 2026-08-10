@@ -34,6 +34,7 @@ class DocumentTaskOut(BaseModel):
     document_id: UUID
     task_id: str
     type: str
+    filename: str | None = None
     status: str
     attempts: int
     heartbeat_at: datetime | None = None

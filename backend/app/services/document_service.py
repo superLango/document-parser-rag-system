@@ -318,7 +318,7 @@ async def list_tasks(
     kb_id: uuid.UUID,
     page: int,
     page_size: int,
-) -> tuple[list[DocumentTask], int]:
+) -> tuple[list[DocumentTask], int, dict[str, str]]:
     base = select(DocumentTask).where(DocumentTask.kb_id == kb_id)
     count_base = (
         select(func.count())
@@ -333,7 +333,18 @@ async def list_tasks(
             .limit(page_size)
         )
     ).scalars().all()
-    return list(rows), total
+    doc_ids = {str(t.document_id) for t in rows}
+    filenames: dict[str, str] = {}
+    if doc_ids:
+        docs = (
+            await db.execute(
+                select(Document.id, Document.filename).where(
+                    Document.id.in_(doc_ids)
+                )
+            )
+        ).all()
+        filenames = {str(d.id): d.filename for d in docs}
+    return list(rows), total, filenames
 
 
 async def claim_outbox(db: AsyncSession, limit: int = 10) -> list[TaskOutbox]:

@@ -194,6 +194,7 @@ export interface DocumentItem {
   page_count: number
   markdown_path: string | null
   layout_path: string | null
+  pages_cleaned_at: string | null
   error: Record<string, unknown> | null
   created_at: string
   updated_at: string | null
@@ -205,6 +206,7 @@ export interface DocumentTaskItem {
   document_id: string
   task_id: string
   type: string
+  filename: string | null
   status: string
   attempts: number
   heartbeat_at: string | null

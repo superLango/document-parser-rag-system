@@ -140,15 +140,15 @@ async def list_tasks(
     current_user: User = Depends(require_not_pending),
 ) -> dict:
     await _kb_access(kb_id, db=db, current_user=current_user)
-    items, total = await document_service.list_tasks(
+    items, total, filenames = await document_service.list_tasks(
         db, kb_id, pagination["page"], pagination["page_size"]
     )
-    return paginated(
-        [DocumentTaskOut.model_validate(t).model_dump() for t in items],
-        total,
-        pagination["page"],
-        pagination["page_size"],
-    )
+    rows = []
+    for task in items:
+        row = DocumentTaskOut.model_validate(task).model_dump()
+        row["filename"] = filenames.get(str(task.document_id))
+        rows.append(row)
+    return paginated(rows, total, pagination["page"], pagination["page_size"])
 
 
 @router.get("/{document_id}")
