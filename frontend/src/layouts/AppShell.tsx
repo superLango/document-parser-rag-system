@@ -161,7 +161,10 @@ function UserMenu() {
 export default function AppShell({ children }: { children: ReactNode }) {
   const location = useLocation()
   const user = useAuthStore((s) => s.user)
-  const title = titleMap[location.pathname] || 'HansonDOC RAG'
+  const title =
+    location.pathname.startsWith('/kb/') && location.pathname !== '/kb' && location.pathname !== '/kb/invitations'
+      ? '知识库'
+      : titleMap[location.pathname] || 'HansonDOC RAG'
   const eyebrow = eyebrowMap[location.pathname]
 
   const nav = (

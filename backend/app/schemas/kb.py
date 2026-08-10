@@ -29,6 +29,11 @@ class KbCreate(BaseModel):
     members: list[KbMemberSeed] = Field(default_factory=list, max_length=50)
 
 
+class KbExternalUpdate(BaseModel):
+    enabled: bool = False
+    regenerate: bool = False
+
+
 class KbUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=100)
     description: str | None = Field(default=None, max_length=500)

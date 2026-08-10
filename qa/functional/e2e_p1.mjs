@@ -107,15 +107,19 @@ await scenario('L3M10-02', 'M10', async () => {
   await page.waitForTimeout(700)
   const card = page.locator('main .rounded-xl', { hasText: `E2E知识库_${stamp}` }).first()
   await card.getByRole('button', { name: '成员' }).click()
-  await page.waitForTimeout(500)
-  await page.fill('#invite-username', invitee)
-  await page.getByRole('button', { name: '发送邀请' }).click()
+  await page.waitForURL('**/kb/*/members', { timeout: 10000 })
+  await page.waitForTimeout(600)
+  const combobox = page.getByPlaceholder('搜索系统现有用户')
+  await combobox.click()
+  await combobox.fill(invitee)
+  await page.waitForTimeout(800)
+  await page.getByRole('button', { name: new RegExp(invitee) }).first().click()
+  await page.getByRole('button', { name: '添加成员' }).click()
   await page.waitForTimeout(800)
   if (!(await page.getByText('邀请已发送').first().isVisible().catch(() => false))) {
     throw new Error('邀请发送未提示成功')
   }
   await page.screenshot({ path: `${OUT}p1_kb_members.png` })
-  await page.getByRole('button', { name: '关闭' }).click()
 
   const ctx2 = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const p2 = await ctx2.newPage()
@@ -156,8 +160,11 @@ await scenario('L3M10-04', 'M10', async () => {
   await page.waitForTimeout(300)
   await page.fill('#kb-name', `E2E初始成员库_${stamp}`)
   await page.fill('#kb-desc', '创建时邀请成员')
-  const memberInput = page.getByPlaceholder('输入成员用户名')
+  const memberInput = page.getByPlaceholder('输入用户名搜索成员')
+  await memberInput.click()
   await memberInput.fill(invitee)
+  await page.waitForTimeout(800)
+  await page.getByRole('button', { name: new RegExp(invitee) }).first().click()
   await page.locator('select').first().selectOption('admin')
   await page.getByRole('button', { name: '添加', exact: true }).click()
   await page.waitForTimeout(300)
@@ -184,6 +191,76 @@ await scenario('L3M10-04', 'M10', async () => {
     throw new Error('初始成员邀请未出现在我的邀请')
   }
   await ctx3.close()
+})
+
+// ---------- M10 KB 详情：概览 / 成员权限管理 / 外部联动 ----------
+const detailKbId = () => createdKbs[createdKbs.length - 1]
+
+await scenario('L3M10-06', 'M10', async () => {
+  await sessionLogin(page, 'admin', 'admin123')
+  await page.goto(`${BASE}/kb`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(700)
+  await page.getByText(`E2E初始成员库_${stamp}`).click()
+  await page.waitForURL(`**/kb/${detailKbId()}`, { timeout: 10000 })
+  await page.waitForTimeout(800)
+  for (const t of ['知识库概览', '活跃成员', '文档解析', '知识图谱', '知识问答', '知识库成员']) {
+    if (!(await page.getByText(t, { exact: false }).first().isVisible().catch(() => false))) {
+      throw new Error(`KB 概览缺少：${t}`)
+    }
+  }
+  await page.screenshot({ path: `${OUT}p1_kb_overview.png` })
+})
+
+await scenario('L3M10-07', 'M10', async () => {
+  await page.goto(`${BASE}/kb/${detailKbId()}/members`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(900)
+  if (!(await page.getByText(`@kb_seed_member_${stamp}`).first().isVisible().catch(() => false))) {
+    throw new Error('成员页未显示初始成员')
+  }
+  if (!(await page.getByText('待接受').first().isVisible().catch(() => false))) {
+    throw new Error('成员页未显示待接受状态')
+  }
+  const invitee = `kb_seed_member_${stamp}`
+  const login = await api('POST', '/auth/login', { username: invitee, password: 'Test@1234' })
+  const itoken = login.body.data.access_token
+  const mine = await api('GET', '/kb/invitations/mine', null, itoken)
+  const inv = mine.body.data.find((i) => i.kb_id === detailKbId())
+  if (!inv) throw new Error('初始成员邀请不存在')
+  await api('POST', `/kb/invitations/${inv.token}/accept`, null, itoken)
+  await page.reload({ waitUntil: 'networkidle' })
+  await page.waitForTimeout(800)
+  if (!(await page.getByText('已加入').first().isVisible().catch(() => false))) {
+    throw new Error('接受后成员页未显示已加入')
+  }
+  const memberRow = page.locator('div.px-4', { hasText: `@${invitee}` }).last()
+  await memberRow.locator('select').selectOption('editor')
+  await page.waitForTimeout(700)
+  if (!(await page.getByText('角色已更新').first().isVisible().catch(() => false))) {
+    throw new Error('角色调整未提示成功')
+  }
+})
+
+await scenario('L3M10-08', 'M10', async () => {
+  await page.goto(`${BASE}/kb/${detailKbId()}/resources`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(800)
+  const toggle = page.locator('input[type="checkbox"]')
+  if (!(await toggle.isVisible().catch(() => false))) throw new Error('外部联动开关不可见')
+  if (!(await toggle.isChecked())) {
+    await page.locator('label').filter({ hasText: '启用外部访问' }).click()
+    await page.waitForTimeout(700)
+  }
+  if (!(await page.getByText('已开启').first().isVisible().catch(() => false))) {
+    throw new Error('外部联动开启状态未展示')
+  }
+  await page.getByRole('button', { name: '重新生成' }).click()
+  await page.waitForTimeout(300)
+  await page.getByRole('button', { name: '确认重新生成' }).click()
+  await page.waitForTimeout(800)
+  if (!(await page.getByText('新令牌已生成').first().isVisible().catch(() => false))) {
+    throw new Error('重新生成后未展示完整令牌')
+  }
+  await page.screenshot({ path: `${OUT}p1_kb_external.png` })
+  await page.getByRole('button', { name: '我知道了' }).click()
 })
 
 // ---------- M10 成员可见性隔离 ----------

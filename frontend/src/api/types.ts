@@ -149,6 +149,7 @@ export interface KbItem {
   member_count: number
   invited?: string[]
   failed_invites?: { username: string; error: string }[]
+  stats?: KbOverviewStats
 }
 
 export interface KbMemberItem {
@@ -157,11 +158,35 @@ export interface KbMemberItem {
   user_id: string
   username: string | null
   full_name: string | null
+  department: string | null
+  email: string | null
   role: KbRole
   status: 'active' | 'invited' | 'removed'
   invited_by: string | null
   expires_at: string | null
   created_at: string
+}
+
+export interface UserSearchItem {
+  id: string
+  username: string
+  full_name: string | null
+  department: string | null
+  email: string | null
+}
+
+export interface KbOverviewStats {
+  members_active: number
+  pending_invites: number
+  documents: number
+  tasks: number
+}
+
+export interface KbExternalConfig {
+  enabled: boolean
+  token_prefix: string
+  token?: string | null
+  updated_at: string | null
 }
 
 export interface KbInvitationItem {

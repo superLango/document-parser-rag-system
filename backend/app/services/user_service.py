@@ -52,6 +52,29 @@ async def list_users(
     return list(users), total
 
 
+async def search_users(
+    db: AsyncSession, keyword: str, limit: int
+) -> list[User]:
+    """内部成员选择器：模糊搜索启用中的用户（供 KB 成员添加使用）。"""
+    like = f"%{keyword}%"
+    stmt = (
+        select(User)
+        .where(
+            User.deleted_at.is_(None),
+            User.is_active.is_(True),
+            or_(
+                User.username.ilike(like),
+                User.full_name.ilike(like),
+                User.email.ilike(like),
+                User.department.ilike(like),
+            ),
+        )
+        .order_by(User.username)
+        .limit(limit)
+    )
+    return list((await db.execute(stmt)).scalars().all())
+
+
 async def get_user(db: AsyncSession, user_id: uuid.UUID) -> User:
     user = await db.get(User, user_id)
     if user is None or user.deleted_at is not None:

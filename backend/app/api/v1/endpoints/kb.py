@@ -12,6 +12,7 @@ from app.middleware.audit_log import audit_action
 from app.models.user import User
 from app.schemas.kb import (
     KbCreate,
+    KbExternalUpdate,
     KbInviteCreate,
     KbMemberRoleUpdate,
     KbTransferRequest,
@@ -74,6 +75,40 @@ async def accept_invitation(
     current_user: User = Depends(require_not_pending),
 ) -> dict:
     return success(data=await kb_service.accept_invitation(db, current_user, token))
+
+
+@router.get("/{kb_id}/overview")
+async def get_kb_overview(
+    kb_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    return success(data=await kb_service.get_kb_overview(db, current_user, kb_id))
+
+
+@router.get("/{kb_id}/external")
+async def get_kb_external(
+    kb_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    return success(data=await kb_service.get_kb_external(db, current_user, kb_id))
+
+
+@router.put("/{kb_id}/external")
+@audit_action(action="kb.external_update", resource_type="kb")
+async def update_kb_external(
+    kb_id: uuid.UUID,
+    body: KbExternalUpdate,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    return success(
+        data=await kb_service.update_kb_external(
+            db, current_user, kb_id, body.enabled, body.regenerate
+        )
+    )
 
 
 @router.get("/{kb_id}")

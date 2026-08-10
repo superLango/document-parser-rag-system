@@ -2,6 +2,11 @@ import { http } from '@/api/client'
 import type { Paginated, User } from '@/api/types'
 
 export const usersApi = {
+  search(keyword: string, limit = 20): Promise<import('@/api/types').UserSearchItem[]> {
+    return http.get<import('@/api/types').UserSearchItem[]>('/users/search', {
+      params: { keyword, limit },
+    })
+  },
   list(params?: {
     page?: number
     page_size?: number

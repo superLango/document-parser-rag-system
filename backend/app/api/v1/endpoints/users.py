@@ -5,7 +5,7 @@ import uuid
 from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_pagination_params, require_permission
+from app.api.deps import get_pagination_params, require_not_pending, require_permission
 from app.core.database import get_db
 from app.core.response import paginated, success
 from app.middleware.audit_log import audit_action
@@ -63,6 +63,28 @@ async def create_user(
     user = await user_service.create_user(db, current_user, body)
     roles = await rbac_service.get_user_roles(db, user.id)
     return success(data=_serialize_user(user, roles=roles))
+
+
+@router.get("/search")
+async def search_users(
+    keyword: str = Query(min_length=1, max_length=50),
+    limit: int = Query(20, ge=1, le=50),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    users = await user_service.search_users(db, keyword, limit)
+    return success(
+        data=[
+            {
+                "id": str(u.id),
+                "username": u.username,
+                "full_name": u.full_name,
+                "department": u.department,
+                "email": u.email,
+            }
+            for u in users
+        ]
+    )
 
 
 @router.get("/{user_id}")

@@ -279,7 +279,7 @@ async def list_members(
         await _require_member(db, kb_id, user)
     rows = (
         await db.execute(
-            select(KbMember, User.username, User.full_name)
+            select(KbMember, User.username, User.full_name, User.department, User.email)
             .join(User, User.id == KbMember.user_id)
             .where(KbMember.kb_id == kb_id)
             .order_by(KbMember.created_at)
@@ -292,13 +292,15 @@ async def list_members(
             "user_id": str(m.user_id),
             "username": username,
             "full_name": full_name,
+            "department": department,
+            "email": email,
             "role": m.role,
             "status": m.status,
             "invited_by": str(m.invited_by) if m.invited_by else None,
             "expires_at": m.expires_at.isoformat() if m.expires_at else None,
             "created_at": m.created_at.isoformat() if m.created_at else None,
         }
-        for m, username, full_name in rows
+        for m, username, full_name, department, email in rows
     ]
 
 
@@ -558,3 +560,71 @@ async def transfer_ownership(
     kb.owner_id = target_user_id
     await db.commit()
     logger.info("知识库所有权已转移", kb_id=str(kb_id), new_owner=str(target_user_id))
+
+
+async def get_kb_overview(db: AsyncSession, user: User, kb_id: uuid.UUID) -> dict:
+    """KB 概览：基础信息 + 成员统计（文档/任务在对应阶段迁移后启用）。"""
+    data = await get_kb(db, user, kb_id)
+    members = await list_members(db, user, kb_id)
+    data["stats"] = {
+        "members_active": sum(1 for m in members if m["status"] == "active"),
+        "pending_invites": sum(1 for m in members if m["status"] == "invited"),
+        "documents": 0,
+        "tasks": 0,
+    }
+    return data
+
+
+def _mask_token(token: str) -> str:
+    return (token[:6] + "••••••") if len(token) > 6 else "••••••"
+
+
+async def _require_kb_manage(db: AsyncSession, user: User, kb_id: uuid.UUID) -> None:
+    if user.is_superuser:
+        return
+    role = await effective_kb_role(db, user.id, kb_id)
+    if role is None:
+        raise PermissionException(message="您不是该知识库成员")
+    if role not in MANAGE_ROLES:
+        raise PermissionException(message="需要管理员或所有者权限")
+
+
+async def get_kb_external(db: AsyncSession, user: User, kb_id: uuid.UUID) -> dict:
+    await _require_kb_manage(db, user, kb_id)
+    kb = await _get_kb(db, kb_id)
+    ext = (kb.config or {}).get("external") or {}
+    return {
+        "enabled": bool(ext.get("enabled")),
+        "token_prefix": _mask_token(str(ext.get("token") or "")),
+        "updated_at": ext.get("updated_at"),
+    }
+
+
+async def update_kb_external(
+    db: AsyncSession,
+    user: User,
+    kb_id: uuid.UUID,
+    enabled: bool,
+    regenerate: bool,
+) -> dict:
+    await _require_kb_manage(db, user, kb_id)
+    kb = await _get_kb(db, kb_id)
+    config = dict(kb.config or {})
+    ext = dict(config.get("external") or {})
+    token = str(ext.get("token") or "")
+    token_full: str | None = None
+    if regenerate or not token:
+        token = secrets.token_urlsafe(24)
+        token_full = token
+    ext["enabled"] = enabled
+    ext["token"] = token
+    ext["updated_at"] = _now().isoformat()
+    config["external"] = ext
+    kb.config = config
+    await db.commit()
+    return {
+        "enabled": enabled,
+        "token_prefix": _mask_token(token),
+        "token": token_full,
+        "updated_at": ext["updated_at"],
+    }

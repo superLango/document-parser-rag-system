@@ -292,3 +292,86 @@ async def test_create_kb_with_members_api(client, super_token):
     )
     detail = await client.get(f"/api/v1/kb/{data['id']}", headers=h)
     assert detail.json()["data"]["member_count"] == 2
+
+
+async def test_users_search_endpoint(client, super_token):
+    """成员选择器：模糊搜索系统现有用户；pending 拒绝。"""
+    member_name, member_id = await _make_user(client, super_token)
+    resp = await client.get(
+        f"/api/v1/users/search?keyword={member_name[:8]}",
+        headers={"Authorization": f"Bearer {super_token}"},
+    )
+    assert resp.status_code == 200
+    items = resp.json()["data"]
+    assert any(i["username"] == member_name for i in items)
+    assert "department" in items[0]
+
+    pending_name, _ = await _make_user(client, super_token, role_codes=("pending",))
+    pending_login = await client.post(
+        "/api/v1/auth/login", json={"username": pending_name, "password": "Test@1234"}
+    )
+    ptoken = pending_login.json()["data"]["access_token"]
+    denied = await client.get(
+        "/api/v1/users/search?keyword=admin",
+        headers={"Authorization": f"Bearer {ptoken}"},
+    )
+    assert denied.status_code == 403
+
+    missing = await client.get(
+        "/api/v1/users/search",
+        headers={"Authorization": f"Bearer {super_token}"},
+    )
+    assert missing.status_code == 400
+
+
+async def test_kb_overview_and_external_api(client, super_token):
+    h = {"Authorization": f"Bearer {super_token}"}
+    kb = await _create_kb(client, super_token, "概览外部库")
+
+    overview = await client.get(f"/api/v1/kb/{kb['id']}/overview", headers=h)
+    assert overview.status_code == 200
+    data = overview.json()["data"]
+    assert data["stats"]["members_active"] == 1
+    assert data["stats"]["pending_invites"] == 0
+    assert data["stats"]["documents"] == 0
+    assert data["stats"]["tasks"] == 0
+
+    ext0 = await client.get(f"/api/v1/kb/{kb['id']}/external", headers=h)
+    assert ext0.status_code == 200
+    assert ext0.json()["data"]["enabled"] is False
+    assert ext0.json()["data"]["token_prefix"] == "••••••"
+
+    updated = await client.put(
+        f"/api/v1/kb/{kb['id']}/external",
+        headers=h,
+        json={"enabled": True, "regenerate": True},
+    )
+    assert updated.status_code == 200
+    data = updated.json()["data"]
+    assert data["enabled"] is True
+    assert data["token"] and len(data["token"]) >= 20
+    assert data["token_prefix"] != "••••••"
+
+    ext1 = await client.get(f"/api/v1/kb/{kb['id']}/external", headers=h)
+    assert "token" not in ext1.json()["data"]  # 完整令牌不再返回
+    assert ext1.json()["data"]["enabled"] is True
+
+    # viewer 无管理权限
+    viewer_name, viewer_id = await _make_user(client, super_token)
+    inv = await client.post(
+        f"/api/v1/kb/{kb['id']}/invitations",
+        headers=h,
+        json={"username": viewer_name, "role": "viewer"},
+    )
+    viewer_token = await _login(client, viewer_name)
+    await client.post(
+        f"/api/v1/kb/invitations/{inv.json()['data']['token']}/accept",
+        headers={"Authorization": f"Bearer {viewer_token}"},
+    )
+    vh = {"Authorization": f"Bearer {viewer_token}"}
+    assert (await client.get(f"/api/v1/kb/{kb['id']}/external", headers=vh)).status_code == 403
+    assert (
+        await client.put(
+            f"/api/v1/kb/{kb['id']}/external", headers=vh, json={"enabled": False}
+        )
+    ).status_code == 403

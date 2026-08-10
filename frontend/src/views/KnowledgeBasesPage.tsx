@@ -1,5 +1,6 @@
 import type { CSSProperties, FormEvent } from 'react'
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Crown,
@@ -26,8 +27,8 @@ import { Select } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/toast'
 import { formatDateTime } from '@/lib/utils'
-import { useAuthStore } from '@/stores/auth'
-import type { KbItem, KbMemberItem, KbRole } from '@/api/types'
+import { UserCombobox } from '@/components/UserCombobox'
+import type { KbItem, KbRole, UserSearchItem } from '@/api/types'
 
 const roleLabels: Record<string, string> = {
   owner: '所有者',
@@ -36,8 +37,7 @@ const roleLabels: Record<string, string> = {
   viewer: '查看者',
 }
 
-interface MemberSeed {
-  username: string
+interface MemberSeed extends UserSearchItem {
   role: KbRole
 }
 
@@ -49,6 +49,7 @@ interface KbForm {
 const emptyForm: KbForm = { name: '', description: '' }
 
 export default function KnowledgeBasesPage() {
+  const navigate = useNavigate()
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const [page, setPage] = useState(1)
@@ -57,10 +58,9 @@ export default function KnowledgeBasesPage() {
   const [creating, setCreating] = useState(false)
   const [form, setForm] = useState<KbForm>(emptyForm)
   const [members, setMembers] = useState<MemberSeed[]>([])
-  const [memberUsername, setMemberUsername] = useState('')
+  const [memberUser, setMemberUser] = useState<UserSearchItem | null>(null)
   const [memberRole, setMemberRole] = useState<KbRole>('viewer')
   const [submitting, setSubmitting] = useState(false)
-  const [membersTarget, setMembersTarget] = useState<KbItem | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<KbItem | null>(null)
 
   const { data, isLoading, refetch, isFetching } = useQuery({
@@ -76,14 +76,13 @@ export default function KnowledgeBasesPage() {
   }
 
   function addMemberSeed() {
-    const username = memberUsername.trim()
-    if (!username) return
-    if (members.some((m) => m.username === username)) {
-      toast('warning', '成员已添加', `${username} 已在初始成员列表中`)
+    if (!memberUser || !memberUser.username) return
+    if (members.some((m) => m.username === memberUser.username)) {
+      toast('warning', '成员已添加', `${memberUser.username} 已在初始成员列表中`)
       return
     }
-    setMembers((prev) => [...prev, { username, role: memberRole }])
-    setMemberUsername('')
+    setMembers((prev) => [...prev, { ...memberUser, role: memberRole }])
+    setMemberUser(null)
   }
 
   function removeMemberSeed(username: string) {
@@ -97,7 +96,7 @@ export default function KnowledgeBasesPage() {
       const created = await kbApi.create({
         name: form.name,
         description: form.description || undefined,
-        members,
+        members: members.map((m) => ({ username: m.username, role: m.role })),
       })
       const invited = created.invited?.length ?? 0
       const failed = created.failed_invites ?? []
@@ -116,6 +115,7 @@ export default function KnowledgeBasesPage() {
       setCreating(false)
       setForm(emptyForm)
       setMembers([])
+      setMemberUser(null)
       invalidate()
     } catch (err) {
       toast('error', '创建失败', err instanceof ApiError ? err.message : '请稍后重试')
@@ -141,14 +141,14 @@ export default function KnowledgeBasesPage() {
       <PageHeader
         eyebrow="资源"
         title="知识库"
-        description="以知识库为隔离边界与协作入口，成员按角色访问"
+description="以知识库为隔离边界的垂直领域文档智能产品"
         actions={
           <Button
             onClick={() => {
               setCreating(true)
               setForm(emptyForm)
               setMembers([])
-              setMemberUsername('')
+              setMemberUser(null)
             }}
           >
             <Plus className="h-4 w-4" />
@@ -213,7 +213,7 @@ export default function KnowledgeBasesPage() {
               key={kb.id}
               kb={kb}
               delay={Math.min(index, 6) * 70}
-              onMembers={() => setMembersTarget(kb)}
+              onMembers={() => navigate(`/kb/${kb.id}/members`)}
               onDelete={() => setDeleteTarget(kb)}
             />
           ))}
@@ -267,59 +267,70 @@ export default function KnowledgeBasesPage() {
               <UserPlus className="h-4 w-4 text-primary" />
               初始成员
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <div className="flex-1">
-                <Input
-                  value={memberUsername}
-                  onChange={(e) => setMemberUsername(e.target.value)}
-                  placeholder="输入成员用户名"
-                />
+            <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+              <div>
+                <Label>成员</Label>
+                <UserCombobox value={memberUser} onSelect={setMemberUser} />
               </div>
-              <Select
-                className="w-full sm:w-32"
-                value={memberRole}
-                onChange={(e) => setMemberRole(e.target.value as KbRole)}
+              <div>
+                <Label>权限</Label>
+                <Select
+                  className="w-full sm:w-32"
+                  value={memberRole}
+                  onChange={(e) => setMemberRole(e.target.value as KbRole)}
+                >
+                  <option value="viewer">查看者</option>
+                  <option value="editor">编辑者</option>
+                  <option value="admin">管理员</option>
+                </Select>
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={addMemberSeed}
+                disabled={!memberUser?.username}
+                className="sm:mb-px"
               >
-                <option value="viewer">查看者</option>
-                <option value="editor">编辑者</option>
-                <option value="admin">管理员</option>
-              </Select>
-              <Button type="button" variant="secondary" onClick={addMemberSeed} disabled={!memberUsername.trim()}>
                 添加
               </Button>
             </div>
             {members.length > 0 ? (
-              <div className="flex flex-wrap gap-2 pt-1">
+              <div className="space-y-1.5 pt-1">
                 {members.map((m) => (
-                  <span
+                  <div
                     key={m.username}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-white/80 px-2.5 py-1 text-xs shadow-soft"
+                    className="flex items-center gap-3 rounded-lg border border-border bg-white/70 px-3 py-2 shadow-soft"
                   >
-                    @{m.username}
-                    <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
-                      {roleLabels[m.role]}
-                    </Badge>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 text-xs font-semibold text-primary-strong">
+                      {(m.full_name || m.username || 'U').slice(0, 1).toUpperCase()}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{m.full_name || m.username}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        @{m.username}
+                        {m.department ? ` · ${m.department}` : ''}
+                      </p>
+                    </div>
+                    <Badge variant="outline">{roleLabels[m.role]}</Badge>
                     <button
                       type="button"
                       onClick={() => removeMemberSeed(m.username)}
-                      className="text-muted-foreground transition-colors hover:text-destructive"
+                      className="rounded p-1 text-muted-foreground transition-colors hover:text-destructive"
                       aria-label={`移除 ${m.username}`}
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-3.5 w-3.5" />
                     </button>
-                  </span>
+                  </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-muted-foreground">可暂不邀请，创建后在成员管理中补充</p>
+              <p className="text-xs text-muted-foreground">
+                从系统现有成员中选择，可添加多人；创建后将发送邀请
+              </p>
             )}
           </div>
         </form>
       </Dialog>
-
-      {membersTarget ? (
-        <MembersDialog kb={membersTarget} onClose={() => setMembersTarget(null)} />
-      ) : null}
 
       <Dialog
         open={deleteTarget !== null}
@@ -348,11 +359,13 @@ function KbCard({
   onMembers: () => void
   onDelete: () => void
 }) {
+  const navigate = useNavigate()
   const canManage = kb.my_role === 'owner' || kb.my_role === 'admin'
   return (
     <Card
       interactive
-      className="animate-fade-up group relative flex flex-col overflow-hidden"
+      onClick={() => navigate(`/kb/${kb.id}`)}
+      className="animate-fade-up group relative flex cursor-pointer flex-col overflow-hidden"
       style={{ animationDelay: `${delay}ms` } as CSSProperties}
     >
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-300 opacity-70 transition-opacity group-hover:opacity-100" />
@@ -382,7 +395,15 @@ function KbCard({
         <div className="mt-auto flex items-center justify-between border-t border-border pt-3">
           <p className="text-xs text-muted-foreground">{formatDateTime(kb.created_at)}</p>
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" title="成员管理" onClick={onMembers}>
+            <Button
+              variant="ghost"
+              size="sm"
+              title="成员管理"
+              onClick={(e) => {
+                e.stopPropagation()
+                onMembers()
+              }}
+            >
               <Users className="h-4 w-4" />
               成员
             </Button>
@@ -392,7 +413,10 @@ function KbCard({
                 size="icon"
                 title="删除"
                 className="text-destructive"
-                onClick={onDelete}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDelete()
+                }}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -401,180 +425,5 @@ function KbCard({
         </div>
       </CardContent>
     </Card>
-  )
-}
-
-function MembersDialog({ kb, onClose }: { kb: KbItem; onClose: () => void }) {
-  const user = useAuthStore((s) => s.user)
-  const { toast } = useToast()
-  const queryClient = useQueryClient()
-  const canManage = user?.is_superuser || kb.my_role === 'owner' || kb.my_role === 'admin'
-  const isOwner = user?.is_superuser || kb.my_role === 'owner'
-
-  const { data: members, isLoading, refetch } = useQuery({
-    queryKey: ['kb-members', kb.id],
-    queryFn: () => kbApi.listMembers(kb.id),
-  })
-  const [username, setUsername] = useState('')
-  const [role, setRole] = useState<KbRole>('viewer')
-  const [submitting, setSubmitting] = useState(false)
-  const [transferTarget, setTransferTarget] = useState<KbMemberItem | null>(null)
-
-  async function handleInvite(e: FormEvent) {
-    e.preventDefault()
-    setSubmitting(true)
-    try {
-      await kbApi.invite(kb.id, { username, role })
-      toast('success', '邀请已发送', `已邀请 ${username} 加入知识库`)
-      setUsername('')
-      void refetch()
-    } catch (err) {
-      toast('error', '邀请失败', err instanceof ApiError ? err.message : '请稍后重试')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  async function changeRole(member: KbMemberItem, nextRole: KbRole) {
-    try {
-      await kbApi.setMemberRole(kb.id, member.user_id, nextRole)
-      toast('success', '角色已更新')
-      void refetch()
-    } catch (err) {
-      toast('error', '更新失败', err instanceof ApiError ? err.message : '请稍后重试')
-    }
-  }
-
-  async function removeMember(member: KbMemberItem) {
-    try {
-      await kbApi.removeMember(kb.id, member.user_id)
-      toast('success', '成员已移除')
-      void refetch()
-      void queryClient.invalidateQueries({ queryKey: ['kb-list'] })
-    } catch (err) {
-      toast('error', '移除失败', err instanceof ApiError ? err.message : '请稍后重试')
-    }
-  }
-
-  async function handleTransfer() {
-    if (!transferTarget) return
-    try {
-      await kbApi.transfer(kb.id, transferTarget.user_id)
-      toast('success', '所有权已转移', `「${kb.name}」所有者已变更为 ${transferTarget.username}`)
-      setTransferTarget(null)
-      void refetch()
-      void queryClient.invalidateQueries({ queryKey: ['kb-list'] })
-    } catch (err) {
-      toast('error', '转移失败', err instanceof ApiError ? err.message : '请稍后重试')
-    }
-  }
-
-  return (
-    <>
-      <Dialog
-        open
-        onOpenChange={onClose}
-        title={`成员管理：${kb.name}`}
-        description="邀请成员、调整角色或转移所有权"
-        className="max-w-2xl"
-      >
-        {canManage ? (
-          <form onSubmit={handleInvite} className="mb-4 flex flex-col gap-2 rounded-xl border border-border bg-muted/40 p-3 sm:flex-row">
-            <div className="flex-1">
-              <Label htmlFor="invite-username">用户名</Label>
-              <Input
-                id="invite-username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="输入成员用户名"
-              />
-            </div>
-            <div>
-              <Label>角色</Label>
-              <Select
-                className="w-full sm:w-32"
-                value={role}
-                onChange={(e) => setRole(e.target.value as KbRole)}
-              >
-                <option value="viewer">查看者</option>
-                <option value="editor">编辑者</option>
-                <option value="admin">管理员</option>
-              </Select>
-            </div>
-            <Button type="submit" disabled={submitting || !username.trim()} className="self-end">
-              {submitting ? '发送中...' : '发送邀请'}
-            </Button>
-          </form>
-        ) : null}
-
-        {isLoading ? (
-          <Skeleton className="h-40 w-full rounded-xl" />
-        ) : (
-          <div className="space-y-2">
-            {(members ?? []).map((member) => (
-              <div
-                key={member.id}
-                className="flex items-center gap-3 rounded-xl border border-border px-3 py-2.5"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-50 text-sm font-semibold text-primary-strong">
-                  {(member.full_name || member.username || 'U').slice(0, 1).toUpperCase()}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium">
-                    {member.full_name || member.username}
-                    {member.role === 'owner' ? (
-                      <Crown className="ml-1 inline h-3.5 w-3.5 text-warning" />
-                    ) : null}
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    @{member.username} · {member.status === 'invited' ? '待接受' : roleLabels[member.role]}
-                  </p>
-                </div>
-                {member.status === 'active' && member.role !== 'owner' && canManage ? (
-                  <>
-                    <Select
-                      className="w-28"
-                      value={member.role}
-                      onChange={(e) => changeRole(member, e.target.value as KbRole)}
-                    >
-                      <option value="viewer">查看者</option>
-                      <option value="editor">编辑者</option>
-                      <option value="admin">管理员</option>
-                    </Select>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      title="移除"
-                      className="text-destructive"
-                      onClick={() => removeMember(member)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </>
-                ) : null}
-                {isOwner && member.role !== 'owner' && member.status === 'active' ? (
-                  <Button variant="outline" size="sm" onClick={() => setTransferTarget(member)}>
-                    转移所有权
-                  </Button>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        )}
-      </Dialog>
-
-      <Dialog
-        open={transferTarget !== null}
-        onOpenChange={(open) => { if (!open) setTransferTarget(null) }}
-        title="转移所有权"
-        description={`确认将「${kb.name}」的所有权转移给 ${transferTarget?.username ?? ''}？转移后你将变为管理员。`}
-        footer={
-          <>
-            <Button variant="outline" onClick={() => setTransferTarget(null)}>取消</Button>
-            <Button onClick={() => void handleTransfer()}>确认转移</Button>
-          </>
-        }
-      />
-    </>
   )
 }

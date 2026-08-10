@@ -1,5 +1,6 @@
 import { http } from '@/api/client'
 import type {
+  KbExternalConfig,
   KbGroupGrantItem,
   KbInvitationItem,
   KbItem,
@@ -24,6 +25,18 @@ export const kbApi = {
     members?: { username: string; role: KbRole }[]
   }): Promise<KbItem> {
     return http.post<KbItem>('/kb', data)
+  },
+  overview(kbId: string): Promise<KbItem> {
+    return http.get<KbItem>(`/kb/${kbId}/overview`)
+  },
+  getExternal(kbId: string): Promise<KbExternalConfig> {
+    return http.get<KbExternalConfig>(`/kb/${kbId}/external`)
+  },
+  updateExternal(
+    kbId: string,
+    data: { enabled: boolean; regenerate?: boolean },
+  ): Promise<KbExternalConfig> {
+    return http.put<KbExternalConfig>(`/kb/${kbId}/external`, data)
   },
   get(kbId: string): Promise<KbItem> {
     return http.get<KbItem>(`/kb/${kbId}`)

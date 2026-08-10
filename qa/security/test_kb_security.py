@@ -180,3 +180,36 @@ async def test_kb_actions_audited(client, super_token):
 
         await asyncio.sleep(0.2)
     assert found, "kb.create / kb.invite 应出现在审计日志"
+
+
+async def test_pending_user_search_denied(client, super_token):
+    from app.core.config import settings
+
+    original = settings.REGISTRATION_DEFAULT_PENDING
+    settings.REGISTRATION_DEFAULT_PENDING = True
+    try:
+        username = await _unique("pendingsearch")
+        await client.post(
+            "/api/v1/auth/register", json={"username": username, "password": "Test@1234"}
+        )
+        token = await _login(client, username)
+        resp = await client.get(
+            "/api/v1/users/search?keyword=admin",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        assert resp.status_code == 403
+    finally:
+        settings.REGISTRATION_DEFAULT_PENDING = original
+
+
+async def test_non_member_external_denied(client, super_token):
+    owner_name, _ = await _make_user(client, super_token)
+    stranger_name, _ = await _make_user(client, super_token)
+    owner_token = await _login(client, owner_name)
+    stranger_token = await _login(client, stranger_name)
+    kb = await _kb(client, owner_token, "外部联动安全")
+    h = {"Authorization": f"Bearer {stranger_token}"}
+    assert (await client.get(f"/api/v1/kb/{kb['id']}/external", headers=h)).status_code == 403
+    assert (
+        await client.put(f"/api/v1/kb/{kb['id']}/external", headers=h, json={"enabled": True})
+    ).status_code == 403
