@@ -203,12 +203,28 @@ await scenario('L3M10-06', 'M10', async () => {
   await page.getByText(`E2E初始成员库_${stamp}`).click()
   await page.waitForURL(`**/kb/${detailKbId()}`, { timeout: 10000 })
   await page.waitForTimeout(800)
-  for (const t of ['知识库概览', '活跃成员', '文档解析', '知识图谱', '知识问答', '知识库成员']) {
+  for (const t of ['知识库概览', '活跃成员']) {
     if (!(await page.getByText(t, { exact: false }).first().isVisible().catch(() => false))) {
       throw new Error(`KB 概览缺少：${t}`)
     }
   }
+  for (const t of ['文档解析', '知识图谱', '知识问答', '知识库成员']) {
+    if (!(await page.locator('aside').getByText(t, { exact: false }).first().isVisible().catch(() => false))) {
+      throw new Error(`KB 内部菜单缺少：${t}`)
+    }
+  }
+  // 内部布局应替换外部导航：全局“工作台”菜单不可见
+  if ((await page.getByRole('link', { name: '工作台' }).count()) !== 0) {
+    throw new Error('KB 内部不应显示外部导航')
+  }
   await page.screenshot({ path: `${OUT}p1_kb_overview.png` })
+  // 返回按钮回到外部导航
+  await page.getByTitle('返回知识库列表（外部导航）').click()
+  await page.waitForURL(`${BASE}/kb`, { timeout: 10000 })
+  await page.waitForTimeout(600)
+  if ((await page.getByRole('link', { name: '工作台' }).count()) === 0) {
+    throw new Error('返回后未恢复外部导航')
+  }
 })
 
 await scenario('L3M10-07', 'M10', async () => {
@@ -232,18 +248,30 @@ await scenario('L3M10-07', 'M10', async () => {
   if (!(await page.getByText('已加入').first().isVisible().catch(() => false))) {
     throw new Error('接受后成员页未显示已加入')
   }
-  // 当前阶段仅支持添加：成员行不应出现角色下拉、移除或转移所有权操作
+  // 完整成员权限管理：角色调整、移除、转移所有权均可用
   const memberRow = page.locator('div.px-4', { hasText: `@${invitee}` }).last()
-  if ((await memberRow.locator('select').count()) !== 0) {
-    throw new Error('成员页不应出现角色下拉')
+  if ((await memberRow.locator('select').count()) !== 1) {
+    throw new Error('成员行应存在角色下拉')
   }
-  if (await page.getByRole('button', { name: '转移所有权' }).count()) {
-    throw new Error('成员页不应出现转移所有权')
+  await memberRow.locator('select').selectOption('editor')
+  await page.waitForTimeout(700)
+  if (!(await page.getByText('角色已更新').first().isVisible().catch(() => false))) {
+    throw new Error('角色调整未提示成功')
   }
-  if (await memberRow.getByTitle('移除').count()) {
-    throw new Error('成员页不应出现移除操作')
+  if ((await memberRow.getByTitle('移除').count()) !== 1) {
+    throw new Error('成员行应存在移除操作')
   }
-  await page.screenshot({ path: `${OUT}p1_kb_members_readonly.png` })
+  const transferBtn = page.getByRole('button', { name: '转移所有权' })
+  if ((await transferBtn.count()) === 0) {
+    throw new Error('所有者应看到转移所有权按钮')
+  }
+  await transferBtn.first().click()
+  await page.waitForTimeout(400)
+  if (!(await page.getByRole('button', { name: '确认转移' }).isVisible().catch(() => false))) {
+    throw new Error('转移确认弹窗未出现')
+  }
+  await page.getByRole('button', { name: '取消' }).click()
+  await page.screenshot({ path: `${OUT}p1_kb_members_manage.png` })
 })
 
 await scenario('L3M10-08', 'M10', async () => {

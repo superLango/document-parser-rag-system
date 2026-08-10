@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useOutletContext, useParams } from 'react-router-dom'
+import { Link, Navigate, NavLink, Outlet, useOutletContext, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import {
   ArrowLeft,
@@ -18,6 +18,8 @@ import { kbApi } from '@/api/modules/kb'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores/auth'
+import { isPending } from '@/stores/rbac'
 import type { KbItem } from '@/api/types'
 
 const roleLabels: Record<string, string> = {
@@ -47,56 +49,78 @@ export interface KbDetailContext {
 
 export default function KbDetailLayout() {
   const { kbId } = useParams<{ kbId: string }>()
+  const user = useAuthStore((s) => s.user)
   const { data: kb, isLoading, refetch } = useQuery({
     queryKey: ['kb-detail', kbId],
     queryFn: () => kbApi.get(kbId!),
     enabled: Boolean(kbId),
   })
 
-  if (isLoading || !kb) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-20 w-full rounded-2xl" />
-        <div className="flex gap-6">
-          <Skeleton className="h-96 w-52 rounded-2xl" />
-          <Skeleton className="h-96 flex-1 rounded-2xl" />
-        </div>
-      </div>
-    )
+  if (isPending(user)) {
+    return <Navigate to="/pending" replace />
   }
 
   return (
-    <div className="space-y-6">
-      {/* 顶部信息栏：返回 + 知识库名称与描述 */}
-      <div className="flex items-center gap-4 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 via-white to-teal-50 px-4 py-4 shadow-soft sm:px-6">
-        <Link
-          to="/kb"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-white/80 text-primary-strong shadow-soft transition-all hover:shadow-glow"
-          title="返回知识库列表"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-glow">
-          <Database className="h-5 w-5" strokeWidth={1.6} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="font-display text-lg font-semibold tracking-tight">{kb.name}</h1>
-            <Badge variant={kb.my_role === 'owner' ? 'success' : 'outline'}>
-              {kb.my_role ? roleLabels[kb.my_role] ?? kb.my_role : '—'}
-            </Badge>
-            <Badge variant="secondary"><Users className="h-3 w-3" /> {kb.member_count} 人</Badge>
+    <div className="min-h-dvh bg-background-soft">
+      {/* 顶部信息栏：返回外部 + 知识库名称/描述（替换外部导航栏） */}
+      <header className="sticky top-0 z-30 border-b border-border/80 bg-card/85 backdrop-blur-md">
+        <div className="flex items-center gap-3 px-4 py-3 sm:px-6">
+          <Link
+            to="/kb"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-white/80 text-primary-strong shadow-soft transition-all hover:shadow-glow"
+            title="返回知识库列表（外部导航）"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-glow">
+            <Database className="h-5 w-5" strokeWidth={1.6} />
+          </span>
+          <div className="min-w-0 flex-1">
+            {isLoading || !kb ? (
+              <Skeleton className="h-6 w-64 max-w-full rounded-lg" />
+            ) : (
+              <>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="truncate font-display text-lg font-semibold tracking-tight">{kb.name}</h1>
+                  <Badge variant={kb.my_role === 'owner' ? 'success' : 'outline'}>
+                    {kb.my_role ? roleLabels[kb.my_role] ?? kb.my_role : '—'}
+                  </Badge>
+                  <Badge variant="secondary"><Users className="h-3 w-3" /> {kb.member_count} 人</Badge>
+                </div>
+                <p className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">
+                  {kb.description || '暂无描述'}
+                </p>
+              </>
+            )}
           </div>
-          <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
-            {kb.description || '暂无描述'}
-          </p>
         </div>
-      </div>
+        {/* 移动端横向菜单 */}
+        <div className="flex gap-1 overflow-x-auto border-t border-border px-3 py-1.5 lg:hidden">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to || 'overview'}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                cn(
+                  'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                )
+              }
+            >
+              <item.icon className="h-4 w-4" strokeWidth={1.8} />
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
+      </header>
 
-      <div className="flex flex-col gap-6 lg:flex-row">
-        {/* 左侧知识库内部菜单 */}
-        <aside className="shrink-0 lg:w-56">
-          <nav className="space-y-1 rounded-2xl border border-border bg-card p-2 shadow-soft">
+      <div className="flex">
+        {/* 左侧知识库内部菜单（替换外部侧栏） */}
+        <aside className="sticky top-[104px] hidden h-[calc(100dvh-104px)] w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar p-3 lg:flex">
+          <nav className="space-y-1">
             {navItems.map((item) => (
               <NavLink
                 key={item.to || 'overview'}
@@ -129,9 +153,16 @@ export default function KbDetailLayout() {
         </aside>
 
         {/* 内容区 */}
-        <div className="min-w-0 flex-1">
-          <Outlet context={{ kb, refetch } satisfies KbDetailContext} />
-        </div>
+        <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
+          {isLoading || !kb ? (
+            <div className="space-y-6">
+              <Skeleton className="h-64 w-full rounded-2xl" />
+              <Skeleton className="h-40 w-full rounded-2xl" />
+            </div>
+          ) : (
+            <Outlet context={{ kb, refetch } satisfies KbDetailContext} />
+          )}
+        </main>
       </div>
     </div>
   )
