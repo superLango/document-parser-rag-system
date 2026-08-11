@@ -100,6 +100,16 @@ class Settings(BaseSettings):
     GLMOCR_MAX_EDGE: int = 2048
     GLMOCR_MIN_EDGE: int = 32
 
+    # ---------- 嵌入（S3/D2：BGE-M3，dense only） ----------
+    EMBEDDING_MODEL_DIR: str = str(
+        Path(__file__).resolve().parents[3] / "models" / "bge-m3"
+    )
+    EMBEDDING_DEVICE: str = "cuda"  # cuda | cpu
+    EMBEDDING_FP16: bool = True
+    EMBEDDING_BATCH_SIZE: int = 16  # 原版实测最优（batch_size=16）
+    EMBEDDING_MAX_LENGTH: int = 8192  # BGE-M3 最大序列（大表格块友好）
+    EMBEDDING_DIM: int = 1024  # BGE-M3 输出维度（D2 已确认）
+
     # ---------- 审计与可观测性 ----------
     AUDIT_LOG_RETENTION_DAYS: int = 90
     ENABLE_METRICS: bool = False
