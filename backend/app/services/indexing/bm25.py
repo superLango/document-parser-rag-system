@@ -173,6 +173,8 @@ class KBBm25Service:
         kb_id: uuid.UUID,
         query: str,
         top_k: int = 20,
+        extra_where: str = "",
+        extra_params: dict | None = None,
     ) -> list[dict]:
         """查询 BM25 打分：候选过滤 + Python 打分，返回 top_k。
 
@@ -185,15 +187,18 @@ class KBBm25Service:
             return []
         unique_tokens = list(dict.fromkeys(query_tokens))
 
-        # 候选：包含任一查询词元的未删除块（GIN 索引加速）
+        # 候选：包含任一查询词元的未删除块（GIN 索引加速；支持过滤条件）
+        bind = {"kb": kb_id, "tokens": unique_tokens}
+        if extra_params:
+            bind.update(extra_params)
         rows = (
             await db.execute(
                 text(
                     "SELECT chunk_id, document_id, content, hierarchy_path, title, "
                     "source_pages, has_table, bm25_tokens FROM document_chunks "
                     "WHERE kb_id = :kb AND deleted_at IS NULL "
-                    "AND bm25_tokens ?| :tokens"
-                ).bindparams(kb=kb_id, tokens=unique_tokens),
+                    f"AND bm25_tokens ?| :tokens{extra_where}"
+                ).bindparams(**bind),
             )
         ).all()
         if not rows:

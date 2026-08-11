@@ -20,6 +20,7 @@ from app.core.response import paginated, success
 from app.middleware.audit_log import audit_action
 from app.models.user import User
 from app.schemas.document import DocumentOut, DocumentTaskOut
+from app.schemas.indexing import SearchRequest
 from app.services import document_service, kb_service
 
 router = APIRouter(prefix="/kb/{kb_id}", tags=["知识库索引"])
@@ -65,6 +66,40 @@ async def start_document_index(
             "task": DocumentTaskOut.model_validate(task).model_dump(),
         },
         message="索引任务已创建",
+    )
+
+
+@router.post("/search")
+async def search_kb(
+    kb_id: uuid.UUID,
+    payload: SearchRequest,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    """混合检索（有效成员可读）：双向量 + BM25 + RRF。"""
+    from dataclasses import asdict
+
+    from app.services.indexing.retrieval import SearchFilters, retrieval_service
+
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    filters = None
+    if payload.filters is not None:
+        filters = SearchFilters(
+            document_id=payload.filters.document_id,
+            has_table=payload.filters.has_table,
+            level=payload.filters.level,
+        )
+    hits = await retrieval_service.search(
+        db, kb_id, payload.query, top_k=payload.top_k, filters=filters
+    )
+    return success(
+        data={
+            "query": payload.query,
+            "total": len(hits),
+            "items": [asdict(h) for h in hits],
+        },
+        message="检索完成",
     )
 
 

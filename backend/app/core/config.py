@@ -114,6 +114,15 @@ class Settings(BaseSettings):
     BM25_K1: float = 1.5
     BM25_B: float = 0.75
 
+    # ---------- 检索（S6/D6：dense 双路 + BM25 + RRF） ----------
+    RETRIEVAL_TITLE_WEIGHT: float = 0.2
+    RETRIEVAL_CONTENT_WEIGHT: float = 0.8
+    RETRIEVAL_RRF_K: float = 60.0
+    RETRIEVAL_DENSE_WEIGHT: float = 1.0
+    RETRIEVAL_KEYWORD_WEIGHT: float = 1.2
+    RETRIEVAL_TOP_K: int = 10
+    RETRIEVAL_CANDIDATE_MULT: int = 2
+
     # ---------- 审计与可观测性 ----------
     AUDIT_LOG_RETENTION_DAYS: int = 90
     ENABLE_METRICS: bool = False
