@@ -135,6 +135,11 @@ await scenario('L3UI-04', 'M18', async () => {
   await page.locator(`[data-testid="start-${globalThis.__docId}"]`).click()
   await page.waitForTimeout(500)
   if (!(await page.getByText('解析已开始').first().isVisible().catch(() => false))) throw new Error('开始解析未提示')
+  const parsingBtn = page.locator(`[data-testid="parsing-${globalThis.__docId}"]`)
+  if (!(await parsingBtn.isVisible().catch(() => false))) throw new Error('解析中未显示置灰解析按钮')
+  if (!(await parsingBtn.isDisabled().catch(() => false))) throw new Error('解析中按钮未禁用')
+  if (!(await page.locator(`[data-testid="progress-${globalThis.__docId}"]`).isVisible().catch(() => false))) throw new Error('解析中未显示进度条')
+  await page.screenshot({ path: `${OUT}ui_parsing_progress.png` })
   await waitDocStatus(token, kbId, globalThis.__docId, 'completed')
   await page.reload({ waitUntil: 'networkidle' })
   await page.waitForTimeout(800)
@@ -148,6 +153,13 @@ await scenario('L3UI-05', 'M18', async () => {
   await page.waitForURL('**/viewer', { timeout: 10000 })
   await page.waitForTimeout(1200)
   if (!(await page.locator('[data-testid="viewer-page"]').isVisible().catch(() => false))) throw new Error('左侧原文档未显示')
+  // 翻页位于左侧源文件组件上方
+  const pagination = page.locator('[data-testid="viewer-pagination"]')
+  if (!(await pagination.isVisible().catch(() => false))) throw new Error('左侧翻页栏未显示')
+  const pageBox = await page.locator('[data-testid="viewer-page"]').boundingBox()
+  const pagBox = await pagination.boundingBox()
+  if (!pageBox || !pagBox || pagBox.y >= pageBox.y) throw new Error('翻页栏未位于源文件上方')
+  if (!(await page.locator('[data-testid="viewer-reparse"]').isVisible().catch(() => false))) throw new Error('内页未显示重新解析按钮')
   // 默认版面块标签：双栏（列表 + 内容区）
   const blockCount = await page.locator('[data-testid^="block-"]').count()
   if (blockCount === 0) throw new Error('版面块列表为空')
@@ -170,13 +182,23 @@ await scenario('L3UI-05', 'M18', async () => {
   await page.waitForTimeout(300)
   const jsonText = await page.locator('[data-testid="viewer-json"]').innerText()
   if (!jsonText.includes('"schema_version": "1.2"')) throw new Error('JSON 标签页内容异常')
-  // 翻页位于左侧组件
+  // 翻页（位于左侧组件上方）
   const pageIndicator = await page.getByText(/第 \d+ \/ \d+ 页/).innerText()
   await page.getByRole('button', { name: '下一页' }).click()
   await page.waitForTimeout(900)
   const indicator2 = await page.getByText(/第 \d+ \/ \d+ 页/).innerText()
   if (indicator2 === pageIndicator) throw new Error('翻页未生效')
   await page.screenshot({ path: `${OUT}ui_viewer_linked.png` })
+  // 内页重新解析 → 显示解析进度 → 完成后恢复标签页
+  await page.locator('[data-testid="viewer-reparse"]').click()
+  await page.waitForTimeout(600)
+  if (!(await page.locator('[data-testid="viewer-progress"]').isVisible().catch(() => false))) throw new Error('内页重新解析未显示进度')
+  if (!(await page.locator('[data-testid="viewer-progress-bar"]').isVisible().catch(() => false))) throw new Error('内页进度条未显示')
+  await page.screenshot({ path: `${OUT}ui_viewer_reparsing.png` })
+  await waitDocStatus(token, kbId, globalThis.__docId, 'completed')
+  await page.waitForTimeout(2000)
+  if (!(await page.locator('[data-testid="viewer-page"]').isVisible().catch(() => false))) throw new Error('重新解析完成后未恢复原文档')
+  if (!(await page.locator('[data-testid="tab-json"]').isVisible().catch(() => false))) throw new Error('重新解析完成后标签页未恢复')
 })
 
 // ---------- 场景 6：控制台无错误 + 清理 ----------

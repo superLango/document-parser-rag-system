@@ -1,5 +1,6 @@
 """文档服务：上传记录、任务/Outbox、parsekit 解析流水线、删除与重解析。"""
 
+import asyncio
 import json
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -10,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.logging import get_logger
 from app.models.document import Document, DocumentTask, TaskDeadLetter, TaskOutbox
 from app.services import storage
-from app.services.parsekit import ParsekitError, ParseOptions, parse_pdf
+from app.services.parsekit import ParseOptions, parse_pdf
 
 logger = get_logger(__name__)
 
@@ -483,25 +484,42 @@ async def run_parse_task(
         "header_footer_mode": options.header_footer_mode,
         "dpi": options.dpi,
     }
-    done: list[str] = []
-    for stage in PARSE_STAGES:
-        document.process_status = stage
-        document.status = "parsing"
-        done.append(stage)
-        task.checkpoint = {**checkpoint_meta, "stages": list(done)}
-        task.heartbeat_at = _now()
-        task.updated_at = _now()
-        document.updated_at = _now()
-        await db.commit()
+    document.status = "parsing"
+    document.process_status = "queued"
+    document.updated_at = _now()
+    await db.commit()
 
     try:
         pdf_bytes = storage.get_object(document.object_key)
     except Exception as exc:
         raise RuntimeError(f"读取原始 PDF 失败：{exc}") from exc
 
+    stage_holder: dict[str, str | None] = {"stage": None}
+
+    def _on_stage(stage: str) -> None:
+        stage_holder["stage"] = stage
+
+    parse_task = asyncio.create_task(
+        asyncio.to_thread(parse_pdf, pdf_bytes, options=options, progress=_on_stage)
+    )
+    done_stages: list[str] = []
+    last_stage: str | None = None
+    while not parse_task.done():
+        stage = stage_holder["stage"]
+        if stage is not None and stage != last_stage:
+            last_stage = stage
+            done_stages.append(stage)
+            document.process_status = stage
+            document.status = "parsing"
+            task.checkpoint = {**checkpoint_meta, "stages": list(done_stages)}
+            task.heartbeat_at = _now()
+            task.updated_at = _now()
+            document.updated_at = _now()
+            await db.commit()
+        await asyncio.sleep(0.2)
     try:
-        result = parse_pdf(pdf_bytes, options=options)
-    except ParsekitError as exc:
+        result = parse_task.result()
+    except Exception as exc:
         raise RuntimeError(str(exc)) from exc
 
     keys = _artifact_keys(kb_id, task.task_id)

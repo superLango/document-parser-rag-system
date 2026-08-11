@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, Braces, ChevronLeft, ChevronRight, FileText, Layers, MessageSquareText } from 'lucide-react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { ArrowLeft, Braces, ChevronLeft, ChevronRight, FileText, Layers, Loader2, MessageSquareText, RefreshCcw } from 'lucide-react'
 import { documentsApi } from '@/api/modules/documents'
+import { ApiError } from '@/api/client'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/toast'
+import { PROCESS_LABELS, TERMINAL_STATUSES, progressPercent } from '@/lib/documentStatus'
 import { cn } from '@/lib/utils'
 
 interface ViewerBlock {
@@ -36,13 +39,19 @@ function splitMarkdownByPage(md: string): string[] {
 
 type TabKey = 'blocks' | 'md' | 'json'
 
+const POLL_INTERVAL = 1500
+
 export default function KbDocumentViewerPage() {
   const { kbId = '', docId = '' } = useParams()
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
   const [page, setPage] = useState(1)
   const [activeBlock, setActiveBlock] = useState<string | null>(null)
   const [tab, setTab] = useState<TabKey>('blocks')
   const [pageUrl, setPageUrl] = useState<string | null>(null)
   const [originalUrl, setOriginalUrl] = useState<string | null>(null)
+  const [reparsing, setReparsing] = useState(false)
+  const reparseSawNonTerminal = useRef(false)
   const pageUrlRef = useRef<string | null>(null)
   const originalUrlRef = useRef<string | null>(null)
 
@@ -63,12 +72,41 @@ export default function KbDocumentViewerPage() {
   })
 
   const completed = doc?.status === 'completed'
+  const reparseable = completed || doc?.status === 'failed' || reparsing
   const pageCount = layout?.page_count ?? doc?.page_count ?? 1
   const safePage = Math.min(Math.max(page, 1), Math.max(pageCount, 1))
   const currentPage = completed ? layout?.pages?.find((p) => p.page_index === safePage) : undefined
   const blocks = currentPage?.blocks ?? []
   const mdPages = useMemo(() => (markdown ? splitMarkdownByPage(markdown) : []), [markdown])
   const currentMd = mdPages[safePage - 1] ?? ''
+  const percent = progressPercent(doc?.process_status)
+  const stageLabel = PROCESS_LABELS[doc?.process_status ?? ''] ?? '排队中'
+
+  // 重新解析：轮询文档详情直至终态
+  useEffect(() => {
+    if (!reparsing) return
+    const timer = window.setInterval(() => {
+      void queryClient.invalidateQueries({ queryKey: ['doc-detail', kbId, docId] })
+    }, POLL_INTERVAL)
+    return () => window.clearInterval(timer)
+  }, [reparsing, kbId, docId, queryClient])
+
+  useEffect(() => {
+    if (!reparsing || !doc) return
+    if (TERMINAL_STATUSES.has(doc.status)) {
+      if (!reparseSawNonTerminal.current) return
+      setReparsing(false)
+      void queryClient.invalidateQueries({ queryKey: ['doc-layout', kbId, docId] })
+      void queryClient.invalidateQueries({ queryKey: ['doc-markdown', kbId, docId] })
+      if (doc.status === 'failed') {
+        toast('error', '重新解析失败', typeof doc.error === 'string' ? doc.error : '请前往任务列表查看失败原因')
+      } else {
+        toast('success', '重新解析完成', '已恢复版面块 / Markdown / JSON 查看')
+      }
+    } else {
+      reparseSawNonTerminal.current = true
+    }
+  }, [reparsing, doc, kbId, docId, queryClient, toast])
 
   // 待解析/解析中：加载原始 PDF blob 供浏览器预览
   useEffect(() => {
@@ -104,6 +142,21 @@ export default function KbDocumentViewerPage() {
     setActiveBlock(null)
   }, [safePage])
 
+  async function handleReparse() {
+    if (reparsing) return
+    reparseSawNonTerminal.current = false
+    setReparsing(true)
+    try {
+      await documentsApi.reparse(kbId, docId)
+      toast('success', '重新解析已启动', '正在重新解析，完成后自动恢复版面查看')
+      void queryClient.invalidateQueries({ queryKey: ['doc-detail', kbId, docId] })
+    } catch (err) {
+      reparseSawNonTerminal.current = false
+      setReparsing(false)
+      toast('error', '重新解析失败', err instanceof ApiError ? err.message : '请稍后重试')
+    }
+  }
+
   function prevPage() {
     if (safePage > 1) setPage(safePage - 1)
   }
@@ -137,9 +190,25 @@ export default function KbDocumentViewerPage() {
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold">{doc?.filename ?? '文档详情'}</p>
             <p className="text-xs text-muted-foreground">
-              {completed ? `第 ${safePage} / ${pageCount} 页 · 版面块 ${blocks.length} 个` : '原文档预览'}
+              {reparsing
+                ? `重新解析中 · ${stageLabel} ${percent}%`
+                : completed
+                  ? `第 ${safePage} / ${pageCount} 页 · 版面块 ${blocks.length} 个`
+                  : '原文档预览'}
             </p>
           </div>
+          {reparseable ? (
+            <Button
+              variant="outline"
+              size="sm"
+              data-testid="viewer-reparse"
+              disabled={reparsing}
+              onClick={() => void handleReparse()}
+            >
+              {reparsing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
+              {reparsing ? '重新解析中' : '重新解析'}
+            </Button>
+          ) : null}
         </div>
       </header>
 
@@ -150,6 +219,18 @@ export default function KbDocumentViewerPage() {
             <div className="border-b border-border bg-muted/40 px-4 py-2 text-sm font-medium">原文档</div>
             {completed ? (
               <>
+                {/* 翻页：位于左侧源文件组件上方 */}
+                <div className="flex items-center justify-between gap-2 border-b border-border bg-muted/20 px-3 py-2" data-testid="viewer-pagination">
+                  <Button variant="outline" size="sm" onClick={prevPage} disabled={safePage <= 1} data-testid="prev-page">
+                    <ChevronLeft className="h-4 w-4" />
+                    上一页
+                  </Button>
+                  <span className="text-sm font-medium">{safePage} / {pageCount}</span>
+                  <Button variant="outline" size="sm" onClick={nextPage} disabled={safePage >= pageCount} data-testid="next-page">
+                    下一页
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
                 <div className="relative aspect-[595/842] w-full flex-1 bg-white">
                   {pageUrl ? (
                     <>
@@ -191,18 +272,6 @@ export default function KbDocumentViewerPage() {
                     </div>
                   )}
                 </div>
-                {/* 翻页：位于左侧源文件组件 */}
-                <div className="flex items-center justify-between border-t border-border bg-muted/30 px-3 py-2">
-                  <Button variant="outline" size="sm" onClick={prevPage} disabled={safePage <= 1}>
-                    <ChevronLeft className="h-4 w-4" />
-                    上一页
-                  </Button>
-                  <span className="text-sm font-medium">{safePage} / {pageCount}</span>
-                  <Button variant="outline" size="sm" onClick={nextPage} disabled={safePage >= pageCount}>
-                    下一页
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
               </>
             ) : originalUrl ? (
               <embed
@@ -219,8 +288,30 @@ export default function KbDocumentViewerPage() {
           </div>
         </section>
 
-        {/* 右：标签页（仅完成模式） */}
-        {completed ? (
+        {/* 右：重新解析进度 / 标签页（完成模式） / 占位 */}
+        {reparsing ? (
+          <section
+            className="flex min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-emerald-200 bg-emerald-50/30 p-10 text-center"
+            data-testid="viewer-progress"
+          >
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-sm font-medium">正在重新解析</p>
+            <div className="w-full max-w-sm space-y-2">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>{stageLabel}</span>
+                <span data-testid="viewer-progress-text">{percent}%</span>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-muted" data-testid="viewer-progress-bar">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+                  style={{ width: `${percent}%` }}
+                  data-testid="viewer-progress-fill"
+                />
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">解析完成后将自动恢复版面块 / Markdown / JSON 查看</p>
+          </section>
+        ) : completed ? (
           <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
             <div className="flex items-center gap-1 border-b border-border bg-muted/40 px-2 py-1.5">
               {tabs.map(({ key, label, icon: Icon }) => (

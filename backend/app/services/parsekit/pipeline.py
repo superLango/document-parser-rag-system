@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -202,12 +203,15 @@ def _build_layout_json(
 def parse_pdf(
     pdf_bytes: bytes,
     options: ParseOptions | None = None,
+    progress: Callable[[str], None] | None = None,
 ) -> ParseResult:
     """执行完整解析管线，返回 Markdown + layout.json + 页面图片。"""
     opts = options or ParseOptions.from_settings()
     _validate_options(opts)
     started = time.monotonic()
 
+    if progress:
+        progress("rendering")
     render_result = render_pdf(
         pdf_bytes,
         dpi=opts.dpi,
@@ -224,6 +228,8 @@ def parse_pdf(
     for page, kept in zip(pages, erase_result.pages):
         page.text_blocks = kept
 
+    if progress:
+        progress("layout")
     engine = _get_layout_engine(opts)
     page_layouts = engine.analyze(pages)
     # DocLayout 引擎单页失败并入页面级 failures（U11）
@@ -239,6 +245,8 @@ def parse_pdf(
         from app.services.ocr_backend.glmocr import get_ocr_backend
 
         backend = get_ocr_backend()
+        if progress:
+            progress("ocr")
         page_layouts, ocr_failures = run_ocr_stage(
             pages,
             page_layouts,
@@ -256,6 +264,8 @@ def parse_pdf(
                 f"error={first.get('error')}"
             )
 
+    if progress:
+        progress("rebuild")
     ordered_layouts = [sort_reading_order(blocks) for blocks in page_layouts]
     all_ordered = [b for blocks in ordered_layouts for b in blocks]
     markdown = assemble_markdown(all_ordered)
