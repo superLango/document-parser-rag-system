@@ -24,6 +24,11 @@ class DocumentOut(BaseModel):
     layout_path: str | None = None
     pages_cleaned_at: datetime | None = None
     error: dict | None = None
+    # S4/D8 独立索引状态（解析状态与索引状态互不覆盖）
+    index_status: str = "not_indexed"
+    index_progress: int | None = None
+    index_total: int | None = None
+    index_error: dict | None = None
     created_at: datetime
     updated_at: datetime | None = None
 

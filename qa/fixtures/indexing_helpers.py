@@ -17,8 +17,13 @@ async def create_kb_via_api(client, super_token, name: str) -> dict:
     return resp.json()["data"]
 
 
-async def create_document_row(db, kb_id: uuid.UUID, filename: str = "idx.pdf") -> uuid.UUID:
-    """以超管上下文插入 documents 行（索引表 FK 依赖）。"""
+async def create_document_row(
+    db, kb_id: uuid.UUID, filename: str = "idx.pdf", layout_path: str | None = None
+) -> uuid.UUID:
+    """以超管上下文插入 documents 行（索引表 FK 依赖）。
+
+    layout_path 非空时视为已解析完成（可进入索引）。
+    """
     from sqlalchemy import insert
 
     from app.models.document import Document
@@ -34,6 +39,7 @@ async def create_document_row(db, kb_id: uuid.UUID, filename: str = "idx.pdf") -
             status="completed",
             process_status="completed",
             page_count=2,
+            layout_path=layout_path,
         )
         .returning(Document.id)
     )

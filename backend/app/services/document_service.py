@@ -16,6 +16,8 @@ from app.services.parsekit import ParseOptions, parse_pdf
 logger = get_logger(__name__)
 
 PARSE_STAGES = ["rendering", "layout", "ocr", "rebuild"]
+INDEX_STAGES = ["chunking", "embedding", "storing"]
+INDEX_TASK_TYPE = "document_index"
 
 
 def _now() -> datetime:
@@ -388,6 +390,262 @@ async def cleanup_expired_pages(
     return cleaned
 
 
+async def enqueue_index_task(
+    db: AsyncSession, kb_id: uuid.UUID, document_id: uuid.UUID
+) -> DocumentTask | None:
+    """创建独立索引任务（D8）：解析完成后自动触发或手动重索引。
+
+    幂等：咨询锁串行化，同一文档同时只允许一个 queued/running 索引任务；
+    已有活动任务时返回 None（调用方按 409 处理）。
+    仅允许已解析完成（layout 产物存在）的文档进入索引。
+    """
+    from app.core.exceptions import BusinessException, ErrorCode
+
+    await db.execute(
+        text("SELECT pg_advisory_xact_lock(hashtext(:key))"),
+        {"key": f"index-trigger:{document_id}"},
+    )
+    document = (
+        await db.execute(
+            select(Document)
+            .where(
+                Document.id == document_id,
+                Document.kb_id == kb_id,
+                Document.deleted_at.is_(None),
+            )
+            .with_for_update()
+        )
+    ).scalar_one_or_none()
+    if document is None:
+        raise BusinessException(code=ErrorCode.BUSINESS_NOT_FOUND, message="文档不存在")
+    if document.status != "completed" or not document.layout_path:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_INVALID_STATE,
+            message="文档尚未解析完成，无法索引",
+        )
+
+    active = (
+        await db.execute(
+            select(func.count())
+            .select_from(DocumentTask)
+            .where(
+                DocumentTask.document_id == document_id,
+                DocumentTask.type == INDEX_TASK_TYPE,
+                DocumentTask.status.in_(("queued", "running")),
+            )
+        )
+    ).scalar_one()
+    if active > 0:
+        return None
+
+    task = DocumentTask(
+        kb_id=kb_id,
+        document_id=document.id,
+        task_id=f"idx-{uuid.uuid4()}",
+        type=INDEX_TASK_TYPE,
+        status="queued",
+        checkpoint={},
+    )
+    db.add(task)
+    await db.flush()
+    db.add(
+        TaskOutbox(
+            task_id=task.task_id,
+            type=INDEX_TASK_TYPE,
+            payload={
+                "document_id": str(document.id),
+                "kb_id": str(kb_id),
+            },
+            status="pending",
+        )
+    )
+    await db.commit()
+    await db.refresh(task)
+    logger.info("索引任务已创建", document_id=str(document.id), kb_id=str(kb_id))
+    return task
+
+
+async def run_index_task(
+    db: AsyncSession, document_id: uuid.UUID, kb_id: uuid.UUID
+) -> dict:
+    """独立索引流水线：分块 → 嵌入 → 幂等入库（D8）。
+
+    - 失败仅置 document.index_status=index_failed，不影响解析状态；
+    - 重跑幂等：先删除该文档旧块再批量插入；
+    - checkpoint 记录 stages 与块数，供任务列表/进度展示。
+    """
+    from app.models.indexing import DocumentChunk, TextChunk
+    from app.services.embedding.embedding_service import embedding_service
+    from app.services.indexing.chunker import hierarchy_chunker
+
+    document = await get_document(db, kb_id, document_id)
+    task = (
+        await db.execute(
+            select(DocumentTask).where(
+                DocumentTask.document_id == document_id,
+                DocumentTask.kb_id == kb_id,
+                DocumentTask.type == INDEX_TASK_TYPE,
+            )
+            .order_by(DocumentTask.created_at.desc())
+            .limit(1)
+        )
+    ).scalars().first()
+    if task is None:
+        raise RuntimeError(f"索引任务不存在：document={document_id}")
+
+    task.attempts += 1
+    task.status = "running"
+    task.heartbeat_at = _now()
+    document.index_status = "indexing"
+    document.index_error = None
+    document.index_progress = 0
+    document.index_total = 0
+    document.updated_at = _now()
+    await db.commit()
+
+    checkpoint_meta = {"engine": "hierarchy-chunker-v1", "embedding": "bge-m3"}
+    done_stages: list[str] = []
+
+    try:
+        # ---- stage 1: chunking ----
+        if document.layout_path is None:
+            raise RuntimeError("文档缺少 layout.json 产物，无法分块")
+        layout_bytes = storage.get_object(document.layout_path)
+        layout = json.loads(layout_bytes.decode("utf-8"))
+        _, children = hierarchy_chunker.chunk(layout, str(document_id))
+        if not children:
+            raise RuntimeError("分块结果为空，无内容可索引")
+        done_stages.append("chunking")
+        task.checkpoint = {**checkpoint_meta, "stages": list(done_stages)}
+        task.heartbeat_at = _now()
+        document.index_total = len(children)
+        await db.commit()
+
+        # ---- stage 2: embedding（title/content 双路，D3） ----
+        title_texts = [
+            f"{c.hierarchy_path} {c.title}".strip() or "文档根节点" for c in children
+        ]
+        content_texts = [c.content_for_embedding for c in children]
+        title_vectors = await embedding_service.embed(title_texts)
+        content_vectors = await embedding_service.embed(content_texts)
+        done_stages.append("embedding")
+        task.checkpoint = {**checkpoint_meta, "stages": list(done_stages)}
+        task.heartbeat_at = _now()
+        await db.commit()
+
+        # ---- stage 3: storing（幂等：先删旧块，再批量插入） ----
+        await db.execute(
+            text("DELETE FROM document_chunks WHERE document_id = :doc_id"),
+            {"doc_id": document_id},
+        )
+        await db.execute(
+            text("DELETE FROM text_chunks WHERE document_id = :doc_id"),
+            {"doc_id": document_id},
+        )
+        chunk_rows: list[DocumentChunk] = []
+        text_rows: list[TextChunk] = []
+        for i, child in enumerate(children):
+            chunk_rows.append(
+                DocumentChunk(
+                    kb_id=kb_id,
+                    document_id=document_id,
+                    chunk_id=child.chunk_id,
+                    parent_chunk_id=child.parent_chunk_id,
+                    chunk_index=child.chunk_index,
+                    hierarchy_path=child.hierarchy_path,
+                    title=child.title,
+                    level=child.level,
+                    has_table=child.has_table,
+                    semantic_label=child.semantic_label,
+                    source_pages=child.source_pages,
+                    content=child.content,
+                    content_for_embedding=child.content_for_embedding,
+                    parent_text=child.parent_text,
+                    tokens=child.tokens,
+                    title_vector=title_vectors[i],
+                    content_vector=content_vectors[i],
+                )
+            )
+        db.add_all(chunk_rows)
+        await db.flush()
+        for child, row in zip(children, chunk_rows):
+            text_rows.append(
+                TextChunk(
+                    kb_id=kb_id,
+                    document_id=document_id,
+                    document_chunk_id=row.id,
+                    chunk_id=child.chunk_id,
+                    content=child.content,
+                    heading=child.hierarchy_path,
+                    tokens=child.tokens,
+                    metadata_json={
+                        "page": child.source_pages,
+                        "has_table": child.has_table,
+                        "semantic_label": child.semantic_label,
+                    },
+                )
+            )
+        db.add_all(text_rows)
+        done_stages.append("storing")
+        await db.commit()
+
+        # ---- 完成 ----
+        document.index_status = "indexed"
+        document.index_progress = len(children)
+        document.index_total = len(children)
+        document.updated_at = _now()
+        task.status = "completed"
+        task.error = None
+        task.checkpoint = {
+            **checkpoint_meta,
+            "stages": INDEX_STAGES,
+            "chunk_count": len(children),
+            "completed_at": _now().isoformat(),
+        }
+        task.heartbeat_at = _now()
+        task.updated_at = _now()
+        await db.commit()
+        await db.refresh(document)
+        await db.refresh(task)
+        logger.info(
+            "索引任务完成",
+            document_id=str(document_id),
+            kb_id=str(kb_id),
+            chunk_count=len(children),
+        )
+        return {"task_id": task.task_id, "status": task.status, "chunk_count": len(children)}
+    except Exception as exc:
+        await db.rollback()
+        await fail_index_task(db, kb_id, document_id, str(exc))
+        raise
+
+
+async def fail_index_task(
+    db: AsyncSession, kb_id: uuid.UUID, document_id: uuid.UUID, error: str
+) -> None:
+    """索引失败：只影响索引状态，解析状态/产物不受影响（D8）。"""
+    document = await get_document(db, kb_id, document_id)
+    task = (
+        await db.execute(
+            select(DocumentTask).where(
+                DocumentTask.document_id == document_id,
+                DocumentTask.kb_id == kb_id,
+                DocumentTask.type == INDEX_TASK_TYPE,
+            )
+            .order_by(DocumentTask.created_at.desc())
+            .limit(1)
+        )
+    ).scalars().first()
+    document.index_status = "index_failed"
+    document.index_error = {"message": error[:500]}
+    document.updated_at = _now()
+    if task is not None:
+        task.status = "failed"
+        task.error = {"message": error[:500]}
+        task.updated_at = _now()
+    await db.commit()
+
+
 async def delete_document(
     db: AsyncSession, kb_id: uuid.UUID, document_id: uuid.UUID
 ) -> None:
@@ -403,6 +661,7 @@ async def list_tasks(
     kb_id: uuid.UUID,
     page: int,
     page_size: int,
+    task_type: str | None = None,
 ) -> tuple[list[DocumentTask], int, dict[str, str]]:
     base = select(DocumentTask).where(DocumentTask.kb_id == kb_id)
     count_base = (
@@ -410,6 +669,9 @@ async def list_tasks(
         .select_from(DocumentTask)
         .where(DocumentTask.kb_id == kb_id)
     )
+    if task_type:
+        base = base.where(DocumentTask.type == task_type)
+        count_base = count_base.where(DocumentTask.type == task_type)
     total = (await db.execute(count_base)).scalar_one()
     rows = (
         await db.execute(

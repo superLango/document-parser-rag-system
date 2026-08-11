@@ -19,6 +19,8 @@ class ErrorCode(IntEnum):
     BUSINESS_KB_NOT_FOUND = 30006
     BUSINESS_KB_INACTIVE = 30007
     BUSINESS_NOT_FOUND = 30017
+    BUSINESS_INVALID_STATE = 30018
+    BUSINESS_CONFLICT = 30019
 
     SYSTEM_INTERNAL_ERROR = 50000
     SYSTEM_SERVICE_UNAVAILABLE = 50001
@@ -74,9 +76,10 @@ class BusinessException(AppException):
         self,
         code: int = ErrorCode.BUSINESS_NOT_FOUND,
         message: str = "业务处理失败",
+        http_status: int = 400,
         details: dict | None = None,
     ) -> None:
-        super().__init__(code=code, message=message, http_status=400, details=details)
+        super().__init__(code=code, message=message, http_status=http_status, details=details)
 
 
 class SystemException(AppException):

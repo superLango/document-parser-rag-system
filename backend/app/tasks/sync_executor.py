@@ -24,15 +24,54 @@ async def execute_sync_task(document_id: str, kb_id: str) -> dict:
             {"kb": kb_id},
         )
         try:
-            result = await document_service.run_parse_task(
-                db, uuid.UUID(document_id), uuid.UUID(kb_id)
-            )
-            task_id = result["task_id"]
+            from app.models.document import DocumentTask
+
+            # 1) 优先按该文档最新 pending outbox 路由（parse/index）
             outbox = (
                 await db.execute(
-                    select(TaskOutbox).where(TaskOutbox.task_id == task_id)
+                    select(TaskOutbox)
+                    .where(TaskOutbox.status == "pending")
+                    .where(TaskOutbox.payload["document_id"].astext == document_id)
+                    .order_by(TaskOutbox.created_at.desc())
+                    .limit(1)
+                    .with_for_update()
                 )
             ).scalar_one_or_none()
+            if outbox is not None:
+                task_type = outbox.type
+            else:
+                # 2) 无 outbox（如产物预置场景）按最新 queued 任务路由
+                task_row = (
+                    await db.execute(
+                        select(DocumentTask)
+                        .where(
+                            DocumentTask.document_id == uuid.UUID(document_id),
+                            DocumentTask.status == "queued",
+                        )
+                        .order_by(DocumentTask.created_at.desc())
+                        .limit(1)
+                        .with_for_update()
+                    )
+                ).scalar_one_or_none()
+                if task_row is None:
+                    raise RuntimeError("没有待执行的解析/索引任务")
+                task_type = task_row.type
+
+            if task_type == "document_index":
+                result = await document_service.run_index_task(
+                    db, uuid.UUID(document_id), uuid.UUID(kb_id)
+                )
+            else:
+                result = await document_service.run_parse_task(
+                    db, uuid.UUID(document_id), uuid.UUID(kb_id)
+                )
+                # 解析成功 → 同会话自动创建独立索引任务（D8，失败不影响解析）
+                try:
+                    await document_service.enqueue_index_task(
+                        db, uuid.UUID(kb_id), uuid.UUID(document_id)
+                    )
+                except Exception:
+                    logger.exception("自动触发索引失败", document_id=document_id)
             if outbox is not None:
                 await document_service.mark_outbox(db, outbox, "done")
             return result

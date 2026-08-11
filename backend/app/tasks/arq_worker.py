@@ -3,14 +3,15 @@
 import uuid
 from typing import ClassVar
 
+from arq import cron
+from arq.connections import RedisSettings
+from sqlalchemy import text
+
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
 from app.models.document import TaskOutbox
 from app.services import document_service
-from arq import cron
-from arq.connections import RedisSettings
-from sqlalchemy import text
 
 logger = get_logger(__name__)
 
@@ -32,6 +33,13 @@ async def parse_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
         result = await document_service.run_parse_task(
             db, uuid.UUID(document_id), uuid.UUID(kb_id)
         )
+        # 解析成功 → 自动创建独立索引任务（D8，失败不影响解析）
+        try:
+            await document_service.enqueue_index_task(
+                db, uuid.UUID(kb_id), uuid.UUID(document_id)
+            )
+        except Exception:
+            logger.exception("自动触发索引失败", document_id=document_id)
         await db.commit()
         return result
     except Exception as exc:
@@ -42,6 +50,32 @@ async def parse_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
             )
         except Exception:
             logger.exception("标记任务失败时出错", document_id=document_id)
+        raise
+    finally:
+        await db.close()
+
+
+async def index_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
+    """独立索引任务：分块 → 嵌入 → 幂等入库（D8）。"""
+    db = await _superuser_session()
+    try:
+        await db.execute(
+            text("SELECT set_config('app.current_kb', :kb, true)"),
+            {"kb": kb_id},
+        )
+        result = await document_service.run_index_task(
+            db, uuid.UUID(document_id), uuid.UUID(kb_id)
+        )
+        await db.commit()
+        return result
+    except Exception as exc:
+        await db.rollback()
+        try:
+            await document_service.fail_index_task(
+                db, uuid.UUID(kb_id), uuid.UUID(document_id), str(exc)
+            )
+        except Exception:
+            logger.exception("标记索引任务失败时出错", document_id=document_id)
         raise
     finally:
         await db.close()
@@ -71,8 +105,11 @@ async def dispatch_outbox(ctx: dict) -> int:
     enqueued = 0
     for row in rows:
         payload = row.payload or {}
+        job_name = (
+            "index_document_task" if row.type == "document_index" else "parse_document_task"
+        )
         await redis.enqueue_job(
-            "parse_document_task",
+            job_name,
             payload.get("document_id"),
             payload.get("kb_id"),
         )
@@ -88,7 +125,7 @@ async def dispatch_outbox(ctx: dict) -> int:
 
 
 class WorkerSettings:
-    functions: ClassVar[list] = [parse_document_task]
+    functions: ClassVar[list] = [parse_document_task, index_document_task]
     cron_jobs: ClassVar[list] = [
         cron(
             dispatch_outbox,
