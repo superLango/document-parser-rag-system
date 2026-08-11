@@ -3,8 +3,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-PSQL_BIN="${PSQL_BIN:-/home/grainuser/miniforge3/envs/pg16/bin/psql}"
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-/tmp/hansondoc_pg/root/usr/lib/aarch64-linux-gnu}"
+PSQL_BIN="${PSQL_BIN:-/home/grainuser/pgsql18/bin/psql}"
 TEST_DB="hanson_doc_rag_test"
 TEST_URL="postgresql+asyncpg://postgres@localhost:5432/${TEST_DB}"
 
