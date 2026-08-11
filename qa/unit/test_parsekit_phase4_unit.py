@@ -1,5 +1,7 @@
 """L1 单元测试：Phase 4 后处理与版面重建（M20）。"""
 
+from typing import ClassVar
+
 from app.services.parsekit.rebuild import (
     build_tree,
     mark_cross_page_tables,
@@ -130,16 +132,46 @@ async def test_build_tree_empty_and_no_titles():
 
 
 # ---------- L1M20-08 layout.json 结构树与 U8 字段 ----------
-async def test_layout_json_rebuild_fields():
-    from app.services.parsekit import ParseOptions, parse_pdf
+async def test_layout_json_rebuild_fields(monkeypatch):
     import pymupdf
+
+    import app.services.parsekit.pipeline as pipeline_mod
+    from app.services.parsekit import ParseOptions, parse_pdf
+
+    def _fake_layout_engine(options):
+        from app.services.parsekit.types import LayoutBlock
+
+        class _FakeEngine:
+            name = "fake"
+            failures: ClassVar[list] = []
+
+            def analyze(self, pages, progress=None):
+                result = []
+                for page in pages:
+                    blocks = [
+                        LayoutBlock(
+                            type="text",
+                            bbox=tb.bbox.normalized(page.width, page.height),
+                            page_index=page.page_index,
+                            confidence=0.9,
+                            content=tb.text,
+                            source="text",
+                        )
+                        for tb in page.text_blocks
+                    ]
+                    result.append(blocks)
+                return result
+
+        return _FakeEngine()
+
+    monkeypatch.setattr(pipeline_mod, "_get_layout_engine", _fake_layout_engine)
 
     doc = pymupdf.open()
     page = doc.new_page(width=595, height=842)
     page.insert_text((72, 72), "hello rebuild", fontsize=12)
     data = doc.tobytes()
     doc.close()
-    result = parse_pdf(data, options=ParseOptions(layout_engine="rule", dpi=100, ocr_enabled=False))
+    result = parse_pdf(data, options=ParseOptions(dpi=100, ocr_enabled=False))
     layout = result.layout
     assert layout["schema_version"] == "1.2"
     assert "document_tree" in layout["rebuild"]

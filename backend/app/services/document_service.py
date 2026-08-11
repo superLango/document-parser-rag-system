@@ -482,7 +482,7 @@ async def run_parse_task(
 
     options = ParseOptions.from_settings()
     checkpoint_meta = {
-        "engine": options.layout_engine,
+        "engine": "ppdoclayoutv3",
         "header_footer_mode": options.header_footer_mode,
         "dpi": options.dpi,
     }

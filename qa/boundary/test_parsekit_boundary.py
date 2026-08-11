@@ -6,7 +6,6 @@ import time
 import uuid
 
 import pymupdf
-import pytest
 
 from app.core.config import settings
 
@@ -118,28 +117,24 @@ async def test_encrypted_pdf_failed(client, super_token):
     assert "加密" in detail["error"]["message"]
 
 
-# ---------- L4M18-04 doclayout 权重缺失 ----------
-async def test_doclayout_missing_weights_failed(client, super_token):
+# ---------- L4M18-04 ppdoclayoutv3 权重缺失 ----------
+async def test_ppdoclayoutv3_missing_weights_failed(client, super_token):
     kb = await _create_kb(client, super_token, "L4权重缺失")
-    original_engine = settings.PARSEKIT_LAYOUT_ENGINE
     original_dir = settings.PARSEKIT_LAYOUT_MODEL_DIR
-    settings.PARSEKIT_LAYOUT_ENGINE = "doclayout"
-    settings.PARSEKIT_LAYOUT_MODEL_DIR = "/nonexistent/doclayout_yolo"
+    settings.PARSEKIT_LAYOUT_MODEL_DIR = "/nonexistent/pp_doclayoutv3"
     try:
         resp = await _upload(client, super_token, kb["id"], "w.pdf", _simple_pdf())
         assert resp.status_code == 200
         doc = resp.json()["data"]["document"]
         detail = await _wait_status(client, super_token, kb["id"], doc["id"], target="failed")
-        assert "DocLayout-YOLO 权重未部署" in detail["error"]["message"]
+        assert "PP-DocLayoutV3 权重未部署" in detail["error"]["message"]
     finally:
-        settings.PARSEKIT_LAYOUT_ENGINE = original_engine
         settings.PARSEKIT_LAYOUT_MODEL_DIR = original_dir
 
 
 # ---------- L4M18-05 并发上传 5 份 ----------
 async def test_concurrent_uploads(client, super_token):
     kb = await _create_kb(client, super_token, "L4并发上传")
-    h = {"Authorization": f"Bearer {super_token}"}
 
     async def _up(i):
         return await _upload(client, super_token, kb["id"], f"c{i}.pdf", _simple_pdf())
@@ -155,10 +150,9 @@ async def test_concurrent_uploads(client, super_token):
 
 # ---------- L4M18-06 并发重解析：服务层咨询锁 ----------
 async def test_concurrent_reparse_service_lock(client, super_token, db_session):
-    from sqlalchemy import select, text
+    from sqlalchemy import text
 
     from app.core.database import AsyncSessionLocal
-    from app.models.document import Document, DocumentTask
     from app.services import document_service, storage
 
     kb = await _create_kb(client, super_token, "L4并发重解析")

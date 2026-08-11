@@ -15,12 +15,13 @@ from app.core.logging import get_logger
 from .assemble import assemble_markdown
 from .errors import InvalidParseOptions
 from .header_footer import EraseOptions, apply_header_footer_erase
-from .layout import DocLayoutEngine, RuleLayoutEngine
+from .layout_ppdoc import PPDocLayoutEngine
 from .ocr import run_ocr_stage
-from .reading_order import sort_reading_order
+from .pdf_classify import classify_pdf, fill_text_layer_blocks
 from .rebuild import build_tree, mark_cross_page_tables
 from .render import render_pdf
 from .types import LayoutBlock, RenderPage
+from .visual_grouping import group_table_footnotes, merge_inline_formula_into_text
 
 logger = get_logger(__name__)
 
@@ -30,8 +31,8 @@ class ParseOptions:
     """解析参数（与配置项一一对应）。"""
 
     dpi: int = 200
-    layout_engine: str = "rule"
-    layout_model_dir: str = str(PROJECT_ROOT / "models" / "doclayout_yolo")
+    layout_model_dir: str = str(PROJECT_ROOT / "models" / "pp_doclayoutv3")
+    layout_conf_threshold: float = 0.4
     header_footer_mode: str = "rule"
     partial_on_page_failure: bool = True
     page_concurrency: int = 4
@@ -45,8 +46,8 @@ class ParseOptions:
     def from_settings(cls) -> ParseOptions:
         return cls(
             dpi=settings.PARSEKIT_DPI,
-            layout_engine=settings.PARSEKIT_LAYOUT_ENGINE,
             layout_model_dir=settings.PARSEKIT_LAYOUT_MODEL_DIR,
+            layout_conf_threshold=settings.PARSEKIT_LAYOUT_CONF_THRESHOLD,
             header_footer_mode=settings.PARSEKIT_HEADER_FOOTER_MODE,
             partial_on_page_failure=settings.PARSEKIT_PARTIAL_ON_PAGE_FAILURE,
             page_concurrency=settings.PARSEKIT_PAGE_CONCURRENCY,
@@ -73,9 +74,9 @@ class ParseResult:
 def _validate_options(options: ParseOptions) -> None:
     if not 50 <= options.dpi <= 600:
         raise InvalidParseOptions(f"DPI 必须介于 50-600，当前 {options.dpi}")
-    if options.layout_engine not in ("rule", "doclayout"):
+    if not 0.01 <= options.layout_conf_threshold <= 1.0:
         raise InvalidParseOptions(
-            f"未知版面引擎：{options.layout_engine}（可选 rule|doclayout）"
+            f"版面置信度阈值必须介于 0.01-1.0，当前 {options.layout_conf_threshold}"
         )
     if options.header_footer_mode != "rule":
         raise InvalidParseOptions(
@@ -131,13 +132,39 @@ def _drop_erased_overlap_blocks(
     return dropped
 
 
+import threading as _threading
+
+_ENGINE_CACHE: dict = {}
+_ENGINE_LOCK = _threading.Lock()
+
+
 def _get_layout_engine(options: ParseOptions):
-    if options.layout_engine == "doclayout":
-        return DocLayoutEngine(options.layout_model_dir)
-    return RuleLayoutEngine(
-        title_font_threshold=options.title_font_threshold,
-        image_min_area=options.image_min_area,
-    )
+    """版面引擎工厂：固定 PP-DocLayoutV3（唯一引擎），进程内单例缓存。
+
+    模型权重约 133MB，每次解析重复加载既慢又占用显存；缓存后整个进程
+    仅加载一次。并发安全：首次加载用双检锁，避免多任务同时加载模型
+    导致 GPU 显存竞争（参考 MinerU ModelSingleton + 推理锁）。
+    """
+    cache_key = (options.layout_model_dir, options.layout_conf_threshold)
+    if cache_key not in _ENGINE_CACHE:
+        with _ENGINE_LOCK:
+            if cache_key not in _ENGINE_CACHE:
+                _ENGINE_CACHE[cache_key] = PPDocLayoutEngine(
+                    options.layout_model_dir,
+                    conf_threshold=options.layout_conf_threshold,
+                )
+    return _ENGINE_CACHE[cache_key]
+
+
+def _apply_reading_order(page_layouts: list[list[LayoutBlock]]) -> list[list[LayoutBlock]]:
+    """阅读顺序：PP-DocLayoutV3 输出已按模型内置 order_seq 排列，直接回填 order。"""
+    ordered_layouts: list[list[LayoutBlock]] = []
+    for blocks in page_layouts:
+        ordered = list(blocks)  # 引擎输出已按阅读顺序
+        for idx, block in enumerate(ordered, start=1):
+            block.order = idx
+        ordered_layouts.append(ordered)
+    return ordered_layouts
 
 
 def _build_layout_json(
@@ -147,6 +174,7 @@ def _build_layout_json(
     failures: list[dict],
     ocr_failures: list[dict] | None = None,
     document_tree: dict | None = None,
+    classification: str = "ocr",
 ) -> dict:
     """layout.json 契约（U9：path/title/type/structural 预留）。"""
     page_entries = []
@@ -181,15 +209,16 @@ def _build_layout_json(
     return {
         "schema_version": "1.2",
         "producer": "parsekit",
-        "layout_engine": options.layout_engine,
+        "layout_engine": "ppdoclayoutv3",
+        "classification": classification,
         "header_footer_mode": options.header_footer_mode,
         "page_count": len(pages),
         "pages": page_entries,
         "page_failures": failures,
         "ocr_failures": ocr_failures or [],
         "ocr": {
-            "enabled": bool(options.ocr_enabled and options.layout_engine == "doclayout"),
-            "backend": "glm-ocr" if options.ocr_enabled and options.layout_engine == "doclayout" else None,
+            "enabled": bool(options.ocr_enabled),
+            "backend": "glm-ocr" if options.ocr_enabled else None,
             "failure_policy": options.ocr_failure_policy,
         },
         "rebuild": {
@@ -227,6 +256,9 @@ def parse_pdf(
     for page, kept in zip(pages, erase_result.pages):
         page.text_blocks = kept
 
+    # 文本型 PDF 分类（MinerU 借鉴 P0）：纯文本文档跳过正文 GLM-OCR
+    doc_kind = classify_pdf(pages) if opts.ocr_enabled else "ocr"
+
     engine = _get_layout_engine(opts)
     page_layouts = engine.analyze(pages, progress=progress)
     # DocLayout 引擎单页失败并入页面级 failures（U11）
@@ -237,8 +269,23 @@ def parse_pdf(
         page_layouts, pages, erase_result.erased
     )
 
+    # 视觉归属：表格底部注行合并进表格 bbox（MinerU 借鉴 P0）
+    page_layouts, group_stats = group_table_footnotes(page_layouts)
+
+    # 行内公式归并：正文行内的 formula 误检并入 text（防公式重复输出）
+    page_layouts, inline_formula_removed = merge_inline_formula_into_text(
+        page_layouts
+    )
+
     ocr_failures: list[dict] = []
-    if opts.ocr_enabled and opts.layout_engine == "doclayout":
+    text_layer_filled = 0
+    if opts.ocr_enabled:
+        if doc_kind == "text":
+            # 文本型：text/title/footnote 用文本层填充（source=text），
+            # 表格/公式/图片说明仍送 GLM-OCR
+            page_layouts, text_layer_filled = fill_text_layer_blocks(
+                pages, page_layouts
+            )
         from app.services.ocr_backend.glmocr import get_ocr_backend
 
         backend = get_ocr_backend()
@@ -262,7 +309,7 @@ def parse_pdf(
 
     if progress:
         progress("rebuild")
-    ordered_layouts = [sort_reading_order(blocks) for blocks in page_layouts]
+    ordered_layouts = _apply_reading_order(page_layouts)
     all_ordered = [b for blocks in ordered_layouts for b in blocks]
     markdown = assemble_markdown(all_ordered)
 
@@ -271,17 +318,28 @@ def parse_pdf(
     document_tree = build_tree(all_ordered)
 
     layout_json = _build_layout_json(
-        ordered_layouts, pages, opts, failures, ocr_failures, document_tree
+        ordered_layouts,
+        pages,
+        opts,
+        failures,
+        ocr_failures,
+        document_tree,
+        classification=doc_kind,
     )
     elapsed = round(time.monotonic() - started, 3)
     stats = {
-        "engine": opts.layout_engine,
+        "engine": "ppdoclayoutv3",
         "header_footer_mode": opts.header_footer_mode,
         "pages": len(pages),
         "blocks": len(all_ordered),
         "erased_blocks": len(erase_result.erased),
         "page_failures": len(failures),
         "margin_blocks_dropped": margin_dropped,
+        "merged_table_footnotes": group_stats["merged_table_footnotes"],
+        "inline_formula_removed": inline_formula_removed,
+        "classification": doc_kind,
+        "text_layer_filled": text_layer_filled,
+        "skipped_ocr": text_layer_filled if doc_kind == "text" else 0,
         "ocr_blocks": sum(
             1
             for blocks in page_layouts
@@ -289,7 +347,7 @@ def parse_pdf(
             if (b.structural or {}).get("ocr_source") == "glm-ocr"
         ),
         "ocr_failures": len(ocr_failures),
-        "ocr_enabled": bool(opts.ocr_enabled and opts.layout_engine == "doclayout"),
+        "ocr_enabled": bool(opts.ocr_enabled),
         "cross_page_tables": cross_page_tables,
         "rebuild": {
             "title_count": document_tree.get("stats", {}).get("title_count", 0),

@@ -103,10 +103,10 @@ def run_ocr_stage(
     block_concurrency: int = 8,
     progress: Callable[[str, int | None, int | None], None] | None = None,
 ) -> tuple[list[list[LayoutBlock]], list[dict]]:
-    """对 doclayout 版面块执行 GLM-OCR；返回 (布局, 块级失败列表)。
+    """对 PP-DocLayoutV3 版面块执行 GLM-OCR；返回 (布局, 块级失败列表)。
 
     并发语义（U11）：页并发 page_concurrency × 页内块并发 block_concurrency。
-    规则引擎产出的文本块（source=text）已含文本层内容，不重复 OCR。
+    PP-DocLayoutV3 版面块全部交由 GLM-OCR；文本层块（source=text）不重复 OCR。
     """
     failures: list[dict] = []
     lock = threading.Lock()
@@ -119,7 +119,7 @@ def run_ocr_stage(
     with ThreadPoolExecutor(max_workers=workers) as pool:
         for page, blocks in zip(pages, page_layouts):
             for block in blocks:
-                if block.source != "doclayout":
+                if block.source == "text":
                     continue
                 if block.type not in OCR_BLOCK_TYPES:
                     continue

@@ -114,7 +114,14 @@ def _render_node(node: dict, lines: list[str]) -> None:
             lines.append(f"<!-- table: page {page} -->")
         lines.append("")
     elif node_type == "formula":
-        lines.append(f"$${content}$$" if content else f"<!-- formula: page {page} -->")
+        if content:
+            clean = content.strip()
+            if clean.startswith("$$") and clean.endswith("$$"):
+                lines.append(clean)
+            else:
+                lines.append(f"$${clean}$$")
+        else:
+            lines.append(f"<!-- formula: page {page} -->")
         lines.append("")
     elif node_type == "image":
         lines.append(f"<!-- image: page {page} -->")

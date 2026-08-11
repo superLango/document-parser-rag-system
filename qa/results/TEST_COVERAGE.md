@@ -104,3 +104,8 @@
 - DocLayout-YOLO 权重：`models/doclayout_yolo/doclayout_yolo.pt`（SHA256 `1b152460...c80be`，不入 Git）
 - U3 A/B 评测：`qa/evaluation/header_footer_ab/`（report.md、annotations.json、enhanced_strategy.py 归档）
 - 历史脚本归档：`qa/legacy/`
+
+
+> 2026-08 更新：版面引擎已定版为 **PP-DocLayoutV3（唯一引擎）**。DocLayout-YOLO /
+> PP-DocLayoutV2 / RuleLayoutEngine 可插拔代码已清除（models/ 下权重文件保留）。
+> 上述 REG-16/17（doclayout_yolo 兼容性问题）为历史记录，不再适用。

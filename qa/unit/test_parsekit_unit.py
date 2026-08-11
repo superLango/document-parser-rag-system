@@ -1,6 +1,7 @@
+from typing import ClassVar
+
 """L1 单元测试：parsekit 渲染/擦除/版面/顺序/拼装/编排（M18）。"""
 
-import io
 
 import pymupdf
 import pytest
@@ -11,10 +12,9 @@ from app.services.parsekit.errors import (
     PdfRenderError,
 )
 from app.services.parsekit.header_footer import (
-    EraseOptions,
     apply_header_footer_erase,
 )
-from app.services.parsekit.layout import DocLayoutEngine, RuleLayoutEngine
+from app.services.parsekit.layout_ppdoc import PPDocLayoutEngine
 from app.services.parsekit.pipeline import ParseOptions, parse_pdf
 from app.services.parsekit.reading_order import sort_reading_order
 from app.services.parsekit.render import render_pdf
@@ -232,37 +232,67 @@ async def test_assemble_markdown():
     assert "<!-- page: 2 -->" in md
 
 
-# ---------- L1M18-08 规则版面引擎分类 ----------
-async def test_rule_layout_engine_classify():
-    page = render_page(
-        1,
-        [
-            {"text": "文档大Heading One", "bbox": (80, 100, 500, 130), "size": 24},
-            {"text": "普通正文内容", "bbox": (80, 200, 400, 218), "size": 12},
-        ],
-    )
-    page.image_boxes.append(BBox(100, 400, 300, 600))
-    engine = RuleLayoutEngine()
-    blocks = engine.analyze([page])[0]
-    types = [b.type for b in blocks]
-    assert "title" in types
-    assert "text" in types
-    assert "image" in types
-    title = next(b for b in blocks if b.type == "title")
-    assert title.structural["title_level"] == 1
-
-
-# ---------- L1M18-09 DocLayout 权重缺失报错 ----------
-async def test_doclayout_engine_missing_weights(tmp_path):
+# ---------- L1M18-09 PP-DocLayoutV3 权重缺失报错 ----------
+async def test_ppdoclayoutv3_engine_missing_weights(tmp_path):
     with pytest.raises(LayoutModelUnavailable) as exc:
-        DocLayoutEngine(tmp_path / "not_exist")
+        PPDocLayoutEngine(tmp_path / "not_exist")
     assert "权重未部署" in str(exc.value)
 
 
 # ---------- L1M18-10 layout.json U9 预留字段 ----------
-async def test_layout_json_u9_contract():
+def _fake_layout_engine(options):
+    """测试注入：基于文本层的轻量引擎（不加载模型），source=text。"""
+
+    class _FakeEngine:
+        name = "fake"
+        failures: ClassVar[list] = []
+
+        def analyze(self, pages, progress=None):
+            result = []
+            for page in pages:
+                if progress:
+                    progress("layout", page.page_index, len(pages))
+                blocks = []
+                max_font = max((b.font_size for b in page.text_blocks), default=0.0)
+                for tb in page.text_blocks:
+                    nb = tb.bbox.normalized(page.width, page.height)
+                    is_title = (
+                        tb.font_size >= max(max_font * 0.85, 14.0)
+                        and len(tb.text.strip()) <= 60
+                    )
+                    blocks.append(
+                        LayoutBlock(
+                            type="title" if is_title else "text",
+                            bbox=nb,
+                            page_index=page.page_index,
+                            confidence=0.9,
+                            content=tb.text,
+                            source="text",
+                        )
+                    )
+                for img in page.image_boxes:
+                    nb = img.normalized(page.width, page.height)
+                    blocks.append(
+                        LayoutBlock(
+                            type="image",
+                            bbox=nb,
+                            page_index=page.page_index,
+                            confidence=0.9,
+                            source="text",
+                        )
+                    )
+                result.append(blocks)
+            return result
+
+    return _FakeEngine()
+
+
+async def test_layout_json_u9_contract(monkeypatch):
+    import app.services.parsekit.pipeline as pipeline_mod
+
+    monkeypatch.setattr(pipeline_mod, "_get_layout_engine", _fake_layout_engine)
     data = make_pdf([[{"text": "Heading One", "x": 200, "y": 100, "size": 24}]])
-    result = parse_pdf(data, options=ParseOptions(dpi=100, layout_engine="rule"))
+    result = parse_pdf(data, options=ParseOptions(dpi=100))
     layout = result.layout
     assert layout["schema_version"] == "1.2"
     assert layout["page_count"] == 1
@@ -279,7 +309,10 @@ async def test_layout_json_u9_contract():
 
 
 # ---------- L1M18-11 管线端到端（内存 PDF） ----------
-async def test_pipeline_end_to_end():
+async def test_pipeline_end_to_end(monkeypatch):
+    import app.services.parsekit.pipeline as pipeline_mod
+
+    monkeypatch.setattr(pipeline_mod, "_get_layout_engine", _fake_layout_engine)
     data = make_pdf(
         [
             [{"text": "Cover Element", "x": 200, "y": 120, "size": 18}],
@@ -293,7 +326,7 @@ async def test_pipeline_end_to_end():
             ],
         ]
     )
-    result = parse_pdf(data, options=ParseOptions(dpi=100, layout_engine="rule"))
+    result = parse_pdf(data, options=ParseOptions(dpi=100))
     assert result.stats["pages"] == 3
     assert len(result.pages) == 3
     assert result.stats["erased_blocks"] >= 2
@@ -304,7 +337,10 @@ async def test_pipeline_end_to_end():
 
 
 # ---------- L1M18-14 页级进度回调 ----------
-async def test_parse_pdf_progress_reports_pages():
+async def test_parse_pdf_progress_reports_pages(monkeypatch):
+    import app.services.parsekit.pipeline as pipeline_mod
+
+    monkeypatch.setattr(pipeline_mod, "_get_layout_engine", _fake_layout_engine)
     data = make_pdf(
         [
             [{"text": "Page One Body", "x": 72, "y": 120, "size": 12}],
@@ -315,7 +351,7 @@ async def test_parse_pdf_progress_reports_pages():
     events: list[tuple[str, int | None, int | None]] = []
     parse_pdf(
         data,
-        options=ParseOptions(dpi=100, layout_engine="rule", ocr_enabled=False),
+        options=ParseOptions(dpi=100, ocr_enabled=False),
         progress=lambda stage, page=None, total=None: events.append(
             (stage, page, total)
         ),
@@ -334,7 +370,7 @@ async def test_parse_pdf_progress_reports_pages():
 async def test_parse_options_validation():
     for opts in (
         ParseOptions(dpi=10),
-        ParseOptions(layout_engine="unknown"),
+        ParseOptions(layout_conf_threshold=0.0),
         ParseOptions(header_footer_mode="unknown"),
         ParseOptions(dpi=800),
     ):
@@ -359,3 +395,53 @@ async def test_block_types_constant():
 
     for t in ("title", "text", "table", "formula", "image", "header", "footer"):
         assert t in BLOCK_TYPES
+
+
+# ---------- 引擎单例并发安全（2026-08 修复：双检锁 + 推理锁） ----------
+def test_engine_singleton_concurrent(monkeypatch):
+    """并发首次获取引擎只创建一个实例（双检锁），不重复加载模型。"""
+    import threading
+
+    import app.services.parsekit.pipeline as pipeline_mod
+    from app.services.parsekit.layout_ppdoc import PPDocLayoutEngine
+    from app.services.parsekit.pipeline import ParseOptions, _ENGINE_CACHE, _ENGINE_LOCK
+
+    created = []
+    real_init = PPDocLayoutEngine.__init__
+
+    def counting_init(self, model_dir, **kw):
+        created.append(model_dir)
+        # 不真正加载模型：只设置必要属性
+        from pathlib import Path
+
+        self.model_dir = Path(model_dir)
+        self.device = "cpu"
+        self.conf_threshold = float(kw.get("conf_threshold", 0.4))
+        self.verify_hash = False
+        self._model = None
+        self._processor = None
+        self._id2label = {}
+        self.failures = []
+        import threading as _th
+
+        self._infer_lock = _th.Lock()
+
+    monkeypatch.setattr(PPDocLayoutEngine, "__init__", counting_init)
+    _ENGINE_CACHE.clear()
+    opts = ParseOptions(layout_model_dir="/tmp/fake_v3", layout_conf_threshold=0.4)
+    results = []
+    barrier = threading.Barrier(4)
+
+    def worker():
+        barrier.wait()
+        results.append(pipeline_mod._get_layout_engine(opts))
+
+    threads = [threading.Thread(target=worker) for _ in range(4)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert len(created) == 1, f"并发首次获取应只创建 1 个引擎，实际 {len(created)}"
+    assert all(r is results[0] for r in results), "所有线程应拿到同一实例"
+    _ENGINE_CACHE.clear()

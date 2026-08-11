@@ -1,4 +1,4 @@
-// L3 功能场景测试（Playwright E2E，Phase 3：DocLayout-YOLO + GLM-OCR 真实解析）
+// L3 功能场景测试（Playwright E2E，Phase 3：PP-DocLayoutV3 + GLM-OCR 真实解析）
 import { chromium } from '/tmp/uitools/node_modules/playwright/index.mjs'
 import { writeFileSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -93,7 +93,7 @@ const kbResp = await api('POST', '/kb', { name: `E2E-P3_${stamp}`, description: 
 const kbId = kbResp.body.data.id
 createdKbs.push(kbId)
 
-// ---------- L3M19-01 真实 doclayout+OCR：LSAM 样本 ----------
+// ---------- L3M19-01 真实 ppdoclayoutv3+OCR：LSAM 样本 ----------
 await scenario('L3M19-01', 'M19', async () => {
   await sessionLogin(page, 'admin', 'admin123')
   await page.goto(`${BASE}/kb/${kbId}/documents`, { waitUntil: 'networkidle' })
@@ -130,7 +130,7 @@ await scenario('L3M19-01', 'M19', async () => {
   await page.screenshot({ path: `${OUT}parsing_phase3_ocr_markdown.png` })
 })
 
-// ---------- L3M19-02 真实 doclayout+OCR：第二个样本 ----------
+// ---------- L3M19-02 真实 ppdoclayoutv3+OCR：第二个样本 ----------
 await scenario('L3M19-02', 'M19', async () => {
   await page.goto(`${BASE}/kb/${kbId}/documents`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(800)

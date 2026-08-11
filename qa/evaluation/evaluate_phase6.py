@@ -83,7 +83,6 @@ def evaluate_layout(pdf: Path, gt: dict | None, options: argparse.Namespace) -> 
         result = parse_pdf(
             data,
             options=ParseOptions(
-                layout_engine="doclayout",
                 dpi=200,
                 ocr_enabled=False,
             ),
@@ -163,7 +162,7 @@ def evaluate_layout(pdf: Path, gt: dict | None, options: argparse.Namespace) -> 
     return metrics
 
 
-def evaluate_ocr(pdf: Path, gt: dict | None) -> dict:
+def evaluate_ocr(pdf: Path, gt: dict | None, options: argparse.Namespace) -> dict:
     """OCR 子集：页面正确率/标题准确率/表格还原率。"""
     from app.services.parsekit import ParseOptions, parse_pdf
 
@@ -171,7 +170,10 @@ def evaluate_ocr(pdf: Path, gt: dict | None) -> dict:
     try:
         result = parse_pdf(
             pdf.read_bytes(),
-            options=ParseOptions(layout_engine="doclayout", dpi=100, ocr_enabled=True),
+            options=ParseOptions(
+                dpi=100,
+                ocr_enabled=True,
+            ),
         )
     except Exception as exc:  # noqa: BLE001 - OCR 评测失败记录不中断
         metrics["error"] = str(exc)[:200]
@@ -346,7 +348,7 @@ def main(argv: list[str] | None = None) -> int:
         gt = load_gt(pdf)
         layout_metrics.append(evaluate_layout(pdf, gt, args))
         if not args.skip_ocr and gt and gt.get("kind") in OCR_KINDS and gt.get("pages", 99) <= 5:
-            ocr_metrics.append(evaluate_ocr(pdf, gt))
+            ocr_metrics.append(evaluate_ocr(pdf, gt, args))
 
     agg = aggregate(layout_metrics, ocr_metrics)
     gates = check_gates(agg)

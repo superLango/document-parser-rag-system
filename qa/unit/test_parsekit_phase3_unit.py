@@ -3,24 +3,20 @@
 import base64
 import hashlib
 import io
+import os
 import time
+from pathlib import Path
 
 import httpx
-import pytest
 import pymupdf
+import pytest
 
 from app.services.ocr_backend.glmocr import GLMOCRBackend, OcrBlockError
 from app.services.parsekit import InvalidParseOptions, ParseOptions, parse_pdf
-from app.services.parsekit.errors import LayoutModelUnavailable
-from app.services.parsekit.layout import DocLayoutEngine
+from app.services.parsekit.layout_ppdoc import PPDocLayoutEngine
 from app.services.parsekit.ocr import crop_block, run_ocr_stage
 from app.services.parsekit.render import render_pdf
-from app.services.parsekit.types import BBox, LayoutBlock, RenderPage, TextBlock
-
-WEIGHTS = (
-    "/home/grainuser/hansonDoc_RAG/models/doclayout_yolo/doclayout_yolo.pt"
-)
-WEIGHTS_SHA256 = "1b152460888dc30be6db7f5dfab28bde3dcc999e5202f46187a764a1699c80be"
+from app.services.parsekit.types import BBox, LayoutBlock, RenderPage
 
 
 def _pdf_bytes(text="hello ocr"):
@@ -63,25 +59,32 @@ class FakeHttpClient:
         pass
 
 
-# ---------- M18 补测：真实权重完整性/加载/推理 ----------
-async def test_doclayout_weights_present_and_hash_locked():
-    import os
-
-    assert os.path.exists(WEIGHTS), "DocLayout-YOLO 权重必须部署"
-    digest = hashlib.sha256(open(WEIGHTS, "rb").read()).hexdigest()
-    assert digest == WEIGHTS_SHA256
+# ---------- M18 补测：PP-DocLayoutV3 真实权重完整性/加载/推理 ----------
+PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3"
+TEST_DOC = Path("/home/grainuser/hansonDoc_RAG/test_doc")
 
 
-async def test_doclayout_real_engine_load():
-    engine = DocLayoutEngine(WEIGHTS, device="cpu")
+async def test_ppdoclayoutv3_weights_hash_locked():
+    'V3 权重 SHA256 与 EXPECTED_SHA256 精确一致。'
+
+    from app.services.parsekit.layout_ppdoc import EXPECTED_SHA256
+
+    assert os.path.exists(PPDOCV3_MODEL_DIR), "PP-DocLayoutV3 权重必须部署"
+    weight = Path(PPDOCV3_MODEL_DIR) / "model.safetensors"
+    digest = hashlib.sha256(weight.read_bytes()).hexdigest()
+    assert digest == EXPECTED_SHA256
+
+
+async def test_ppdoclayoutv3_engine_load():
+    engine = PPDocLayoutEngine(PPDOCV3_MODEL_DIR, device="cuda:0")
     model = engine._load_model()
-    assert engine._names[0] == "title"
-    assert len(engine._names) == 10
+    assert engine.name == "ppdoclayoutv3"
+    assert len(engine._id2label) == 25
     assert model is not None
 
 
-async def test_doclayout_real_engine_single_page_infer():
-    engine = DocLayoutEngine(WEIGHTS, device="cpu")
+async def test_ppdoclayoutv3_engine_single_page_infer():
+    engine = PPDocLayoutEngine(PPDOCV3_MODEL_DIR, device="cuda:0")
     pdf = _pdf_bytes()
     page = render_pdf(pdf, dpi=100, partial_on_page_failure=True).pages[0]
     blocks = engine.analyze([page])[0]
@@ -89,12 +92,12 @@ async def test_doclayout_real_engine_single_page_infer():
     for b in blocks:
         assert 0.0 <= b.bbox.x0 <= 1.0
         assert 0.0 <= b.bbox.y1 <= 1.0
-        assert b.source == "doclayout"
+        assert b.source == "ppdoclayoutv3"
         assert b.confidence > 0
 
 
-async def test_doclayout_real_engine_page_failure_partial(monkeypatch):
-    engine = DocLayoutEngine(WEIGHTS, device="cpu")
+async def test_ppdoclayoutv3_engine_page_failure_partial(monkeypatch):
+    engine = PPDocLayoutEngine(PPDOCV3_MODEL_DIR, device="cuda:0")
     page = render_pdf(_pdf_bytes(), dpi=100, partial_on_page_failure=True).pages[0]
 
     def boom(image_bytes):
@@ -214,7 +217,7 @@ async def test_ocr_stage_concurrent():
             type="text",
             bbox=BBox(0.1, 0.1 + i * 0.08, 0.5, 0.16 + i * 0.08),
             page_index=1,
-            source="doclayout",
+            source="ppdoclayoutv3",
         )
         for i in range(8)
     ]
@@ -238,7 +241,7 @@ async def test_ocr_stage_failure_recorded():
             type="table",
             bbox=BBox(0.1, 0.2, 0.6, 0.5),
             page_index=1,
-            source="doclayout",
+            source="ppdoclayoutv3",
         )
     ]
     backend = FakeOCRBackend(fail_types={"table"})
@@ -287,3 +290,26 @@ async def test_rule_engine_skips_ocr_blocks():
     assert backend.calls == 0
     assert failures == []
     assert result[0][0].content == "hello text"
+
+
+# ================= PP-DocLayoutV3 引擎（真实样本坐标验证） =================
+
+PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3"
+
+
+async def test_ppdoclayoutv3_engine_load_and_infer():
+    """V3 引擎可加载并完成单页推理，坐标归一化正确。"""
+    from app.services.parsekit.layout_ppdoc import PPDocLayoutEngine
+
+    engine = PPDocLayoutEngine(PPDOCV3_MODEL_DIR, device="cuda:0")
+    assert engine.name == "ppdoclayoutv3"
+    model = engine._load_model()
+    assert model is not None
+    assert len(engine._id2label) == 25
+    pdf = (TEST_DOC / "generated" / "synth_mixed_layout.pdf").read_bytes()
+    res = render_pdf(pdf, dpi=200)
+    blocks = engine.analyze(res.pages[:1])[0]
+    assert blocks, "V3 应检出版面块"
+    for b in blocks:
+        assert 0.0 <= b.bbox.x0 <= 1.0 and 0.0 <= b.bbox.y1 <= 1.0
+        assert b.source == "ppdoclayoutv3"

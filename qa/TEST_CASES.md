@@ -4645,7 +4645,7 @@
 
 【前置条件】构造 24pt 标题、12pt 正文与图片框
 【操作步骤】
-1. RuleLayoutEngine.analyze
+1. PPDocLayoutEngine.analyze（V3，唯一版面引擎）
 【预期结果】输出 title/text/image 三类版面块
 【断言校验规则】
 - 断言：类型集合含三要素

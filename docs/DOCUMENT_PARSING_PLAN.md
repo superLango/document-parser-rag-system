@@ -38,13 +38,18 @@
 ```
 上传（API + MinIO）→ documents 记录（RLS）
   → 任务编排（PG outbox → Redis/arq）
-  → 阶段 A：PDF → 高清图片（PyMuPDF，DPI=200）
-  → 阶段 B：页眉页脚擦除（方案 A 内置 / 方案 B 样本增强）
-  → 阶段 C：DocLayout-YOLO 版面分析 → 版面框
-  → 阶段 D：阅读顺序排序（PDF-Extract-Kit）
-  → 阶段 E：Markdown 拼接拼装（PDF-Extract-Kit）
-  → 识别分支拦截：正文/表格/公式 → GLM-OCR（U7/U13）
-  → 阶段 F：版面重建/后处理（Popo 迁移；跨页表格合并暂缓 U8）
+  → 阶段 A：PDF → 高清图片（PyMuPDF，DPI=200）+ 文本层
+  → 阶段 B：页眉页脚擦除（方案 A 内置）
+  → 阶段 B2：文本型 PDF 分类（MinerU 借鉴，纯规则）
+      ├─ 文本型 → 直接取文本层拼装（跳过 GLM-OCR）
+      └─ 扫描型 → 继续版面分析
+  → 阶段 C：PP-DocLayoutV3 版面分析（唯一引擎）→ 版面框
+  → 阶段 C2：视觉归属（MinerU 借鉴）：caption/footnote → 表格/图片子块
+      （解决表格底部"注"行丢失）
+  → 阶段 D：阅读顺序（V3 内置 order_seq）
+  → 阶段 E：Markdown 拼接拼装 + 段落合并（MinerU 借鉴 para_split）
+  → 识别：正文/表格/公式 → GLM-OCR（U7/U13）
+  → 阶段 F：版面重建/后处理（含内容清洗、语言检测）
   → 阶段 G：产物落库（result.md / layout.json / pages）
   →（后续阶段）分块索引 / 结构化抽取 / 图谱 / 问答
 ```
@@ -53,18 +58,26 @@
 
 | 组件 | 处理 | 说明 |
 |------|------|------|
-| PDF → 图片（PyMuPDF，DPI=200） | 保留 | U2 |
-| 页眉页脚擦除 | A/B 对比后保留胜出方案 | U3（§6.3） |
-| DocLayout-YOLO 版面分析 | 保留 | U4，本地部署 |
-| 阅读顺序排序 | 保留（PDF-Extract-Kit） | U5 |
-| Markdown 拼接拼装 | 保留 | U5 |
-| 正文 OCR | 替换 → GLM-OCR | U6 |
-| 表格识别 | 替换 → GLM-OCR | 跨页合并暂缓 U8 |
-| 公式识别 | 替换 → GLM-OCR | U7，无 UniMERNet |
+| PDF → 图片（PyMuPDF，DPI=200）+ 文本层 | 保留 | U2 |
+| 页眉页脚擦除 | 方案 A（U3 择优胜出） | §6.3 |
+| **文本型 PDF 分类** | **新增（MinerU 借鉴）** | 纯规则，文本型跳过 OCR |
+| 版面分析 | **PP-DocLayoutV3（唯一引擎）** | 2026-08 定版；doclayout/v2/rule 已移除 |
+| **视觉归属** | **新增（MinerU 借鉴）** | caption/footnote → 表格/图片子块（修注行丢失） |
+| 阅读顺序 | V3 内置 order_seq | 无自研分簇 |
+| Markdown 拼接 | 保留 + **段落合并** | 段落合并借鉴 para_split |
+| 正文 OCR | GLM-OCR | U6 |
+| 表格识别 | GLM-OCR（无专用模型） | 跨页合并暂缓 U8；**不做**方向纠正/有线无线分类 |
+| 公式识别 | GLM-OCR（无专用模型） | U7；编号并入公式（不做独立标记） |
+| **语言检测** | **新增（MinerU 方案）** | fasttext lid.176（fast-langdetect，0.9MB，CPU） |
+| **内容清洗** | **新增（MinerU 借鉴）** | 输出统一清洗规则 |
 | OCR 兜底 | **无** | U13：失败即记录错误，任务标记 failed/partial |
-| 版面重建后处理 | 迁移旧版 popo | 排除跨页表格合并（U8 记录） |
-| 文档/任务模型 | 新增 | documents/tasks/outbox/dead_letter，RLS |
-| 任务编排 | 新增（D5） | Outbox + 幂等 + 重试 + 心跳 |
+| 版面重建后处理 | 保留 build_tree | 排除跨页表格合并（U8 记录） |
+| 文档/任务模型 | 保留 | documents/tasks/outbox/dead_letter，RLS |
+| 任务编排 | 保留（D5） | Outbox + 幂等 + 重试 + 心跳 |
+| ~~表格方向纠正 + 有线/无线分类~~ | **已剔除** | 无专用模型，走 GLM-OCR |
+| ~~印章检测 + 矫正 + 专用 OCR~~ | **已剔除** | 无专用模型 |
+| ~~行内公式 inline formula~~ | **已剔除** | V3 无 inline_formula 标签 |
+| ~~公式编号独立标记~~ | **已剔除** | 正文引用收益低，维持编号并入公式（GLM-OCR） |
 
 ## 5. 数据模型（新表，KB 表启用 RLS）
 
@@ -391,3 +404,161 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
 | GLM-OCR 图片块尺寸上限（U6） | Phase 3 实测 |
 | 页/块并发实际最优值 | 默认页4×块8（U11），按 GPU 实测调整 |
 | 评测阈值（U12） | 样本源 `test_doc/`（6 份），阈值 Phase 2/6 随样本确定 |
+
+
+## 附录：PP-DocLayoutV2 版面引擎（A/B 对比接入，2026-08）
+
+### 接入方式
+- 引擎：`backend/app/services/parsekit/layout_ppdoc.py`（PPDocLayoutEngine）
+- 配置：`PARSEKIT_LAYOUT_ENGINE=ppdoclayoutv2`（另可 doclayout | rule），
+  权重目录 `PARSEKIT_PPDOCLAYOUTV2_MODEL_DIR=models/pp_doclayoutv2`
+- 可调参数：`PARSEKIT_PPDOCLAYOUTV2_CONF_THRESHOLD`（默认 0.4，过滤低置信度框）。
+  调低（如 0.3）可提升召回（找回低分公式/脚注/图题等），调高（如 0.5）可提升精确率；
+  0.25 在真实文档上会引入较多噪声块，0.5 会漏掉约 8% 的公式/脚注/图题
+- 权重：`PaddlePaddle/PP-DocLayoutV2_safetensors`（HuggingFace），
+  `model.safetensors` SHA256=`e60f3725...dc2739d2` 锁定；
+  依赖 `transformers>=5.15.0`（已加入 backend/requirements.txt）
+- 推理：`AutoImageProcessor` + `AutoModelForObjectDetection`，GPU/CPU 自动选择；
+  `post_process_object_detection` 输出已按内置阅读顺序 head（order_seq）排序
+
+### 关键差异（vs DocLayoutEngine）
+- 25 类元素（含 doc_title/paragraph_title/formula/header/footer/seal 等），
+  内置阅读顺序 head，替代自研“纵向分簇 + 横向排序”
+- 坐标注意点：`target_sizes` 必须传 `(高, 宽)`；模型输出为原图像素，
+  归一化基准必须用图像实际像素尺寸而非 pt 尺寸（DPI=200 时两者不同）
+- 页眉页脚/印章类元素由引擎直接丢弃（LABEL_MAP 置 None），
+  仍保留 pipeline 的文本层擦除过滤
+
+### 对比评测（qa/evaluation，--skip-ocr，GPU）
+| 指标 | DocLayout-YOLO | PP-DocLayoutV2 |
+|------|----------------|----------------|
+| task_success_rate | 1.0 | 1.0 |
+| layout_recall | 0.8974 | 0.8718 |
+| layout_precision | 0.9278 | 0.9353 |
+
+结论：真实工业 PDF 上两者均达标且接近；DocLayout-YOLO 检出略全（recall 高 2.6pt），
+PP-DocLayoutV2 误检更少（precision 高 0.8pt）且自带阅读顺序。合成公式样本上
+DocLayout-YOLO 将简化文本行识别为 formula，PP-DocLayoutV2 识别为 text，
+属合成样本渲染差异，真实文档未见此偏差。
+
+当前版面引擎已定版为 `ppdoclayoutv3`（唯一引擎）；DocLayout-YOLO / PP-DocLayoutV2 /
+RuleLayoutEngine 的可插拔代码已清除（权重文件保留于 models/），配置简化为
+`PARSEKIT_LAYOUT_MODEL_DIR` + `PARSEKIT_LAYOUT_CONF_THRESHOLD`。
+
+
+## 附录 2：PP-DocLayoutV3 引擎（2026-08 定版）
+
+- 引擎：`PPDocLayoutEngine`（唯一版面引擎，V2/DocLayout-YOLO/Rule 已移除）
+- 权重：`models/pp_doclayoutv3/model.safetensors`（官方 safetensors 版，
+  SHA256=`5ea422c6...9e2b85e` 锁定）
+- 特点：非平面文档支持、多点框（polygon_points）、端到端阅读顺序；25 类与 V2 一致
+- 配置：`PARSEKIT_LAYOUT_MODEL_DIR=models/pp_doclayoutv3`（唯一引擎）、
+  `PARSEKIT_LAYOUT_CONF_THRESHOLD=0.4`
+- 单例缓存：`pipeline._ENGINE_CACHE` 进程内缓存引擎（模型仅加载一次），
+  避免重复解析反复加载 133MB 权重与 GPU 显存累积
+
+### V2/V3 对比（全量 20 样本，--skip-ocr，GPU，阈值 0.4）
+| 指标 | V2 | V3 |
+|------|-----|-----|
+| task_success_rate | 1.0 | 1.0 |
+| layout_recall | 0.8718 | 0.8718 |
+| layout_precision | 0.8572 | 0.8424 |
+| title_block_hit_rate | 0.75 | 0.75 |
+
+结论：V2/V3 整体相当（recall 相同，V2 precision 略高 1.5pt）；
+**表格底部"注"行问题 V3 未改善**——GB-T1220 page23 上 V3 仍将注行检测为独立
+vision_footnote（score 0.47），page18 上 V3 甚至漏检（V2 检出 score 0.34）。
+注行漏框是训练标签语义（通栏说明行 = footnote 类）导致，V2/V3 标注约定一致，
+换模型无法解决。已纳入 **MinerU 视觉归属 P0**（§13）：footnote 块按阅读顺序/
+几何邻近归属到表格子块并合并进表格 bbox，由 GLM-OCR 一并识别。
+
+
+## 13. MinerU 借鉴落地决策（2026-08）
+
+来源：`docs/MINERU_SOURCE_ANALYSIS.md`（基于 mineru/ 源码深度对比）。
+
+### 13.1 采纳清单（按实现顺序）
+
+| 优先级 | 借鉴项 | MinerU 参考源码 | 实现要点 |
+|---|---|---|---|
+| P0 | **视觉归属**（caption/footnote → 表格/图片子块） | `utils/visual_magic_model_utils.py`（find_best_visual_parent / is_visual_neighbor） | 阅读顺序 + 几何间隙判定；footnote 归属表格后合并 bbox，随表格进 GLM-OCR；同时细化类型（table_body/table_caption/table_footnote） |
+| P0 | **文本型 PDF 分类跳过 OCR** | `utils/pdf_classify.py`（纯规则） | 字符数/图片覆盖率/CID 字体/Unicode 错误率阈值；文本型直接取文本层拼装，省 GLM-OCR |
+| P1 | **段落合并 para_split** | `backend/pipeline/para_split.py` | 按标题/公式分组合并连续文本块；行尾标点判断段落边界 |
+| P2 | **内容清洗** | `visual_magic_model_utils.py` clean_content | 输出统一清洗规则（空白/引号/代码） |
+| P2 | **语言检测** | `utils/language.py` + fasttext lid.176 | 沿用 MinerU 方案：fast-langdetect（0.9MB，CPU，~0.16ms/次）；用于后续策略分流 |
+
+### 13.2 已剔除清单（不实现）
+
+| 项 | 剔除原因 |
+|---|---|
+| 表格方向纠正 + 有线/无线分类前置 | 无专用模型，表格统一走 GLM-OCR |
+| 印章检测 + 矫正 + 专用 OCR | 无专用模型，场景收益低 |
+| 行内公式 inline formula | V3 25 类无 inline_formula 标签，需自研启发式，成本高收益低 |
+| 公式 MFD/MFR 两段式 | 走 GLM-OCR 直接 LaTeX（U7） |
+| 公式编号独立标记 | 正文引用收益低，维持编号并入公式，避免降级文本落位问题 |
+| 表格专用模型（UNet/SlanetPlus） | 与 GLM-OCR 路线冲突 |
+
+### 13.3 类型设计对齐（随 P0 视觉归属一并落地）
+
+当前 `LABEL_MAP` 25→11 类过粗（abstract→text、chart→image 等合并），
+视觉归属需要至少细化视觉主体三件套：`table_body / table_caption / table_footnote`、
+`image_body / image_caption / image_footnote`，作为结构树嵌套关系。
+
+### 13.4 验收标准
+
+- 视觉归属：真实文档表格"注：a、b、c"行进入表格 HTML（回归 GB-T1220 page23）；
+- 文本型分类：纯文本 PDF 解析不调用 GLM-OCR（stats 记录 skipped_ocr）；
+- 段落合并：连续文本块合并为段落，Markdown 无逐行碎片；
+- 语言检测：中/英文文档识别准确，CPU 检测 <5ms/块。
+
+
+## 14. MinerU 借鉴阶段性优化计划（2026-08）
+
+> 基于 §13 决策，按依赖关系与价值排序分 4 个阶段实施；每阶段完成后按铁律五层验证。
+
+### 阶段 1（P0）：视觉归属——表格注行修复
+
+- 目标：footnote/caption 块按阅读顺序 + 几何邻近归属到表格/图片主体；
+  "注：a、b、c"行合并进表格 bbox，随表格进 GLM-OCR，最终出现在表格 HTML 内。
+- 范围：类型细化（table_body/table_caption/table_footnote、image_body/image_caption/image_footnote）、
+  归属算法（参考 MinerU `find_best_visual_parent`/`is_visual_neighbor`）、
+  表格 bbox 扩展、结构树嵌套、Markdown 渲染。
+- 验证：GB-T1220 page23 回归（注行进表格 HTML）；单测/集成/边界/评测全量。
+
+### 阶段 2（P0）：文本型 PDF 分类跳过 OCR
+
+- 目标：渲染后按文本层覆盖率/图片覆盖率分类；纯文本 PDF 直接取文本层拼装，
+  不调用 GLM-OCR（stats 记录 skipped_ocr）。
+- 范围：pdf_classify 纯规则实现（字符数/图片覆盖率/CID 字体/Unicode 错误率）、
+  流水线分支、产物标记。
+- 验证：合成纯文本/扫描样本分类准确率 100%；OCR 调用次数为 0。
+
+### 阶段 3（P1）：段落合并 para_split
+
+- 目标：连续文本块按标题/公式分组合并，行尾标点判断段落边界，
+  Markdown 输出无逐行碎片。
+- 范围：para_split 实现（参考 MinerU `para_split.py`）、拼装改造。
+- 验证：长文本样本段落数符合预期；多栏样本不误并。
+
+### 阶段 4（P2）：内容清洗 + 语言检测
+
+- 目标：Markdown 输出统一清洗（空白/引号/代码）；引入 fast-langdetect
+  （lid.176，0.9MB，CPU）按块检测语言，为后续策略分流留接口。
+- 范围：clean_content 规则、语言检测接入与 stats 记录。
+- 验证：清洗规则单测；语言检测中/英文准确率；全量评测回归。
+
+### 阶段状态
+
+- 阶段 1：**已完成（2026-08-11）**
+  - 实现：`backend/app/services/parsekit/visual_grouping.py`（归属判定 + 表格 bbox 合并），
+    pipeline OCR 前调用，stats 记录 `merged_table_footnotes`；
+  - 候选类型：footnote（宽松几何）/ text / title（通栏≥0.85 + 单行 + 紧贴 + 仅首行）；
+  - 验证：GB-T1220 page23 注行进入表格 HTML（`<td colspan="7">a.当镍含量...`）；
+    全库 6 条合并无大范围误并；76 个测试通过（含 11 个归属单测）；评测指标无退化。
+- 阶段 2：**已完成（2026-08-11）**
+  - 实现：`backend/app/services/parsekit/pdf_classify.py`（纯规则分类 + 文本层填充），
+    pipeline 渲染后分类，文本型跳过正文 GLM-OCR（表格/公式/图片说明仍识别）；
+  - 验证：合成纯文本 PDF classification=text、GLM-OCR 零调用；84 个测试通过
+    （含 8 个分类单测）；全量评测 PASS（OCR 页面准确率 0.96、表格还原率 1.0）。
+- 阶段 3：未开始
+- 阶段 4：未开始

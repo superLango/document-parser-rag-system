@@ -1,4 +1,4 @@
-"""L2 集成链路：Phase 3 GLM-OCR 拦截层 + DocLayout-YOLO 真实引擎（M19）。"""
+"""L2 集成链路：Phase 3 GLM-OCR 拦截层 + PP-DocLayoutV3 真实引擎（M19）。"""
 
 import asyncio
 import time
@@ -44,8 +44,8 @@ class FakeOCRBackend:
         return f"{self.text}-{block_type}"
 
 
-# ---------- L2M19-01 doclayout + fake OCR 全链路 ----------
-async def test_pipeline_doclayout_with_fake_ocr(monkeypatch):
+# ---------- L2M19-01 ppdoclayoutv3 + fake OCR 全链路 ----------
+async def test_pipeline_ppdoclayoutv3_with_fake_ocr(monkeypatch):
     import app.services.ocr_backend.glmocr as glmocr_mod
     from app.services.parsekit import ParseOptions, parse_pdf
 
@@ -54,9 +54,9 @@ async def test_pipeline_doclayout_with_fake_ocr(monkeypatch):
     pdf = (TEST_DOC / SAMPLE).read_bytes()
     result = parse_pdf(
         pdf,
-        options=ParseOptions(layout_engine="doclayout", dpi=100, ocr_enabled=True),
+        options=ParseOptions(dpi=100, ocr_enabled=True),
     )
-    assert result.stats["engine"] == "doclayout"
+    assert result.stats["engine"] == "ppdoclayoutv3"
     assert result.stats["blocks"] > 0
     assert result.stats["ocr_blocks"] > 0
     assert result.ocr_failures == []
@@ -130,7 +130,7 @@ async def test_pipeline_ocr_policy_failed(monkeypatch):
     result = parse_pdf(
         pdf,
         options=ParseOptions(
-            layout_engine="doclayout", dpi=100, ocr_enabled=True,
+            dpi=100, ocr_enabled=True,
             ocr_failure_policy="partial",
         ),
     )
@@ -142,7 +142,7 @@ async def test_pipeline_ocr_policy_failed(monkeypatch):
         parse_pdf(
             pdf,
             options=ParseOptions(
-                layout_engine="doclayout", dpi=100, ocr_enabled=True,
+                dpi=100, ocr_enabled=True,
                 ocr_failure_policy="failed",
             ),
         )
@@ -165,7 +165,7 @@ async def test_real_glmocr_smoke(monkeypatch):
     pdf = (TEST_DOC / SAMPLE).read_bytes()
     result = parse_pdf(
         pdf,
-        options=ParseOptions(layout_engine="doclayout", dpi=100, ocr_enabled=True),
+        options=ParseOptions(dpi=100, ocr_enabled=True),
     )
     assert result.ocr_failures == []
     assert result.stats["ocr_blocks"] > 0

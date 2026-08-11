@@ -1,6 +1,5 @@
 """L4 边界异常：Phase 3 GLM-OCR 拦截层（M19，含并发用例）。"""
 
-import asyncio
 import base64
 import time
 import uuid
@@ -71,7 +70,7 @@ async def test_ocr_timeout_retries_then_failure(monkeypatch):
     pdf = (TEST_DOC / SAMPLE).read_bytes()
     result = parse_pdf(
         pdf,
-        options=ParseOptions(layout_engine="doclayout", dpi=100, ocr_enabled=True),
+        options=ParseOptions(dpi=100, ocr_enabled=True),
     )
     assert len(result.ocr_failures) > 0
     assert "timeout" in result.ocr_failures[0]["error"].lower() or "GLM-OCR" in result.ocr_failures[0]["error"]
@@ -139,13 +138,13 @@ async def test_ocr_concurrent_blocks():
             type="text",
             bbox=BBox(0.05 + 0.02 * i, 0.1, 0.3, 0.2),
             page_index=1,
-            source="doclayout",
+            source="ppdoclayoutv3",
         )
         for i in range(16)
     ]
     backend = FakeOCRBackend(delay=0.1)
     t0 = time.monotonic()
-    result, failures = run_ocr_stage(
+    _, failures = run_ocr_stage(
         [page], [blocks], backend, page_concurrency=4, block_concurrency=8
     )
     elapsed = time.monotonic() - t0
@@ -166,7 +165,7 @@ async def test_ocr_large_image_resized(monkeypatch):
             captured["bytes"] = image_bytes
             return "ok"
 
-    backend = CaptureBackend()
+    _ = CaptureBackend()
     # 直接验证 prepare 后尺寸
     big = _png_bytes(size=5000)
     data_url = GLMOCRBackend._prepare_image(big, max_edge=2048, min_edge=32)
@@ -179,26 +178,26 @@ async def test_ocr_large_image_resized(monkeypatch):
     assert max(img.size) <= 2048
 
 
-# ---------- L4M19-05 doclayout 单页失败 partial ----------
-async def test_doclayout_page_failure_partial(monkeypatch):
+# ---------- L4M19-05 ppdoclayoutv3 单页失败 partial ----------
+async def test_ppdoclayoutv3_page_failure_partial(monkeypatch):
     from app.services.parsekit import ParseOptions, parse_pdf
-    from app.services.parsekit.layout import DocLayoutEngine
+    from app.services.parsekit.layout_ppdoc import PPDocLayoutEngine
 
     pdf = (TEST_DOC / SAMPLE).read_bytes()
     calls = {"n": 0}
 
-    original = DocLayoutEngine._infer_page
+    original = PPDocLayoutEngine._infer_page
 
-    def flaky(self, image_bytes):
+    def flaky(self, image_bytes, width, height):
         calls["n"] += 1
         if calls["n"] == 2:
             raise RuntimeError("injected page failure")
-        return original(self, image_bytes)
+        return original(self, image_bytes, width, height)
 
-    monkeypatch.setattr(DocLayoutEngine, "_infer_page", flaky)
+    monkeypatch.setattr(PPDocLayoutEngine, "_infer_page", flaky)
     result = parse_pdf(
         pdf,
-        options=ParseOptions(layout_engine="doclayout", dpi=100, ocr_enabled=False),
+        options=ParseOptions(dpi=100, ocr_enabled=False),
     )
     assert len(result.page_failures) == 1
     assert result.page_failures[0]["stage"] == "layout"
@@ -219,7 +218,7 @@ async def test_ocr_oversized_content_recorded(monkeypatch):
     pdf = (TEST_DOC / SAMPLE).read_bytes()
     result = parse_pdf(
         pdf,
-        options=ParseOptions(layout_engine="doclayout", dpi=100, ocr_enabled=True),
+        options=ParseOptions(dpi=100, ocr_enabled=True),
     )
     assert result.ocr_failures == []
     assert len(result.markdown) > 100000

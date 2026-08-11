@@ -74,10 +74,12 @@ class Settings(BaseSettings):
     DOCUMENT_MAX_SIZE_MB: int = 100
 
     # ---------- 文档解析管线（Phase 2 parsekit） ----------
-    PARSEKIT_LAYOUT_ENGINE: str = "doclayout"  # doclayout（生产，权重已部署） | rule（快速/测试）
+    # 版面引擎固定 PP-DocLayoutV3（唯一引擎，2026-08 定版）
     PARSEKIT_LAYOUT_MODEL_DIR: str = str(
-        Path(__file__).resolve().parents[3] / "models" / "doclayout_yolo"
+        Path(__file__).resolve().parents[3] / "models" / "pp_doclayoutv3"
     )
+    # 置信度阈值（过滤低置信度框；调低可提升召回、调高提升精确率）
+    PARSEKIT_LAYOUT_CONF_THRESHOLD: float = 0.4
     PARSEKIT_DPI: int = 200
     PARSEKIT_HEADER_FOOTER_MODE: str = "rule"  # A/B 择优后的胜出方案
     PARSEKIT_PAGE_CONCURRENCY: int = 4

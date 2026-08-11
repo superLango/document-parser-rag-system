@@ -24,7 +24,11 @@ def _render_block(block: LayoutBlock) -> list[str]:
         return [f"<!-- table: page {block.page_index} -->", ""]
     if block.type in ("formula", "equation"):
         if content:
-            return [f"$${content}$$", ""]
+            clean = content.strip()
+            # GLM-OCR 返回可能已带 $$ 定界符，避免双重包裹
+            if clean.startswith("$$") and clean.endswith("$$"):
+                return [clean, ""]
+            return [f"$${clean}$$", ""]
         return [f"<!-- formula: page {block.page_index} -->", ""]
     if block.type == "image":
         return [f"<!-- image: page {block.page_index} -->", ""]

@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-08-11T04:46:14+0800",
+  "generated_at": "2026-08-11T17:08:16+0800",
   "metrics": {
     "samples_total": 20,
     "samples_success": 20,
     "task_success_rate": 1.0,
-    "avg_elapsed": 1.493,
-    "layout_recall": 0.8974,
-    "layout_precision": 0.9278,
+    "avg_elapsed": 1.346,
+    "layout_recall": 0.8718,
+    "layout_precision": 0.8424,
     "title_block_hit_rate": 0.75,
-    "ocr_page_accuracy": 1.0,
+    "ocr_page_accuracy": 0.96,
     "table_restore_rate": 1.0,
-    "title_accuracy": 0.8695652173913043
+    "title_accuracy": 0.9130434782608695
   },
   "gates": {
     "task_success_rate": {
@@ -20,22 +20,22 @@
     },
     "layout_recall": {
       "threshold": 0.8,
-      "value": 0.8974,
+      "value": 0.8718,
       "pass": true
     },
     "layout_precision": {
       "threshold": 0.7,
-      "value": 0.9278,
+      "value": 0.8424,
       "pass": true
     },
     "title_accuracy": {
       "threshold": 0.7,
-      "value": 0.8695652173913043,
+      "value": 0.9130434782608695,
       "pass": true
     },
     "ocr_page_accuracy": {
       "threshold": 0.85,
-      "value": 1.0,
+      "value": 0.96,
       "pass": true
     },
     "table_restore_rate": {
@@ -48,9 +48,9 @@
     {
       "sample": "462a2e2857face94b2c800d3a8492740.pdf",
       "success": true,
-      "elapsed": 6.163,
+      "elapsed": 4.973,
       "pages": 13,
-      "blocks": 144,
+      "blocks": 196,
       "layout_recall": null,
       "layout_precision": null,
       "title_block_hit_rate": null
@@ -58,9 +58,9 @@
     {
       "sample": "GB-T1220-2007 不锈钢棒.pdf",
       "success": true,
-      "elapsed": 8.85,
+      "elapsed": 8.482,
       "pages": 31,
-      "blocks": 212,
+      "blocks": 348,
       "layout_recall": null,
       "layout_precision": null,
       "title_block_hit_rate": null
@@ -68,9 +68,9 @@
     {
       "sample": "GJB3325A-2019.pdf",
       "success": true,
-      "elapsed": 2.169,
+      "elapsed": 2.055,
       "pages": 9,
-      "blocks": 124,
+      "blocks": 209,
       "layout_recall": null,
       "layout_precision": null,
       "title_block_hit_rate": null
@@ -78,9 +78,9 @@
     {
       "sample": "LSAM-JD01-0016  优质GH4169合金锻制棒材.pdf",
       "success": true,
-      "elapsed": 1.734,
+      "elapsed": 1.664,
       "pages": 11,
-      "blocks": 135,
+      "blocks": 180,
       "layout_recall": null,
       "layout_precision": null,
       "title_block_hit_rate": null
@@ -88,9 +88,9 @@
     {
       "sample": "a62820a10c1c33f40ede554498d7bdf1.pdf",
       "success": true,
-      "elapsed": 1.872,
+      "elapsed": 1.77,
       "pages": 12,
-      "blocks": 135,
+      "blocks": 191,
       "layout_recall": null,
       "layout_precision": null,
       "title_block_hit_rate": null
@@ -98,9 +98,9 @@
     {
       "sample": "c8f1e134282d41dcc40b5243f4e9a98d.pdf",
       "success": true,
-      "elapsed": 2.165,
+      "elapsed": 2.129,
       "pages": 14,
-      "blocks": 126,
+      "blocks": 166,
       "layout_recall": null,
       "layout_precision": null,
       "title_block_hit_rate": null
@@ -108,20 +108,20 @@
     {
       "sample": "synth_blank_mix.pdf",
       "success": true,
-      "elapsed": 0.318,
+      "elapsed": 0.263,
       "pages": 2,
-      "blocks": 3,
-      "layout_recall": 1.0,
+      "blocks": 2,
+      "layout_recall": 0.6666666666666666,
       "layout_precision": 1.0,
-      "layout_tp": 3,
+      "layout_tp": 2,
       "layout_fp": 0,
-      "layout_fn": 0,
+      "layout_fn": 1,
       "title_block_hit_rate": 1.0
     },
     {
       "sample": "synth_cover_body.pdf",
       "success": true,
-      "elapsed": 0.603,
+      "elapsed": 0.523,
       "pages": 4,
       "blocks": 11,
       "layout_recall": 1.0,
@@ -134,33 +134,33 @@
     {
       "sample": "synth_footnote.pdf",
       "success": true,
-      "elapsed": 0.329,
+      "elapsed": 0.262,
       "pages": 2,
-      "blocks": 4,
+      "blocks": 6,
       "layout_recall": 0.6666666666666666,
-      "layout_precision": 1.0,
+      "layout_precision": 0.6666666666666666,
       "layout_tp": 4,
-      "layout_fp": 0,
+      "layout_fp": 2,
       "layout_fn": 2,
       "title_block_hit_rate": 0.0
     },
     {
       "sample": "synth_formula.pdf",
       "success": true,
-      "elapsed": 0.323,
+      "elapsed": 0.263,
       "pages": 2,
-      "blocks": 4,
+      "blocks": 6,
       "layout_recall": 0.3333333333333333,
-      "layout_precision": 0.5,
+      "layout_precision": 0.3333333333333333,
       "layout_tp": 2,
-      "layout_fp": 2,
+      "layout_fp": 4,
       "layout_fn": 4,
       "title_block_hit_rate": 0.0
     },
     {
       "sample": "synth_header_complex.pdf",
       "success": true,
-      "elapsed": 0.477,
+      "elapsed": 0.414,
       "pages": 3,
       "blocks": 9,
       "layout_recall": 1.0,
@@ -173,7 +173,7 @@
     {
       "sample": "synth_image_caption.pdf",
       "success": true,
-      "elapsed": 0.331,
+      "elapsed": 0.265,
       "pages": 2,
       "blocks": 4,
       "layout_recall": 0.6666666666666666,
@@ -186,7 +186,7 @@
     {
       "sample": "synth_long_multi.pdf",
       "success": true,
-      "elapsed": 1.141,
+      "elapsed": 1.04,
       "pages": 8,
       "blocks": 16,
       "layout_recall": 1.0,
@@ -199,7 +199,7 @@
     {
       "sample": "synth_mixed_layout.pdf",
       "success": true,
-      "elapsed": 0.462,
+      "elapsed": 0.405,
       "pages": 3,
       "blocks": 15,
       "layout_recall": 1.0,
@@ -212,9 +212,9 @@
     {
       "sample": "synth_scanned_style.pdf",
       "success": true,
-      "elapsed": 0.318,
+      "elapsed": 0.268,
       "pages": 2,
-      "blocks": 0,
+      "blocks": 2,
       "layout_recall": null,
       "layout_precision": null,
       "title_block_hit_rate": null
@@ -222,20 +222,20 @@
     {
       "sample": "synth_table_crosspage.pdf",
       "success": true,
-      "elapsed": 0.585,
+      "elapsed": 0.418,
       "pages": 3,
-      "blocks": 4,
+      "blocks": 6,
       "layout_recall": 1.0,
-      "layout_precision": 1.0,
+      "layout_precision": 0.6666666666666666,
       "layout_tp": 4,
-      "layout_fp": 0,
+      "layout_fp": 2,
       "layout_fn": 0,
       "title_block_hit_rate": 1.0
     },
     {
       "sample": "synth_table_mixed.pdf",
       "success": true,
-      "elapsed": 0.478,
+      "elapsed": 0.406,
       "pages": 3,
       "blocks": 7,
       "layout_recall": 1.0,
@@ -248,20 +248,20 @@
     {
       "sample": "synth_text_single.pdf",
       "success": true,
-      "elapsed": 0.464,
+      "elapsed": 0.397,
       "pages": 3,
-      "blocks": 9,
+      "blocks": 8,
       "layout_recall": 1.0,
-      "layout_precision": 0.7777777777777778,
+      "layout_precision": 0.875,
       "layout_tp": 7,
-      "layout_fp": 2,
+      "layout_fp": 1,
       "layout_fn": 0,
       "title_block_hit_rate": 1.0
     },
     {
       "sample": "synth_text_two_column.pdf",
       "success": true,
-      "elapsed": 0.477,
+      "elapsed": 0.4,
       "pages": 3,
       "blocks": 9,
       "layout_recall": 1.0,
@@ -274,20 +274,20 @@
     {
       "sample": "synth_toc_chapters.pdf",
       "success": true,
-      "elapsed": 0.603,
+      "elapsed": 0.531,
       "pages": 4,
-      "blocks": 8,
+      "blocks": 14,
       "layout_recall": 1.0,
-      "layout_precision": 0.875,
+      "layout_precision": 0.5,
       "layout_tp": 7,
-      "layout_fp": 1,
+      "layout_fp": 7,
       "layout_fn": 0,
       "title_block_hit_rate": 1.0
     },
     {
       "sample": "synth_blank_mix.pdf",
       "ocr_pages": 2,
-      "ocr_correct_pages": 2,
+      "ocr_correct_pages": 1,
       "titles": 1,
       "titles_hit": 1,
       "tables": 0,
@@ -298,7 +298,7 @@
       "ocr_pages": 3,
       "ocr_correct_pages": 3,
       "titles": 4,
-      "titles_hit": 3,
+      "titles_hit": 4,
       "tables": 0,
       "tables_ok": 0
     },

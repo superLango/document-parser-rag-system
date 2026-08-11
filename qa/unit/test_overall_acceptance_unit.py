@@ -43,7 +43,7 @@ async def test_artifact_contract():
     data = doc.tobytes()
     doc.close()
     result = parse_pdf(
-        data, options=ParseOptions(layout_engine="rule", dpi=100, ocr_enabled=False)
+        data, options=ParseOptions(dpi=100, ocr_enabled=False)
     )
     layout = result.layout
     assert layout["schema_version"] == "1.2"
