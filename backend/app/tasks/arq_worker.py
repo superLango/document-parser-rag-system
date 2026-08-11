@@ -3,15 +3,14 @@
 import uuid
 from typing import ClassVar
 
-from arq import cron
-from arq.connections import RedisSettings
-from sqlalchemy import text
-
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
 from app.models.document import TaskOutbox
 from app.services import document_service
+from arq import cron
+from arq.connections import RedisSettings
+from sqlalchemy import text
 
 logger = get_logger(__name__)
 

@@ -78,7 +78,7 @@ await scenario('L3M10-01', 'M10', async () => {
   await sessionLogin(page, 'admin', 'admin123')
   await page.goto(`${BASE}/kb`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(800)
-  await page.getByText('新建知识库').click()
+  await page.getByRole('button', { name: '新建知识库' }).first().click()
   await page.waitForTimeout(300)
   await page.fill('#kb-name', `E2E知识库_${stamp}`)
   await page.fill('#kb-desc', 'P1 功能验证')
@@ -156,7 +156,7 @@ await scenario('L3M10-04', 'M10', async () => {
   await sessionLogin(page, 'admin', 'admin123')
   await page.goto(`${BASE}/kb`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(700)
-  await page.getByText('新建知识库').click()
+  await page.getByRole('button', { name: '新建知识库' }).first().click()
   await page.waitForTimeout(300)
   await page.fill('#kb-name', `E2E初始成员库_${stamp}`)
   await page.fill('#kb-desc', '创建时邀请成员')
@@ -390,18 +390,33 @@ await scenario('L3M17-01', 'M17', async () => {
   if (!(await page.locator('main').getByText('文档解析').first().isVisible().catch(() => false))) {
     throw new Error('文档解析页未渲染')
   }
+  await page.locator('[data-testid="open-upload"]').click()
+  await page.waitForTimeout(300)
   await page.setInputFiles(
-    'input[type="file"]',
+    '[data-testid="upload-input"]',
     '/home/grainuser/hansonDoc_RAG/test_doc/a62820a10c1c33f40ede554498d7bdf1.pdf',
   )
+  await page.waitForTimeout(400)
+  await page.locator('[data-testid="confirm-upload"]').click()
   await page.waitForTimeout(1200)
   if (!(await page.getByText('文档已上传').first().isVisible().catch(() => false))) {
     throw new Error('上传未提示成功')
   }
-  await page.waitForFunction(
-    () => document.body.innerText.includes('已完成'),
-    { timeout: 15000 },
-  )
+  const docList = await api('GET', `/kb/${kbId}/documents?page=1&page_size=20`, null, token)
+  const doc = docList.body.data.items.find((d) => d.filename.includes('a62820a10c1c33f40ede554498d7bdf1'))
+  if (!doc) throw new Error('文档未出现在列表')
+  const deadline = Date.now() + 120000
+  while (Date.now() < deadline) {
+    const d = await api('GET', `/kb/${kbId}/documents/${doc.id}`, null, token)
+    if (d.body.data.status === 'completed') break
+    if (d.body.data.status === 'failed') throw new Error('解析失败')
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+  }
+  await page.reload({ waitUntil: 'networkidle' })
+  await page.waitForTimeout(800)
+  if (!(await page.getByText('已完成').first().isVisible().catch(() => false))) {
+    throw new Error('未显示已完成')
+  }
   await page.screenshot({ path: `${OUT}p1_documents.png` })
   await page.getByTitle('删除').click()
   await page.waitForTimeout(400)

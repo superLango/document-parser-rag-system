@@ -182,7 +182,7 @@ async def delete_document_objects(kb_id: uuid.UUID, object_key: str) -> None:
                 driver.delete_prefix(key)
             else:
                 driver.delete(key)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - 单个对象删除失败不中断
             logger.warning(
                 "删除对象失败", object_key=key, error=str(exc)[:200]
             )

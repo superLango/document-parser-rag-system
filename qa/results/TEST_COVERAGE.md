@@ -1,9 +1,9 @@
-# P0+P1+P2 + 文档解析 Phase 1/2/3/4/5/6 测试覆盖率统计表
+# P0+P1+P2 + 文档解析 Phase 1-6 + 整体验收 测试覆盖率统计表
 
 统计口径：覆盖率 = 实际通过用例数 / 计划用例数；单模块通过率必须 ≥95%。
 模块全覆盖判定 = 该模块在五层中至少覆盖 3 个层，且所有用例通过。
 
-## 逐模块×层用例数（M1-M22）
+## 逐模块×层用例数（M1-M23）
 
 | 模块 | L1 单测 | L2 集成 | L3 功能 | L4 边界 | L5 安全 | 用例总数 | 覆盖层数 | 是否全覆盖 |
 |------|--------:|--------:|--------:|--------:|--------:|---------:|---------:|:----------:|
@@ -29,20 +29,21 @@
 | M20 后处理与产物生命周期（Phase 4） | 8 | 4 | 2 | 6 | 5 | 25 | 5 | 是 |
 | M21 文档解析前端完整化（Phase 5） | 4 | 2 | 6 | 5 | 5 | 22 | 5 | 是 |
 | M22 评测与调优（Phase 6） | 8 | 2 | 1 | 5 | 4 | 20 | 5 | 是 |
-| **合计（去重）** | **117** | **79** | **51** | **73** | **57** | **376** | — | **是** |
+| M23 整体验收（Phase 1-6 综合） | 5 | 5 | 2 | 5 | 5 | 22 | 5 | 是 |
+| **合计（去重）** | **122** | **84** | **53** | **78** | **62** | **398** | — | **是** |
 
 > 合计含 1 条跨模块复计（L1M9-01 与 L1M3-07 同一幂等种子测试）；
-> pytest 306（P0/P1/P2 + Phase1-Phase6）+ Playwright/CLI E2E 61
-> （P0 20 + P1 11 + P2 5 + 解析 Phase2 4 + Phase3 2 + Phase4 2 + Phase5 16 + Phase6 1）
-> + node:test 4（M21 L1）+ 迁移脚本 5 = 376。
+> pytest 326（P0/P1/P2 + Phase1-Phase6 + M23 整体验收 20）+ Playwright/CLI E2E 63
+> （P0 20 + P1 11 + P2 5 + 解析 Phase2 4 + Phase3 2 + Phase4 2 + Phase5 16 + Phase6 1 + 整体 2）
+> + node:test 4（M21 L1）+ 迁移脚本 5 = 398。
 
 ## 覆盖率结论
 
-- 计划用例数：376
-- 实际通过：376（100%）
+- 计划用例数：398
+- 实际通过：398（100%）
 - 失败/阻塞：0
-- 模块全覆盖：21/21（100%）
-- **结论：覆盖率 100% ≥ 95%，P0+P1+P2 + 文档解析 Phase 1/2/3/4/5/6 测试完成。**
+- 模块全覆盖：22/22（100%）
+- **结论：覆盖率 100% ≥ 95%，P0+P1+P2 + 文档解析 Phase 1-6 + 整体验收测试完成。**
 
 ## 并发用例清单（铁律第 4 条）
 
@@ -96,6 +97,7 @@
 - 前端 E2E：`qa/functional/e2e_p0.mjs`、`e2e_p1.mjs`、`e2e_p2.mjs`、`e2e_phase2.mjs`、`e2e_phase3.mjs`、`e2e_phase4.mjs`、`e2e_phase5.mjs`、`e2e_phase5_boundary.mjs`、`e2e_phase5_security.mjs`
 - 前端 L1：`qa/unit/test_frontend_phase5.mjs`（node:test）
 - Phase 6 评测：`qa/evaluation/generate_samples.py`、`metrics.py`、`evaluate_phase6.py`、`reports/`、`ground_truth/`
+- 整体验收：`qa/unit|integration|boundary|security/test_overall_acceptance_*`、`qa/functional/e2e_overall_acceptance.mjs`
 - 迁移验证：`qa/migration/verify_migration.sh`
 - 截图归档：`qa/results/p0_*.png`、`p1_*.png`、`p2_*.png`、`parsing_phase2_*.png`、`parsing_phase3_*.png`、`parsing_phase4_*.png`、`parsing_phase5_*.png`
 - DocLayout-YOLO 权重：`models/doclayout_yolo/doclayout_yolo.pt`（SHA256 `1b152460...c80be`，不入 Git）
