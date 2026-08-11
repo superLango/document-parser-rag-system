@@ -476,6 +476,7 @@ async def run_index_task(
     """
     from app.models.indexing import DocumentChunk, TextChunk
     from app.services.embedding.embedding_service import embedding_service
+    from app.services.indexing.bm25 import chunk_token_counts, kb_bm25_service
     from app.services.indexing.chunker import hierarchy_chunker
 
     document = await get_document(db, kb_id, document_id)
@@ -533,7 +534,17 @@ async def run_index_task(
         task.heartbeat_at = _now()
         await db.commit()
 
-        # ---- stage 3: storing（幂等：先删旧块，再批量插入） ----
+        # ---- stage 3: storing（幂等：回退旧统计→删旧块→插入新块→增统计） ----
+        old_rows = (
+            await db.execute(
+                text(
+                    "SELECT bm25_tokens FROM document_chunks "
+                    "WHERE document_id = :doc_id"
+                ).bindparams(doc_id=document_id)
+            )
+        ).scalars().all()
+        old_tokens = [dict(r) for r in old_rows if r]
+        await kb_bm25_service.remove_document_stats(db, kb_id, old_tokens)
         await db.execute(
             text("DELETE FROM document_chunks WHERE document_id = :doc_id"),
             {"doc_id": document_id},
@@ -544,7 +555,10 @@ async def run_index_task(
         )
         chunk_rows: list[DocumentChunk] = []
         text_rows: list[TextChunk] = []
+        new_tokens: list[dict[str, int]] = []
         for i, child in enumerate(children):
+            tokens = chunk_token_counts(f"{child.title} {child.content}")
+            new_tokens.append(tokens)
             chunk_rows.append(
                 DocumentChunk(
                     kb_id=kb_id,
@@ -562,6 +576,7 @@ async def run_index_task(
                     content_for_embedding=child.content_for_embedding,
                     parent_text=child.parent_text,
                     tokens=child.tokens,
+                    bm25_tokens=tokens,
                     title_vector=title_vectors[i],
                     content_vector=content_vectors[i],
                 )
@@ -586,6 +601,7 @@ async def run_index_task(
                 )
             )
         db.add_all(text_rows)
+        await kb_bm25_service.add_document_stats(db, kb_id, new_tokens)
         done_stages.append("storing")
         await db.commit()
 
@@ -649,7 +665,27 @@ async def fail_index_task(
 async def delete_document(
     db: AsyncSession, kb_id: uuid.UUID, document_id: uuid.UUID
 ) -> None:
+    """软删文档记录，同时硬删索引块并回退 BM25 统计（S5/D4）。"""
+    from app.services.indexing.bm25 import kb_bm25_service
+
     doc = await get_document(db, kb_id, document_id)
+    old_rows = (
+        await db.execute(
+            text(
+                "SELECT bm25_tokens FROM document_chunks WHERE document_id = :doc_id"
+            ).bindparams(doc_id=document_id)
+        )
+    ).scalars().all()
+    old_tokens = [dict(r) for r in old_rows if r]
+    await kb_bm25_service.remove_document_stats(db, kb_id, old_tokens)
+    await db.execute(
+        text("DELETE FROM text_chunks WHERE document_id = :doc_id"),
+        {"doc_id": document_id},
+    )
+    await db.execute(
+        text("DELETE FROM document_chunks WHERE document_id = :doc_id"),
+        {"doc_id": document_id},
+    )
     doc.deleted_at = _now()
     doc.status = "deleted"
     await db.commit()

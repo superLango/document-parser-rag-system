@@ -110,6 +110,10 @@ class Settings(BaseSettings):
     EMBEDDING_MAX_LENGTH: int = 8192  # BGE-M3 最大序列（大表格块友好）
     EMBEDDING_DIM: int = 1024  # BGE-M3 输出维度（D2 已确认）
 
+    # ---------- BM25（S5/D4：jieba 词法检索，零 LLM） ----------
+    BM25_K1: float = 1.5
+    BM25_B: float = 0.75
+
     # ---------- 审计与可观测性 ----------
     AUDIT_LOG_RETENTION_DAYS: int = 90
     ENABLE_METRICS: bool = False
