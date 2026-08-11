@@ -186,6 +186,8 @@ await scenario('L3UI-05', 'M18', async () => {
   await page.waitForTimeout(300)
   const jsonText = await page.locator('[data-testid="viewer-json"]').innerText()
   if (!jsonText.includes('"schema_version": "1.2"')) throw new Error('JSON 标签页内容异常')
+  const jsonPageBox = await page.locator('[data-testid="viewer-page"]').boundingBox()
+  if (!jsonPageBox || jsonPageBox.height > 5000) throw new Error('JSON 标签页导致左侧原文档被拉伸')
   // 翻页（位于左侧组件上方）
   const pageIndicator = await page.getByText(/第 \d+ \/ \d+ 页/).innerText()
   await page.getByRole('button', { name: '下一页' }).click()

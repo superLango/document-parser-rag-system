@@ -313,7 +313,7 @@ export default function KbDocumentViewerPage() {
             <p className="text-xs text-muted-foreground">解析完成后将自动恢复版面块 / Markdown / JSON 查看</p>
           </section>
         ) : completed ? (
-          <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
+          <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft lg:max-h-[calc(100dvh-8rem)]">
             <div className="flex items-center gap-1 border-b border-border bg-muted/40 px-2 py-1.5">
               {tabs.map(({ key, label, icon: Icon }) => (
                 <button

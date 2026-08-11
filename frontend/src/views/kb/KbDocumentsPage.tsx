@@ -278,22 +278,26 @@ export default function KbDocumentsPage() {
                       <TableCell className="text-xs text-muted-foreground">{(doc.file_size / 1024).toFixed(1)} KB</TableCell>
                       <TableCell className="text-xs text-muted-foreground">{formatDateTime(doc.created_at)}</TableCell>
                       <TableCell>
-                        <div className="w-44">
-                          <Badge variant={displayMeta.variant}>{displayMeta.label}</Badge>
+                        <div className="min-w-52">
+                          <div className="flex items-center gap-2">
+                            <Badge variant={displayMeta.variant} className="shrink-0">{displayMeta.label}</Badge>
+                            {parsing ? (
+                              <>
+                                <div className="h-1.5 w-24 shrink-0 overflow-hidden rounded-full bg-muted" data-testid={`progress-${doc.id}`}>
+                                  <div
+                                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+                                    style={{ width: `${percent}%` }}
+                                    data-testid={`progress-fill-${doc.id}`}
+                                  />
+                                </div>
+                                <span className="shrink-0 text-[11px] font-medium tabular-nums text-muted-foreground" data-testid={`progress-text-${doc.id}`}>{percent}%</span>
+                              </>
+                            ) : null}
+                          </div>
                           {parsing ? (
-                            <div className="mt-2 space-y-1">
-                              <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                                <span className="truncate">{stageLabel}{pageText ? <span data-testid={`progress-page-${doc.id}`}> · {pageText}</span> : null}</span>
-                                <span data-testid={`progress-text-${doc.id}`}>{percent}%</span>
-                              </div>
-                              <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted" data-testid={`progress-${doc.id}`}>
-                                <div
-                                  className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
-                                  style={{ width: `${percent}%` }}
-                                  data-testid={`progress-fill-${doc.id}`}
-                                />
-                              </div>
-                            </div>
+                            <p className="mt-1 truncate text-[11px] text-muted-foreground">
+                              {stageLabel}{pageText ? <span data-testid={`progress-page-${doc.id}`}> · {pageText}</span> : null}
+                            </p>
                           ) : null}
                         </div>
                       </TableCell>

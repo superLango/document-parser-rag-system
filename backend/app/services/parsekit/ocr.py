@@ -139,12 +139,15 @@ def run_ocr_stage(
                     page_ocr_total.get(page.page_index, 0) + 1
                 )
         page_done: dict[int, int] = {}
+        pages_done_count = 0
         for future in as_completed(futures):
             page_index = future_pages[future]
             done = page_done.get(page_index, 0) + 1
             page_done[page_index] = done
-            if progress and done >= page_ocr_total[page_index]:
-                progress("ocr", page_index, len(pages))
+            if done >= page_ocr_total[page_index]:
+                pages_done_count += 1
+                if progress:
+                    progress("ocr", pages_done_count, len(pages))
     ocr_count = sum(
         1
         for blocks in page_layouts
