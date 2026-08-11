@@ -30,12 +30,15 @@ yarn-debug.log*
 
 # ===== Runtime data =====
 volumes/
-models/
+/models/
 data/
 backend/data/
 logs/
 backend/logs/
 *.log
+
+# ===== 临时目录 =====
+tmp/
 
 # ===== Backup =====
 .backup/
@@ -66,6 +69,9 @@ document-parser-rag-system/
 
 # ===== LightRAG 参考代码（只读参考，不推送） =====
 lightrag/
+
+# ===== MinerU 参考代码（只读参考，不推送） =====
+mineru/
 
 # ===== 测试文档样本（本地测试资产，不推送） =====
 test_doc/
