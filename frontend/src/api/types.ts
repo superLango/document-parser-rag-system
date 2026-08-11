@@ -71,6 +71,30 @@ export interface AuditLog {
   created_at: string
 }
 
+export interface SearchHit {
+  chunk_id: string
+  document_id: string
+  content: string
+  parent_text: string | null
+  hierarchy_path: string
+  title: string
+  source_pages: number[]
+  has_table: boolean
+  score: number
+}
+
+export interface SearchResponse {
+  query: string
+  total: number
+  items: SearchHit[]
+}
+
+export interface SearchFilters {
+  document_id?: string | null
+  has_table?: boolean | null
+  level?: number | null
+}
+
 export interface AuditStats {
   days: number
   total: number

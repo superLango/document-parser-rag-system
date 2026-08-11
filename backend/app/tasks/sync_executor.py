@@ -8,6 +8,7 @@ import uuid
 
 from sqlalchemy import select, text
 
+from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
 from app.models.document import TaskOutbox
@@ -67,9 +68,23 @@ async def execute_sync_task(document_id: str, kb_id: str) -> dict:
                 )
                 # 解析成功 → 同会话自动创建独立索引任务（D8，失败不影响解析）
                 try:
-                    await document_service.enqueue_index_task(
+                    index_task = await document_service.enqueue_index_task(
                         db, uuid.UUID(kb_id), uuid.UUID(document_id)
                     )
+                    # sync 模式无 dispatcher：立即执行自动索引，避免任务悬挂
+                    if index_task is not None and settings.TASK_EXECUTOR == "sync":
+                        await document_service.run_index_task(
+                            db, uuid.UUID(document_id), uuid.UUID(kb_id)
+                        )
+                        idx_outbox = (
+                            await db.execute(
+                                select(TaskOutbox).where(
+                                    TaskOutbox.task_id == index_task.task_id
+                                )
+                            )
+                        ).scalar_one_or_none()
+                        if idx_outbox is not None:
+                            await document_service.mark_outbox(db, idx_outbox, "done")
                 except Exception:
                     logger.exception("自动触发索引失败", document_id=document_id)
             if outbox is not None:

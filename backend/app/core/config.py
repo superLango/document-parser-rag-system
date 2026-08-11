@@ -122,6 +122,8 @@ class Settings(BaseSettings):
     RETRIEVAL_KEYWORD_WEIGHT: float = 1.2
     RETRIEVAL_TOP_K: int = 10
     RETRIEVAL_CANDIDATE_MULT: int = 2
+    # 索引嵌入单路超时（秒），防任务悬挂
+    INDEX_EMBED_TIMEOUT: int = 120
 
     # ---------- 审计与可观测性 ----------
     AUDIT_LOG_RETENTION_DAYS: int = 90

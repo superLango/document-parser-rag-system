@@ -12,11 +12,16 @@ from qa.fixtures.indexing_helpers import create_kb_via_api
 
 
 def _pdf(text: str = "索引集成测试") -> bytes:
+    """结构化多行 PDF：标题+正文，确保版面引擎可检出文本块。"""
     import pymupdf
 
     doc = pymupdf.open()
     page = doc.new_page()
-    page.insert_text((72, 72), text, fontsize=12)
+    page.insert_text((72, 150), "1 范围", fontsize=18)
+    page.insert_text((72, 190), "本文件规定了不锈钢棒材的化学成分和力学性能要求。", fontsize=12)
+    page.insert_text((72, 215), text, fontsize=12)
+    page.insert_text((72, 240), "抗拉强度按 GB/T 228.1 执行，规定值 715 MPa。", fontsize=12)
+    page.insert_text((72, 265), "晶间腐蚀试验按 GB/T 4334 执行，试验温度应符合要求。", fontsize=12)
     data = doc.tobytes()
     doc.close()
     return data
@@ -56,22 +61,39 @@ async def _upload_and_parse(client, super_token, kb_id):
 
 async def test_parse_completion_auto_enqueues_index(client, super_token, db_session):
     """L2M28-01：解析成功后自动创建独立索引任务（D8）。"""
+    from app.core.config import settings
+
     kb = await create_kb_via_api(client, super_token, "S4自动触发")
     kb_id = kb["id"]
-    doc = await _upload_and_parse(client, super_token, kb_id)
-    await _wait_document(client, super_token, kb_id, doc["id"], "status", "completed", timeout=90)
+    # 测试环境 OCR 默认关闭；文本型 PDF 需开启 OCR 使文本层填充版面块内容
+    original_ocr = settings.PARSEKIT_OCR_ENABLED
+    settings.PARSEKIT_OCR_ENABLED = True
+    try:
+        doc = await _upload_and_parse(client, super_token, kb_id)
+        await _wait_document(client, super_token, kb_id, doc["id"], "status", "completed", timeout=90)
+    finally:
+        settings.PARSEKIT_OCR_ENABLED = original_ocr
 
     # 自动触发：存在 queued 的 document_index 任务与 outbox
-    tasks = (
-        await db_session.execute(
-            select(DocumentTask).where(
-                DocumentTask.document_id == uuid.UUID(doc["id"]),
-                DocumentTask.type == "document_index",
+    # sync 模式：自动任务在解析完成后立即执行（无 dispatcher 悬挂）
+    deadline = time.monotonic() + 60
+    tasks = []
+    while time.monotonic() < deadline:
+        tasks = (
+            await db_session.execute(
+                select(DocumentTask)
+                .where(
+                    DocumentTask.document_id == uuid.UUID(doc["id"]),
+                    DocumentTask.type == "document_index",
+                )
+                .execution_options(populate_existing=True)
             )
-        )
-    ).scalars().all()
+        ).scalars().all()
+        if tasks and tasks[0].status == "completed":
+            break
+        await asyncio.sleep(0.5)
     assert tasks, "解析完成后应自动创建索引任务"
-    assert any(t.status == "queued" for t in tasks)
+    assert tasks[0].status == "completed"
     outbox = (
         await db_session.execute(
             select(TaskOutbox).where(TaskOutbox.task_id == tasks[0].task_id)

@@ -18,6 +18,7 @@ from __future__ import annotations
 import asyncio
 import os
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Self
 
@@ -109,11 +110,17 @@ class BgeM3TransformersProvider(EmbeddingProvider):
 
 
 class EmbeddingService:
-    """嵌入服务门面：单例、懒加载、串行锁、批量编码。"""
+    """嵌入服务门面：单例、懒加载、串行锁、单线程推理执行器。
+
+    推理统一提交到专用单线程 executor：BGE-M3 与版面模型在同一进程
+    交替执行 CUDA 推理时，跨线程推理可能死锁（GB10/torch 2.13 实测），
+    单线程串行化可彻底规避。
+    """
 
     _instance: EmbeddingService | None = None
     _provider: EmbeddingProvider | None = None
     _embed_lock: asyncio.Lock | None = None
+    _executor: ThreadPoolExecutor | None = None
 
     def __new__(cls) -> Self:
         if cls._instance is None:
@@ -123,6 +130,10 @@ class EmbeddingService:
     def __init__(self) -> None:
         if self._embed_lock is None:
             self._embed_lock = asyncio.Lock()
+        if self._executor is None:
+            self._executor = ThreadPoolExecutor(
+                max_workers=1, thread_name_prefix="bge-m3-embed"
+            )
 
     def _ensure_provider(self) -> EmbeddingProvider:
         if self._provider is None:
@@ -148,10 +159,12 @@ class EmbeddingService:
         batch_size = batch_size or settings.EMBEDDING_BATCH_SIZE
         max_length = max_length or settings.EMBEDDING_MAX_LENGTH
         assert self._embed_lock is not None
+        assert self._executor is not None
         async with self._embed_lock:
             provider = self._ensure_provider()
-            vectors = await asyncio.to_thread(
-                provider.encode, texts, batch_size, max_length
+            loop = asyncio.get_running_loop()
+            vectors = await loop.run_in_executor(
+                self._executor, provider.encode, texts, batch_size, max_length
             )
         return [v.tolist() for v in vectors]
 

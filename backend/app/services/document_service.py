@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import func, or_, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.logging import get_logger
 from app.models.document import Document, DocumentTask, TaskDeadLetter, TaskOutbox
 from app.services import storage
@@ -527,8 +528,12 @@ async def run_index_task(
             f"{c.hierarchy_path} {c.title}".strip() or "文档根节点" for c in children
         ]
         content_texts = [c.content_for_embedding for c in children]
-        title_vectors = await embedding_service.embed(title_texts)
-        content_vectors = await embedding_service.embed(content_texts)
+        title_vectors = await asyncio.wait_for(
+            embedding_service.embed(title_texts), timeout=settings.INDEX_EMBED_TIMEOUT
+        )
+        content_vectors = await asyncio.wait_for(
+            embedding_service.embed(content_texts), timeout=settings.INDEX_EMBED_TIMEOUT
+        )
         done_stages.append("embedding")
         task.checkpoint = {**checkpoint_meta, "stages": list(done_stages)}
         task.heartbeat_at = _now()
@@ -603,7 +608,6 @@ async def run_index_task(
         db.add_all(text_rows)
         await kb_bm25_service.add_document_stats(db, kb_id, new_tokens)
         done_stages.append("storing")
-        await db.commit()
 
         # ---- 完成 ----
         document.index_status = "indexed"
