@@ -213,6 +213,23 @@ async def get_document_page(
     return Response(content=data, media_type="image/png")
 
 
+@router.get("/{document_id}/original")
+async def get_document_original(
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> Response:
+    """原始 PDF 预览（viewer+；供待解析/解析中内页查看原文档）。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    document = await document_service.get_document(db, kb_id, document_id)
+    try:
+        data = storage.get_object(document.object_key)
+    except Exception as exc:
+        raise ValidationException(message="原始 PDF 读取失败") from exc
+    return Response(content=data, media_type="application/pdf")
+
+
 @router.get("/{document_id}/markdown")
 async def get_document_markdown(
     kb_id: uuid.UUID,

@@ -74,6 +74,7 @@ data: {"event":"done","result":{...}}\n\n
 | GET | `/api/v1/kb/{kb_id}/documents/{doc_id}/markdown` | viewer+ | result.md |
 | GET | `/api/v1/kb/{kb_id}/documents/{doc_id}/layout` | viewer+ | layout.json（schema 1.2） |
 | GET | `/api/v1/kb/{kb_id}/documents/{doc_id}/pages/{page}` | viewer+ | 单页 PNG |
+| GET | `/api/v1/kb/{kb_id}/documents/{doc_id}/original` | viewer+ | 原始 PDF（待解析/解析中预览；对象缺失 400） |
 | POST | `/api/v1/kb/{kb_id}/documents/{doc_id}/reparse` | editor+ | 重新解析（自动开始） |
 | DELETE | `/api/v1/kb/{kb_id}/documents/{doc_id}` | editor+ | 删除文档与产物 |
 | GET | `/api/v1/kb/{kb_id}/documents/tasks` | viewer+ | 任务列表（含 filename） |

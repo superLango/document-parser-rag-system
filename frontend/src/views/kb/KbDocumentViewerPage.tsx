@@ -34,12 +34,17 @@ function splitMarkdownByPage(md: string): string[] {
   return pages
 }
 
+type TabKey = 'blocks' | 'md' | 'json'
+
 export default function KbDocumentViewerPage() {
   const { kbId = '', docId = '' } = useParams()
   const [page, setPage] = useState(1)
   const [activeBlock, setActiveBlock] = useState<string | null>(null)
+  const [tab, setTab] = useState<TabKey>('blocks')
   const [pageUrl, setPageUrl] = useState<string | null>(null)
+  const [originalUrl, setOriginalUrl] = useState<string | null>(null)
   const pageUrlRef = useRef<string | null>(null)
+  const originalUrlRef = useRef<string | null>(null)
 
   const { data: doc } = useQuery({
     queryKey: ['doc-detail', kbId, docId],
@@ -49,22 +54,40 @@ export default function KbDocumentViewerPage() {
   const { data: layout, isLoading: layoutLoading } = useQuery({
     queryKey: ['doc-layout', kbId, docId],
     queryFn: () => documentsApi.layout(kbId, docId) as Promise<ViewerLayout>,
-    enabled: Boolean(kbId && docId),
+    enabled: Boolean(kbId && docId && doc?.status === 'completed'),
   })
   const { data: markdown } = useQuery({
     queryKey: ['doc-markdown', kbId, docId],
     queryFn: () => documentsApi.markdown(kbId, docId),
-    enabled: Boolean(kbId && docId),
+    enabled: Boolean(kbId && docId && doc?.status === 'completed'),
   })
 
+  const completed = doc?.status === 'completed'
   const pageCount = layout?.page_count ?? doc?.page_count ?? 1
   const safePage = Math.min(Math.max(page, 1), Math.max(pageCount, 1))
-  const currentPage = layout?.pages?.find((p) => p.page_index === safePage)
+  const currentPage = completed ? layout?.pages?.find((p) => p.page_index === safePage) : undefined
   const blocks = currentPage?.blocks ?? []
   const mdPages = useMemo(() => (markdown ? splitMarkdownByPage(markdown) : []), [markdown])
   const currentMd = mdPages[safePage - 1] ?? ''
 
+  // 待解析/解析中：加载原始 PDF blob 供浏览器预览
   useEffect(() => {
+    if (completed) return
+    let cancelled = false
+    documentsApi.original(kbId, docId)
+      .then((url) => {
+        if (cancelled) return
+        if (originalUrlRef.current) URL.revokeObjectURL(originalUrlRef.current)
+        originalUrlRef.current = url
+        setOriginalUrl(url)
+      })
+      .catch(() => { if (!cancelled) setOriginalUrl(null) })
+    return () => { cancelled = true }
+  }, [kbId, docId, completed])
+
+  // 完成模式：加载当前页图片
+  useEffect(() => {
+    if (!completed) return
     let cancelled = false
     documentsApi.page(kbId, docId, safePage)
       .then((url) => {
@@ -73,11 +96,9 @@ export default function KbDocumentViewerPage() {
         pageUrlRef.current = url
         setPageUrl(url)
       })
-      .catch(() => {
-        if (!cancelled) setPageUrl(null)
-      })
+      .catch(() => { if (!cancelled) setPageUrl(null) })
     return () => { cancelled = true }
-  }, [kbId, docId, safePage])
+  }, [kbId, docId, safePage, completed])
 
   useEffect(() => {
     setActiveBlock(null)
@@ -90,6 +111,13 @@ export default function KbDocumentViewerPage() {
     if (safePage < pageCount) setPage(safePage + 1)
   }
 
+  const activeBlockData = blocks.find((b) => String(b.order) === activeBlock) ?? null
+
+  const tabs: { key: TabKey; label: string; icon: typeof Layers }[] = [
+    { key: 'blocks', label: '版面块', icon: Layers },
+    { key: 'md', label: 'Markdown', icon: MessageSquareText },
+    { key: 'json', label: 'JSON', icon: Braces },
+  ]
 
   return (
     <div className="flex min-h-dvh flex-col bg-background-soft">
@@ -109,135 +137,207 @@ export default function KbDocumentViewerPage() {
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold">{doc?.filename ?? '文档详情'}</p>
             <p className="text-xs text-muted-foreground">
-              第 {safePage} / {pageCount} 页 · 版面块 {blocks.length} 个
+              {completed ? `第 ${safePage} / ${pageCount} 页 · 版面块 ${blocks.length} 个` : '原文档预览'}
             </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={prevPage} disabled={safePage <= 1}>
-              <ChevronLeft className="h-4 w-4" />
-              上一页
-            </Button>
-            <span className="min-w-16 text-center text-sm font-medium">{safePage} / {pageCount}</span>
-            <Button variant="outline" size="sm" onClick={nextPage} disabled={safePage >= pageCount}>
-              下一页
-              <ChevronRight className="h-4 w-4" />
-            </Button>
           </div>
         </div>
       </header>
 
-      {/* 主体：左文档 + 右三栏 */}
       <main className="flex flex-1 flex-col gap-4 p-4 sm:p-6 lg:flex-row">
-        {/* 左：原文档 + 版面矩形 */}
-        <section className="w-full lg:w-[42%]">
-          <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-soft">
+        {/* 左：原文档（完成=页面图+版面矩形；未完成=浏览器 PDF 预览） */}
+        <section className="w-full lg:w-[46%]">
+          <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-soft">
             <div className="border-b border-border bg-muted/40 px-4 py-2 text-sm font-medium">原文档</div>
-            <div className="relative aspect-[595/842] w-full bg-white">
-              {pageUrl ? (
-                <>
-                  <img
-                    src={pageUrl}
-                    alt={`第 ${safePage} 页`}
-                    data-testid="viewer-page"
-                    className="absolute inset-0 h-full w-full"
-                  />
-                  {blocks.map((b) => {
-                    const [x0, y0, x1, y1] = b.bbox
-                    const active = String(b.order) === activeBlock
-                    return (
-                      <button
-                        key={String(b.order)}
-                        type="button"
-                        data-testid={`doc-rect-${b.order}`}
-                        onClick={() => setActiveBlock(String(b.order))}
-                        className={cn(
-                          'absolute border-2 transition-all duration-150',
-                          active
-                            ? 'z-20 border-rose-500 bg-rose-400/20 shadow-[0_0_0_2px_rgba(244,63,94,0.35)]'
-                            : 'z-10 border-emerald-400/70 bg-emerald-300/10 hover:border-emerald-500 hover:bg-emerald-300/20',
-                        )}
-                        style={{
-                          left: `${x0 * 100}%`,
-                          top: `${y0 * 100}%`,
-                          width: `${(x1 - x0) * 100}%`,
-                          height: `${(y1 - y0) * 100}%`,
-                        }}
-                        title={`${b.type} #${b.order}`}
+            {completed ? (
+              <>
+                <div className="relative aspect-[595/842] w-full flex-1 bg-white">
+                  {pageUrl ? (
+                    <>
+                      <img
+                        src={pageUrl}
+                        alt={`第 ${safePage} 页`}
+                        data-testid="viewer-page"
+                        className="absolute inset-0 h-full w-full"
                       />
-                    )
-                  })}
-                </>
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
-                  {layoutLoading ? '页面加载中...' : '页面不可用（可能已清理）'}
+                      {blocks.map((b) => {
+                        const [x0, y0, x1, y1] = b.bbox
+                        const active = String(b.order) === activeBlock
+                        return (
+                          <button
+                            key={String(b.order)}
+                            type="button"
+                            data-testid={`doc-rect-${b.order}`}
+                            onClick={() => setActiveBlock(String(b.order))}
+                            className={cn(
+                              'absolute border-2 transition-all duration-150',
+                              active
+                                ? 'z-20 border-rose-500 bg-rose-400/20 shadow-[0_0_0_2px_rgba(244,63,94,0.35)]'
+                                : 'z-10 border-emerald-400/70 bg-emerald-300/10 hover:border-emerald-500 hover:bg-emerald-300/20',
+                            )}
+                            style={{
+                              left: `${x0 * 100}%`,
+                              top: `${y0 * 100}%`,
+                              width: `${(x1 - x0) * 100}%`,
+                              height: `${(y1 - y0) * 100}%`,
+                            }}
+                            title={`${b.type} #${b.order}`}
+                          />
+                        )
+                      })}
+                    </>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
+                      {layoutLoading ? '页面加载中...' : '页面不可用（可能已清理）'}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+                {/* 翻页：位于左侧源文件组件 */}
+                <div className="flex items-center justify-between border-t border-border bg-muted/30 px-3 py-2">
+                  <Button variant="outline" size="sm" onClick={prevPage} disabled={safePage <= 1}>
+                    <ChevronLeft className="h-4 w-4" />
+                    上一页
+                  </Button>
+                  <span className="text-sm font-medium">{safePage} / {pageCount}</span>
+                  <Button variant="outline" size="sm" onClick={nextPage} disabled={safePage >= pageCount}>
+                    下一页
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </>
+            ) : originalUrl ? (
+              <embed
+                src={originalUrl}
+                type="application/pdf"
+                className="h-[calc(100vh-11rem)] w-full"
+                data-testid="viewer-original"
+              />
+            ) : (
+              <div className="flex h-[60vh] items-center justify-center text-sm text-muted-foreground">
+                原文档加载中...
+              </div>
+            )}
           </div>
         </section>
 
-        {/* 右：三栏 */}
-        <section className="grid min-w-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-3">
-          {/* 版面块 */}
-          <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-            <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-2 text-sm font-medium">
-              <Layers className="h-4 w-4 text-primary" />
-              版面块
+        {/* 右：标签页（仅完成模式） */}
+        {completed ? (
+          <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
+            <div className="flex items-center gap-1 border-b border-border bg-muted/40 px-2 py-1.5">
+              {tabs.map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  type="button"
+                  data-testid={`tab-${key}`}
+                  onClick={() => setTab(key)}
+                  className={cn(
+                    'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+                    tab === key
+                      ? 'bg-white text-primary-strong shadow-soft'
+                      : 'text-muted-foreground hover:bg-muted/60',
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </button>
+              ))}
             </div>
-            <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto p-3" data-testid="blocks-container">
-              {blocks.length === 0 ? (
-                <p className="py-8 text-center text-xs text-muted-foreground">本页无版面块</p>
-              ) : (
-                blocks.map((b) => {
-                  const active = String(b.order) === activeBlock
-                  return (
-                    <button
-                      key={String(b.order)}
-                      type="button"
-                      data-testid={`block-${b.order}`}
-                      onClick={() => setActiveBlock(String(b.order))}
-                      className={cn(
-                        'w-full rounded-lg border px-3 py-2 text-left transition-all',
-                        active
-                          ? 'border-rose-300 bg-rose-50'
-                          : 'border-border bg-white/70 hover:border-emerald-300 hover:bg-emerald-50/50',
-                      )}
-                    >
-                      <p className="text-xs font-medium">
-                        <span className="text-muted-foreground">#{b.order}</span> {b.type}
-                      </p>
-                      <p className="mt-0.5 truncate font-mono text-[10px] text-muted-foreground">
-                        [{b.bbox.map((v) => v.toFixed(2)).join(', ')}]
-                      </p>
-                    </button>
-                  )
-                })
-              )}
-            </div>
-          </div>
 
-          {/* Markdown（按页） */}
-          <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-            <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-2 text-sm font-medium">
-              <MessageSquareText className="h-4 w-4 text-primary" />
-              Markdown
-            </div>
-            <pre className="min-h-0 flex-1 overflow-auto whitespace-pre-wrap p-4 font-mono text-xs leading-relaxed" data-testid="viewer-md">
-              {currentMd || '本页暂无内容'}
-            </pre>
-          </div>
+            <div className="min-h-0 flex-1 overflow-auto">
+              {tab === 'blocks' ? (
+                <div className="grid h-full grid-cols-2 gap-3 p-3">
+                  {/* 左：版面块列表 */}
+                  <div className="min-h-0 space-y-1.5 overflow-y-auto rounded-xl border border-border bg-muted/20 p-2" data-testid="blocks-container">
+                    {blocks.length === 0 ? (
+                      <p className="py-8 text-center text-xs text-muted-foreground">本页无版面块</p>
+                    ) : (
+                      blocks.map((b) => {
+                        const active = String(b.order) === activeBlock
+                        return (
+                          <button
+                            key={String(b.order)}
+                            type="button"
+                            data-testid={`block-${b.order}`}
+                            onClick={() => setActiveBlock(String(b.order))}
+                            className={cn(
+                              'w-full rounded-lg border px-3 py-2 text-left transition-all',
+                              active
+                                ? 'border-rose-300 bg-rose-50'
+                                : 'border-border bg-white/70 hover:border-emerald-300 hover:bg-emerald-50/50',
+                            )}
+                          >
+                            <p className="text-xs font-medium">
+                              <span className="text-muted-foreground">#{b.order}</span> {b.type}
+                            </p>
+                            <p className="mt-0.5 truncate font-mono text-[10px] text-muted-foreground">
+                              [{b.bbox.map((v) => v.toFixed(2)).join(', ')}]
+                            </p>
+                          </button>
+                        )
+                      })
+                    )}
+                  </div>
+                  {/* 右：选中块内容 */}
+                  <div className="min-h-0 overflow-y-auto rounded-xl border border-border bg-white/70 p-3" data-testid="block-content">
+                    {activeBlockData ? (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-primary">
+                            #{activeBlockData.order} {activeBlockData.type}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="mb-1 text-[11px] font-medium text-muted-foreground">内容</p>
+                          <pre className="whitespace-pre-wrap rounded-lg bg-muted/50 p-2 font-mono text-xs leading-relaxed">
+                            {activeBlockData.content || '（无文本内容）'}
+                          </pre>
+                        </div>
+                        <div>
+                          <p className="mb-1 text-[11px] font-medium text-muted-foreground">属性</p>
+                          <pre className="whitespace-pre-wrap rounded-lg bg-muted/50 p-2 font-mono text-[10px] leading-relaxed">
+                            {JSON.stringify(
+                              {
+                                type: activeBlockData.type,
+                                bbox: activeBlockData.bbox,
+                                confidence: activeBlockData.confidence,
+                                structural: activeBlockData.structural,
+                              },
+                              null,
+                              2,
+                            )}
+                          </pre>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="py-12 text-center text-xs text-muted-foreground">
+                        点击左侧版面块查看该块内容
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ) : null}
 
-          {/* 原始版面 JSON */}
-          <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-            <div className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-2 text-sm font-medium">
-              <Braces className="h-4 w-4 text-primary" />
-              版面 JSON
+              {tab === 'md' ? (
+                <pre className="h-full whitespace-pre-wrap p-4 font-mono text-xs leading-relaxed" data-testid="viewer-md">
+                  {currentMd || '本页暂无内容'}
+                </pre>
+              ) : null}
+
+              {tab === 'json' ? (
+                <pre className="h-full overflow-auto p-4 font-mono text-[10px] leading-relaxed text-foreground" data-testid="viewer-json">
+                  {layout ? JSON.stringify(layout, null, 2) : '加载中...'}
+                </pre>
+              ) : null}
             </div>
-            <pre className="min-h-0 flex-1 overflow-auto p-4 font-mono text-[10px] leading-relaxed text-foreground" data-testid="viewer-json">
-              {layout ? JSON.stringify(layout, null, 2) : '加载中...'}
-            </pre>
-          </div>
-        </section>
+          </section>
+        ) : (
+          <section className="flex min-w-0 flex-1 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-emerald-200 bg-emerald-50/30 p-10 text-center">
+            <FileText className="h-10 w-10 text-primary" strokeWidth={1.4} />
+            <p className="text-sm font-medium">原文档预览</p>
+            <p className="text-xs text-muted-foreground">
+              解析完成后可查看版面块、Markdown 与版面 JSON（左侧浏览器 PDF 查看器支持原文档翻页）
+            </p>
+          </section>
+        )}
       </main>
     </div>
   )

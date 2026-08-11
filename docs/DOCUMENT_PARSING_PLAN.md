@@ -189,6 +189,7 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
 | GET | `/kb/{kb_id}/documents/{doc_id}` | viewer+ | 详情与状态 |
 | GET | `/kb/{kb_id}/documents/{doc_id}/markdown` | viewer+ | result.md |
 | GET | `/kb/{kb_id}/documents/{doc_id}/layout` | viewer+ | layout.json |
+| GET | `/kb/{kb_id}/documents/{doc_id}/original` | viewer+ | 原始 PDF（待解析/解析中预览；对象缺失 400） |
 | POST | `/kb/{kb_id}/documents/{doc_id}/reparse` | editor+ | 重新解析（幂等） |
 | DELETE | `/kb/{kb_id}/documents/{doc_id}` | editor+ | 删除文档与产物 |
 | GET | `/kb/{kb_id}/tasks` | viewer+ | 任务列表 |
@@ -244,7 +245,8 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
   - 前端：文档页（上传/列表/状态/删除）基础版。
 - 验收：上传 PDF 后任务状态流转正确；杀 worker 不丢单；RLS 集成测试通过；E2E 通过。
 - **2026-08-11 调整：上传后默认“待解析”，由用户手动点击“开始解析”（POST /start，幂等）触发；
-  生产/开发均不自动执行；重解析仍自动开始。**
+  生产/开发均不自动执行；重解析仍自动开始。
+  待解析/解析中可通过行内眼睛图标预览原文档（GET /original，viewer+）。**
 
 ### Phase 2：PDF-Extract-Kit 集成（已完成，见实现记录）
 
@@ -342,9 +344,12 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
 6. **移动端适配**：375px 视口 E2E 校验文档页与任务页均无横向溢出、
    上传按钮可见可点。
 7. **2026-08-11 调整**：上传后进入“待解析”，列表行提供“开始解析”按钮；
-   去除列表内嵌版面结构按钮；新增文档内页 `/kb/:kbId/documents/:docId/viewer`：
-   左侧原文档（按页渲染 + 版面矩形框），右侧三栏（版面块列表 / 按页 Markdown / 原始版面 JSON），
-   文档与版面块通过坐标双向绑定，翻页三侧同步。
+   去除列表内嵌版面结构按钮；行内眼睛图标可预览原文档（纯 PDF）；
+   “开始解析”为图标按钮（播放三角），解析中置灰，完成后替换为“重新解析”。
+   新增文档内页 `/kb/:kbId/documents/:docId/viewer`：左侧原文档（按页渲染 + 版面矩形框），
+   底部翻页位于左侧源文件组件；右侧标签页切换（版面块 / Markdown / JSON），
+   版面块标签页左右两栏（块列表 + 选中块内容与属性）；文档与版面块坐标双向绑定，
+   翻页时文档与版面块同步。
 
 ### Phase 6：评测与调优（已完成，见实现记录）
 

@@ -21,6 +21,7 @@
 | 知识库（卡片入口） | `kb-cards.png` | 知识库卡片列表截图 |
 | 知识库概览与成员 | `kb-overview.png` / `kb-members.png` | KB 概览/成员页截图 |
 | 资源与外部访问令牌 | `kb-external.png` | 资源与配置截图 |
+| 文档解析（待解析/原文档预览/内页联动） | `documents-queued.png` / `documents-original-preview.png` / `documents-viewer.png` | 文档解析页与内页截图 |
 | 工作空间与 API 密钥 | `workspaces.png` / `api-keys.png` | P2 功能截图 |
 
 ## 3. 更新流程（每阶段强制）

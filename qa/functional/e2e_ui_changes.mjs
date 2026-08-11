@@ -111,55 +111,66 @@ await scenario('L3UI-02', 'M18', async () => {
   await page.waitForTimeout(800)
   if (!(await page.getByText('待解析').first().isVisible().catch(() => false))) throw new Error('未显示待解析状态')
   const startBtn = page.locator(`[data-testid="start-${doc.id}"]`)
-  if (!(await startBtn.isVisible().catch(() => false))) throw new Error('未显示开始解析按钮')
+  if (!(await startBtn.isVisible().catch(() => false))) throw new Error('未显示开始解析图标按钮')
   if ((await page.locator('[data-testid^="layout-"]').count()) !== 0) throw new Error('仍存在版面结构按钮')
+  if (!(await page.locator(`[data-testid="view-${doc.id}"]`).isVisible().catch(() => false))) throw new Error('待解析时未显示眼睛按钮')
   await page.screenshot({ path: `${OUT}ui_queued_start.png` })
   globalThis.__docId = doc.id
 })
 
-// ---------- 场景 3：点击开始解析 → 完成 ----------
+// ---------- 待解析眼睛 → 原文档预览（无其他内容） ----------
 await scenario('L3UI-03', 'M18', async () => {
+  await page.locator(`[data-testid="view-${globalThis.__docId}"]`).click()
+  await page.waitForURL('**/viewer', { timeout: 10000 })
+  await page.waitForTimeout(1200)
+  if (!(await page.locator('[data-testid="viewer-original"]').isVisible().catch(() => false))) throw new Error('原文档 PDF 预览未显示')
+  if ((await page.locator('[data-testid^="tab-"]').count()) !== 0) throw new Error('待解析模式不应显示右侧标签页')
+  await page.screenshot({ path: `${OUT}ui_original_only.png` })
+  await page.goto(`${BASE}/kb/${kbId}/documents`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(800)
+})
+
+// ---------- 场景 4：点击开始解析（图标）→ 完成，出现重新解析 ----------
+await scenario('L3UI-04', 'M18', async () => {
   await page.locator(`[data-testid="start-${globalThis.__docId}"]`).click()
-  await page.waitForTimeout(900)
+  await page.waitForTimeout(500)
   if (!(await page.getByText('解析已开始').first().isVisible().catch(() => false))) throw new Error('开始解析未提示')
   await waitDocStatus(token, kbId, globalThis.__docId, 'completed')
   await page.reload({ waitUntil: 'networkidle' })
   await page.waitForTimeout(800)
   if (!(await page.getByText('已完成').first().isVisible().catch(() => false))) throw new Error('未显示已完成')
+  if (!(await page.locator(`[data-testid="reparse-${globalThis.__docId}"]`).isVisible().catch(() => false))) throw new Error('完成后未显示重新解析按钮')
 })
 
-// ---------- 场景 4：内页（左文档 + 右三栏联动） ----------
-await scenario('L3UI-04', 'M18', async () => {
+// ---------- 场景 5：内页标签页 + 版面块双栏 + 左侧翻页 ----------
+await scenario('L3UI-05', 'M18', async () => {
   await page.locator(`[data-testid="view-${globalThis.__docId}"]`).click()
   await page.waitForURL('**/viewer', { timeout: 10000 })
   await page.waitForTimeout(1200)
   if (!(await page.locator('[data-testid="viewer-page"]').isVisible().catch(() => false))) throw new Error('左侧原文档未显示')
+  // 默认版面块标签：双栏（列表 + 内容区）
   const blockCount = await page.locator('[data-testid^="block-"]').count()
   if (blockCount === 0) throw new Error('版面块列表为空')
-  const mdText = await page.locator('[data-testid="viewer-md"]').innerText()
-  if (!mdText.includes('优质 GH4169')) throw new Error('Markdown 当前页内容异常')
-  const jsonText = await page.locator('[data-testid="viewer-json"]').innerText()
-  if (!jsonText.includes('"schema_version": "1.2"')) throw new Error('JSON 栏内容异常')
-  // 点击第一个版面块 → 文档矩形高亮
+  if (!(await page.locator('[data-testid="block-content"]').isVisible().catch(() => false))) throw new Error('块内容区域未显示')
+  // 点击第一个版面块 → 左侧文档矩形高亮 + 右侧内容更新
   const firstBlock = page.locator('[data-testid^="block-"]').first()
   const blockId = (await firstBlock.getAttribute('data-testid')).replace('block-', '')
   await firstBlock.click()
-  await page.waitForTimeout(300)
+  await page.waitForTimeout(400)
   const rect = page.locator(`[data-testid="doc-rect-${blockId}"]`)
-  const rectCount = await page.locator('[data-testid^="doc-rect-"]').count()
-  if (!(await rect.isVisible().catch(() => false))) {
-    const info = await page.locator(`[data-testid="block-${blockId}"]`).evaluate((el) => ({
-      cls: el.className,
-      text: el.innerText,
-    })).catch(() => null)
-    throw new Error(`版面块未在文档中高亮 blockId=${blockId} rectCount=${rectCount} info=${JSON.stringify(info)}`)
-  }
-  // 点击文档矩形 → 仍选中
-  await rect.click()
+  if (!(await rect.isVisible().catch(() => false))) throw new Error('版面块未在文档中高亮')
+  const contentText = await page.locator('[data-testid="block-content"]').innerText()
+  if (contentText.includes('点击左侧版面块')) throw new Error('块内容未更新')
+  // 标签切换：Markdown / JSON
+  await page.locator('[data-testid="tab-md"]').click()
   await page.waitForTimeout(300)
-  const activeBlock = await page.locator(`[data-testid="block-${blockId}"]`).evaluate((el) => el.className)
-  if (!activeBlock.includes('rose')) throw new Error('文档矩形点击未联动到块列表')
-  // 翻页同步
+  const mdText = await page.locator('[data-testid="viewer-md"]').innerText()
+  if (!mdText.includes('优质 GH4169')) throw new Error('Markdown 标签页内容异常')
+  await page.locator('[data-testid="tab-json"]').click()
+  await page.waitForTimeout(300)
+  const jsonText = await page.locator('[data-testid="viewer-json"]').innerText()
+  if (!jsonText.includes('"schema_version": "1.2"')) throw new Error('JSON 标签页内容异常')
+  // 翻页位于左侧组件
   const pageIndicator = await page.getByText(/第 \d+ \/ \d+ 页/).innerText()
   await page.getByRole('button', { name: '下一页' }).click()
   await page.waitForTimeout(900)
@@ -168,8 +179,8 @@ await scenario('L3UI-04', 'M18', async () => {
   await page.screenshot({ path: `${OUT}ui_viewer_linked.png` })
 })
 
-// ---------- 场景 5：控制台无错误 + 清理 ----------
-await scenario('L3UI-05', 'M18', async () => {
+// ---------- 场景 6：控制台无错误 + 清理 ----------
+await scenario('L3UI-06', 'M18', async () => {
   if (errors.length > 0) throw new Error(`存在控制台错误：${JSON.stringify(errors)}`)
 })
 

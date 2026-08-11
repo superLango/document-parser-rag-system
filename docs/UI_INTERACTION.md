@@ -61,6 +61,15 @@
 - 危险操作（删除/禁用）必须二次确认弹窗；操作完成后刷新列表并 Toast 反馈。
 - 表格行 hover 使用 150ms 浅绿底过渡，不做位移。
 
+### 3.5 文档解析页与内页（[KbDocumentsPage.tsx](/home/grainuser/hansonDoc_RAG/frontend/src/views/kb/KbDocumentsPage.tsx) / [KbDocumentViewerPage.tsx](/home/grainuser/hansonDoc_RAG/frontend/src/views/kb/KbDocumentViewerPage.tsx)）
+
+- 上传后状态为“待解析”：行内提供眼睛图标（原文档预览）与“开始解析”图标按钮（播放三角，无文字）。
+- 点击“开始解析”后按钮置灰禁用（不可重复触发），状态显示“解析中”；解析完成自动替换为“重新解析”按钮。
+- 待解析/解析中点击眼睛进入内页：**只展示原文档**（浏览器 PDF 预览自带翻页），不渲染右侧标签页，也不请求 markdown/layout，避免无效 400。
+- 完成状态点击眼睛进入内页：左侧原文档按页渲染 + 版面矩形框，底部“上一页/下一页”位于左侧源文件组件；右侧为标签页切换（版面块 / Markdown / JSON）。
+- 版面块标签页左右两栏：左为块列表（序号/类型/坐标），右为选中块的内容与属性；点击块后左侧文档矩形框高亮定位，点击矩形框可反向选中。
+- 翻页同步：页面、版面块列表、按页 Markdown 随页码联动；JSON 标签展示整份 layout.json。
+
 ## 4. 禁止事项
 
 1. 禁止自定义散落阴影、颜色、圆角绕过 UI_THEME.md token。

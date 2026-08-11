@@ -63,6 +63,7 @@ export default function KbDocumentsPage() {
   const [uploadError, setUploadError] = useState('')
   const [uploading, setUploading] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<DocumentItem | null>(null)
+  const [startingId, setStartingId] = useState<string | null>(null)
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['kb-documents', kb.id, page, search],
@@ -126,6 +127,7 @@ export default function KbDocumentsPage() {
   }
 
   async function handleStartParse(doc: DocumentItem) {
+    setStartingId(doc.id)
     try {
       await documentsApi.startParse(kb.id, doc.id)
       toast('success', '解析已开始', `「${doc.filename}」正在解析`)
@@ -133,6 +135,8 @@ export default function KbDocumentsPage() {
       setTimeout(() => { void refetch() }, 1500)
     } catch (err) {
       toast('error', '开始解析失败', err instanceof ApiError ? err.message : '请稍后重试')
+    } finally {
+      setStartingId(null)
     }
   }
 
@@ -269,16 +273,18 @@ export default function KbDocumentsPage() {
                         <div className="flex items-center justify-end gap-1">
                           {doc.status === 'queued' && canManage ? (
                             <Button
-                              variant="outline"
-                              size="sm"
+                              variant="ghost"
+                              size="icon"
+                              title="开始解析"
                               data-testid={`start-${doc.id}`}
+                              disabled={startingId === doc.id}
+                              className={startingId === doc.id ? 'text-muted-foreground' : 'text-primary'}
                               onClick={() => void handleStartParse(doc)}
                             >
                               <PlayCircle className="h-4 w-4" />
-                              开始解析
                             </Button>
                           ) : null}
-                          {doc.status === 'completed' ? (
+                          {doc.status !== 'deleted' ? (
                             <Link
                               to={`/kb/${kb.id}/documents/${doc.id}/viewer`}
                               title="查看"
@@ -288,7 +294,7 @@ export default function KbDocumentsPage() {
                               <Eye className="h-4 w-4" />
                             </Link>
                           ) : null}
-                          {canManage && doc.status !== 'parsing' && doc.status !== 'deleted' && doc.status !== 'queued' ? (
+                          {canManage && (doc.status === 'completed' || doc.status === 'failed') ? (
                             <Button variant="ghost" size="icon" title="重新解析" data-testid={`reparse-${doc.id}`} onClick={() => void handleReparse(doc)}>
                               <RefreshCcw className="h-4 w-4" />
                             </Button>
