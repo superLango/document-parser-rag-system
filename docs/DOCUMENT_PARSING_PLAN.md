@@ -243,6 +243,8 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
   - 任务状态机与 checkpoint；文档列表/详情/删除 API；
   - 前端：文档页（上传/列表/状态/删除）基础版。
 - 验收：上传 PDF 后任务状态流转正确；杀 worker 不丢单；RLS 集成测试通过；E2E 通过。
+- **2026-08-11 调整：上传后默认“待解析”，由用户手动点击“开始解析”（POST /start，幂等）触发；
+  生产/开发均不自动执行；重解析仍自动开始。**
 
 ### Phase 2：PDF-Extract-Kit 集成（已完成，见实现记录）
 
@@ -339,6 +341,10 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
    接口补充文档 filename 字段（schema/join 增强）。
 6. **移动端适配**：375px 视口 E2E 校验文档页与任务页均无横向溢出、
    上传按钮可见可点。
+7. **2026-08-11 调整**：上传后进入“待解析”，列表行提供“开始解析”按钮；
+   去除列表内嵌版面结构按钮；新增文档内页 `/kb/:kbId/documents/:docId/viewer`：
+   左侧原文档（按页渲染 + 版面矩形框），右侧三栏（版面块列表 / 按页 Markdown / 原始版面 JSON），
+   文档与版面块通过坐标双向绑定，翻页三侧同步。
 
 ### Phase 6：评测与调优（已完成，见实现记录）
 

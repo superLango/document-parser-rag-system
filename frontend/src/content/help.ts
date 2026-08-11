@@ -76,6 +76,19 @@ export const helpSections: HelpSection[] = [
     ],
   },
   {
+    id: 'kb-documents',
+    title: '文档解析（待解析/手动解析/内页查看）',
+    description: '上传 PDF 后进入待解析状态，手动点击“开始解析”，完成后进入内页联动查看版面块/Markdown/JSON。',
+    image: '/help/kb-overview.png',
+    steps: [
+      '知识库内“文档解析”页上传 PDF（≤100MB），上传后状态为“待解析”，不会自动解析',
+      '点击文档行右侧“开始解析”按钮，状态依次经历 页面渲染 → 版面分析 → OCR 识别 → 版面重建 → 已完成',
+      '解析完成后点击“查看”进入内页：左侧为原文档（可翻页，版面矩形框覆盖），右侧三栏分别为版面块、Markdown（按页）、版面 JSON',
+      '点击版面块或文档中的矩形框可双向定位（坐标绑定）；翻页时文档、版面块与 Markdown 同步',
+      '已完成文档可重新解析或删除；删除会清理全部解析产物',
+    ],
+  },
+  {
     id: 'workspace-keys',
     title: '工作空间与 API 密钥',
     description: '以工作空间组织群组并集授权；API 密钥供脚本与集成调用。',

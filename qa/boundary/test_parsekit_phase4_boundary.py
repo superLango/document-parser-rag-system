@@ -43,6 +43,10 @@ async def _upload_wait(client, token, kb_id, name="b.pdf"):
     )
     assert resp.status_code == 200, resp.text
     doc_id = resp.json()["data"]["document"]["id"]
+    await client.post(
+        f"/api/v1/kb/{kb_id}/documents/{doc_id}/start",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     deadline = time.monotonic() + 30
     while time.monotonic() < deadline:
         detail = (

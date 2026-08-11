@@ -95,16 +95,35 @@ async def upload_document(
     except Exception:
         await storage.delete_document_objects(kb_id, object_key)
         raise
-    if settings.TASK_EXECUTOR == "sync":
-        from app.tasks.sync_executor import execute_sync_task
-
-        asyncio.create_task(execute_sync_task(str(document.id), str(kb_id)))
     return success(
         data=UploadDocumentOut(
             document=DocumentOut.model_validate(document),
             task=DocumentTaskOut.model_validate(task),
         ).model_dump(),
-        message="文档已上传，解析任务已创建",
+        message="文档已上传，待解析",
+    )
+
+
+@router.post("/{document_id}/start")
+@audit_action(action="document.parse_start", resource_type="document")
+async def start_document_parse(
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_not_pending),
+) -> dict:
+    """手动开始解析（editor+；上传后默认待解析）。"""
+    kb = await _kb_access(kb_id, db=db, current_user=current_user)
+    _require_editor(kb)
+    task = await document_service.start_document_parse(db, kb_id, document_id)
+    if settings.TASK_EXECUTOR == "sync":
+        from app.tasks.sync_executor import execute_sync_task
+
+        asyncio.create_task(execute_sync_task(str(document_id), str(kb_id)))
+    return success(
+        data=DocumentTaskOut.model_validate(task).model_dump(),
+        message="解析已开始",
     )
 
 

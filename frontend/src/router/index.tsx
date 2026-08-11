@@ -19,6 +19,7 @@ import KbMembersPage from '@/views/kb/KbMembersPage'
 import KbResourcesPage from '@/views/kb/KbResourcesPage'
 import KbDocumentsPage from '@/views/kb/KbDocumentsPage'
 import KbTasksPage from '@/views/kb/KbTasksPage'
+import KbDocumentViewerPage from '@/views/kb/KbDocumentViewerPage'
 import KbPlaceholderPage from '@/views/kb/KbPlaceholderPage'
 import WorkspacesPage from '@/views/WorkspacesPage'
 import ApiKeysPage from '@/views/ApiKeysPage'
@@ -123,6 +124,10 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: '/kb/:kbId/documents/:docId/viewer',
+    element: <KbDocumentViewerPage />,
   },
   {
     path: '/kb/:kbId',

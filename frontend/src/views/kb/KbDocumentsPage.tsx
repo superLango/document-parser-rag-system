@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Braces, Eye, FileText, RefreshCcw, Trash2, UploadCloud } from 'lucide-react'
+import { Eye, FileText, PlayCircle, RefreshCcw, Trash2, UploadCloud } from 'lucide-react'
 import { documentsApi } from '@/api/modules/documents'
 import { ApiError } from '@/api/client'
 import { Badge } from '@/components/ui/badge'
@@ -21,7 +22,7 @@ import { useKbDetail } from './KbDetailLayout'
 const MAX_SIZE = 100 * 1024 * 1024
 
 const statusMeta: Record<string, { label: string; variant: 'success' | 'warning' | 'destructive' | 'secondary' | 'outline' }> = {
-  queued: { label: '排队中', variant: 'outline' },
+  queued: { label: '待解析', variant: 'outline' },
   parsing: { label: '解析中', variant: 'warning' },
   completed: { label: '已完成', variant: 'success' },
   failed: { label: '失败', variant: 'destructive' },
@@ -53,7 +54,6 @@ export default function KbDocumentsPage() {
   const queryClient = useQueryClient()
   const canManage = user?.is_superuser || kb.my_role === 'owner' || kb.my_role === 'admin' || kb.my_role === 'editor'
   const uploadInputRef = useRef<HTMLInputElement>(null)
-  const pageUrlRef = useRef<string | null>(null)
 
   const [page, setPage] = useState(1)
   const [keyword, setKeyword] = useState('')
@@ -63,15 +63,6 @@ export default function KbDocumentsPage() {
   const [uploadError, setUploadError] = useState('')
   const [uploading, setUploading] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<DocumentItem | null>(null)
-  const [previewDoc, setPreviewDoc] = useState<DocumentItem | null>(null)
-  const [previewText, setPreviewText] = useState('')
-  const [previewLoading, setPreviewLoading] = useState(false)
-  const [previewPage, setPreviewPage] = useState(1)
-  const [previewPageUrl, setPreviewPageUrl] = useState<string | null>(null)
-  const [pageLoading, setPageLoading] = useState(false)
-  const [layoutDoc, setLayoutDoc] = useState<DocumentItem | null>(null)
-  const [layoutData, setLayoutData] = useState<Record<string, unknown> | null>(null)
-  const [layoutLoading, setLayoutLoading] = useState(false)
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['kb-documents', kb.id, page, search],
@@ -79,10 +70,10 @@ export default function KbDocumentsPage() {
   })
   const list = useMemo(() => data?.items ?? [], [data])
 
-  // 解析中自动轮询（2s），完成后停止
+  // 仅解析中轮询（待解析不触发）
   useEffect(() => {
-    const hasActive = list.some((d) => d.status === 'queued' || d.status === 'parsing')
-    if (!hasActive) return
+    const hasParsing = list.some((d) => d.status === 'parsing')
+    if (!hasParsing) return
     const timer = window.setInterval(() => { void refetch() }, 2000)
     return () => window.clearInterval(timer)
   }, [list, refetch])
@@ -120,8 +111,8 @@ export default function KbDocumentsPage() {
     if (!uploadFile) return
     setUploading(true)
     try {
-      const result = await documentsApi.upload(kb.id, uploadFile)
-      toast('success', '文档已上传', `解析任务已创建（${result.task.task_id.slice(0, 8)}）`)
+      await documentsApi.upload(kb.id, uploadFile)
+      toast('success', '文档已上传', '状态为待解析，点击“开始解析”后执行')
       setUploadOpen(false)
       setUploadFile(null)
       setPage(1)
@@ -134,61 +125,19 @@ export default function KbDocumentsPage() {
     }
   }
 
-  async function loadPreviewPage(doc: DocumentItem, pageIndex: number) {
-    setPageLoading(true)
+  async function handleStartParse(doc: DocumentItem) {
     try {
-      const url = await documentsApi.page(kb.id, doc.id, pageIndex)
-      if (pageUrlRef.current) URL.revokeObjectURL(pageUrlRef.current)
-      pageUrlRef.current = url
-      setPreviewPageUrl(url)
-      setPreviewPage(pageIndex)
+      await documentsApi.startParse(kb.id, doc.id)
+      toast('success', '解析已开始', `「${doc.filename}」正在解析`)
+      invalidate()
+      setTimeout(() => { void refetch() }, 1500)
     } catch (err) {
-      setPreviewPageUrl(null)
-      toast('error', '页面预览失败', err instanceof ApiError ? err.message : '页面可能已清理')
-    } finally {
-      setPageLoading(false)
-    }
-  }
-
-  async function openPreview(doc: DocumentItem) {
-    setPreviewDoc(doc)
-    setPreviewText('')
-    setPreviewLoading(true)
-    setPreviewPage(1)
-    setPreviewPageUrl(null)
-    if (pageUrlRef.current) {
-      URL.revokeObjectURL(pageUrlRef.current)
-      pageUrlRef.current = null
-    }
-    void loadPreviewPage(doc, 1)
-    try {
-      const text = await documentsApi.markdown(kb.id, doc.id)
-      setPreviewText(text)
-    } catch (err) {
-      setPreviewText('')
-      toast('error', '预览失败', err instanceof ApiError ? err.message : '请稍后重试')
-    } finally {
-      setPreviewLoading(false)
-    }
-  }
-
-  async function openLayout(doc: DocumentItem) {
-    setLayoutDoc(doc)
-    setLayoutData(null)
-    setLayoutLoading(true)
-    try {
-      const data = await documentsApi.layout(kb.id, doc.id)
-      setLayoutData(data)
-    } catch (err) {
-      setLayoutData(null)
-      toast('error', '版面数据加载失败', err instanceof ApiError ? err.message : '请稍后重试')
-    } finally {
-      setLayoutLoading(false)
+      toast('error', '开始解析失败', err instanceof ApiError ? err.message : '请稍后重试')
     }
   }
 
   async function handleReparse(doc: DocumentItem) {
-    if (doc.status === 'parsing' || doc.status === 'queued') {
+    if (doc.status === 'parsing') {
       toast('error', '文档正在解析中', '请等待当前任务结束后再重新解析')
       return
     }
@@ -196,6 +145,7 @@ export default function KbDocumentsPage() {
       await documentsApi.reparse(kb.id, doc.id)
       toast('success', '重新解析已启动', `已为「${doc.filename}」创建新任务`)
       invalidate()
+      setTimeout(() => { void refetch() }, 1500)
     } catch (err) {
       toast('error', '重新解析失败', err instanceof ApiError ? err.message : '请稍后重试')
     }
@@ -213,26 +163,12 @@ export default function KbDocumentsPage() {
     }
   }
 
-  function layoutStats() {
-    if (!layoutData) return null
-    const pages = (layoutData.pages ?? []) as Array<{ blocks?: Array<{ type: string }> }>
-    const typeCount: Record<string, number> = {}
-    let blocks = 0
-    for (const p of pages) {
-      for (const b of p.blocks ?? []) {
-        blocks += 1
-        typeCount[b.type] = (typeCount[b.type] ?? 0) + 1
-      }
-    }
-    return { pages: pages.length, blocks, typeCount }
-  }
-
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="解析"
         title="文档解析"
-        description="上传 PDF 自动解析：DocLayout-YOLO 版面分析 + GLM-OCR 识别 + 结构树重建"
+        description="上传 PDF 后进入待解析状态，手动点击“开始解析”执行 DocLayout-YOLO 版面分析 + GLM-OCR 识别"
         actions={
           canManage ? (
             <Button onClick={openUploadDialog} disabled={uploading} data-testid="open-upload">
@@ -278,7 +214,7 @@ export default function KbDocumentsPage() {
                 <FileText className="h-7 w-7" strokeWidth={1.5} />
               </span>
               <p className="text-sm font-medium">暂无文档</p>
-              <p className="text-xs text-muted-foreground">上传 PDF 后自动创建解析任务</p>
+              <p className="text-xs text-muted-foreground">上传 PDF 后进入待解析状态</p>
             </div>
           ) : (
             <Table className="min-w-[880px]">
@@ -294,7 +230,7 @@ export default function KbDocumentsPage() {
               <TableBody>
                 {list.map((doc) => {
                   const meta = statusMeta[doc.status] ?? { label: doc.status, variant: 'outline' as const }
-                  const parsing = doc.status === 'parsing' || doc.status === 'queued'
+                  const parsing = doc.status === 'parsing'
                   return (
                     <TableRow key={doc.id} data-testid={`doc-row-${doc.id}`}>
                       <TableCell>
@@ -304,7 +240,9 @@ export default function KbDocumentsPage() {
                           </span>
                           <div className="min-w-0">
                             <p className="max-w-[260px] truncate text-sm font-medium">{doc.filename}</p>
-                            <p className="text-xs text-muted-foreground">{doc.page_count > 0 ? `${doc.page_count} 页` : '未解析'}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {doc.page_count > 0 ? `${doc.page_count} 页` : doc.status === 'queued' ? '待解析' : '未解析'}
+                            </p>
                           </div>
                         </div>
                       </TableCell>
@@ -329,17 +267,28 @@ export default function KbDocumentsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-1">
-                          {doc.status === 'completed' ? (
-                            <>
-                              <Button variant="ghost" size="icon" title="查看 Markdown 产物" data-testid={`preview-${doc.id}`} onClick={() => void openPreview(doc)}>
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" title="查看版面结构" data-testid={`layout-${doc.id}`} onClick={() => void openLayout(doc)}>
-                                <Braces className="h-4 w-4" />
-                              </Button>
-                            </>
+                          {doc.status === 'queued' && canManage ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              data-testid={`start-${doc.id}`}
+                              onClick={() => void handleStartParse(doc)}
+                            >
+                              <PlayCircle className="h-4 w-4" />
+                              开始解析
+                            </Button>
                           ) : null}
-                          {canManage && doc.status !== 'parsing' && doc.status !== 'queued' && doc.status !== 'deleted' ? (
+                          {doc.status === 'completed' ? (
+                            <Link
+                              to={`/kb/${kb.id}/documents/${doc.id}/viewer`}
+                              title="查看"
+                              data-testid={`view-${doc.id}`}
+                              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Link>
+                          ) : null}
+                          {canManage && doc.status !== 'parsing' && doc.status !== 'deleted' && doc.status !== 'queued' ? (
                             <Button variant="ghost" size="icon" title="重新解析" data-testid={`reparse-${doc.id}`} onClick={() => void handleReparse(doc)}>
                               <RefreshCcw className="h-4 w-4" />
                             </Button>
@@ -370,7 +319,7 @@ export default function KbDocumentsPage() {
         open={uploadOpen}
         onOpenChange={(open) => { if (!open) setUploadOpen(false) }}
         title="上传 PDF"
-        description="支持 PDF，单文件不超过 100MB；上传后自动创建解析任务"
+        description="支持 PDF，单文件不超过 100MB；上传后进入待解析状态"
       >
         <input
           ref={uploadInputRef}
@@ -404,96 +353,13 @@ export default function KbDocumentsPage() {
           )}
           {uploadError ? <p className="text-xs text-destructive" data-testid="upload-error">{uploadError}</p> : null}
         </div>
-        <DialogFooter
-          uploading={uploading}
-          disabled={!uploadFile || Boolean(uploadError)}
-          onCancel={() => setUploadOpen(false)}
-          onUpload={() => void handleUpload()}
-        />
-      </Dialog>
-
-      {/* 产物预览 */}
-      <Dialog
-        open={previewDoc !== null}
-        onOpenChange={(open) => { if (!open) setPreviewDoc(null) }}
-        title="Markdown 产物"
-        description={previewDoc ? `${previewDoc.filename} · ${previewDoc.page_count ?? 0} 页` : undefined}
-        className="max-w-3xl"
-      >
-        <div className="mb-4 rounded-xl border border-border bg-muted/40 p-3">
-          {pageLoading ? (
-            <Skeleton className="h-52 w-full rounded-lg" />
-          ) : previewPageUrl ? (
-            <img
-              src={previewPageUrl}
-              alt={`第 ${previewPage} 页预览`}
-              data-testid="page-preview"
-              className="mx-auto max-h-72 rounded-lg border border-border bg-white object-contain"
-            />
-          ) : (
-            <p className="py-10 text-center text-xs text-muted-foreground">页面预览不可用（可能已清理）</p>
-          )}
-          <div className="mt-3 flex items-center justify-between">
-            <Button size="sm" variant="outline" disabled={!previewDoc || previewPage <= 1 || pageLoading} onClick={() => previewDoc && void loadPreviewPage(previewDoc, previewPage - 1)}>
-              上一页
-            </Button>
-            <span className="text-xs text-muted-foreground">第 {previewPage} / {previewDoc?.page_count ?? 0} 页</span>
-            <Button size="sm" variant="outline" disabled={!previewDoc || previewPage >= (previewDoc.page_count ?? 0) || pageLoading} onClick={() => previewDoc && void loadPreviewPage(previewDoc, previewPage + 1)}>
-              下一页
-            </Button>
-          </div>
+        <div className="mt-4 flex justify-end gap-2">
+          <Button variant="outline" onClick={() => setUploadOpen(false)} disabled={uploading}>取消</Button>
+          <Button onClick={() => void handleUpload()} disabled={!uploadFile || Boolean(uploadError) || uploading} data-testid="confirm-upload">
+            <UploadCloud className="h-4 w-4" />
+            {uploading ? '上传中...' : '确认上传'}
+          </Button>
         </div>
-        {previewLoading ? (
-          <div className="py-10 text-center text-sm text-muted-foreground">产物加载中...</div>
-        ) : previewText ? (
-          <pre className="max-h-[52vh] overflow-auto whitespace-pre-wrap rounded-xl bg-muted/60 p-4 font-mono text-xs leading-relaxed text-foreground">
-            {previewText}
-          </pre>
-        ) : (
-          <div className="py-10 text-center text-sm text-muted-foreground">暂无产物内容</div>
-        )}
-        <div className="mt-4 flex justify-end">
-          {previewDoc ? (
-            <Button size="sm" variant="outline" data-testid="open-layout" onClick={() => { void openLayout(previewDoc) }}>
-              <Braces className="h-4 w-4" />
-              查看版面
-            </Button>
-          ) : null}
-        </div>
-      </Dialog>
-
-      {/* 版面调试视图 */}
-      <Dialog
-        open={layoutDoc !== null}
-        onOpenChange={(open) => { if (!open) setLayoutDoc(null) }}
-        title="版面结构"
-        description={layoutDoc ? `${layoutDoc.filename} · layout.json` : undefined}
-        className="max-w-3xl"
-      >
-        {layoutLoading ? (
-          <div className="py-10 text-center text-sm text-muted-foreground">版面数据加载中...</div>
-        ) : layoutData ? (
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <Stat label="页数" value={String(layoutStats()?.pages ?? 0)} />
-              <Stat label="版面块" value={String(layoutStats()?.blocks ?? 0)} />
-              <Stat label="引擎" value={String(layoutData.layout_engine ?? '—')} />
-              <Stat label="Schema" value={String(layoutData.schema_version ?? '—')} />
-            </div>
-            {layoutStats() && Object.keys(layoutStats()!.typeCount).length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(layoutStats()!.typeCount).map(([type, count]) => (
-                  <Badge key={type} variant="secondary">{type}: {count}</Badge>
-                ))}
-              </div>
-            ) : null}
-            <pre className="max-h-[46vh] overflow-auto whitespace-pre-wrap rounded-xl bg-muted/60 p-4 font-mono text-[11px] leading-relaxed text-foreground" data-testid="layout-json">
-              {JSON.stringify(layoutData, null, 2)}
-            </pre>
-          </div>
-        ) : (
-          <div className="py-10 text-center text-sm text-muted-foreground">版面数据不可用</div>
-        )}
       </Dialog>
 
       {/* 删除确认 */}
@@ -509,27 +375,6 @@ export default function KbDocumentsPage() {
           </>
         }
       />
-    </div>
-  )
-}
-
-function DialogFooter({ uploading, disabled, onCancel, onUpload }: { uploading: boolean; disabled: boolean; onCancel: () => void; onUpload: () => void }) {
-  return (
-    <div className="mt-4 flex justify-end gap-2">
-      <Button variant="outline" onClick={onCancel} disabled={uploading}>取消</Button>
-      <Button onClick={onUpload} disabled={disabled || uploading} data-testid="confirm-upload">
-        <UploadCloud className="h-4 w-4" />
-        {uploading ? '上传中...' : '确认上传'}
-      </Button>
-    </div>
-  )
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-muted/40 px-3 py-2">
-      <p className="text-[11px] text-muted-foreground">{label}</p>
-      <p className="mt-0.5 truncate text-sm font-semibold">{value}</p>
     </div>
   )
 }

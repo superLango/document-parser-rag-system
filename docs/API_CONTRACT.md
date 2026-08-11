@@ -62,3 +62,18 @@ data: {"event":"done","result":{...}}\n\n
 - 业务资源一律 `GET/POST /api/v1/kbs/{kb_id}/...`。
 - 全局旧路径（`/extraction`、`/tasks`、`/schemas`、`/terms`）随重构下线，
   迁移期内保留兼容映射并标记 `Deprecation` 头。
+
+## 知识库文档接口（文档解析）
+
+| 方法 | 路径 | 权限 | 说明 |
+|------|------|------|------|
+| POST | `/api/v1/kb/{kb_id}/documents` | editor+ | 上传 PDF（≤100MB）；创建“待解析”文档与任务，不自动解析 |
+| POST | `/api/v1/kb/{kb_id}/documents/{doc_id}/start` | editor+ | 手动开始解析（幂等，复用上传创建的 queued 任务） |
+| GET | `/api/v1/kb/{kb_id}/documents` | viewer+ | 文档列表（关键词分页） |
+| GET | `/api/v1/kb/{kb_id}/documents/{doc_id}` | viewer+ | 文档详情/状态 |
+| GET | `/api/v1/kb/{kb_id}/documents/{doc_id}/markdown` | viewer+ | result.md |
+| GET | `/api/v1/kb/{kb_id}/documents/{doc_id}/layout` | viewer+ | layout.json（schema 1.2） |
+| GET | `/api/v1/kb/{kb_id}/documents/{doc_id}/pages/{page}` | viewer+ | 单页 PNG |
+| POST | `/api/v1/kb/{kb_id}/documents/{doc_id}/reparse` | editor+ | 重新解析（自动开始） |
+| DELETE | `/api/v1/kb/{kb_id}/documents/{doc_id}` | editor+ | 删除文档与产物 |
+| GET | `/api/v1/kb/{kb_id}/documents/tasks` | viewer+ | 任务列表（含 filename） |

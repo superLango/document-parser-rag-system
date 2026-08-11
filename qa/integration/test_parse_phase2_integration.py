@@ -66,6 +66,10 @@ async def _upload(client, token, kb_id, name, data):
 
 
 async def _wait_status(client, token, kb_id, doc_id, target="completed", timeout=60.0):
+    await client.post(
+        f"/api/v1/kb/{kb_id}/documents/{doc_id}/start",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     deadline = time.monotonic() + timeout
     last = None
     while time.monotonic() < deadline:

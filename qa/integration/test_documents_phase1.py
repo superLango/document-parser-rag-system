@@ -71,6 +71,10 @@ async def _invite_accept(client, owner_token, kb_id, username):
 
 
 async def _wait_status(client, token, kb_id, doc_id, target="completed", timeout=8.0):
+    await client.post(
+        f"/api/v1/kb/{kb_id}/documents/{doc_id}/start",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         resp = await client.get(
@@ -294,6 +298,11 @@ async def test_outbox_claim_and_sync_executor(client, super_token, db_session):
             sha256="1" * 64,
             object_key=object_key,
         )
+        # 上传不再写 outbox：手动开始解析后补写（复用上传创建的 queued 任务）
+        started = await document_service.start_document_parse(
+            db, uuid.UUID(kb["id"]), doc.id
+        )
+        assert started.task_id == task.task_id
         outbox_id = (
             await db.execute(
                 select(TaskOutbox).where(TaskOutbox.task_id == task.task_id)

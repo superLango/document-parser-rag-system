@@ -54,6 +54,9 @@ export const documentsApi = {
   reparse(kbId: string, documentId: string): Promise<{ document: DocumentItem; task: DocumentTaskItem }> {
     return http.post<{ document: DocumentItem; task: DocumentTaskItem }>(`/kb/${kbId}/documents/${documentId}/reparse`)
   },
+  startParse(kbId: string, documentId: string): Promise<DocumentTaskItem> {
+    return http.post<DocumentTaskItem>(`/kb/${kbId}/documents/${documentId}/start`)
+  },
   remove(kbId: string, documentId: string): Promise<unknown> {
     return http.delete(`/kb/${kbId}/documents/${documentId}`)
   },

@@ -61,6 +61,10 @@ async def _upload_wait(client, token, kb_id, name="p3.pdf", data=None):
     )
     assert resp.status_code == 200, resp.text
     doc_id = resp.json()["data"]["document"]["id"]
+    await client.post(
+        f"/api/v1/kb/{kb_id}/documents/{doc_id}/start",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     deadline = time.monotonic() + 30
     while time.monotonic() < deadline:
         detail = (
@@ -196,9 +200,9 @@ async def test_ocr_html_content_rendered_as_text():
         ]
     )
     assert "<script>" in md  # 原样进入产物（纯文本管道）
-    # 前端预览使用 <pre> 纯文本展示，不渲染 HTML
+    # 前端文档内页使用 <pre> 纯文本展示（Markdown/JSON），不渲染 HTML
     source = (
-        "/home/grainuser/hansonDoc_RAG/frontend/src/views/kb/KbDocumentsPage.tsx"
+        "/home/grainuser/hansonDoc_RAG/frontend/src/views/kb/KbDocumentViewerPage.tsx"
     )
     text = open(source, encoding="utf-8").read()
     assert "<pre" in text

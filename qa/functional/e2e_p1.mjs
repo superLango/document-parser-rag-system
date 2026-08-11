@@ -405,6 +405,7 @@ await scenario('L3M17-01', 'M17', async () => {
   const docList = await api('GET', `/kb/${kbId}/documents?page=1&page_size=20`, null, token)
   const doc = docList.body.data.items.find((d) => d.filename.includes('a62820a10c1c33f40ede554498d7bdf1'))
   if (!doc) throw new Error('文档未出现在列表')
+  await api('POST', `/kb/${kbId}/documents/${doc.id}/start`, null, token)
   const deadline = Date.now() + 120000
   while (Date.now() < deadline) {
     const d = await api('GET', `/kb/${kbId}/documents/${doc.id}`, null, token)

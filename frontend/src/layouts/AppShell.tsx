@@ -178,7 +178,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       {!isPending(user) ? (
         <>
           <NavItem to="/" label="工作台" icon={LayoutDashboard} end />
-          <NavItem to="/kb" label="知识库" icon={Database} />
+          <NavItem to="/kb" label="知识库" icon={Database} end />
           <NavItem to="/kb/invitations" label="我的邀请" icon={Inbox} />
           <NavItem to="/workspaces" label="工作空间" icon={Building2} />
           <NavItem to="/api-keys" label="API 密钥" icon={KeyRound} />

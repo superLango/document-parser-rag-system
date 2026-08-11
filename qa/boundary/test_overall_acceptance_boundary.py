@@ -44,6 +44,10 @@ async def _upload_wait(client, token, kb_id, name="b.pdf", data=None, timeout=60
     )
     assert resp.status_code == 200, resp.text
     doc_id = resp.json()["data"]["document"]["id"]
+    await client.post(
+        f"/api/v1/kb/{kb_id}/documents/{doc_id}/start",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         detail = (
@@ -73,11 +77,15 @@ async def test_concurrent_uploads(client, super_token):
     assert all(r.status_code == 200 for r in results)
     task_ids = [r.json()["data"]["task"]["task_id"] for r in results]
     assert len(set(task_ids)) == 5
-    # 全部最终完成
+    # 手动开始解析后全部最终完成
     import time
 
     for r in results:
         doc = r.json()["data"]["document"]
+        await client.post(
+            f"/api/v1/kb/{kb['id']}/documents/{doc['id']}/start",
+            headers={"Authorization": f"Bearer {super_token}"},
+        )
         deadline = time.monotonic() + 30
         while time.monotonic() < deadline:
             detail = (

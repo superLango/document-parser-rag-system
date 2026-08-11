@@ -71,10 +71,104 @@ async def create_document(
         checkpoint={},
     )
     db.add(task)
+    # 上传仅登记任务，不写 outbox；由 start_document_parse 手动触发解析
+    await db.commit()
+    await db.refresh(document)
+    await db.refresh(task)
+    return document, task
+
+
+async def start_document_parse(
+    db: AsyncSession,
+    kb_id: uuid.UUID,
+    document_id: uuid.UUID,
+) -> DocumentTask:
+    """手动开始解析（上传后默认待解析；行内“开始解析”触发）。
+
+    幂等：同一文档只允许一个 queued 任务存在，重复调用返回现有 queued 任务。
+    """
+    from app.core.exceptions import BusinessException, ErrorCode
+
+    await db.execute(
+        text("SELECT pg_advisory_xact_lock(hashtext(:key))"),
+        {"key": f"start-parse:{document_id}"},
+    )
+    document = (
+        await db.execute(
+            select(Document)
+            .where(
+                Document.id == document_id,
+                Document.kb_id == kb_id,
+                Document.deleted_at.is_(None),
+            )
+            .with_for_update()
+        )
+    ).scalar_one_or_none()
+    if document is None:
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_NOT_FOUND, message="文档不存在"
+        )
+    active = (
+        await db.execute(
+            select(func.count())
+            .select_from(DocumentTask)
+            .where(
+                DocumentTask.document_id == document_id,
+                DocumentTask.status.in_(("queued", "running")),
+            )
+        )
+    ).scalar_one()
+    if active > 0:
+        task = (
+            await db.execute(
+                select(DocumentTask)
+                .where(
+                    DocumentTask.document_id == document_id,
+                    DocumentTask.status.in_(("queued", "running")),
+                )
+                .order_by(DocumentTask.created_at)
+                .limit(1)
+            )
+        ).scalar_one()
+        if task.status == "queued":
+            # 上传创建的任务可能尚未写 outbox，补写后返回
+            outbox = (
+                await db.execute(
+                    select(TaskOutbox).where(TaskOutbox.task_id == task.task_id)
+                )
+            ).scalar_one_or_none()
+            if outbox is None:
+                db.add(
+                    TaskOutbox(
+                        task_id=task.task_id,
+                        type="document_parse",
+                        payload={
+                            "document_id": str(document.id),
+                            "kb_id": str(kb_id),
+                        },
+                        status="pending",
+                    )
+                )
+                await db.commit()
+            return task
+        raise BusinessException(
+            code=ErrorCode.BUSINESS_NOT_FOUND,
+            message="文档正在解析中，请稍后重试",
+        )
+
+    task = DocumentTask(
+        kb_id=kb_id,
+        document_id=document.id,
+        task_id=str(uuid.uuid4()),
+        type="document_parse",
+        status="queued",
+        checkpoint={},
+    )
+    db.add(task)
     await db.flush()
     db.add(
         TaskOutbox(
-            task_id=task_id,
+            task_id=task.task_id,
             type="document_parse",
             payload={
                 "document_id": str(document.id),
@@ -84,9 +178,8 @@ async def create_document(
         )
     )
     await db.commit()
-    await db.refresh(document)
     await db.refresh(task)
-    return document, task
+    return task
 
 
 async def reset_document_for_reparse(
@@ -150,18 +243,7 @@ async def reset_document_for_reparse(
         checkpoint={},
     )
     db.add(task)
-    await db.flush()
-    db.add(
-        TaskOutbox(
-            task_id=task_id,
-            type="document_parse",
-            payload={
-                "document_id": str(document.id),
-                "kb_id": str(kb_id),
-            },
-            status="pending",
-        )
-    )
+    # 上传仅登记任务，不写 outbox；由 start_document_parse 手动触发解析
     await db.commit()
     await db.refresh(document)
     await db.refresh(task)

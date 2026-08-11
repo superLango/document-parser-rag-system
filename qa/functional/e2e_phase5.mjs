@@ -97,6 +97,7 @@ await scenario('L3M21-01', 'M21', async () => {
   const list = await api('GET', `/kb/${kbId}/documents?page=1&page_size=20`, null, token)
   const doc = list.body.data.items.find((d) => d.filename.includes('LSAM-JD01-0016'))
   if (!doc) throw new Error('文档未出现在列表')
+  await api('POST', `/kb/${kbId}/documents/${doc.id}/start`, null, token)
   await page.screenshot({ path: `${OUT}parsing_phase5_upload_dialog.png` })
   globalThis.__docId = doc.id
 })
@@ -118,18 +119,15 @@ await scenario('L3M21-02', 'M21', async () => {
 
 await scenario('L3M21-03', 'M21', async () => {
   const docId = globalThis.__docId
-  await page.locator(`[data-testid="preview-${docId}"]`).click()
+  await page.locator(`[data-testid="view-${docId}"]`).click()
+  await page.waitForURL('**/viewer', { timeout: 10000 })
   await page.waitForTimeout(1000)
-  const md = await page.locator('pre').innerText()
-  if (!md.includes('<!-- page: 1 -->')) throw new Error('Markdown 预览缺失')
-  await page.locator('[data-testid="open-layout"]').click()
-  await page.waitForTimeout(800)
-  const json = await page.locator('[data-testid="layout-json"]').innerText()
-  if (!json.includes('"schema_version": "1.2"')) throw new Error('layout 调试视图缺少 schema 1.2')
-  if (!json.includes('document_tree')) throw new Error('layout 调试视图缺少结构树')
+  const md = await page.locator('[data-testid="viewer-md"]').innerText()
+  if (!md.includes('优质 GH4169')) throw new Error('Markdown 当前页内容异常')
+  const json = await page.locator('[data-testid="viewer-json"]').innerText()
+  if (!json.includes('"schema_version": "1.2"')) throw new Error('JSON 栏缺少 schema 1.2')
+  if (!json.includes('document_tree')) throw new Error('JSON 栏缺少结构树')
   await page.screenshot({ path: `${OUT}parsing_phase5_layout_debug.png` })
-  await page.getByRole('button', { name: '关闭' }).last().click()
-  await page.getByRole('button', { name: '关闭' }).last().click()
 })
 
 await scenario('L3M21-04', 'M21', async () => {
