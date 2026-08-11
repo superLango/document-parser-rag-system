@@ -1,0 +1,193 @@
+{
+  "schema_version": "1.2",
+  "producer": "parsekit",
+  "layout_engine": "ppdoclayoutv3",
+  "classification": "ocr",
+  "page_count": 2,
+  "pages": [
+    {
+      "page_index": 0,
+      "width": 595,
+      "height": 842,
+      "path": "pages/page-0000.png",
+      "blocks": [
+        {
+          "type": "title",
+          "bbox": [
+            50,
+            50,
+            500,
+            80
+          ],
+          "page_index": 0,
+          "order": 0,
+          "confidence": 0.95,
+          "content": "1 范围",
+          "source": "ocr"
+        },
+        {
+          "type": "text",
+          "bbox": [
+            50,
+            90,
+            500,
+            130
+          ],
+          "page_index": 0,
+          "order": 1,
+          "confidence": 0.9,
+          "content": "本文件规定了不锈钢棒材的化学成分要求。",
+          "source": "ocr"
+        },
+        {
+          "type": "table",
+          "bbox": [
+            50,
+            140,
+            500,
+            300
+          ],
+          "page_index": 0,
+          "order": 2,
+          "confidence": 0.8,
+          "content": "<table><tr><th rowspan=\"2\">GB/T 序号</th><th colspan=\"2\">规定非比例延伸强度</th></tr><tr><th>不小于</th><th>不大于</th></tr><tr><td>67</td><td>440</td><td>715</td></tr><tr><td>68</td><td>390</td><td>590</td></tr></table>",
+          "source": "ocr"
+        },
+        {
+          "type": "table_caption",
+          "bbox": [
+            50,
+            305,
+            500,
+            325
+          ],
+          "page_index": 0,
+          "order": 3,
+          "confidence": 0.7,
+          "content": "表1 规定非比例延伸强度",
+          "source": "ocr"
+        }
+      ]
+    },
+    {
+      "page_index": 1,
+      "width": 595,
+      "height": 842,
+      "path": "pages/page-0001.png",
+      "blocks": [
+        {
+          "type": "title",
+          "bbox": [
+            50,
+            50,
+            500,
+            80
+          ],
+          "page_index": 1,
+          "order": 4,
+          "confidence": 0.95,
+          "content": "2 力学性能",
+          "source": "ocr"
+        },
+        {
+          "type": "text",
+          "bbox": [
+            50,
+            90,
+            500,
+            130
+          ],
+          "page_index": 1,
+          "order": 5,
+          "confidence": 0.9,
+          "content": "拉伸试验按 GB/T 228.1 执行。",
+          "source": "ocr"
+        },
+        {
+          "type": "formula",
+          "bbox": [
+            50,
+            140,
+            500,
+            170
+          ],
+          "page_index": 1,
+          "order": 6,
+          "confidence": 0.6,
+          "content": "$R_m = \\sigma_b$",
+          "source": "ocr"
+        }
+      ]
+    }
+  ],
+  "rebuild": {
+    "enabled": true,
+    "document_tree": {
+      "type": "root",
+      "level": 0,
+      "content": "",
+      "children": [
+        {
+          "type": "title",
+          "content": "1 范围",
+          "level": 1,
+          "page": 0,
+          "order": 0,
+          "children": [
+            {
+              "type": "text",
+              "content": "本文件规定了不锈钢棒材的化学成分要求。",
+              "level": 0,
+              "page": 0,
+              "order": 1,
+              "children": []
+            },
+            {
+              "type": "table",
+              "content": "<table><tr><th rowspan=\"2\">GB/T 序号</th><th colspan=\"2\">规定非比例延伸强度</th></tr><tr><th>不小于</th><th>不大于</th></tr><tr><td>67</td><td>440</td><td>715</td></tr><tr><td>68</td><td>390</td><td>590</td></tr></table>",
+              "level": 0,
+              "page": 0,
+              "order": 2,
+              "children": [
+                {
+                  "type": "table_caption",
+                  "content": "表1 规定非比例延伸强度",
+                  "level": 0,
+                  "page": 0,
+                  "order": 3,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "title",
+          "content": "2 力学性能",
+          "level": 1,
+          "page": 1,
+          "order": 4,
+          "children": [
+            {
+              "type": "text",
+              "content": "拉伸试验按 GB/T 228.1 执行。",
+              "level": 0,
+              "page": 1,
+              "order": 5,
+              "children": []
+            },
+            {
+              "type": "formula",
+              "content": "$R_m = \\sigma_b$",
+              "level": 0,
+              "page": 1,
+              "order": 6,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "cross_page_tables_note": "U8：跨页表格合并暂缓"
+  }
+}
