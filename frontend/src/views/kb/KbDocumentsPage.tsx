@@ -18,7 +18,8 @@ import {
   DOCUMENT_STATUS_META,
   PROCESS_LABELS,
   TERMINAL_STATUSES,
-  progressPercent,
+  pageProgressText,
+  progressPercentForDoc,
 } from '@/lib/documentStatus'
 import { formatDateTime } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth'
@@ -256,8 +257,9 @@ export default function KbDocumentsPage() {
                   const parsing = running || doc.status === 'parsing'
                   const displayStatus = parsing && doc.status === 'queued' ? 'parsing' : doc.status
                   const displayMeta = DOCUMENT_STATUS_META[displayStatus] ?? { label: displayStatus, variant: 'outline' as const }
-                  const percent = progressPercent(doc.process_status)
+                  const percent = progressPercentForDoc(doc.process_status, doc.progress_page, doc.progress_total)
                   const stageLabel = PROCESS_LABELS[doc.process_status] ?? '排队中'
+                  const pageText = pageProgressText(doc.progress_page, doc.progress_total)
                   return (
                     <TableRow key={doc.id} data-testid={`doc-row-${doc.id}`}>
                       <TableCell>
@@ -281,7 +283,7 @@ export default function KbDocumentsPage() {
                           {parsing ? (
                             <div className="mt-2 space-y-1">
                               <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                                <span className="truncate">{stageLabel}</span>
+                                <span className="truncate">{stageLabel}{pageText ? <span data-testid={`progress-page-${doc.id}`}> · {pageText}</span> : null}</span>
                                 <span data-testid={`progress-text-${doc.id}`}>{percent}%</span>
                               </div>
                               <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted" data-testid={`progress-${doc.id}`}>

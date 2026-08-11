@@ -351,8 +351,9 @@ OCRBackend.ocr_block(image_block, block_type: text|table|formula) -> str
    版面块标签页左右两栏（块列表 + 选中块内容与属性）；文档与版面块坐标双向绑定，
    翻页时文档与版面块同步。
 8. **2026-08-11 进度与重解析细化**：同步执行器将 parse_pdf 放入线程执行并接入阶段回调，
-   解析中状态按 queued→rendering→layout→ocr→rebuild→completed 实时落库；
-   列表页状态列显示“阶段 + 百分比进度条”，解析中开始/重新解析按钮置灰不可重复触发；
+   解析中状态按 queued→rendering→layout→ocr→rebuild→completed 实时落库，
+   渲染/版面/OCR 按页上报 progress_page/progress_total（第 x / y 页）；
+   列表页状态列显示“阶段 + 页数 + 百分比进度条”，解析中开始/重新解析按钮置灰不可重复触发；
    内页翻页栏移至左侧源文件组件上方，顶栏右侧提供“重新解析”按钮，
    触发后右侧显示进度面板，完成后自动恢复标签页。
 

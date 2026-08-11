@@ -29,3 +29,35 @@ export function progressPercent(processStatus: string | null | undefined): numbe
   if (idx < 0) return 0
   return Math.round((idx / (PROCESS_STEPS.length - 1)) * 100)
 }
+
+export function pageProgressPercent(
+  page: number | null | undefined,
+  total: number | null | undefined,
+): number | null {
+  if (!page || !total || page < 1 || total < 1) return null
+  return Math.min(100, Math.round((page / total) * 100))
+}
+
+export function progressPercentForDoc(
+  processStatus: string | null | undefined,
+  page: number | null | undefined,
+  total: number | null | undefined,
+): number {
+  if (processStatus === 'completed') return 100
+  const stageIdx = PROCESS_STEPS.indexOf(processStatus ?? '')
+  if (stageIdx < 0) return 0
+  const stageSpan = 100 / (PROCESS_STEPS.length - 1)
+  let base = stageIdx * stageSpan
+  if (page && total && total > 0) {
+    base += Math.min(1, page / total) * stageSpan
+  }
+  return Math.min(99, Math.round(base))
+}
+
+export function pageProgressText(
+  page: number | null | undefined,
+  total: number | null | undefined,
+): string | null {
+  if (!page || !total || total < 1) return null
+  return '第 ' + Math.min(page, total) + ' / ' + total + ' 页'
+}

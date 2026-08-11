@@ -6,7 +6,7 @@ import { documentsApi } from '@/api/modules/documents'
 import { ApiError } from '@/api/client'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
-import { PROCESS_LABELS, TERMINAL_STATUSES, progressPercent } from '@/lib/documentStatus'
+import { PROCESS_LABELS, TERMINAL_STATUSES, pageProgressText, progressPercentForDoc } from '@/lib/documentStatus'
 import { cn } from '@/lib/utils'
 
 interface ViewerBlock {
@@ -79,8 +79,9 @@ export default function KbDocumentViewerPage() {
   const blocks = currentPage?.blocks ?? []
   const mdPages = useMemo(() => (markdown ? splitMarkdownByPage(markdown) : []), [markdown])
   const currentMd = mdPages[safePage - 1] ?? ''
-  const percent = progressPercent(doc?.process_status)
+  const percent = progressPercentForDoc(doc?.process_status, doc?.progress_page, doc?.progress_total)
   const stageLabel = PROCESS_LABELS[doc?.process_status ?? ''] ?? '排队中'
+  const pageText = pageProgressText(doc?.progress_page, doc?.progress_total)
 
   // 重新解析：轮询文档详情直至终态
   useEffect(() => {
@@ -298,7 +299,7 @@ export default function KbDocumentViewerPage() {
             <p className="text-sm font-medium">正在重新解析</p>
             <div className="w-full max-w-sm space-y-2">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{stageLabel}</span>
+                <span>{stageLabel}{pageText ? ' · ' + pageText : ''}</span>
                 <span data-testid="viewer-progress-text">{percent}%</span>
               </div>
               <div className="h-2 w-full overflow-hidden rounded-full bg-muted" data-testid="viewer-progress-bar">

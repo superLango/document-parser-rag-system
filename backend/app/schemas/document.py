@@ -17,6 +17,8 @@ class DocumentOut(BaseModel):
     sha256: str
     status: str
     process_status: str
+    progress_page: int | None = None
+    progress_total: int | None = None
     page_count: int = 0
     markdown_path: str | None = None
     layout_path: str | None = None

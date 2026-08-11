@@ -230,6 +230,8 @@ async def reset_document_for_reparse(
 
     document.status = "queued"
     document.process_status = "queued"
+    document.progress_page = None
+    document.progress_total = None
     document.page_count = 0
     document.markdown_path = None
     document.layout_path = None
@@ -494,23 +496,40 @@ async def run_parse_task(
     except Exception as exc:
         raise RuntimeError(f"读取原始 PDF 失败：{exc}") from exc
 
-    stage_holder: dict[str, str | None] = {"stage": None}
+    stage_holder: dict[str, str | int | None] = {
+        "stage": None,
+        "page": None,
+        "total": None,
+    }
 
-    def _on_stage(stage: str) -> None:
+    def _on_stage(
+        stage: str, page: int | None = None, total: int | None = None
+    ) -> None:
         stage_holder["stage"] = stage
+        stage_holder["page"] = page
+        stage_holder["total"] = total
 
     parse_task = asyncio.create_task(
         asyncio.to_thread(parse_pdf, pdf_bytes, options=options, progress=_on_stage)
     )
     done_stages: list[str] = []
     last_stage: str | None = None
+    last_page: int | None = None
     while not parse_task.done():
         stage = stage_holder["stage"]
-        if stage is not None and stage != last_stage:
+        page = stage_holder["page"]
+        total = stage_holder["total"]
+        if stage is not None and (stage != last_stage or page != last_page):
+            if stage != last_stage:
+                done_stages.append(stage)
             last_stage = stage
-            done_stages.append(stage)
+            last_page = page
             document.process_status = stage
             document.status = "parsing"
+            if page is not None:
+                document.progress_page = page
+            if total is not None:
+                document.progress_total = total
             task.checkpoint = {**checkpoint_meta, "stages": list(done_stages)}
             task.heartbeat_at = _now()
             task.updated_at = _now()
@@ -547,6 +566,8 @@ async def run_parse_task(
         bool(result.ocr_failures) and options.ocr_failure_policy == "partial"
     )
     document.page_count = len(result.pages)
+    document.progress_page = len(result.pages)
+    document.progress_total = len(result.pages)
     document.markdown_path = keys["markdown"]
     document.layout_path = keys["layout"]
     document.status = "completed"

@@ -203,19 +203,18 @@ def _build_layout_json(
 def parse_pdf(
     pdf_bytes: bytes,
     options: ParseOptions | None = None,
-    progress: Callable[[str], None] | None = None,
+    progress: Callable[[str, int | None, int | None], None] | None = None,
 ) -> ParseResult:
     """执行完整解析管线，返回 Markdown + layout.json + 页面图片。"""
     opts = options or ParseOptions.from_settings()
     _validate_options(opts)
     started = time.monotonic()
 
-    if progress:
-        progress("rendering")
     render_result = render_pdf(
         pdf_bytes,
         dpi=opts.dpi,
         partial_on_page_failure=opts.partial_on_page_failure,
+        progress=progress,
     )
     pages = render_result.pages
     failures = list(render_result.failures)
@@ -228,10 +227,8 @@ def parse_pdf(
     for page, kept in zip(pages, erase_result.pages):
         page.text_blocks = kept
 
-    if progress:
-        progress("layout")
     engine = _get_layout_engine(opts)
-    page_layouts = engine.analyze(pages)
+    page_layouts = engine.analyze(pages, progress=progress)
     # DocLayout 引擎单页失败并入页面级 failures（U11）
     if hasattr(engine, "failures"):
         failures.extend(engine.failures or [])
@@ -245,14 +242,13 @@ def parse_pdf(
         from app.services.ocr_backend.glmocr import get_ocr_backend
 
         backend = get_ocr_backend()
-        if progress:
-            progress("ocr")
         page_layouts, ocr_failures = run_ocr_stage(
             pages,
             page_layouts,
             backend,
             page_concurrency=opts.page_concurrency,
             block_concurrency=opts.block_concurrency,
+            progress=progress,
         )
         if ocr_failures and opts.ocr_failure_policy == "failed":
             from .errors import OcrStageError

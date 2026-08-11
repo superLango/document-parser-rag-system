@@ -191,6 +191,8 @@ export interface DocumentItem {
   sha256: string
   status: string
   process_status: string
+  progress_page: number | null
+  progress_total: number | null
   page_count: number
   markdown_path: string | null
   layout_path: string | null

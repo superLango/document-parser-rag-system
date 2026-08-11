@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import pymupdf
 
 from app.core.logging import get_logger
@@ -76,7 +78,10 @@ def _render_page(
 
 
 def render_pdf(
-    pdf_bytes: bytes, dpi: int = 200, partial_on_page_failure: bool = False
+    pdf_bytes: bytes,
+    dpi: int = 200,
+    partial_on_page_failure: bool = False,
+    progress: Callable[[str, int | None, int | None], None] | None = None,
 ) -> RenderResult:
     """渲染 PDF 全部页面。
 
@@ -104,6 +109,8 @@ def render_pdf(
         pages: list[RenderPage] = []
         failures: list[dict] = []
         for idx in range(doc.page_count):
+            if progress:
+                progress("rendering", idx + 1, doc.page_count)
             try:
                 pages.append(_render_page(doc, idx, dpi))
             except Exception as exc:

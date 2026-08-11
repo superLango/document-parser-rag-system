@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 from typing import ClassVar, Protocol
 
@@ -30,7 +31,11 @@ EXPECTED_MODEL_FILES = (
 class LayoutEngine(Protocol):
     name: str
 
-    def analyze(self, pages: list[RenderPage]) -> list[list[LayoutBlock]]: ...
+    def analyze(
+        self,
+        pages: list[RenderPage],
+        progress: Callable[[str, int | None, int | None], None] | None = None,
+    ) -> list[list[LayoutBlock]]: ...
 
 
 def _infer_title_level(font_size: float, max_font: float) -> int:
@@ -97,9 +102,15 @@ class RuleLayoutEngine:
             structural={"font_size": round(block.font_size, 2)},
         )
 
-    def analyze(self, pages: list[RenderPage]) -> list[list[LayoutBlock]]:
+    def analyze(
+        self,
+        pages: list[RenderPage],
+        progress: Callable[[str, int | None, int | None], None] | None = None,
+    ) -> list[list[LayoutBlock]]:
         result: list[list[LayoutBlock]] = []
         for page in pages:
+            if progress:
+                progress("layout", page.page_index, len(pages))
             page_blocks: list[LayoutBlock] = []
             max_font = max(
                 (b.font_size for b in page.text_blocks), default=0.0
@@ -344,11 +355,17 @@ class DocLayoutEngine:
             )
         return blocks
 
-    def analyze(self, pages: list[RenderPage]) -> list[list[LayoutBlock]]:
+    def analyze(
+        self,
+        pages: list[RenderPage],
+        progress: Callable[[str, int | None, int | None], None] | None = None,
+    ) -> list[list[LayoutBlock]]:
         """逐页真实推理；单页失败记录到 self.failures 不中断（U11）。"""
         self.failures = []
         result: list[list[LayoutBlock]] = []
         for page in pages:
+            if progress:
+                progress("layout", page.page_index, len(pages))
             try:
                 blocks = self._infer_page(page.image_bytes)
             except Exception as exc:  # noqa: BLE001 - 单页失败记录 partial（U11）

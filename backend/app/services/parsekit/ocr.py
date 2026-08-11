@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import io
 import threading
-from concurrent.futures import ThreadPoolExecutor
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 from PIL import Image
@@ -100,6 +101,7 @@ def run_ocr_stage(
     *,
     page_concurrency: int = 4,
     block_concurrency: int = 8,
+    progress: Callable[[str, int | None, int | None], None] | None = None,
 ) -> tuple[list[list[LayoutBlock]], list[dict]]:
     """对 doclayout 版面块执行 GLM-OCR；返回 (布局, 块级失败列表)。
 
@@ -111,6 +113,8 @@ def run_ocr_stage(
     page_sem = threading.Semaphore(max(1, page_concurrency))
     block_sem = threading.Semaphore(max(1, block_concurrency))
     futures = []
+    future_pages: dict = {}
+    page_ocr_total: dict[int, int] = {}
     workers = max(1, page_concurrency) * max(1, block_concurrency)
     with ThreadPoolExecutor(max_workers=workers) as pool:
         for page, blocks in zip(pages, page_layouts):
@@ -119,20 +123,28 @@ def run_ocr_stage(
                     continue
                 if block.type not in OCR_BLOCK_TYPES:
                     continue
-                futures.append(
-                    pool.submit(
-                        _ocr_one,
-                        backend,
-                        page,
-                        block,
-                        page_sem,
-                        block_sem,
-                        failures,
-                        lock,
-                    )
+                fut = pool.submit(
+                    _ocr_one,
+                    backend,
+                    page,
+                    block,
+                    page_sem,
+                    block_sem,
+                    failures,
+                    lock,
                 )
-        for future in futures:
-            future.result()
+                futures.append(fut)
+                future_pages[fut] = page.page_index
+                page_ocr_total[page.page_index] = (
+                    page_ocr_total.get(page.page_index, 0) + 1
+                )
+        page_done: dict[int, int] = {}
+        for future in as_completed(futures):
+            page_index = future_pages[future]
+            done = page_done.get(page_index, 0) + 1
+            page_done[page_index] = done
+            if progress and done >= page_ocr_total[page_index]:
+                progress("ocr", page_index, len(pages))
     ocr_count = sum(
         1
         for blocks in page_layouts

@@ -303,6 +303,33 @@ async def test_pipeline_end_to_end():
     assert result.layout["page_failures"] == []
 
 
+# ---------- L1M18-14 页级进度回调 ----------
+async def test_parse_pdf_progress_reports_pages():
+    data = make_pdf(
+        [
+            [{"text": "Page One Body", "x": 72, "y": 120, "size": 12}],
+            [{"text": "Page Two Body", "x": 72, "y": 120, "size": 12}],
+            [{"text": "Page Three Body", "x": 72, "y": 120, "size": 12}],
+        ]
+    )
+    events: list[tuple[str, int | None, int | None]] = []
+    parse_pdf(
+        data,
+        options=ParseOptions(dpi=100, layout_engine="rule", ocr_enabled=False),
+        progress=lambda stage, page=None, total=None: events.append(
+            (stage, page, total)
+        ),
+    )
+    render_events = [e for e in events if e[0] == "rendering"]
+    layout_events = [e for e in events if e[0] == "layout"]
+    assert len(render_events) == 3
+    assert len(layout_events) == 3
+    assert all(total == 3 for _, _, total in render_events + layout_events)
+    assert [p for _, p, _ in render_events] == [1, 2, 3]
+    assert [p for _, p, _ in layout_events] == [1, 2, 3]
+    assert events[-1][0] == "rebuild"
+
+
 # ---------- L1M18-12 参数校验 ----------
 async def test_parse_options_validation():
     for opts in (

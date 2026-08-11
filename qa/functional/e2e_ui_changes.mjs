@@ -139,6 +139,10 @@ await scenario('L3UI-04', 'M18', async () => {
   if (!(await parsingBtn.isVisible().catch(() => false))) throw new Error('解析中未显示置灰解析按钮')
   if (!(await parsingBtn.isDisabled().catch(() => false))) throw new Error('解析中按钮未禁用')
   if (!(await page.locator(`[data-testid="progress-${globalThis.__docId}"]`).isVisible().catch(() => false))) throw new Error('解析中未显示进度条')
+  await page.waitForFunction((id) => {
+    const el = document.querySelector(`[data-testid="progress-page-${id}"]`)
+    return el && /第 \d+ \/ \d+ 页/.test(el.textContent)
+  }, globalThis.__docId, { timeout: 15000 })
   await page.screenshot({ path: `${OUT}ui_parsing_progress.png` })
   await waitDocStatus(token, kbId, globalThis.__docId, 'completed')
   await page.reload({ waitUntil: 'networkidle' })
