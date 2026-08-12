@@ -198,3 +198,48 @@ export const ruleGroupApi = {
     return http.delete(`/kb/${kbId}/extraction-config/rule-groups/${groupId}`)
   },
 }
+
+
+export interface KbScript {
+  id: string
+  folder: 'post' | 'validation'
+  name: string
+  description: string
+  enabled: boolean
+  code: string
+  created_at: string
+  updated_at: string | null
+}
+
+export interface ScriptIOFolder {
+  input: Array<{ name: string; type: string; description: string }>
+  output: Array<{ name: string; type: string; description: string }>
+  tools: string[]
+}
+
+export interface ScriptRunResult {
+  ok: boolean
+  result?: unknown
+  error?: string
+}
+
+export const scriptApi = {
+  io(kbId: string): Promise<{ folders: Record<string, ScriptIOFolder> }> {
+    return http.get(`/kb/${kbId}/extraction-config/scripts/io`)
+  },
+  list(kbId: string, folder?: string): Promise<{ items: KbScript[] }> {
+    return http.get(`/kb/${kbId}/extraction-config/scripts`, { params: folder ? { folder } : undefined })
+  },
+  create(kbId: string, data: Record<string, unknown>): Promise<{ id: string }> {
+    return http.post(`/kb/${kbId}/extraction-config/scripts`, data)
+  },
+  update(kbId: string, scriptId: string, data: Partial<{ folder: string; name: string; description: string; enabled: boolean; code: string }>): Promise<{ message: string }> {
+    return http.put(`/kb/${kbId}/extraction-config/scripts/${scriptId}`, data)
+  },
+  remove(kbId: string, scriptId: string): Promise<unknown> {
+    return http.delete(`/kb/${kbId}/extraction-config/scripts/${scriptId}`)
+  },
+  run(kbId: string, data: { script_id?: string; code?: string; args?: Record<string, unknown> }): Promise<ScriptRunResult> {
+    return http.post(`/kb/${kbId}/extraction-config/scripts/run`, data)
+  },
+}

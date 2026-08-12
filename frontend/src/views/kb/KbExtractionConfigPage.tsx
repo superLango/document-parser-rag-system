@@ -5,7 +5,6 @@ import {
   ChevronDown,
   ChevronRight,
   FileText,
-  History,
   LayoutTemplate,
   ListChecks,
   Loader2,
@@ -32,6 +31,7 @@ import { Tabs } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores/auth'
 import { useKbDetail } from './KbDetailLayout'
+import KbScriptManager from './KbScriptManager'
 
 const MANUAL_TERM_FIELDS = [
   { name: 'term_name', label: '术语名称' },
@@ -718,12 +718,7 @@ export default function KbExtractionConfigPage() {
       )}
 
       {tab === 'scripts' && (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <History className="h-8 w-8 text-muted-foreground/50" />
-            <p className="text-sm font-medium text-muted-foreground">该模块在后续阶段开放</p>
-          </CardContent>
-        </Card>
+        <KbScriptManager kbId={kb.id} canManage={canManage} />
       )}
 
       {tab === 'schema' && (
