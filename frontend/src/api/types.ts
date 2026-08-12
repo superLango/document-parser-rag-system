@@ -333,3 +333,41 @@ export interface HealthCheck {
   error?: string
   database?: string
 }
+
+export interface TermBase {
+  id: string
+  kb_id: string
+  name: string
+  description: string
+  source_type: 'manual' | 'api' | 'db'
+  source_config: Record<string, unknown>
+  columns: Array<{ name: string; type: string; label: string }>
+  column_aliases: Record<string, string>
+  sync_enabled: boolean
+  last_synced_at: string | null
+  status: string
+  term_count: number
+  created_at: string
+  updated_at: string | null
+}
+
+export interface TermItem {
+  id: string
+  term_base_id: string
+  term_base_name: string
+  term_name: string
+  standard_name: string
+  english_term: string
+  definition: string
+  category: string
+  standard_number: string
+  synonyms: string[]
+  aliases: string[]
+  extras: Record<string, unknown>
+  status: string
+  reviewed_by: string | null
+  reviewed_at: string | null
+  created_at: string
+  updated_at: string | null
+}
+

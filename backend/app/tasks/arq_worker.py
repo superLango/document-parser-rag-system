@@ -2,6 +2,7 @@
 
 import uuid
 from typing import ClassVar
+from urllib.parse import unquote, urlparse
 
 from arq import cron
 from arq.connections import RedisSettings
@@ -90,6 +91,40 @@ async def cleanup_expired_parse_pages(ctx: dict) -> int:
         await db.close()
 
 
+async def sync_term_bases_cron(ctx: dict) -> int:
+    """术语集定时同步（S8/C3）：扫描 sync_enabled 术语集并逐个同步。
+
+    单术语集失败仅记录日志，不中断整轮；受 TERM_SYNC_BATCH_LIMIT 限制。
+    """
+    from app.services.glossary import term_base_service
+
+    db = await _superuser_session()
+    try:
+        bases = await term_base_service.list_syncable_bases(
+            db, settings.TERM_SYNC_BATCH_LIMIT
+        )
+    finally:
+        await db.close()
+    synced = 0
+    for base in bases:
+        db = await _superuser_session()
+        try:
+            await db.execute(
+                text("SELECT set_config('app.current_kb', :kb, true)"),
+                {"kb": str(base.kb_id)},
+            )
+            await term_base_service.sync_term_base(db, base.kb_id, base.id)
+            synced += 1
+        except Exception:
+            logger.exception(
+                "术语集定时同步失败", base_id=str(base.id), kb_id=str(base.kb_id)
+            )
+        finally:
+            await db.close()
+    logger.info("术语集定时同步完成", scanned=len(bases), synced=synced)
+    return synced
+
+
 async def dispatch_outbox(ctx: dict) -> int:
     """扫描 pending outbox → 入队 arq → 标记 enqueued。"""
     db = await _superuser_session()
@@ -124,16 +159,33 @@ async def dispatch_outbox(ctx: dict) -> int:
     return enqueued
 
 
+def _redis_settings_from_dsn(dsn: str) -> RedisSettings:
+    """从 DSN 构建 RedisSettings（显式解码密码，支持含 @ 等特殊字符）。"""
+    parsed = urlparse(dsn)
+    return RedisSettings(
+        host=parsed.hostname or "localhost",
+        port=parsed.port or 6379,
+        password=unquote(parsed.password) if parsed.password else None,
+        database=int((parsed.path or "/0").lstrip("/") or 0),
+    )
+
+
 class WorkerSettings:
     functions: ClassVar[list] = [parse_document_task, index_document_task]
     cron_jobs: ClassVar[list] = [
         cron(
             dispatch_outbox,
-            second=range(0, 60, max(1, settings.TASK_DISPATCH_INTERVAL_SECONDS)),
+            second=tuple(range(0, 60, max(1, settings.TASK_DISPATCH_INTERVAL_SECONDS))),
         ),
         cron(cleanup_expired_parse_pages, hour=3, minute=0),
+        cron(
+            sync_term_bases_cron,
+            hour=tuple(
+                max(0, min(23, int(h))) for h in settings.TERM_SYNC_CRON_HOURS.split(",") if h.strip()
+            ) or (3,),
+        ),
     ]
-    redis_settings = RedisSettings.from_dsn(settings.REDIS_URL)
+    redis_settings = _redis_settings_from_dsn(settings.REDIS_URL)
     max_jobs = 10
     job_timeout = 600
     keep_result = 60

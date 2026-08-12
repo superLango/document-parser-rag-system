@@ -9,6 +9,7 @@ from app.api.v1.endpoints import (
     dashboard,
     kb,
     kb_documents,
+    kb_glossary,
     kb_indexing,
     roles,
     system,
@@ -23,6 +24,8 @@ api_router.include_router(roles.router)
 api_router.include_router(kb.router)
 api_router.include_router(kb_documents.router)
 api_router.include_router(kb_indexing.router)
+api_router.include_router(kb_glossary.router)
+api_router.include_router(kb_glossary.terms_router)
 api_router.include_router(workspaces.router)
 api_router.include_router(api_keys.router)
 api_router.include_router(audit_logs.router)

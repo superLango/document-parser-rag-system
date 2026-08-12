@@ -21,6 +21,8 @@ import KbDocumentsPage from '@/views/kb/KbDocumentsPage'
 import KbTasksPage from '@/views/kb/KbTasksPage'
 import KbDocumentViewerPage from '@/views/kb/KbDocumentViewerPage'
 import KbPlaceholderPage from '@/views/kb/KbPlaceholderPage'
+import KbGlossaryPage from '@/views/kb/KbGlossaryPage'
+import KbGlossaryEditorPage from '@/views/kb/KbGlossaryEditorPage'
 import KbVectorSearchPage from '@/views/kb/KbVectorSearchPage'
 import WorkspacesPage from '@/views/WorkspacesPage'
 import ApiKeysPage from '@/views/ApiKeysPage'
@@ -138,7 +140,9 @@ export const router = createBrowserRouter([
       { path: 'documents', element: <KbDocumentsPage /> },
       { path: 'vector-search', element: <KbVectorSearchPage /> },
       { path: 'extraction', element: <KbPlaceholderPage title="结构化抽取" description="Schema 驱动的结构化抽取（迁移阶段开放）" /> },
-      { path: 'extraction-config', element: <KbPlaceholderPage title="抽取配置·专业术语集" description="Schema/Prompt 模板与术语集管理（迁移阶段开放）" /> },
+      { path: 'extraction-config', element: <KbPlaceholderPage title="抽取配置" description="Schema/Prompt 模板管理（迁移阶段开放）" /> },
+      { path: 'glossary', element: <KbGlossaryPage /> },
+      { path: 'glossary/:baseId', element: <KbGlossaryEditorPage /> },
       { path: 'tasks', element: <KbTasksPage /> },
       { path: 'graph', element: <KbPlaceholderPage title="知识图谱" description="实体关系图谱与子图查询（迁移阶段开放）" /> },
       { path: 'qa', element: <KbPlaceholderPage title="知识问答" description="混合检索问答与溯源（迁移阶段开放）" /> },

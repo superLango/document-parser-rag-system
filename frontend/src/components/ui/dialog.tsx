@@ -3,6 +3,8 @@ import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
+let dialogLayerCounter = 50
+
 interface DialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -22,9 +24,21 @@ export function Dialog({
   footer,
   className,
 }: DialogProps) {
+  const layerRef = React.useRef(0)
+  if (layerRef.current === 0) layerRef.current = ++dialogLayerCounter
+
+  React.useEffect(() => {
+    if (!open) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onOpenChange(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open, onOpenChange])
+
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ zIndex: layerRef.current }}>
       <div
         className="animate-fade-in absolute inset-0 bg-foreground/35 backdrop-blur-sm"
         onClick={() => onOpenChange(false)}

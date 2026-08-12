@@ -125,6 +125,13 @@ class Settings(BaseSettings):
     # 索引嵌入单路超时（秒），防任务悬挂
     INDEX_EMBED_TIMEOUT: int = 120
 
+    # ---------- 专业术语集（S8） ----------
+    TERM_SYNC_CRON_HOURS: str = "3"  # 术语集定时同步小时（逗号分隔，如 "2,14"）
+    TERM_SYNC_BATCH_LIMIT: int = 20  # 单轮同步术语集数量上限
+    TERM_SOURCE_CONNECT_TIMEOUT: int = 10  # 外部数据源连接超时（秒）
+    TERM_SOURCE_MAX_RESPONSE_MB: int = 5  # 外部数据源响应体上限（MB）
+    TERM_SYNC_IMPORT_LIMIT: int = 5000  # 单术语集同步/批量导入词条上限
+
     # ---------- 审计与可观测性 ----------
     AUDIT_LOG_RETENTION_DAYS: int = 90
     ENABLE_METRICS: bool = False

@@ -22,6 +22,8 @@
 | 知识库概览与成员 | `kb-overview.png` / `kb-members.png` | KB 概览/成员页截图 |
 | 资源与外部访问令牌 | `kb-external.png` | 资源与配置截图 |
 | 文档解析（待解析/原文档预览/内页联动） | `documents-queued.png` / `documents-original-preview.png` / `documents-viewer.png` | 文档解析页与内页截图 |
+| 专业术语集 | `glossary.png` | 术语集主页截图（S8-S4 E2E 产物） |
+| 术语管理 | `glossary-editor.png` | 术语管理页截图（S8-S5 E2E 产物） |
 | 向量搜索 | `vector-search.png` | 向量搜索页截图（S7 E2E 产物） |
 | 工作空间与 API 密钥 | `workspaces.png` / `api-keys.png` | P2 功能截图 |
 

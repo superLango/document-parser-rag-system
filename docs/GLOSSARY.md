@@ -14,6 +14,7 @@
 | feature / 类别 | Schema 模板中的抽取类别节点 | `name_source=term_base` 时可展开 |
 | Schema 模板 / Prompt 模板 | 抽取结构定义 / 提示词定义 | 每 KB 配置，缺失即报错 |
 | 术语集（term base） | 名称/同义词/查询词/字段值集合 | 替代旧“数据集” |
+| 术语条目（term） | 术语集内的单条术语（术语名/标准名/英文/定义/分类/同义词/别名） | status: active/pending/rejected；手动=active、外部同步=pending |
 | 术语绑定 | 类别字段 ↔ 术语集值映射 | `(category_id, field)` → term_base |
 | Hook 接口 | 6 个标准接口（extract_candidates/build_category_schema/validate_record/post_process/category_match/build_doc_info_prompt） | `kb_hooks/{kb_id_hex}/hooks.py` |
 | process_status | 一体化流程状态 | queued / ocr_processing / ocr_done / extracting / completed / failed |

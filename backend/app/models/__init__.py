@@ -15,6 +15,7 @@ from app.models.workspace import (
 from app.models.api_key import ApiKey
 from app.models.document import Document, DocumentTask, TaskDeadLetter, TaskOutbox
 from app.models.indexing import DocumentChunk, KbBm25Stats, TextChunk
+from app.models.glossary import Term, TermBase
 
 __all__ = [
     "User",
@@ -41,4 +42,6 @@ __all__ = [
     "DocumentChunk",
     "TextChunk",
     "KbBm25Stats",
+    "TermBase",
+    "Term",
 ]
