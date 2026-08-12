@@ -15,7 +15,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
-import { extractionConfigApi, promptApi, type PromptTemplate, type QuerySource, type SchemaCategory, type SchemaField, type SchemaTemplate } from '@/api/modules/extractionConfig'
+import { extractionConfigApi, promptApi, ruleGroupApi, type PromptTemplate, type QuerySource, type RuleGroup, type RuleGroupDetail, type SchemaCategory, type SchemaField, type SchemaTemplate } from '@/api/modules/extractionConfig'
 import { glossaryApi } from '@/api/modules/glossary'
 import type { TermBase } from '@/api/types'
 import { ApiError } from '@/api/client'
@@ -111,6 +111,19 @@ export default function KbExtractionConfigPage() {
     name: '', description: '', scope: 'simple', schema_template_id: '', category_ids: [] as string[], is_active: true,
   })
   const [promptSaving, setPromptSaving] = useState(false)
+
+  // 规则组
+  const [ruleGroups, setRuleGroups] = useState<RuleGroup[]>([])
+  const [ruleLoading, setRuleLoading] = useState(false)
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
+  const [groupDetail, setGroupDetail] = useState<RuleGroupDetail | null>(null)
+  const [ruleOpen, setRuleOpen] = useState(false)
+  const [ruleForm, setRuleForm] = useState({ schema_template_id: '', name: '', description: '' })
+  const [ruleSaving, setRuleSaving] = useState(false)
+  const [ruleItemOpen, setRuleItemOpen] = useState(false)
+  const [ruleItemCatId, setRuleItemCatId] = useState<string | null>(null)
+  const [ruleItems, setRuleItems] = useState<Array<{ script_name: string; paramsText: string; enabled: boolean }>>([])
+  const [ruleItemSaving, setRuleItemSaving] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -419,6 +432,109 @@ export default function KbExtractionConfigPage() {
     })
   }
 
+  async function loadRuleGroups() {
+    setRuleLoading(true)
+    try {
+      const res = await ruleGroupApi.list(kb.id)
+      setRuleGroups(res.items)
+    } catch (err) {
+      toast('error', '加载失败', err instanceof ApiError ? err.message : '加载失败')
+    } finally {
+      setRuleLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (tab === 'rules') void loadRuleGroups()
+  }, [tab, kb.id])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  function openCreateRule() {
+    setRuleForm({ schema_template_id: '', name: '', description: '' })
+    setRuleOpen(true)
+  }
+
+  async function saveRule() {
+    if (!ruleForm.schema_template_id) { toast('warning', '请选择 Schema 模板'); return }
+    setRuleSaving(true)
+    try {
+      await ruleGroupApi.create(kb.id, ruleForm)
+      toast('success', '规则组已创建')
+      setRuleOpen(false)
+      await loadRuleGroups()
+    } catch (err) {
+      toast('error', '创建失败', err instanceof ApiError ? err.message : '创建失败')
+    } finally {
+      setRuleSaving(false)
+    }
+  }
+
+  async function selectRuleGroup(groupId: string) {
+    setSelectedGroupId(groupId)
+    try {
+      const d = await ruleGroupApi.get(kb.id, groupId)
+      setGroupDetail(d)
+    } catch (err) {
+      toast('error', '加载失败', err instanceof ApiError ? err.message : '加载失败')
+    }
+  }
+
+  function openRuleItems(catId: string) {
+    const cat = groupDetail?.categories.find((c) => c.id === catId)
+    setRuleItemCatId(catId)
+    const existing = (cat?.rules ?? []).map((r) => ({
+      script_name: r.script_name,
+      paramsText: JSON.stringify(r.params ?? {}, null, 2),
+      enabled: r.enabled,
+    }))
+    setRuleItems(existing.length > 0 ? existing : [{ script_name: '', paramsText: '{}', enabled: true }])
+    setRuleItemOpen(true)
+  }
+
+  function updateRuleItem(idx: number, patch: Partial<{ script_name: string; paramsText: string; enabled: boolean }>) {
+    setRuleItems((items) => items.map((it, i) => (i === idx ? { ...it, ...patch } : it)))
+  }
+
+  async function saveRuleItems() {
+    if (!selectedGroupId || !ruleItemCatId) return
+    if (ruleItems.some((it) => !it.script_name.trim())) { toast('warning', '规则项脚本名不能为空'); return }
+    let paramsList: Array<Record<string, unknown>> = []
+    try {
+      paramsList = ruleItems.map((it) => JSON.parse(it.paramsText || '{}'))
+    } catch {
+      toast('error', '参数 JSON 格式错误'); return
+    }
+    setRuleItemSaving(true)
+    try {
+      await ruleGroupApi.saveItems(kb.id, selectedGroupId, {
+        category_id: ruleItemCatId,
+        items: ruleItems.map((it, idx) => ({
+          script_name: it.script_name.trim(), params: paramsList[idx], enabled: it.enabled, sort_order: idx,
+        })),
+      })
+      toast('success', '规则项已保存')
+      setRuleItemOpen(false)
+      const d = await ruleGroupApi.get(kb.id, selectedGroupId)
+      setGroupDetail(d)
+      await loadRuleGroups()
+    } catch (err) {
+      toast('error', '保存失败', err instanceof ApiError ? err.message : '保存失败')
+    } finally {
+      setRuleItemSaving(false)
+    }
+  }
+
+  function requestDeleteRuleGroup(g: RuleGroup) {
+    setConfirmState({
+      title: '删除规则组',
+      description: `确定删除规则组「${g.name}」？其下所有规则将一并删除。`,
+      onConfirm: async () => {
+        await ruleGroupApi.remove(kb.id, g.id)
+        if (selectedGroupId === g.id) { setSelectedGroupId(null); setGroupDetail(null) }
+        await loadRuleGroups()
+      },
+    })
+  }
+
   function openPromptEditor(p: PromptTemplate) {
     void navigate(`/kb/${kb.id}/extraction-config/prompts/${p.id}`)
   }
@@ -509,7 +625,99 @@ export default function KbExtractionConfigPage() {
         </Card>
       )}
 
-      {(tab === 'rules' || tab === 'scripts') && (
+      {tab === 'rules' && (
+        <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
+          <Card className="h-fit">
+            <CardContent className="space-y-2 p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">规则组</p>
+                {canManage && (
+                  <Button size="sm" onClick={openCreateRule} className="gap-1" data-testid="btn-new-rule-group">
+                    <Plus className="h-4 w-4" /> 新建规则组
+                  </Button>
+                )}
+              </div>
+              {ruleLoading ? (
+                <Skeleton className="h-24 w-full" />
+              ) : ruleGroups.length === 0 ? (
+                <p className="py-10 text-center text-sm text-muted-foreground">暂无规则组</p>
+              ) : (
+                ruleGroups.map((g) => (
+                  <div
+                    key={g.id}
+                    role="button"
+                    tabIndex={0}
+                    data-testid={`rule-group-${g.id}`}
+                    onClick={() => void selectRuleGroup(g.id)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') void selectRuleGroup(g.id) }}
+                    className={`w-full cursor-pointer rounded-lg border p-3 text-left transition-all ${selectedGroupId === g.id ? 'border-primary/50 bg-secondary/40 shadow-soft' : 'border-border hover:bg-muted/50'}`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="truncate text-sm font-medium">{g.name}</p>
+                      {canManage && (
+                        <Button variant="ghost" size="sm" className="h-7 w-7 shrink-0 p-0 text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); requestDeleteRuleGroup(g) }} title="删除" data-testid={`btn-del-rule-group-${g.id}`}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      )}
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">{g.schema_template_name} · {g.category_count} 类别 · {g.item_count} 规则项</p>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="space-y-4 p-4">
+              {!groupDetail ? (
+                <div className="flex flex-col items-center gap-2 py-16 text-center">
+                  <ListChecks className="h-8 w-8 text-muted-foreground/50" />
+                  <p className="text-sm font-medium">选择左侧规则组查看类别与规则</p>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <h3 className="text-base font-semibold">{groupDetail.name}</h3>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      Schema 模板：{groupDetail.schema_template_name}{groupDetail.description ? ` · ${groupDetail.description}` : ''}
+                    </p>
+                  </div>
+                  {groupDetail.categories.length === 0 ? (
+                    <p className="py-8 text-center text-sm text-muted-foreground">绑定模板暂无类别</p>
+                  ) : (
+                    groupDetail.categories.map((cat) => (
+                      <div key={cat.id} className="rounded-xl border border-border">
+                        <div className="flex items-center justify-between bg-muted/30 px-3 py-2">
+                          <p className="text-sm font-medium">{cat.name || '全局'}</p>
+                          {canManage && (
+                            <Button variant="outline" size="sm" className="h-7 gap-1 text-xs" onClick={() => openRuleItems(cat.id)} data-testid={`btn-edit-rules-${cat.id}`}>
+                              <ListChecks className="h-3.5 w-3.5" /> 规则项
+                            </Button>
+                          )}
+                        </div>
+                        <div className="space-y-1 p-3">
+                          {cat.rules.length === 0 ? (
+                            <p className="py-3 text-center text-xs text-muted-foreground">暂无规则</p>
+                          ) : (
+                            cat.rules.map((r) => (
+                              <div key={r.id} className="flex items-center gap-2 rounded-md border border-border/70 px-2 py-1.5">
+                                <span className="flex-1 truncate font-mono text-xs">{r.script_name}</span>
+                                {!r.enabled && <Badge variant="outline" className="text-[10px]">停用</Badge>}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {tab === 'scripts' && (
         <Card>
           <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
             <History className="h-8 w-8 text-muted-foreground/50" />
@@ -735,6 +943,58 @@ export default function KbExtractionConfigPage() {
           <Button variant="ghost" onClick={() => setPromptOpen(false)}>取消</Button>
           <Button onClick={savePrompt} disabled={promptSaving || !promptForm.name.trim()} className="gap-1.5" data-testid="btn-prompt-save">
             {promptSaving && <Loader2 className="h-4 w-4 animate-spin" />} {promptEdit ? '保存' : '创建'}
+          </Button>
+        </div>
+      </Dialog>
+
+      {/* 规则组新建弹窗 */}
+      <Dialog open={ruleOpen} onOpenChange={(o) => { if (!o) setRuleOpen(false) }} title="新建规则组" className="max-w-xl">
+        <div className="space-y-4">
+          <label className="block text-xs font-medium text-muted-foreground">绑定 Schema 模板 *
+            <Select value={ruleForm.schema_template_id} onChange={(e) => setRuleForm({ ...ruleForm, schema_template_id: e.target.value })} className="mt-1 h-10" data-testid="rule-template-select">
+              <option value="">请选择 Schema 模板</option>
+              {templates.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+            </Select>
+          </label>
+          <label className="block text-xs font-medium text-muted-foreground">规则组名称（留空使用模板名）
+            <Input value={ruleForm.name} onChange={(e) => setRuleForm({ ...ruleForm, name: e.target.value })} className="mt-1 h-10" data-testid="rule-name-input" />
+          </label>
+          <label className="block text-xs font-medium text-muted-foreground">描述
+            <Input value={ruleForm.description} onChange={(e) => setRuleForm({ ...ruleForm, description: e.target.value })} className="mt-1 h-10" />
+          </label>
+        </div>
+        <div className="mt-5 flex justify-end gap-2 border-t border-border/60 pt-4">
+          <Button variant="ghost" onClick={() => setRuleOpen(false)}>取消</Button>
+          <Button onClick={saveRule} disabled={ruleSaving || !ruleForm.schema_template_id} className="gap-1.5" data-testid="btn-rule-save">
+            {ruleSaving && <Loader2 className="h-4 w-4 animate-spin" />} 创建
+          </Button>
+        </div>
+      </Dialog>
+
+      {/* 规则项编辑弹窗 */}
+      <Dialog open={ruleItemOpen} onOpenChange={(o) => { if (!o) setRuleItemOpen(false) }} title="规则项" description="配置该类别绑定的脚本规则项（全量替换）" className="max-w-xl">
+        <div className="max-h-[60vh] space-y-3 overflow-y-auto pr-1">
+          {ruleItems.map((item, idx) => (
+            <div key={idx} className="space-y-2 rounded-xl border border-border/70 p-3">
+              <div className="flex items-center gap-2">
+                <Input value={item.script_name} onChange={(e) => updateRuleItem(idx, { script_name: e.target.value })} placeholder="脚本名（如 clean_records）" className="h-9 font-mono text-xs" data-testid={`rule-script-${idx}`} />
+                <Button variant="ghost" size="sm" className="h-8 w-8 shrink-0 p-0 text-destructive" onClick={() => setRuleItems((items) => items.filter((_, i) => i !== idx))}><X className="h-4 w-4" /></Button>
+              </div>
+              <textarea value={item.paramsText} onChange={(e) => updateRuleItem(idx, { paramsText: e.target.value })} rows={3} placeholder='{"drop_empty": true}' className="w-full rounded-md border border-input bg-card px-3 py-2 font-mono text-xs shadow-soft focus-visible:border-primary/50" data-testid={`rule-params-${idx}`} />
+              <label className="flex items-center gap-2 text-xs">
+                <Switch checked={item.enabled} onCheckedChange={(v) => updateRuleItem(idx, { enabled: v })} /> 启用
+              </label>
+            </div>
+          ))}
+          {ruleItems.length === 0 && <p className="py-6 text-center text-xs text-muted-foreground">暂无规则项</p>}
+          <Button variant="outline" size="sm" onClick={() => setRuleItems((items) => [...items, { script_name: '', paramsText: '{}', enabled: true }])} className="gap-1">
+            <Plus className="h-3.5 w-3.5" /> 添加规则项
+          </Button>
+        </div>
+        <div className="mt-5 flex justify-end gap-2 border-t border-border/60 pt-4">
+          <Button variant="ghost" onClick={() => setRuleItemOpen(false)}>取消</Button>
+          <Button onClick={saveRuleItems} disabled={ruleItemSaving} className="gap-1.5" data-testid="btn-rule-items-save">
+            {ruleItemSaving && <Loader2 className="h-4 w-4 animate-spin" />} 保存
           </Button>
         </div>
       </Dialog>

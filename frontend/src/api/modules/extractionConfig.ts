@@ -139,3 +139,62 @@ export const promptApi = {
     return http.delete(`/kb/${kbId}/extraction-config/prompts/${promptId}`)
   },
 }
+
+
+export interface RuleGroupItem {
+  id: string
+  category_id: string | null
+  script_name: string
+  params: Record<string, unknown>
+  enabled: boolean
+  sort_order: number
+}
+
+export interface RuleGroup {
+  id: string
+  name: string
+  schema_template_id: string | null
+  schema_template_name: string
+  description: string
+  enabled: boolean
+  category_count: number
+  item_count: number
+  created_at: string
+}
+
+export interface RuleGroupCategory {
+  id: string
+  name: string
+  rules: RuleGroupItem[]
+}
+
+export interface RuleGroupDetail {
+  id: string
+  name: string
+  schema_template_id: string | null
+  schema_template_name: string
+  description: string
+  categories: RuleGroupCategory[]
+}
+
+export const ruleGroupApi = {
+  list(kbId: string): Promise<{ items: RuleGroup[] }> {
+    return http.get(`/kb/${kbId}/extraction-config/rule-groups`)
+  },
+  create(kbId: string, data: { schema_template_id: string; name?: string; description?: string }): Promise<{ id: string }> {
+    return http.post(`/kb/${kbId}/extraction-config/rule-groups`, data)
+  },
+  get(kbId: string, groupId: string): Promise<RuleGroupDetail> {
+    return http.get(`/kb/${kbId}/extraction-config/rule-groups/${groupId}`)
+  },
+  saveItems(
+    kbId: string,
+    groupId: string,
+    data: { category_id?: string; items: Array<{ id?: string; script_name: string; params?: Record<string, unknown>; enabled?: boolean; sort_order?: number }> },
+  ): Promise<{ message: string }> {
+    return http.put(`/kb/${kbId}/extraction-config/rule-groups/${groupId}/items`, data)
+  },
+  remove(kbId: string, groupId: string): Promise<unknown> {
+    return http.delete(`/kb/${kbId}/extraction-config/rule-groups/${groupId}`)
+  },
+}
