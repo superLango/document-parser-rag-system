@@ -25,6 +25,7 @@
 | 专业术语集 | `glossary.png` | 术语集主页截图（S8-S4 E2E 产物） |
 | 术语管理 | `glossary-editor.png` | 术语管理页截图（S8-S5 E2E 产物） |
 | 向量搜索 | `vector-search.png` | 向量搜索页截图（S7 E2E 产物） |
+| 抽取配置（Schema/Prompt/规则/脚本） | `extraction-config.png` | 抽取配置页截图（S9-S7 E2E 产物） |
 | 工作空间与 API 密钥 | `workspaces.png` / `api-keys.png` | P2 功能截图 |
 
 ## 3. 更新流程（每阶段强制）

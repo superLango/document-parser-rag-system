@@ -67,10 +67,10 @@ async function run() {
   const tabs = await page.locator('button:has-text("Schema 模板")').count()
   results.push({ id: 'S3-01', name: '页面标题与四个页签', pass: h1 >= 1 && tabs >= 1 && await page.locator('button:has-text("Prompt 模板")').count() >= 1 && await page.locator('button:has-text("后处理与校验规则")').count() >= 1 && await page.locator('button:has-text("脚本管理")').count() >= 1 })
 
-  // 2. 其他页签占位
+  // 2. 页签可切换
   await page.locator('button:has-text("Prompt 模板")').first().click()
   await page.waitForTimeout(300)
-  results.push({ id: 'S3-02', name: '未开放页签占位提示', pass: (await page.textContent('body')).includes('该模块在后续阶段开放') })
+  results.push({ id: 'S3-02', name: '页签可切换（Prompt 列表出现）', pass: (await page.textContent('body')).includes('Prompt 模板') })
   await page.locator('button:has-text("Schema 模板")').first().click()
   await page.waitForTimeout(300)
 

@@ -69,7 +69,7 @@ async function run() {
   await page.waitForTimeout(300)
   await page.selectOption('[data-testid="rule-template-select"]', tpl.id)
   await page.click('[data-testid="btn-rule-save"]')
-  await page.waitForFunction(() => document.body.innerText.includes('规则模板'), null, { timeout: 10000 }).catch(() => {})
+  await page.waitForFunction(() => document.body.innerText.includes('2 类别'), null, { timeout: 10000 }).catch(() => {})
   results.push({ id: 'S5-02', name: '新建规则组（绑定 Schema 模板）', pass: (await page.textContent('body')).includes('规则模板') && (await page.textContent('body')).includes('2 类别') })
 
   // 3. 规则组详情类别

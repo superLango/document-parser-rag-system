@@ -120,6 +120,19 @@ export const helpSections: HelpSection[] = [
     ],
   },
   {
+    id: 'extraction-config',
+    title: '抽取配置',
+    description: 'Schema 模板、Prompt 模板、后处理与校验规则、脚本管理四项配置。',
+    image: '/help/extraction-config.png',
+    steps: [
+      '知识库内左侧菜单进入“抽取配置”，顶部为四个页签：Schema 模板 / Prompt 模板 / 后处理与校验规则 / 脚本管理',
+      'Schema 模板：模板→类别→字段三层；类别名称可来源术语集（按字段值生成类别），可挂载 Query 术语集（分组/取值/参与 Query/去重/条数上限）',
+      'Prompt 模板：simple 或绑定 Schema（按类别拆分 user 提示词）；编辑页支持 ${字段名} 占位符插入与渲染预览（不调用 LLM）',
+      '后处理与校验规则：规则组绑定 Schema 模板，按类别配置脚本规则项（脚本名 + 参数 JSON + 启用）',
+      '脚本管理：post/validation 两个目录，脚本即函数（def run(args) 返回 dict），支持 async 与 kb_tools.get_term_records 读取术语集，底部可调试运行（受限子进程，10 秒超时）',
+    ],
+  },
+  {
     id: 'workspace-keys',
     title: '工作空间与 API 密钥',
     description: '以工作空间组织群组并集授权；API 密钥供脚本与集成调用。',
