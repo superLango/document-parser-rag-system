@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   BookMarked,
   ChevronDown,
@@ -14,7 +15,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
-import { extractionConfigApi, type QuerySource, type SchemaCategory, type SchemaField, type SchemaTemplate } from '@/api/modules/extractionConfig'
+import { extractionConfigApi, promptApi, type PromptTemplate, type QuerySource, type SchemaCategory, type SchemaField, type SchemaTemplate } from '@/api/modules/extractionConfig'
 import { glossaryApi } from '@/api/modules/glossary'
 import type { TermBase } from '@/api/types'
 import { ApiError } from '@/api/client'
@@ -55,11 +56,18 @@ interface ConfirmState {
 
 export default function KbExtractionConfigPage() {
   const { kb } = useKbDetail()
+  const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const { toast } = useToast()
   const canManage = user?.is_superuser || kb.my_role === 'owner' || kb.my_role === 'admin' || kb.my_role === 'editor'
 
-  const [tab, setTab] = useState('schema')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [tab, setTabState] = useState(searchParams.get('tab') || 'schema')
+
+  function handleTabChange(next: string) {
+    setTabState(next)
+    setSearchParams({ tab: next }, { replace: true })
+  }
   const [loading, setLoading] = useState(true)
   const [templates, setTemplates] = useState<SchemaTemplate[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -93,6 +101,16 @@ export default function KbExtractionConfigPage() {
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null)
   const [fieldForm, setFieldForm] = useState({ name: '', type: 'string', description: '', example: '', required: true })
   const [fieldSaving, setFieldSaving] = useState(false)
+
+  // Prompt
+  const [prompts, setPrompts] = useState<PromptTemplate[]>([])
+  const [promptLoading, setPromptLoading] = useState(false)
+  const [promptOpen, setPromptOpen] = useState(false)
+  const [promptEdit, setPromptEdit] = useState<PromptTemplate | null>(null)
+  const [promptForm, setPromptForm] = useState({
+    name: '', description: '', scope: 'simple', schema_template_id: '', category_ids: [] as string[], is_active: true,
+  })
+  const [promptSaving, setPromptSaving] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -325,6 +343,86 @@ export default function KbExtractionConfigPage() {
     })
   }
 
+  async function loadPrompts() {
+    setPromptLoading(true)
+    try {
+      const res = await promptApi.list(kb.id)
+      setPrompts(res.items)
+    } catch (err) {
+      toast('error', '加载失败', err instanceof ApiError ? err.message : '加载失败')
+    } finally {
+      setPromptLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (tab === 'prompt') void loadPrompts()
+  }, [tab, kb.id])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  function openCreatePrompt() {
+    setPromptEdit(null)
+    setPromptForm({ name: '', description: '', scope: 'simple', schema_template_id: '', category_ids: [], is_active: true })
+    setPromptOpen(true)
+  }
+
+  function openEditPrompt(p: PromptTemplate) {
+    setPromptEdit(p)
+    setPromptForm({
+      name: p.name, description: p.description, scope: p.scope,
+      schema_template_id: p.schema_template_id ?? '', category_ids: p.category_ids ?? [], is_active: p.is_active,
+    })
+    setPromptOpen(true)
+  }
+
+  function togglePromptCat(catId: string) {
+    setPromptForm((f) => ({
+      ...f,
+      category_ids: f.category_ids.includes(catId)
+        ? f.category_ids.filter((c) => c !== catId)
+        : [...f.category_ids, catId],
+    }))
+  }
+
+  async function savePrompt() {
+    if (!promptForm.name.trim()) { toast('warning', '请填写模板名称'); return }
+    if (promptForm.scope === 'schema' && !promptForm.schema_template_id) {
+      toast('warning', '请选择 Schema 模板'); return
+    }
+    setPromptSaving(true)
+    try {
+      if (promptEdit) {
+        await promptApi.update(kb.id, promptEdit.id, {
+          name: promptForm.name, description: promptForm.description, is_active: promptForm.is_active,
+        })
+        toast('success', 'Prompt 已更新')
+      } else {
+        await promptApi.create(kb.id, promptForm)
+        toast('success', 'Prompt 已创建，进入编辑页配置提示词')
+      }
+      setPromptOpen(false)
+      await loadPrompts()
+    } catch (err) {
+      toast('error', '保存失败', err instanceof ApiError ? err.message : '保存失败')
+    } finally {
+      setPromptSaving(false)
+    }
+  }
+
+  function requestDeletePrompt(p: PromptTemplate) {
+    setConfirmState({
+      title: '删除 Prompt',
+      description: `确定删除 Prompt「${p.name}」？`,
+      onConfirm: async () => {
+        await promptApi.remove(kb.id, p.id)
+        await loadPrompts()
+      },
+    })
+  }
+
+  function openPromptEditor(p: PromptTemplate) {
+    void navigate(`/kb/${kb.id}/extraction-config/prompts/${p.id}`)
+  }
+
   async function runConfirm() {
     if (!confirmState) return
     setConfirming(true)
@@ -357,7 +455,7 @@ export default function KbExtractionConfigPage() {
 
       <Tabs
         value={tab}
-        onValueChange={setTab}
+        onValueChange={handleTabChange}
         items={[
           { value: 'schema', label: <><LayoutTemplate className="h-4 w-4" /> Schema 模板</> },
           { value: 'prompt', label: <><FileText className="h-4 w-4" /> Prompt 模板</> },
@@ -366,7 +464,52 @@ export default function KbExtractionConfigPage() {
         ]}
       />
 
-      {tab !== 'schema' && (
+      {tab === 'prompt' && (
+        <Card>
+          <CardContent className="space-y-2 p-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Prompt 模板</p>
+              {canManage && (
+                <Button size="sm" onClick={openCreatePrompt} className="gap-1" data-testid="btn-new-prompt">
+                  <Plus className="h-4 w-4" /> 新建 Prompt
+                </Button>
+              )}
+            </div>
+            {promptLoading ? (
+              <Skeleton className="h-24 w-full" />
+            ) : prompts.length === 0 ? (
+              <p className="py-10 text-center text-sm text-muted-foreground">暂无 Prompt 模板</p>
+            ) : (
+              prompts.map((p) => {
+                const boundTpl = templates.find((t) => t.id === p.schema_template_id)
+                return (
+                  <div key={p.id} className="flex items-center gap-3 rounded-lg border border-border/70 px-3 py-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{p.name}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {p.scope === 'schema' ? `Schema：${boundTpl?.name ?? '—'}` : 'simple'}
+                        {!p.is_active && ' · 停用'}
+                      </p>
+                    </div>
+                    <Badge variant={p.scope === 'schema' ? 'secondary' : 'outline'} className="text-[10px]">{p.scope === 'schema' ? 'schema' : 'simple'}</Badge>
+                    {canManage && (
+                      <div className="flex shrink-0 gap-1">
+                        <Button variant="outline" size="sm" className="h-7 gap-1 text-xs" onClick={() => openPromptEditor(p)} data-testid={`btn-open-prompt-${p.id}`}>
+                          <FileText className="h-3.5 w-3.5" /> 编辑
+                        </Button>
+                        <Button variant="outline" size="sm" className="h-7 px-2 text-destructive hover:text-destructive" onClick={() => openEditPrompt(p)} title="修改信息"><Pencil className="h-3.5 w-3.5" /></Button>
+                        <Button variant="ghost" size="sm" className="h-7 px-2 text-destructive hover:text-destructive" onClick={() => requestDeletePrompt(p)} title="删除" data-testid={`btn-del-prompt-${p.id}`}><Trash2 className="h-3.5 w-3.5" /></Button>
+                      </div>
+                    )}
+                  </div>
+                )
+              })
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {(tab === 'rules' || tab === 'scripts') && (
         <Card>
           <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
             <History className="h-8 w-8 text-muted-foreground/50" />
@@ -542,6 +685,56 @@ export default function KbExtractionConfigPage() {
           <Button variant="ghost" onClick={() => setTplOpen(false)}>取消</Button>
           <Button onClick={saveTemplate} disabled={tplSaving || !tplForm.name.trim()} className="gap-1.5" data-testid="btn-tpl-save">
             {tplSaving && <Loader2 className="h-4 w-4 animate-spin" />} {tplEdit ? '保存' : '创建'}
+          </Button>
+        </div>
+      </Dialog>
+
+      {/* Prompt 弹窗 */}
+      <Dialog open={promptOpen} onOpenChange={(o) => { if (!o) setPromptOpen(false) }} title={promptEdit ? '编辑 Prompt' : '新建 Prompt'} className="max-w-xl">
+        <div className="space-y-4">
+          <label className="block text-xs font-medium text-muted-foreground">模板名称 *
+            <Input value={promptForm.name} onChange={(e) => setPromptForm({ ...promptForm, name: e.target.value })} className="mt-1 h-10" data-testid="prompt-name-input" />
+          </label>
+          <label className="block text-xs font-medium text-muted-foreground">描述
+            <Input value={promptForm.description} onChange={(e) => setPromptForm({ ...promptForm, description: e.target.value })} className="mt-1 h-10" />
+          </label>
+          <label className="block text-xs font-medium text-muted-foreground">模式
+            <Select value={promptForm.scope} onChange={(e) => setPromptForm({ ...promptForm, scope: e.target.value, schema_template_id: '', category_ids: [] })} className="mt-1 h-10" data-testid="prompt-scope-select">
+              <option value="simple">simple（单个 user 提示词）</option>
+              <option value="schema">schema（绑定 Schema，按类别拆分 user 提示词）</option>
+            </Select>
+          </label>
+          {promptForm.scope === 'schema' && (
+            <>
+              <label className="block text-xs font-medium text-muted-foreground">选择 Schema 模板 *
+                <Select value={promptForm.schema_template_id} onChange={(e) => setPromptForm({ ...promptForm, schema_template_id: e.target.value, category_ids: [] })} className="mt-1 h-10" data-testid="prompt-template-select">
+                  <option value="">请选择 Schema 模板</option>
+                  {templates.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </Select>
+              </label>
+              {templates.find((t) => t.id === promptForm.schema_template_id)?.categories.length ? (
+                <div className="max-h-40 space-y-1 overflow-y-auto rounded-md border p-2">
+                  {templates.find((t) => t.id === promptForm.schema_template_id)?.categories.map((c) => (
+                    <label key={c.id} className="flex cursor-pointer items-center gap-2 rounded px-1 py-0.5 text-sm hover:bg-muted">
+                      <input type="checkbox" className="h-4 w-4 accent-primary" checked={promptForm.category_ids.includes(c.id)} onChange={() => togglePromptCat(c.id)} data-testid={`prompt-cat-${c.id}`} />
+                      {c.name || (c.name_source === 'term_base' ? (termBases.find((b) => b.id === c.name_term_base_id)?.name ?? '术语类别') : '未命名类别')}
+                      {c.name_source === 'term_base' && <Badge variant="secondary" className="text-[10px]">术语库</Badge>}
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">该模板暂无类别</p>
+              )}            </>
+          )}
+          <label className="flex items-center gap-2 text-sm">
+            <Switch checked={promptForm.is_active} onCheckedChange={(v) => setPromptForm({ ...promptForm, is_active: v })} /> 启用
+          </label>
+          <p className="text-xs text-muted-foreground">创建后进入编辑页，可配置 system / user 提示词并使用 $&#123;字段名&#125; 占位符。</p>
+        </div>
+        <div className="mt-5 flex justify-end gap-2 border-t border-border/60 pt-4">
+          <Button variant="ghost" onClick={() => setPromptOpen(false)}>取消</Button>
+          <Button onClick={savePrompt} disabled={promptSaving || !promptForm.name.trim()} className="gap-1.5" data-testid="btn-prompt-save">
+            {promptSaving && <Loader2 className="h-4 w-4 animate-spin" />} {promptEdit ? '保存' : '创建'}
           </Button>
         </div>
       </Dialog>

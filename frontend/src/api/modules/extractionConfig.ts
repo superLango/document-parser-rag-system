@@ -88,3 +88,54 @@ export const extractionConfigApi = {
     return http.delete(`/kb/${kbId}/schema-templates/${templateId}/categories/${categoryId}/fields/${fieldId}`)
   },
 }
+
+
+export interface PromptCategoryContent {
+  category_id: string
+  user_prompt: string
+}
+
+export interface PromptTemplate {
+  id: string
+  name: string
+  description: string
+  scope: 'simple' | 'schema'
+  schema_template_id: string | null
+  category_ids: string[]
+  is_active: boolean
+  system_prompt: string
+  user_prompt: string
+  categories: PromptCategoryContent[]
+  created_at: string
+  updated_at: string | null
+}
+
+export const promptApi = {
+  list(kbId: string): Promise<{ items: PromptTemplate[] }> {
+    return http.get(`/kb/${kbId}/extraction-config/prompts`)
+  },
+  get(kbId: string, promptId: string): Promise<PromptTemplate> {
+    return http.get(`/kb/${kbId}/extraction-config/prompts/${promptId}`)
+  },
+  create(kbId: string, data: Record<string, unknown>): Promise<PromptTemplate> {
+    return http.post(`/kb/${kbId}/extraction-config/prompts`, data)
+  },
+  update(kbId: string, promptId: string, data: Partial<{ name: string; description: string; is_active: boolean }>): Promise<PromptTemplate> {
+    return http.put(`/kb/${kbId}/extraction-config/prompts/${promptId}`, data)
+  },
+  save(
+    kbId: string,
+    promptId: string,
+    data: {
+      system_prompt?: string
+      user_prompt?: string
+      categories?: PromptCategoryContent[]
+      is_active?: boolean
+    },
+  ): Promise<PromptTemplate> {
+    return http.put(`/kb/${kbId}/extraction-config/prompts/${promptId}/save`, data)
+  },
+  remove(kbId: string, promptId: string): Promise<unknown> {
+    return http.delete(`/kb/${kbId}/extraction-config/prompts/${promptId}`)
+  },
+}
