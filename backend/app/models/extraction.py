@@ -178,11 +178,12 @@ class PromptContent(Base):
 
 
 class RuleGroup(Base):
-    """后处理/校验规则组。"""
+    """后处理/校验规则组（绑定 Schema 模板，一个模板至多一个规则组）。"""
 
     __tablename__ = "rule_groups"
     __table_args__ = (
         Index("uq_rule_groups_kb_name", "kb_id", "name", unique=True),
+        Index("idx_rule_groups_template", "kb_id", "schema_template_id"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -190,6 +191,10 @@ class RuleGroup(Base):
         PgUUID(as_uuid=True), ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False
     )
     name: Mapped[str] = mapped_column(String(128), nullable=False)
+    schema_template_id: Mapped[uuid.UUID | None] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("schema_templates.id", ondelete="SET NULL"), nullable=True
+    )
+    description: Mapped[str] = mapped_column(Text, default="", nullable=False)
     enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
