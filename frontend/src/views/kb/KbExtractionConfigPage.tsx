@@ -4,6 +4,8 @@ import {
   BookMarked,
   ChevronDown,
   ChevronRight,
+  FileBox,
+  FolderTree,
   FileText,
   LayoutTemplate,
   ListChecks,
@@ -14,7 +16,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
-import { extractionConfigApi, promptApi, ruleGroupApi, type PromptTemplate, type QuerySource, type RuleGroup, type RuleGroupDetail, type SchemaCategory, type SchemaField, type SchemaTemplate } from '@/api/modules/extractionConfig'
+import { extractionConfigApi, promptApi, type PromptTemplate, type QuerySource, type SchemaCategory, type SchemaField, type SchemaTemplate } from '@/api/modules/extractionConfig'
 import { glossaryApi } from '@/api/modules/glossary'
 import type { TermBase } from '@/api/types'
 import { ApiError } from '@/api/client'
@@ -31,6 +33,7 @@ import { Tabs } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores/auth'
 import { useKbDetail } from './KbDetailLayout'
+import KbRuleGroups from './KbRuleGroups'
 import KbScriptManager from './KbScriptManager'
 
 const MANUAL_TERM_FIELDS = [
@@ -74,13 +77,13 @@ export default function KbExtractionConfigPage() {
   const [detail, setDetail] = useState<SchemaTemplate | null>(null)
   const [termBases, setTermBases] = useState<TermBase[]>([])
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set())
+  const [expandedPool, setExpandedPool] = useState<Set<number>>(new Set())
   const [confirmState, setConfirmState] = useState<ConfirmState | null>(null)
   const [confirming, setConfirming] = useState(false)
 
   // 模板弹窗
   const [tplOpen, setTplOpen] = useState(false)
-  const [tplEdit, setTplEdit] = useState<SchemaTemplate | null>(null)
-  const [tplForm, setTplForm] = useState({ name: '', description: '', is_active: true })
+  const [tplForm, setTplForm] = useState({ name: '', description: '' })
   const [tplSaving, setTplSaving] = useState(false)
 
   // 类别弹窗
@@ -106,24 +109,11 @@ export default function KbExtractionConfigPage() {
   const [prompts, setPrompts] = useState<PromptTemplate[]>([])
   const [promptLoading, setPromptLoading] = useState(false)
   const [promptOpen, setPromptOpen] = useState(false)
-  const [promptEdit, setPromptEdit] = useState<PromptTemplate | null>(null)
   const [promptForm, setPromptForm] = useState({
     name: '', description: '', scope: 'simple', schema_template_id: '', category_ids: [] as string[], is_active: true,
   })
   const [promptSaving, setPromptSaving] = useState(false)
 
-  // 规则组
-  const [ruleGroups, setRuleGroups] = useState<RuleGroup[]>([])
-  const [ruleLoading, setRuleLoading] = useState(false)
-  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
-  const [groupDetail, setGroupDetail] = useState<RuleGroupDetail | null>(null)
-  const [ruleOpen, setRuleOpen] = useState(false)
-  const [ruleForm, setRuleForm] = useState({ schema_template_id: '', name: '', description: '' })
-  const [ruleSaving, setRuleSaving] = useState(false)
-  const [ruleItemOpen, setRuleItemOpen] = useState(false)
-  const [ruleItemCatId, setRuleItemCatId] = useState<string | null>(null)
-  const [ruleItems, setRuleItems] = useState<Array<{ script_name: string; paramsText: string; enabled: boolean }>>([])
-  const [ruleItemSaving, setRuleItemSaving] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -173,14 +163,7 @@ export default function KbExtractionConfigPage() {
 
   // ---------- 模板 ----------
   function openCreateTemplate() {
-    setTplEdit(null)
-    setTplForm({ name: '', description: '', is_active: true })
-    setTplOpen(true)
-  }
-
-  function openEditTemplate(t: SchemaTemplate) {
-    setTplEdit(t)
-    setTplForm({ name: t.name, description: t.description, is_active: t.is_active })
+    setTplForm({ name: '', description: '' })
     setTplOpen(true)
   }
 
@@ -188,15 +171,11 @@ export default function KbExtractionConfigPage() {
     if (!tplForm.name.trim()) { toast('warning', '请填写模板名称'); return }
     setTplSaving(true)
     try {
-      if (tplEdit) {
-        await extractionConfigApi.updateSchemaTemplate(kb.id, tplEdit.id, tplForm)
-        toast('success', '模板已更新')
-      } else {
-        await extractionConfigApi.createSchemaTemplate(kb.id, tplForm)
-        toast('success', '模板已创建')
-      }
+      const created = await extractionConfigApi.createSchemaTemplate(kb.id, tplForm)
+      toast('success', '模板已创建')
       setTplOpen(false)
       await load()
+      setSelectedId(created.id)
     } catch (err) {
       toast('error', '保存失败', err instanceof ApiError ? err.message : '保存失败')
     } finally {
@@ -245,7 +224,28 @@ export default function KbExtractionConfigPage() {
   }
 
   function addQuerySource() {
-    setCatForm((f) => ({ ...f, query_sources: [...f.query_sources, { ...EMPTY_QUERY }] }))
+    setCatForm((f) => {
+      const next = [...f.query_sources, { ...EMPTY_QUERY }]
+      setExpandedPool((st) => new Set(st).add(next.length - 1))
+      return { ...f, query_sources: next }
+    })
+  }
+
+  function toggleExpandPool(idx: number) {
+    setExpandedPool((st) => {
+      const n = new Set(st)
+      if (n.has(idx)) n.delete(idx); else n.add(idx)
+      return n
+    })
+  }
+
+  function saveQuerySource(idx: number) {
+    const qs = catForm.query_sources[idx]
+    const tb = termBases.find((b) => b.id === qs.term_base_id)
+    if (tb) {
+      setCatForm((f) => ({ ...f, query_sources: f.query_sources.map((q, i) => (i === idx ? { ...q, label: tb.name } : q)) }))
+    }
+    setExpandedPool((st) => { const n = new Set(st); n.delete(idx); return n })
   }
 
   function updateQuerySource(idx: number, patch: Partial<QuerySource>) {
@@ -258,9 +258,18 @@ export default function KbExtractionConfigPage() {
 
   async function saveCategory() {
     if (!selected) return
-    if (catForm.name_source === 'term_base' && !catForm.name_term_base_id) {
-      toast('warning', '请选择名称来源术语集')
+    if (catForm.name_source === 'manual' && !catForm.name.trim()) {
+      toast('warning', '请填写类别名称')
       return
+    }
+    if (catForm.name_source === 'term_base') {
+      if (!catForm.name_term_base_id) { toast('warning', '请选择名称来源术语集'); return }
+      if (!catForm.name_term_field) { toast('warning', '请选择名称来源字段'); return }
+    }
+    for (const [i, q] of catForm.query_sources.entries()) {
+      if (!q.label.trim()) { toast('warning', `第 ${i + 1} 个术语集名称不能为空`); return }
+      if (!q.term_base_id) { toast('warning', `第 ${i + 1} 个术语集未选择术语集`); return }
+      if (!q.value_field) { toast('warning', `第 ${i + 1} 个术语集的值字段必选`); return }
     }
     const payload: Record<string, unknown> = {
       name: catForm.name, description: catForm.description, return_type: catForm.return_type,
@@ -373,17 +382,7 @@ export default function KbExtractionConfigPage() {
   }, [tab, kb.id])  // eslint-disable-line react-hooks/exhaustive-deps
 
   function openCreatePrompt() {
-    setPromptEdit(null)
     setPromptForm({ name: '', description: '', scope: 'simple', schema_template_id: '', category_ids: [], is_active: true })
-    setPromptOpen(true)
-  }
-
-  function openEditPrompt(p: PromptTemplate) {
-    setPromptEdit(p)
-    setPromptForm({
-      name: p.name, description: p.description, scope: p.scope,
-      schema_template_id: p.schema_template_id ?? '', category_ids: p.category_ids ?? [], is_active: p.is_active,
-    })
     setPromptOpen(true)
   }
 
@@ -401,19 +400,14 @@ export default function KbExtractionConfigPage() {
     if (promptForm.scope === 'schema' && !promptForm.schema_template_id) {
       toast('warning', '请选择 Schema 模板'); return
     }
+    if (promptForm.scope === 'schema' && promptForm.category_ids.length === 0) {
+      toast('warning', '请至少选择一个类别'); return
+    }
     setPromptSaving(true)
     try {
-      if (promptEdit) {
-        await promptApi.update(kb.id, promptEdit.id, {
-          name: promptForm.name, description: promptForm.description, is_active: promptForm.is_active,
-        })
-        toast('success', 'Prompt 已更新')
-      } else {
-        await promptApi.create(kb.id, promptForm)
-        toast('success', 'Prompt 已创建，进入编辑页配置提示词')
-      }
+      const created = await promptApi.create(kb.id, promptForm)
       setPromptOpen(false)
-      await loadPrompts()
+      navigate(`/kb/${kb.id}/extraction-config/prompts/${created.id}`)
     } catch (err) {
       toast('error', '保存失败', err instanceof ApiError ? err.message : '保存失败')
     } finally {
@@ -428,109 +422,6 @@ export default function KbExtractionConfigPage() {
       onConfirm: async () => {
         await promptApi.remove(kb.id, p.id)
         await loadPrompts()
-      },
-    })
-  }
-
-  async function loadRuleGroups() {
-    setRuleLoading(true)
-    try {
-      const res = await ruleGroupApi.list(kb.id)
-      setRuleGroups(res.items)
-    } catch (err) {
-      toast('error', '加载失败', err instanceof ApiError ? err.message : '加载失败')
-    } finally {
-      setRuleLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (tab === 'rules') void loadRuleGroups()
-  }, [tab, kb.id])  // eslint-disable-line react-hooks/exhaustive-deps
-
-  function openCreateRule() {
-    setRuleForm({ schema_template_id: '', name: '', description: '' })
-    setRuleOpen(true)
-  }
-
-  async function saveRule() {
-    if (!ruleForm.schema_template_id) { toast('warning', '请选择 Schema 模板'); return }
-    setRuleSaving(true)
-    try {
-      await ruleGroupApi.create(kb.id, ruleForm)
-      toast('success', '规则组已创建')
-      setRuleOpen(false)
-      await loadRuleGroups()
-    } catch (err) {
-      toast('error', '创建失败', err instanceof ApiError ? err.message : '创建失败')
-    } finally {
-      setRuleSaving(false)
-    }
-  }
-
-  async function selectRuleGroup(groupId: string) {
-    setSelectedGroupId(groupId)
-    try {
-      const d = await ruleGroupApi.get(kb.id, groupId)
-      setGroupDetail(d)
-    } catch (err) {
-      toast('error', '加载失败', err instanceof ApiError ? err.message : '加载失败')
-    }
-  }
-
-  function openRuleItems(catId: string) {
-    const cat = groupDetail?.categories.find((c) => c.id === catId)
-    setRuleItemCatId(catId)
-    const existing = (cat?.rules ?? []).map((r) => ({
-      script_name: r.script_name,
-      paramsText: JSON.stringify(r.params ?? {}, null, 2),
-      enabled: r.enabled,
-    }))
-    setRuleItems(existing.length > 0 ? existing : [{ script_name: '', paramsText: '{}', enabled: true }])
-    setRuleItemOpen(true)
-  }
-
-  function updateRuleItem(idx: number, patch: Partial<{ script_name: string; paramsText: string; enabled: boolean }>) {
-    setRuleItems((items) => items.map((it, i) => (i === idx ? { ...it, ...patch } : it)))
-  }
-
-  async function saveRuleItems() {
-    if (!selectedGroupId || !ruleItemCatId) return
-    if (ruleItems.some((it) => !it.script_name.trim())) { toast('warning', '规则项脚本名不能为空'); return }
-    let paramsList: Array<Record<string, unknown>> = []
-    try {
-      paramsList = ruleItems.map((it) => JSON.parse(it.paramsText || '{}'))
-    } catch {
-      toast('error', '参数 JSON 格式错误'); return
-    }
-    setRuleItemSaving(true)
-    try {
-      await ruleGroupApi.saveItems(kb.id, selectedGroupId, {
-        category_id: ruleItemCatId,
-        items: ruleItems.map((it, idx) => ({
-          script_name: it.script_name.trim(), params: paramsList[idx], enabled: it.enabled, sort_order: idx,
-        })),
-      })
-      toast('success', '规则项已保存')
-      setRuleItemOpen(false)
-      const d = await ruleGroupApi.get(kb.id, selectedGroupId)
-      setGroupDetail(d)
-      await loadRuleGroups()
-    } catch (err) {
-      toast('error', '保存失败', err instanceof ApiError ? err.message : '保存失败')
-    } finally {
-      setRuleItemSaving(false)
-    }
-  }
-
-  function requestDeleteRuleGroup(g: RuleGroup) {
-    setConfirmState({
-      title: '删除规则组',
-      description: `确定删除规则组「${g.name}」？其下所有规则将一并删除。`,
-      onConfirm: async () => {
-        await ruleGroupApi.remove(kb.id, g.id)
-        if (selectedGroupId === g.id) { setSelectedGroupId(null); setGroupDetail(null) }
-        await loadRuleGroups()
       },
     })
   }
@@ -596,125 +487,39 @@ export default function KbExtractionConfigPage() {
             ) : prompts.length === 0 ? (
               <p className="py-10 text-center text-sm text-muted-foreground">暂无 Prompt 模板</p>
             ) : (
-              prompts.map((p) => {
-                const boundTpl = templates.find((t) => t.id === p.schema_template_id)
-                return (
-                  <div key={p.id} className="flex items-center gap-3 rounded-lg border border-border/70 px-3 py-2">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{p.name}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {p.scope === 'schema' ? `Schema：${boundTpl?.name ?? '—'}` : 'simple'}
-                        {!p.is_active && ' · 停用'}
-                      </p>
-                    </div>
-                    <Badge variant={p.scope === 'schema' ? 'secondary' : 'outline'} className="text-[10px]">{p.scope === 'schema' ? 'schema' : 'simple'}</Badge>
-                    {canManage && (
-                      <div className="flex shrink-0 gap-1">
-                        <Button variant="outline" size="sm" className="h-7 gap-1 text-xs" onClick={() => openPromptEditor(p)} data-testid={`btn-open-prompt-${p.id}`}>
-                          <FileText className="h-3.5 w-3.5" /> 编辑
-                        </Button>
-                        <Button variant="outline" size="sm" className="h-7 px-2 text-destructive hover:text-destructive" onClick={() => openEditPrompt(p)} title="修改信息"><Pencil className="h-3.5 w-3.5" /></Button>
-                        <Button variant="ghost" size="sm" className="h-7 px-2 text-destructive hover:text-destructive" onClick={() => requestDeletePrompt(p)} title="删除" data-testid={`btn-del-prompt-${p.id}`}><Trash2 className="h-3.5 w-3.5" /></Button>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {prompts.map((p) => (
+                  <Card key={p.id} className="bg-muted/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-foreground">{p.name}</p>
+                          <Badge variant="outline" className="text-[10px]">{p.scope === 'schema' ? 'Schema' : '简单'}</Badge>
+                        </div>
+                        {canManage && (
+                          <div className="flex items-center gap-1">
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="编辑" onClick={() => openPromptEditor(p)} data-testid={`btn-open-prompt-${p.id}`}>
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive" title="删除" onClick={() => requestDeletePrompt(p)} data-testid={`btn-del-prompt-${p.id}`}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                )
-              })
+                      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{p.description || '暂无描述'}</p>
+                      <p className="mt-2 line-clamp-3 rounded-md bg-muted p-2 font-mono text-xs">{p.system_prompt || p.user_prompt}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>
       )}
 
       {tab === 'rules' && (
-        <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
-          <Card className="h-fit">
-            <CardContent className="space-y-2 p-3">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">规则组</p>
-                {canManage && (
-                  <Button size="sm" onClick={openCreateRule} className="gap-1" data-testid="btn-new-rule-group">
-                    <Plus className="h-4 w-4" /> 新建规则组
-                  </Button>
-                )}
-              </div>
-              {ruleLoading ? (
-                <Skeleton className="h-24 w-full" />
-              ) : ruleGroups.length === 0 ? (
-                <p className="py-10 text-center text-sm text-muted-foreground">暂无规则组</p>
-              ) : (
-                ruleGroups.map((g) => (
-                  <div
-                    key={g.id}
-                    role="button"
-                    tabIndex={0}
-                    data-testid={`rule-group-${g.id}`}
-                    onClick={() => void selectRuleGroup(g.id)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') void selectRuleGroup(g.id) }}
-                    className={`w-full cursor-pointer rounded-lg border p-3 text-left transition-all ${selectedGroupId === g.id ? 'border-primary/50 bg-secondary/40 shadow-soft' : 'border-border hover:bg-muted/50'}`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="truncate text-sm font-medium">{g.name}</p>
-                      {canManage && (
-                        <Button variant="ghost" size="sm" className="h-7 w-7 shrink-0 p-0 text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); requestDeleteRuleGroup(g) }} title="删除" data-testid={`btn-del-rule-group-${g.id}`}>
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      )}
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{g.schema_template_name} · {g.category_count} 类别 · {g.item_count} 规则项</p>
-                  </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="space-y-4 p-4">
-              {!groupDetail ? (
-                <div className="flex flex-col items-center gap-2 py-16 text-center">
-                  <ListChecks className="h-8 w-8 text-muted-foreground/50" />
-                  <p className="text-sm font-medium">选择左侧规则组查看类别与规则</p>
-                </div>
-              ) : (
-                <>
-                  <div>
-                    <h3 className="text-base font-semibold">{groupDetail.name}</h3>
-                    <p className="mt-0.5 text-xs text-muted-foreground">
-                      Schema 模板：{groupDetail.schema_template_name}{groupDetail.description ? ` · ${groupDetail.description}` : ''}
-                    </p>
-                  </div>
-                  {groupDetail.categories.length === 0 ? (
-                    <p className="py-8 text-center text-sm text-muted-foreground">绑定模板暂无类别</p>
-                  ) : (
-                    groupDetail.categories.map((cat) => (
-                      <div key={cat.id} className="rounded-xl border border-border">
-                        <div className="flex items-center justify-between bg-muted/30 px-3 py-2">
-                          <p className="text-sm font-medium">{cat.name || '全局'}</p>
-                          {canManage && (
-                            <Button variant="outline" size="sm" className="h-7 gap-1 text-xs" onClick={() => openRuleItems(cat.id)} data-testid={`btn-edit-rules-${cat.id}`}>
-                              <ListChecks className="h-3.5 w-3.5" /> 规则项
-                            </Button>
-                          )}
-                        </div>
-                        <div className="space-y-1 p-3">
-                          {cat.rules.length === 0 ? (
-                            <p className="py-3 text-center text-xs text-muted-foreground">暂无规则</p>
-                          ) : (
-                            cat.rules.map((r) => (
-                              <div key={r.id} className="flex items-center gap-2 rounded-md border border-border/70 px-2 py-1.5">
-                                <span className="flex-1 truncate font-mono text-xs">{r.script_name}</span>
-                                {!r.enabled && <Badge variant="outline" className="text-[10px]">停用</Badge>}
-                              </div>
-                            ))
-                          )}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <KbRuleGroups kbId={kb.id} canManage={canManage} templates={templates} />
       )}
 
       {tab === 'scripts' && (
@@ -737,7 +542,11 @@ export default function KbExtractionConfigPage() {
               {loading ? (
                 <Skeleton className="h-24 w-full" />
               ) : templates.length === 0 ? (
-                <p className="py-8 text-center text-sm text-muted-foreground">暂无模板</p>
+                <div className="flex flex-col items-center gap-2 py-10 text-center">
+                  <LayoutTemplate className="h-8 w-8 text-muted-foreground/50" />
+                  <p className="text-sm font-medium">暂无模板</p>
+                  <p className="text-xs text-muted-foreground">创建 Schema 模板以定义抽取结构</p>
+                </div>
               ) : (
                 templates.map((t) => (
                   <button
@@ -754,7 +563,6 @@ export default function KbExtractionConfigPage() {
                       {!t.is_active && <Badge variant="outline" className="text-[10px]">停用</Badge>}
                     </div>
                     {t.description && <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">{t.description}</p>}
-                    <p className="mt-1 text-[11px] text-muted-foreground">{t.categories.length} 个类别</p>
                   </button>
                 ))
               )}
@@ -777,45 +585,62 @@ export default function KbExtractionConfigPage() {
                       <p className="mt-0.5 text-xs text-muted-foreground">{detail?.description || '暂无描述'}</p>
                     </div>
                     {canManage && (
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => openEditTemplate(selected)} className="gap-1">
-                          <Pencil className="h-3.5 w-3.5" /> 编辑
+                      <div className="flex items-center gap-1">
+                        <Button variant="outline" size="sm" onClick={openCreateCategory} className="gap-1" data-testid="btn-new-category">
+                          <Plus className="h-4 w-4" /> 新建类别
                         </Button>
-                        <Button variant="outline" size="sm" onClick={() => requestDeleteTemplate(selected)} className="gap-1 text-destructive hover:text-destructive">
-                          <Trash2 className="h-3.5 w-3.5" /> 删除
+                        <Button variant="ghost" size="sm" onClick={() => requestDeleteTemplate(selected)} className="text-destructive hover:text-destructive" title="删除模板">
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     )}
                   </div>
 
-                  {canManage && (
-                    <Button size="sm" onClick={openCreateCategory} className="gap-1" data-testid="btn-new-category">
-                      <Plus className="h-4 w-4" /> 新建类别
-                    </Button>
-                  )}
-
                   {(detail?.categories ?? []).length === 0 ? (
-                    <p className="py-8 text-center text-sm text-muted-foreground">暂无类别，点击“新建类别”开始</p>
+                    <div className="flex flex-col items-center gap-2 py-12 text-center">
+                      <FolderTree className="h-8 w-8 text-muted-foreground/50" />
+                      <p className="text-sm font-medium">暂无类别</p>
+                      <p className="text-xs text-muted-foreground">添加类别以定义抽取目标（如：室温拉伸、化学成分）</p>
+                    </div>
                   ) : (
                     <div className="space-y-2">
                       {(detail?.categories ?? []).map((cat) => (
                         <div key={cat.id} className="overflow-hidden rounded-xl border border-border">
-                          <div className="flex items-center gap-2 bg-muted/30 px-3 py-2">
-                            <button type="button" onClick={() => toggleCat(cat.id)} className="flex flex-1 items-center gap-2 text-left">
+                          <div className="flex items-center gap-3 p-3" data-testid={`schema-cat-${cat.id}`}>
+                            <button type="button" onClick={() => toggleCat(cat.id)} className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-muted">
                               {expandedCats.has(cat.id) ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                              <span className="text-sm font-medium">{categoryDisplayName(cat)}</span>
-                              {cat.name_source === 'term_base' && (
-                                <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 text-[10px]">使用术语库</Badge>
-                              )}
-                              {!cat.is_active && <Badge variant="outline" className="text-[10px]">停用</Badge>}
                             </button>
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                              <FolderTree className="h-4 w-4" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <p className="font-medium text-foreground">{categoryDisplayName(cat)}</p>
+                                <Badge variant="outline" className="text-[10px]">{cat.return_type}</Badge>
+                                <Badge variant="secondary" className="text-[10px]">{cat.extraction_strategy}</Badge>
+                                {cat.name_source === 'term_base' && (
+                                  <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 text-[10px]">使用术语库</Badge>
+                                )}
+                                {(cat.query_sources ?? []).some((q) => q.in_query) && (
+                                  <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 text-[10px]">
+                                    Query术语集({(cat.query_sources ?? []).filter((q) => q.in_query).length})
+                                  </Badge>
+                                )}
+                                {cat.top_k ? <Badge variant="secondary" className="text-[10px]">top_k={cat.top_k}</Badge> : null}
+                                {!cat.is_active && <Badge variant="secondary" className="bg-danger/10 text-destructive text-[10px]">停用</Badge>}
+                              </div>
+                              {cat.description && <p className="mt-0.5 truncate text-xs text-muted-foreground">{cat.description}</p>}
+                            </div>
                             {canManage && (
-                              <div className="flex shrink-0 gap-1">
-                                <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => openEditCategory(cat)} title="编辑">
-                                  <Pencil className="h-3.5 w-3.5" />
+                              <div className="flex shrink-0 items-center gap-1">
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="添加字段" onClick={() => openCreateField(cat.id)}>
+                                  <Plus className="h-4 w-4" />
                                 </Button>
-                                <Button variant="ghost" size="sm" className="h-7 px-2 text-destructive hover:text-destructive" onClick={() => requestDeleteCategory(cat)} title="删除">
-                                  <Trash2 className="h-3.5 w-3.5" />
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="编辑" onClick={() => openEditCategory(cat)}>
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive" title="删除" onClick={() => requestDeleteCategory(cat)}>
+                                  <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
                             )}
@@ -833,26 +658,30 @@ export default function KbExtractionConfigPage() {
                                   ))}
                                 </div>
                               )}
-                              <div className="flex items-center justify-between">
-                                <p className="text-xs font-medium text-muted-foreground">字段（{cat.fields.length}）</p>
-                                {canManage && (
-                                  <Button variant="outline" size="sm" className="h-7 gap-1 text-xs" onClick={() => openCreateField(cat.id)}>
-                                    <Plus className="h-3.5 w-3.5" /> 添加字段
-                                  </Button>
-                                )}
-                              </div>
                               {cat.fields.length === 0 ? (
-                                <p className="py-4 text-center text-xs text-muted-foreground">暂无字段</p>
+                                <div className="flex flex-col items-center gap-1.5 py-6 text-center">
+                                  <FileBox className="h-6 w-6 text-muted-foreground/50" />
+                                  <p className="text-xs font-medium">暂无字段</p>
+                                  <p className="text-[11px] text-muted-foreground">添加字段以定义抽取项</p>
+                                </div>
                               ) : (
                                 cat.fields.map((field) => (
-                                  <div key={field.id} className="flex items-center gap-2 rounded-lg border border-border/70 px-3 py-2">
-                                    <span className="flex-1 truncate text-sm">{field.name}</span>
-                                    <Badge variant="outline" className="text-[10px]">{field.type}</Badge>
-                                    {field.required && <Badge variant="secondary" className="text-[10px]">必填</Badge>}
+                                  <div key={field.id} className="flex items-center gap-3 rounded-md bg-muted/40 p-2.5">
+                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                                      <FileBox className="h-4 w-4" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center gap-2">
+                                        <p className="text-sm font-medium text-foreground">{field.name}</p>
+                                        <Badge variant="outline" className="text-[10px]">{field.type}</Badge>
+                                        {field.required && <Badge variant="secondary" className="text-[10px]">必填</Badge>}
+                                      </div>
+                                      {field.description && <p className="mt-0.5 truncate text-xs text-muted-foreground">{field.description}</p>}
+                                    </div>
                                     {canManage && (
-                                      <div className="flex gap-1">
-                                        <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => openEditField(cat.id, field)}><Pencil className="h-3.5 w-3.5" /></Button>
-                                        <Button variant="ghost" size="sm" className="h-7 px-2 text-destructive hover:text-destructive" onClick={() => requestDeleteField(cat, field)}><Trash2 className="h-3.5 w-3.5" /></Button>
+                                      <div className="flex shrink-0 items-center gap-1">
+                                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="编辑" onClick={() => openEditField(cat.id, field)}><Pencil className="h-3.5 w-3.5" /></Button>
+                                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive hover:text-destructive" title="删除" onClick={() => requestDeleteField(cat, field)}><Trash2 className="h-3.5 w-3.5" /></Button>
                                       </div>
                                     )}
                                   </div>
@@ -872,7 +701,7 @@ export default function KbExtractionConfigPage() {
       )}
 
       {/* 模板弹窗 */}
-      <Dialog open={tplOpen} onOpenChange={(o) => { if (!o) setTplOpen(false) }} title={tplEdit ? '编辑模板' : '新建模板'} className="max-w-xl">
+      <Dialog open={tplOpen} onOpenChange={(o) => { if (!o) setTplOpen(false) }} title="新建 Schema 模板" className="max-w-xl">
         <div className="space-y-4">
           <label className="block text-xs font-medium text-muted-foreground">模板名称 *
             <Input value={tplForm.name} onChange={(e) => setTplForm({ ...tplForm, name: e.target.value })} className="mt-1 h-10" data-testid="tpl-name-input" />
@@ -880,20 +709,17 @@ export default function KbExtractionConfigPage() {
           <label className="block text-xs font-medium text-muted-foreground">描述
             <textarea value={tplForm.description} onChange={(e) => setTplForm({ ...tplForm, description: e.target.value })} rows={2} className="mt-1 min-h-[60px] w-full rounded-md border border-input bg-card px-3 py-2 text-sm shadow-soft focus-visible:border-primary/50" />
           </label>
-          <label className="flex items-center gap-2 text-sm">
-            <Switch checked={tplForm.is_active} onCheckedChange={(v) => setTplForm({ ...tplForm, is_active: v })} /> 启用
-          </label>
         </div>
         <div className="mt-5 flex justify-end gap-2 border-t border-border/60 pt-4">
           <Button variant="ghost" onClick={() => setTplOpen(false)}>取消</Button>
           <Button onClick={saveTemplate} disabled={tplSaving || !tplForm.name.trim()} className="gap-1.5" data-testid="btn-tpl-save">
-            {tplSaving && <Loader2 className="h-4 w-4 animate-spin" />} {tplEdit ? '保存' : '创建'}
+            {tplSaving && <Loader2 className="h-4 w-4 animate-spin" />} 创建
           </Button>
         </div>
       </Dialog>
 
       {/* Prompt 弹窗 */}
-      <Dialog open={promptOpen} onOpenChange={(o) => { if (!o) setPromptOpen(false) }} title={promptEdit ? '编辑 Prompt' : '新建 Prompt'} className="max-w-xl">
+      <Dialog open={promptOpen} onOpenChange={(o) => { if (!o) setPromptOpen(false) }} title="新建 Prompt" className="max-w-xl">
         <div className="space-y-4">
           <label className="block text-xs font-medium text-muted-foreground">模板名称 *
             <Input value={promptForm.name} onChange={(e) => setPromptForm({ ...promptForm, name: e.target.value })} className="mt-1 h-10" data-testid="prompt-name-input" />
@@ -910,7 +736,14 @@ export default function KbExtractionConfigPage() {
           {promptForm.scope === 'schema' && (
             <>
               <label className="block text-xs font-medium text-muted-foreground">选择 Schema 模板 *
-                <Select value={promptForm.schema_template_id} onChange={(e) => setPromptForm({ ...promptForm, schema_template_id: e.target.value, category_ids: [] })} className="mt-1 h-10" data-testid="prompt-template-select">
+                <Select value={promptForm.schema_template_id} onChange={(e) => {
+                  const tpl = templates.find((t) => t.id === e.target.value)
+                  setPromptForm({
+                    ...promptForm,
+                    schema_template_id: e.target.value,
+                    category_ids: tpl ? tpl.categories.map((c) => c.id) : [],
+                  })
+                }} className="mt-1 h-10" data-testid="prompt-template-select">
                   <option value="">请选择 Schema 模板</option>
                   {templates.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
                 </Select>
@@ -937,59 +770,7 @@ export default function KbExtractionConfigPage() {
         <div className="mt-5 flex justify-end gap-2 border-t border-border/60 pt-4">
           <Button variant="ghost" onClick={() => setPromptOpen(false)}>取消</Button>
           <Button onClick={savePrompt} disabled={promptSaving || !promptForm.name.trim()} className="gap-1.5" data-testid="btn-prompt-save">
-            {promptSaving && <Loader2 className="h-4 w-4 animate-spin" />} {promptEdit ? '保存' : '创建'}
-          </Button>
-        </div>
-      </Dialog>
-
-      {/* 规则组新建弹窗 */}
-      <Dialog open={ruleOpen} onOpenChange={(o) => { if (!o) setRuleOpen(false) }} title="新建规则组" className="max-w-xl">
-        <div className="space-y-4">
-          <label className="block text-xs font-medium text-muted-foreground">绑定 Schema 模板 *
-            <Select value={ruleForm.schema_template_id} onChange={(e) => setRuleForm({ ...ruleForm, schema_template_id: e.target.value })} className="mt-1 h-10" data-testid="rule-template-select">
-              <option value="">请选择 Schema 模板</option>
-              {templates.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-            </Select>
-          </label>
-          <label className="block text-xs font-medium text-muted-foreground">规则组名称（留空使用模板名）
-            <Input value={ruleForm.name} onChange={(e) => setRuleForm({ ...ruleForm, name: e.target.value })} className="mt-1 h-10" data-testid="rule-name-input" />
-          </label>
-          <label className="block text-xs font-medium text-muted-foreground">描述
-            <Input value={ruleForm.description} onChange={(e) => setRuleForm({ ...ruleForm, description: e.target.value })} className="mt-1 h-10" />
-          </label>
-        </div>
-        <div className="mt-5 flex justify-end gap-2 border-t border-border/60 pt-4">
-          <Button variant="ghost" onClick={() => setRuleOpen(false)}>取消</Button>
-          <Button onClick={saveRule} disabled={ruleSaving || !ruleForm.schema_template_id} className="gap-1.5" data-testid="btn-rule-save">
-            {ruleSaving && <Loader2 className="h-4 w-4 animate-spin" />} 创建
-          </Button>
-        </div>
-      </Dialog>
-
-      {/* 规则项编辑弹窗 */}
-      <Dialog open={ruleItemOpen} onOpenChange={(o) => { if (!o) setRuleItemOpen(false) }} title="规则项" description="配置该类别绑定的脚本规则项（全量替换）" className="max-w-xl">
-        <div className="max-h-[60vh] space-y-3 overflow-y-auto pr-1">
-          {ruleItems.map((item, idx) => (
-            <div key={idx} className="space-y-2 rounded-xl border border-border/70 p-3">
-              <div className="flex items-center gap-2">
-                <Input value={item.script_name} onChange={(e) => updateRuleItem(idx, { script_name: e.target.value })} placeholder="脚本名（如 clean_records）" className="h-9 font-mono text-xs" data-testid={`rule-script-${idx}`} />
-                <Button variant="ghost" size="sm" className="h-8 w-8 shrink-0 p-0 text-destructive" onClick={() => setRuleItems((items) => items.filter((_, i) => i !== idx))}><X className="h-4 w-4" /></Button>
-              </div>
-              <textarea value={item.paramsText} onChange={(e) => updateRuleItem(idx, { paramsText: e.target.value })} rows={3} placeholder='{"drop_empty": true}' className="w-full rounded-md border border-input bg-card px-3 py-2 font-mono text-xs shadow-soft focus-visible:border-primary/50" data-testid={`rule-params-${idx}`} />
-              <label className="flex items-center gap-2 text-xs">
-                <Switch checked={item.enabled} onCheckedChange={(v) => updateRuleItem(idx, { enabled: v })} /> 启用
-              </label>
-            </div>
-          ))}
-          {ruleItems.length === 0 && <p className="py-6 text-center text-xs text-muted-foreground">暂无规则项</p>}
-          <Button variant="outline" size="sm" onClick={() => setRuleItems((items) => [...items, { script_name: '', paramsText: '{}', enabled: true }])} className="gap-1">
-            <Plus className="h-3.5 w-3.5" /> 添加规则项
-          </Button>
-        </div>
-        <div className="mt-5 flex justify-end gap-2 border-t border-border/60 pt-4">
-          <Button variant="ghost" onClick={() => setRuleItemOpen(false)}>取消</Button>
-          <Button onClick={saveRuleItems} disabled={ruleItemSaving} className="gap-1.5" data-testid="btn-rule-items-save">
-            {ruleItemSaving && <Loader2 className="h-4 w-4 animate-spin" />} 保存
+            {promptSaving && <Loader2 className="h-4 w-4 animate-spin" />} 创建
           </Button>
         </div>
       </Dialog>
@@ -1017,7 +798,7 @@ export default function KbExtractionConfigPage() {
                 </Select>
               </label>
               <label className="block text-xs font-medium text-muted-foreground">取值字段
-                <Select value={catForm.name_term_field} onChange={(e) => setCatForm({ ...catForm, name_term_field: e.target.value })} className="mt-1 h-10" disabled={!catForm.name_term_base_id}>
+                <Select value={catForm.name_term_field} onChange={(e) => setCatForm({ ...catForm, name_term_field: e.target.value })} className="mt-1 h-10" disabled={!catForm.name_term_base_id} data-testid="cat-term-field-select">
                   <option value="">选择字段</option>
                   {effectiveFields(termBases.find((b) => b.id === catForm.name_term_base_id)).map((f) => (
                     <option key={f.name} value={f.name}>{f.label}</option>
@@ -1054,33 +835,48 @@ export default function KbExtractionConfigPage() {
             </div>
             {catForm.query_sources.length === 0 && <p className="py-3 text-center text-xs text-muted-foreground">暂无术语集，添加后用于构造动态 Query</p>}
             {catForm.query_sources.map((qs, idx) => (
-              <div key={idx} className="rounded-lg border border-border/70 p-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium">{qs.label || `术语集 ${idx + 1}`}</p>
+              !expandedPool.has(idx) ? (
+                <div key={idx} className="flex items-center justify-between rounded-lg border border-border/70 px-3 py-2">
+                  <button type="button" className="flex min-w-0 flex-1 items-center gap-2 text-left" onClick={() => toggleExpandPool(idx)}>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span className="truncate text-sm font-medium">{qs.label || `术语集 ${idx + 1}`}</span>
+                  </button>
                   <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-destructive" onClick={() => removeQuerySource(idx)}><X className="h-3.5 w-3.5" /></Button>
                 </div>
-                <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                  <Input value={qs.label} onChange={(e) => updateQuerySource(idx, { label: e.target.value })} placeholder="显示名称（必填）" className="h-9" data-testid={`qs-label-${idx}`} />
-                  <Select value={qs.term_base_id} onChange={(e) => updateQuerySource(idx, { term_base_id: e.target.value, group_field: '', value_field: '' })} className="h-9" data-testid={`qs-term-${idx}`}>
-                    <option value="">选择术语集</option>
-                    {termBases.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-                  </Select>
-                  <Select value={qs.group_field} onChange={(e) => updateQuerySource(idx, { group_field: e.target.value })} className="h-9" disabled={!qs.term_base_id}>
-                    <option value="">分组字段（可选）</option>
-                    {effectiveFields(termBases.find((b) => b.id === qs.term_base_id)).map((f) => <option key={f.name} value={f.name}>{f.label}</option>)}
-                  </Select>
-                  <Select value={qs.value_field} onChange={(e) => updateQuerySource(idx, { value_field: e.target.value })} className="h-9" disabled={!qs.term_base_id}>
-                    <option value="">值字段 *</option>
-                    {effectiveFields(termBases.find((b) => b.id === qs.term_base_id)).map((f) => <option key={f.name} value={f.name}>{f.label}</option>)}
-                  </Select>
+              ) : (
+                <div key={idx} className="rounded-lg border border-border/70 p-3">
+                  <div className="flex items-center justify-between">
+                    <button type="button" className="flex items-center gap-1.5 text-sm font-medium" onClick={() => toggleExpandPool(idx)}>
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" /> 术语集 {idx + 1}
+                    </button>
+                    <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-destructive" onClick={() => removeQuerySource(idx)}><X className="h-3.5 w-3.5" /></Button>
+                  </div>
+                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                    <Input value={qs.label} onChange={(e) => updateQuerySource(idx, { label: e.target.value })} placeholder="显示名称（必填）" className="h-9" data-testid={`qs-label-${idx}`} />
+                    <Select value={qs.term_base_id} onChange={(e) => updateQuerySource(idx, { term_base_id: e.target.value, group_field: '', value_field: '' })} className="h-9" data-testid={`qs-term-${idx}`}>
+                      <option value="">选择术语集</option>
+                      {termBases.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+                    </Select>
+                    <Select value={qs.group_field} onChange={(e) => updateQuerySource(idx, { group_field: e.target.value })} className="h-9" disabled={!qs.term_base_id} data-testid={`qs-group-${idx}`}>
+                      <option value="">分组字段（可选）</option>
+                      {effectiveFields(termBases.find((b) => b.id === qs.term_base_id)).map((f) => <option key={f.name} value={f.name}>{f.label}</option>)}
+                    </Select>
+                    <Select value={qs.value_field} onChange={(e) => updateQuerySource(idx, { value_field: e.target.value })} className="h-9" disabled={!qs.term_base_id} data-testid={`qs-value-${idx}`}>
+                      <option value="">值字段 *</option>
+                      {effectiveFields(termBases.find((b) => b.id === qs.term_base_id)).map((f) => <option key={f.name} value={f.name}>{f.label}</option>)}
+                    </Select>
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-3">
+                    <label className="flex items-center gap-1.5 text-xs"><Switch checked={qs.in_query} onCheckedChange={(v) => updateQuerySource(idx, { in_query: v })} data-testid={`qs-in-query-${idx}`} /> 参与 Query</label>
+                    <label className="flex items-center gap-1.5 text-xs"><Switch checked={qs.dedupe} onCheckedChange={(v) => updateQuerySource(idx, { dedupe: v })} /> 精简</label>
+                    <label className="flex items-center gap-1.5 text-xs">主查询上限 <Input type="number" min={1} value={qs.query_main_limit} onChange={(e) => updateQuerySource(idx, { query_main_limit: Number(e.target.value) || 1 })} className="h-7 w-16" /></label>
+                    <label className="flex items-center gap-1.5 text-xs">精简上限 <Input type="number" min={1} value={qs.query_refined_limit} onChange={(e) => updateQuerySource(idx, { query_refined_limit: Number(e.target.value) || 1 })} className="h-7 w-16" /></label>
+                  </div>
+                  <div className="mt-3 flex justify-end">
+                    <Button type="button" size="sm" onClick={() => saveQuerySource(idx)} data-testid={`qs-save-${idx}`}>保存</Button>
+                  </div>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-3">
-                  <label className="flex items-center gap-1.5 text-xs"><Switch checked={qs.in_query} onCheckedChange={(v) => updateQuerySource(idx, { in_query: v })} data-testid={`qs-in-query-${idx}`} /> 参与 Query</label>
-                  <label className="flex items-center gap-1.5 text-xs"><Switch checked={qs.dedupe} onCheckedChange={(v) => updateQuerySource(idx, { dedupe: v })} /> 精简</label>
-                  <label className="flex items-center gap-1.5 text-xs">主查询上限 <Input type="number" min={1} value={qs.query_main_limit} onChange={(e) => updateQuerySource(idx, { query_main_limit: Number(e.target.value) || 1 })} className="h-7 w-16" /></label>
-                  <label className="flex items-center gap-1.5 text-xs">精简上限 <Input type="number" min={1} value={qs.query_refined_limit} onChange={(e) => updateQuerySource(idx, { query_refined_limit: Number(e.target.value) || 1 })} className="h-7 w-16" /></label>
-                </div>
-              </div>
+              )
             ))}
           </div>
 

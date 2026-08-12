@@ -144,9 +144,11 @@ export const promptApi = {
 export interface RuleGroupItem {
   id: string
   category_id: string | null
+  category_name: string
+  script_id: string
   script_name: string
-  params: Record<string, unknown>
-  enabled: boolean
+  script_description: string
+  stage: 'post' | 'validation'
   sort_order: number
 }
 
@@ -190,7 +192,7 @@ export const ruleGroupApi = {
   saveItems(
     kbId: string,
     groupId: string,
-    data: { category_id?: string; items: Array<{ id?: string; script_name: string; params?: Record<string, unknown>; enabled?: boolean; sort_order?: number }> },
+    data: { category_id?: string; items: Array<{ script_id: string; stage: 'post' | 'validation'; category_name?: string; sort_order?: number }> },
   ): Promise<{ message: string }> {
     return http.put(`/kb/${kbId}/extraction-config/rule-groups/${groupId}/items`, data)
   },
@@ -211,10 +213,18 @@ export interface KbScript {
   updated_at: string | null
 }
 
+export interface ScriptIOFolderTool {
+  name: string
+  desc: string
+  params: Array<{ name: string; type: string; desc: string }>
+  returns: string
+  usage: string
+}
+
 export interface ScriptIOFolder {
   input: Array<{ name: string; type: string; description: string }>
   output: Array<{ name: string; type: string; description: string }>
-  tools: string[]
+  tools: ScriptIOFolderTool[]
 }
 
 export interface ScriptRunResult {

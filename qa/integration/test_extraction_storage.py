@@ -71,12 +71,14 @@ async def test_orm_write_read_and_cascade(client, super_token, db_session):
     group = RuleGroup(kb_id=kb_id, name="后处理组", enabled=True)
     db_session.add(group)
     await db_session.flush()
-    item = RuleGroupItem(kb_id=kb_id, group_id=group.id, category_id=cat.id, script_name="clean", params={"x": 1})
-    db_session.add(item)
-
     script = KbScript(kb_id=kb_id, folder="post", name="clean", code="def run(args): return args", enabled=True)
     db_session.add(script)
+    await db_session.flush()
+    item = RuleGroupItem(kb_id=kb_id, group_id=group.id, category_id=cat.id,
+                         script_id=script.id, stage="post", category_name="类别", params={"x": 1})
+    db_session.add(item)
     await db_session.commit()
+
 
     # 读取
     got_cat = (await db_session.execute(select(SchemaCategory).where(SchemaCategory.id == cat.id))).scalar_one()
@@ -84,7 +86,8 @@ async def test_orm_write_read_and_cascade(client, super_token, db_session):
     assert got_cat.query_sources[0]["value_field"] == "name"
     assert (await db_session.execute(select(SchemaField).where(SchemaField.id == fld.id))).scalar_one().name == "抗拉强度"
     assert (await db_session.execute(select(PromptContent).where(PromptContent.id == pc.id))).scalar_one().user_prompt == "user"
-    assert (await db_session.execute(select(RuleGroupItem).where(RuleGroupItem.id == item.id))).scalar_one().script_name == "clean"
+    got_item = (await db_session.execute(select(RuleGroupItem).where(RuleGroupItem.id == item.id))).scalar_one()
+    assert got_item.stage == "post" and got_item.script_id == script.id
     assert (await db_session.execute(select(KbScript).where(KbScript.id == script.id))).scalar_one().folder == "post"
 
     # 级联：删模板 → 类别/字段消失；删规则组 → 项消失；删 prompt → content 消失

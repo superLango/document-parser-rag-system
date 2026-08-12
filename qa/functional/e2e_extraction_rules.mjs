@@ -53,6 +53,9 @@ async function run() {
   const tpl = (await (await fetch(`${API}/kb/${kb.id}/schema-templates`, { method: 'POST', headers: h, body: JSON.stringify({ name: '规则模板' }) })).json()).data
   const cat1 = (await (await fetch(`${API}/kb/${kb.id}/schema-templates/${tpl.id}/categories`, { method: 'POST', headers: h, body: JSON.stringify({ name: '类别一' }) })).json()).data
   const cat2 = (await (await fetch(`${API}/kb/${kb.id}/schema-templates/${tpl.id}/categories`, { method: 'POST', headers: h, body: JSON.stringify({ name: '类别二' }) })).json()).data
+  // 前置：已启用脚本（添加规则弹窗只列出启用脚本）
+  await api('POST', `/kb/${kb.id}/extraction-config/scripts`, { folder: 'post', name: 'clean_records', enabled: true, code: 'def run(args): return args' }, token)
+  await api('POST', `/kb/${kb.id}/extraction-config/scripts`, { folder: 'validation', name: 'validate_records', enabled: true, code: 'def run(args): return args' }, token)
 
   const browser = await chromium.launch({ headless: true })
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
@@ -64,7 +67,7 @@ async function run() {
   // 1. 规则页签空态
   results.push({ id: 'S5-01', name: '规则页签与空态', pass: (await page.textContent('body')).includes('暂无规则组') && await page.locator('[data-testid="btn-new-rule-group"]').count() === 1 })
 
-  // 2. 新建规则组
+  // 2. 新建规则组（默认选中第一个模板）
   await page.click('[data-testid="btn-new-rule-group"]')
   await page.waitForTimeout(300)
   await page.selectOption('[data-testid="rule-template-select"]', tpl.id)
@@ -72,31 +75,37 @@ async function run() {
   await page.waitForFunction(() => document.body.innerText.includes('2 类别'), null, { timeout: 10000 }).catch(() => {})
   results.push({ id: 'S5-02', name: '新建规则组（绑定 Schema 模板）', pass: (await page.textContent('body')).includes('规则模板') && (await page.textContent('body')).includes('2 类别') })
 
-  // 3. 规则组详情类别
-  await page.locator('[role="button"]', { hasText: '规则模板' }).first().click()
+  // 3. 展开规则组（懒加载类别详情）
+  const groups = (await (await fetch(`${API}/kb/${kb.id}/extraction-config/rule-groups`, { headers: h })).json()).data.items
+  const gid = groups[0].id
+  await page.locator(`[data-testid="rule-group-${gid}"]`).click()
   await page.waitForTimeout(800)
-  results.push({ id: 'S5-03', name: '规则组详情显示绑定模板类别', pass: (await page.textContent('body')).includes('类别一') && (await page.textContent('body')).includes('类别二') })
+  results.push({ id: 'S5-03', name: '规则组展开显示绑定模板类别', pass: (await page.textContent('body')).includes('类别一') && (await page.textContent('body')).includes('类别二') })
 
-  // 4. 类别一添加规则项
-  await page.click(`[data-testid="btn-edit-rules-${cat1.id}"]`)
+  // 4. 类别一添加后处理规则（弹窗：阶段 + 脚本）
+  await page.locator('button[title="添加规则"]').first().click()
   await page.waitForTimeout(300)
-  await page.fill('[data-testid="rule-script-0"]', 'clean_records')
-  await page.fill('[data-testid="rule-params-0"]', '{"drop_empty": true}')
-  await page.click('[data-testid="btn-rule-items-save"]')
-  await page.waitForFunction(() => document.body.innerText.includes('clean_records'), null, { timeout: 10000 }).catch(() => {})
-  results.push({ id: 'S5-04', name: '类别一规则项保存', pass: (await page.textContent('body')).includes('clean_records') })
+  await page.selectOption('[data-testid="add-rule-stage"]', 'post')
+  await page.selectOption('[data-testid="add-rule-script"]', { label: 'clean_records' })
+  await page.click('[data-testid="btn-add-rule"]')
+  await page.waitForTimeout(900)
+  await page.locator(`[data-testid="rule-cat-${cat1.id}"]`).click()
+  await page.waitForTimeout(300)
+  results.push({ id: 'S5-04', name: '类别一添加后处理规则（自动持久化）', pass: (await page.textContent('body')).includes('clean_records') && (await page.textContent('body')).includes('后处理') })
 
-  // 5. 类别二添加规则项
-  await page.click(`[data-testid="btn-edit-rules-${cat2.id}"]`)
+  // 5. 类别二添加校验规则
+  await page.locator('button[title="添加规则"]').last().click()
   await page.waitForTimeout(300)
-  await page.fill('[data-testid="rule-script-0"]', 'validate_records')
-  await page.click('[data-testid="btn-rule-items-save"]')
-  await page.waitForFunction(() => document.body.innerText.includes('validate_records'), null, { timeout: 10000 }).catch(() => {})
-  results.push({ id: 'S5-05', name: '类别二规则项保存', pass: (await page.textContent('body')).includes('validate_records') })
+  await page.selectOption('[data-testid="add-rule-stage"]', 'validation')
+  await page.selectOption('[data-testid="add-rule-script"]', { label: 'validate_records' })
+  await page.click('[data-testid="btn-add-rule"]')
+  await page.waitForTimeout(900)
+  await page.locator(`[data-testid="rule-cat-${cat2.id}"]`).click()
+  await page.waitForTimeout(300)
+  results.push({ id: 'S5-05', name: '类别二添加校验规则（阶段徽章）', pass: (await page.textContent('body')).includes('validate_records') && (await page.textContent('body')).includes('校验') })
 
   // 6. 删除规则组
-  const groups = (await (await fetch(`${API}/kb/${kb.id}/extraction-config/rule-groups`, { headers: h })).json()).data.items
-  await page.click(`[data-testid="btn-del-rule-group-${groups[0].id}"]`)
+  await page.locator(`[data-testid="btn-del-rule-group-${gid}"]`).click()
   await page.waitForTimeout(300)
   const delDialog = await page.locator('text=删除规则组').count()
   await page.click('[data-testid="btn-confirm-delete"]')

@@ -50,7 +50,9 @@ def test_schema_field_prompt_rule_script_fields():
     assert "category_ids" in PromptTemplate.__table__.columns
     assert "system_prompt" in PromptContent.__table__.columns
     assert "user_prompt" in PromptContent.__table__.columns
-    assert "script_name" in RuleGroupItem.__table__.columns
+    assert "script_id" in RuleGroupItem.__table__.columns
+    assert "stage" in RuleGroupItem.__table__.columns
+    assert "category_name" in RuleGroupItem.__table__.columns
     assert "params" in RuleGroupItem.__table__.columns
     assert "folder" in KbScript.__table__.columns
     assert "code" in KbScript.__table__.columns

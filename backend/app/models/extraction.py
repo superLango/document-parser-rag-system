@@ -202,11 +202,12 @@ class RuleGroup(Base):
 
 
 class RuleGroupItem(Base):
-    """规则组内的脚本规则项（按类别可选绑定）。"""
+    """规则组内的脚本规则项（绑定脚本 + 阶段，按类别可选绑定）。"""
 
     __tablename__ = "rule_group_items"
     __table_args__ = (
         Index("idx_rule_group_items_group", "kb_id", "group_id"),
+        Index("idx_rule_group_items_script", "kb_id", "script_id"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -219,7 +220,11 @@ class RuleGroupItem(Base):
     category_id: Mapped[uuid.UUID | None] = mapped_column(
         PgUUID(as_uuid=True), ForeignKey("schema_categories.id", ondelete="SET NULL"), nullable=True
     )
-    script_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    category_name: Mapped[str] = mapped_column(String(128), default="", nullable=False)
+    script_id: Mapped[uuid.UUID | None] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("kb_scripts.id", ondelete="SET NULL"), nullable=True
+    )
+    stage: Mapped[str] = mapped_column(String(16), default="post", nullable=False)
     params: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
     enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

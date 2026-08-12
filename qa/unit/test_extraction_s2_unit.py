@@ -10,7 +10,9 @@ def test_script_io_registry():
     for folder in ("post", "validation"):
         assert data["folders"][folder]["input"]
         assert data["folders"][folder]["output"]
-        assert any("get_term_records" in t for t in data["folders"][folder]["tools"])
+        tools = data["folders"][folder]["tools"]
+        assert any(t["name"] == "get_term_records" for t in tools)
+        assert all("desc" in t and "usage" in t for t in tools)
 
 
 def test_qs_to_dict():

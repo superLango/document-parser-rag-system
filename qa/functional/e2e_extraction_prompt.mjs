@@ -73,18 +73,22 @@ async function run() {
   await page.fill('[data-testid="prompt-name-input"]', '简单Prompt')
   await page.click('[data-testid="btn-prompt-save"]')
   await page.waitForFunction(() => document.body.innerText.includes('简单Prompt'), null, { timeout: 10000 }).catch(() => {})
-  results.push({ id: 'S4-02', name: '新建 simple Prompt', pass: (await page.textContent('body')).includes('简单Prompt') })
+  results.push({ id: 'S4-02', name: '新建 simple Prompt（自动进入编辑页）', pass: (await page.textContent('body')).includes('简单Prompt') && (await page.textContent('body')).includes('System 系统提示词') })
 
   // 3. simple 编辑器：编辑并保存
   const prompts1 = (await (await fetch(`${API}/kb/${kb.id}/extraction-config/prompts`, { headers: h })).json()).data.items
   const simpleP = prompts1.find((p) => p.name === '简单Prompt')
+  await page.locator('button:has-text("返回")').first().click()
+  await page.waitForTimeout(500)
   await page.click(`[data-testid="btn-open-prompt-${simpleP.id}"]`)
   await page.waitForTimeout(900)
   await page.fill('[data-testid="system-prompt-input"]', '你是材料检测专家')
   await page.fill('[data-testid="user-prompt-input"]', '请抽取 ${feature} 的抗拉强度')
   await page.click('[data-testid="btn-prompt-editor-save"]')
   await page.waitForTimeout(1000)
-  results.push({ id: 'S4-03', name: 'simple 编辑器保存并返回', pass: (await page.textContent('body')).includes('Prompt 模板') && (await page.textContent('body')).includes('简单Prompt') })
+  results.push({ id: 'S4-03', name: 'simple 编辑器保存并停留编辑页', pass: (await page.textContent('body')).includes('简单Prompt') && (await page.textContent('body')).includes('System 系统提示词') })
+  await page.locator('button:has-text("返回")').first().click()
+  await page.waitForTimeout(500)
 
   // 4. 新建 schema Prompt（绑定模板 + 勾选类别）
   await page.click('[data-testid="btn-new-prompt"]')
@@ -97,31 +101,28 @@ async function run() {
   await page.locator(`[data-testid="prompt-cat-${cat.id}"]`).check()
   await page.click('[data-testid="btn-prompt-save"]')
   await page.waitForFunction(() => document.body.innerText.includes('SchemaPrompt'), null, { timeout: 10000 }).catch(() => {})
-  results.push({ id: 'S4-04', name: '新建 schema Prompt（绑定模板与类别）', pass: (await page.textContent('body')).includes('SchemaPrompt') && (await page.textContent('body')).includes('材料模板') })
+  results.push({ id: 'S4-04', name: '新建 schema Prompt（绑定模板并自动进入编辑页）', pass: (await page.textContent('body')).includes('SchemaPrompt') && (await page.textContent('body')).includes('室温拉伸') })
 
   // 5. schema 编辑器：三栏 + 字段占位符插入 + 渲染预览 + 保存
   const prompts2 = (await (await fetch(`${API}/kb/${kb.id}/extraction-config/prompts`, { headers: h })).json()).data.items
   const schemaP = prompts2.find((p) => p.name === 'SchemaPrompt')
-  await page.click(`[data-testid="btn-open-prompt-${schemaP.id}"]`)
-  await page.waitForTimeout(900)
+  await page.waitForTimeout(600)
   await page.fill('[data-testid="system-prompt-input"]', '你是材料检测专家，请按 Schema 抽取')
   await page.fill('[data-testid="schema-user-input"]', '请抽取当前类别的')
   await page.click('[data-testid="field-token-抗拉强度"]')
   await page.waitForTimeout(200)
   const schemaInput = await page.inputValue('[data-testid="schema-user-input"]')
   results.push({ id: 'S4-05', name: 'schema 编辑器字段占位符插入', pass: schemaInput.includes('${') && schemaInput.includes('抗拉强度') })
-  await page.click('[data-testid="btn-prompt-preview"]')
+  await page.locator('button:has-text("测试组装")').last().click()
   await page.waitForTimeout(300)
-  const previewText = await page.textContent('[data-testid="prompt-preview-content"]')
-  results.push({ id: 'S4-06', name: '渲染预览（占位符替换）', pass: previewText.includes('Rm') || previewText.includes('抗拉强度') })
+  const previewText = await page.textContent('[data-testid="test-user"]')
+  results.push({ id: 'S4-06', name: '测试组装（占位符替换）', pass: previewText.includes('Rm') || previewText.includes('抗拉强度') })
   await page.click('[data-testid="btn-prompt-editor-save"]')
   await page.waitForTimeout(1000)
 
-  // 6. 删除 schema Prompt
-  await page.click('[data-testid="btn-new-prompt"]')
-  await page.waitForTimeout(200)
-  await page.keyboard.press('Escape')
-  await page.waitForTimeout(300)
+  // 6. 删除 schema Prompt（先返回列表）
+  await page.locator('button:has-text("返回")').first().click()
+  await page.waitForTimeout(1500)
   await page.click(`[data-testid="btn-del-prompt-${schemaP.id}"]`)
   await page.waitForTimeout(300)
   await page.click('[data-testid="btn-confirm-delete"]')

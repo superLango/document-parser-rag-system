@@ -60,7 +60,7 @@ async function run() {
   await page.waitForTimeout(900)
 
   // 1. 脚本页签与目录
-  results.push({ id: 'S6-01', name: '脚本页签与目录/空态', pass: (await page.textContent('body')).includes('抽取后处理') && (await page.textContent('body')).includes('校验') && (await page.textContent('body')).includes('暂无脚本') })
+  results.push({ id: 'S6-01', name: '脚本页签与目录/新建入口', pass: (await page.textContent('body')).includes('抽取后处理') && (await page.textContent('body')).includes('校验') && await page.locator('[data-testid="btn-new-script"]').count() === 1 })
 
   // 2. 新建 post 脚本并保存
   await page.click('[data-testid="btn-new-script"]')
@@ -80,16 +80,18 @@ async function run() {
   await page.waitForFunction(() => document.body.innerText.includes('validate_records'), null, { timeout: 10000 }).catch(() => {})
   results.push({ id: 'S6-03', name: '校验目录新建脚本', pass: (await page.textContent('body')).includes('validate_records') })
 
-  // 4. 回到 post 运行调试
+  // 4. 回到 post 运行调试（文件夹点击为折叠/展开切换）
+  await page.click('[data-testid="script-folder-post"]')
+  await page.waitForTimeout(200)
   await page.click('[data-testid="script-folder-post"]')
   await page.waitForTimeout(300)
   await page.locator('[data-testid="script-item-clean_records"]').click()
   await page.waitForTimeout(300)
   await page.fill('[data-testid="debug-args-input"]', '{"records":[{"a":1}],"category":"力学性能"}')
   await page.click('[data-testid="btn-run-script"]')
-  await page.waitForFunction(() => document.body.innerText.includes('运行成功'), null, { timeout: 20000 }).catch(() => {})
+  await page.waitForFunction(() => document.body.innerText.includes('records'), null, { timeout: 20000 }).catch(() => {})
   const debugText = await page.textContent('[data-testid="debug-result"]')
-  results.push({ id: 'S6-04', name: '调试运行成功（回显 records）', pass: (await page.textContent('body')).includes('运行成功') && debugText.includes('a') })
+  results.push({ id: 'S6-04', name: '调试运行成功（结构化回显 records）', pass: debugText.includes('records') && debugText.includes('a') })
 
   // 5. 术语集工具读取
   await page.fill('[data-testid="script-code-input"]', 'async def run(args):\n    rows = await kb_tools.get_term_records("材料库", "term_name")\n    return {"rows": rows}\n')

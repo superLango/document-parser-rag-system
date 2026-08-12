@@ -133,13 +133,17 @@ async def test_rule_group_flow(client, super_token):
                           json={"schema_template_id": tpl["id"]})
     assert r.status_code == 409
 
+    sc = (await client.post(f"/api/v1/kb/{kb_id}/extraction-config/scripts", headers=h,
+                             json={"folder": "post", "name": "clean_records",
+                                   "code": "def run(args): return args"})).json()["data"]
     r = await client.put(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups/{gid}/items", headers=h,
                          json={"category_id": cat["id"], "items": [
-                             {"script_name": "clean_records", "params": {"drop_empty": True}},
+                             {"script_id": sc["id"], "stage": "post"},
                          ]})
     assert r.status_code == 200, r.text
     detail = (await client.get(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups/{gid}", headers=h)).json()["data"]
-    assert detail["categories"][0]["rules"][0]["script_name"] == "clean_records"
+    rule = detail["categories"][0]["rules"][0]
+    assert rule["script_name"] == "clean_records" and rule["stage"] == "post"
 
     # 全量替换为空
     await client.put(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups/{gid}/items", headers=h,

@@ -60,6 +60,11 @@ async function run() {
     query_sources: [{ label: '材料Query', term_base_id: tb.id, value_field: 'standard_name', in_query: true }],
   }, token)).body.data
   await api('POST', `/kb/${kb.id}/schema-templates/${tpl.id}/categories/${cat.id}/fields`, { name: '抗拉强度', type: 'string', example: 'Rm' }, token)
+  // 前置：已启用脚本（规则绑定 + 脚本调试共用）
+  await api('POST', `/kb/${kb.id}/extraction-config/scripts`, {
+    folder: 'post', name: 'clean_records', enabled: true,
+    code: 'async def run(args):\n    rows = await kb_tools.get_term_records("材料库", "standard_name")\n    return {"rows": rows}\n',
+  }, token)
 
   const browser = await chromium.launch({ headless: true })
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
@@ -71,7 +76,7 @@ async function run() {
   // 1. Schema：模板/术语库类别/字段/Query 联动可见
   await page.locator('[data-testid^="tpl-item-"]').first().click()
   await page.waitForTimeout(600)
-  await page.locator('button:has-text("使用术语库")').first().click()
+  await page.locator('[data-testid^="schema-cat-"]', { hasText: '使用术语库' }).first().locator('button').first().click()
   await page.waitForTimeout(300)
   const schemaBody = await page.textContent('body')
   results.push({
@@ -79,7 +84,7 @@ async function run() {
     pass: schemaBody.includes('材料检测模板') && schemaBody.includes('使用术语库') && schemaBody.includes('材料Query'),
   })
 
-  // 2. Prompt：绑定 Schema 新建 → 编辑器占位符 → 保存
+  // 2. Prompt：绑定 Schema 新建 → 自动进入编辑器 → 占位符 → 保存 → 返回
   await page.locator('button:has-text("Prompt 模板")').first().click()
   await page.waitForTimeout(400)
   await page.click('[data-testid="btn-new-prompt"]')
@@ -89,50 +94,46 @@ async function run() {
   await page.waitForTimeout(200)
   await page.selectOption('[data-testid="prompt-template-select"]', tpl.id)
   await page.waitForTimeout(200)
-  await page.locator(`[data-testid="prompt-cat-${cat.id}"]`).check()
   await page.click('[data-testid="btn-prompt-save"]')
   await page.waitForFunction(() => document.body.innerText.includes('联动Prompt'), null, { timeout: 10000 }).catch(() => {})
-  const prompts = (await (await fetch(`${API}/kb/${kb.id}/extraction-config/prompts`, { headers: h })).json()).data.items
-  const prompt = prompts.find((p) => p.name === '联动Prompt')
-  await page.click(`[data-testid="btn-open-prompt-${prompt.id}"]`)
-  await page.waitForTimeout(900)
+  await page.waitForTimeout(600)
   await page.fill('[data-testid="system-prompt-input"]', '你是材料检测专家')
   await page.fill('[data-testid="schema-user-input"]', '请抽取类别')
   await page.click('[data-testid="field-token-抗拉强度"]')
   await page.waitForTimeout(200)
-  await page.click('[data-testid="btn-prompt-preview"]')
-  await page.waitForTimeout(300)
-  const preview = await page.textContent('[data-testid="prompt-preview-content"]')
+  await page.locator('button:has-text("测试组装")').last().click()
+  await page.waitForTimeout(400)
+  const preview = await page.textContent('[data-testid="test-user"]')
   await page.click('[data-testid="btn-prompt-editor-save"]')
-  await page.waitForTimeout(1000)
-  results.push({ id: 'S7-02', name: 'Prompt 绑定与占位符/预览', pass: preview.includes('Rm') || preview.includes('抗拉强度') })
+  await page.waitForTimeout(800)
+  await page.locator('button:has-text("返回")').first().click()
+  await page.waitForTimeout(500)
+  results.push({ id: 'S7-02', name: 'Prompt 绑定与占位符/测试组装', pass: preview.includes('Rm') || preview.includes('抗拉强度') })
 
-  // 3. 规则组：绑定同一模板 + 添加脚本规则项
+  // 3. 规则组：绑定同一模板 + 弹窗添加脚本规则项
   await page.locator('button:has-text("后处理与校验规则")').first().click()
   await page.waitForTimeout(400)
   await page.click('[data-testid="btn-new-rule-group"]')
   await page.waitForTimeout(300)
   await page.selectOption('[data-testid="rule-template-select"]', tpl.id)
   await page.click('[data-testid="btn-rule-save"]')
-  await page.waitForFunction(() => document.body.innerText.includes('材料检测模板'), null, { timeout: 10000 }).catch(() => {})
-  await page.locator('[role="button"]', { hasText: '材料检测模板' }).first().click()
-  await page.waitForTimeout(600)
-  await page.click(`[data-testid="btn-edit-rules-${cat.id}"]`)
+  await page.waitForFunction(() => document.body.innerText.includes('1 类别'), null, { timeout: 10000 }).catch(() => {})
+  const groups = (await (await fetch(`${API}/kb/${kb.id}/extraction-config/rule-groups`, { headers: h })).json()).data.items
+  await page.locator(`[data-testid="rule-group-${groups[0].id}"]`).click()
+  await page.waitForTimeout(800)
+  await page.locator('button[title="添加规则"]').first().click()
   await page.waitForTimeout(300)
-  await page.fill('[data-testid="rule-script-0"]', 'clean_records')
-  await page.click('[data-testid="btn-rule-items-save"]')
-  await page.waitForFunction(() => document.body.innerText.includes('clean_records'), null, { timeout: 10000 }).catch(() => {})
+  await page.selectOption('[data-testid="add-rule-stage"]', 'post')
+  await page.selectOption('[data-testid="add-rule-script"]', { label: 'clean_records' })
+  await page.click('[data-testid="btn-add-rule"]')
+  await page.waitForTimeout(900)
+  await page.locator(`[data-testid="rule-cat-${cat.id}"]`).click()
+  await page.waitForTimeout(300)
   results.push({ id: 'S7-03', name: '规则组绑定模板并添加脚本规则项', pass: (await page.textContent('body')).includes('clean_records') })
 
-  // 4. 脚本：新建并调试读取术语集（与规则项同名脚本）
+  // 4. 脚本：调试读取术语集（与规则项同名脚本联动闭环）
   await page.locator('button:has-text("脚本管理")').first().click()
   await page.waitForTimeout(400)
-  await page.click('[data-testid="btn-new-script"]')
-  await page.waitForTimeout(200)
-  await page.fill('[data-testid="script-name-input"]', 'clean_records')
-  await page.fill('[data-testid="script-code-input"]', 'async def run(args):\n    rows = await kb_tools.get_term_records("材料库", "standard_name")\n    return {"rows": rows}\n')
-  await page.click('[data-testid="btn-save-script"]')
-  await page.waitForFunction(() => document.body.innerText.includes('clean_records'), null, { timeout: 10000 }).catch(() => {})
   await page.locator('[data-testid="script-item-clean_records"]').click()
   await page.waitForTimeout(300)
   await page.fill('[data-testid="debug-args-input"]', '{}')

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field, field_validator
 
 from app.models.extraction import (
@@ -177,9 +179,9 @@ class RuleGroupCreate(BaseModel):
 
 class RuleGroupItemSave(BaseModel):
     id: str | None = None
-    script_name: str = Field(min_length=1, max_length=128)
-    params: dict = Field(default_factory=dict)
-    enabled: bool = True
+    script_id: str = Field(min_length=1, max_length=64)
+    stage: Literal["post", "validation"] = "post"
+    category_name: str = Field(default="", max_length=128)
     sort_order: int = 0
 
 

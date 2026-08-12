@@ -83,3 +83,17 @@ async def test_rule_group_template_not_found(client, super_token):
     r = await client.post(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups", headers=h,
                           json={"schema_template_id": str(uuid.uuid4())})
     assert r.status_code == 400
+
+
+async def test_rule_item_script_not_found(client, super_token):
+    """L4M34-S2-08：规则项引用不存在的脚本返回 400。"""
+    kb_id = await _kb(client, super_token, "S10规则缺脚本")
+    h = {H: f"Bearer {super_token}"}
+    tpl = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates", headers=h,
+                             json={"name": "T"})).json()["data"]
+    g = (await client.post(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups", headers=h,
+                           json={"schema_template_id": tpl["id"]})).json()["data"]
+    r = await client.put(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups/{g['id']}/items", headers=h,
+                         json={"category_id": None, "items": [{"script_id": str(uuid.uuid4()), "stage": "post"}]})
+    assert r.status_code == 400
+    assert "脚本" in r.json()["message"]

@@ -13,7 +13,6 @@ async def test_config_completeness():
     from app.core.config import settings
 
     for key in (
-        "PARSEKIT_LAYOUT_ENGINE",
         "PARSEKIT_LAYOUT_MODEL_DIR",
         "PARSEKIT_DPI",
         "PARSEKIT_HEADER_FOOTER_MODE",
@@ -59,7 +58,7 @@ async def test_module_inventory():
         "parsekit/__init__.py",
         "parsekit/render.py",
         "parsekit/header_footer.py",
-        "parsekit/layout.py",
+        "parsekit/layout_ppdoc.py",
         "parsekit/reading_order.py",
         "parsekit/assemble.py",
         "parsekit/rebuild.py",

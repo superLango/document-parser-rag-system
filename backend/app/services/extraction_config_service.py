@@ -632,15 +632,26 @@ async def get_rule_group(db, kb_id, group_id) -> dict:
             )
         )
     ).scalars().all()
+    script_map: dict[str, KbScript] = {}
+    if items:
+        script_ids = {it.script_id for it in items if it.script_id}
+        if script_ids:
+            scripts = (
+                await db.execute(select(KbScript).where(KbScript.id.in_(list(script_ids))))
+            ).scalars().all()
+            script_map = {str(x.id): x for x in scripts}
     by_cat: dict[str, list[dict]] = {}
     for it in items:
         key = str(it.category_id) if it.category_id else ""
+        sc = script_map.get(str(it.script_id)) if it.script_id else None
         by_cat.setdefault(key, []).append({
             "id": str(it.id),
             "category_id": str(it.category_id) if it.category_id else None,
-            "script_name": it.script_name,
-            "params": it.params or {},
-            "enabled": it.enabled,
+            "category_name": it.category_name or "",
+            "script_id": str(it.script_id) if it.script_id else None,
+            "script_name": sc.name if sc else "",
+            "script_description": sc.description if sc else "",
+            "stage": it.stage,
             "sort_order": it.sort_order,
         })
     categories = [
@@ -681,11 +692,21 @@ async def save_rule_group_items(db, kb_id, group_id, data: dict) -> dict:
         stmt = stmt.where(RuleGroupItem.category_id == category_id)
     await db.execute(stmt)
     for idx, item in enumerate(data.get("items") or []):
+        script_id = uuid.UUID(str(item["script_id"])) if item.get("script_id") else None
+        if script_id is None:
+            raise BusinessException(code=ErrorCode.VALIDATION_ERROR, message="规则项必须选择脚本")
+        exists = (
+            await db.execute(select(KbScript.id).where(KbScript.id == script_id, KbScript.kb_id == kb_id))
+        ).scalar_one_or_none()
+        if exists is None:
+            raise BusinessException(code=ErrorCode.VALIDATION_ERROR, message="所选脚本不属于当前知识库")
         db.add(RuleGroupItem(
             kb_id=kb_id, group_id=g.id, category_id=category_id,
-            script_name=(item.get("script_name") or "").strip()[:128],
-            params=item.get("params") or {},
-            enabled=bool(item.get("enabled", True)),
+            category_name=(item.get("category_name") or "")[:128],
+            script_id=script_id,
+            stage=item.get("stage", "post"),
+            params={},
+            enabled=True,
             sort_order=int(item.get("sort_order") or idx),
         ))
     g.updated_at = _now()
@@ -702,6 +723,47 @@ async def delete_rule_group(db, kb_id, group_id) -> None:
 # ============================================================
 # 脚本
 # ============================================================
+_TOOL_CATALOG = [
+    {
+        "name": "get_term_records",
+        "desc": "按术语集名称与字段读取术语集记录（只读，active 词条）",
+        "params": [
+            {"name": "name", "type": "string", "desc": "术语集名称"},
+            {"name": "field", "type": "string", "desc": "字段名（如 term_name/standard_name/extras 字段）"},
+        ],
+        "returns": "list[str]",
+        "usage": 'rows = await kb_tools.get_term_records("材料库", "term_name")',
+    },
+    {
+        "name": "embed",
+        "desc": "文本嵌入（返回向量，抽取阶段接入真实服务）",
+        "params": [{"name": "text", "type": "string", "desc": "待嵌入文本"}],
+        "returns": "dict {text, vector}",
+        "usage": 'vec = await kb_tools.embed("抗拉强度")',
+    },
+    {
+        "name": "semantic_search",
+        "desc": "语义检索（抽取阶段接入真实检索服务）",
+        "params": [
+            {"name": "query", "type": "string", "desc": "查询词"},
+            {"name": "top_k", "type": "int", "desc": "返回条数（默认 5）"},
+        ],
+        "returns": "list",
+        "usage": 'hits = await kb_tools.semantic_search("抗拉强度", top_k=5)',
+    },
+    {
+        "name": "match_record",
+        "desc": "记录匹配（抽取阶段接入真实匹配）",
+        "params": [
+            {"name": "query", "type": "string", "desc": "查询词"},
+            {"name": "rows", "type": "list", "desc": "候选记录"},
+            {"name": "fields", "type": "list", "desc": "参与匹配的字段"},
+        ],
+        "returns": "dict",
+        "usage": 'hit = await kb_tools.match_record("抗拉强度", rows, ["term_name"])',
+    },
+]
+
 SCRIPT_IO_REGISTRY = {
     "post": {
         "input": [
@@ -713,12 +775,7 @@ SCRIPT_IO_REGISTRY = {
             {"name": "records", "type": "list", "description": "处理后的记录"},
             {"name": "rejected", "type": "list", "description": "剔除的记录（可选）"},
         ],
-        "tools": [
-            "kb_tools.get_term_records(术语集名称, 字段名)",
-            "kb_tools.embed(text)",
-            "kb_tools.semantic_search(query, top_k)",
-            "kb_tools.match_record(query, rows, fields)",
-        ],
+        "tools": _TOOL_CATALOG,
     },
     "validation": {
         "input": [
@@ -730,12 +787,7 @@ SCRIPT_IO_REGISTRY = {
             {"name": "records", "type": "list", "description": "校验通过的记录"},
             {"name": "rejected", "type": "list", "description": "校验失败记录"},
         ],
-        "tools": [
-            "kb_tools.get_term_records(术语集名称, 字段名)",
-            "kb_tools.embed(text)",
-            "kb_tools.semantic_search(query, top_k)",
-            "kb_tools.match_record(query, rows, fields)",
-        ],
+        "tools": _TOOL_CATALOG,
     },
 }
 

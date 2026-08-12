@@ -6,13 +6,12 @@
 
 import uuid
 
-from sqlalchemy import select, text
-
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
 from app.models.document import TaskOutbox
 from app.services import document_service
+from sqlalchemy import select, text
 
 logger = get_logger(__name__)
 
@@ -31,7 +30,7 @@ async def execute_sync_task(document_id: str, kb_id: str) -> dict:
             outbox = (
                 await db.execute(
                     select(TaskOutbox)
-                    .where(TaskOutbox.status == "pending")
+                    .where(TaskOutbox.status.in_(("pending", "claimed")))
                     .where(TaskOutbox.payload["document_id"].astext == document_id)
                     .order_by(TaskOutbox.created_at.desc())
                     .limit(1)
