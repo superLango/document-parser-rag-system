@@ -22,6 +22,7 @@ import KbTasksPage from '@/views/kb/KbTasksPage'
 import KbDocumentViewerPage from '@/views/kb/KbDocumentViewerPage'
 import KbPlaceholderPage from '@/views/kb/KbPlaceholderPage'
 import KbGlossaryPage from '@/views/kb/KbGlossaryPage'
+import KbExtractionConfigPage from '@/views/kb/KbExtractionConfigPage'
 import KbGlossaryEditorPage from '@/views/kb/KbGlossaryEditorPage'
 import KbVectorSearchPage from '@/views/kb/KbVectorSearchPage'
 import WorkspacesPage from '@/views/WorkspacesPage'
@@ -140,7 +141,7 @@ export const router = createBrowserRouter([
       { path: 'documents', element: <KbDocumentsPage /> },
       { path: 'vector-search', element: <KbVectorSearchPage /> },
       { path: 'extraction', element: <KbPlaceholderPage title="结构化抽取" description="Schema 驱动的结构化抽取（迁移阶段开放）" /> },
-      { path: 'extraction-config', element: <KbPlaceholderPage title="抽取配置" description="Schema/Prompt 模板管理（迁移阶段开放）" /> },
+      { path: 'extraction-config', element: <KbExtractionConfigPage /> },
       { path: 'glossary', element: <KbGlossaryPage /> },
       { path: 'glossary/:baseId', element: <KbGlossaryEditorPage /> },
       { path: 'tasks', element: <KbTasksPage /> },
