@@ -49,12 +49,9 @@ DEFAULT_GLOBAL_CONFIG: dict = {
         "context_top_k": 20,
         "context_max_tokens": 28000,
         "context": {"chars_per_token": 1.5, "min_keep_chars": 200, "truncate_marker": "\n[...内容截断...]"},
-        "phase2": {"top_k": 5, "per_dim_top_k": 10},
+        "category_recall": {"top_k": 5, "per_dim_top_k": 10},
         "query_embed": {
             "content_max_chars": 2000,
-            "feature_repeat": 2,
-            "embed_max_length": 2048,
-            "type_query": "表格 数据结构 行列",
             "dedupe_similarity_threshold": 0.85,
         },
         "hybrid": {"enabled": True, "rrf_k": 60.0, "dense_weight": 1.0, "keyword_weight": 1.2, "keyword_min_hits": 1},

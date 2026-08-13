@@ -57,13 +57,17 @@ async function run() {
   await page.goto(`${BASE}/kb/${kb.id}/extraction-config`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(1200)
 
-  // 1. 默认进入全局配置页签
-  results.push({ id: 'G-01', name: '默认进入全局配置页签', pass: (await page.textContent('body')).includes('检索召回与上下文') && (await page.textContent('body')).includes('LLM 抽取参数') && (await page.textContent('body')).includes('脚本工具 kb_tool') })
+  // 1. 默认进入全局配置页签，三个卡片默认收起
+  results.push({ id: 'G-01', name: '默认进入全局配置页签且卡片默认收起', pass: (await page.textContent('body')).includes('检索召回与上下文') && (await page.textContent('body')).includes('LLM 抽取参数') && (await page.textContent('body')).includes('脚本工具 kb_tool') && (await page.locator('[data-testid="global-retrieval-top-k"]').count()) === 0 })
 
-  // 2. 三大区块与默认值
+  // 2. 展开卡片后读取默认值
+  await page.locator('button:has-text("检索召回与上下文")').first().click()
+  await page.waitForTimeout(200)
+  await page.locator('button:has-text("脚本工具 kb_tool")').first().click()
+  await page.waitForTimeout(200)
   const topK = await page.inputValue('[data-testid="global-retrieval-top-k"]')
   const timeout = await page.inputValue('[data-testid="global-script-timeout"]')
-  results.push({ id: 'G-02', name: '默认值回显（top_k=10 / script_timeout=10）', pass: topK === '10' && timeout === '10' })
+  results.push({ id: 'G-02', name: '默认值回显（top_k=10 / script_timeout=10）', pass: topK === '10' && timeout === '10' && (await page.textContent('body')).includes('类别召回') && (await page.textContent('body')).includes('Query 编码与精简') })
 
   // 3. LLM 区块展开与引擎切换
   await page.locator('button:has-text("LLM 抽取参数")').first().click()
@@ -79,9 +83,12 @@ async function run() {
   await page.waitForFunction(() => document.body.innerText.includes('全局配置已保存'), null, { timeout: 10000 }).catch(() => {})
   results.push({ id: 'G-04', name: '编辑并保存全局配置', pass: (await page.textContent('body')).includes('全局配置已保存') })
 
-  // 5. 重载持久化
+  // 5. 重载后默认收起，展开后校验持久化
   await page.reload({ waitUntil: 'networkidle' })
   await page.waitForTimeout(1200)
+  await page.locator('button:has-text("检索召回与上下文")').first().click()
+  await page.locator('button:has-text("脚本工具 kb_tool")').first().click()
+  await page.waitForTimeout(300)
   const topK2 = await page.inputValue('[data-testid="global-retrieval-top-k"]')
   const timeout2 = await page.inputValue('[data-testid="global-script-timeout"]')
   results.push({ id: 'G-05', name: '重载后配置持久化', pass: topK2 === '25' && timeout2 === '20' })

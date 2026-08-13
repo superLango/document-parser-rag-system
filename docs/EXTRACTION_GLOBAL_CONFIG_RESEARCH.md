@@ -121,8 +121,8 @@
     "context_top_k": 20,
     "context_max_tokens": 28000,
     "context": { "chars_per_token": 1.5, "min_keep_chars": 200, "truncate_marker": "\n[...内容截断...]" },
-    "phase2": { "top_k": 5, "per_dim_top_k": 10 },
-    "query_embed": { "content_max_chars": 2000, "feature_repeat": 2, "embed_max_length": 2048, "type_query": "表格 数据结构 行列", "dedupe_similarity_threshold": 0.85 },
+    "category_recall": { "top_k": 5, "per_dim_top_k": 10 },
+    "query_embed": { "content_max_chars": 2000, "dedupe_similarity_threshold": 0.85 },
     "hybrid": { "enabled": true, "rrf_k": 60, "dense_weight": 1.0, "keyword_weight": 1.2, "keyword_min_hits": 1 },
     "reranker": { "enabled": false, "model": "", "top_n": 15 }
   },
@@ -175,3 +175,6 @@
 2. 阶段二：检索/BM25/脚本服务改造为“全局配置优先、settings 兜底”，保持向后兼容。
 3. 阶段三：LLM 抽取链路接入后，启用 `llm` 区块与引擎切换；再评估是否需要原项目式“提交前全量显式校验”（默认先宽松，避免阻塞）。
 4. 版本管理：与全局配置同一版本号，保存即 +1，支持快照/回滚（记录项）。
+
+
+> 注：落地实现中已将 `phase2` 命名为 `category_recall`（UI 展示“类别召回”），并移除 `type_query`（当前项目为 dense(title/content)+BM25，无 type 维度）。

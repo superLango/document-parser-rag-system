@@ -239,16 +239,13 @@ class GlobalRetrievalWeights(BaseModel):
     content: float = Field(default=0.8, ge=0)
 
 
-class GlobalPhase2Config(BaseModel):
+class GlobalCategoryRecallConfig(BaseModel):
     top_k: int = Field(default=5, ge=1)
     per_dim_top_k: int = Field(default=10, ge=1)
 
 
 class GlobalQueryEmbedConfig(BaseModel):
     content_max_chars: int = Field(default=2000, ge=1)
-    feature_repeat: int = Field(default=2, ge=0)
-    embed_max_length: int = Field(default=2048, ge=1)
-    type_query: str = Field(default="表格 数据结构 行列", max_length=500)
     dedupe_similarity_threshold: float = Field(default=0.85, ge=0, le=1)
 
 
@@ -274,7 +271,7 @@ class GlobalRetrievalConfig(BaseModel):
     context_top_k: int = Field(default=20, ge=1)
     context_max_tokens: int = Field(default=28000, ge=1)
     context: GlobalContextConfig = Field(default_factory=GlobalContextConfig)
-    phase2: GlobalPhase2Config = Field(default_factory=GlobalPhase2Config)
+    category_recall: GlobalCategoryRecallConfig = Field(default_factory=GlobalCategoryRecallConfig)
     query_embed: GlobalQueryEmbedConfig = Field(default_factory=GlobalQueryEmbedConfig)
     hybrid: GlobalHybridConfig = Field(default_factory=GlobalHybridConfig)
     reranker: GlobalRerankerConfig = Field(default_factory=GlobalRerankerConfig)

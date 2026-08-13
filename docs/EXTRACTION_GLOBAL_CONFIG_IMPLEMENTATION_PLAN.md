@@ -18,7 +18,7 @@
 ### 2.1 retrieval（检索召回与上下文）
 top_k、candidate_mult、weights.title/content、default_confidence_threshold、
 context_top_k、context_max_tokens、context.chars_per_token/min_keep_chars/truncate_marker、
-phase2.top_k/per_dim_top_k、query_embed.content_max_chars/feature_repeat/embed_max_length/type_query/dedupe_similarity_threshold、
+category_recall.top_k/per_dim_top_k、query_embed.content_max_chars/dedupe_similarity_threshold（术语集精简去重阈值；精简开关与条目上限在 Schema 类别 Query 术语集中按类别配置）、
 hybrid.enabled/rrf_k/dense_weight/keyword_weight/keyword_min_hits、
 reranker.enabled/model/top_n（预留）。
 

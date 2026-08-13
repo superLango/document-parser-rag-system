@@ -258,8 +258,8 @@ export interface GlobalRetrievalConfig {
   context_top_k: number
   context_max_tokens: number
   context: { chars_per_token: number; min_keep_chars: number; truncate_marker: string }
-  phase2: { top_k: number; per_dim_top_k: number }
-  query_embed: { content_max_chars: number; feature_repeat: number; embed_max_length: number; type_query: string; dedupe_similarity_threshold: number }
+  category_recall: { top_k: number; per_dim_top_k: number }
+  query_embed: { content_max_chars: number; dedupe_similarity_threshold: number }
   hybrid: { enabled: boolean; rrf_k: number; dense_weight: number; keyword_weight: number; keyword_min_hits: number }
   reranker: { enabled: boolean; model: string; top_n: number }
 }
