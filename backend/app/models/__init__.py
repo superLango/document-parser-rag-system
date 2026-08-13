@@ -4,6 +4,7 @@ from app.models.api_key import ApiKey
 from app.models.audit_log import AuditLog
 from app.models.document import Document, DocumentTask, TaskDeadLetter, TaskOutbox
 from app.models.extraction import (
+    KbExtractionConfig,
     KbScript,
     PromptContent,
     PromptTemplate,

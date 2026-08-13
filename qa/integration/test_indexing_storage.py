@@ -66,13 +66,13 @@ async def test_migration_artifacts_present(db_session):
 
 
 async def test_alembic_version_head(db_session):
-    """L2M24-02：测试库迁移版本为 014_rule_item_script_binding（当前链头）。"""
+    """L2M24-02：测试库迁移版本为 015_global_extraction_config（当前链头）。"""
     ver = (
         await db_session.execute(
             sa_text("select version_num from alembic_version")
         )
     ).scalar()
-    assert ver == "014_rule_item_script_binding"
+    assert ver == "015_global_extraction_config"
 
 
 async def test_orm_write_read_flow(client, super_token, db_session):

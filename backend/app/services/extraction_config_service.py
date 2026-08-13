@@ -19,6 +19,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import BusinessException, ErrorCode
 from app.core.logging import get_logger
 from app.models.extraction import (
+    KbExtractionConfig,
     KbScript,
     PromptContent,
     PromptTemplate,
@@ -35,6 +36,114 @@ logger = get_logger(__name__)
 SCRIPT_TIMEOUT = 10  # 脚本调试超时（秒）
 SCRIPT_MAX_OUTPUT = 1024 * 1024  # 输出上限 1MB
 SCRIPT_MAX_TERM_ROWS = 1000  # 注入术语集每库最大词条数
+
+# ============================================================
+# 全局配置（结构化抽取：retrieval / llm / kb_tool）
+# ============================================================
+DEFAULT_GLOBAL_CONFIG: dict = {
+    "retrieval": {
+        "top_k": 10,
+        "candidate_mult": 2,
+        "weights": {"title": 0.2, "content": 0.8},
+        "default_confidence_threshold": 0.35,
+        "context_top_k": 20,
+        "context_max_tokens": 28000,
+        "context": {"chars_per_token": 1.5, "min_keep_chars": 200, "truncate_marker": "\n[...内容截断...]"},
+        "phase2": {"top_k": 5, "per_dim_top_k": 10},
+        "query_embed": {
+            "content_max_chars": 2000,
+            "feature_repeat": 2,
+            "embed_max_length": 2048,
+            "type_query": "表格 数据结构 行列",
+            "dedupe_similarity_threshold": 0.85,
+        },
+        "hybrid": {"enabled": True, "rrf_k": 60.0, "dense_weight": 1.0, "keyword_weight": 1.2, "keyword_min_hits": 1},
+        "reranker": {"enabled": False, "model": "", "top_n": 15},
+    },
+    "llm": {
+        "engine": "BaseExtract",
+        "engines": {
+            "BaseExtract": {
+                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 32768,
+                "timeout": 300, "enable_thinking": False,
+                "concurrency": {"max_concurrency": 24, "cross_category": 24, "within_category": 1},
+                "batch": {"single_threshold": 8000, "batch_chars": 6000, "overlap": 500, "context_truncate": 32000},
+            },
+            "LangExtract": {
+                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 32768,
+                "timeout": 300, "enable_thinking": False,
+                "format_type": "JSON", "fence_output": False, "max_examples": 3, "passes": 2,
+                "context_window_chars": 28000, "max_char_buffer": 40000,
+                "concurrency": {"max_concurrency": 24, "cross_category": 8, "within_category": 3},
+            },
+        },
+    },
+    "kb_tool": {
+        "embed_batch_size": 16,
+        "search_concurrency": 10,
+        "semantic_top_k": 5,
+        "match_top_k": 1,
+        "match_threshold": 0.9,
+        "script_timeout": SCRIPT_TIMEOUT,
+        "script_max_output_bytes": SCRIPT_MAX_OUTPUT,
+        "script_max_term_rows": SCRIPT_MAX_TERM_ROWS,
+    },
+}
+
+
+def _deep_merge(base: dict, override: dict) -> dict:
+    """递归合并：override 显式覆盖 base；返回新 dict。"""
+    out = dict(base)
+    for key, value in (override or {}).items():
+        if isinstance(value, dict) and isinstance(out.get(key), dict):
+            out[key] = _deep_merge(out[key], value)
+        else:
+            out[key] = value
+    return out
+
+
+def _default_global_config() -> dict:
+    import copy
+
+    return copy.deepcopy(DEFAULT_GLOBAL_CONFIG)
+
+
+async def get_global_config(db, kb_id) -> dict:
+    """读取 KB 全局配置：默认值 + 用户覆盖 deep merge（无记录时返回默认）。"""
+    row = (
+        await db.execute(
+            select(KbExtractionConfig).where(KbExtractionConfig.kb_id == kb_id)
+        )
+    ).scalar_one_or_none()
+    if row is None or not row.content:
+        return {
+            "enabled": True,
+            "content": _default_global_config(),
+            "version": 1,
+        }
+    merged = _deep_merge(_default_global_config(), row.content)
+    return {"enabled": row.enabled, "content": merged, "version": row.version}
+
+
+async def save_global_config(db, kb_id, data: dict) -> dict:
+    """保存 KB 全局配置：存储“默认+覆盖”合并后的完整结构，version 自增。"""
+    row = (
+        await db.execute(
+            select(KbExtractionConfig).where(KbExtractionConfig.kb_id == kb_id)
+        )
+    ).scalar_one_or_none()
+    merged = _deep_merge(_default_global_config(), data.get("content") or {})
+    if row is None:
+        row = KbExtractionConfig(kb_id=kb_id, enabled=bool(data.get("enabled", True)), content=merged, version=2)
+        db.add(row)
+    else:
+        row.enabled = bool(data.get("enabled", True))
+        row.content = merged
+        row.version = (row.version or 1) + 1
+        row.updated_at = _now()
+    await db.commit()
+    await db.refresh(row)
+    return {"enabled": row.enabled, "content": row.content, "version": row.version}
 
 
 def _now() -> datetime:
@@ -923,8 +1032,9 @@ async def delete_script(db, kb_id, script_id) -> None:
     await db.commit()
 
 
-async def _load_term_data(db, kb_id) -> dict:
+async def _load_term_data(db, kb_id, max_rows: int | None = None) -> dict:
     """按术语集名称构建 {名称: {字段: [值]}} 只读数据（active 词条，上限保护）。"""
+    limit = max_rows or SCRIPT_MAX_TERM_ROWS
     bases = (
         await db.execute(select(TermBase).where(TermBase.kb_id == kb_id).order_by(TermBase.created_at))
     ).scalars().all()
@@ -936,7 +1046,7 @@ async def _load_term_data(db, kb_id) -> dict:
                     Term.kb_id == kb_id,
                     Term.term_base_id == b.id,
                     Term.status == TERM_STATUS_ACTIVE,
-                ).limit(SCRIPT_MAX_TERM_ROWS)
+                ).limit(limit)
             )
         ).scalars().all()
         bucket: dict[str, list[str]] = {}
@@ -1005,20 +1115,26 @@ async def run_script(db, kb_id, data: dict) -> dict:
         raise BusinessException(code=ErrorCode.VALIDATION_ERROR, message="脚本代码不能为空")
     if "def run(args):" not in code:
         raise BusinessException(code=ErrorCode.VALIDATION_ERROR, message="脚本需定义 def run(args): 并返回 dict")
-    term_data = await _load_term_data(db, kb_id)
+    # 全局配置优先（kb_tool），缺省回退常量
+    gcfg = await get_global_config(db, kb_id)
+    kb_tool = gcfg["content"].get("kb_tool") or {}
+    timeout = int(kb_tool.get("script_timeout") or SCRIPT_TIMEOUT)
+    max_output = int(kb_tool.get("script_max_output_bytes") or SCRIPT_MAX_OUTPUT)
+    max_term_rows = int(kb_tool.get("script_max_term_rows") or SCRIPT_MAX_TERM_ROWS)
+    term_data = await _load_term_data(db, kb_id, max_rows=max_term_rows)
     payload = _RUN_TEMPLATE.format(term_data=json.dumps(term_data, ensure_ascii=False), code=code)
     try:
         proc = await asyncio.to_thread(
             subprocess.run,
             [sys.executable, "-I", "-c", payload],
             input=json.dumps(data.get("args") or {}, ensure_ascii=False),
-            capture_output=True, text=True, timeout=SCRIPT_TIMEOUT, check=False,
+            capture_output=True, text=True, timeout=timeout, check=False,
         )
     except subprocess.TimeoutExpired:
         logger.warning("脚本调试超时", kb_id=str(kb_id))
-        return {"ok": False, "error": f"脚本执行超时（{SCRIPT_TIMEOUT}s）"}
-    stdout = (proc.stdout or "")[:SCRIPT_MAX_OUTPUT]
-    stderr = (proc.stderr or "")[:SCRIPT_MAX_OUTPUT]
+        return {"ok": False, "error": f"脚本执行超时（{timeout}s）"}
+    stdout = (proc.stdout or "")[:max_output]
+    stderr = (proc.stderr or "")[:max_output]
     if proc.returncode != 0:
         return {"ok": False, "error": stderr.strip() or "脚本执行失败"}
     try:

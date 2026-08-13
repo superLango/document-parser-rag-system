@@ -254,3 +254,26 @@ class KbScript(Base):
     )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
     updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), onupdate=utcnow, nullable=True)
+
+
+class KbExtractionConfig(Base):
+    """KB 级结构化抽取全局配置（retrieval / llm / kb_tool）。
+
+    每 KB 一行；content 保存“默认值 + 用户覆盖”合并后的完整结构，
+    version 每次保存自增（供版本管理记录项使用）。
+    """
+
+    __tablename__ = "kb_extraction_config"
+    __table_args__ = (
+        Index("uq_kb_extraction_config_kb", "kb_id", unique=True),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    kb_id: Mapped[uuid.UUID] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    content: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), onupdate=utcnow, nullable=True)

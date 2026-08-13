@@ -63,9 +63,6 @@ export const extractionConfigApi = {
   getSchemaTemplate(kbId: string, templateId: string): Promise<SchemaTemplate> {
     return http.get(`/kb/${kbId}/schema-templates/${templateId}`)
   },
-  updateSchemaTemplate(kbId: string, templateId: string, data: Partial<{ name: string; description: string; is_active: boolean }>): Promise<SchemaTemplate> {
-    return http.put(`/kb/${kbId}/schema-templates/${templateId}`, data)
-  },
   deleteSchemaTemplate(kbId: string, templateId: string): Promise<unknown> {
     return http.delete(`/kb/${kbId}/schema-templates/${templateId}`)
   },
@@ -120,9 +117,6 @@ export const promptApi = {
   },
   create(kbId: string, data: Record<string, unknown>): Promise<PromptTemplate> {
     return http.post(`/kb/${kbId}/extraction-config/prompts`, data)
-  },
-  update(kbId: string, promptId: string, data: Partial<{ name: string; description: string; is_active: boolean }>): Promise<PromptTemplate> {
-    return http.put(`/kb/${kbId}/extraction-config/prompts/${promptId}`, data)
   },
   save(
     kbId: string,
@@ -252,5 +246,74 @@ export const scriptApi = {
   },
   run(kbId: string, data: { script_id?: string; code?: string; args?: Record<string, unknown> }): Promise<ScriptRunResult> {
     return http.post(`/kb/${kbId}/extraction-config/scripts/run`, data)
+  },
+}
+
+
+export interface GlobalRetrievalConfig {
+  top_k: number
+  candidate_mult: number
+  weights: { title: number; content: number }
+  default_confidence_threshold: number
+  context_top_k: number
+  context_max_tokens: number
+  context: { chars_per_token: number; min_keep_chars: number; truncate_marker: string }
+  phase2: { top_k: number; per_dim_top_k: number }
+  query_embed: { content_max_chars: number; feature_repeat: number; embed_max_length: number; type_query: string; dedupe_similarity_threshold: number }
+  hybrid: { enabled: boolean; rrf_k: number; dense_weight: number; keyword_weight: number; keyword_min_hits: number }
+  reranker: { enabled: boolean; model: string; top_n: number }
+}
+
+export interface GlobalEngineConfig {
+  temperature: number
+  top_p: number
+  top_k: number
+  max_tokens: number
+  timeout: number
+  enable_thinking: boolean
+  concurrency: { max_concurrency: number; cross_category: number; within_category: number }
+  batch: { single_threshold: number; batch_chars: number; overlap: number; context_truncate: number }
+  format_type?: 'JSON' | 'YAML'
+  fence_output?: boolean
+  max_examples?: number
+  passes?: number
+  context_window_chars?: number
+  max_char_buffer?: number
+}
+
+export interface GlobalLLMConfig {
+  engine: 'BaseExtract' | 'LangExtract'
+  engines: { BaseExtract: GlobalEngineConfig; LangExtract: GlobalEngineConfig }
+}
+
+export interface GlobalKbToolConfig {
+  embed_batch_size: number
+  search_concurrency: number
+  semantic_top_k: number
+  match_top_k: number
+  match_threshold: number
+  script_timeout: number
+  script_max_output_bytes: number
+  script_max_term_rows: number
+}
+
+export interface GlobalConfigContent {
+  retrieval: GlobalRetrievalConfig
+  llm: GlobalLLMConfig
+  kb_tool: GlobalKbToolConfig
+}
+
+export interface GlobalConfig {
+  enabled: boolean
+  content: GlobalConfigContent
+  version: number
+}
+
+export const globalConfigApi = {
+  get(kbId: string): Promise<GlobalConfig> {
+    return http.get(`/kb/${kbId}/extraction-config/global`)
+  },
+  save(kbId: string, data: { enabled: boolean; content: GlobalConfigContent }): Promise<GlobalConfig> {
+    return http.put(`/kb/${kbId}/extraction-config/global`, data)
   },
 }

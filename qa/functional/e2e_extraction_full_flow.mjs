@@ -73,6 +73,10 @@ async function run() {
   await page.goto(`${BASE}/kb/${kb.id}/extraction-config`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(1000)
 
+  // 0. 默认页签为全局配置，先切换到 Schema 页签
+  await page.locator('button:has-text("Schema 模板")').first().click()
+  await page.waitForTimeout(400)
+
   // 1. Schema：模板/术语库类别/字段/Query 联动可见
   await page.locator('[data-testid^="tpl-item-"]').first().click()
   await page.waitForTimeout(600)

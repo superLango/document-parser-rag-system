@@ -13,6 +13,7 @@ from app.core.response import success
 from app.middleware.audit_log import audit_action
 from app.models.user import User
 from app.schemas.extraction import (
+    GlobalConfigSave,
     PromptCreate,
     PromptSaveRequest,
     PromptUpdate,
@@ -185,6 +186,29 @@ async def delete_schema_field(
 # ============================================================
 # Prompt 模板
 # ============================================================
+@cfg_router.get("/global")
+async def get_global_config(
+    kb_id: uuid.UUID, request: Request,
+    db: AsyncSession = Depends(get_db), current_user: User = Depends(require_not_pending),
+) -> dict:
+    """获取 KB 结构化抽取全局配置（默认值 + 用户覆盖合并）。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    return success(data=await svc.get_global_config(db, kb_id))
+
+
+@cfg_router.put("/global")
+@audit_action(action="global_config.save", resource_type="global_config")
+async def save_global_config(
+    kb_id: uuid.UUID, payload: GlobalConfigSave, request: Request,
+    db: AsyncSession = Depends(get_db), current_user: User = Depends(require_not_pending),
+) -> dict:
+    """保存 KB 结构化抽取全局配置（editor+，版本自增）。"""
+    kb = await _kb_access(kb_id, db=db, current_user=current_user)
+    _require_editor(kb)
+    data = await svc.save_global_config(db, kb_id, payload.model_dump())
+    return success(data=data, message="全局配置已保存")
+
+
 @cfg_router.get("/prompts")
 async def list_prompts(
     kb_id: uuid.UUID, request: Request,

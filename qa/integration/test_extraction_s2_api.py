@@ -167,9 +167,9 @@ async def test_rule_group_term_base_category_name(client, super_token):
                             json={"name": "回退材料库", "source_type": "manual"})).json()["data"]
     tpl = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates", headers=h,
                              json={"name": "模板T"})).json()["data"]
-    cat = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates/{tpl['id']}/categories", headers=h,
-                             json={"name": "", "name_source": "term_base",
-                                   "name_term_base_id": tb["id"], "name_term_field": "term_name"})).json()["data"]
+    await client.post(f"/api/v1/kb/{kb_id}/schema-templates/{tpl['id']}/categories", headers=h,
+                       json={"name": "", "name_source": "term_base",
+                             "name_term_base_id": tb["id"], "name_term_field": "term_name"})
     gid = (await client.post(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups", headers=h,
                              json={"schema_template_id": tpl["id"]})).json()["data"]["id"]
     detail = (await client.get(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups/{gid}", headers=h)).json()["data"]

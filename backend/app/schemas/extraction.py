@@ -178,7 +178,6 @@ class RuleGroupCreate(BaseModel):
 
 
 class RuleGroupItemSave(BaseModel):
-    id: str | None = None
     script_id: str = Field(min_length=1, max_length=64)
     stage: Literal["post", "validation"] = "post"
     category_name: str = Field(default="", max_length=128)
@@ -224,3 +223,118 @@ class ScriptRunRequest(BaseModel):
     script_id: str | None = None
     code: str | None = Field(default=None, max_length=100000)
     args: dict = Field(default_factory=dict)
+
+
+# ============================================================
+# 全局配置（结构化抽取：retrieval / llm / kb_tool）
+# ============================================================
+class GlobalContextConfig(BaseModel):
+    chars_per_token: float = Field(default=1.5, gt=0)
+    min_keep_chars: int = Field(default=200, ge=0)
+    truncate_marker: str = Field(default="\n[...内容截断...]", max_length=200)
+
+
+class GlobalRetrievalWeights(BaseModel):
+    title: float = Field(default=0.2, ge=0)
+    content: float = Field(default=0.8, ge=0)
+
+
+class GlobalPhase2Config(BaseModel):
+    top_k: int = Field(default=5, ge=1)
+    per_dim_top_k: int = Field(default=10, ge=1)
+
+
+class GlobalQueryEmbedConfig(BaseModel):
+    content_max_chars: int = Field(default=2000, ge=1)
+    feature_repeat: int = Field(default=2, ge=0)
+    embed_max_length: int = Field(default=2048, ge=1)
+    type_query: str = Field(default="表格 数据结构 行列", max_length=500)
+    dedupe_similarity_threshold: float = Field(default=0.85, ge=0, le=1)
+
+
+class GlobalHybridConfig(BaseModel):
+    enabled: bool = True
+    rrf_k: float = Field(default=60.0, gt=0)
+    dense_weight: float = Field(default=1.0, ge=0)
+    keyword_weight: float = Field(default=1.2, ge=0)
+    keyword_min_hits: int = Field(default=1, ge=1)
+
+
+class GlobalRerankerConfig(BaseModel):
+    enabled: bool = False
+    model: str = Field(default="", max_length=500)
+    top_n: int = Field(default=15, ge=1)
+
+
+class GlobalRetrievalConfig(BaseModel):
+    top_k: int = Field(default=10, ge=1)
+    candidate_mult: int = Field(default=2, ge=1)
+    weights: GlobalRetrievalWeights = Field(default_factory=GlobalRetrievalWeights)
+    default_confidence_threshold: float = Field(default=0.35, ge=0, le=1)
+    context_top_k: int = Field(default=20, ge=1)
+    context_max_tokens: int = Field(default=28000, ge=1)
+    context: GlobalContextConfig = Field(default_factory=GlobalContextConfig)
+    phase2: GlobalPhase2Config = Field(default_factory=GlobalPhase2Config)
+    query_embed: GlobalQueryEmbedConfig = Field(default_factory=GlobalQueryEmbedConfig)
+    hybrid: GlobalHybridConfig = Field(default_factory=GlobalHybridConfig)
+    reranker: GlobalRerankerConfig = Field(default_factory=GlobalRerankerConfig)
+
+
+class GlobalConcurrencyConfig(BaseModel):
+    max_concurrency: int = Field(default=24, ge=1)
+    cross_category: int = Field(default=24, ge=1)
+    within_category: int = Field(default=1, ge=1)
+
+
+class GlobalBatchConfig(BaseModel):
+    single_threshold: int = Field(default=8000, ge=1)
+    batch_chars: int = Field(default=6000, ge=1)
+    overlap: int = Field(default=500, ge=0)
+    context_truncate: int = Field(default=32000, ge=1)
+
+
+class GlobalBaseExtractConfig(BaseModel):
+    temperature: float = Field(default=0.0, ge=0, le=2)
+    top_p: float = Field(default=0.1, ge=0, le=1)
+    top_k: int = Field(default=20, ge=1)
+    max_tokens: int = Field(default=32768, ge=1)
+    timeout: int = Field(default=300, ge=1)
+    enable_thinking: bool = False
+    concurrency: GlobalConcurrencyConfig = Field(default_factory=GlobalConcurrencyConfig)
+    batch: GlobalBatchConfig = Field(default_factory=GlobalBatchConfig)
+
+
+class GlobalLangExtractConfig(GlobalBaseExtractConfig):
+    format_type: Literal["JSON", "YAML"] = "JSON"
+    fence_output: bool = False
+    max_examples: int = Field(default=3, ge=0)
+    passes: int = Field(default=2, ge=1)
+    context_window_chars: int = Field(default=28000, ge=1)
+    max_char_buffer: int = Field(default=40000, ge=1)
+
+
+class GlobalLLMConfig(BaseModel):
+    engine: Literal["BaseExtract", "LangExtract"] = "BaseExtract"
+    engines: dict[str, GlobalBaseExtractConfig | GlobalLangExtractConfig] = Field(default_factory=dict)
+
+
+class GlobalKbToolConfig(BaseModel):
+    embed_batch_size: int = Field(default=16, ge=1)
+    search_concurrency: int = Field(default=10, ge=1)
+    semantic_top_k: int = Field(default=5, ge=1)
+    match_top_k: int = Field(default=1, ge=1)
+    match_threshold: float = Field(default=0.9, ge=0, le=1)
+    script_timeout: int = Field(default=10, ge=1)
+    script_max_output_bytes: int = Field(default=1024 * 1024, ge=1024)
+    script_max_term_rows: int = Field(default=1000, ge=1)
+
+
+class GlobalConfigContent(BaseModel):
+    retrieval: GlobalRetrievalConfig = Field(default_factory=GlobalRetrievalConfig)
+    llm: GlobalLLMConfig = Field(default_factory=GlobalLLMConfig)
+    kb_tool: GlobalKbToolConfig = Field(default_factory=GlobalKbToolConfig)
+
+
+class GlobalConfigSave(BaseModel):
+    enabled: bool = True
+    content: GlobalConfigContent = Field(default_factory=GlobalConfigContent)

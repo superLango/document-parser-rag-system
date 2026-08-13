@@ -33,6 +33,7 @@ import { Tabs } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores/auth'
 import { useKbDetail } from './KbDetailLayout'
+import KbGlobalConfig from './KbGlobalConfig'
 import KbRuleGroups from './KbRuleGroups'
 import KbScriptManager from './KbScriptManager'
 
@@ -65,7 +66,7 @@ export default function KbExtractionConfigPage() {
   const canManage = user?.is_superuser || kb.my_role === 'owner' || kb.my_role === 'admin' || kb.my_role === 'editor'
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const [tab, setTabState] = useState(searchParams.get('tab') || 'schema')
+  const [tab, setTabState] = useState(searchParams.get('tab') || 'global')
 
   function handleTabChange(next: string) {
     setTabState(next)
@@ -468,12 +469,17 @@ export default function KbExtractionConfigPage() {
         value={tab}
         onValueChange={handleTabChange}
         items={[
+          { value: 'global', label: <><Settings2 className="h-4 w-4" /> 全局配置</> },
           { value: 'schema', label: <><LayoutTemplate className="h-4 w-4" /> Schema 模板</> },
           { value: 'prompt', label: <><FileText className="h-4 w-4" /> Prompt 模板</> },
           { value: 'rules', label: <><ListChecks className="h-4 w-4" /> 后处理与校验规则</> },
           { value: 'scripts', label: <><Settings2 className="h-4 w-4" /> 脚本管理</> },
         ]}
       />
+
+      {tab === 'global' && (
+        <KbGlobalConfig kbId={kb.id} canManage={canManage} />
+      )}
 
       {tab === 'prompt' && (
         <Card>
