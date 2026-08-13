@@ -6,12 +6,15 @@ import pytest
 from app.core.exceptions import BusinessException
 from app.models.document import Document, DocumentTask, TaskDeadLetter, TaskOutbox
 from app.models.extraction import ExtractionResult
+from app.models.indexing import DocumentChunk
 from app.services.extraction import extraction_task_service, result_store
 from app.tasks.sync_executor import execute_sync_task
 from sqlalchemy import select
 from sqlalchemy import text as sa_text
 
 from qa.fixtures.indexing_helpers import create_document_row, create_kb_via_api
+
+H = "Authorization"
 
 
 async def _kb_and_doc(client, super_token, db_session, name, indexed=True):
@@ -61,8 +64,27 @@ async def test_duplicate_start_conflict(client, super_token, db_session):
 
 
 async def test_sync_failure_path(client, super_token, db_session):
-    """L2E1-04：同步执行失败状态机（task failed + outbox done + 死信 + result failed）。"""
+    """L2E1-04：同步执行失败状态机（E3 起：缺 LLM 资源配置触发失败）。"""
     kb_id, doc_id = await _kb_and_doc(client, super_token, db_session, "E1失败")
+    h = {H: f"Bearer {super_token}"}
+    # 让流水线走到 LLM 阶段：配置 Schema + Prompt（类别非空）
+    tpl = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates", headers=h, json={"name": "T"})).json()["data"]
+    cat = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates/{tpl['id']}/categories", headers=h, json={"name": "C"})).json()["data"]
+    prompt = (await client.post(f"/api/v1/kb/{kb_id}/extraction-config/prompts", headers=h, json={
+        "name": "P", "scope": "schema", "schema_template_id": tpl["id"], "category_ids": [cat["id"]],
+    })).json()["data"]
+    await client.put(f"/api/v1/kb/{kb_id}/extraction-config/prompts/{prompt['id']}/save", headers=h, json={
+        "system_prompt": "sys", "categories": [{"category_id": cat["id"], "user_prompt": "u"}],
+    })
+    # 插入分块，保证类别召回命中并进入 LLM 阶段
+    db_session.add(DocumentChunk(
+        kb_id=kb_id, document_id=doc_id, chunk_id=f"{doc_id}_p0_0",
+        hierarchy_path="1", title="C", level=1, has_table=False, semantic_label="text",
+        content="室温拉伸抗拉强度 800MPa", content_for_embedding="室温拉伸抗拉强度 800MPa",
+        parent_text="C", tokens=8, title_vector=[0.1] * 1024, content_vector=[0.1] * 1024,
+        bm25_tokens={"抗拉": 1}, source_pages=[1],
+    ))
+    await db_session.commit()
     started = await extraction_task_service.start_document_extraction(db_session, kb_id, doc_id)
     result = await execute_sync_task(str(doc_id), str(kb_id))
     assert result["status"] == "failed"
@@ -92,7 +114,7 @@ async def test_sync_failure_path(client, super_token, db_session):
     doc = await db_session.get(Document, doc_id)
     assert task.status == "failed"
     assert outbox.status == "done"
-    assert dlq and "E3" in dlq[0].error
+    assert dlq and "LLM" in dlq[0].error
     assert res.status == "failed" and res.progress == 100
     assert doc.extraction_status == "failed"
 
