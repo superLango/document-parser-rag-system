@@ -4,6 +4,8 @@ from app.models.api_key import ApiKey
 from app.models.audit_log import AuditLog
 from app.models.document import Document, DocumentTask, TaskDeadLetter, TaskOutbox
 from app.models.extraction import (
+    ExtractionHistory,
+    ExtractionResult,
     KbExtractionConfig,
     KbScript,
     PromptContent,
@@ -34,9 +36,12 @@ __all__ = [
     "Document",
     "DocumentChunk",
     "DocumentTask",
+    "ExtractionHistory",
+    "ExtractionResult",
     "Group",
     "GroupMember",
     "KbBm25Stats",
+    "KbExtractionConfig",
     "KbGroupAccess",
     "KbInvitation",
     "KbMember",

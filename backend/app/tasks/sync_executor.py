@@ -61,6 +61,12 @@ async def execute_sync_task(document_id: str, kb_id: str) -> dict:
                 result = await document_service.run_index_task(
                     db, uuid.UUID(document_id), uuid.UUID(kb_id)
                 )
+            elif task_type == "document_extraction":
+                from app.services.extraction import extraction_task_service
+
+                result = await extraction_task_service.run_extraction_task(
+                    db, uuid.UUID(document_id), uuid.UUID(kb_id)
+                )
             else:
                 result = await document_service.run_parse_task(
                     db, uuid.UUID(document_id), uuid.UUID(kb_id)

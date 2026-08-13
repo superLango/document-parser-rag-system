@@ -72,7 +72,7 @@ async def test_alembic_version_head(db_session):
             sa_text("select version_num from alembic_version")
         )
     ).scalar()
-    assert ver == "015_global_extraction_config"
+    assert ver == "016_extraction_result"
 
 
 async def test_orm_write_read_flow(client, super_token, db_session):

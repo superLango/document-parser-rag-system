@@ -43,6 +43,8 @@ class Document(Base):
     index_progress: Mapped[int | None] = mapped_column(Integer, nullable=True)
     index_total: Mapped[int | None] = mapped_column(Integer, nullable=True)
     index_error: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    # ---------- 结构化抽取状态（E1）：null=未抽取 / running / completed / failed ----------
+    extraction_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
     updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), onupdate=utcnow, nullable=True)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -277,3 +277,60 @@ class KbExtractionConfig(Base):
     version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
     updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), onupdate=utcnow, nullable=True)
+
+
+class ExtractionResult(Base):
+    """结构化抽取最新结果（每文档一条）。"""
+
+    __tablename__ = "extraction_results"
+    __table_args__ = (
+        Index("uq_extraction_results_kb_doc", "kb_id", "document_id", unique=True),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    kb_id: Mapped[uuid.UUID] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    document_id: Mapped[uuid.UUID] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("documents.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    schema_template_id: Mapped[uuid.UUID | None] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("schema_templates.id", ondelete="SET NULL"), nullable=True
+    )
+    schema_name: Mapped[str] = mapped_column(String(255), default="", nullable=False)
+    status: Mapped[str] = mapped_column(String(32), default="queued", nullable=False)
+    progress: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    categories: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    summary: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    timing: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    error: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), onupdate=utcnow, nullable=True)
+
+
+class ExtractionHistory(Base):
+    """结构化抽取历史归档（保留最近 50 条）。"""
+
+    __tablename__ = "extraction_history"
+    __table_args__ = (
+        Index("idx_extraction_history_doc", "kb_id", "document_id", "archived_at"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    kb_id: Mapped[uuid.UUID] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("knowledge_bases.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    document_id: Mapped[uuid.UUID] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("documents.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    schema_template_id: Mapped[uuid.UUID | None] = mapped_column(
+        PgUUID(as_uuid=True), ForeignKey("schema_templates.id", ondelete="SET NULL"), nullable=True
+    )
+    schema_name: Mapped[str] = mapped_column(String(255), default="", nullable=False)
+    categories: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    summary: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    timing: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    extracted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    archived_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
