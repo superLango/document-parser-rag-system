@@ -26,6 +26,8 @@ import KbExtractionConfigPage from '@/views/kb/KbExtractionConfigPage'
 import KbPromptEditorPage from '@/views/kb/KbPromptEditorPage'
 import KbGlossaryEditorPage from '@/views/kb/KbGlossaryEditorPage'
 import KbVectorSearchPage from '@/views/kb/KbVectorSearchPage'
+import KbStructuredExtractionPage from '@/views/kb/KbStructuredExtractionPage'
+import KbExtractionDetailPage from '@/views/kb/KbExtractionDetailPage'
 import WorkspacesPage from '@/views/WorkspacesPage'
 import ApiKeysPage from '@/views/ApiKeysPage'
 import InvitationsPage from '@/views/InvitationsPage'
@@ -141,7 +143,8 @@ export const router = createBrowserRouter([
       { index: true, element: <KbOverviewPage /> },
       { path: 'documents', element: <KbDocumentsPage /> },
       { path: 'vector-search', element: <KbVectorSearchPage /> },
-      { path: 'extraction', element: <KbPlaceholderPage title="结构化抽取" description="Schema 驱动的结构化抽取（迁移阶段开放）" /> },
+      { path: 'extraction', element: <KbStructuredExtractionPage /> },
+      { path: 'extraction/:documentId', element: <KbExtractionDetailPage /> },
       { path: 'extraction-config', element: <KbExtractionConfigPage /> },
       { path: 'extraction-config/prompts/:promptId', element: <KbPromptEditorPage /> },
       { path: 'glossary', element: <KbGlossaryPage /> },

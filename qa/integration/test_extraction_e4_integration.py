@@ -21,7 +21,7 @@ async def _setup(client, super_token, db_session, name, indexed=True):
     doc_id = await create_document_row(db_session, kb_id, layout_path="x" if indexed else None)
     if indexed:
         doc = await db_session.get(Document, doc_id)
-        doc.index_status = "completed"
+        doc.index_status = "indexed"
         db_session.add(DocumentChunk(
             kb_id=kb_id, document_id=doc_id, chunk_id=f"{doc_id}_p0_0",
             hierarchy_path="1", title="C", level=1, has_table=False, semantic_label="text",

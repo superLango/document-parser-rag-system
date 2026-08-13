@@ -48,7 +48,7 @@ async def list_extractable_documents(
                 Document.kb_id == kb_id,
                 Document.deleted_at.is_(None),
                 Document.process_status == "completed",
-                Document.index_status == "completed",
+                Document.index_status == "indexed",
             )
             .order_by(Document.updated_at.desc())
         )

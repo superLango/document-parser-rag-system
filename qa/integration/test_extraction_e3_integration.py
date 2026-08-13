@@ -60,7 +60,7 @@ async def _setup_full(client, super_token, db_session, name):
     # 文档 + 分块
     doc_id = await create_document_row(db_session, kb_id, layout_path="x")
     doc = await db_session.get(Document, doc_id)
-    doc.index_status = "completed"
+    doc.index_status = "indexed"
     db_session.add(DocumentChunk(
         kb_id=kb_id, document_id=doc_id, chunk_id=f"{doc_id}_p0_0",
         hierarchy_path="1 范围", title="范围", level=1, has_table=False, semantic_label="text",

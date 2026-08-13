@@ -43,7 +43,7 @@ async def _kb_with_schema(client, super_token, name):
 async def _doc_no_chunk(db_session, kb_id):
     doc_id = await create_document_row(db_session, kb_id, layout_path="x")
     doc = await db_session.get(Document, doc_id)
-    doc.index_status = "completed"
+    doc.index_status = "indexed"
     await db_session.commit()
     await db_session.execute(sa_text("SELECT set_config('app.is_superuser', 'true', true)"))
     return doc_id
@@ -69,7 +69,7 @@ async def test_bad_json_raises(client, super_token, db_session):
     kb_id = uuid.UUID(kb["id"])
     doc_id = await create_document_row(db_session, kb_id, layout_path="x")
     doc = await db_session.get(Document, doc_id)
-    doc.index_status = "completed"
+    doc.index_status = "indexed"
     db_session.add(DocumentChunk(
         kb_id=kb_id, document_id=doc_id, chunk_id=f"{doc_id}_p0_0",
         hierarchy_path="1", title="C", level=1, has_table=False, semantic_label="text",

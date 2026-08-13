@@ -23,7 +23,7 @@ async def _kb_and_doc(client, super_token, db_session, name, indexed=True):
     doc_id = await create_document_row(db_session, kb_id, layout_path="x" if indexed else None)
     if indexed:
         doc = await db_session.get(Document, doc_id)
-        doc.index_status = "completed"
+        doc.index_status = "indexed"
         await db_session.commit()
     return kb_id, doc_id
 

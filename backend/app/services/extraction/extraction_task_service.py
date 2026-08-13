@@ -44,7 +44,7 @@ async def start_document_extraction(db: AsyncSession, kb_id, document_id) -> dic
         {"k": f"extract:{document_id}"},
     )
     doc = await _get_document(db, kb_id, document_id)
-    if doc.process_status != "completed" or doc.index_status != "completed":
+    if doc.process_status != "completed" or doc.index_status != "indexed":
         raise BusinessException(
             code=ErrorCode.VALIDATION_ERROR,
             message="文档未完成解析与索引，无法抽取",
