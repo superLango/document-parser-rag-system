@@ -9,6 +9,14 @@ import type {
   Paginated,
 } from '@/api/types'
 
+export interface LLMResourceConfig {
+  enabled: boolean
+  api_base: string
+  model: string
+  api_key_masked: string
+  timeout: number
+}
+
 export const kbApi = {
   list(params?: {
     page?: number
@@ -37,6 +45,21 @@ export const kbApi = {
     data: { enabled: boolean; regenerate?: boolean },
   ): Promise<KbExternalConfig> {
     return http.put<KbExternalConfig>(`/kb/${kbId}/external`, data)
+  },
+  getLLMResource(kbId: string): Promise<LLMResourceConfig> {
+    return http.get<LLMResourceConfig>(`/kb/${kbId}/resources/llm`)
+  },
+  saveLLMResource(
+    kbId: string,
+    data: { enabled: boolean; api_base: string; model: string; api_key?: string; timeout: number },
+  ): Promise<LLMResourceConfig> {
+    return http.put<LLMResourceConfig>(`/kb/${kbId}/resources/llm`, data)
+  },
+  testLLMResource(
+    kbId: string,
+    data: { enabled: boolean; api_base: string; model: string; api_key?: string; timeout: number },
+  ): Promise<{ ok: boolean; error?: string }> {
+    return http.post<{ ok: boolean; error?: string }>(`/kb/${kbId}/resources/llm/test`, data)
   },
   get(kbId: string): Promise<KbItem> {
     return http.get<KbItem>(`/kb/${kbId}`)
