@@ -136,6 +136,15 @@ GET result / status / history / export
 - 脚本后处理/校验：复用现有受限执行器（子进程 -I、超时/输出上限/术语集注入），按规则组 stage 执行；
 - 结果对象：类别 → records/rejected/missing_fields/summary/timing。
 
+**kb_tools 真实工具层（2026-08-13 落地，对齐原项目 KbScriptTools）**：
+- `get_term_records(name, *fields)`：返回记录 dict 列表（键为传入字段名，支持 column_aliases 双向映射）；
+- `embed(texts)` / `semantic_search(records, query, match_fields, top_k, return_fields)` /
+  `match_record(name, records, match_fields, threshold)`：语义→精确→编辑距离三级匹配；
+- 嵌入走内部端点 `POST /kb/{kb_id}/extraction-config/script-embed`（无状态 HMAC 令牌，TTL 600s；
+  结果进程内缓存，抽取前 warmup 预热模型）；
+- 脚本超时默认由 10s 上调至 60s（首次嵌入需加载模型并编码术语集；KB 全局配置可覆盖）；
+- 并发预载：pipeline 在 gather 前串行加载 KB 术语集与脚本代码，避免共享会话并发查询。
+
 ### 4.5 端点（/kb/{kb_id}/extraction）
 
 | 方法 | 路径 | 权限 | 说明 |
@@ -198,7 +207,7 @@ GET result / status / history / export
 |------|------|------|
 | E1 数据与任务底座 | 016 迁移（extraction_results + documents.extraction_status + history）、任务类型/Outbox、sync 执行器分支 | 迁移/模型/任务状态机测试 ✅ **已完成（2026-08-13，12/12）** |
 | E2 配置解析与 LLM 层 | ExtractionDomainConfig 解析器、LLMClient/OpenAICompatibleClient、**KB 资源与配置 LLM 服务表单**（services.llm_vllm + 连接测试） | 单元测试（解析完整性、LLM 客户端 mock、资源配置读写） ✅ **已完成（2026-08-13，13/13）** |
-| E3 抽取流水线 | CategoryBuilder、上下文组装、Prompt 渲染、LLM 抽取、JSON 解析、脚本后处理/校验 | 集成测试（真实 mock LLM + 术语集 + 脚本） ✅ **已完成（2026-08-13，8/8）** |
+| E3 抽取流水线 | CategoryBuilder、上下文组装、Prompt 渲染、LLM 抽取、JSON 解析、脚本后处理/校验（**真实 kb_tools 工具层**） | 集成测试（真实 mock LLM + 术语集 + 脚本）+ 两份 test_doc 真实文档全链路 ✅ **已完成（2026-08-13）** |
 | E4 端点与任务 | extraction 端点（列表/启动/状态/结果/历史/导出/**删除结果与历史**）+ arq/sync 任务（失败不重试）+ 进度轮询 | API 五层测试 + 并发用例 ✅ **已完成（2026-08-13，10/10）** |
 | E5 前端页面 | 列表页 + 详情页 + 路由 + 轮询进度 + 表格/JSON/历史/导出/删除 + **重新抽取** | E2E 页面闭环（入口→抽取→进度→结果→返回） ✅ **已完成（2026-08-13，6/6）** |
 | E6 整体回归 | M34/M33/抽取全量 + E2E + 覆盖率表 + 文档更新 | 全部通过 ✅ **已完成（2026-08-13）** |

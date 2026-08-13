@@ -29,11 +29,12 @@ from app.models.extraction import (
     SchemaField,
     SchemaTemplate,
 )
-from app.models.glossary import TERM_STATUS_ACTIVE, Term, TermBase
+from app.models.glossary import TermBase
+from app.services.extraction import script_tools
 
 logger = get_logger(__name__)
 
-SCRIPT_TIMEOUT = 10  # 脚本调试超时（秒）
+SCRIPT_TIMEOUT = 60  # 脚本调试超时（秒）：首次嵌入需加载模型并编码术语集
 SCRIPT_MAX_OUTPUT = 1024 * 1024  # 输出上限 1MB
 SCRIPT_MAX_TERM_ROWS = 1000  # 注入术语集每库最大词条数
 
@@ -408,6 +409,13 @@ async def update_schema_category(db, kb_id, template_id, category_id, data: dict
 
 async def delete_schema_category(db, kb_id, template_id, category_id) -> None:
     c = await _get_category(db, kb_id, template_id, category_id)
+    # 先删除该类别对应的 PromptContent 行：若依赖 FK ON DELETE SET NULL，
+    # 会与 schema 模式的 system 行（category_id IS NULL）冲突，违反 uq_prompt_content_simple
+    await db.execute(
+        delete(PromptContent).where(
+            PromptContent.kb_id == kb_id, PromptContent.category_id == category_id
+        )
+    )
     await db.delete(c)
     await db.commit()
 
@@ -880,42 +888,48 @@ async def delete_rule_group(db, kb_id, group_id) -> None:
 # ============================================================
 _TOOL_CATALOG = [
     {
-        "name": "get_term_records",
-        "desc": "按术语集名称与字段读取术语集记录（只读，active 词条）",
-        "params": [
-            {"name": "name", "type": "string", "desc": "术语集名称"},
-            {"name": "field", "type": "string", "desc": "字段名（如 term_name/standard_name/extras 字段）"},
-        ],
-        "returns": "list[str]",
-        "usage": 'rows = await kb_tools.get_term_records("材料库", "term_name")',
-    },
-    {
         "name": "embed",
-        "desc": "文本嵌入（返回向量，抽取阶段接入真实服务）",
-        "params": [{"name": "text", "type": "string", "desc": "待嵌入文本"}],
-        "returns": "dict {text, vector}",
-        "usage": 'vec = await kb_tools.embed("抗拉强度")',
+        "desc": "文本向量化：把文本转成 bge-m3 的 1024 维稠密向量（已归一化），是语义检索的第一步。",
+        "params": [
+            {"name": "texts", "type": "str | list[str]", "desc": "单个文本或文本列表"},
+        ],
+        "returns": "list[list[float]]（每个文本对应一个 1024 维向量，顺序与入参一致）",
+        "usage": 'vecs = await kb_tools.embed("拉伸强度")\n# 或整批：vecs = await kb_tools.embed(["a", "b"])',
     },
     {
         "name": "semantic_search",
-        "desc": "语义检索（抽取阶段接入真实检索服务）",
+        "desc": "语义检索：在传入的记录列表内，用查询词与指定字段做相似度检索，返回最相似的 top_k 条（内部自动向量化）。",
         "params": [
-            {"name": "query", "type": "string", "desc": "查询词"},
-            {"name": "top_k", "type": "int", "desc": "返回条数（默认 5）"},
+            {"name": "records", "type": "list[dict]", "desc": "待检索的记录列表（通常来自 get_term_records）"},
+            {"name": "query", "type": "str", "desc": "查询词"},
+            {"name": "match_fields", "type": "str | list[str]", "desc": "参与匹配的字段名（可单个或多个）"},
+            {"name": "top_k", "type": "int", "desc": "返回结果数，默认 5"},
+            {"name": "return_fields", "type": "list[str] | None", "desc": "仅返回字段（可选），缺省返回全字段"},
         ],
-        "returns": "list",
-        "usage": 'hits = await kb_tools.semantic_search("抗拉强度", top_k=5)',
+        "returns": "list[dict]（按相似度降序，含 score 字段）",
+        "usage": 'top = await kb_tools.semantic_search(rows, "Q235B", ["牌号"], top_k=1)',
     },
     {
         "name": "match_record",
-        "desc": "记录匹配（抽取阶段接入真实匹配）",
+        "desc": "单条匹配：对一条查询词做语义检索，相似度 ≥ 阈值判为命中；失败回退精确/编辑距离匹配。用于项目名、牌号等归一化。",
         "params": [
-            {"name": "query", "type": "string", "desc": "查询词"},
-            {"name": "rows", "type": "list", "desc": "候选记录"},
-            {"name": "fields", "type": "list", "desc": "参与匹配的字段"},
+            {"name": "name", "type": "str", "desc": "待匹配的查询词"},
+            {"name": "records", "type": "list[dict]", "desc": "候选记录列表（通常来自 get_term_records）"},
+            {"name": "match_fields", "type": "str | list[str]", "desc": "参与匹配的字段名"},
+            {"name": "threshold", "type": "float", "desc": "语义命中阈值，默认 0.90"},
         ],
-        "returns": "dict",
-        "usage": 'hit = await kb_tools.match_record("抗拉强度", rows, ["term_name"])',
+        "returns": "{canonical(标准化名), score(置信度), type(匹配类型 vector/exact/edit_distance/unverified), record(命中的原始记录)}",
+        "usage": 'hit = await kb_tools.match_record("Rp0.2", rows, ["项目名称"])\n# if hit["type"] != "unverified": r["项目名称"] = hit["canonical"]',
+    },
+    {
+        "name": "get_term_records",
+        "desc": "取术语集记录：按术语集名称读取当前知识库下该术语集的全部记录，返回对象列表（键为修改后的字段名）。",
+        "params": [
+            {"name": "name", "type": "str", "desc": "术语集名称（TermBase.name）"},
+            {"name": "*fields", "type": "str", "desc": "需要的字段名（优先按新表头名，可传多个）"},
+        ],
+        "returns": "list[dict]（每条记录一个 dict，键为传入的字段名；术语集不存在返回空列表）",
+        "usage": 'rows = await kb_tools.get_term_records("材料牌号", "牌号", "厂家")\n# rows = [{"牌号": "Q235B", "厂家": "宝钢"}, ...]',
     },
 ]
 
@@ -1030,80 +1044,13 @@ async def delete_script(db, kb_id, script_id) -> None:
 
 
 async def _load_term_data(db, kb_id, max_rows: int | None = None) -> dict:
-    """按术语集名称构建 {名称: {字段: [值]}} 只读数据（active 词条，上限保护）。"""
+    """按术语集名称构建 {名称: [记录 dict]}（active 词条，上限保护）。"""
     limit = max_rows or SCRIPT_MAX_TERM_ROWS
-    bases = (
-        await db.execute(select(TermBase).where(TermBase.kb_id == kb_id).order_by(TermBase.created_at))
-    ).scalars().all()
-    data: dict[str, dict[str, list[str]]] = {}
-    for b in bases:
-        terms = (
-            await db.execute(
-                select(Term).where(
-                    Term.kb_id == kb_id,
-                    Term.term_base_id == b.id,
-                    Term.status == TERM_STATUS_ACTIVE,
-                ).limit(limit)
-            )
-        ).scalars().all()
-        bucket: dict[str, list[str]] = {}
-        for t in terms:
-            for field, value in (
-                ("term_name", t.term_name),
-                ("standard_name", t.standard_name),
-                ("english_term", t.english_term),
-                ("definition", t.definition),
-                ("category", t.category),
-                ("standard_number", t.standard_number),
-            ):
-                if value:
-                    bucket.setdefault(field, []).append(value)
-            for alias in (t.aliases or []):
-                if alias:
-                    bucket.setdefault("aliases", []).append(alias)
-            for synonym in (t.synonyms or []):
-                if synonym:
-                    bucket.setdefault("synonyms", []).append(synonym)
-            for k, v in (t.extras or {}).items():
-                if v is not None:
-                    bucket.setdefault(str(k), []).append(str(v))
-        data[b.name] = bucket
-    return data
-
-
-_RUN_TEMPLATE = """import asyncio
-import json
-import sys
-
-TERM_DATA = {term_data}
-
-class _KbTools:
-    async def get_term_records(self, name, field):
-        return TERM_DATA.get(name, {{}}).get(field, [])
-    async def embed(self, text):
-        return {{"text": text, "vector": []}}
-    async def semantic_search(self, query, top_k=5):
-        return []
-    async def match_record(self, query, rows, fields):
-        return []
-
-kb_tools = _KbTools()
-
-{code}
-
-async def _main():
-    args = json.loads(sys.stdin.read())
-    result = run(args)
-    if asyncio.iscoroutine(result):
-        result = await result
-    sys.stdout.write(json.dumps(result, ensure_ascii=False, default=str))
-
-asyncio.run(_main())
-"""
+    return await script_tools.load_term_data(db, kb_id, max_rows=limit)
 
 
 async def run_script(db, kb_id, data: dict) -> dict:
-    """受限子进程执行脚本（-I 隔离、10s 超时、1MB 输出上限、注入术语集只读数据）。"""
+    """受限子进程执行脚本（-I 隔离、超时/输出上限、注入术语集只读数据 + 真实 kb_tools）。"""
     code = (data.get("code") or "").strip()
     if not code and data.get("script_id"):
         script = await _get_script(db, kb_id, uuid.UUID(str(data["script_id"])))
@@ -1119,23 +1066,36 @@ async def run_script(db, kb_id, data: dict) -> dict:
     max_output = int(kb_tool.get("script_max_output_bytes") or SCRIPT_MAX_OUTPUT)
     max_term_rows = int(kb_tool.get("script_max_term_rows") or SCRIPT_MAX_TERM_ROWS)
     term_data = await _load_term_data(db, kb_id, max_rows=max_term_rows)
-    payload = _RUN_TEMPLATE.format(term_data=json.dumps(term_data, ensure_ascii=False), code=code)
+    token = script_tools.issue_embed_token(kb_id)
     try:
-        proc = await asyncio.to_thread(
-            subprocess.run,
-            [sys.executable, "-I", "-c", payload],
-            input=json.dumps(data.get("args") or {}, ensure_ascii=False),
-            capture_output=True, text=True, timeout=timeout, check=False,
+        payload = script_tools.build_script_code(code)
+        stdin = json.dumps(
+            {
+                "args": data.get("args") or {},
+                "term_data": term_data,
+                "embed": {"url": script_tools.embed_endpoint_url(kb_id), "token": token},
+            },
+            ensure_ascii=False,
         )
-    except subprocess.TimeoutExpired:
-        logger.warning("脚本调试超时", kb_id=str(kb_id))
-        return {"ok": False, "error": f"脚本执行超时（{timeout}s）"}
-    stdout = (proc.stdout or "")[:max_output]
-    stderr = (proc.stderr or "")[:max_output]
-    if proc.returncode != 0:
-        return {"ok": False, "error": stderr.strip() or "脚本执行失败"}
-    try:
-        result = json.loads(stdout.strip().splitlines()[-1] if stdout.strip() else "null")
-    except (ValueError, IndexError):
-        return {"ok": False, "error": stderr.strip() or "脚本未返回合法 JSON"}
-    return {"ok": True, "result": result}
+        try:
+            proc = await asyncio.to_thread(
+                subprocess.run,
+                [sys.executable, "-I", "-c", payload],
+                input=stdin,
+                capture_output=True, text=True, timeout=timeout, check=False,
+            )
+        except subprocess.TimeoutExpired:
+            logger.warning("脚本调试超时", kb_id=str(kb_id))
+            return {"ok": False, "error": f"脚本执行超时（{timeout}s）"}
+        stdout = (proc.stdout or "")[:max_output]
+        stderr = (proc.stderr or "")[:max_output]
+        if proc.returncode != 0:
+            return {"ok": False, "error": stderr.strip() or "脚本执行失败"}
+        try:
+            result = json.loads(stdout.strip().splitlines()[-1] if stdout.strip() else "null")
+        except (ValueError, IndexError):
+            return {"ok": False, "error": stderr.strip() or "脚本未返回合法 JSON"}
+        return {"ok": True, "result": result}
+    finally:
+        script_tools.revoke_embed_token(token)
+

@@ -99,3 +99,55 @@ async def test_script_run_allowed_for_viewer(client, super_token):
                           json={"code": "def run(args): return {'ok': 1}"})
     assert r.status_code == 200, r.text
     assert r.json()["data"]["ok"] is True
+
+
+async def test_script_embed_token_guard(client, super_token, monkeypatch):
+    """L5M34-S2-05：内部嵌入端点令牌防护（无效/跨KB/过期/超限/正常）。"""
+    import hashlib
+    import hmac
+    import time
+
+    from app.core.config import settings
+    from app.services.extraction import script_tools
+
+    kb = await create_kb_via_api(client, super_token, "S10嵌入令牌")
+    kb_id = kb["id"]
+
+    # 正常路径：注入桩，避免测试环境加载嵌入模型
+    async def fake_embed(texts):
+        return [[0.1]] * len(texts)
+
+    monkeypatch.setattr(script_tools, "_cache_embed", fake_embed)
+
+    valid = script_tools.issue_embed_token(kb_id)
+    r = await client.post(f"/api/v1/kb/{kb_id}/extraction-config/script-embed",
+                          json={"token": valid, "texts": ["抗拉强度"]})
+    assert r.status_code == 200, r.text
+    assert len(r.json()["vectors"]) == 1
+
+    # 无/伪造令牌
+    for bad in ("", "abc.def", valid[::-1]):
+        r = await client.post(f"/api/v1/kb/{kb_id}/extraction-config/script-embed",
+                              json={"token": bad, "texts": ["x"]})
+        assert r.status_code == 403, (bad, r.status_code)
+
+    # 跨 KB：A 的令牌不能访问 B
+    kb_b = await create_kb_via_api(client, super_token, "S10嵌入令牌B")
+    token_a = script_tools.issue_embed_token(kb_id)
+    r = await client.post(f"/api/v1/kb/{kb_b['id']}/extraction-config/script-embed",
+                          json={"token": token_a, "texts": ["x"]})
+    assert r.status_code == 403
+
+    # 过期令牌：合法签名但时间已过期
+    exp = int(time.time()) - 10
+    payload = f"{kb_id}:{exp}"
+    sig = hmac.new(settings.SECRET_KEY.encode(), payload.encode(), hashlib.sha256).hexdigest()[:32]
+    r = await client.post(f"/api/v1/kb/{kb_id}/extraction-config/script-embed",
+                          json={"token": f"{exp}.{sig}", "texts": ["x"]})
+    assert r.status_code == 403
+
+    # 超过单次文本上限 → 400（在调用嵌入前拦截）
+    token = script_tools.issue_embed_token(kb_id)
+    r = await client.post(f"/api/v1/kb/{kb_id}/extraction-config/script-embed",
+                          json={"token": token, "texts": ["x"] * (script_tools.EMBED_MAX_TEXTS + 1)})
+    assert r.status_code == 400, r.text

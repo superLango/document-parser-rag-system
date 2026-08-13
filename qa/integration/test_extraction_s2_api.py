@@ -118,6 +118,28 @@ async def test_prompt_simple_and_schema(client, super_token):
     assert all(p["id"] != pid for p in r.json()["data"]["items"])
 
 
+async def test_delete_category_with_prompt_content(client, super_token):
+    """L3M34-S2-01c：删除被 Schema Prompt 引用的类别不触发 uq_prompt_content_simple 冲突。"""
+    kb_id = await _kb(client, super_token, "S10删类别")
+    h = {H: f"Bearer {super_token}"}
+    tpl = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates", headers=h,
+                             json={"name": "模板D"})).json()["data"]
+    cat = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates/{tpl['id']}/categories", headers=h,
+                             json={"name": "类别D"})).json()["data"]
+    pid = (await client.post(f"/api/v1/kb/{kb_id}/extraction-config/prompts", headers=h,
+                             json={"name": "PromptD", "scope": "schema",
+                                   "schema_template_id": tpl["id"], "category_ids": [cat["id"]]})).json()["data"]["id"]
+    await client.put(f"/api/v1/kb/{kb_id}/extraction-config/prompts/{pid}/save", headers=h,
+                     json={"system_prompt": "sys", "categories": [{"category_id": cat["id"], "user_prompt": "u"}]})
+
+    r = await client.delete(f"/api/v1/kb/{kb_id}/schema-templates/{tpl['id']}/categories/{cat['id']}", headers=h)
+    assert r.status_code == 200, r.text
+    # Prompt 仍存在，且类别内容已清理
+    detail = (await client.get(f"/api/v1/kb/{kb_id}/extraction-config/prompts/{pid}", headers=h)).json()["data"]
+    assert detail["system_prompt"] == "sys"
+    assert all(c["category_id"] != cat["id"] for c in detail["categories"])
+
+
 async def test_rule_group_flow(client, super_token):
     """L3M34-S2-03：规则组创建/规则项保存/详情/删除。"""
     kb_id = await _kb(client, super_token, "S10规则")
@@ -215,7 +237,7 @@ async def run(args):
                           json={"code": code, "args": {}})
     assert r.status_code == 200, r.text
     assert r.json()["data"]["ok"] is True
-    assert r.json()["data"]["result"]["rows"] == ["抗拉强度"]
+    assert r.json()["data"]["result"]["rows"] == [{"term_name": "抗拉强度"}]
 
     await client.delete(f"/api/v1/kb/{kb_id}/extraction-config/scripts/{sid}", headers=h)
     r = await client.get(f"/api/v1/kb/{kb_id}/extraction-config/scripts?folder=post", headers=h)

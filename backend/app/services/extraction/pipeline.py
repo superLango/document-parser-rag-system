@@ -43,6 +43,30 @@ async def run(
             cfg, session, kb_id=kb_id, document_id=document_id,
         )
         await _progress(progress_cb, 30, "类别构建与召回完成")
+        # 并发前预载只读数据（共享会话禁止并发查询）：
+        # KB 术语集 + 规则脚本代码
+        from app.services.extraction import script_tools
+        from app.services.extraction.script_processor import _script_code
+
+        term_data = await script_tools.load_term_data(session, kb_id)
+        script_ids = {
+            str(r.get("script_id"))
+            for g in cfg.rule_groups
+            for cat in g.get("categories") or []
+            for r in cat.get("rules") or []
+            if r.get("script_id")
+        }
+        script_codes: dict[str, str] = {}
+        for sid in sorted(script_ids):
+            script_codes[sid] = await _script_code(session, kb_id, sid)
+        # 预热嵌入模型并缓存（脚本超时窗口内不再做首次模型加载）
+        await script_tools.warmup_embed()
+        for g in cfg.rule_groups:
+            for cat in g.get("categories") or []:
+                for r in cat.get("rules") or []:
+                    sid = str(r.get("script_id") or "")
+                    if sid in script_codes:
+                        r["code"] = script_codes[sid]
 
         if not targets:
             return _result(cfg, [], [], skipped, 0.0, total_start)
@@ -67,7 +91,7 @@ async def run(
             async with sem:
                 return await _extract_single(
                     session, cfg, target, client, engine_params, retrieval_cfg,
-                    context_cfg, script_timeout, str(document_id),
+                    context_cfg, script_timeout, str(document_id), term_data,
                 )
 
         await _progress(progress_cb, 40, "开始类别抽取")
@@ -87,7 +111,7 @@ async def run(
             await session.close()
 
 
-async def _extract_single(session, cfg, target, client, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id) -> CategoryResult:
+async def _extract_single(session, cfg, target, client, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None) -> CategoryResult:
     try:
         hits = target.hits or []
         context = context_assembler.assemble(
@@ -101,17 +125,6 @@ async def _extract_single(session, cfg, target, client, engine_params, retrieval
         if not context:
             return CategoryResult(feature=target.feature, records=[], rejected=[])
 
-        # 注入 Query 术语集数据（供 ${术语集名.字段} 占位符替换）
-        from app.services.extraction.term_base_loader import load_term_base
-
-        for qs in target.query_sources or []:
-            label = (qs.get("label") or "").strip()
-            tb_id = qs.get("term_base_id")
-            if label and tb_id:
-                target.term_data[label] = await load_term_base(
-                    session, uuid.UUID(str(cfg.kb_id)), uuid.UUID(str(tb_id))
-                )
-
         records = await llm_extractor.extract_category(cfg, target, context, client, engine_params)
         # 规则组脚本：post 后处理 + validation 校验
         rules = _rules_for_category(cfg, target.category_id)
@@ -120,7 +133,7 @@ async def _extract_single(session, cfg, target, client, engine_params, retrieval
             kept, rejected = await script_processor.apply_scripts(
                 session, uuid.UUID(str(cfg.kb_id)),
                 category_feature=target.feature, records=records, doc_id=doc_id,
-                rules=rules, script_timeout=script_timeout,
+                rules=rules, script_timeout=script_timeout, term_data=term_data,
             )
         missing = llm_extractor.missing_required_fields(kept, target.schema)
         return CategoryResult(feature=target.feature, records=kept, rejected=rejected, missing_fields=missing)

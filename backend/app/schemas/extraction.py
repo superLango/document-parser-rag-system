@@ -321,7 +321,7 @@ class GlobalKbToolConfig(BaseModel):
     semantic_top_k: int = Field(default=5, ge=1)
     match_top_k: int = Field(default=1, ge=1)
     match_threshold: float = Field(default=0.9, ge=0, le=1)
-    script_timeout: int = Field(default=10, ge=1)
+    script_timeout: int = Field(default=60, ge=1)
     script_max_output_bytes: int = Field(default=1024 * 1024, ge=1024)
     script_max_term_rows: int = Field(default=1000, ge=1)
 
@@ -335,3 +335,10 @@ class GlobalConfigContent(BaseModel):
 class GlobalConfigSave(BaseModel):
     enabled: bool = True
     content: GlobalConfigContent = Field(default_factory=GlobalConfigContent)
+
+
+class ScriptEmbedRequest(BaseModel):
+    """脚本子进程嵌入回调请求（内部令牌鉴权，非用户 API）。"""
+
+    token: str
+    texts: list[str]

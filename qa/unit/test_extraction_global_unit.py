@@ -18,7 +18,7 @@ async def test_default_config_structure():
     assert cfg["retrieval"]["hybrid"]["rrf_k"] == 60.0
     assert cfg["llm"]["engine"] == "BaseExtract"
     assert set(cfg["llm"]["engines"]) == {"BaseExtract", "LangExtract"}
-    assert cfg["kb_tool"]["script_timeout"] == 10
+    assert cfg["kb_tool"]["script_timeout"] == 60
 
 
 async def test_deep_merge_partial_override():

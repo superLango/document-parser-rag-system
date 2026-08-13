@@ -131,6 +131,14 @@ async def build(
                 prop["example"] = f["example"]
             properties[f["name"]] = prop
         t.schema = {"type": t.return_type, "properties": properties}
+        # 预载 Query 术语集数据（串行阶段完成，避免并发 gather 内共享会话查询）
+        for qs in t.query_sources or []:
+            label = (qs.get("label") or "").strip()
+            tb_id = qs.get("term_base_id")
+            if label and tb_id:
+                t.term_data[label] = await load_term_base(
+                    db, kb_id, uuid.UUID(str(tb_id))
+                )
         kept.append(t)
     schemas = {"categories": {t.feature: t.schema for t in kept}}
     return kept, skipped, schemas

@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.deps import activate_kb_context, require_not_pending
 from app.api.v1.endpoints.kb_documents import _require_editor
 from app.core.database import get_db
+from app.core.exceptions import BusinessException, ErrorCode, PermissionException
 from app.core.response import success
 from app.middleware.audit_log import audit_action
 from app.models.user import User
@@ -26,11 +27,13 @@ from app.schemas.extraction import (
     SchemaTemplateCreate,
     SchemaTemplateUpdate,
     ScriptCreate,
+    ScriptEmbedRequest,
     ScriptRunRequest,
     ScriptUpdate,
 )
 from app.services import extraction_config_service as svc
 from app.services import kb_service
+from app.services.extraction import script_tools
 
 schema_router = APIRouter(prefix="/kb/{kb_id}/schema-templates", tags=["知识库-抽取配置-Schema"])
 cfg_router = APIRouter(prefix="/kb/{kb_id}/extraction-config", tags=["知识库-抽取配置"])
@@ -387,6 +390,27 @@ async def delete_script(
     _require_editor(kb)
     await svc.delete_script(db, kb_id, script_id)
     return success(message="脚本已删除")
+
+
+@cfg_router.post("/script-embed")
+async def script_embed(
+    kb_id: uuid.UUID, payload: ScriptEmbedRequest,
+) -> dict:
+    """脚本子进程嵌入回调：内部令牌鉴权，返回 BGE-M3 向量列表。"""
+    if not script_tools.validate_embed_token(payload.token, str(kb_id)):
+        raise PermissionException(
+            code=ErrorCode.AUTH_PERMISSION_DENIED, message="嵌入令牌无效或已过期"
+        )
+    texts = [t for t in (payload.texts or []) if isinstance(t, str) and t.strip()]
+    if len(texts) > script_tools.EMBED_MAX_TEXTS:
+        raise BusinessException(
+            code=ErrorCode.VALIDATION_ERROR,
+            message=f"单次嵌入文本数超过上限（{script_tools.EMBED_MAX_TEXTS}）",
+        )
+    if not texts:
+        return {"vectors": []}
+    vectors = await script_tools._cache_embed(texts)
+    return {"vectors": vectors}
 
 
 @cfg_router.post("/scripts/run")

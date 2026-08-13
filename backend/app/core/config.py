@@ -114,6 +114,9 @@ class Settings(BaseSettings):
     BM25_K1: float = 1.5
     BM25_B: float = 0.75
 
+    # ---------- 抽取脚本（E3：kb_tools 内部嵌入端点回调地址） ----------
+    SCRIPT_EMBED_BASE_URL: str = "http://127.0.0.1:8000"
+
     # ---------- 检索（S6/D6：dense 双路 + BM25 + RRF） ----------
     RETRIEVAL_TITLE_WEIGHT: float = 0.2
     RETRIEVAL_CONTENT_WEIGHT: float = 0.8

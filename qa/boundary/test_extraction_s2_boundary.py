@@ -65,11 +65,16 @@ async def test_script_missing_run_function(client, super_token):
 
 
 async def test_script_run_timeout(client, super_token):
-    """L4M34-S2-06：脚本执行超时返回错误（不 500）。"""
+    """L4M34-S2-06：脚本执行超时返回错误（不 500；显式短超时覆盖默认）。"""
     kb_id = await _kb(client, super_token, "S10脚本超时")
     h = {H: f"Bearer {super_token}"}
+    r = await client.put(f"/api/v1/kb/{kb_id}/extraction-config/global", headers=h, json={
+        "enabled": True,
+        "content": {"kb_tool": {"script_timeout": 1}},
+    })
+    assert r.status_code == 200, r.text
     r = await client.post(f"/api/v1/kb/{kb_id}/extraction-config/scripts/run", headers=h,
-                          json={"code": "import time\ndef run(args):\n    time.sleep(11)\n    return {}",
+                          json={"code": "import time\ndef run(args):\n    time.sleep(2)\n    return {}",
                                 "args": {}})
     assert r.status_code == 200, r.text
     assert r.json()["data"]["ok"] is False

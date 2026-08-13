@@ -22,7 +22,7 @@ async def test_global_config_default_and_save(client, super_token):
     assert data["enabled"] is True
     assert data["version"] == 1
     assert data["content"]["retrieval"]["top_k"] == 10
-    assert data["content"]["kb_tool"]["script_timeout"] == 10
+    assert data["content"]["kb_tool"]["script_timeout"] == 60
 
     # 部分覆盖保存
     r = await client.put(f"/api/v1/kb/{kb_id}/extraction-config/global", headers=h, json={
