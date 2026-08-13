@@ -33,7 +33,7 @@ async def run(
 
     llm_client 用于测试注入；为 None 时从 KB 资源配置构建。
     """
-    total_start = time.time()
+    total_start = time.monotonic()
     session = db if db is not None else AsyncSessionLocal()
     try:
         cfg = await extraction_resolver.resolve(session, kb_id)

@@ -133,6 +133,20 @@ export const helpSections: HelpSection[] = [
     ],
   },
   {
+    id: 'structured-extraction',
+    title: '结构化抽取',
+    description: '文档完成解析与索引后，按 Schema 配置驱动 LLM 抽取结构化数据。',
+    image: '/help/structured-extraction.png',
+    steps: [
+      '知识库内左侧菜单进入“结构化抽取”，列表展示已完成解析+索引的可抽取文档（解析状态/历史版本数）',
+      '点击“抽取”进入详情页：左侧为原文档预览，右侧选择 Schema 模板后点击“开始抽取”',
+      '抽取过程展示进度条与四步流程（初始化→解析文档→抽取字段→完成），2 秒轮询，退出重进可恢复',
+      '完成后支持表格视图（按类别展开动态字段表）/ JSON 视图、缺失字段提示、历史版本回看',
+      '可导出 CSV；支持“重新抽取”（失败后）与“删除结果”（同时清空历史，不可恢复）',
+      '抽取前需在“资源与配置”配置并启用 LLM 服务（OpenAI 兼容接口）',
+    ],
+  },
+  {
     id: 'workspace-keys',
     title: '工作空间与 API 密钥',
     description: '以工作空间组织群组并集授权；API 密钥供脚本与集成调用。',

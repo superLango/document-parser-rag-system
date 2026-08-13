@@ -83,3 +83,13 @@ M34 四项前端已完成与原项目逐项对齐并通过铁律整体验收：
 | E2E（入口/默认值/编辑保存/重载/移动端） | 6 | 通过 |
 
 后端 M34+M33+全局配置合计 **125/125** 通过；E2E 合计 **45/45**（Schema 9、Prompt 9、规则 7、脚本 8、全局 6、联动 6）通过；type-check/build/ruff 通过。
+
+
+## 8. E6 整体回归（2026-08-13）
+
+- 真实 LLM：`http://127.0.0.1:9988/v1` · `Qwen3.6-35B-A3B-FP8`，全成功链路通过（自建术语集/Schema/Prompt/规则/LLM 资源，上传→解析→索引→抽取→表格/JSON→历史→导出→删除）。
+- 后端全量回归：**168/168**（M34+M33+全局配置+E1-E4）。
+- 前端 E2E：抽取 **59/59**（Schema 9、Prompt 9、规则 7、脚本 8、全局 6、联动 6、页面 6、真实 LLM 成功 8）+ 术语集 **26/26**（15+11）= **85/85**。
+- type-check / build / ruff 通过。
+- 附带修复：抽取 timing 使用单调时钟；索引成功状态统一 `indexed`。
+- 帮助文档新增“结构化抽取”章节与截图 [structured-extraction.png](/home/grainuser/hansonDoc_RAG/frontend/public/help/structured-extraction.png)。
