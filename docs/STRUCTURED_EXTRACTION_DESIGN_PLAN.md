@@ -199,7 +199,7 @@ GET result / status / history / export
 | E1 数据与任务底座 | 016 迁移（extraction_results + documents.extraction_status + history）、任务类型/Outbox、sync 执行器分支 | 迁移/模型/任务状态机测试 ✅ **已完成（2026-08-13，12/12）** |
 | E2 配置解析与 LLM 层 | ExtractionDomainConfig 解析器、LLMClient/OpenAICompatibleClient、**KB 资源与配置 LLM 服务表单**（services.llm_vllm + 连接测试） | 单元测试（解析完整性、LLM 客户端 mock、资源配置读写） ✅ **已完成（2026-08-13，13/13）** |
 | E3 抽取流水线 | CategoryBuilder、上下文组装、Prompt 渲染、LLM 抽取、JSON 解析、脚本后处理/校验 | 集成测试（真实 mock LLM + 术语集 + 脚本） ✅ **已完成（2026-08-13，8/8）** |
-| E4 端点与任务 | extraction 端点（列表/启动/状态/结果/历史/导出/**删除结果与历史**）+ arq/sync 任务（失败不重试）+ 进度轮询 | API 五层测试 + 并发用例 |
+| E4 端点与任务 | extraction 端点（列表/启动/状态/结果/历史/导出/**删除结果与历史**）+ arq/sync 任务（失败不重试）+ 进度轮询 | API 五层测试 + 并发用例 ✅ **已完成（2026-08-13，10/10）** |
 | E5 前端页面 | 列表页 + 详情页 + 路由 + 轮询进度 + 表格/JSON/历史/导出/删除 + **重新抽取** | E2E 页面闭环（入口→抽取→进度→结果→返回） |
 | E6 整体回归 | M34/M33/抽取全量 + E2E + 覆盖率表 + 文档更新 | 全部通过 |
 

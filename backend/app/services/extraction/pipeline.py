@@ -17,7 +17,6 @@ from app.services.extraction import (
     script_processor,
 )
 from app.services.extraction.extraction_models import CategoryResult, SkippedFeature
-from app.services.llm.llm_client import LLMError
 
 logger = get_logger(__name__)
 
@@ -73,12 +72,12 @@ async def run(
 
         await _progress(progress_cb, 40, "开始类别抽取")
         results = await asyncio.gather(*[extract_one(t) for t in targets], return_exceptions=True)
-        categories: list[CategoryResult] = []
+        # 任一类别异常（含 LLM 不可用）→ 任务整体失败（B11：不静默吞错）
         for i, r in enumerate(results):
-            if isinstance(r, CategoryResult):
-                categories.append(r)
-            else:
+            if not isinstance(r, CategoryResult):
                 logger.error("类别抽取异常", feature=targets[i].feature, error=str(r))
+                raise r if isinstance(r, Exception) else RuntimeError(f"类别抽取异常：{r}")
+        categories = [r for r in results if isinstance(r, CategoryResult)]
         await _progress(progress_cb, 90, "抽取完成，保存结果")
 
         non_empty = [c for c in categories if c.records or c.rejected]
@@ -125,9 +124,6 @@ async def _extract_single(session, cfg, target, client, engine_params, retrieval
             )
         missing = llm_extractor.missing_required_fields(kept, target.schema)
         return CategoryResult(feature=target.feature, records=kept, rejected=rejected, missing_fields=missing)
-    except LLMError as exc:
-        logger.warning("类别抽取 LLM 失败", feature=target.feature, error=str(exc))
-        return CategoryResult(feature=target.feature, records=[], rejected=[])
     except Exception as exc:
         logger.error("类别抽取异常", feature=target.feature, error=str(exc))
         raise

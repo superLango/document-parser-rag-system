@@ -10,7 +10,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import func, select
+from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import BusinessException, ErrorCode
@@ -39,6 +39,10 @@ async def _get_document(db: AsyncSession, kb_id, document_id) -> Document:
 
 async def start_document_extraction(db: AsyncSession, kb_id, document_id) -> dict:
     """创建抽取任务与 outbox（editor+ 由端点层控制）。"""
+    await db.execute(
+        text("SELECT pg_advisory_xact_lock(hashtext(:k))"),
+        {"k": f"extract:{document_id}"},
+    )
     doc = await _get_document(db, kb_id, document_id)
     if doc.process_status != "completed" or doc.index_status != "completed":
         raise BusinessException(
@@ -107,7 +111,14 @@ async def run_extraction_task(db: AsyncSession, document_id: uuid.UUID, kb_id: u
         await result_store.set_result_status(
             db, kb_id, document_id, status="running", progress=5
         )
-        result = await pipeline.run(kb_id=str(kb_id), document_id=str(document_id))
+        async def _on_progress(progress: int, _message: str) -> None:
+            await result_store.set_result_status(
+                db, kb_id, document_id, status="running", progress=progress
+            )
+
+        result = await pipeline.run(
+            kb_id=str(kb_id), document_id=str(document_id), progress_cb=_on_progress
+        )
         # E3 后：result 含 categories/summary/timing/schema 信息，落库并完成
         saved = await result_store.save_result(
             db, kb_id, document_id,

@@ -58,10 +58,26 @@ async def test_zero_hit_returns_empty(client, super_token, db_session):
     assert any(s["reason"] == "零命中（检索无结果）" for s in result["summary"]["skipped"])
 
 
-async def test_bad_json_yields_empty_category(client, super_token, db_session):
-    """L4E3-02：LLM 非法 JSON 时类别为空但不中断。"""
+async def test_bad_json_raises(client, super_token, db_session):
+    """L4E3-02：LLM 非法 JSON 使任务失败（B11 不静默吞错）。"""
+    import pytest
+    from app.models.document import Document
+    from app.models.indexing import DocumentChunk
+    from app.services.llm.llm_client import LLMError
+
     kb, _h = await _kb_with_schema(client, super_token, "E3坏JSON")
-    doc_id = await _doc_no_chunk(db_session, uuid.UUID(kb["id"]))
-    # 无分块 → 零命中；此处仅验证流水线不抛错
-    result = await pipeline.run(kb_id=uuid.UUID(kb["id"]), document_id=doc_id, llm_client=BadLLM(), db=db_session)
-    assert isinstance(result["summary"]["skipped"], list)
+    kb_id = uuid.UUID(kb["id"])
+    doc_id = await create_document_row(db_session, kb_id, layout_path="x")
+    doc = await db_session.get(Document, doc_id)
+    doc.index_status = "completed"
+    db_session.add(DocumentChunk(
+        kb_id=kb_id, document_id=doc_id, chunk_id=f"{doc_id}_p0_0",
+        hierarchy_path="1", title="C", level=1, has_table=False, semantic_label="text",
+        content="室温拉伸抗拉强度 800MPa", content_for_embedding="室温拉伸抗拉强度 800MPa",
+        parent_text="C", tokens=8, title_vector=[0.1] * 1024, content_vector=[0.1] * 1024,
+        bm25_tokens={"抗拉": 1}, source_pages=[1],
+    ))
+    await db_session.commit()
+    await db_session.execute(sa_text("SELECT set_config('app.is_superuser', 'true', true)"))
+    with pytest.raises(LLMError):
+        await pipeline.run(kb_id=kb_id, document_id=doc_id, llm_client=BadLLM(), db=db_session)

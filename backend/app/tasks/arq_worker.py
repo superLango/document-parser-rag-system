@@ -4,15 +4,14 @@ import uuid
 from typing import ClassVar
 from urllib.parse import unquote, urlparse
 
-from arq import cron
-from arq.connections import RedisSettings
-from sqlalchemy import text
-
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
 from app.models.document import TaskOutbox
 from app.services import document_service
+from arq import cron
+from arq.connections import RedisSettings
+from sqlalchemy import text
 
 logger = get_logger(__name__)
 
@@ -82,6 +81,26 @@ async def index_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
         await db.close()
 
 
+async def extract_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
+    """结构化抽取任务（E4）：由 arq 执行抽取流水线并落库。"""
+    from app.services.extraction import extraction_task_service
+
+    db = await _superuser_session()
+    try:
+        await db.execute(
+            text("SELECT set_config('app.current_kb', :kb, true)"),
+            {"kb": kb_id},
+        )
+        return await extraction_task_service.run_extraction_task(
+            db, uuid.UUID(document_id), uuid.UUID(kb_id)
+        )
+    except Exception:
+        await db.rollback()
+        raise
+    finally:
+        await db.close()
+
+
 async def cleanup_expired_parse_pages(ctx: dict) -> int:
     """U14：每日清理超过保留期的 pages 中间产物。"""
     db = await _superuser_session()
@@ -140,9 +159,12 @@ async def dispatch_outbox(ctx: dict) -> int:
     enqueued = 0
     for row in rows:
         payload = row.payload or {}
-        job_name = (
-            "index_document_task" if row.type == "document_index" else "parse_document_task"
-        )
+        if row.type == "document_index":
+            job_name = "index_document_task"
+        elif row.type == "document_extraction":
+            job_name = "extract_document_task"
+        else:
+            job_name = "parse_document_task"
         await redis.enqueue_job(
             job_name,
             payload.get("document_id"),
@@ -171,7 +193,11 @@ def _redis_settings_from_dsn(dsn: str) -> RedisSettings:
 
 
 class WorkerSettings:
-    functions: ClassVar[list] = [parse_document_task, index_document_task]
+    functions: ClassVar[list] = [
+        parse_document_task,
+        index_document_task,
+        extract_document_task,
+    ]
     cron_jobs: ClassVar[list] = [
         cron(
             dispatch_outbox,
