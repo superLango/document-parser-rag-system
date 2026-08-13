@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import TestPanel, { type PromptTestResult } from '@/components/kb/TestPanel'
 import { useToast } from '@/components/ui/toast'
+import { useAuthStore } from '@/stores/auth'
 import { useKbDetail } from './KbDetailLayout'
 
 const SYSTEM_PARAMS = [
@@ -77,7 +78,9 @@ export default function KbPromptEditorPage() {
   const { promptId } = useParams<{ promptId: string }>()
   const { kb } = useKbDetail()
   const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
   const { toast } = useToast()
+  const canManage = user?.is_superuser || kb.my_role === 'owner' || kb.my_role === 'admin' || kb.my_role === 'editor'
 
   const [loading, setLoading] = useState(true)
   const [prompt, setPrompt] = useState<PromptTemplate | null>(null)
@@ -126,7 +129,18 @@ export default function KbPromptEditorPage() {
           setCategories(cats)
           if (cats.length > 0) setActiveCatId(cats[0].id)
         } catch {
-          setCategories([])
+          // 模板详情加载失败时降级为 prompt 返回的类别（无字段），对齐原项目
+          const cats = (p.categories || []).map((c) => ({
+            id: c.category_id,
+            name: c.category_name || '',
+            description: '',
+            return_type: 'array',
+            query_sources: [],
+            user_prompt: c.user_prompt || '',
+            fields: [],
+          }))
+          setCategories(cats)
+          if (cats.length > 0) setActiveCatId(cats[0].id)
         }
       }
     } catch (err) {
@@ -355,9 +369,11 @@ export default function KbPromptEditorPage() {
             <Button variant="outline" onClick={() => navigate(`/kb/${kb.id}/extraction-config?tab=prompt`)} className="gap-1.5">
               <ArrowLeft className="h-4 w-4" /> 返回
             </Button>
-            <Button onClick={save} disabled={saving} className="gap-1.5" data-testid="btn-prompt-editor-save">
-              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} 保存
-            </Button>
+            {canManage && (
+              <Button onClick={save} disabled={saving} className="gap-1.5" data-testid="btn-prompt-editor-save">
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} 保存
+              </Button>
+            )}
           </div>
         }
       />
@@ -370,7 +386,7 @@ export default function KbPromptEditorPage() {
             <Badge variant={isActive ? 'default' : 'secondary'}>{isActive ? '启用' : '停用'}</Badge>
           </div>
           <label className="flex items-center gap-2 text-sm">
-            <Switch checked={isActive} onCheckedChange={setIsActive} /> 启用
+            <Switch checked={isActive} onCheckedChange={setIsActive} disabled={!canManage} /> 启用
           </label>
         </CardContent>
       </Card>
@@ -381,8 +397,8 @@ export default function KbPromptEditorPage() {
           <p className="flex items-center gap-2 text-sm font-medium">
             <BookMarked className="h-4 w-4 text-primary" /> System 系统提示词
           </p>
-          <textarea value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} rows={8} spellCheck={false}
-            className="w-full rounded-md border border-input bg-card px-3 py-2 font-mono text-sm shadow-soft focus-visible:border-primary/50" data-testid="system-prompt-input" />
+          <textarea value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} rows={8} spellCheck={false} disabled={!canManage}
+            className="w-full rounded-md border border-input bg-card px-3 py-2 font-mono text-sm shadow-soft focus-visible:border-primary/50 disabled:opacity-60" data-testid="system-prompt-input" />
           <p className="flex items-center gap-1 text-xs text-muted-foreground">
             <Info className="h-3.5 w-3.5" /> System 提示词为全局角色设定，不使用 ${'{...}'} 占位符
           </p>
@@ -396,8 +412,8 @@ export default function KbPromptEditorPage() {
               <p className="flex items-center gap-2 text-sm font-medium">
                 <FileText className="h-4 w-4 text-primary" /> User 提示词
               </p>
-              <textarea id="user-prompt-simple" value={simpleUserPrompt} onChange={(e) => setSimpleUserPrompt(e.target.value)} rows={14} spellCheck={false}
-                className="w-full rounded-md border border-input bg-card px-3 py-2 font-mono text-sm shadow-soft focus-visible:border-primary/50" data-testid="user-prompt-input" />
+              <textarea id="user-prompt-simple" value={simpleUserPrompt} onChange={(e) => setSimpleUserPrompt(e.target.value)} rows={14} spellCheck={false} disabled={!canManage}
+                className="w-full rounded-md border border-input bg-card px-3 py-2 font-mono text-sm shadow-soft focus-visible:border-primary/50 disabled:opacity-60" data-testid="user-prompt-input" />
               <p className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Info className="h-3.5 w-3.5" /> 可用占位符：${'{feature}'}、${'{feature_descript}'}、${'{schema}'}、${'{context}'}、${'{return_type}'}、${'{prev_brands}'}
               </p>
@@ -446,7 +462,7 @@ export default function KbPromptEditorPage() {
                     <div className="space-y-1">
                       <p className="px-1 text-[10px] font-medium text-muted-foreground">系统参数</p>
                       {SYSTEM_PARAMS.map((p) => (
-                        <button key={p.placeholder} type="button" onClick={() => insertPlaceholder(p.placeholder)} data-testid={`system-token-${p.placeholder.replace(/[${}]/g, '')}`}
+                        <button key={p.placeholder} type="button" disabled={!canManage} onClick={() => insertPlaceholder(p.placeholder)} data-testid={`system-token-${p.placeholder.replace(/[${}]/g, '')}`}
                           className="flex w-full items-center justify-between gap-1 rounded-md px-2 py-1 text-left text-xs transition-colors hover:bg-muted">
                           <span className="min-w-0 flex-1">
                             <span className="line-clamp-1 text-foreground">{p.label}</span>
@@ -460,7 +476,7 @@ export default function KbPromptEditorPage() {
                       <div className="space-y-1">
                         <p className="px-1 text-[10px] font-medium text-muted-foreground">字段</p>
                         {activeCat.fields.map((f) => (
-                          <button key={f.id} type="button" onClick={() => insertPlaceholder(`$${'{' + f.name + '}'}`)} data-testid={`field-token-${f.name}`}
+                          <button key={f.id} type="button" disabled={!canManage} onClick={() => insertPlaceholder(`$${'{' + f.name + '}'}`)} data-testid={`field-token-${f.name}`}
                             className="flex w-full items-center justify-between gap-1 rounded-md px-2 py-1 text-left text-xs transition-colors hover:bg-muted">
                             <span className="line-clamp-1 font-mono text-primary">{'$' + '{' + f.name + '}'}</span>
                             <Badge variant="outline" className="shrink-0 text-[9px]">{f.type}</Badge>
@@ -473,7 +489,7 @@ export default function KbPromptEditorPage() {
                         <p className="px-1 text-[10px] font-medium text-muted-foreground">术语集 / Query</p>
                         {activeTermRefs.map((ref) => (
                           <div key={ref.term_base_id} className="space-y-1 rounded-md bg-muted/40 p-1.5">
-                            <button type="button" onClick={() => insertPlaceholder(`$${'{' + ref.label + '}'}`)}
+                            <button type="button" disabled={!canManage} onClick={() => insertPlaceholder(`$${'{' + ref.label + '}'}`)}
                               className="flex w-full items-center justify-between gap-1 rounded px-1.5 py-1 text-left text-xs transition-colors hover:bg-muted">
                               <span className="line-clamp-1 font-mono text-primary">{'$' + '{' + ref.label + '}'}</span>
                               <Badge variant="outline" className="shrink-0 text-[9px]">术语集</Badge>
@@ -481,11 +497,11 @@ export default function KbPromptEditorPage() {
                             {ref.value_field && (
                               <div className="flex flex-wrap gap-1 px-1">
                                 {ref.group_field && (
-                                  <button type="button" onClick={() => insertPlaceholder(`$${'{' + ref.label + '.' + ref.group_field + '}'}`)}
-                                    className="rounded border px-1.5 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-muted">{ref.group_field}</button>
+                                  <button type="button" disabled={!canManage} onClick={() => insertPlaceholder(`$${'{' + ref.label + '.' + ref.group_field + '}'}`)}
+                                    className="rounded border px-1.5 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-muted disabled:opacity-60">{ref.group_field}</button>
                                 )}
-                                <button type="button" onClick={() => insertPlaceholder(`$${'{' + ref.label + '.' + ref.value_field + '}'}`)}
-                                  className="rounded border px-1.5 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-muted">{ref.value_field}</button>
+                                <button type="button" disabled={!canManage} onClick={() => insertPlaceholder(`$${'{' + ref.label + '.' + ref.value_field + '}'}`)}
+                                  className="rounded border px-1.5 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-muted disabled:opacity-60">{ref.value_field}</button>
                               </div>
                             )}
                           </div>
@@ -504,8 +520,8 @@ export default function KbPromptEditorPage() {
                     </div>
                   )}
                   {activeCat && (
-                    <textarea id={`user-prompt-${activeCat.id}`} value={activeCat.user_prompt} onChange={(e) => updateCatPrompt(activeCat.id, e.target.value)} rows={16} spellCheck={false}
-                      className="flex-1 rounded-md border border-input bg-card px-3 py-2 font-mono text-sm shadow-soft focus-visible:border-primary/50" data-testid="schema-user-input" />
+                    <textarea id={`user-prompt-${activeCat.id}`} value={activeCat.user_prompt} onChange={(e) => updateCatPrompt(activeCat.id, e.target.value)} rows={16} spellCheck={false} disabled={!canManage}
+                      className="flex-1 rounded-md border border-input bg-card px-3 py-2 font-mono text-sm shadow-soft focus-visible:border-primary/50 disabled:opacity-60" data-testid="schema-user-input" />
                   )}
                   <div className="flex justify-end">
                     <Button variant="outline" size="sm" onClick={runTest} className="gap-1"><Play className="h-4 w-4" /> 测试组装</Button>

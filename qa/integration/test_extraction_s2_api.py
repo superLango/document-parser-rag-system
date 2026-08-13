@@ -104,6 +104,9 @@ async def test_prompt_simple_and_schema(client, super_token):
                          json={"system_prompt": "全局sys", "categories": [{"category_id": cat["id"], "user_prompt": "类别提示词"}]})
     assert r.status_code == 200, r.text
     assert r.json()["data"]["categories"][0]["user_prompt"] == "类别提示词"
+    assert r.json()["data"]["categories"][0]["category_name"] == "类别1"
+    detail = (await client.get(f"/api/v1/kb/{kb_id}/extraction-config/prompts/{pid2}", headers=h)).json()["data"]
+    assert detail["categories"][0]["category_name"] == "类别1"
 
     # 非法类别保存被拒
     r = await client.put(f"/api/v1/kb/{kb_id}/extraction-config/prompts/{pid2}/save", headers=h,
@@ -154,6 +157,25 @@ async def test_rule_group_flow(client, super_token):
     await client.delete(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups/{gid}", headers=h)
     r = await client.get(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups", headers=h)
     assert all(g["id"] != gid for g in r.json()["data"]["items"])
+
+
+async def test_rule_group_term_base_category_name(client, super_token):
+    """L3M34-S2-03b：规则组详情中术语库来源且名称为空的类别回退术语集名。"""
+    kb_id = await _kb(client, super_token, "S10术语规则")
+    h = {H: f"Bearer {super_token}"}
+    tb = (await client.post(f"/api/v1/kb/{kb_id}/term-bases", headers=h,
+                            json={"name": "回退材料库", "source_type": "manual"})).json()["data"]
+    tpl = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates", headers=h,
+                             json={"name": "模板T"})).json()["data"]
+    cat = (await client.post(f"/api/v1/kb/{kb_id}/schema-templates/{tpl['id']}/categories", headers=h,
+                             json={"name": "", "name_source": "term_base",
+                                   "name_term_base_id": tb["id"], "name_term_field": "term_name"})).json()["data"]
+    gid = (await client.post(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups", headers=h,
+                             json={"schema_template_id": tpl["id"]})).json()["data"]["id"]
+    detail = (await client.get(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups/{gid}", headers=h)).json()["data"]
+    names = [c["name"] for c in detail["categories"]]
+    assert "回退材料库" in names, names
+    await client.delete(f"/api/v1/kb/{kb_id}/extraction-config/rule-groups/{gid}", headers=h)
 
 
 async def test_script_crud_and_run(client, super_token, db_session):

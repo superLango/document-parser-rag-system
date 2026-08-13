@@ -92,6 +92,7 @@ export const extractionConfigApi = {
 
 export interface PromptCategoryContent {
   category_id: string
+  category_name?: string
   user_prompt: string
 }
 

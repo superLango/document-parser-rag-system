@@ -124,6 +124,8 @@ export default function KbExtractionConfigPage() {
       ])
       setTemplates(tplRes.items)
       setTermBases(tbRes.items)
+      // 对齐原项目：进入页签自动选中第一个模板
+      setSelectedId((prev) => prev ?? tplRes.items[0]?.id ?? null)
     } catch (err) {
       const msg = err instanceof ApiError ? err.message : '加载失败'
       toast('error', '加载失败', msg)
@@ -274,12 +276,14 @@ export default function KbExtractionConfigPage() {
     const payload: Record<string, unknown> = {
       name: catForm.name, description: catForm.description, return_type: catForm.return_type,
       extraction_strategy: catForm.extraction_strategy, fixed_query: catForm.fixed_query,
-      confidence_threshold: catForm.confidence_threshold === '' ? null : Number(catForm.confidence_threshold),
       top_k: catForm.top_k === '' ? null : Number(catForm.top_k),
       rerank_top_k: catForm.rerank_top_k === '' ? null : Number(catForm.rerank_top_k),
       max_tokens: catForm.max_tokens === '' ? null : Number(catForm.max_tokens),
       name_source: catForm.name_source, name_term_base_id: catForm.name_term_base_id || null,
       name_term_field: catForm.name_term_field, query_sources: catForm.query_sources, is_active: catForm.is_active,
+    }
+    if (catForm.extraction_strategy === 'auto') {
+      payload.confidence_threshold = catForm.confidence_threshold === '' ? null : Number(catForm.confidence_threshold)
     }
     setCatSaving(true)
     try {
@@ -827,6 +831,44 @@ export default function KbExtractionConfigPage() {
             <Input value={catForm.fixed_query} onChange={(e) => setCatForm({ ...catForm, fixed_query: e.target.value })} placeholder="如：标准名称 标准编号 文件编号" className="mt-1 h-10" />
           </label>
 
+          {/* Query 关联（挂载到 Query 的术语集） */}
+          <div className="space-y-2 rounded-xl border border-border p-3">
+            <p className="text-xs font-medium text-muted-foreground">Query 关联（挂载到 Query 的术语集）</p>
+            {catForm.query_sources.filter((qs) => qs.in_query).length === 0 ? (
+              <p className="py-3 text-center text-xs text-muted-foreground">暂无参与 Query 的术语集，在下方术语集中开启“参与 Query”后展示</p>
+            ) : (
+              catForm.query_sources.map((qs, idx) => (
+                qs.in_query ? (
+                  <div key={idx} className="rounded-lg border border-border bg-muted/30 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <span className="text-amber-500">#</span>
+                        <p className="truncate text-sm font-medium text-foreground">{qs.label || '未命名术语集'}</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          主查询上限
+                          <Input type="number" min={1} value={qs.query_main_limit} onChange={(e) => updateQuerySource(idx, { query_main_limit: Number(e.target.value) || 1 })} className="h-7 w-14" />
+                        </label>
+                        <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          精简上限
+                          <Input type="number" min={1} value={qs.query_refined_limit} onChange={(e) => updateQuerySource(idx, { query_refined_limit: Number(e.target.value) || 1 })} className="h-7 w-14" />
+                        </label>
+                        <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          精简
+                          <Switch checked={qs.dedupe} onCheckedChange={(v) => updateQuerySource(idx, { dedupe: v })} />
+                        </label>
+                        <Button type="button" variant="ghost" size="sm" title="取消与 Query 的关联（术语集保留）" onClick={() => updateQuerySource(idx, { in_query: false })}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : null
+              ))
+            )}
+          </div>
+
           {/* Query 术语集 */}
           <div className="space-y-2 rounded-xl border border-border p-3">
             <div className="flex items-center justify-between">
@@ -881,9 +923,11 @@ export default function KbExtractionConfigPage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block text-xs font-medium text-muted-foreground">置信度阈值（覆盖全局）
-              <Input type="number" step="0.05" value={catForm.confidence_threshold} onChange={(e) => setCatForm({ ...catForm, confidence_threshold: e.target.value })} placeholder="留空用全局默认" className="mt-1 h-10" />
-            </label>
+            {catForm.extraction_strategy === 'auto' && (
+              <label className="block text-xs font-medium text-muted-foreground">置信度阈值（覆盖全局）
+                <Input type="number" step="0.05" value={catForm.confidence_threshold} onChange={(e) => setCatForm({ ...catForm, confidence_threshold: e.target.value })} placeholder="留空用全局默认" className="mt-1 h-10" />
+              </label>
+            )}
             <label className="block text-xs font-medium text-muted-foreground">检索 top_k（覆盖全局）
               <Input type="number" value={catForm.top_k} onChange={(e) => setCatForm({ ...catForm, top_k: e.target.value })} placeholder="留空用全局默认" className="mt-1 h-10" />
             </label>

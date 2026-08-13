@@ -371,7 +371,7 @@ async def run_script(
     kb_id: uuid.UUID, payload: ScriptRunRequest, request: Request,
     db: AsyncSession = Depends(get_db), current_user: User = Depends(require_not_pending),
 ) -> dict:
-    kb = await _kb_access(kb_id, db=db, current_user=current_user)
-    _require_editor(kb)
+    # 脚本试运行允许 KB 任意成员（对齐原项目：配置中心试运行）
+    await _kb_access(kb_id, db=db, current_user=current_user)
     data = await svc.run_script(db, kb_id, payload.model_dump(exclude_none=True))
     return success(data=data)

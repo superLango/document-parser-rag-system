@@ -13,6 +13,7 @@ mkdirSync(OUT, { recursive: true })
 const results = []
 const errors = []
 const stamp = Date.now().toString(36)
+let ignoreAbortError = false
 
 async function api(method, path, body, token) {
   const headers = { 'Content-Type': 'application/json' }
@@ -32,6 +33,7 @@ function attachErrors(page, label) {
   page.on('console', (m) => {
     if (m.type() !== 'error') return
     if (/401|429/.test(m.text())) return
+    if (ignoreAbortError && /net::ERR_FAILED/.test(m.text())) return
     errors.push(`[${label}] console: ${m.text()}`)
   })
 }
@@ -120,20 +122,31 @@ async function run() {
   await page.click('[data-testid="btn-prompt-editor-save"]')
   await page.waitForTimeout(1000)
 
-  // 6. 删除 schema Prompt（先返回列表）
-  await page.locator('button:has-text("返回")').first().click()
+  // 6. 模板详情加载失败降级：拦截模板详情请求，重载后仍保留类别与已保存提示词
+  ignoreAbortError = true
+  await page.route(`**/api/v1/kb/${kb.id}/schema-templates/${tpl.id}`, (route) => route.abort())
+  await page.reload({ waitUntil: 'networkidle' })
   await page.waitForTimeout(1500)
-  await page.click(`[data-testid="btn-del-prompt-${schemaP.id}"]`)
-  await page.waitForTimeout(300)
-  await page.click('[data-testid="btn-confirm-delete"]')
-  await page.waitForTimeout(1000)
-  results.push({ id: 'S4-07', name: '删除 Prompt（确认弹框）', pass: !(await page.textContent('body')).includes('SchemaPrompt') })
+  const fallbackInput = await page.locator('[data-testid="schema-user-input"]').count() === 1
+    ? await page.inputValue('[data-testid="schema-user-input"]') : ''
+  results.push({ id: 'S4-07', name: '模板加载失败降级（保留类别与提示词）', pass: (await page.textContent('body')).includes('室温拉伸') && fallbackInput.includes('抗拉强度') })
+  await page.unroute(`**/api/v1/kb/${kb.id}/schema-templates/${tpl.id}`)
+  ignoreAbortError = false
 
-  // 7. 移动端
+  // 7. 删除 schema Prompt（先返回列表）
+  await page.locator('button:has-text("返回")').first().click()
+  await page.waitForSelector(`[data-testid="btn-del-prompt-${schemaP.id}"]`, { timeout: 10000 })
+  await page.click(`[data-testid="btn-del-prompt-${schemaP.id}"]`)
+  await page.waitForSelector('[data-testid="btn-confirm-delete"]', { timeout: 5000 })
+  await page.click('[data-testid="btn-confirm-delete"]')
+  await page.waitForSelector(`[data-testid="btn-del-prompt-${schemaP.id}"]`, { state: 'detached', timeout: 10000 }).catch(() => {})
+  results.push({ id: 'S4-08', name: '删除 Prompt（确认弹框+列表移除）', pass: (await page.locator(`[data-testid="btn-del-prompt-${schemaP.id}"]`).count()) === 0 })
+
+  // 8. 移动端
   await page.setViewportSize({ width: 375, height: 720 })
   await page.reload({ waitUntil: 'networkidle' })
   await page.waitForTimeout(800)
-  results.push({ id: 'S4-08', name: '移动端 Prompt 列表可用', pass: (await page.textContent('body')).includes('简单Prompt') && await page.locator('[data-testid="btn-new-prompt"]').count() === 1 })
+  results.push({ id: 'S4-09', name: '移动端 Prompt 列表可用', pass: (await page.textContent('body')).includes('简单Prompt') && await page.locator('[data-testid="btn-new-prompt"]').count() === 1 })
 
   await browser.close()
 

@@ -86,8 +86,8 @@ async def test_cross_kb_isolation(client, super_token):
     assert r.json()["data"]["items"] == []
 
 
-async def test_script_run_requires_editor(client, super_token):
-    """L5M34-S2-04：脚本调试运行需要 editor。"""
+async def test_script_run_allowed_for_viewer(client, super_token):
+    """L5M34-S2-04：脚本试运行允许 KB 任意成员（对齐原项目）。"""
     owner = await _mk_user(client, super_token, "s10run")
     viewer = await _mk_user(client, super_token, "s10runv")
     owner_token = await _login(client, owner)
@@ -96,5 +96,6 @@ async def test_script_run_requires_editor(client, super_token):
     viewer_token = await _invite(client, owner_token, kb["id"], viewer, "viewer")
     r = await client.post(f"/api/v1/kb/{kb['id']}/extraction-config/scripts/run",
                           headers={H: f"Bearer {viewer_token}"},
-                          json={"code": "def run(args): return {}"})
-    assert r.status_code == 403
+                          json={"code": "def run(args): return {'ok': 1}"})
+    assert r.status_code == 200, r.text
+    assert r.json()["data"]["ok"] is True

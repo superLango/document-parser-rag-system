@@ -379,8 +379,9 @@ async def delete_schema_field(db, kb_id, template_id, category_id, field_id) -> 
 # ============================================================
 # Prompt 模板
 # ============================================================
-def _serialize_prompt(p: PromptTemplate, contents: list[PromptContent]) -> dict:
+def _serialize_prompt(p: PromptTemplate, contents: list[PromptContent], category_names: dict[str, str] | None = None) -> dict:
     simple = next((c for c in contents if c.category_id is None), None)
+    names = category_names or {}
     return {
         "id": str(p.id),
         "name": p.name,
@@ -392,12 +393,29 @@ def _serialize_prompt(p: PromptTemplate, contents: list[PromptContent]) -> dict:
         "system_prompt": simple.system_prompt if simple else "",
         "user_prompt": simple.user_prompt if simple else "",
         "categories": [
-            {"category_id": str(c.category_id), "user_prompt": c.user_prompt}
+            {
+                "category_id": str(c.category_id),
+                "category_name": names.get(str(c.category_id), ""),
+                "user_prompt": c.user_prompt,
+            }
             for c in contents if c.category_id is not None
         ],
         "created_at": p.created_at.isoformat(),
         "updated_at": p.updated_at.isoformat() if p.updated_at else None,
     }
+
+
+async def _prompt_category_names(db: AsyncSession, category_ids) -> dict[str, str]:
+    """批量解析 Prompt 类别名（对齐原项目 get_prompt 返回 category_name）。"""
+    ids = {uuid.UUID(str(i)) for i in category_ids if i}
+    if not ids:
+        return {}
+    rows = (
+        await db.execute(
+            select(SchemaCategory.id, SchemaCategory.name).where(SchemaCategory.id.in_(ids))
+        )
+    ).all()
+    return {str(i): n for i, n in rows}
 
 
 async def _get_prompt(db, kb_id, prompt_id) -> PromptTemplate:
@@ -423,13 +441,23 @@ async def list_prompts(db, kb_id) -> list[dict]:
     rows = (
         await db.execute(select(PromptTemplate).where(PromptTemplate.kb_id == kb_id).order_by(PromptTemplate.created_at))
     ).scalars().all()
-    items = []
-    for p in rows:
+    contents_by_prompt: dict[uuid.UUID, list[PromptContent]] = {}
+    if rows:
         contents = (
-            await db.execute(select(PromptContent).where(PromptContent.prompt_id == p.id))
+            await db.execute(
+                select(PromptContent).where(PromptContent.prompt_id.in_([p.id for p in rows]))
+            )
         ).scalars().all()
-        items.append(_serialize_prompt(p, contents))
-    return items
+        for c in contents:
+            contents_by_prompt.setdefault(c.prompt_id, []).append(c)
+    category_ids = [
+        c.category_id for cs in contents_by_prompt.values() for c in cs if c.category_id is not None
+    ]
+    names = await _prompt_category_names(db, category_ids)
+    return [
+        _serialize_prompt(p, contents_by_prompt.get(p.id, []), names)
+        for p in rows
+    ]
 
 
 async def get_prompt(db, kb_id, prompt_id) -> dict:
@@ -437,7 +465,8 @@ async def get_prompt(db, kb_id, prompt_id) -> dict:
     contents = (
         await db.execute(select(PromptContent).where(PromptContent.prompt_id == p.id))
     ).scalars().all()
-    return _serialize_prompt(p, contents)
+    names = await _prompt_category_names(db, [c.category_id for c in contents if c.category_id is not None])
+    return _serialize_prompt(p, contents, names)
 
 
 async def create_prompt(db, kb_id, user_id, data: dict) -> dict:
@@ -485,7 +514,8 @@ async def update_prompt(db, kb_id, prompt_id, data: dict) -> dict:
     contents = (
         await db.execute(select(PromptContent).where(PromptContent.prompt_id == p.id))
     ).scalars().all()
-    return _serialize_prompt(p, contents)
+    names = await _prompt_category_names(db, [c.category_id for c in contents if c.category_id is not None])
+    return _serialize_prompt(p, contents, names)
 
 
 async def save_prompt_content(db, kb_id, prompt_id, data: dict) -> dict:
@@ -534,7 +564,8 @@ async def save_prompt_content(db, kb_id, prompt_id, data: dict) -> dict:
     contents = (
         await db.execute(select(PromptContent).where(PromptContent.prompt_id == p.id))
     ).scalars().all()
-    return _serialize_prompt(p, contents)
+    names = await _prompt_category_names(db, [c.category_id for c in contents if c.category_id is not None])
+    return _serialize_prompt(p, contents, names)
 
 
 async def delete_prompt(db, kb_id, prompt_id) -> None:
@@ -625,6 +656,22 @@ async def get_rule_group(db, kb_id, group_id) -> dict:
                 )
             )
         ).scalars().all()
+    # 批量解析 term_base 来源类别名：name 为空时回退术语集名称（对齐原项目）
+    term_base_ids = {
+        c.name_term_base_id
+        for c in cats
+        if c.name_source == "term_base" and not (c.name or "").strip() and c.name_term_base_id
+    }
+    term_names: dict[str, str] = {}
+    if term_base_ids:
+        term_rows = (
+            await db.execute(
+                select(TermBase.id, TermBase.name).where(
+                    TermBase.kb_id == kb_id, TermBase.id.in_(list(term_base_ids))
+                )
+            )
+        ).all()
+        term_names = {str(t): n for t, n in term_rows}
     items = (
         await db.execute(
             select(RuleGroupItem).where(RuleGroupItem.group_id == g.id).order_by(
@@ -654,10 +701,12 @@ async def get_rule_group(db, kb_id, group_id) -> dict:
             "stage": it.stage,
             "sort_order": it.sort_order,
         })
-    categories = [
-        {"id": str(c.id), "name": c.name or "", "rules": by_cat.get(str(c.id), [])}
-        for c in cats
-    ]
+    categories = []
+    for c in cats:
+        cat_name = c.name or ""
+        if not cat_name.strip() and c.name_source == "term_base":
+            cat_name = term_names.get(str(c.name_term_base_id)) or cat_name
+        categories.append({"id": str(c.id), "name": cat_name, "rules": by_cat.get(str(c.id), [])})
     if "" in by_cat:
         categories.append({"id": "", "name": "全局", "rules": by_cat[""]})
     return {

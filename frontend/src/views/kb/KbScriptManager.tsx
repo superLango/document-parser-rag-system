@@ -291,7 +291,7 @@ export default function KbScriptManager({ kbId, canManage }: Props) {
           <CardContent className="flex flex-1 flex-col p-0">
             <div className="flex items-center gap-2 border-b border-border px-3 py-2">
               <Code2 className="h-4 w-4 text-muted-foreground" />
-              <Input value={editor.name} onChange={(e) => onFieldChange({ name: e.target.value })} placeholder="脚本名称" className="h-7 max-w-52 font-medium" data-testid="script-name-input" />
+              <Input value={editor.name} onChange={(e) => onFieldChange({ name: e.target.value })} placeholder="脚本名称" className="h-7 max-w-52 font-medium" disabled={!canManage} data-testid="script-name-input" />
               {canManage && <Switch checked={editor.enabled} onCheckedChange={(v) => onFieldChange({ enabled: v })} />}
               <span className="text-xs text-muted-foreground">{editor.enabled ? '启用' : '关闭'}</span>
               <div className="ml-auto flex items-center gap-2">
@@ -310,7 +310,11 @@ export default function KbScriptManager({ kbId, canManage }: Props) {
               </div>
               <div className="col-span-3">
                 <p className="text-[10px] text-muted-foreground">说明</p>
-                <Input value={editor.description} onChange={(e) => onFieldChange({ description: e.target.value })} placeholder="脚本用途说明" className="mt-0.5 h-7" />
+                {canManage ? (
+                  <Input value={editor.description} onChange={(e) => onFieldChange({ description: e.target.value })} placeholder="脚本用途说明" className="mt-0.5 h-7" />
+                ) : (
+                  <div className="mt-0.5 truncate text-xs">{editor.description || '—'}</div>
+                )}
               </div>
             </div>
             {/* 代码编辑器（带行号） */}
@@ -326,7 +330,8 @@ export default function KbScriptManager({ kbId, canManage }: Props) {
                     value={editor.code}
                     onChange={(e) => onCodeChange(e.target.value)}
                     spellCheck={false}
-                    className="h-full w-full resize-none bg-transparent p-3 font-mono text-[13px] leading-5 text-foreground outline-none"
+                    readOnly={!canManage}
+                    className="h-full w-full resize-none bg-transparent p-3 font-mono text-[13px] leading-5 text-foreground outline-none disabled:cursor-not-allowed"
                     data-testid="script-code-input"
                   />
                 </div>
@@ -486,7 +491,7 @@ export default function KbScriptManager({ kbId, canManage }: Props) {
           <div className="grid gap-3 p-3 lg:grid-cols-2">
             <div>
               <p className="text-[10px] text-muted-foreground">请求参数 (args JSON)</p>
-              <textarea value={debugArgsText} onChange={(e) => setDebugArgsText(e.target.value)} spellCheck={false} className="mt-1 min-h-[140px] w-full rounded border border-input bg-muted/30 p-3 font-mono text-[12px]" data-testid="debug-args-input" />
+              <textarea value={debugArgsText} onChange={(e) => setDebugArgsText(e.target.value)} spellCheck={false} readOnly={!canManage && !currentScriptId} className="mt-1 min-h-[140px] w-full rounded border border-input bg-muted/30 p-3 font-mono text-[12px] disabled:cursor-not-allowed" data-testid="debug-args-input" />
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground">返回结果</p>
