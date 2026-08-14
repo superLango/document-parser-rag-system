@@ -50,7 +50,7 @@ DEFAULT_GLOBAL_CONFIG: dict = {
         "context_top_k": 20,
         "context_max_tokens": 28000,
         "context": {"chars_per_token": 1.5, "min_keep_chars": 200, "truncate_marker": "\n[...内容截断...]"},
-        "category_recall": {"top_k": 5, "per_dim_top_k": 10},
+        "category_recall": {"mode": "loose", "top_k": 5, "per_dim_top_k": 10},
         "query_embed": {
             "content_max_chars": 2000,
             "dedupe_similarity_threshold": 0.85,

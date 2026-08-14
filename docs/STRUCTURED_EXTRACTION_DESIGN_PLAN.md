@@ -295,3 +295,8 @@ GET result / status / history / export
 | 第三版 | 增加“类别召回模式”配置（严格/宽松/关闭，KB 级可选） | 终态对齐原项目提前剔除，阈值由评测驱动 |
 
 前端配套：第二版在结果 summary 展示 skipped 原因，辅助配置调优；第三版在全局配置增加“类别召回模式”开关。
+
+**实施状态（2026-08-14）**：
+- 第二版已落地：每类别结果含 `hit_score/hit_count`；summary 新增 `recall`（mode/participated/kept/skipped_count/score_bands）与带 `score` 的 skipped 原因；抽取详情页展示召回统计与剔除原因；
+- 第三版已落地：全局配置新增 `retrieval.category_recall.mode`（loose/strict/off），strict 支持类别级置信度覆盖 + 词法兜底（SearchResult.keyword_matched + hybrid.keyword_min_hits）；off 模式零命中类别以空上下文参与；
+- 真实验证（GJB3325A-2019，test_doc 新文档，上传→解析→索引→抽取）：strict（阈值 0.9、词法兜底关闭）41 类全部按“置信度低于阈值”剔除并记录分数；loose 41 类全部参与、产出 24 条记录；Schema 术语集（项目大类 39 项展开 + 检测项目/试验方法 Query 注入 Prompt）验证生效。

@@ -22,6 +22,8 @@ class ExtractionTarget:
     fields: list[dict] = field(default_factory=list)
     schema: dict = field(default_factory=dict)
     hits: list[dict] = field(default_factory=list)
+    hit_score: float | None = None
+    hit_count: int = 0
     term_data: dict[str, list[dict]] = field(default_factory=dict)
 
 
@@ -31,6 +33,8 @@ class CategoryResult:
     records: list[dict] = field(default_factory=list)
     rejected: list[dict] = field(default_factory=list)
     missing_fields: list[str] = field(default_factory=list)
+    hit_score: float | None = None
+    hit_count: int = 0
 
     def to_dict(self) -> dict:
         return {
@@ -38,6 +42,8 @@ class CategoryResult:
             "records": self.records,
             "rejected": self.rejected,
             "missing_fields": self.missing_fields,
+            "hit_score": self.hit_score,
+            "hit_count": self.hit_count,
         }
 
 
@@ -45,3 +51,4 @@ class CategoryResult:
 class SkippedFeature:
     feature: str
     reason: str
+    score: float | None = None

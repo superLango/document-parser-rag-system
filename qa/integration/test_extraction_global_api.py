@@ -28,7 +28,7 @@ async def test_global_config_default_and_save(client, super_token):
     r = await client.put(f"/api/v1/kb/{kb_id}/extraction-config/global", headers=h, json={
         "enabled": True,
         "content": {
-            "retrieval": {"top_k": 30, "hybrid": {"rrf_k": 80}},
+            "retrieval": {"top_k": 30, "hybrid": {"rrf_k": 80}, "category_recall": {"mode": "strict", "top_k": 6}},
             "kb_tool": {"script_timeout": 20},
         },
     })
@@ -38,11 +38,14 @@ async def test_global_config_default_and_save(client, super_token):
     assert saved["content"]["retrieval"]["top_k"] == 30
     assert saved["content"]["retrieval"]["hybrid"]["rrf_k"] == 80
     assert saved["content"]["retrieval"]["candidate_mult"] == 2  # 未覆盖保留默认
+    assert saved["content"]["retrieval"]["category_recall"]["mode"] == "strict"
+    assert saved["content"]["retrieval"]["category_recall"]["top_k"] == 6
     assert saved["content"]["kb_tool"]["script_timeout"] == 20
 
     r = await client.get(f"/api/v1/kb/{kb_id}/extraction-config/global", headers=h)
     data = r.json()["data"]
     assert data["version"] == 2
+    assert data["content"]["retrieval"]["category_recall"]["mode"] == "strict"
     assert data["content"]["retrieval"]["top_k"] == 30
     assert data["content"]["kb_tool"]["script_timeout"] == 20
 

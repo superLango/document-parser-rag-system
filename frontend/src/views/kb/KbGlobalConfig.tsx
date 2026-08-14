@@ -211,6 +211,21 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
 
         <div className="space-y-1.5 rounded-lg border border-primary/15 bg-primary/5 p-2">
           <p className="text-sm font-semibold text-primary-strong">类别召回</p>
+          <div className="space-y-1 rounded-lg bg-muted/30 p-2 sm:col-span-2">
+            <label className="text-xs font-medium text-muted-foreground">类别召回模式</label>
+            <Select
+              value={cfg.retrieval.category_recall.mode ?? 'loose'}
+              disabled={!canManage}
+              onChange={(e) => patchNested('retrieval', 'category_recall', { ...cfg.retrieval.category_recall, mode: e.target.value as 'loose' | 'strict' | 'off' })}
+              className="mt-0.5 h-8"
+              data-testid="global-category-recall-mode"
+            >
+              <option value="loose">宽松（零命中剔除，阈值仅记录）</option>
+              <option value="strict">严格（命中分低于阈值且词法不足时剔除）</option>
+              <option value="off">关闭（全部类别参与，不做召回过滤）</option>
+            </Select>
+            <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">9.5 演进：宽松为第一版行为；严格启用「置信度阈值 + 词法兜底（keyword_min_hits）」；关闭则所有类别进入抽取（零命中类别以空上下文参与）。</p>
+          </div>
           <div className="grid gap-1.5 sm:grid-cols-2">
             <Field label="融合 top_k" hint="类别命中判定前，各维融合后保留的候选块数；太小可能漏判类别，太大增加计算量" value={cfg.retrieval.category_recall.top_k} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'category_recall', { ...cfg.retrieval.category_recall, top_k: num(v, 5) })} />
             <Field label="每维 top_k" hint="类别命中判定前，每维独立召回的候选块数（dense 与 BM25 各自召回）" value={cfg.retrieval.category_recall.per_dim_top_k} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'category_recall', { ...cfg.retrieval.category_recall, per_dim_top_k: num(v, 10) })} />

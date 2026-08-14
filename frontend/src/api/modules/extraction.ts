@@ -25,6 +25,8 @@ export interface ExtractionCategory {
   records: Record<string, unknown>[]
   rejected: Record<string, unknown>[]
   missing_fields: string[]
+  hit_score?: number | null
+  hit_count?: number
 }
 
 export interface ExtractionResultData {

@@ -240,6 +240,14 @@ class GlobalRetrievalWeights(BaseModel):
 
 
 class GlobalCategoryRecallConfig(BaseModel):
+    """类别召回模式（9.5 演进第三版）。
+
+    - loose：零命中剔除，置信度仅记录不强制（第一版行为）；
+    - strict：命中分 < 阈值且词法命中不足时剔除（词法兜底 keyword_min_hits）；
+    - off：全部类别参与（关闭召回过滤，含零命中类别）。
+    """
+
+    mode: Literal["loose", "strict", "off"] = "loose"
     top_k: int = Field(default=5, ge=1)
     per_dim_top_k: int = Field(default=10, ge=1)
 

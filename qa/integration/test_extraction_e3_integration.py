@@ -84,3 +84,10 @@ async def test_pipeline_full_flow(client, super_token, db_session):
     # Prompt 中术语集占位符被真实值替换
     user_prompt = "".join(m["content"] for m in mock.calls[0] if m["role"] == "user")
     assert "[拉伸强度]" in user_prompt
+    # 9.5 第二版：召回统计与命中分数落库
+    recall = result["summary"].get("recall") or {}
+    assert recall.get("mode") == "loose"
+    assert recall.get("participated", 0) >= 1
+    assert set((recall.get("score_bands") or {}).keys()) == {"0-0.3", "0.3-0.5", "0.5-0.7", "0.7-0.9", "0.9-1.0"}
+    assert "hit_score" in result["categories"][0]
+    assert "hit_count" in result["categories"][0]

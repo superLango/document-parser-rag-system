@@ -53,3 +53,14 @@ async def test_script_timeout_global_override(client, super_token):
     assert r.status_code == 200, r.text
     assert r.json()["data"]["ok"] is False
     assert "超时" in r.json()["data"]["error"]
+
+
+async def test_global_config_invalid_recall_mode(client, super_token):
+    """L4G-04：非法类别召回模式被拒。"""
+    kb_id = await _kb(client, super_token, "S10召回模式非法")
+    h = {H: f"Bearer {super_token}"}
+    r = await client.put(f"/api/v1/kb/{kb_id}/extraction-config/global", headers=h, json={
+        "enabled": True,
+        "content": {"retrieval": {"category_recall": {"mode": "bogus"}}},
+    })
+    assert r.status_code in (400, 422), r.text

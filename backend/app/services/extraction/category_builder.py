@@ -99,27 +99,14 @@ async def build(
     targets, skipped = await _build_targets(cfg, db, kb_id)
     global_retrieval = cfg.global_config.get("retrieval") or {}
     default_top_k = top_k or global_retrieval.get("top_k") or 10
+    category_recall = global_retrieval.get("category_recall") or {}
+    recall_mode = category_recall.get("mode") or "loose"
+    default_threshold = float(global_retrieval.get("default_confidence_threshold") or 0.35)
+    keyword_min_hits = int((global_retrieval.get("hybrid") or {}).get("keyword_min_hits") or 1)
     kept: list[ExtractionTarget] = []
-    for t in targets:
-        t.query_terms = await _build_query_terms(db, kb_id, t)
-        query = " ".join([t.feature, *t.query_terms]).strip() or t.feature
-        hits = await retrieval_service.search(
-            db,
-            uuid.UUID(str(kb_id)),
-            query,
-            top_k=t.top_k or default_top_k,
-            filters=SearchFilters(document_id=uuid.UUID(str(document_id))),
-        )
-        if not hits:
-            skipped.append(SkippedFeature(feature=t.feature, reason="零命中（检索无结果）"))
-            continue
-        t.hits = [{
-            "chunk_id": h.chunk_id,
-            "content": h.content,
-            "parent_text": h.parent_text,
-            "source_pages": h.source_pages,
-            "score": h.score,
-        } for h in hits]
+
+    async def _finalize(t: ExtractionTarget) -> None:
+        """补全 schema 与 Query 术语集数据（串行阶段完成，避免并发共享会话查询）。"""
         properties = {}
         for f in t.fields:
             prop: dict = {"type": f.get("type") or "string"}
@@ -131,7 +118,6 @@ async def build(
                 prop["example"] = f["example"]
             properties[f["name"]] = prop
         t.schema = {"type": t.return_type, "properties": properties}
-        # 预载 Query 术语集数据（串行阶段完成，避免并发 gather 内共享会话查询）
         for qs in t.query_sources or []:
             label = (qs.get("label") or "").strip()
             tb_id = qs.get("term_base_id")
@@ -140,5 +126,48 @@ async def build(
                     db, kb_id, uuid.UUID(str(tb_id))
                 )
         kept.append(t)
+
+    for t in targets:
+        t.query_terms = await _build_query_terms(db, kb_id, t)
+        query = " ".join([t.feature, *t.query_terms]).strip() or t.feature
+        hits = await retrieval_service.search(
+            db,
+            uuid.UUID(str(kb_id)),
+            query,
+            top_k=t.top_k or default_top_k,
+            filters=SearchFilters(document_id=uuid.UUID(str(document_id))),
+        )
+        if not hits:
+            if recall_mode == "off":
+                # 第三版「关闭」：全部类别参与，零命中类别以空上下文进入抽取
+                t.hits = []
+                await _finalize(t)
+            else:
+                skipped.append(SkippedFeature(feature=t.feature, reason="零命中（检索无结果）", score=0.0))
+            continue
+        t.hits = [{
+            "chunk_id": h.chunk_id,
+            "content": h.content,
+            "parent_text": h.parent_text,
+            "source_pages": h.source_pages,
+            "score": h.score,
+        } for h in hits]
+        t.hit_score = max(h.score for h in hits)
+        t.hit_count = len(hits)
+        kw_count = sum(1 for h in hits if getattr(h, "keyword_matched", False))
+        # 第二版/第三版：严格模式按阈值剔除（类别级覆盖优先），词法命中兜底
+        threshold = (
+            float(t.confidence_threshold)
+            if t.confidence_threshold is not None
+            else default_threshold
+        )
+        if recall_mode == "strict" and t.hit_score < threshold and kw_count < keyword_min_hits:
+            skipped.append(SkippedFeature(
+                feature=t.feature,
+                reason=f"置信度低于阈值（最高分 {t.hit_score:.3f} < {threshold}，词法命中 {kw_count} < {keyword_min_hits}）",
+                score=t.hit_score,
+            ))
+            continue
+        await _finalize(t)
     schemas = {"categories": {t.feature: t.schema for t in kept}}
     return kept, skipped, schemas

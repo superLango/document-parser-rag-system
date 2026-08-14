@@ -123,7 +123,10 @@ async def _extract_single(session, cfg, target, client, engine_params, retrieval
             truncate_marker=context_cfg.get("truncate_marker") or "\n[...内容截断...]",
         )
         if not context:
-            return CategoryResult(feature=target.feature, records=[], rejected=[])
+            return CategoryResult(
+                feature=target.feature, records=[], rejected=[],
+                hit_score=target.hit_score, hit_count=target.hit_count,
+            )
 
         records = await llm_extractor.extract_category(cfg, target, context, client, engine_params)
         # 规则组脚本：post 后处理 + validation 校验
@@ -136,7 +139,10 @@ async def _extract_single(session, cfg, target, client, engine_params, retrieval
                 rules=rules, script_timeout=script_timeout, term_data=term_data,
             )
         missing = llm_extractor.missing_required_fields(kept, target.schema)
-        return CategoryResult(feature=target.feature, records=kept, rejected=rejected, missing_fields=missing)
+        return CategoryResult(
+            feature=target.feature, records=kept, rejected=rejected,
+            missing_fields=missing, hit_score=target.hit_score, hit_count=target.hit_count,
+        )
     except Exception as exc:
         logger.error("类别抽取异常", feature=target.feature, error=str(exc))
         raise
@@ -153,14 +159,32 @@ def _rules_for_category(cfg, category_id: str) -> list[dict]:
 
 
 def _result(cfg, categories, all_categories, skipped, elapsed, total_start) -> dict:
+    skipped_items = [
+        {"feature": s.feature, "reason": s.reason, "score": s.score}
+        for s in skipped if isinstance(s, SkippedFeature)
+    ]
+    # 第二版：命中分数分布（调参与阈值决策依据）
+    scores = [c.hit_score for c in all_categories if c.hit_score is not None]
+    bands = {
+        "0-0.3": sum(1 for x in scores if x < 0.3),
+        "0.3-0.5": sum(1 for x in scores if 0.3 <= x < 0.5),
+        "0.5-0.7": sum(1 for x in scores if 0.5 <= x < 0.7),
+        "0.7-0.9": sum(1 for x in scores if 0.7 <= x < 0.9),
+        "0.9-1.0": sum(1 for x in scores if x >= 0.9),
+    }
+    recall_mode = ((cfg.global_config.get("retrieval") or {}).get("category_recall") or {}).get("mode") or "loose"
     summary = {
         "total_records": sum(len(c.records) for c in categories),
         "kept_categories": len(categories),
         "categories_attempted": len(all_categories),
-        "skipped": [
-            {"feature": s.feature, "reason": s.reason}
-            for s in skipped if isinstance(s, SkippedFeature)
-        ],
+        "skipped": skipped_items,
+        "recall": {
+            "mode": recall_mode,
+            "participated": len(all_categories) + len(skipped_items),
+            "kept": len(all_categories),
+            "skipped_count": len(skipped_items),
+            "score_bands": bands,
+        },
     }
     timing = {"total_sec": round(time.monotonic() - total_start, 2)}
     tpl = cfg.schema_templates[0] if cfg.schema_templates else None

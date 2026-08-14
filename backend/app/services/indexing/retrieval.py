@@ -51,6 +51,7 @@ class SearchResult:
     source_pages: list = field(default_factory=list)
     has_table: bool = False
     score: float = 0.0
+    keyword_matched: bool = False
 
 
 def _vector_literal(vec: list[float]) -> str:
@@ -148,7 +149,8 @@ class RetrievalService:
         chunk_map: dict[str, dict] = {cid: h for cid, _, h in dense_list}
         for h in keyword_hits:
             chunk_map.setdefault(h["chunk_id"], h)
-        raw_hits = [self._to_hit(chunk_map[cid], score) for cid, score in top]
+        kw_set = {h["chunk_id"] for h in keyword_hits}
+        raw_hits = [self._to_hit(chunk_map[cid], score, cid in kw_set) for cid, score in top]
         reranked = await passthrough_reranker.rerank(query, raw_hits, top_k)
         logger.info(
             "检索完成",
@@ -228,7 +230,7 @@ class RetrievalService:
         ]
 
     @staticmethod
-    def _to_hit(hit: dict, score: float) -> SearchResult:
+    def _to_hit(hit: dict, score: float, keyword_matched: bool = False) -> SearchResult:
         """组装检索结果（移除内部距离字段）。"""
         return SearchResult(
             chunk_id=hit["chunk_id"],
@@ -240,6 +242,7 @@ class RetrievalService:
             source_pages=hit.get("source_pages", []),
             has_table=bool(hit.get("has_table", False)),
             score=round(score, 6),
+            keyword_matched=keyword_matched,
         )
 
 

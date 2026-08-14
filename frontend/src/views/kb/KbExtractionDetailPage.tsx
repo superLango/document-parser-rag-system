@@ -233,6 +233,8 @@ export default function KbExtractionDetailPage() {
 
   const missingFields = Array.from(new Set((result?.categories || []).flatMap((c) => c.missing_fields || [])))
   const totalRecords = (result?.categories || []).reduce((sum, c) => sum + (c.records || []).length, 0)
+  const recall = (result?.summary?.recall ?? null) as { mode?: string; participated?: number; kept?: number; skipped_count?: number; score_bands?: Record<string, number> } | null
+  const skipped = (result?.summary?.skipped ?? []) as { feature: string; reason: string; score?: number | null }[]
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
@@ -413,6 +415,29 @@ export default function KbExtractionDetailPage() {
                     <p className="text-xs">AI 正在分析文档并提取结构化数据</p>
                   </div>
                 )}
+                {recall && (
+                  <div className="mb-3 rounded-xl border border-primary/15 bg-primary/5 p-3">
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
+                      <span className="font-semibold text-primary-strong">召回统计</span>
+                      <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary border-primary/20">{recall.mode === 'strict' ? '严格' : recall.mode === 'off' ? '关闭' : '宽松'}</Badge>
+                      <span className="text-muted-foreground">参与 {recall.participated ?? 0} · 保留 {recall.kept ?? 0} · 剔除 {recall.skipped_count ?? 0}</span>
+                    </div>
+                    {recall.score_bands && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {Object.entries(recall.score_bands).map(([k, v]) => (
+                          <Badge key={k} variant="outline" className="text-[10px]">{k}: {v}</Badge>
+                        ))}
+                      </div>
+                    )}
+                    {skipped.length > 0 && (
+                      <div className="mt-2 space-y-1 border-t border-primary/10 pt-2">
+                        {skipped.map((s, i) => (
+                          <p key={i} className="text-[11px] leading-snug text-muted-foreground">· {s.feature}：{s.reason}{s.score != null ? `（score=${Number(s.score).toFixed(3)}）` : ''}</p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
                 {result && viewMode === 'table' && (result.categories?.length ?? 0) > 0 && (
                   <div className="space-y-2">
                     {result.categories.map((cat) => {
@@ -429,7 +454,10 @@ export default function KbExtractionDetailPage() {
                               <p className="truncate text-sm font-semibold">{cat.feature}</p>
                               <p className="text-xs text-muted-foreground">{(cat.records || []).length} 条记录</p>
                             </div>
-                            <Badge variant="secondary" className="text-[10px]">{headers.length} 字段</Badge>
+                            <div className="flex items-center gap-1.5">
+                              {cat.hit_score != null && <Badge variant="outline" className="text-[10px]">{cat.hit_score.toFixed(3)}</Badge>}
+                              <Badge variant="secondary" className="text-[10px]">{headers.length} 字段</Badge>
+                            </div>
                           </button>
                           {expanded && (
                             <div className="overflow-x-auto border-t border-border/50">
