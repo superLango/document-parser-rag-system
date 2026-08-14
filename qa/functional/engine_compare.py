@@ -55,6 +55,25 @@ ENGINES = [
             "concurrency": {"max_concurrency": 4, "cross_category": 4, "within_category": 2},
         },
     },
+    {
+        "name": "LE_pkg_default",
+        "engine": "LangExtractPkg",
+        "desc": "LangExtract 原包默认（passes2/示例3/窗口28k，与自研同参）",
+        "params": {
+            "format_type": "JSON", "fence_output": False, "max_examples": 3,
+            "passes": 2, "context_window_chars": 28000, "max_char_buffer": 40000,
+        },
+    },
+    {
+        "name": "LE_pkg_strong",
+        "engine": "LangExtractPkg",
+        "desc": "LangExtract 原包强约束（passes3/示例5/围栏/窗口16k/类内并发2）",
+        "params": {
+            "format_type": "JSON", "fence_output": True, "max_examples": 5,
+            "passes": 3, "context_window_chars": 16000, "max_char_buffer": 20000,
+            "concurrency": {"max_concurrency": 4, "cross_category": 4, "within_category": 2},
+        },
+    },
 ]
 
 
@@ -84,6 +103,7 @@ async def set_engine(client, h, engine: str, params: dict):
         "format_type": "JSON", "fence_output": False, "max_examples": 3,
         "passes": 2, "context_window_chars": 28000, "max_char_buffer": 40000,
     })
+    engines.setdefault("LangExtractPkg", dict(engines["LangExtract"]))
     engines[engine] = _deep_merge(engines[engine], params)
     payload = {
         "enabled": True,
@@ -124,6 +144,10 @@ async def main():
         token = await login(client)
         h = {"Authorization": f"Bearer {token}"}
         for eng in ENGINES:
+            result_file = RESULTS_DIR / f"engine_{eng['name']}.json"
+            if result_file.exists():
+                print(f"[{eng['name']}] 已存在结果，跳过", flush=True)
+                continue
             await set_engine(client, h, eng["engine"], eng["params"])
             print(f"\n===== ENGINE {eng['name']} | {eng['desc']} =====", flush=True)
             t0 = time.monotonic()

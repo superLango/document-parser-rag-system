@@ -74,6 +74,10 @@ async def run(
         client = llm_client or await kb_resource_service.build_llm_client(session, kb_id)
         engine = (cfg.global_config.get("llm") or {}).get("engine") or "BaseExtract"
         engine_params = ((cfg.global_config.get("llm") or {}).get("engines") or {}).get(engine) or {}
+        llm_endpoint = None
+        if engine == "LangExtractPkg":
+            # 原包适配器需要 KB LLM 资源原始配置（api_base/model/api_key）
+            llm_endpoint = await kb_resource_service.get_llm_resource_raw(session, kb_id)
         retrieval_cfg = cfg.global_config.get("retrieval") or {}
         context_cfg = retrieval_cfg.get("context") or {}
         kb_tool = cfg.global_config.get("kb_tool") or {}
@@ -91,7 +95,7 @@ async def run(
             async with sem:
                 return await _extract_single(
                     session, cfg, target, client, engine, engine_params, retrieval_cfg,
-                    context_cfg, script_timeout, str(document_id), term_data,
+                    context_cfg, script_timeout, str(document_id), term_data, llm_endpoint,
                 )
 
         await _progress(progress_cb, 40, "开始类别抽取")
@@ -111,7 +115,7 @@ async def run(
             await session.close()
 
 
-async def _extract_single(session, cfg, target, client, engine, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None) -> CategoryResult:
+async def _extract_single(session, cfg, target, client, engine, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None, llm_endpoint=None) -> CategoryResult:
     try:
         hits = target.hits or []
         # context_top_k：拼接上下文的最大块数（超出部分按相关性截断）
@@ -131,7 +135,15 @@ async def _extract_single(session, cfg, target, client, engine, engine_params, r
                 hit_score=target.hit_score, hit_count=target.hit_count,
             )
 
-        records = await llm_extractor.extract_category(cfg, target, context, client, engine_params, engine=engine)
+        if engine == "LangExtractPkg":
+            from app.services.extraction import lang_pkg_extractor
+
+            records = await lang_pkg_extractor.extract_category_pkg(
+                kb_id=cfg.kb_id, cfg=cfg, target=target, context=context,
+                engine_params=engine_params, llm_endpoint=llm_endpoint or {},
+            )
+        else:
+            records = await llm_extractor.extract_category(cfg, target, context, client, engine_params, engine=engine)
         # 规则组脚本：post 后处理 + validation 校验
         rules = _rules_for_category(cfg, target.category_id)
         kept, rejected = records, []

@@ -129,7 +129,7 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
     })
   }
 
-  function patchEngine(engine: 'BaseExtract' | 'LangExtract', key: string, value: unknown, sub?: string) {
+  function patchEngine(engine: 'BaseExtract' | 'LangExtract' | 'LangExtractPkg', key: string, value: unknown, sub?: string) {
     setCfg((prev) => {
       if (!prev) return prev
       const eng = prev.llm.engines[engine] as GlobalEngineConfig & Record<string, unknown>
@@ -284,7 +284,8 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
               data-testid="global-llm-engine"
             >
               <option value="BaseExtract">BaseExtract（直抽）</option>
-              <option value="LangExtract">LangExtract（结构化强约束）</option>
+              <option value="LangExtract">LangExtract（自研·结构化强约束）</option>
+              <option value="LangExtractPkg">LangExtractPkg（原包·XGrammar 强约束）</option>
             </Select>
             <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">BaseExtract 直抽快；LangExtract 多轮+示例约束，更稳但更慢。切换后下方参数自动联动。</p>
           </div>

@@ -41,3 +41,31 @@
 | LE_strong | OK | 18 | 12 | 0.5519 | 0.1111 | 0.8333 | 0.6111 | **0.5209** | 266.3 |
 
 > 说明：当前两个引擎共用 llm_extractor.extract_category 同一实现，LangExtract 专属参数（passes/max_examples/fence_output/format_type/context_window_chars/max_char_buffer）未被消费，差异仅来自 LLM 输出随机性与并发参数。
+
+
+## 抽取引擎对比（BaseExtract vs LangExtract，GJB3325A-2019）
+
+| 引擎 | 状态 | 记录数 | 剔除 | 字段填充率 | 完整率 | 可用率 | 脚本命中率 | 综合分 | 耗时(s) |
+|---|---|---|---|---|---|---|---|---|---|
+| BE_default | OK | 16 | 11 | 0.5178 | 0.0 | 0.6875 | 0.375 | **0.4093** | 145.7 |
+| BE_batch | OK | 14 | 12 | 0.5497 | 0.0 | 0.7143 | 0.3571 | **0.4245** | 130.6 |
+| LE_default | OK | 18 | 11 | 0.5874 | 0.1667 | 0.7778 | 0.6667 | **0.5417** | 210.9 |
+| LE_strong | OK | 21 | 11 | 0.5896 | 0.1429 | 0.8571 | 0.6667 | **0.5564** | 271.2 |
+| LE_pkg_default | FAIL | - | - | - | - | - | - | - | - |
+| LE_pkg_strong | FAIL | - | - | - | - | - | - | - | - |
+
+> 说明：当前两个引擎共用 llm_extractor.extract_category 同一实现，LangExtract 专属参数（passes/max_examples/fence_output/format_type/context_window_chars/max_char_buffer）未被消费，差异仅来自 LLM 输出随机性与并发参数。
+
+
+## 抽取引擎对比（BaseExtract vs LangExtract，GJB3325A-2019）
+
+| 引擎 | 状态 | 记录数 | 剔除 | 字段填充率 | 完整率 | 可用率 | 脚本命中率 | 综合分 | 耗时(s) |
+|---|---|---|---|---|---|---|---|---|---|
+| BE_default | OK | None | None | None | None | None | None | **None** | None |
+| BE_batch | OK | None | None | None | None | None | None | **None** | None |
+| LE_default | OK | None | None | None | None | None | None | **None** | None |
+| LE_strong | OK | None | None | None | None | None | None | **None** | None |
+| LE_pkg_default | OK | 72 | 8 | 0.5438 | 0.1528 | 1.0 | 0.9861 | **0.6264** | 424.8 |
+| LE_pkg_strong | OK | 43 | 6 | 0.7336 | 0.3023 | 0.907 | 0.9767 | **0.7056** | 296.3 |
+
+> 说明：当前两个引擎共用 llm_extractor.extract_category 同一实现，LangExtract 专属参数（passes/max_examples/fence_output/format_type/context_window_chars/max_char_buffer）未被消费，差异仅来自 LLM 输出随机性与并发参数。

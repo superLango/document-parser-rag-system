@@ -17,7 +17,7 @@ async def test_default_config_structure():
     assert cfg["retrieval"]["top_k"] == 10
     assert cfg["retrieval"]["hybrid"]["rrf_k"] == 60.0
     assert cfg["llm"]["engine"] == "BaseExtract"
-    assert set(cfg["llm"]["engines"]) == {"BaseExtract", "LangExtract"}
+    assert set(cfg["llm"]["engines"]) == {"BaseExtract", "LangExtract", "LangExtractPkg"}
     assert cfg["kb_tool"]["script_timeout"] == 60
 
 

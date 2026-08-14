@@ -86,6 +86,12 @@ async def test_llm_resource(db: AsyncSession, kb_id, data: dict | None = None) -
         return {"ok": False, "error": str(exc)}
 
 
+async def get_llm_resource_raw(db: AsyncSession, kb_id) -> dict:
+    """读取 LLM 资源原始配置（内部使用：适配器/诊断，含未脱敏 api_key）。"""
+    kb = await _get_kb(db, kb_id)
+    return dict(_read_config(kb))
+
+
 async def build_llm_client(db: AsyncSession, kb_id) -> OpenAICompatibleClient:
     """构建已启用的 LLM 客户端（E3 抽取流水线使用）。"""
     kb = await _get_kb(db, kb_id)
