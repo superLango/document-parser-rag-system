@@ -19,7 +19,7 @@ from qa.functional.global_config_tuning import (
 
 DOC = "427fcb66-87f0-4e9b-904f-e8dbeaf4b2ab"  # GJB3325A-2019
 BASE = "http://127.0.0.1:8000/api/v1"
-RESULTS_DIR = Path(__file__).resolve().parents[2] / "qa/evaluation/results"
+RESULTS_DIR = Path(__file__).resolve().parents[2] / "qa/evaluation/results/engine_compare"
 
 ENGINES = [
     {

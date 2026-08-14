@@ -69,3 +69,11 @@
 | LE_pkg_strong | OK | 43 | 6 | 0.7336 | 0.3023 | 0.907 | 0.9767 | **0.7056** | 296.3 |
 
 > 说明：当前两个引擎共用 llm_extractor.extract_category 同一实现，LangExtract 专属参数（passes/max_examples/fence_output/format_type/context_window_chars/max_char_buffer）未被消费，差异仅来自 LLM 输出随机性与并发参数。
+
+
+## LSAM-JD01-0016 验证（BASE vs STRICT）
+
+| 配置 | 状态 | 保留类别 | 记录数 | 剔除 | 字段填充率 | 完整率 | 可用率 | 脚本命中率 | 综合分 | 耗时(s) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| LSAM_BASE | OK | 41 | 25 | 16 | 0.7125 | 0.16 | 0.8 | 0.4 | **0.5494** | 185.9 |
+| LSAM_STRICT | OK | 29 | 18 | 11 | 0.7523 | 0.2778 | 0.8333 | 0.5556 | **0.6244** | 140.6 |

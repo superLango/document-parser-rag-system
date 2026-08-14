@@ -21,6 +21,7 @@ from qa.functional.global_config_tuning import (
 
 DOC_LSAM = "92f5b301-b65d-4415-a925-94f3d29c704a"
 BASE = "http://127.0.0.1:8000/api/v1"
+RESULTS_DIR = Path(__file__).resolve().parents[2] / "qa/evaluation/results/validation"
 
 CONFIGS = [
     {
@@ -96,6 +97,13 @@ async def main():
             m["elapsed_sec"] = round(dt, 1)
             results[cfg["name"]] = m
             print("METRICS:", json.dumps(m, ensure_ascii=False), flush=True)
+            RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+            (RESULTS_DIR / f"lsam_{cfg['name']}.json").write_text(
+                json.dumps(res, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            (RESULTS_DIR / f"lsam_{cfg['name']}_metrics.json").write_text(
+                json.dumps(m, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
         await set_config(client, h, {})  # 恢复默认
 
     REPORT.parent.mkdir(parents=True, exist_ok=True)

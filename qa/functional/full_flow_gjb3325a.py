@@ -16,6 +16,7 @@ from pathlib import Path
 import httpx
 
 BASE = "http://127.0.0.1:8000/api/v1"
+RESULTS_DIR = Path(__file__).resolve().parents[2] / "qa/evaluation/results/full_flow"
 KB = "25e7d8ef-6268-42d7-ba0c-62516ffc93f9"
 PDF = Path(__file__).resolve().parents[2] / "test_doc" / "GJB3325A-2019.pdf"
 DETECT_TB = "ab03135a-781f-40ff-a2d6-75c9c9941d47"  # 检测项目
@@ -46,7 +47,7 @@ async def set_global_config(client, h, mode: str) -> None:
                 "engines": {
                     "BaseExtract": {
                         "timeout": 600,
-                        "concurrency": {"max_concurrency": 8, "cross_category": 8, "within_category": 1},
+                        "concurrency": {"max_concurrency": 4, "cross_category": 4, "within_category": 1},
                     }
                 },
             },
@@ -188,7 +189,11 @@ async def main() -> None:
         await wait_index(client, h, doc_id)
         await probe_recall_and_prompt(client, h, doc_id)
 
+        RESULTS_DIR.mkdir(parents=True, exist_ok=True)
         res_strict = await run_extraction(client, h, doc_id, "strict")
+        (RESULTS_DIR / "gjb_strict.json").write_text(
+            json.dumps(res_strict, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         summary = res_strict["summary"]
         print("\nRESULT(strict):", json.dumps({
             "schema": res_strict.get("schema_name"),
@@ -205,6 +210,9 @@ async def main() -> None:
 
         await set_global_config(client, h, "loose")
         res_loose = await run_extraction(client, h, doc_id, "loose")
+        (RESULTS_DIR / "gjb_loose.json").write_text(
+            json.dumps(res_loose, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         s2 = res_loose["summary"]
         print("\nRESULT(loose):", json.dumps({
             "total_records": s2.get("total_records"),

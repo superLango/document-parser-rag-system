@@ -26,7 +26,7 @@ BASE_RETRIEVAL = {
     "category_recall": {"mode": "loose", "top_k": 5, "per_dim_top_k": 10},
     "hybrid": {"enabled": True, "rrf_k": 60.0, "dense_weight": 1.0, "keyword_weight": 1.2, "keyword_min_hits": 1},
 }
-RESULTS_DIR = Path(__file__).resolve().parents[2] / "qa/evaluation/results"
+RESULTS_DIR = Path(__file__).resolve().parents[2] / "qa/evaluation/results/global_config_tuning"
 
 
 async def reset_stuck_extraction() -> None:
