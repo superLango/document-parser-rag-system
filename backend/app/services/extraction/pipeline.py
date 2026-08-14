@@ -90,7 +90,7 @@ async def run(
         async def extract_one(target):
             async with sem:
                 return await _extract_single(
-                    session, cfg, target, client, engine_params, retrieval_cfg,
+                    session, cfg, target, client, engine, engine_params, retrieval_cfg,
                     context_cfg, script_timeout, str(document_id), term_data,
                 )
 
@@ -111,7 +111,7 @@ async def run(
             await session.close()
 
 
-async def _extract_single(session, cfg, target, client, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None) -> CategoryResult:
+async def _extract_single(session, cfg, target, client, engine, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None) -> CategoryResult:
     try:
         hits = target.hits or []
         # context_top_k：拼接上下文的最大块数（超出部分按相关性截断）
@@ -131,7 +131,7 @@ async def _extract_single(session, cfg, target, client, engine_params, retrieval
                 hit_score=target.hit_score, hit_count=target.hit_count,
             )
 
-        records = await llm_extractor.extract_category(cfg, target, context, client, engine_params)
+        records = await llm_extractor.extract_category(cfg, target, context, client, engine_params, engine=engine)
         # 规则组脚本：post 后处理 + validation 校验
         rules = _rules_for_category(cfg, target.category_id)
         kept, rejected = records, []

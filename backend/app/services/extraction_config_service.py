@@ -73,6 +73,7 @@ DEFAULT_GLOBAL_CONFIG: dict = {
                 "format_type": "JSON", "fence_output": False, "max_examples": 3, "passes": 2,
                 "context_window_chars": 28000, "max_char_buffer": 40000,
                 "concurrency": {"max_concurrency": 24, "cross_category": 8, "within_category": 3},
+                "batch": {"single_threshold": 8000, "batch_chars": 6000, "overlap": 500, "context_truncate": 32000},
             },
         },
     },

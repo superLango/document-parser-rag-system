@@ -52,6 +52,9 @@ class OpenAICompatibleClient:
         temperature: float = 0.0,
         max_tokens: int | None = None,
         timeout: int | None = None,
+        top_p: float | None = None,
+        top_k: int | None = None,
+        enable_thinking: bool | None = None,
     ) -> str:
         payload: dict = {
             "model": self.model,
@@ -60,6 +63,12 @@ class OpenAICompatibleClient:
         }
         if max_tokens:
             payload["max_tokens"] = int(max_tokens)
+        if top_p is not None:
+            payload["top_p"] = float(top_p)
+        if top_k is not None:
+            payload["top_k"] = int(top_k)
+        if enable_thinking:
+            payload["chat_template_kwargs"] = {"enable_thinking": True}
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
         try:

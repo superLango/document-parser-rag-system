@@ -29,3 +29,15 @@
 - 上下文/混合权重：BASE（top_k=10、context_max_tokens=28000、混合默认）优于 CTX_SMALL/CTX_LARGE/KW_HEAVY/DENSE_HEAVY；
 - 推荐写入 KB 的全局配置：retrieval.category_recall.mode=strict、default_confidence_threshold=0.035、keyword_min_hits=999（词法兜底关闭），其余检索参数保持默认；LLM 超时/并发按部署环境调整（调优时使用 timeout=600、并发 4~8 更稳定）。
 - 注意：RRF 融合分整体在 0.03~0.05 区间，阈值需按文档集重新标定；词法兜底当前按“召回块是否命中 BM25”计数，区分度有限，后续可改为按命中 chunk 的 BM25 分数统计。
+
+
+## 抽取引擎对比（BaseExtract vs LangExtract，GJB3325A-2019）
+
+| 引擎 | 状态 | 记录数 | 剔除 | 字段填充率 | 完整率 | 可用率 | 脚本命中率 | 综合分 | 耗时(s) |
+|---|---|---|---|---|---|---|---|---|---|
+| BE_default | OK | 12 | 12 | 0.4966 | 0.0833 | 0.75 | 0.5 | **0.4571** | 116.8 |
+| BE_batch | OK | 16 | 11 | 0.5076 | 0.0 | 0.6875 | 0.375 | **0.4058** | 130.7 |
+| LE_default | OK | 19 | 12 | 0.6144 | 0.1579 | 0.7895 | 0.6842 | **0.5545** | 185.9 |
+| LE_strong | OK | 18 | 12 | 0.5519 | 0.1111 | 0.8333 | 0.6111 | **0.5209** | 266.3 |
+
+> 说明：当前两个引擎共用 llm_extractor.extract_category 同一实现，LangExtract 专属参数（passes/max_examples/fence_output/format_type/context_window_chars/max_char_buffer）未被消费，差异仅来自 LLM 输出随机性与并发参数。
