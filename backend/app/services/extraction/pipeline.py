@@ -114,9 +114,12 @@ async def run(
 async def _extract_single(session, cfg, target, client, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None) -> CategoryResult:
     try:
         hits = target.hits or []
+        # context_top_k：拼接上下文的最大块数（超出部分按相关性截断）
+        ctx_top_k = target.top_k or int(retrieval_cfg.get("top_k") or 10)
+        ctx_top_k = min(ctx_top_k, int(retrieval_cfg.get("context_top_k") or ctx_top_k))
         context = context_assembler.assemble(
             hits,
-            top_k=target.top_k or int(retrieval_cfg.get("top_k") or 10),
+            top_k=ctx_top_k,
             max_tokens=int(retrieval_cfg.get("context_max_tokens") or 28000),
             chars_per_token=float(context_cfg.get("chars_per_token") or 1.5),
             min_keep_chars=int(context_cfg.get("min_keep_chars") or 200),

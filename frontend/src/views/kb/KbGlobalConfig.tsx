@@ -227,8 +227,8 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
             <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">9.5 演进：宽松为第一版行为；严格启用「置信度阈值 + 词法兜底（keyword_min_hits）」；关闭则所有类别进入抽取（零命中类别以空上下文参与）。</p>
           </div>
           <div className="grid gap-1.5 sm:grid-cols-2">
-            <Field label="融合 top_k" hint="类别命中判定前，各维融合后保留的候选块数；太小可能漏判类别，太大增加计算量" value={cfg.retrieval.category_recall.top_k} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'category_recall', { ...cfg.retrieval.category_recall, top_k: num(v, 5) })} />
-            <Field label="每维 top_k" hint="类别命中判定前，每维独立召回的候选块数（dense 与 BM25 各自召回）" value={cfg.retrieval.category_recall.per_dim_top_k} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'category_recall', { ...cfg.retrieval.category_recall, per_dim_top_k: num(v, 10) })} />
+            <Field label="融合 top_k" hint="类别召回第一段检索的融合候选数：决定类别是否参与抽取（两段式召回，已生效）" value={cfg.retrieval.category_recall.top_k} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'category_recall', { ...cfg.retrieval.category_recall, top_k: num(v, 5) })} />
+            <Field label="每维 top_k" hint="类别召回第一段检索时 dense/BM25 每路独立召回数（已生效）" value={cfg.retrieval.category_recall.per_dim_top_k} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'category_recall', { ...cfg.retrieval.category_recall, per_dim_top_k: num(v, 10) })} />
           </div>
         </div>
 
@@ -239,8 +239,8 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
             Schema 类别 → Query 术语集中按类别配置；此处仅设全局语义去重阈值与查询文本长度上限。
           </p>
           <div className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-4">
-            <Field label="content 最大字符" hint="构造主查询文本的最大字符数，超长部分会被截断，避免嵌入耗时过长（预留，检索接线后生效）" value={cfg.retrieval.query_embed.content_max_chars} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'query_embed', { ...cfg.retrieval.query_embed, content_max_chars: num(v, 2000) })} />
-            <Field label="语义去重阈值" hint="精简查询时的语义去重阈值（0~1）：两条词条相似度≥该值视为重复并合并；仅对 Schema 类别中开启“精简”的 Query 术语集生效" type="number" step={0.01} min={0} value={cfg.retrieval.query_embed.dedupe_similarity_threshold} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'query_embed', { ...cfg.retrieval.query_embed, dedupe_similarity_threshold: num(v, 0.85) })} />
+            <Field label="content 最大字符" hint="构造类别查询文本的最大字符数，超长截断后进入检索（已生效）" value={cfg.retrieval.query_embed.content_max_chars} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'query_embed', { ...cfg.retrieval.query_embed, content_max_chars: num(v, 2000) })} />
+            <Field label="语义去重阈值" hint="精简查询的语义去重阈值（0~1）：Query 术语集开启 dedupe 后，词条余弦≥该值视为重复并合并，受 query_refined_limit 截断（已生效）" type="number" step={0.01} min={0} value={cfg.retrieval.query_embed.dedupe_similarity_threshold} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'query_embed', { ...cfg.retrieval.query_embed, dedupe_similarity_threshold: num(v, 0.85) })} />
           </div>
         </div>
 
@@ -257,9 +257,9 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
 
         <div className="space-y-1.5 rounded-lg border border-warning/25 bg-warning/10 p-2">
           <p className="text-sm font-semibold text-warning">重排序（reranker · 预留）</p>
-          <ToggleField label="启用重排序" hint="预留：接入重排模型后对召回候选二次排序；开启时须配置可加载的重排模型" value={cfg.retrieval.reranker.enabled} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, enabled: v })} />
+          <ToggleField label="启用重排序" hint="开启后对召回候选做 BGE-M3 语义精排（当前环境无独立重排模型，复用嵌入模型，已生效）；后续可替换为 bge-reranker" value={cfg.retrieval.reranker.enabled} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, enabled: v })} />
           <div className="grid gap-1.5 sm:grid-cols-2">
-            <Field label="重排模型" hint="重排模型路径或标识（预留）；启用重排后必须可加载，否则提交任务校验失败" type="text" value={cfg.retrieval.reranker.model} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, model: String(v) })} />
+            <Field label="重排模型" hint="重排模型路径或标识（当前语义精排固定使用 BGE-M3，该字段为标识记录）" type="text" value={cfg.retrieval.reranker.model} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, model: String(v) })} />
             <Field label="重排后 top_n" hint="重排后保留并送入抽取的块数；开启重排后生效（预留）" value={cfg.retrieval.reranker.top_n} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, top_n: num(v, 15) })} />
           </div>
         </div>

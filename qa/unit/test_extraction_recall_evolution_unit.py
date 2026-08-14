@@ -56,7 +56,7 @@ async def _search_mock(query: str, **kwargs):
 
 
 async def _run(monkeypatch, mode, threshold=0.5, keyword_min=1, kw_hit=False):
-    async def fake_search(db, kb_id, query, top_k=None, filters=None):
+    async def fake_search(db, kb_id, query, top_k=None, filters=None, per_dim_top_k=None, retrieval_config=None):
         return await _search_mock(query, kw=kw_hit)
 
     monkeypatch.setattr(category_builder, "retrieval_service", SimpleNamespace(search=fake_search))

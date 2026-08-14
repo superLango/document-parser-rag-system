@@ -24,7 +24,7 @@ from app.core.logging import get_logger
 from app.services.embedding.embedding_service import embedding_service
 
 from .bm25 import kb_bm25_service
-from .reranker import passthrough_reranker
+from .reranker import get_reranker
 
 logger = get_logger(__name__)
 
@@ -87,6 +87,8 @@ class RetrievalService:
         query: str,
         top_k: int | None = None,
         filters: SearchFilters | None = None,
+        retrieval_config: dict | None = None,
+        per_dim_top_k: int | None = None,
     ) -> list[SearchResult]:
         """执行混合检索。
 
@@ -96,6 +98,9 @@ class RetrievalService:
             query: 查询文本。
             top_k: 返回数量（默认配置）。
             filters: 可选过滤（文档/表格/层级）。
+            retrieval_config: KB 全局配置 retrieval 区块；未传时回退 settings 常量。
+                生效键：candidate_mult/weights/hybrid.enabled/rrf_k/dense_weight/keyword_weight/
+                reranker.enabled/top_n；per_dim_top_k 用于类别召回两段式检索的每维候选数。
 
         Returns:
             按 RRF 分数降序的命中列表。
@@ -103,8 +108,20 @@ class RetrievalService:
         query = (query or "").strip()
         if not query:
             return []
-        top_k = top_k or settings.RETRIEVAL_TOP_K
-        candidate_k = max(top_k * settings.RETRIEVAL_CANDIDATE_MULT, top_k)
+        rcfg = retrieval_config or {}
+        top_k = top_k or int(rcfg.get("top_k") or settings.RETRIEVAL_TOP_K)
+        candidate_mult = int(rcfg.get("candidate_mult") or settings.RETRIEVAL_CANDIDATE_MULT)
+        if per_dim_top_k is not None:
+            candidate_k = max(int(per_dim_top_k), top_k)
+        else:
+            candidate_k = max(top_k * candidate_mult, top_k)
+        title_w = float((rcfg.get("weights") or {}).get("title") or settings.RETRIEVAL_TITLE_WEIGHT)
+        content_w = float((rcfg.get("weights") or {}).get("content") or settings.RETRIEVAL_CONTENT_WEIGHT)
+        hybrid_cfg = rcfg.get("hybrid") or {}
+        hybrid_enabled = bool(hybrid_cfg.get("enabled", True))
+        rrf_k = float(hybrid_cfg.get("rrf_k") or settings.RETRIEVAL_RRF_K)
+        dense_w = float(hybrid_cfg.get("dense_weight") or settings.RETRIEVAL_DENSE_WEIGHT)
+        kw_w = float(hybrid_cfg.get("keyword_weight") or settings.RETRIEVAL_KEYWORD_WEIGHT)
         filters_sql, filter_params = _filters_sql(filters)
 
         # 1) 查询编码（title/content 双路一次批量）
@@ -119,11 +136,13 @@ class RetrievalService:
             db, kb_id, "content_vector", content_vec, candidate_k, filters_sql, filter_params
         )
 
-        # 3) BM25 词法路（同样应用过滤条件）
-        keyword_hits = await kb_bm25_service.score_query(
-            db, kb_id, query, top_k=candidate_k,
-            extra_where=filters_sql, extra_params=filter_params,
-        )
+        # 3) BM25 词法路（hybrid.enabled 控制；同样应用过滤条件）
+        keyword_hits = []
+        if hybrid_enabled:
+            keyword_hits = await kb_bm25_service.score_query(
+                db, kb_id, query, top_k=candidate_k,
+                extra_where=filters_sql, extra_params=filter_params,
+            )
 
         # 4) dense 融合（title 0.2 + content 0.8，相似度加权）
         dense_scores: dict[str, dict] = {}
@@ -135,23 +154,22 @@ class RetrievalService:
         for cid, hit in dense_scores.items():
             t = 1.0 - hit.get("_t", 1.0)
             c = 1.0 - hit.get("_c", 1.0)
-            score = (
-                settings.RETRIEVAL_TITLE_WEIGHT * t
-                + settings.RETRIEVAL_CONTENT_WEIGHT * c
-            )
+            score = title_w * t + content_w * c
             dense_list.append((cid, score, hit))
         dense_list.sort(key=lambda x: x[1], reverse=True)
 
-        # 5) RRF 融合
-        top = self._rrf_fuse(dense_list, keyword_hits, top_k)
+        # 5) RRF 融合（权重可配置）
+        top = self._rrf_fuse(dense_list, keyword_hits, top_k, rrf_k, dense_w, kw_w)
 
-        # 6) rerank 占位（本期直通）
+        # 6) 重排（默认直通；reranker.enabled=true 时 BGE-M3 语义精排）
         chunk_map: dict[str, dict] = {cid: h for cid, _, h in dense_list}
         for h in keyword_hits:
             chunk_map.setdefault(h["chunk_id"], h)
         kw_set = {h["chunk_id"] for h in keyword_hits}
         raw_hits = [self._to_hit(chunk_map[cid], score, cid in kw_set) for cid, score in top]
-        reranked = await passthrough_reranker.rerank(query, raw_hits, top_k)
+        reranker = get_reranker(rcfg)
+        reranker_top_n = int((rcfg.get("reranker") or {}).get("top_n") or top_k)
+        reranked = await reranker.rerank(query, raw_hits, min(reranker_top_n, top_k))
         logger.info(
             "检索完成",
             kb_id=str(kb_id),
@@ -168,11 +186,11 @@ class RetrievalService:
         dense_list: list[tuple[str, float, dict]],
         keyword_hits: list[dict],
         top_k: int,
+        rrf_k: float,
+        dense_w: float,
+        kw_w: float,
     ) -> list[tuple[str, float]]:
         """RRF 融合：dense 排名（已按加权分排序）与 BM25 排名加权求和。"""
-        rrf_k = settings.RETRIEVAL_RRF_K
-        dense_w = settings.RETRIEVAL_DENSE_WEIGHT
-        kw_w = settings.RETRIEVAL_KEYWORD_WEIGHT
         dense_rank = {cid: i + 1 for i, (cid, _, _) in enumerate(dense_list)}
         keyword_rank = {h["chunk_id"]: i + 1 for i, h in enumerate(keyword_hits)}
         fused: list[tuple[str, float]] = []
