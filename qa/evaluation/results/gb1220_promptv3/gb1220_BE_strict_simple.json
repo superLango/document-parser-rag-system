@@ -1,0 +1,524 @@
+{
+  "categories": [
+    {
+      "feature": "标准信息",
+      "result": [
+        {
+          "标准名称": "不锈钢棒",
+          "标准编号": "GB/T 1220-2007"
+        }
+      ]
+    },
+    {
+      "feature": "相变点",
+      "result": [
+        {
+          "type": "array",
+          "properties": {
+            "位置": {
+              "type": "string",
+              "example": "D/4",
+              "required": true,
+              "description": "该类别取样时的取样位置"
+            },
+            "单位": {
+              "type": "string",
+              "example": "Mpa",
+              "required": true,
+              "description": "对应项目的单位"
+            },
+            "方向": {
+              "type": "string",
+              "example": "纵向",
+              "required": true,
+              "description": "该类别取样的方向"
+            },
+            "取样数量": {
+              "type": "number",
+              "example": "3",
+              "required": true,
+              "description": "该类型对取样的要求，取几个样品；如果出现取一批这种就认为是取1个样品，如果是一批取5个样，则就是取5个样品"
+            },
+            "取样说明": {
+              "type": "string",
+              "example": "氢含量在产品上取样",
+              "required": true,
+              "description": "该类型取样品时的一些说明"
+            },
+            "尺寸厚度": {
+              "type": "string",
+              "example": "≤300",
+              "required": true,
+              "description": "获取样品规定的尺寸厚度，截面尺寸，棒材尺寸等全都算作尺寸厚度"
+            },
+            "材料牌号": {
+              "type": "string",
+              "example": "GH4169",
+              "required": true,
+              "description": "该检测类型下的牌号"
+            },
+            "标准要求": {
+              "type": "string",
+              "example": "≥960",
+              "required": true,
+              "description": "对应项目的检测标准要求，如果出现不大于、不小于、小于、大于等这类，要转化为数学符号"
+            },
+            "试样状态": {
+              "type": "string",
+              "example": "铸态",
+              "required": true,
+              "description": "获取样品的试样状态"
+            },
+            "试验方法": {
+              "type": "string",
+              "example": "GB/T 228.1-2021",
+              "required": true,
+              "description": "获取对应检测类别对应项目的试验方法，可通过method术语集获取，如果抽取结果没有版本年代号，则查看该类别下method术语集中是否存在，如果存在则获取最新版本号或者年代号的试验方法编号，如果不存在，则保留原版抽取结果"
+            },
+            "试验温度": {
+              "type": "string",
+              "example": "500",
+              "required": true,
+              "description": "获取标准规定样品试验温度"
+            },
+            "锻件类型": {
+              "type": "string",
+              "example": "锻件棒材",
+              "required": true,
+              "description": "获取标准要求样品的锻件类型"
+            },
+            "项目名称": {
+              "type": "string",
+              "example": "抗拉强度 Rm",
+              "required": true,
+              "description": "该检测类型下的项目名称，从该类型下的item术语集中获取使名称归一化"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "feature": "晶间腐蚀",
+      "result": []
+    },
+    {
+      "feature": "抗氧化",
+      "result": [
+        {
+          "type": "array",
+          "properties": {
+            "位置": {
+              "type": "string",
+              "example": "D/4",
+              "required": true,
+              "description": "该类别取样时的取样位置"
+            },
+            "单位": {
+              "type": "string",
+              "example": "Mpa",
+              "required": true,
+              "description": "对应项目的单位"
+            },
+            "方向": {
+              "type": "string",
+              "example": "纵向",
+              "required": true,
+              "description": "该类别取样的方向"
+            },
+            "取样数量": {
+              "type": "number",
+              "example": "3",
+              "required": true,
+              "description": "该类型对取样的要求，取几个样品；如果出现取一批这种就认为是取1个样品，如果是一批取5个样，则就是取5个样品"
+            },
+            "取样说明": {
+              "type": "string",
+              "example": "氢含量在产品上取样",
+              "required": true,
+              "description": "该类型取样品时的一些说明"
+            },
+            "尺寸厚度": {
+              "type": "string",
+              "example": "≤300",
+              "required": true,
+              "description": "获取样品规定的尺寸厚度，截面尺寸，棒材尺寸等全都算作尺寸厚度"
+            },
+            "材料牌号": {
+              "type": "string",
+              "example": "GH4169",
+              "required": true,
+              "description": "该检测类型下的牌号"
+            },
+            "标准要求": {
+              "type": "string",
+              "example": "≥960",
+              "required": true,
+              "description": "对应项目的检测标准要求，如果出现不大于、不小于、小于、大于等这类，要转化为数学符号"
+            },
+            "试样状态": {
+              "type": "string",
+              "example": "铸态",
+              "required": true,
+              "description": "获取样品的试样状态"
+            },
+            "试验方法": {
+              "type": "string",
+              "example": "GB/T 228.1-2021",
+              "required": true,
+              "description": "获取对应检测类别对应项目的试验方法，可通过method术语集获取，如果抽取结果没有版本年代号，则查看该类别下method术语集中是否存在，如果存在则获取最新版本号或者年代号的试验方法编号，如果不存在，则保留原版抽取结果"
+            },
+            "试验温度": {
+              "type": "string",
+              "example": "500",
+              "required": true,
+              "description": "获取标准规定样品试验温度"
+            },
+            "锻件类型": {
+              "type": "string",
+              "example": "锻件棒材",
+              "required": true,
+              "description": "获取标准要求样品的锻件类型"
+            },
+            "项目名称": {
+              "type": "string",
+              "example": "抗拉强度 Rm",
+              "required": true,
+              "description": "该检测类型下的项目名称，从该类型下的item术语集中获取使名称归一化"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "feature": "低温拉伸",
+      "result": []
+    },
+    {
+      "feature": "布氏硬度",
+      "result": [
+        {
+          "位置": "",
+          "单位": "HBW",
+          "方向": "",
+          "取样数量": 0,
+          "取样说明": "",
+          "尺寸厚度": "",
+          "材料牌号": "022Cr19Ni5Mo3Si2N",
+          "标准要求": "≤290",
+          "试样状态": "",
+          "试验方法": "GB/T 231.1-2018",
+          "试验温度": "",
+          "锻件类型": "",
+          "项目名称": "布氏硬度(HBW)",
+          "_normalize_type": "vector"
+        }
+      ]
+    },
+    {
+      "feature": "高倍组织",
+      "result": []
+    },
+    {
+      "feature": "晶粒度",
+      "result": [
+        {
+          "位置": "",
+          "单位": "",
+          "方向": "",
+          "取样数量": 1,
+          "取样说明": "任一钢棒",
+          "尺寸厚度": "",
+          "材料牌号": "",
+          "标准要求": "",
+          "试样状态": "",
+          "试验方法": "GB/T 6394",
+          "试验温度": "",
+          "锻件类型": "",
+          "项目名称": "晶粒度",
+          "_normalize_type": "vector"
+        },
+        {
+          "位置": "任一钢棒",
+          "单位": "",
+          "方向": "",
+          "取样数量": 1,
+          "取样说明": "",
+          "尺寸厚度": "",
+          "材料牌号": "",
+          "标准要求": "",
+          "试样状态": "",
+          "试验方法": "GB/T 6394",
+          "试验温度": "",
+          "锻件类型": "",
+          "项目名称": "晶粒度",
+          "_normalize_type": "vector"
+        }
+      ]
+    },
+    {
+      "feature": "非金属夹杂",
+      "result": []
+    },
+    {
+      "feature": "落锤",
+      "result": []
+    },
+    {
+      "feature": "化学成分",
+      "result": [
+        {
+          "位置": "",
+          "单位": "%",
+          "方向": "",
+          "取样数量": 0,
+          "取样说明": "",
+          "尺寸厚度": "",
+          "材料牌号": "05Cr15Ni5Cu4Nb",
+          "标准要求": "≤0.07",
+          "试样状态": "",
+          "试验方法": "",
+          "试验温度": "",
+          "锻件类型": "",
+          "项目名称": "C",
+          "_normalize_type": "vector"
+        }
+      ]
+    },
+    {
+      "feature": "洛氏硬度",
+      "result": [
+        {
+          "位置": "",
+          "单位": "",
+          "方向": "",
+          "取样数量": 0,
+          "取样说明": "",
+          "尺寸厚度": "",
+          "材料牌号": "",
+          "标准要求": "",
+          "试样状态": "",
+          "试验方法": "",
+          "试验温度": "",
+          "锻件类型": "",
+          "项目名称": ""
+        }
+      ]
+    },
+    {
+      "feature": "维氏硬度",
+      "result": [
+        {
+          "位置": "",
+          "单位": "",
+          "方向": "",
+          "取样数量": 0,
+          "取样说明": "",
+          "尺寸厚度": "",
+          "材料牌号": "06Cr19Ni10",
+          "标准要求": "",
+          "试样状态": "",
+          "试验方法": "GB/T 4340.1-1999",
+          "试验温度": "",
+          "锻件类型": "",
+          "项目名称": "维氏硬度(HV)",
+          "_normalize_type": "vector"
+        }
+      ]
+    },
+    {
+      "feature": "塔形",
+      "result": []
+    },
+    {
+      "feature": "步冷实验",
+      "result": [
+        {
+          "type": "array",
+          "properties": {
+            "位置": {
+              "type": "string",
+              "example": "D/4",
+              "required": true,
+              "description": "该类别取样时的取样位置"
+            },
+            "单位": {
+              "type": "string",
+              "example": "Mpa",
+              "required": true,
+              "description": "对应项目的单位"
+            },
+            "方向": {
+              "type": "string",
+              "example": "纵向",
+              "required": true,
+              "description": "该类别取样的方向"
+            },
+            "取样数量": {
+              "type": "number",
+              "example": "3",
+              "required": true,
+              "description": "该类型对取样的要求，取几个样品；如果出现取一批这种就认为是取1个样品，如果是一批取5个样，则就是取5个样品"
+            },
+            "取样说明": {
+              "type": "string",
+              "example": "氢含量在产品上取样",
+              "required": true,
+              "description": "该类型取样品时的一些说明"
+            },
+            "尺寸厚度": {
+              "type": "string",
+              "example": "≤300",
+              "required": true,
+              "description": "获取样品规定的尺寸厚度，截面尺寸，棒材尺寸等全都算作尺寸厚度"
+            },
+            "材料牌号": {
+              "type": "string",
+              "example": "GH4169",
+              "required": true,
+              "description": "该检测类型下的牌号"
+            },
+            "标准要求": {
+              "type": "string",
+              "example": "≥960",
+              "required": true,
+              "description": "对应项目的检测标准要求，如果出现不大于、不小于、小于、大于等这类，要转化为数学符号"
+            },
+            "试样状态": {
+              "type": "string",
+              "example": "铸态",
+              "required": true,
+              "description": "获取样品的试样状态"
+            },
+            "试验方法": {
+              "type": "string",
+              "example": "GB/T 228.1-2021",
+              "required": true,
+              "description": "获取对应检测类别对应项目的试验方法，可通过method术语集获取，如果抽取结果没有版本年代号，则查看该类别下method术语集中是否存在，如果存在则获取最新版本号或者年代号的试验方法编号，如果不存在，则保留原版抽取结果"
+            },
+            "试验温度": {
+              "type": "string",
+              "example": "500",
+              "required": true,
+              "description": "获取标准规定样品试验温度"
+            },
+            "锻件类型": {
+              "type": "string",
+              "example": "锻件棒材",
+              "required": true,
+              "description": "获取标准要求样品的锻件类型"
+            },
+            "项目名称": {
+              "type": "string",
+              "example": "抗拉强度 Rm",
+              "required": true,
+              "description": "该检测类型下的项目名称，从该类型下的item术语集中获取使名称归一化"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "feature": "扭转",
+      "result": [
+        {
+          "位置": "D/4",
+          "单位": "N·m",
+          "方向": "纵向",
+          "取样数量": 3,
+          "取样说明": "氢含量在产品上取样",
+          "尺寸厚度": "≤300",
+          "材料牌号": "06Cr19Ni10",
+          "标准要求": "≥100",
+          "试样状态": "固溶处理",
+          "试验方法": "GB/T 228.1-2021",
+          "试验温度": "500",
+          "锻件类型": "锻件棒材",
+          "项目名称": "破坏扭矩MB"
+        },
+        {
+          "type": "array",
+          "properties": {
+            "位置": {
+              "type": "string",
+              "example": "D/4",
+              "required": true,
+              "description": "该类别取样时的取样位置"
+            },
+            "单位": {
+              "type": "string",
+              "example": "Mpa",
+              "required": true,
+              "description": "对应项目的单位"
+            },
+            "方向": {
+              "type": "string",
+              "example": "纵向",
+              "required": true,
+              "description": "该类别取样的方向"
+            },
+            "取样数量": {
+              "type": "number",
+              "example": "3",
+              "required": true,
+              "description": "该类型对取样的要求，取几个样品；如果出现取一批这种就认为是取1个样品，如果是一批取5个样，则就是取5个样品"
+            },
+            "取样说明": {
+              "type": "string",
+              "example": "氢含量在产品上取样",
+              "required": true,
+              "description": "该类型取样品时的一些说明"
+            },
+            "尺寸厚度": {
+              "type": "string",
+              "example": "≤300",
+              "required": true,
+              "description": "获取样品规定的尺寸厚度，截面尺寸，棒材尺寸等全都算作尺寸厚度"
+            },
+            "材料牌号": {
+              "type": "string",
+              "example": "GH4169",
+              "required": true,
+              "description": "该检测类型下的牌号"
+            },
+            "标准要求": {
+              "type": "string",
+              "example": "≥960",
+              "required": true,
+              "description": "对应项目的检测标准要求，如果出现不大于、不小于、小于、大于等这类，要转化为数学符号"
+            },
+            "试样状态": {
+              "type": "string",
+              "example": "铸态",
+              "required": true,
+              "description": "获取样品的试样状态"
+            },
+            "试验方法": {
+              "type": "string",
+              "example": "GB/T 228.1-2021",
+              "required": true,
+              "description": "获取对应检测类别对应项目的试验方法，可通过method术语集获取，如果抽取结果没有版本年代号，则查看该类别下method术语集中是否存在，如果存在则获取最新版本号或者年代号的试验方法编号，如果不存在，则保留原版抽取结果"
+            },
+            "试验温度": {
+              "type": "string",
+              "example": "500",
+              "required": true,
+              "description": "获取标准规定样品试验温度"
+            },
+            "锻件类型": {
+              "type": "string",
+              "example": "锻件棒材",
+              "required": true,
+              "description": "获取标准要求样品的锻件类型"
+            },
+            "项目名称": {
+              "type": "string",
+              "example": "抗拉强度 Rm",
+              "required": true,
+              "description": "该检测类型下的项目名称，从该类型下的item术语集中获取使名称归一化"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
