@@ -59,7 +59,9 @@ DEFAULT_GLOBAL_CONFIG: dict = {
         "reranker": {"enabled": False, "model": "", "top_n": 15},
     },
     "llm": {
-        "engine": "BaseExtract",
+        # 引擎收敛：默认 LangExtractPkg（原包官方特性：sentence-aware 分块/
+        # 共指窗口/并行/多轮/对齐）；BaseExtract 仅作历史兜底，前端已停用。
+        "engine": "LangExtractPkg",
         "engines": {
             "BaseExtract": {
                 "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 32768,
@@ -68,12 +70,15 @@ DEFAULT_GLOBAL_CONFIG: dict = {
                 "batch": {"single_threshold": 8000, "batch_chars": 6000, "overlap": 500, "context_truncate": 32000},
             },
             "LangExtractPkg": {
-                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 32768,
-                "timeout": 300, "enable_thinking": False,
+                # 输出预算下调，输入预算自动放大（防 400/截断）
+                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 8192,
+                "timeout": 600, "enable_thinking": False,
                 "format_type": "JSON", "fence_output": False, "max_examples": 3, "passes": 2,
-                "context_window_chars": 28000, "max_char_buffer": 40000,
-                "concurrency": {"max_concurrency": 24, "cross_category": 8, "within_category": 3},
-                "batch": {"single_threshold": 8000, "batch_chars": 6000, "overlap": 500, "context_truncate": 32000},
+                # 原包分块：单块字符上限（受模型窗口/输出预算钳制）+ 跨块共指窗口
+                "max_char_buffer": 3000, "context_window_chars": 500,
+                # 并行：batch×workers，建议与 vLLM --max-num-seqs 一致
+                "batch_length": 8, "max_workers": 8,
+                "concurrency": {"max_concurrency": 8, "cross_category": 8, "within_category": 8},
             },
         },
     },
@@ -1099,4 +1104,3 @@ async def run_script(db, kb_id, data: dict) -> dict:
         return {"ok": True, "result": result}
     finally:
         script_tools.revoke_embed_token(token)
-

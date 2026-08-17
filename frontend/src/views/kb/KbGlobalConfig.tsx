@@ -283,10 +283,10 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
               className="mt-0.5 h-8"
               data-testid="global-llm-engine"
             >
-              <option value="BaseExtract">BaseExtract（直抽）</option>
+              <option value="BaseExtract" disabled>BaseExtract（已停用）</option>
               <option value="LangExtractPkg">LangExtractPkg（原包·XGrammar 强约束）</option>
             </Select>
-            <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">BaseExtract 直抽快；LangExtractPkg 原包多轮+示例+XGrammar 约束，更稳但更慢。切换后下方参数自动联动。</p>
+            <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">已收敛为 LangExtractPkg 原包：sentence-aware 分块、跨块共指窗口、多轮抽取、并行与 XGrammar 约束；BaseExtract 已停用（历史配置仍保留兜底）。</p>
           </div>
           <Field label="温度 temperature" hint="LLM 采样温度：越低越确定、越贴近事实；结构化抽取建议保持 0" type="number" step={0.1} min={0} value={eng.temperature} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'temperature', num(v, 0))} />
           <Field label="top_p" hint="核采样概率，与 top_k 共同控制生成多样性；结构化抽取建议 0.1" type="number" step={0.01} min={0} value={eng.top_p} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'top_p', num(v, 0.1))} />
@@ -320,8 +320,10 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
             <p className="text-sm font-semibold text-primary-strong">引擎专属参数（LangExtractPkg）</p>
             <div className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-4">
               <Field label="抽取轮数 passes" hint="LangExtractPkg 的抽取迭代轮数：多轮可提升召回但更耗时，建议 1~2" value={num(eng.passes, 2)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'passes', num(v, 2))} />
-              <Field label="共指消解窗口(字符)" hint="跨块共指消解的窗口字符数，窗口越大跨块关联越准但更耗时" value={num(eng.context_window_chars, 28000)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'context_window_chars', num(v, 28000))} />
-              <Field label="单次输入字符上限" hint="LangExtractPkg 单次送入 LLM 的最大字符数，防止超模型窗口" value={num(eng.max_char_buffer, 40000)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'max_char_buffer', num(v, 40000))} />
+              <Field label="共指消解窗口(字符)" hint="跨块共指窗口：把上一块尾部字符拼到当前块开头，解决代词/跨块实体；窗口越大越准但更耗 token" value={num(eng.context_window_chars, 500)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'context_window_chars', num(v, 500))} />
+              <Field label="单块字符上限" hint="原包按句子边界切分的单块最大字符数；受模型窗口与输出预算自动钳制，不会超限（推荐 2000-4000）" value={num(eng.max_char_buffer, 3000)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'max_char_buffer', num(v, 3000))} />
+              <Field label="批处理块数 batch_length" hint="每批送入的块数，建议 ≥ max_workers 以填满并行度" value={num(eng.batch_length, 8)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'batch_length', num(v, 8))} />
+              <Field label="并行 worker 数" hint="原包并行调用 LLM 的 worker 数，建议与 vLLM --max-num-seqs 一致（如 8），过高会排队或超限" value={num(eng.max_workers, 8)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'max_workers', num(v, 8))} />
               <Field label="few-shot 示例数" hint="从 Schema 字段 example 生成的示例条数；示例越多抽取越稳但更耗 token" value={num(eng.max_examples, 3)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'max_examples', num(v, 3))} />
               <div className="space-y-1 rounded-lg bg-muted/30 p-2">
                 <label className="text-xs font-medium text-muted-foreground">输出格式 format_type</label>

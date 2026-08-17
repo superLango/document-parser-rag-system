@@ -4,14 +4,15 @@ import uuid
 from typing import ClassVar
 from urllib.parse import unquote, urlparse
 
+from arq import cron
+from arq.connections import RedisSettings
+from sqlalchemy import text
+
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
 from app.models.document import TaskOutbox
 from app.services import document_service
-from arq import cron
-from arq.connections import RedisSettings
-from sqlalchemy import text
 
 logger = get_logger(__name__)
 
@@ -213,5 +214,8 @@ class WorkerSettings:
     ]
     redis_settings = _redis_settings_from_dsn(settings.REDIS_URL)
     max_jobs = 10
-    job_timeout = 600
+    # 任务时长取决于文档/上下文/输出长度，无法预估；arq 要求数值型超时，
+    # 设 7 天作为"实际不超时"的安全网，避免误杀仍在抽取的任务。
+    # 显式停止/关闭时由 CancelledError 处理落 failed。
+    job_timeout = 7 * 24 * 3600
     keep_result = 60

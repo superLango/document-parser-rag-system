@@ -279,6 +279,8 @@ export interface GlobalEngineConfig {
   passes?: number
   context_window_chars?: number
   max_char_buffer?: number
+  batch_length?: number
+  max_workers?: number
 }
 
 export interface GlobalLLMConfig {

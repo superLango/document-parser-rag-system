@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import uuid
 from datetime import datetime, timezone
 
@@ -135,6 +136,24 @@ async def run_extraction_task(db: AsyncSession, document_id: uuid.UUID, kb_id: u
         task.updated_at = _now()
         await db.commit()
         return {"task_id": task.task_id, "status": "completed", "version": saved.version}
+    except asyncio.CancelledError:
+        # arq 超时取消：标记失败并重抛，避免任务状态卡在 running
+        await db.rollback()
+        task = (
+            await db.execute(
+                select(DocumentTask).where(DocumentTask.task_id == task_id)
+            )
+        ).scalar_one_or_none()
+        if task is not None:
+            task.status = "failed"
+            task.error = {"message": "抽取任务被取消"}
+            task.updated_at = _now()
+        await result_store.set_result_status(
+            db, kb_id, document_id, status="failed", progress=100,
+            error={"message": "抽取任务被取消"},
+        )
+        await db.commit()
+        raise
     except Exception as exc:  # noqa: BLE001
         message = str(exc)
         await db.rollback()

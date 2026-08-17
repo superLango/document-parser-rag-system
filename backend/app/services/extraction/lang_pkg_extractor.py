@@ -1,11 +1,16 @@
-"""LangExtract 原包适配器（langextract>=1.6.0）。
+"""LangExtract 原包适配器（langextract>=1.6.0，抽取引擎收敛：LangExtractPkg）。
 
-参考原项目 ``langextract_extractor.py``，按当前项目优化：
-- LLM 端点直接复用 KB「资源与配置」services.llm_vllm（api_base/model/api_key）；
-- Prompt 复用当前项目 ``prompt_renderer``（与 BaseExtract/自研 LangExtract 同一模板引擎）；
-- output_schema 适配当前项目 {type, properties} 扁平 schema；
-- 引擎参数全部读 GlobalLangExtractConfig，缺失用默认值；
-- prompt_validation_level 默认 OFF（当前项目无该配置项，避免强校验阻塞流程）。
+参考原项目 ``langextract_extractor.py``，按当前项目优化，并充分利用原包官方特性：
+- **完整上下文一次交给 ``lx.extract``**，由原包内部完成：sentence-aware 分块
+  （max_char_buffer）、跨块共指窗口（context_window_chars）、batch×workers 并行、
+  多轮抽取（passes，first-pass-wins 按字符区间合并）、resolver 对齐
+  （exact/fuzzy/lesser，带回字符区间证据）；不再自行预切段循环调用
+  （旧实现会把上下文拆成独立片段逐段调用，等于禁用上述官方特性）；
+- **防超限不截断**：max_char_buffer 受模型窗口与输出预算（input_char_budget）钳制，
+  并扣除指令/示例/输出 Schema 固定开销与共指窗口；超时按预估块数缩放，
+  避免长文档被固定超时误杀；
+- **溯源证据**：记录附带 ``_evidence``（源文本字符区间 + 对齐状态），支撑复核/审计；
+- **合并去重**：按主键字段值归一化去重（同一实体保留对齐更精确/首次记录）。
 
 依赖：langextract>=1.6.0（已加入 backend/requirements.txt）。
 """
@@ -14,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import math
 from typing import Any
 
 from langextract.core.data import ExampleData, Extraction, FormatType
@@ -26,9 +32,28 @@ from app.core.exceptions import BusinessException
 from app.core.logging import get_logger
 from app.services.extraction import prompt_renderer
 from app.services.extraction.extraction_models import ExtractionTarget
-from app.services.extraction.llm_extractor import input_char_budget, split_context
+from app.services.extraction.llm_extractor import input_char_budget
 
 logger = get_logger(__name__)
+
+
+def _prompt_overhead_chars(
+    prompt_description: str,
+    examples: list[ExampleData],
+    output_schema: dict | None,
+) -> int:
+    """估算固定 prompt 开销（指令 + 示例 + Schema + 信封/安全余量，单位字符）。"""
+    overhead = len(prompt_description or "")
+    for ex in examples or []:
+        overhead += len(ex.text or "")
+        for e in ex.extractions or []:
+            overhead += len(e.extraction_text or "")
+            for k, v in (e.attributes or {}).items():
+                overhead += len(str(k)) + len(str(v))
+    if output_schema is not None:
+        overhead += len(json.dumps(output_schema, ensure_ascii=False))
+    # 格式信封/系统提示/指令等未显式建模部分的安全余量
+    return overhead + 2000
 
 
 def build_output_schema(target: ExtractionTarget) -> dict | None:
@@ -100,8 +125,14 @@ def _primary_field_name(target: ExtractionTarget) -> str | None:
     return fields[0].get("name") if fields else None
 
 
-def _parse_result(result: Any, target: ExtractionTarget) -> list[dict]:
-    """AnnotatedDocument / list[Extraction] / list[dict] → 记录 dict 列表。"""
+def _parse_result(
+    result: Any, target: ExtractionTarget, source_text: str = ""
+) -> list[dict]:
+    """AnnotatedDocument / list[Extraction] / list[dict] → 记录 dict 列表。
+
+    记录附带 ``_evidence``：原包 resolver 对齐出的源文本字符区间与对齐状态，
+    用于溯源/复核（source_text 仅用于日志，不参与构造）。
+    """
     records: list[dict] = []
     if not result:
         return records
@@ -119,8 +150,67 @@ def _parse_result(result: Any, target: ExtractionTarget) -> list[dict]:
                     data[pk] = item.extraction_text
             if getattr(item, "attributes", None):
                 data.update(item.attributes)
+            span = getattr(item, "char_interval", None)
+            alignment = getattr(item, "alignment_status", None)
+            evidence: dict[str, Any] = {}
+            if span is not None and span.start_pos is not None:
+                evidence["span"] = [int(span.start_pos), int(span.end_pos)]
+            if alignment is not None:
+                evidence["alignment"] = str(getattr(alignment, "value", alignment))
+            if evidence:
+                data["_evidence"] = evidence
             records.append(data)
     return records
+
+
+def _json_dedupe(records: list[dict]) -> list[dict]:
+    """JSON 全等去重（无主键字段时的回退方案）。"""
+    seen: set[str] = set()
+    out: list[dict] = []
+    for r in records:
+        key = json.dumps(r, ensure_ascii=False, sort_keys=True)
+        if key not in seen:
+            seen.add(key)
+            out.append(r)
+    return out
+
+
+def _alignment_rank(record: dict) -> int:
+    """对齐状态优先级：exact > greater > lesser > fuzzy > 未知。"""
+    ev = record.get("_evidence") or {}
+    rank = {
+        "match_exact": 4,
+        "match_greater": 3,
+        "match_lesser": 2,
+        "match_fuzzy": 1,
+    }
+    return rank.get(str(ev.get("alignment") or ""), 0)
+
+
+def _dedupe_records(records: list[dict], target: ExtractionTarget) -> list[dict]:
+    """按主键字段归一化去重；同一主键保留对齐更精确的记录，否则保留首次。"""
+    pk = _primary_field_name(target)
+    if not pk:
+        return _json_dedupe(records)
+    seen: dict[str, dict] = {}
+    out: list[dict] = []
+    for r in records:
+        val = r.get(pk)
+        key = str(val).strip().lower() if val not in (None, "") else None
+        if key is None:
+            if r not in out:
+                out.append(r)
+            continue
+        if key in seen:
+            prev = seen[key]
+            if _alignment_rank(r) > _alignment_rank(prev):
+                idx = out.index(prev)
+                out[idx] = r
+                seen[key] = r
+            continue
+        seen[key] = r
+        out.append(r)
+    return out
 
 
 async def extract_category_pkg(
@@ -132,7 +222,7 @@ async def extract_category_pkg(
     engine_params: dict,
     llm_endpoint: dict,
 ) -> list[dict]:
-    """调用 langextract.extract（线程池），配置全部来自引擎参数与 KB LLM 资源。"""
+    """调用 langextract.extract（线程池），完整上下文交原包分块/并行/多轮/对齐。"""
     if not llm_endpoint or not llm_endpoint.get("api_base") or not llm_endpoint.get("model"):
         raise BusinessException(message="未配置抽取 LLM 端点（api_base/model），请在资源与配置中填写")
     fmt = (engine_params.get("format_type") or "JSON").upper()
@@ -140,13 +230,12 @@ async def extract_category_pkg(
         raise BusinessException(message="LangExtract 原包 format_type 仅支持 json/yaml")
     format_type = FormatType.YAML if fmt == "YAML" else FormatType.JSON
     fence_output = bool(engine_params.get("fence_output"))
-    passes = int(engine_params.get("passes") or 2)
-    max_tokens = target.max_tokens or engine_params.get("max_tokens") or 4096
-    input_budget = input_char_budget(max_tokens)
-    batch_cfg = engine_params.get("batch") or {}
-    batch_chars = min(int(batch_cfg.get("batch_chars") or 6000), input_budget)
-    overlap = int(batch_cfg.get("overlap") or 500)
-    max_workers = int((engine_params.get("concurrency") or {}).get("within_category") or 1)
+    passes = max(1, int(engine_params.get("passes") or 2))
+    max_tokens = target.max_tokens or engine_params.get("max_tokens") or 8192
+    max_char_buffer = int(engine_params.get("max_char_buffer") or 3000)
+    context_window_chars = max(0, int(engine_params.get("context_window_chars") or 0))
+    batch_length = max(1, int(engine_params.get("batch_length") or 8))
+    max_workers = max(1, int(engine_params.get("max_workers") or 8))
     temperature = float(engine_params.get("temperature") or 0.0)
     enable_thinking = bool(engine_params.get("enable_thinking"))
     max_examples = int(engine_params.get("max_examples") or 0)
@@ -160,7 +249,23 @@ async def extract_category_pkg(
             feature=target.feature,
         )
         fence_output = False
-    _, prompt_description = prompt_renderer.render_category(cfg, target, "")
+    system, user = prompt_renderer.render_category(cfg, target, "")
+    prompt_description = f"{system}\n\n{user}" if (system or "").strip() else user
+    overhead = _prompt_overhead_chars(prompt_description, examples, output_schema)
+
+    # 防超限（不截断）：单块可用字符 = 输入预算 − 固定开销 − 共指窗口
+    input_budget = input_char_budget(max_tokens)
+    per_chunk_budget = input_budget - overhead - context_window_chars
+    if per_chunk_budget < 500:
+        logger.warning(
+            "原包单块预算不足（max_tokens 过大或固定开销过高），按 500 字符下限兜底",
+            feature=target.feature,
+            per_chunk_budget=per_chunk_budget,
+            overhead=overhead,
+            max_tokens=max_tokens,
+        )
+    max_buffer = max(500, min(max_char_buffer, per_chunk_budget))
+    est_chunks = max(1, math.ceil(len(context) / max_buffer)) if context else 1
 
     model = OpenAILanguageModel(
         model_id=llm_endpoint["model"],
@@ -173,42 +278,42 @@ async def extract_category_pkg(
         extra_body={"chat_template_kwargs": {"enable_thinking": enable_thinking}},
     )
 
-    # 拆分 chunk 多次抽取，不截断：每段独立调用原包，结果合并去重；
-    # 任一段失败即整体失败（不静默丢数据）
-    segments = split_context(context, batch_chars, overlap, input_budget)
-    merged: list[dict] = []
-    seen: set[str] = set()
-    segment_timeout = int(engine_params.get("timeout") or 600)
-    for idx, seg in enumerate(segments, start=1):
-        logger.info("原包分段开始", feature=target.feature, segment=idx, total=len(segments), chars=len(seg))
-        try:
-            result = await asyncio.wait_for(
-                asyncio.to_thread(
-                    lx_extract,
-                    seg,
-                    prompt_description=prompt_description,
-                    examples=examples or None,
-                    model=model,
-                    format_type=format_type,
-                    fence_output=fence_output,
-                    output_schema=output_schema,
-                    additional_context="",
-                    extraction_passes=passes,
-                    context_window_chars=None,
-                    max_char_buffer=len(seg),
-                    max_workers=max_workers,
-                    prompt_validation_level=PromptValidationLevel.OFF,
-                    show_progress=False,
-                ),
-                timeout=segment_timeout,
-            )
-        except Exception as exc:
-            logger.error("LangExtract 原包分段抽取失败", feature=target.feature, segment=idx, error=str(exc))
-            raise
-        for rec in _parse_result(result, target):
-            key = json.dumps(rec, ensure_ascii=False, sort_keys=True)
-            if key not in seen:
-                seen.add(key)
-                merged.append(rec)
-        logger.info("原包分段完成", feature=target.feature, segment=idx)
-    return merged
+    logger.info(
+        "原包整段抽取开始",
+        feature=target.feature,
+        context_chars=len(context),
+        max_char_buffer=max_buffer,
+        context_window_chars=context_window_chars,
+        passes=passes,
+        batch_length=batch_length,
+        max_workers=max_workers,
+        est_chunks=est_chunks,
+    )
+    try:
+        # 不设超时：抽取时长取决于上下文/输出长度，无法预估；贸然超时会
+        # 误杀仍在抽取的任务（to_thread 线程实际仍会跑完但结果被丢弃）。
+        result = await asyncio.to_thread(
+            lx_extract,
+            context,
+            prompt_description=prompt_description,
+            examples=examples or None,
+            model=model,
+            format_type=format_type,
+            fence_output=fence_output,
+            output_schema=output_schema,
+            additional_context="",
+            extraction_passes=passes,
+            context_window_chars=context_window_chars or None,
+            max_char_buffer=max_buffer,
+            batch_length=batch_length,
+            max_workers=max_workers,
+            prompt_validation_level=PromptValidationLevel.OFF,
+            show_progress=False,
+        )
+    except Exception as exc:
+        logger.error("LangExtract 原包整段抽取失败", feature=target.feature, error=str(exc))
+        raise
+    records = _parse_result(result, target, context)
+    records = _dedupe_records(records, target)
+    logger.info("原包整段抽取完成", feature=target.feature, records=len(records))
+    return records
