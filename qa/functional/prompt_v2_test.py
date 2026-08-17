@@ -49,6 +49,16 @@ RUNS = [
             "concurrency": {"max_concurrency": 4, "cross_category": 4, "within_category": 1},
         },
     },
+    {
+        "name": "LEpkg_strict_promptv2",
+        "engine": "LangExtractPkg",
+        "params": {
+            "timeout": 600, "format_type": "JSON", "fence_output": False,
+            "max_examples": 3, "passes": 2, "context_window_chars": 28000,
+            "max_char_buffer": 40000,
+            "concurrency": {"max_concurrency": 4, "cross_category": 4, "within_category": 1},
+        },
+    },
 ]
 
 RETRIEVAL = {
@@ -125,6 +135,10 @@ async def main():
         token = await login(client)
         h = {"Authorization": f"Bearer {token}"}
         for run in RUNS:
+            result_file = RESULTS_DIR / f"{run['name']}.json"
+            if result_file.exists():
+                print(f"[{run['name']}] 已存在结果，跳过", flush=True)
+                continue
             await set_config(client, h, run["engine"], run["params"])
             print(f"\n===== RUN {run['name']} | engine={run['engine']} =====", flush=True)
             t0 = time.monotonic()
