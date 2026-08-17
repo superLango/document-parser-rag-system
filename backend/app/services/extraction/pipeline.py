@@ -121,10 +121,11 @@ async def _extract_single(session, cfg, target, client, engine, engine_params, r
         # context_top_k：拼接上下文的最大块数（超出部分按相关性截断）
         ctx_top_k = target.top_k or int(retrieval_cfg.get("top_k") or 10)
         ctx_top_k = min(ctx_top_k, int(retrieval_cfg.get("context_top_k") or ctx_top_k))
+        # 完整性优先：不按预算截断，全部命中块交由抽取引擎分批多次抽取
         context = context_assembler.assemble(
             hits,
             top_k=ctx_top_k,
-            max_tokens=int(retrieval_cfg.get("context_max_tokens") or 28000),
+            max_tokens=None,
             chars_per_token=float(context_cfg.get("chars_per_token") or 1.5),
             min_keep_chars=int(context_cfg.get("min_keep_chars") or 200),
             truncate_marker=context_cfg.get("truncate_marker") or "\n[...内容截断...]",
@@ -134,6 +135,7 @@ async def _extract_single(session, cfg, target, client, engine, engine_params, r
                 feature=target.feature, records=[], rejected=[],
                 hit_score=target.hit_score, hit_count=target.hit_count,
             )
+        logger.info("类别开始", feature=target.feature, context_chars=len(context), engine=engine)
 
         if engine == "LangExtractPkg":
             from app.services.extraction import lang_pkg_extractor
@@ -144,6 +146,7 @@ async def _extract_single(session, cfg, target, client, engine, engine_params, r
             )
         else:
             records = await llm_extractor.extract_category(cfg, target, context, client, engine_params, engine=engine)
+        logger.info("LLM 完成", feature=target.feature, records=len(records))
         # 规则组脚本：post 后处理 + validation 校验
         rules = _rules_for_category(cfg, target.category_id)
         kept, rejected = records, []
@@ -154,6 +157,7 @@ async def _extract_single(session, cfg, target, client, engine, engine_params, r
                 rules=rules, script_timeout=script_timeout, term_data=term_data,
             )
         missing = llm_extractor.missing_required_fields(kept, target.schema)
+        logger.info("类别完成", feature=target.feature, kept=len(kept), rejected=len(rejected))
         return CategoryResult(
             feature=target.feature, records=kept, rejected=rejected,
             missing_fields=missing, hit_score=target.hit_score, hit_count=target.hit_count,

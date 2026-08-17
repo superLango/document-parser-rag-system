@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from typing import Any
 
 from langextract.core.data import ExampleData, Extraction, FormatType
@@ -25,7 +26,7 @@ from app.core.exceptions import BusinessException
 from app.core.logging import get_logger
 from app.services.extraction import prompt_renderer
 from app.services.extraction.extraction_models import ExtractionTarget
-from app.services.extraction.llm_extractor import input_char_budget
+from app.services.extraction.llm_extractor import input_char_budget, split_context
 
 logger = get_logger(__name__)
 
@@ -142,8 +143,9 @@ async def extract_category_pkg(
     passes = int(engine_params.get("passes") or 2)
     max_tokens = target.max_tokens or engine_params.get("max_tokens") or 4096
     input_budget = input_char_budget(max_tokens)
-    window_chars = min(int(engine_params.get("context_window_chars") or 28000), input_budget)
-    max_buffer = min(int(engine_params.get("max_char_buffer") or 40000), input_budget)
+    batch_cfg = engine_params.get("batch") or {}
+    batch_chars = min(int(batch_cfg.get("batch_chars") or 6000), input_budget)
+    overlap = int(batch_cfg.get("overlap") or 500)
     max_workers = int((engine_params.get("concurrency") or {}).get("within_category") or 1)
     temperature = float(engine_params.get("temperature") or 0.0)
     enable_thinking = bool(engine_params.get("enable_thinking"))
@@ -171,25 +173,42 @@ async def extract_category_pkg(
         extra_body={"chat_template_kwargs": {"enable_thinking": enable_thinking}},
     )
 
-    try:
-        result = await asyncio.to_thread(
-            lx_extract,
-            context,
-            prompt_description=prompt_description,
-            examples=examples or None,
-            model=model,
-            format_type=format_type,
-            fence_output=fence_output,
-            output_schema=output_schema,
-            additional_context="",
-            extraction_passes=passes,
-            context_window_chars=window_chars,
-            max_char_buffer=max_buffer,
-            max_workers=max_workers,
-            prompt_validation_level=PromptValidationLevel.OFF,
-            show_progress=False,
-        )
-    except Exception as exc:
-        logger.error("LangExtract 原包抽取失败", feature=target.feature, error=str(exc))
-        raise
-    return _parse_result(result, target)
+    # 拆分 chunk 多次抽取，不截断：每段独立调用原包，结果合并去重；
+    # 任一段失败即整体失败（不静默丢数据）
+    segments = split_context(context, batch_chars, overlap, input_budget)
+    merged: list[dict] = []
+    seen: set[str] = set()
+    segment_timeout = int(engine_params.get("timeout") or 600)
+    for idx, seg in enumerate(segments, start=1):
+        logger.info("原包分段开始", feature=target.feature, segment=idx, total=len(segments), chars=len(seg))
+        try:
+            result = await asyncio.wait_for(
+                asyncio.to_thread(
+                    lx_extract,
+                    seg,
+                    prompt_description=prompt_description,
+                    examples=examples or None,
+                    model=model,
+                    format_type=format_type,
+                    fence_output=fence_output,
+                    output_schema=output_schema,
+                    additional_context="",
+                    extraction_passes=passes,
+                    context_window_chars=None,
+                    max_char_buffer=len(seg),
+                    max_workers=max_workers,
+                    prompt_validation_level=PromptValidationLevel.OFF,
+                    show_progress=False,
+                ),
+                timeout=segment_timeout,
+            )
+        except Exception as exc:
+            logger.error("LangExtract 原包分段抽取失败", feature=target.feature, segment=idx, error=str(exc))
+            raise
+        for rec in _parse_result(result, target):
+            key = json.dumps(rec, ensure_ascii=False, sort_keys=True)
+            if key not in seen:
+                seen.add(key)
+                merged.append(rec)
+        logger.info("原包分段完成", feature=target.feature, segment=idx)
+    return merged

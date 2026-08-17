@@ -46,8 +46,9 @@ async def test_pkg_adapter_passes_config_and_parses(monkeypatch):
     assert records == [{"项目名称": "抗拉强度(Rm)", "单位": "MPa"}]
     kw = captured["kwargs"]
     assert kw["extraction_passes"] == 2
-    assert kw["context_window_chars"] == 28000
-    assert kw["max_char_buffer"] == 40000
+    # 分段抽取：不再使用包内窗口，由外层按 batch_chars 切分
+    assert kw["context_window_chars"] is None
+    assert kw["max_char_buffer"] == len("上下文")
     assert kw["max_workers"] == 2
     # output_schema（XGrammar）与 fence_output 互斥：有 schema 时自动关闭围栏
     assert kw["fence_output"] is False
@@ -93,3 +94,35 @@ async def test_pkg_adapter_keeps_fence_without_schema(monkeypatch):
         llm_endpoint={"api_base": "http://127.0.0.1:9988/v1", "model": "m", "api_key": ""},
     )
     assert captured["kwargs"]["fence_output"] is True
+
+
+async def test_pkg_adapter_splits_long_context(monkeypatch):
+    """L1M34-20：上下文超过 batch_chars 时拆段多次抽取，结果合并去重。"""
+    calls = []
+
+    def fake_lx_extract(text, **kwargs):
+        calls.append(text)
+        return _FakeResult([{"项目名称": f"项-{len(calls)}"}])
+
+    monkeypatch.setattr(lang_pkg_extractor, "lx_extract", fake_lx_extract)
+    cfg = SimpleNamespace(prompt_templates=[{
+        "schema_template_id": "t1",
+        "categories": [{"category_id": "c1", "user_prompt": "[任务]:${feature}\n[文档]:${context}", "system_prompt": "sys"}],
+    }])
+    target = ExtractionTarget(feature="室温拉伸", category_id="c1", template_id="t1",
+                              fields=[{"name": "项目名称", "type": "string", "example": "抗拉强度(Rm)"}],
+                              schema={"type": "array", "properties": {"项目名称": {"type": "string"}}})
+    ep = {
+        "format_type": "JSON", "fence_output": False, "max_examples": 0, "passes": 1,
+        "max_tokens": 8192, "timeout": 60, "concurrency": {"within_category": 1},
+        "batch": {"batch_chars": 100, "overlap": 20},
+    }
+    context = "A" * 300
+    records = await lang_pkg_extractor.extract_category_pkg(
+        kb_id="kb", cfg=cfg, target=target, context=context, engine_params=ep,
+        llm_endpoint={"api_base": "http://127.0.0.1:9988/v1", "model": "m", "api_key": ""},
+    )
+    assert len(calls) > 1
+    # 全部片段拼接后包含原上下文（不截断）
+    assert "".join(calls) == context
+    assert len(records) == len(calls)

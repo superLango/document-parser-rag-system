@@ -59,3 +59,12 @@ def test_input_char_budget():
     assert input_char_budget(8192) < input_char_budget(4096)
     assert input_char_budget(40000) >= 2000
     assert input_char_budget(32768) < 55000 * 1.5
+
+
+
+def test_split_context_no_loss():
+    """L1E3-14：上下文切分不丢失内容，且每段不超过输入预算。"""
+    ctx = "中文内容" * 300
+    segs = llm_extractor.split_context(ctx, 200, 30, 500)
+    assert "".join(segs) == ctx
+    assert all(len(s) <= 500 for s in segs)

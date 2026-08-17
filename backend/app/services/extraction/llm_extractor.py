@@ -28,6 +28,25 @@ def input_char_budget(max_tokens: int, chars_per_token: float = 1.5) -> int:
     return max(2000, budget)
 
 
+def split_context(context: str, batch_chars: int, overlap: int, max_chars: int) -> list[str]:
+    """将完整上下文切分为多个片段（不丢失内容，最后一段完整保留）。"""
+    if not context:
+        return []
+    batch_chars = min(max(1, int(batch_chars)), max_chars)
+    overlap = min(max(0, int(overlap)), max(0, batch_chars - 1))
+    if len(context) <= batch_chars:
+        return [context]
+    segments: list[str] = []
+    start = 0
+    while start < len(context):
+        end = min(start + batch_chars, len(context))
+        if end < len(context) and overlap > 0:
+            end = max(start + overlap, end - overlap)
+        segments.append(context[start:end])
+        start = end
+    return segments
+
+
 def _strip_fences(text: str) -> str:
     text = text.strip()
     if text.startswith("```"):
@@ -111,18 +130,19 @@ async def _extract_base(cfg, target, context: str, client, engine_params: dict) 
     if len(context) <= single_threshold:
         return parse_records(await _call(user), target.schema)
 
+    # 拆分 chunk 多次抽取，不截断；任一片段失败即整体失败（不静默丢数据）
     all_records: list[dict] = []
-    start = 0
-    while start < len(context):
-        end = min(start + batch_chars, len(context))
-        if end < len(context) and end - start >= overlap:
-            end = max(start + overlap, end - overlap)
-        batch_text = context[start:end]
+    segments = split_context(context, batch_chars, overlap, input_budget)
+    for idx, batch_text in enumerate(segments, start=1):
+        start_ch = (idx - 1) * batch_chars + 1
+        end_ch = min(idx * batch_chars, len(context))
+        logger.info("片段开始", feature=target.feature, segment=idx, total=len(segments), chars=len(batch_text))
         try:
-            all_records.extend(parse_records(await _call(f"{user}\n\n[片段 {start + 1}-{end}]\n{batch_text}"), target.schema))
-        except LLMError:
-            logger.warning("分批抽取片段解析失败，跳过该片段", feature=target.feature)
-        start = end
+            all_records.extend(parse_records(await _call(f"{user}\n\n[片段 {start_ch}-{end_ch}]\n{batch_text}"), target.schema))
+        except LLMError as exc:
+            logger.error("片段失败", feature=target.feature, segment=idx, error=str(exc))
+            raise LLMError(f"片段 {idx} 抽取失败：{exc}") from exc
+        logger.info("片段完成", feature=target.feature, segment=idx)
     return _dedupe_records(all_records)
 
 
