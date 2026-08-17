@@ -49,37 +49,44 @@ def build_output_schema(target: ExtractionTarget) -> dict | None:
 
 
 def build_examples(target: ExtractionTarget, max_examples: int) -> list[ExampleData]:
-    """从 Schema 字段 example 轮转生成 LangExtract ExampleData。"""
+    """few-shot v3：1 条完整正例（所有字段单值）+ 1 条多值拆条示例。"""
     if max_examples <= 0:
         return []
-    field_examples: list[tuple[str, str]] = []
+    full: dict[str, str] = {}
     for f in target.fields or []:
         name = f.get("name", "")
         ex = f.get("example")
-        if not name or ex is None:
+        if not name:
             continue
         vals = ex if isinstance(ex, list) else [ex]
-        for v in vals:
-            if v is not None and str(v).strip():
-                field_examples.append((name, str(v)))
-    if not field_examples:
-        return []
-    window = min(max_examples, len(field_examples))
+        full[name] = next((str(v) for v in vals if v is not None and str(v).strip()), "")
     examples: list[ExampleData] = []
-    for i in range(window):
-        attrs: dict[str, str] = {}
-        for name, value in field_examples[i : i + window]:
-            attrs.setdefault(name, value)
-        parts = [target.feature] + [f"{k} {v}" for k, v in attrs.items()]
+    if full:
+        parts = [target.feature] + [f"{k} {v}" for k, v in full.items() if v]
         sample_text = "，".join(parts)
         examples.append(ExampleData(
             text=sample_text,
             extractions=[Extraction(
                 extraction_class=target.feature,
                 extraction_text=sample_text,
-                attributes=attrs,
+                attributes=full,
             )],
         ))
+    # 拆条示例：原文一个字段含多个值 → 拆成多条单值记录
+    if max_examples >= 2:
+        fields = [f.get("name", "") for f in (target.fields or []) if f.get("name")]
+        pick = next((f for f in ["材料牌号", "项目名称", "尺寸厚度", "标准要求"] if f in fields), fields[0] if fields else None)
+        if pick:
+            text = f"原文片段（示例）：{pick}：示例值A、示例值B"
+            rec1 = {pick: "示例值A"}
+            rec2 = {pick: "示例值B"}
+            examples.append(ExampleData(
+                text=text,
+                extractions=[
+                    Extraction(extraction_class=target.feature, extraction_text="示例值A", attributes=rec1),
+                    Extraction(extraction_class=target.feature, extraction_text="示例值B", attributes=rec2),
+                ],
+            ))
     return examples
 
 

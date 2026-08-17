@@ -73,7 +73,8 @@ async def test_lang_extract_multi_pass_windows_and_params():
     assert len(client.calls) == 2 * len(windows)  # passes × windows
     assert len(records) == 1  # 重复输出去重
     all_users = "".join(c["messages"][1]["content"] for c in client.calls)
-    assert "抗拉强度(Rm)" in all_users      # few-shot 示例注入
+    assert "抗拉强度(Rm)" in all_users      # few-shot 完整正例注入
+    assert "拆条示例" in all_users          # 多值拆条示例注入
     assert "围栏" in all_users              # fence_output 说明
     assert "[已抽取记录]" in all_users       # pass≥2 注入已抽记录
     assert client.calls[0]["json_mode"] is True

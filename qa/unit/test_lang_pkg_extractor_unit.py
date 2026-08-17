@@ -51,7 +51,8 @@ async def test_pkg_adapter_passes_config_and_parses(monkeypatch):
     assert kw["max_workers"] == 2
     # output_schema（XGrammar）与 fence_output 互斥：有 schema 时自动关闭围栏
     assert kw["fence_output"] is False
-    assert len(kw["examples"]) == 2  # 轮转示例：项目名称/单位
+    assert len(kw["examples"]) == 2  # 1 条完整正例 + 1 条拆条示例
+    assert len(kw["examples"][1].extractions) == 2  # 拆条示例含两条记录
     assert "室温拉伸" in kw["output_schema"]["properties"]["extractions"]["items"]["properties"]
     assert "室温拉伸_attributes" in kw["output_schema"]["properties"]["extractions"]["items"]["properties"]
     assert "[任务]" in kw["prompt_description"]

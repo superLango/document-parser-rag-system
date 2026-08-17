@@ -84,29 +84,35 @@ def _dedupe_records(records: list[dict]) -> list[dict]:
 
 
 def _build_few_shot_examples(target, max_examples: int) -> list[dict]:
-    """从 Schema 字段 example 生成轮转 few-shot 示例（覆盖不同字段组合）。"""
+    """从 Schema 字段 example 生成 1 条完整正例（所有字段单值）。"""
     if max_examples <= 0:
         return []
-    field_examples: list[tuple[str, str]] = []
+    rec: dict = {}
     for f in target.fields or []:
         name = f.get("name", "")
         ex = f.get("example")
-        if not name or ex is None:
+        if not name:
             continue
         vals = ex if isinstance(ex, list) else [ex]
-        for v in vals:
-            if v is not None and str(v).strip():
-                field_examples.append((name, str(v)))
-    if not field_examples:
-        return []
-    window = min(max_examples, len(field_examples))
-    examples: list[dict] = []
-    for i in range(window):
-        rec: dict = {}
-        for name, value in field_examples[i : i + window]:
-            rec.setdefault(name, value)
-        examples.append(rec)
-    return examples
+        val = next((str(v) for v in vals if v is not None and str(v).strip()), "")
+        rec[name] = val
+    return [rec] if rec else []
+
+
+def _build_split_demo(target) -> dict | None:
+    """构造多值拆条演示：原文含两个值 → 输出两条单值记录。"""
+    fields = [f.get("name", "") for f in (target.fields or []) if f.get("name")]
+    pick = next((f for f in ["材料牌号", "项目名称", "尺寸厚度", "标准要求"] if f in fields), fields[0] if fields else None)
+    if not pick:
+        return None
+    text = f"原文片段（示例）：{pick}：示例值A、示例值B"
+    return {
+        "text": text,
+        "records": [
+            {pick: "示例值A"},
+            {pick: "示例值B"},
+        ],
+    }
 
 
 def _format_instruction(format_type: str, fence_output: bool) -> str:
@@ -142,11 +148,16 @@ def _lang_prompt(
     pass_no: int,
     prev_records: list[dict],
     window_text: str,
+    split_demo: dict | None = None,
 ) -> str:
     lines = [user_base]
     if examples:
-        lines.append("[示例]（仅示意字段组合，值为占位示例，勿照抄）:")
+        lines.append("[示例]（完整记录，值为占位示例，勿照抄）:")
         lines.append(json.dumps(examples, ensure_ascii=False))
+    if split_demo:
+        lines.append("[拆条示例]（原文一个字段含多个值时，必须拆成多条单值记录）:")
+        lines.append(split_demo.get("text", ""))
+        lines.append(json.dumps(split_demo.get("records", []), ensure_ascii=False))
     lines.append(f"[输出格式]: {_format_instruction(format_type, fence_output)}")
     if pass_no > 0:
         lines.append("[已抽取记录]: " + (json.dumps(prev_records, ensure_ascii=False) if prev_records else "无"))
@@ -215,6 +226,7 @@ async def _extract_lang(cfg, target, context: str, client, engine_params: dict) 
     within = int((engine_params.get("concurrency") or {}).get("within_category") or 1)
     json_mode = format_type == "JSON"
     examples = _build_few_shot_examples(target, max_examples)
+    split_demo = _build_split_demo(target) if max_examples >= 2 else None
     windows = _split_windows(context, window_chars, overlap, max_buffer)
     merged: list[dict] = []
 
@@ -224,7 +236,7 @@ async def _extract_lang(cfg, target, context: str, client, engine_params: dict) 
 
         async def _one(win_text: str, _pass_no: int = pass_no, _prev: list = prev, _sem: asyncio.Semaphore = sem) -> list[dict]:
             async with _sem:
-                prompt = _lang_prompt(user_base, examples, format_type, fence_output, _pass_no, _prev, win_text)
+                prompt = _lang_prompt(user_base, examples, format_type, fence_output, _pass_no, _prev, win_text, split_demo)
                 raw = await _call_llm(client, system, prompt, engine_params=engine_params, max_tokens=max_tokens, json_mode=json_mode)
                 if json_mode:
                     return parse_records(raw, target.schema)
