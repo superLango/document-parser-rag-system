@@ -6,7 +6,7 @@ import csv
 import io
 import uuid
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -118,13 +118,14 @@ async def get_extraction_status(
 @router.get("/{document_id}/result")
 async def get_extraction_result(
     kb_id: uuid.UUID, document_id: uuid.UUID, request: Request,
+    simple: bool = Query(default=False, description="true 时 categories 仅返回 feature+result"),
     db: AsyncSession = Depends(get_db), current_user=Depends(require_not_pending),
 ) -> dict:
     await _kb_access(kb_id, db=db, current_user=current_user)
     row = await result_store.get_latest(db, kb_id, document_id)
     if row is None:
         return success(data=None)
-    return success(data={
+    data = {
         "schema_template_id": str(row.schema_template_id) if row.schema_template_id else None,
         "schema_name": row.schema_name,
         "status": row.status,
@@ -135,7 +136,10 @@ async def get_extraction_result(
         "version": row.version,
         "error": row.error,
         "updated_at": row.updated_at.isoformat() if row.updated_at else None,
-    })
+    }
+    if simple:
+        data = result_store.to_simple_view(data)
+    return success(data=data)
 
 
 @router.get("/{document_id}/history")

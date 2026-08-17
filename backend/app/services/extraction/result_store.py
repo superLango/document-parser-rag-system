@@ -22,6 +22,16 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def to_simple_view(result: dict) -> dict:
+    """完整抽取结果 → 简化视图：categories 仅保留 feature + result（记录数组）。"""
+    return {
+        "categories": [
+            {"feature": cat.get("feature", ""), "result": cat.get("records") or []}
+            for cat in (result.get("categories") or [])
+        ]
+    }
+
+
 async def get_latest(db: AsyncSession, kb_id, document_id) -> ExtractionResult | None:
     return (
         await db.execute(
