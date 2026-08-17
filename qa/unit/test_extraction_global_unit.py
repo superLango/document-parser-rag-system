@@ -17,7 +17,7 @@ async def test_default_config_structure():
     assert cfg["retrieval"]["top_k"] == 10
     assert cfg["retrieval"]["hybrid"]["rrf_k"] == 60.0
     assert cfg["llm"]["engine"] == "BaseExtract"
-    assert set(cfg["llm"]["engines"]) == {"BaseExtract", "LangExtract", "LangExtractPkg"}
+    assert set(cfg["llm"]["engines"]) == {"BaseExtract", "LangExtractPkg"}
     assert cfg["kb_tool"]["script_timeout"] == 60
 
 
@@ -38,7 +38,7 @@ async def test_schema_accepts_full_content():
     """L1G-03：默认内容可通过 GlobalConfigSave 校验。"""
     payload = GlobalConfigSave(content=GlobalConfigContent.model_validate(DEFAULT_GLOBAL_CONFIG))
     assert payload.content.retrieval.top_k == 10
-    assert payload.content.llm.engines["LangExtract"].format_type == "JSON"
+    assert payload.content.llm.engines["LangExtractPkg"].format_type == "JSON"
 
 
 async def test_schema_rejects_invalid_values():

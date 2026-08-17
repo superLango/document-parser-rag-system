@@ -25,6 +25,7 @@ from app.core.exceptions import BusinessException
 from app.core.logging import get_logger
 from app.services.extraction import prompt_renderer
 from app.services.extraction.extraction_models import ExtractionTarget
+from app.services.extraction.llm_extractor import input_char_budget
 
 logger = get_logger(__name__)
 
@@ -139,11 +140,12 @@ async def extract_category_pkg(
     format_type = FormatType.YAML if fmt == "YAML" else FormatType.JSON
     fence_output = bool(engine_params.get("fence_output"))
     passes = int(engine_params.get("passes") or 2)
-    window_chars = int(engine_params.get("context_window_chars") or 28000)
-    max_buffer = int(engine_params.get("max_char_buffer") or 40000)
+    max_tokens = target.max_tokens or engine_params.get("max_tokens") or 4096
+    input_budget = input_char_budget(max_tokens)
+    window_chars = min(int(engine_params.get("context_window_chars") or 28000), input_budget)
+    max_buffer = min(int(engine_params.get("max_char_buffer") or 40000), input_budget)
     max_workers = int((engine_params.get("concurrency") or {}).get("within_category") or 1)
     temperature = float(engine_params.get("temperature") or 0.0)
-    max_tokens = target.max_tokens or engine_params.get("max_tokens") or 4096
     enable_thinking = bool(engine_params.get("enable_thinking"))
     max_examples = int(engine_params.get("max_examples") or 0)
 

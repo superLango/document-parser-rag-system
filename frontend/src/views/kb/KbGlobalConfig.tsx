@@ -129,7 +129,7 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
     })
   }
 
-  function patchEngine(engine: 'BaseExtract' | 'LangExtract' | 'LangExtractPkg', key: string, value: unknown, sub?: string) {
+  function patchEngine(engine: 'BaseExtract' | 'LangExtractPkg', key: string, value: unknown, sub?: string) {
     setCfg((prev) => {
       if (!prev) return prev
       const eng = prev.llm.engines[engine] as GlobalEngineConfig & Record<string, unknown>
@@ -279,15 +279,14 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
             <Select
               value={cfg.llm.engine}
               disabled={!canManage}
-              onChange={(e) => patch('llm', { engine: e.target.value as 'BaseExtract' | 'LangExtract' })}
+              onChange={(e) => patch('llm', { engine: e.target.value as 'BaseExtract' | 'LangExtractPkg' })}
               className="mt-0.5 h-8"
               data-testid="global-llm-engine"
             >
               <option value="BaseExtract">BaseExtract（直抽）</option>
-              <option value="LangExtract">LangExtract（自研·结构化强约束）</option>
               <option value="LangExtractPkg">LangExtractPkg（原包·XGrammar 强约束）</option>
             </Select>
-            <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">BaseExtract 直抽快；LangExtract 多轮+示例约束，更稳但更慢。切换后下方参数自动联动。</p>
+            <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">BaseExtract 直抽快；LangExtractPkg 原包多轮+示例+XGrammar 约束，更稳但更慢。切换后下方参数自动联动。</p>
           </div>
           <Field label="温度 temperature" hint="LLM 采样温度：越低越确定、越贴近事实；结构化抽取建议保持 0" type="number" step={0.1} min={0} value={eng.temperature} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'temperature', num(v, 0))} />
           <Field label="top_p" hint="核采样概率，与 top_k 共同控制生成多样性；结构化抽取建议 0.1" type="number" step={0.01} min={0} value={eng.top_p} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'top_p', num(v, 0.1))} />
@@ -302,7 +301,7 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
           <div className="grid gap-1.5 sm:grid-cols-3">
             <Field label="总并发上限" hint="LLM 调用总并发上限，建议与 vLLM 的 --max-num-seqs 一致，避免排队或超限" value={eng.concurrency.max_concurrency} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'concurrency', { ...eng.concurrency, max_concurrency: num(v, 24) })} />
             <Field label="类别间并发" hint="同时调度处理的类别数量；BaseExtract 建议等于总并发以填满队列" value={eng.concurrency.cross_category} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'concurrency', { ...eng.concurrency, cross_category: num(v, 24) })} />
-            <Field label="类别内并发" hint="单个类别内的并发数；BaseExtract 建议 1（类别内串行），LangExtract 可适当提高" value={eng.concurrency.within_category} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'concurrency', { ...eng.concurrency, within_category: num(v, 1) })} />
+            <Field label="类别内并发" hint="单个类别内的并发数；BaseExtract 建议 1（类别内串行），LangExtractPkg 可适当提高" value={eng.concurrency.within_category} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'concurrency', { ...eng.concurrency, within_category: num(v, 1) })} />
           </div>
         </div>
 
@@ -318,11 +317,11 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
           </div>
         ) : (
           <div className="space-y-1.5 rounded-lg border border-primary/15 bg-primary/5 p-2">
-            <p className="text-sm font-semibold text-primary-strong">引擎专属参数（LangExtract）</p>
+            <p className="text-sm font-semibold text-primary-strong">引擎专属参数（LangExtractPkg）</p>
             <div className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-4">
-              <Field label="抽取轮数 passes" hint="LangExtract 的抽取迭代轮数：多轮可提升召回但更耗时，建议 1~2" value={num(eng.passes, 2)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'passes', num(v, 2))} />
+              <Field label="抽取轮数 passes" hint="LangExtractPkg 的抽取迭代轮数：多轮可提升召回但更耗时，建议 1~2" value={num(eng.passes, 2)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'passes', num(v, 2))} />
               <Field label="共指消解窗口(字符)" hint="跨块共指消解的窗口字符数，窗口越大跨块关联越准但更耗时" value={num(eng.context_window_chars, 28000)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'context_window_chars', num(v, 28000))} />
-              <Field label="单次输入字符上限" hint="LangExtract 单次送入 LLM 的最大字符数，防止超模型窗口" value={num(eng.max_char_buffer, 40000)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'max_char_buffer', num(v, 40000))} />
+              <Field label="单次输入字符上限" hint="LangExtractPkg 单次送入 LLM 的最大字符数，防止超模型窗口" value={num(eng.max_char_buffer, 40000)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'max_char_buffer', num(v, 40000))} />
               <Field label="few-shot 示例数" hint="从 Schema 字段 example 生成的示例条数；示例越多抽取越稳但更耗 token" value={num(eng.max_examples, 3)} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'max_examples', num(v, 3))} />
               <div className="space-y-1 rounded-lg bg-muted/30 p-2">
                 <label className="text-xs font-medium text-muted-foreground">输出格式 format_type</label>
@@ -335,9 +334,9 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
                   <option value="JSON">JSON</option>
                   <option value="YAML">YAML</option>
                 </Select>
-                <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">结构化输出格式，仅 LangExtract 生效。</p>
+                <p className="mt-0.5 text-[11px] leading-tight text-muted-foreground/80">结构化输出格式，仅 LangExtractPkg 生效。</p>
               </div>
-              <ToggleField label="围栏输出 fence_output" hint="在输出外层包裹围栏标记；对接特定解析器时可能需要开启（仅 LangExtract 生效）" value={eng.fence_output ?? false} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'fence_output', v)} />
+              <ToggleField label="围栏输出 fence_output" hint="在输出外层包裹围栏标记；对接特定解析器时可能需要开启（仅 LangExtractPkg 生效）" value={eng.fence_output ?? false} disabled={!canManage} onChange={(v) => patchEngine(cfg.llm.engine, 'fence_output', v)} />
             </div>
           </div>
         )}

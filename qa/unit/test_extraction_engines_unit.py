@@ -4,6 +4,7 @@ from types import SimpleNamespace
 
 from app.services.extraction import llm_extractor
 from app.services.extraction.extraction_models import ExtractionTarget
+from app.services.extraction.llm_extractor import input_char_budget
 
 
 class CaptureLLM:
@@ -53,47 +54,8 @@ async def test_base_extract_consumes_llm_params():
     assert call["json_mode"] is True
 
 
-async def test_lang_extract_multi_pass_windows_and_params():
-    """L1E3-11：LangExtract 消费 passes/窗口/few-shot/围栏/类别内并发。"""
-    client = CaptureLLM()
-    target = _target([
-        {"name": "项目名称", "type": "string", "example": "抗拉强度(Rm)"},
-        {"name": "单位", "type": "string", "example": "MPa"},
-    ])
-    ep = {
-        "temperature": 0.0, "max_tokens": 200, "timeout": 60,
-        "format_type": "JSON", "fence_output": True, "max_examples": 3,
-        "passes": 2, "context_window_chars": 100, "max_char_buffer": 500,
-        "batch": {"overlap": 20},
-        "concurrency": {"within_category": 2},
-    }
-    context = "A" * 300
-    windows = llm_extractor._split_windows(context, 100, 20, 500)
-    records = await llm_extractor.extract_category(_cfg(), target, context, client, ep, engine="LangExtract")
-    assert len(client.calls) == 2 * len(windows)  # passes × windows
-    assert len(records) == 1  # 重复输出去重
-    all_users = "".join(c["messages"][1]["content"] for c in client.calls)
-    assert "抗拉强度(Rm)" in all_users      # few-shot 完整正例注入
-    assert "拆条示例" in all_users          # 多值拆条示例注入
-    assert "围栏" in all_users              # fence_output 说明
-    assert "[已抽取记录]" in all_users       # pass≥2 注入已抽记录
-    assert client.calls[0]["json_mode"] is True
-
-
-async def test_lang_extract_yaml_and_fence():
-    """L1E3-12：LangExtract YAML 输出 + 围栏剥离。"""
-    client = CaptureLLM("```yaml\n- 项目名称: 抗拉强度(Rm)\n  单位: MPa\n```")
-    ep = {
-        "max_tokens": 200, "format_type": "YAML", "fence_output": True,
-        "max_examples": 0, "passes": 1, "context_window_chars": 1000,
-        "max_char_buffer": 2000, "batch": {"overlap": 0},
-        "concurrency": {"within_category": 1},
-    }
-    target = _target([
-        {"name": "项目名称", "type": "string", "example": "抗拉强度(Rm)"},
-        {"name": "单位", "type": "string", "example": "MPa"},
-    ])
-    records = await llm_extractor.extract_category(_cfg(), target, "短上下文", client, ep, engine="LangExtract")
-    assert records == [{"项目名称": "抗拉强度(Rm)", "单位": "MPa"}]
-    assert client.calls[0]["json_mode"] is False
-    assert "YAML" in client.calls[0]["messages"][1]["content"]
+def test_input_char_budget():
+    """L1E3-13：输入预算随输出 max_tokens 收缩，并保底。"""
+    assert input_char_budget(8192) < input_char_budget(4096)
+    assert input_char_budget(40000) >= 2000
+    assert input_char_budget(32768) < 55000 * 1.5

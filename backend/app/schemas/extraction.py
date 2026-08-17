@@ -319,7 +319,7 @@ class GlobalLangExtractConfig(GlobalBaseExtractConfig):
 
 
 class GlobalLLMConfig(BaseModel):
-    engine: Literal["BaseExtract", "LangExtract", "LangExtractPkg"] = "BaseExtract"
+    engine: Literal["BaseExtract", "LangExtractPkg"] = "BaseExtract"
     engines: dict[str, GlobalBaseExtractConfig | GlobalLangExtractConfig] = Field(default_factory=dict)
 
 

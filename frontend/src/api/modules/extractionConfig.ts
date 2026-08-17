@@ -282,8 +282,8 @@ export interface GlobalEngineConfig {
 }
 
 export interface GlobalLLMConfig {
-  engine: 'BaseExtract' | 'LangExtract' | 'LangExtractPkg'
-  engines: { BaseExtract: GlobalEngineConfig; LangExtract: GlobalEngineConfig; LangExtractPkg: GlobalEngineConfig }
+  engine: 'BaseExtract' | 'LangExtractPkg'
+  engines: { BaseExtract: GlobalEngineConfig; LangExtractPkg: GlobalEngineConfig }
 }
 
 export interface GlobalKbToolConfig {

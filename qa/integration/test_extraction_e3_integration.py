@@ -91,23 +91,3 @@ async def test_pipeline_full_flow(client, super_token, db_session):
     assert set((recall.get("score_bands") or {}).keys()) == {"0-0.3", "0.3-0.5", "0.5-0.7", "0.7-0.9", "0.9-1.0"}
     assert "hit_score" in result["categories"][0]
     assert "hit_count" in result["categories"][0]
-
-
-async def test_pipeline_full_flow_lang_extract(client, super_token, db_session):
-    """L2E3-02：LangExtract 引擎（多轮+示例+窗口）全流程产出记录。"""
-    kb_id, doc_id, _tb, _cat, mock = await _setup_full(client, super_token, db_session, "E3LangExtract")
-    h = {H: f"Bearer {super_token}"}
-    r = await client.put(f"/api/v1/kb/{kb_id}/extraction-config/global", headers=h, json={
-        "enabled": True,
-        "content": {"llm": {"engine": "LangExtract", "engines": {"LangExtract": {
-            "temperature": 0.0, "max_tokens": 4096, "timeout": 60,
-            "format_type": "JSON", "fence_output": False, "max_examples": 3,
-            "passes": 2, "context_window_chars": 500, "max_char_buffer": 2000,
-            "batch": {"single_threshold": 8000, "batch_chars": 6000, "overlap": 500, "context_truncate": 32000},
-            "concurrency": {"max_concurrency": 4, "cross_category": 4, "within_category": 2},
-        }}}},
-    })
-    assert r.status_code == 200, r.text
-    result = await pipeline.run(kb_id=kb_id, document_id=doc_id, llm_client=mock, db=db_session)
-    assert result["summary"]["total_records"] >= 1
-    assert result["categories"][0]["records"][0]["f1"] == "抗拉强度值"
