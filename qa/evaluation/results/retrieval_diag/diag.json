@@ -1,0 +1,1789 @@
+{
+  "categories": [
+    {
+      "feature": "α层",
+      "query_len": 5,
+      "term_count": 1,
+      "hits": 15,
+      "score_min": 0.0137,
+      "score_max": 0.0333,
+      "table_hits": 11,
+      "hit_pages": [
+        [
+          19
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          21
+        ],
+        [
+          23
+        ],
+        [
+          21
+        ],
+        [
+          24
+        ],
+        [
+          28
+        ]
+      ]
+    },
+    {
+      "feature": "低倍",
+      "query_len": 147,
+      "term_count": 10,
+      "hits": 15,
+      "score_min": 0.016,
+      "score_max": 0.0355,
+      "table_hits": 3,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          18
+        ],
+        [
+          19,
+          20
+        ],
+        [
+          17
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          6
+        ],
+        [
+          19
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "target_count": 4,
+      "target_in_top15": true,
+      "target_ranks": [
+        1,
+        6
+      ]
+    },
+    {
+      "feature": "低周疲劳",
+      "query_len": 39,
+      "term_count": 3,
+      "hits": 15,
+      "score_min": 0.0141,
+      "score_max": 0.0346,
+      "table_hits": 14,
+      "hit_pages": [
+        [
+          28
+        ],
+        [
+          29
+        ],
+        [
+          30
+        ],
+        [
+          24
+        ],
+        [
+          18
+        ],
+        [
+          27
+        ],
+        [
+          18
+        ],
+        [
+          16
+        ]
+      ]
+    },
+    {
+      "feature": "低温拉伸",
+      "query_len": 20,
+      "term_count": 1,
+      "hits": 15,
+      "score_min": 0.0164,
+      "score_max": 0.0331,
+      "table_hits": 1,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          6
+        ],
+        [
+          7
+        ],
+        [
+          31
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          19,
+          20
+        ],
+        [
+          4,
+          5
+        ]
+      ]
+    },
+    {
+      "feature": "化学成分",
+      "query_len": 218,
+      "term_count": 16,
+      "hits": 15,
+      "score_min": 0.0176,
+      "score_max": 0.0354,
+      "table_hits": 2,
+      "hit_pages": [
+        [
+          7
+        ],
+        [
+          7
+        ],
+        [
+          6
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          7
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          7
+        ]
+      ],
+      "target_count": 3,
+      "target_in_top15": false,
+      "target_ranks": []
+    },
+    {
+      "feature": "塔形",
+      "query_len": 39,
+      "term_count": 3,
+      "hits": 15,
+      "score_min": 0.0171,
+      "score_max": 0.0361,
+      "table_hits": 3,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          17
+        ],
+        [
+          19
+        ],
+        [
+          6
+        ],
+        [
+          17
+        ],
+        [
+          7
+        ],
+        [
+          19
+        ]
+      ],
+      "target_count": 4,
+      "target_in_top15": true,
+      "target_ranks": [
+        3
+      ]
+    },
+    {
+      "feature": "备样",
+      "query_len": 2,
+      "term_count": 0,
+      "hits": 15,
+      "score_min": 0.0133,
+      "score_max": 0.0164,
+      "table_hits": 7,
+      "hit_pages": [
+        [
+          21
+        ],
+        [
+          19
+        ],
+        [
+          21
+        ],
+        [
+          22
+        ],
+        [
+          23
+        ],
+        [
+          6
+        ],
+        [
+          6
+        ],
+        [
+          19
+        ]
+      ]
+    },
+    {
+      "feature": "夏比冲击",
+      "query_len": 82,
+      "term_count": 6,
+      "hits": 15,
+      "score_min": 0.0139,
+      "score_max": 0.0357,
+      "table_hits": 7,
+      "hit_pages": [
+        [
+          14
+        ],
+        [
+          15
+        ],
+        [
+          19
+        ],
+        [
+          28
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          13
+        ],
+        [
+          12
+        ]
+      ]
+    },
+    {
+      "feature": "室温拉伸",
+      "query_len": 242,
+      "term_count": 16,
+      "hits": 15,
+      "score_min": 0.016,
+      "score_max": 0.0352,
+      "table_hits": 12,
+      "hit_pages": [
+        [
+          14
+        ],
+        [
+          13
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          16
+        ],
+        [
+          12
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          15
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "target_count": 5,
+      "target_in_top15": true,
+      "target_ranks": [
+        0,
+        1,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "feature": "室温持久",
+      "query_len": 4,
+      "term_count": 0,
+      "hits": 15,
+      "score_min": 0.0135,
+      "score_max": 0.0355,
+      "table_hits": 14,
+      "hit_pages": [
+        [
+          23
+        ],
+        [
+          28
+        ],
+        [
+          29
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          21
+        ],
+        [
+          22
+        ],
+        [
+          22
+        ],
+        [
+          15
+        ]
+      ]
+    },
+    {
+      "feature": "室温缺口拉伸",
+      "query_len": 22,
+      "term_count": 2,
+      "hits": 15,
+      "score_min": 0.0145,
+      "score_max": 0.0343,
+      "table_hits": 10,
+      "hit_pages": [
+        [
+          14
+        ],
+        [
+          28
+        ],
+        [
+          16
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          13
+        ],
+        [
+          15
+        ],
+        [
+          29
+        ],
+        [
+          4,
+          5
+        ]
+      ]
+    },
+    {
+      "feature": "布氏硬度",
+      "query_len": 62,
+      "term_count": 5,
+      "hits": 15,
+      "score_min": 0.016,
+      "score_max": 0.0358,
+      "table_hits": 1,
+      "hit_pages": [
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6
+        ],
+        [
+          7
+        ],
+        [
+          6
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          20
+        ],
+        [
+          1
+        ]
+      ],
+      "target_count": 5,
+      "target_in_top15": false,
+      "target_ranks": []
+    },
+    {
+      "feature": "应力疲劳",
+      "query_len": 4,
+      "term_count": 0,
+      "hits": 15,
+      "score_min": 0.0133,
+      "score_max": 0.0341,
+      "table_hits": 11,
+      "hit_pages": [
+        [
+          29
+        ],
+        [
+          27
+        ],
+        [
+          28
+        ],
+        [
+          30
+        ],
+        [
+          24
+        ],
+        [
+          15
+        ],
+        [
+          14
+        ],
+        [
+          16
+        ]
+      ]
+    },
+    {
+      "feature": "弯曲",
+      "query_len": 2,
+      "term_count": 0,
+      "hits": 15,
+      "score_min": 0.0135,
+      "score_max": 0.0332,
+      "table_hits": 11,
+      "hit_pages": [
+        [
+          28
+        ],
+        [
+          17
+        ],
+        [
+          6
+        ],
+        [
+          14
+        ],
+        [
+          13
+        ],
+        [
+          6
+        ],
+        [
+          18
+        ],
+        [
+          16
+        ]
+      ]
+    },
+    {
+      "feature": "循环持久",
+      "query_len": 38,
+      "term_count": 5,
+      "hits": 15,
+      "score_min": 0.0164,
+      "score_max": 0.0333,
+      "table_hits": 8,
+      "hit_pages": [
+        [
+          29
+        ],
+        [
+          19
+        ],
+        [
+          28
+        ],
+        [
+          6
+        ],
+        [
+          18
+        ],
+        [
+          17
+        ],
+        [
+          17
+        ],
+        [
+          23
+        ]
+      ]
+    },
+    {
+      "feature": "扭转",
+      "query_len": 18,
+      "term_count": 1,
+      "hits": 15,
+      "score_min": 0.0162,
+      "score_max": 0.0344,
+      "table_hits": 1,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          1
+        ],
+        [
+          6
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          31
+        ],
+        [
+          6
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          19
+        ]
+      ]
+    },
+    {
+      "feature": "抗氧化",
+      "query_len": 25,
+      "term_count": 2,
+      "hits": 15,
+      "score_min": 0.0161,
+      "score_max": 0.0361,
+      "table_hits": 10,
+      "hit_pages": [
+        [
+          21
+        ],
+        [
+          27
+        ],
+        [
+          30
+        ],
+        [
+          19
+        ],
+        [
+          28
+        ],
+        [
+          29
+        ],
+        [
+          22
+        ],
+        [
+          23
+        ]
+      ]
+    },
+    {
+      "feature": "断口",
+      "query_len": 12,
+      "term_count": 1,
+      "hits": 15,
+      "score_min": 0.0133,
+      "score_max": 0.0164,
+      "table_hits": 9,
+      "hit_pages": [
+        [
+          7
+        ],
+        [
+          22
+        ],
+        [
+          27
+        ],
+        [
+          28
+        ],
+        [
+          13
+        ],
+        [
+          17
+        ],
+        [
+          12
+        ],
+        [
+          16
+        ]
+      ]
+    },
+    {
+      "feature": "晶粒度",
+      "query_len": 88,
+      "term_count": 8,
+      "hits": 15,
+      "score_min": 0.0164,
+      "score_max": 0.0346,
+      "table_hits": 7,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          17
+        ],
+        [
+          6
+        ],
+        [
+          6
+        ],
+        [
+          10
+        ],
+        [
+          19
+        ],
+        [
+          24
+        ],
+        [
+          14
+        ]
+      ]
+    },
+    {
+      "feature": "晶间腐蚀",
+      "query_len": 28,
+      "term_count": 2,
+      "hits": 15,
+      "score_min": 0.0162,
+      "score_max": 0.0361,
+      "table_hits": 8,
+      "hit_pages": [
+        [
+          17
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          17
+        ],
+        [
+          21
+        ],
+        [
+          24
+        ],
+        [
+          19
+        ],
+        [
+          15
+        ]
+      ],
+      "target_count": 2,
+      "target_in_top15": true,
+      "target_ranks": [
+        3
+      ]
+    },
+    {
+      "feature": "步冷实验",
+      "query_len": 4,
+      "term_count": 0,
+      "hits": 15,
+      "score_min": 0.0133,
+      "score_max": 0.0164,
+      "table_hits": 12,
+      "hit_pages": [
+        [
+          19
+        ],
+        [
+          21
+        ],
+        [
+          23
+        ],
+        [
+          22
+        ],
+        [
+          21
+        ],
+        [
+          19
+        ],
+        [
+          23
+        ],
+        [
+          22
+        ]
+      ]
+    },
+    {
+      "feature": "洛氏硬度",
+      "query_len": 44,
+      "term_count": 3,
+      "hits": 15,
+      "score_min": 0.016,
+      "score_max": 0.0358,
+      "table_hits": 1,
+      "hit_pages": [
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          7
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          7
+        ],
+        [
+          6
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "feature": "淬透性",
+      "query_len": 20,
+      "term_count": 2,
+      "hits": 15,
+      "score_min": 0.0162,
+      "score_max": 0.0346,
+      "table_hits": 5,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          1
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          13
+        ],
+        [
+          12
+        ],
+        [
+          6
+        ],
+        [
+          16
+        ],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "feature": "热膨胀",
+      "query_len": 30,
+      "term_count": 3,
+      "hits": 15,
+      "score_min": 0.0139,
+      "score_max": 0.0197,
+      "table_hits": 8,
+      "hit_pages": [
+        [
+          7
+        ],
+        [
+          28
+        ],
+        [
+          21
+        ],
+        [
+          7
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6
+        ],
+        [
+          13
+        ]
+      ]
+    },
+    {
+      "feature": "相变点",
+      "query_len": 28,
+      "term_count": 3,
+      "hits": 15,
+      "score_min": 0.0137,
+      "score_max": 0.0352,
+      "table_hits": 9,
+      "hit_pages": [
+        [
+          21
+        ],
+        [
+          28
+        ],
+        [
+          7
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          23
+        ],
+        [
+          21
+        ],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "feature": "组合持久",
+      "query_len": 51,
+      "term_count": 5,
+      "hits": 15,
+      "score_min": 0.016,
+      "score_max": 0.035,
+      "table_hits": 9,
+      "hit_pages": [
+        [
+          14
+        ],
+        [
+          16
+        ],
+        [
+          13
+        ],
+        [
+          12
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          15
+        ],
+        [
+          27
+        ],
+        [
+          29
+        ]
+      ]
+    },
+    {
+      "feature": "维氏硬度",
+      "query_len": 13,
+      "term_count": 1,
+      "hits": 15,
+      "score_min": 0.0137,
+      "score_max": 0.0342,
+      "table_hits": 5,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          15
+        ],
+        [
+          16
+        ],
+        [
+          17
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ]
+    },
+    {
+      "feature": "缺口持久",
+      "query_len": 39,
+      "term_count": 3,
+      "hits": 15,
+      "score_min": 0.0162,
+      "score_max": 0.0346,
+      "table_hits": 4,
+      "hit_pages": [
+        [
+          19
+        ],
+        [
+          18
+        ],
+        [
+          17
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          14
+        ],
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "feature": "脱碳层",
+      "query_len": 3,
+      "term_count": 0,
+      "hits": 15,
+      "score_min": 0.0133,
+      "score_max": 0.0164,
+      "table_hits": 13,
+      "hit_pages": [
+        [
+          23
+        ],
+        [
+          21
+        ],
+        [
+          27
+        ],
+        [
+          22
+        ],
+        [
+          28
+        ],
+        [
+          22
+        ],
+        [
+          30
+        ],
+        [
+          24
+        ]
+      ]
+    },
+    {
+      "feature": "落锤",
+      "query_len": 62,
+      "term_count": 4,
+      "hits": 15,
+      "score_min": 0.0164,
+      "score_max": 0.0355,
+      "table_hits": 1,
+      "hit_pages": [
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          7
+        ],
+        [
+          7
+        ],
+        [
+          7
+        ],
+        [
+          6
+        ],
+        [
+          1
+        ],
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    {
+      "feature": "蠕变",
+      "query_len": 72,
+      "term_count": 7,
+      "hits": 15,
+      "score_min": 0.0143,
+      "score_max": 0.0346,
+      "table_hits": 10,
+      "hit_pages": [
+        [
+          14
+        ],
+        [
+          16
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ],
+        [
+          15
+        ],
+        [
+          29
+        ],
+        [
+          27
+        ],
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    {
+      "feature": "裂纹扩展速率",
+      "query_len": 6,
+      "term_count": 0,
+      "hits": 15,
+      "score_min": 0.0137,
+      "score_max": 0.0347,
+      "table_hits": 12,
+      "hit_pages": [
+        [
+          18
+        ],
+        [
+          17
+        ],
+        [
+          18
+        ],
+        [
+          18
+        ],
+        [
+          14
+        ],
+        [
+          16
+        ],
+        [
+          13
+        ],
+        [
+          12
+        ]
+      ]
+    },
+    {
+      "feature": "铁素体",
+      "query_len": 41,
+      "term_count": 3,
+      "hits": 15,
+      "score_min": 0.0164,
+      "score_max": 0.0347,
+      "table_hits": 7,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          27
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          10
+        ],
+        [
+          17
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          6
+        ],
+        [
+          18,
+          19
+        ]
+      ]
+    },
+    {
+      "feature": "非金属夹杂",
+      "query_len": 17,
+      "term_count": 2,
+      "hits": 15,
+      "score_min": 0.0143,
+      "score_max": 0.0336,
+      "table_hits": 12,
+      "hit_pages": [
+        [
+          18
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          18
+        ],
+        [
+          19,
+          20
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          19
+        ],
+        [
+          17
+        ],
+        [
+          17
+        ]
+      ]
+    },
+    {
+      "feature": "高倍组织",
+      "query_len": 216,
+      "term_count": 16,
+      "hits": 15,
+      "score_min": 0.016,
+      "score_max": 0.0358,
+      "table_hits": 7,
+      "hit_pages": [
+        [
+          5,
+          6
+        ],
+        [
+          27
+        ],
+        [
+          18
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          17
+        ],
+        [
+          30
+        ],
+        [
+          19
+        ],
+        [
+          19,
+          20
+        ]
+      ]
+    },
+    {
+      "feature": "高周疲劳",
+      "query_len": 68,
+      "term_count": 8,
+      "hits": 15,
+      "score_min": 0.0164,
+      "score_max": 0.0338,
+      "table_hits": 9,
+      "hit_pages": [
+        [
+          29
+        ],
+        [
+          30
+        ],
+        [
+          28
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          14
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          18
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    {
+      "feature": "高温光滑持久",
+      "query_len": 104,
+      "term_count": 9,
+      "hits": 15,
+      "score_min": 0.0164,
+      "score_max": 0.0345,
+      "table_hits": 9,
+      "hit_pages": [
+        [
+          7
+        ],
+        [
+          16
+        ],
+        [
+          14
+        ],
+        [
+          17
+        ],
+        [
+          23
+        ],
+        [
+          28
+        ],
+        [
+          17
+        ],
+        [
+          5,
+          6
+        ]
+      ]
+    },
+    {
+      "feature": "高温拉伸",
+      "query_len": 197,
+      "term_count": 13,
+      "hits": 15,
+      "score_min": 0.0164,
+      "score_max": 0.0336,
+      "table_hits": 8,
+      "hit_pages": [
+        [
+          2,
+          3
+        ],
+        [
+          16
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          14
+        ],
+        [
+          13
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          12
+        ],
+        [
+          15
+        ]
+      ]
+    },
+    {
+      "feature": "高温缺口拉伸",
+      "query_len": 6,
+      "term_count": 0,
+      "hits": 15,
+      "score_min": 0.0147,
+      "score_max": 0.0338,
+      "table_hits": 11,
+      "hit_pages": [
+        [
+          28
+        ],
+        [
+          24
+        ],
+        [
+          30
+        ],
+        [
+          22
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          27
+        ],
+        [
+          19
+        ],
+        [
+          14
+        ]
+      ]
+    }
+  ],
+  "rerank": [
+    {
+      "feature": "布氏硬度",
+      "rerank_sec": 14.83,
+      "target_in_top15": false,
+      "target_ranks": [],
+      "hit_pages": [
+        [
+          2,
+          3
+        ],
+        [
+          19
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          1
+        ],
+        [
+          31
+        ],
+        [
+          19,
+          20
+        ],
+        [
+          7
+        ],
+        [
+          6
+        ]
+      ]
+    },
+    {
+      "feature": "室温拉伸",
+      "rerank_sec": 4.67,
+      "target_in_top15": true,
+      "target_ranks": [
+        2,
+        4,
+        5,
+        6,
+        10
+      ],
+      "hit_pages": [
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          15
+        ],
+        [
+          19
+        ],
+        [
+          14
+        ],
+        [
+          13
+        ],
+        [
+          16
+        ],
+        [
+          23
+        ]
+      ]
+    },
+    {
+      "feature": "化学成分",
+      "rerank_sec": 1.5,
+      "target_in_top15": false,
+      "target_ranks": [],
+      "hit_pages": [
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          19
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          7
+        ],
+        [
+          19,
+          20
+        ],
+        [
+          18
+        ],
+        [
+          6
+        ]
+      ]
+    },
+    {
+      "feature": "低倍",
+      "rerank_sec": 0.97,
+      "target_in_top15": true,
+      "target_ranks": [
+        0,
+        2
+      ],
+      "hit_pages": [
+        [
+          18
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          19
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          19,
+          20
+        ],
+        [
+          17
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "feature": "塔形",
+      "rerank_sec": 1.4,
+      "target_in_top15": true,
+      "target_ranks": [
+        0
+      ],
+      "hit_pages": [
+        [
+          19
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          18
+        ],
+        [
+          17
+        ],
+        [
+          17
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "feature": "晶间腐蚀",
+      "rerank_sec": 8.89,
+      "target_in_top15": true,
+      "target_ranks": [
+        1
+      ],
+      "hit_pages": [
+        [
+          24
+        ],
+        [
+          17
+        ],
+        [
+          19
+        ],
+        [
+          17
+        ],
+        [
+          10
+        ],
+        [
+          14
+        ],
+        [
+          16
+        ],
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    {
+      "feature": "热处理制度",
+      "rerank_sec": 2.27,
+      "target_in_top15": true,
+      "target_ranks": [
+        1,
+        3,
+        7,
+        8
+      ],
+      "hit_pages": [
+        [
+          21
+        ],
+        [
+          23
+        ],
+        [
+          7
+        ],
+        [
+          22
+        ],
+        [
+          7
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          16
+        ],
+        [
+          23
+        ]
+      ]
+    }
+  ],
+  "cosine": [
+    {
+      "feature": "布氏硬度",
+      "cosine_vs_targets": [
+        0.6086,
+        0.5979,
+        0.5857
+      ]
+    },
+    {
+      "feature": "室温拉伸",
+      "cosine_vs_targets": [
+        0.7198,
+        0.7259,
+        0.7495
+      ]
+    },
+    {
+      "feature": "化学成分",
+      "cosine_vs_targets": [
+        0.6127,
+        0.5998,
+        0.6211
+      ]
+    },
+    {
+      "feature": "低倍",
+      "cosine_vs_targets": [
+        0.7091,
+        0.4749,
+        0.5668
+      ]
+    },
+    {
+      "feature": "塔形",
+      "cosine_vs_targets": [
+        0.4776,
+        0.3862,
+        0.5379
+      ]
+    },
+    {
+      "feature": "晶间腐蚀",
+      "cosine_vs_targets": [
+        0.5215,
+        0.5557
+      ]
+    },
+    {
+      "feature": "热处理制度",
+      "cosine_vs_targets": [
+        0.5608,
+        0.4899,
+        0.5911
+      ]
+    }
+  ]
+}
