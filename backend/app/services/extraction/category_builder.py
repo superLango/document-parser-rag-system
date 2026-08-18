@@ -112,7 +112,12 @@ async def _build_query_terms(
     refined_cache: dict,
     dedupe_threshold: float,
 ) -> list[str]:
-    """固定 query + Query 术语集（主/精简合并，去重；group_field 按类别过滤）。"""
+    """固定 query + Query 术语集。
+
+    dedupe 开启时只取语义去重后的精简集（refined_limit），不再叠加主查询全集，
+    避免长 query 稀释检索语义；dedupe 关闭时回退主查询（main_limit）。
+    group_field 按类别过滤。
+    """
     terms: list[str] = []
     if target.fixed_query:
         terms.extend(t.strip() for t in target.fixed_query.replace("，", " ").replace(",", " ").split() if t.strip())
@@ -132,9 +137,7 @@ async def _build_query_terms(
         field = qs.get("value_field") or "term_name"
         main_limit = int(qs.get("query_main_limit") or 30)
         refined_limit = int(qs.get("query_refined_limit") or 8)
-        values = distinct_field_values(rows, field, main_limit)
-        terms.extend(values)
-        # 精简查询：语义去重后与主查询合并
+        # 精简查询优先：语义去重后的精简集即 query 全集（不再叠加主查询 30 个）
         if qs.get("dedupe") and refined_limit > 0:
             cache_key = (str(tb_id), field, group_field)
             refined = refined_cache.get(cache_key)
@@ -142,6 +145,12 @@ async def _build_query_terms(
                 refined = await _build_refined_terms(rows, field, refined_limit, dedupe_threshold)
                 refined_cache[cache_key] = refined
             terms.extend(refined)
+            if not refined:
+                # 精简结果为空（嵌入异常等）时回退主查询，保证 query 非空
+                terms.extend(distinct_field_values(rows, field, main_limit))
+        else:
+            values = distinct_field_values(rows, field, main_limit)
+            terms.extend(values)
     return list(dict.fromkeys(terms))
 
 
@@ -153,8 +162,44 @@ async def build(
     document_id,
     top_k: int | None = None,
 ) -> tuple[list[ExtractionTarget], list[SkippedFeature], dict]:
-    """构建抽取目标并执行类别召回（零命中剔除）。"""
-    targets, skipped = await _build_targets(cfg, db, kb_id)
+    """构建抽取目标并执行类别召回（零命中剔除；兼容旧调用，逐类别串行）。"""
+    targets, skipped = await build_targets(cfg, db, kb_id=kb_id)
+    kept: list[ExtractionTarget] = []
+    refined_cache: dict = {}
+    for t in targets:
+        built, sk = await build_one(
+            cfg, db, kb_id=kb_id, document_id=document_id, target=t,
+            refined_cache=refined_cache, top_k=top_k,
+        )
+        if built is not None:
+            kept.append(built)
+        elif sk is not None:
+            skipped.append(sk)
+    schemas = {"categories": {t.feature: t.schema for t in kept}}
+    return kept, skipped, schemas
+
+
+async def build_targets(
+    cfg, db: AsyncSession, *, kb_id
+) -> tuple[list[ExtractionTarget], list[SkippedFeature]]:
+    """仅展开抽取目标（不做检索），供流水线流式化使用。"""
+    return await _build_targets(cfg, db, kb_id)
+
+
+async def build_one(
+    cfg,
+    db: AsyncSession,
+    *,
+    kb_id,
+    document_id,
+    target: ExtractionTarget,
+    refined_cache: dict | None = None,
+    top_k: int | None = None,
+) -> tuple[ExtractionTarget | None, SkippedFeature | None]:
+    """单类别召回 + schema/术语数据补齐。
+
+    返回 (target, None) 或 (None, skipped)；供流水线"检索完一个类别立即抽取"使用。
+    """
     global_retrieval = cfg.global_config.get("retrieval") or {}
     default_top_k = top_k or global_retrieval.get("top_k") or 10
     category_recall = global_retrieval.get("category_recall") or {}
@@ -166,53 +211,28 @@ async def build(
     query_embed_cfg = global_retrieval.get("query_embed") or {}
     content_max_chars = int(query_embed_cfg.get("content_max_chars") or 2000)
     dedupe_threshold = float(query_embed_cfg.get("dedupe_similarity_threshold") or 0.85)
-    refined_cache: dict = {}
-    kept: list[ExtractionTarget] = []
-
-    async def _finalize(t: ExtractionTarget) -> None:
-        """补全 schema 与 Query 术语集数据（串行阶段完成，避免并发共享会话查询）。"""
-        properties = {}
-        for f in t.fields:
-            prop: dict = {"type": f.get("type") or "string"}
-            if f.get("required"):
-                prop["required"] = True
-            if f.get("description"):
-                prop["description"] = f["description"]
-            if f.get("example"):
-                prop["example"] = f["example"]
-            properties[f["name"]] = prop
-        t.schema = {"type": t.return_type, "properties": properties}
-        for qs in t.query_sources or []:
-            label = (qs.get("label") or "").strip()
-            tb_id = qs.get("term_base_id")
-            if label and tb_id:
-                t.term_data[label] = await load_term_base(
-                    db, kb_id, uuid.UUID(str(tb_id))
-                )
-        kept.append(t)
-
-    for t in targets:
-        t.query_terms = await _build_query_terms(db, kb_id, t, refined_cache, dedupe_threshold)
-        query = " ".join([t.feature, *t.query_terms]).strip() or t.feature
-        query = query[:content_max_chars]  # query_embed.content_max_chars 生效
-        # 第一段：类别召回（category_recall.top_k / per_dim_top_k 生效）
-        recall_hits = await retrieval_service.search(
-            db,
-            uuid.UUID(str(kb_id)),
-            query,
-            top_k=recall_top_k,
-            per_dim_top_k=per_dim_top_k,
-            filters=SearchFilters(document_id=uuid.UUID(str(document_id))),
-            retrieval_config=global_retrieval,
-        )
-        if not recall_hits:
-            if recall_mode == "off":
-                # 第三版「关闭」：全部类别参与，零命中类别以空上下文进入抽取
-                t.hits = []
-                await _finalize(t)
-            else:
-                skipped.append(SkippedFeature(feature=t.feature, reason="零命中（检索无结果）", score=0.0))
-            continue
+    cache = refined_cache if refined_cache is not None else {}
+    t = target
+    t.query_terms = await _build_query_terms(db, kb_id, t, cache, dedupe_threshold)
+    query = " ".join([t.feature, *t.query_terms]).strip() or t.feature
+    query = query[:content_max_chars]  # query_embed.content_max_chars 生效
+    # 第一段：类别召回（category_recall.top_k / per_dim_top_k 生效）
+    recall_hits = await retrieval_service.search(
+        db,
+        uuid.UUID(str(kb_id)),
+        query,
+        top_k=recall_top_k,
+        per_dim_top_k=per_dim_top_k,
+        filters=SearchFilters(document_id=uuid.UUID(str(document_id))),
+        retrieval_config=global_retrieval,
+    )
+    if not recall_hits:
+        if recall_mode == "off":
+            # 第三版「关闭」：全部类别参与，零命中类别以空上下文进入抽取
+            t.hits = []
+        else:
+            return None, SkippedFeature(feature=t.feature, reason="零命中（检索无结果）", score=0.0)
+    else:
         t.hit_score = max(h.score for h in recall_hits)
         t.hit_count = len(recall_hits)
         kw_count = sum(1 for h in recall_hits if getattr(h, "keyword_matched", False))
@@ -223,12 +243,11 @@ async def build(
             else default_threshold
         )
         if recall_mode == "strict" and t.hit_score < threshold and kw_count < keyword_min_hits:
-            skipped.append(SkippedFeature(
+            return None, SkippedFeature(
                 feature=t.feature,
                 reason=f"置信度低于阈值（最高分 {t.hit_score:.3f} < {threshold}，词法命中 {kw_count} < {keyword_min_hits}）",
                 score=t.hit_score,
-            ))
-            continue
+            )
         # 第二段：抽取上下文检索（类别级/全局 top_k 生效）
         context_hits = await retrieval_service.search(
             db,
@@ -244,7 +263,25 @@ async def build(
             "parent_text": h.parent_text,
             "source_pages": h.source_pages,
             "score": h.score,
+            "has_table": getattr(h, "has_table", False),
         } for h in context_hits]
-        await _finalize(t)
-    schemas = {"categories": {t.feature: t.schema for t in kept}}
-    return kept, skipped, schemas
+    # 补全 schema 与 Query 术语集数据
+    properties = {}
+    for f in t.fields:
+        prop: dict = {"type": f.get("type") or "string"}
+        if f.get("required"):
+            prop["required"] = True
+        if f.get("description"):
+            prop["description"] = f["description"]
+        if f.get("example"):
+            prop["example"] = f["example"]
+        properties[f["name"]] = prop
+    t.schema = {"type": t.return_type, "properties": properties}
+    for qs in t.query_sources or []:
+        label = (qs.get("label") or "").strip()
+        tb_id = qs.get("term_base_id")
+        if label and tb_id:
+            t.term_data[label] = await load_term_base(
+                db, kb_id, uuid.UUID(str(tb_id))
+            )
+    return t, None

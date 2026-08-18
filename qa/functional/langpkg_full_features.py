@@ -29,27 +29,27 @@ RESULTS_DIR = Path(__file__).resolve().parents[2] / "qa/evaluation/results/langp
 
 # 官方特性全开的引擎参数（与全局配置默认一致）
 ENGINE_PARAMS = {
-    "timeout": 600,
+    "timeout": 1800,
     "format_type": "JSON",
     "fence_output": False,
     "max_examples": 3,
-    "passes": 2,
-    "max_tokens": 8192,
-    "max_char_buffer": 3000,
+    "passes": 1,
+    "max_tokens": 24000,
+    "max_char_buffer": 6000,
     "context_window_chars": 500,
     "batch_length": 8,
-    "max_workers": 8,
+    "max_workers": 4,
     "concurrency": {"max_concurrency": 8, "cross_category": 8, "within_category": 8},
 }
 
 RETRIEVAL = {
-    "top_k": 10, "candidate_mult": 2, "weights": {"title": 0.2, "content": 0.8},
+    "top_k": 15, "candidate_mult": 2, "weights": {"title": 0.2, "content": 0.8},
     "default_confidence_threshold": 0.035, "context_max_tokens": 28000,
     "context": {"chars_per_token": 1.5, "min_keep_chars": 200, "truncate_marker": "\n[...内容截断...]"},
-    "category_recall": {"mode": "loose", "top_k": 5, "per_dim_top_k": 10},
+    "category_recall": {"mode": "loose", "top_k": 8, "per_dim_top_k": 10},
     "query_embed": {"content_max_chars": 2000, "dedupe_similarity_threshold": 0.85},
     "hybrid": {"enabled": True, "rrf_k": 60.0, "dense_weight": 1.0, "keyword_weight": 1.2, "keyword_min_hits": 1},
-    "reranker": {"enabled": False, "model": "", "top_n": 15},
+    "reranker": {"enabled": True, "model": "/home/grainuser/hansonDoc_RAG/models/bge-reranker-v2-m3", "top_n": 15},
 }
 
 

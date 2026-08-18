@@ -52,6 +52,8 @@ _SENTENCE_END_RE = re.compile(r"[。！？.!?；;]+")
 # 表格编号提取（"表3 化学成分" → "表3"）
 _TABLE_NUM_RE = re.compile(r"表\s*[0-9]+")
 
+# 独立页码文本（版面模型常把页眉/页脚页码识别为 text 块，长度为 1~3 位数字）
+_PAGE_NUM_RE = re.compile(r"^\d{1,3}$")
 
 class HierarchyChunker:
     """层级父子分块器。"""
@@ -120,13 +122,20 @@ class HierarchyChunker:
         rebuild = layout.get("rebuild") or {}
         tree = rebuild.get("document_tree") or {}
         if tree.get("children"):
-            return self._elements_from_tree(tree)
+            return [e for e in self._elements_from_tree(tree) if not self._is_page_number(e)]
         # 降级：按 pages.blocks 顺序构造根父块
         logger.warning(
             "document_tree 缺失或为空，降级按 blocks 顺序分块",
             page_count=layout.get("page_count", 0),
         )
-        return self._elements_from_blocks(layout)
+        return [e for e in self._elements_from_blocks(layout) if not self._is_page_number(e)]
+
+    @classmethod
+    def _is_page_number(cls, elem: DocumentElement) -> bool:
+        """纯数字 1~3 位的 text 视为独立页码，不参与分块。"""
+        return elem.type in ("text", "page_title") and bool(
+            _PAGE_NUM_RE.match((elem.content or "").strip())
+        )
 
     def _elements_from_tree(self, tree: dict) -> list[DocumentElement]:
         """深度遍历 document_tree 生成元素（面包屑栈式维护）。"""

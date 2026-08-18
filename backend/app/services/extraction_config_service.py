@@ -43,14 +43,14 @@ SCRIPT_MAX_TERM_ROWS = 1000  # 注入术语集每库最大词条数
 # ============================================================
 DEFAULT_GLOBAL_CONFIG: dict = {
     "retrieval": {
-        "top_k": 10,
+        "top_k": 15,
         "candidate_mult": 2,
         "weights": {"title": 0.2, "content": 0.8},
         "default_confidence_threshold": 0.35,
-        "context_top_k": 20,
+        "context_top_k": 30,
         "context_max_tokens": 28000,
         "context": {"chars_per_token": 1.5, "min_keep_chars": 200, "truncate_marker": "\n[...内容截断...]"},
-        "category_recall": {"mode": "loose", "top_k": 5, "per_dim_top_k": 10},
+        "category_recall": {"mode": "loose", "top_k": 8, "per_dim_top_k": 10},
         "query_embed": {
             "content_max_chars": 2000,
             "dedupe_similarity_threshold": 0.85,
@@ -71,11 +71,13 @@ DEFAULT_GLOBAL_CONFIG: dict = {
             },
             "LangExtractPkg": {
                 # 输出预算下调，输入预算自动放大（防 400/截断）
-                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 8192,
+                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 24000,
                 "timeout": 600, "enable_thinking": False,
-                "format_type": "JSON", "fence_output": False, "max_examples": 3, "passes": 2,
-                # 原包分块：单块字符上限（受模型窗口/输出预算钳制）+ 跨块共指窗口
-                "max_char_buffer": 3000, "context_window_chars": 500,
+                # 单轮抽取优先保证完整（多轮仅放大耗时，first-pass 已覆盖大多数）
+                "format_type": "JSON", "fence_output": False, "max_examples": 3, "passes": 1,
+                # 原包分块：单块字符上限（受模型窗口/输出预算钳制）+ 跨块共指窗口；
+                # 12k 整表单块实测抽取退化，回退 6000 平衡整表上下文与抽取质量
+                "max_char_buffer": 6000, "context_window_chars": 500,
                 # 并行：batch×workers，建议与 vLLM --max-num-seqs 一致
                 "batch_length": 8, "max_workers": 8,
                 "concurrency": {"max_concurrency": 8, "cross_category": 8, "within_category": 8},

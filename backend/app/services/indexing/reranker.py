@@ -1,11 +1,15 @@
-"""重排器（S6/D6）：默认直通；开启全局配置 reranker 后使用 BGE-M3 语义精排。
+"""重排器（S6/D6）：默认直通；reranker.model 配置 bge-reranker 路径时用交叉编码精排。
 
-说明：当前环境无独立重排模型，语义精排复用 BGE-M3（query 与候选块编码后按余弦
-重排）；后续接入 bge-reranker 等交叉编码模型时替换 SemanticReranker 即可。
+- `PassthroughReranker`：默认直通；
+- `SemanticReranker`：复用 BGE-M3 语义精排（无独立重排模型时的回退）；
+- `CrossEncoderReranker`：bge-reranker（XLM-RoBERTa 交叉编码），
+  query 与候选块拼接打分，质量优于向量精排（2026-08 接入，权重在 models/）。
 """
 
 from __future__ import annotations
 
+import asyncio
+import logging
 from typing import Any, Protocol
 
 
@@ -45,11 +49,96 @@ class SemanticReranker:
         return [h for _, h in scored[:top_k]]
 
 
+class CrossEncoderReranker:
+    """bge-reranker 交叉编码重排（reranker.model 指向模型目录）。"""
+
+    _model = None
+    _tokenizer = None
+    _device = None
+    _max_length = 512
+
+    def __init__(self, model_path: str) -> None:
+        self.model_path = model_path
+
+    def _ensure_loaded(self) -> None:
+        if CrossEncoderReranker._model is not None:
+            return
+        import torch
+        from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+        CrossEncoderReranker._tokenizer = AutoTokenizer.from_pretrained(self.model_path)
+        CrossEncoderReranker._model = AutoModelForSequenceClassification.from_pretrained(
+            self.model_path
+        )
+        CrossEncoderReranker._model.eval()
+        # 长文本重排：表格行文本单块约 2-3k 字符（≈1500-2000 token），
+        # 用 2048 兼顾覆盖与速度（8192 全开在后台进程偶发卡顿且无必要）
+        CrossEncoderReranker._max_length = min(
+            2048,
+            int(getattr(CrossEncoderReranker._model.config, "max_position_embeddings", 2048)),
+        )
+        CrossEncoderReranker._device = "cuda" if torch.cuda.is_available() else "cpu"
+        if CrossEncoderReranker._device == "cuda":
+            CrossEncoderReranker._model = CrossEncoderReranker._model.to("cuda")
+        logging.getLogger(__name__).info(
+            "交叉编码重排模型已加载", model=self.model_path, device=CrossEncoderReranker._device
+        )
+
+    async def rerank(self, query: str, hits: list[Any], top_k: int) -> list[Any]:
+        if not hits:
+            return []
+        self._ensure_loaded()
+
+        def _score() -> list[tuple[float, Any]]:
+            import torch
+
+            contents = [
+                getattr(h, "content", None) or (h.get("content", "") if isinstance(h, dict) else "")
+                for h in hits
+            ]
+            scored: list[tuple[float, Any]] = []
+            batch_size = 8
+            for i in range(0, len(hits), batch_size):
+                batch_hits = hits[i : i + batch_size]
+                batch_texts = contents[i : i + batch_size]
+                pairs = [[query, t] for t in batch_texts]
+                enc = CrossEncoderReranker._tokenizer(
+                    pairs,
+                    padding=True,
+                    truncation=True,
+                    max_length=CrossEncoderReranker._max_length,
+                    return_tensors="pt",
+                )
+                if CrossEncoderReranker._device == "cuda":
+                    enc = {k: v.to("cuda") for k, v in enc.items()}
+                with torch.no_grad():
+                    logits = CrossEncoderReranker._model(**enc).logits
+                if CrossEncoderReranker._device == "cuda":
+                    logits = logits.cpu()
+                for h, score in zip(batch_hits, logits[:, 0].tolist()):
+                    scored.append((float(score), h))
+            scored.sort(key=lambda x: x[0], reverse=True)
+            return scored
+
+        try:
+            # 后台进程偶发死锁兜底：超时回退直通，避免整任务卡死
+            scored = await asyncio.wait_for(asyncio.to_thread(_score), timeout=60)
+        except (asyncio.TimeoutError, Exception):  # noqa: BLE001
+            logging.getLogger(__name__).warning(
+                "交叉编码重排超时，回退直通", model=self.model_path
+            )
+            return hits[:top_k]
+        return [h for _, h in scored[:top_k]]
+
+
 def get_reranker(retrieval_config: dict | None = None):
-    """按全局配置选择重排器：reranker.enabled=true 时启用 BGE-M3 语义精排。"""
+    """按全局配置选择重排器：enabled=true 且 model 非空时用交叉编码精排。"""
     rcfg = retrieval_config or {}
     rer = rcfg.get("reranker") or {}
     if rer.get("enabled"):
+        model = (rer.get("model") or "").strip()
+        if model:
+            return CrossEncoderReranker(model)
         return SemanticReranker()
     return passthrough_reranker
 

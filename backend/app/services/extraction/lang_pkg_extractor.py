@@ -19,9 +19,9 @@ from __future__ import annotations
 
 import asyncio
 import json
-import math
 from typing import Any
 
+import openai
 from langextract.core.data import ExampleData, Extraction, FormatType
 from langextract.extraction import extract as lx_extract
 from langextract.prompt_validation import PromptValidationLevel
@@ -35,6 +35,20 @@ from app.services.extraction.extraction_models import ExtractionTarget
 from app.services.extraction.llm_extractor import input_char_budget
 
 logger = get_logger(__name__)
+
+# 长输出无法预估时长：原包 OpenAI provider 未传 timeout，SDK 默认 600s
+# 会误杀长生成。openai 3.x 的 DEFAULT_TIMEOUT 是构造函数默认参数（定义时
+# 绑定），覆盖模块变量无效；monkeypatch 构造时强制无读/写/池超时
+# （仅保留 5s 连接超时避免连不上时挂起），长输出自然完成。
+_ORIG_OPENAI_INIT = openai.OpenAI.__init__
+
+
+def _no_read_timeout_init(self, *args, **kwargs):
+    kwargs["timeout"] = openai.Timeout(connect=5.0, read=None, write=None, pool=None)
+    _ORIG_OPENAI_INIT(self, *args, **kwargs)
+
+
+openai.OpenAI.__init__ = _no_read_timeout_init
 
 
 def _prompt_overhead_chars(
@@ -219,10 +233,17 @@ async def extract_category_pkg(
     cfg,
     target: ExtractionTarget,
     context: str,
+    segments: list[dict] | None = None,
+    llm_sem: asyncio.Semaphore | None = None,
     engine_params: dict,
     llm_endpoint: dict,
 ) -> list[dict]:
-    """调用 langextract.extract（线程池），完整上下文交原包分块/并行/多轮/对齐。"""
+    """调用 langextract.extract（线程池），按语义/表格边界段逐段抽取后合并。
+
+    segments 由 context_assembler.assemble_segments 生成：表格块独立段、文本块聚合段，
+    保证每个请求不跨表；段级并行（llm_sem 控制全局 LLM 请求并发，匹配 vLLM
+    max_num_seqs），避免长类别逐段串行。
+    """
     if not llm_endpoint or not llm_endpoint.get("api_base") or not llm_endpoint.get("model"):
         raise BusinessException(message="未配置抽取 LLM 端点（api_base/model），请在资源与配置中填写")
     fmt = (engine_params.get("format_type") or "JSON").upper()
@@ -265,7 +286,9 @@ async def extract_category_pkg(
             max_tokens=max_tokens,
         )
     max_buffer = max(500, min(max_char_buffer, per_chunk_budget))
-    est_chunks = max(1, math.ceil(len(context) / max_buffer)) if context else 1
+    if segments is None:
+        segments = [{"type": "text", "content": context}]
+    est_chunks = len(segments)
 
     model = OpenAILanguageModel(
         model_id=llm_endpoint["model"],
@@ -281,39 +304,73 @@ async def extract_category_pkg(
     logger.info(
         "原包整段抽取开始",
         feature=target.feature,
-        context_chars=len(context),
+        context_chars=sum(len(s.get("content") or "") for s in segments),
+        segment_count=est_chunks,
         max_char_buffer=max_buffer,
         context_window_chars=context_window_chars,
         passes=passes,
         batch_length=batch_length,
         max_workers=max_workers,
-        est_chunks=est_chunks,
     )
-    try:
-        # 不设超时：抽取时长取决于上下文/输出长度，无法预估；贸然超时会
-        # 误杀仍在抽取的任务（to_thread 线程实际仍会跑完但结果被丢弃）。
-        result = await asyncio.to_thread(
-            lx_extract,
-            context,
-            prompt_description=prompt_description,
-            examples=examples or None,
-            model=model,
-            format_type=format_type,
-            fence_output=fence_output,
-            output_schema=output_schema,
-            additional_context="",
-            extraction_passes=passes,
-            context_window_chars=context_window_chars or None,
-            max_char_buffer=max_buffer,
-            batch_length=batch_length,
-            max_workers=max_workers,
-            prompt_validation_level=PromptValidationLevel.OFF,
-            show_progress=False,
+    merged: list[dict] = []
+
+    async def _run_segment(idx: int, seg: dict) -> list[dict]:
+        seg_text = seg.get("content") or ""
+        if not seg_text.strip():
+            return []
+        logger.info(
+            "原包段抽取开始", feature=target.feature, segment=idx,
+            total=est_chunks, seg_chars=len(seg_text),
         )
-    except Exception as exc:
-        logger.error("LangExtract 原包整段抽取失败", feature=target.feature, error=str(exc))
-        raise
-    records = _parse_result(result, target, context)
+
+        async def _call() -> Any:
+            # 不设超时：抽取时长取决于上下文/输出长度，无法预估；贸然超时会
+            # 误杀仍在抽取的任务（to_thread 线程实际仍会跑完但结果被丢弃）。
+            return await asyncio.to_thread(
+                lx_extract,
+                seg_text,
+                prompt_description=prompt_description,
+                examples=examples or None,
+                model=model,
+                format_type=format_type,
+                fence_output=fence_output,
+                output_schema=output_schema,
+                additional_context="",
+                extraction_passes=passes,
+                context_window_chars=context_window_chars or None,
+                max_char_buffer=max_buffer,
+                batch_length=batch_length,
+                max_workers=1,  # 段级已并行，段内不再嵌套并发
+                prompt_validation_level=PromptValidationLevel.OFF,
+                show_progress=False,
+            )
+
+        try:
+            if llm_sem is not None:
+                async with llm_sem:
+                    result = await _call()
+            else:
+                result = await _call()
+        except Exception as exc:
+            logger.error("LangExtract 原包段抽取失败", feature=target.feature, segment=idx, error=str(exc))
+            raise
+        seg_records = _parse_result(result, target, seg_text)
+        logger.info(
+            "原包段抽取完成", feature=target.feature, segment=idx,
+            records=len(seg_records),
+        )
+        return seg_records
+
+    # 段级并行（gather 保序）；任一段失败即整体失败（不静默丢数据）
+    seg_results = await asyncio.gather(
+        *[_run_segment(idx, seg) for idx, seg in enumerate(segments, start=1)]
+    )
+    for recs in seg_results:
+        merged.extend(recs)
+    records = _dedupe_records(merged, target)
     records = _dedupe_records(records, target)
-    logger.info("原包整段抽取完成", feature=target.feature, records=len(records))
+    # return_type=object 收敛：原包输出恒为数组，object 类别取对齐最精确/首条作为单对象
+    if (target.schema or {}).get("type") == "object" and records:
+        records = [records[0]]
+    logger.info("原包整段抽取完成", feature=target.feature, segments=est_chunks, records=len(records))
     return records

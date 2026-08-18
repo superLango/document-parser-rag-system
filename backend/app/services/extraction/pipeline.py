@@ -39,10 +39,10 @@ async def run(
         cfg = await extraction_resolver.resolve(session, kb_id)
         await _progress(progress_cb, 10, "解析抽取配置")
 
-        targets, skipped, _schemas = await category_builder.build(
-            cfg, session, kb_id=kb_id, document_id=document_id,
+        targets, skipped = await category_builder.build_targets(
+            cfg, session, kb_id=kb_id,
         )
-        await _progress(progress_cb, 30, "类别构建与召回完成")
+        await _progress(progress_cb, 20, "类别展开完成")
         # 并发前预载只读数据（共享会话禁止并发查询）：
         # KB 术语集 + 规则脚本代码
         from app.services.extraction import script_tools
@@ -90,16 +90,33 @@ async def run(
             or 4
         )
         sem = asyncio.Semaphore(concurrency)
+        # 全局 LLM 请求并发（段级并行共享）：匹配 vLLM max_num_seqs，避免超发排队
+        llm_sem = asyncio.Semaphore(
+            int((engine_params.get("concurrency") or {}).get("max_concurrency") or 8)
+        )
 
         async def extract_one(target):
             async with sem:
                 return await _extract_single(
                     session, cfg, target, client, engine, engine_params, retrieval_cfg,
                     context_cfg, script_timeout, str(document_id), term_data, llm_endpoint,
+                    llm_sem=llm_sem,
                 )
 
+        # 流式：逐个类别完成检索/重排后立即进入抽取，不等全部类别检索完
+        extract_tasks: list[asyncio.Task] = []
+        for t in targets:
+            built, sk = await category_builder.build_one(
+                cfg, session, kb_id=kb_id, document_id=document_id, target=t,
+            )
+            if built is None:
+                if sk is not None:
+                    skipped.append(sk)
+                continue
+            logger.info("类别检索完成，进入抽取", feature=built.feature, hit_count=built.hit_count)
+            extract_tasks.append(asyncio.create_task(extract_one(built)))
         await _progress(progress_cb, 40, "开始类别抽取")
-        results = await asyncio.gather(*[extract_one(t) for t in targets], return_exceptions=True)
+        results = await asyncio.gather(*extract_tasks, return_exceptions=True)
         # 任一类别异常（含 LLM 不可用）→ 任务整体失败（B11：不静默吞错）
         for i, r in enumerate(results):
             if not isinstance(r, CategoryResult):
@@ -115,34 +132,31 @@ async def run(
             await session.close()
 
 
-async def _extract_single(session, cfg, target, client, engine, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None, llm_endpoint=None) -> CategoryResult:
+async def _extract_single(session, cfg, target, client, engine, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None, llm_endpoint=None, llm_sem=None) -> CategoryResult:
     try:
         hits = target.hits or []
         # context_top_k：拼接上下文的最大块数（超出部分按相关性截断）
         ctx_top_k = target.top_k or int(retrieval_cfg.get("top_k") or 10)
         ctx_top_k = min(ctx_top_k, int(retrieval_cfg.get("context_top_k") or ctx_top_k))
-        # 完整性优先：不按预算截断，全部命中块交由抽取引擎分批多次抽取
-        context = context_assembler.assemble(
-            hits,
-            top_k=ctx_top_k,
-            max_tokens=None,
-            chars_per_token=float(context_cfg.get("chars_per_token") or 1.5),
-            min_keep_chars=int(context_cfg.get("min_keep_chars") or 200),
-            truncate_marker=context_cfg.get("truncate_marker") or "\n[...内容截断...]",
-        )
-        if not context:
+        # 按表格边界 + 语义边界分组：表格块独立段、文本块聚合段，请求不跨表
+        segments = context_assembler.assemble_segments(hits, top_k=ctx_top_k)
+        if not segments:
             return CategoryResult(
                 feature=target.feature, records=[], rejected=[],
                 hit_score=target.hit_score, hit_count=target.hit_count,
             )
-        logger.info("类别开始", feature=target.feature, context_chars=len(context), engine=engine)
+        context = "\n".join(s.get("content") or "" for s in segments)
+        logger.info(
+            "类别开始", feature=target.feature,
+            context_chars=len(context), segment_count=len(segments), engine=engine,
+        )
 
         if engine == "LangExtractPkg":
             from app.services.extraction import lang_pkg_extractor
 
             records = await lang_pkg_extractor.extract_category_pkg(
-                kb_id=cfg.kb_id, cfg=cfg, target=target, context=context,
-                engine_params=engine_params, llm_endpoint=llm_endpoint or {},
+                kb_id=cfg.kb_id, cfg=cfg, target=target, context=context, segments=segments,
+                engine_params=engine_params, llm_endpoint=llm_endpoint or {}, llm_sem=llm_sem,
             )
         else:
             records = await llm_extractor.extract_category(cfg, target, context, client, engine_params, engine=engine)

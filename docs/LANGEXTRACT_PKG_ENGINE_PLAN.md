@@ -55,6 +55,20 @@
 - 前端：`frontend/src/views/kb/KbGlobalConfig.tsx`（BaseExtract 置灰、原包参数区）；
 - 测试：`qa/functional/langpkg_full_features.py` → 结果 `qa/evaluation/results/langpkg_full_features/`。
 
+## 5.1 检索与分块优化（2026-08-17 第二轮）
+
+- **跨页表格合并入库**（`chunker.py`）：同一逻辑表跨页被版面拆成多个 table block，
+  现按"表头指纹归一化（忽略 colspan/rowspan 数值）+ 连续 table"合并为一个整表块，
+  并过滤独立页码 text；GB-T1220 分块 83→59（表格块 29→23，最大表约 9KB）；
+- **检索 top_k 提高**：`top_k` 10→15、`context_top_k` 20→30、`category_recall.top_k` 5→8；
+- **chunk 大小按模型窗口调整**：`max_char_buffer` 3000→12000（输入预算
+  (55000−max_tokens−3000)×1.5 字符钳制，整表可单块通过）；
+- **适配器 object 收敛**：`return_type=object` 时取对齐最精确/首条作为单对象
+  （原包输出恒为数组）；
+- **术语集精简结论**：`dedupe` 只控制"精简补充项"（query_refined_limit=8），
+  主查询 query_main_limit=30 项不动；室温拉伸 22 个 NAME 全部进 query，
+  query 仍偏长，精简未显著缩短 query（后续可调 query_main_limit）。
+
 ## 6. 验证记录（GB-T1220-2007，2026-08-17）
 
 - 结果：109 条记录（剔除 1），完整率 0.5321、可用率 0.9817、综合分 0.6423；
