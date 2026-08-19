@@ -51,12 +51,26 @@ DEFAULT_GLOBAL_CONFIG: dict = {
         "context_max_tokens": 28000,
         "context": {"chars_per_token": 1.5, "min_keep_chars": 200, "truncate_marker": "\n[...内容截断...]"},
         "category_recall": {"mode": "loose", "top_k": 8, "per_dim_top_k": 10},
+        # 上下文检索分两路（2026-08）：数据路召回复核表（术语集），元信息路召回复核项目表/方法/取样（字段名）
+        "data_route_top_k": 10,
+        "meta_route_top_k": 5,
         "query_embed": {
             "content_max_chars": 2000,
             "dedupe_similarity_threshold": 0.85,
         },
         "hybrid": {"enabled": True, "rrf_k": 60.0, "dense_weight": 1.0, "keyword_weight": 1.2, "keyword_min_hits": 1},
-        "reranker": {"enabled": False, "model": "", "top_n": 15},
+        "reranker": {
+            "enabled": False, "model": "", "top_n": 15,
+            # 抽取过滤开关（2026-08 定稿）：
+            # threshold：重排分数阈值（低于则类别/块被过滤）
+            # category_filter_enabled：类别级过滤（非 always 类别按分数剔除）
+            # block_filter_enabled：块级过滤（低分块不进入抽取上下文）
+            # rerank_query_enabled：重排专用精选 query（类型名+文档频率核心词+字段名）
+            "threshold": 0.0,
+            "category_filter_enabled": True,
+            "block_filter_enabled": True,
+            "rerank_query_enabled": True,
+        },
     },
     "llm": {
         # 引擎收敛：默认 LangExtractPkg（原包官方特性：sentence-aware 分块/

@@ -38,7 +38,7 @@ ENGINE_PARAMS = {
     "max_char_buffer": 6000,
     "context_window_chars": 500,
     "batch_length": 8,
-    "max_workers": 4,
+    "max_workers": 8,
     "concurrency": {"max_concurrency": 8, "cross_category": 8, "within_category": 8},
 }
 

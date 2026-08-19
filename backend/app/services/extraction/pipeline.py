@@ -135,17 +135,27 @@ async def run(
 async def _extract_single(session, cfg, target, client, engine, engine_params, retrieval_cfg, context_cfg, script_timeout, doc_id, term_data=None, llm_endpoint=None, llm_sem=None) -> CategoryResult:
     try:
         hits = target.hits or []
+        # 块级过滤（第二部分）：非 always 类别按块重排分数阈值过滤低分块。
+        # always 类别（标准信息/热处理制度）保留全部上下文（需要全文档信息）。
+        if (target.extraction_strategy or "auto") != "always":
+            reranker_cfg = retrieval_cfg.get("reranker") or {}
+            if reranker_cfg.get("block_filter_enabled", True):
+                rerank_threshold = float(reranker_cfg.get("threshold") or 0.0)
+                hits = [
+                    h for h in hits
+                    if h.get("rerank_score") is None or h.get("rerank_score") >= rerank_threshold
+                ]
         # context_top_k：拼接上下文的最大块数（超出部分按相关性截断）
         ctx_top_k = target.top_k or int(retrieval_cfg.get("top_k") or 10)
         ctx_top_k = min(ctx_top_k, int(retrieval_cfg.get("context_top_k") or ctx_top_k))
-        # 按表格边界 + 语义边界分组：表格块独立段、文本块聚合段，请求不跨表
-        segments = context_assembler.assemble_segments(hits, top_k=ctx_top_k)
-        if not segments:
+        # 一次拼接抽取：候选按重排分数降序拼接为单段（模型自行跨表关联）
+        context = context_assembler.assemble_full_sorted(hits, top_k=ctx_top_k)
+        segments = [{"type": "text", "content": context}]
+        if not context.strip():
             return CategoryResult(
                 feature=target.feature, records=[], rejected=[],
                 hit_score=target.hit_score, hit_count=target.hit_count,
             )
-        context = "\n".join(s.get("content") or "" for s in segments)
         logger.info(
             "类别开始", feature=target.feature,
             context_chars=len(context), segment_count=len(segments), engine=engine,

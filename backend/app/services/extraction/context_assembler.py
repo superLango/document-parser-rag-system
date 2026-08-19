@@ -10,6 +10,7 @@ def assemble_segments(
     *,
     top_k: int,
     max_text_chars: int = 6000,
+    table_format: str = "html",
 ) -> list[dict]:
     """按表格边界 + 语义边界分组上下文段。
 
@@ -37,7 +38,9 @@ def assemble_segments(
             flush_text()
             segments.append({
                 "type": "table",
-                "content": f"[{page_txt}]\n{table_to_rows(content)}",
+                "content": f"[{page_txt}]\n{content}"
+                if table_format == "html"
+                else f"[{page_txt}]\n{table_to_rows(content)}",
             })
         else:
             block = f"[{page_txt}]\n{content}"
@@ -47,6 +50,29 @@ def assemble_segments(
                 flush_text()
     flush_text()
     return segments
+
+
+def assemble_full_sorted(
+    hits: list[dict],
+    *,
+    top_k: int = 15,
+) -> str:
+    """一次拼接：候选块按重排分数降序排列，拼接为单个上下文。
+
+    用于「一次拼接抽取」——所有相关块（数据表+元信息块）在一个上下文里，
+    模型自行跨表关联；分数高的在前，保证核心数据优先可见。
+    """
+    hits_sorted = sorted(
+        hits,
+        key=lambda h: (h.get("rerank_score") if h.get("rerank_score") is not None else -999),
+        reverse=True,
+    )[:top_k]
+    parts: list[str] = []
+    for h in hits_sorted:
+        pages = h.get("source_pages") or []
+        page_txt = f"[第 {pages[0]} 页]" if pages else ""
+        parts.append(f"{page_txt}\n{h.get('content') or ''}")
+    return "\n\n".join(parts)
 
 
 def assemble(

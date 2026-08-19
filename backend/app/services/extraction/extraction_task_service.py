@@ -118,7 +118,8 @@ async def run_extraction_task(db: AsyncSession, document_id: uuid.UUID, kb_id: u
             )
 
         result = await pipeline.run(
-            kb_id=str(kb_id), document_id=str(document_id), progress_cb=_on_progress
+            kb_id=str(kb_id), document_id=str(document_id), progress_cb=_on_progress,
+            db=db,  # 沿用外部 session（含 KB RLS 上下文）；不传会导致内部自建 session 检索不完整
         )
         # E3 后：result 含 categories/summary/timing/schema 信息，落库并完成
         saved = await result_store.save_result(

@@ -71,22 +71,52 @@ def _prompt_overhead_chars(
 
 
 def build_output_schema(target: ExtractionTarget) -> dict | None:
-    """当前项目 schema（{type, properties}）→ LangExtract extractions_schema。"""
+    """当前项目 schema（{type, properties}）→ LangExtract extractions_schema。
+
+    - properties 包含全部字段（可选）：模型可输出元信息字段（试验方法/取样数量等），
+      实现跨表关联填充（一次拼接上下文下实测模型能输出 13 字段完整记录）；
+    - required 只含核心必填字段（材料牌号/项目名称/标准要求/单位等）：拆条负担小，
+      避免模型因被强制输出 13 个字段而少拆条。
+    """
     props = (target.schema or {}).get("properties") or {}
     json_properties: dict[str, dict[str, Any]] = {}
+    required: list[str] = []
     for name, prop in props.items():
         item: dict[str, Any] = {"type": prop.get("type", "string")}
         if prop.get("description"):
             item["description"] = prop["description"]
         json_properties[name] = item
+        if prop.get("required"):
+            required.append(name)
     if not json_properties:
         return None
-    item_schema = extraction_item_schema(
-        extraction_class=target.feature,
-        attributes=json_properties,
-        additional_properties=False,
-    )
-    return extractions_schema(item_schema)
+    attr_name = f"{target.feature}_attributes"
+    return {
+        "type": "object",
+        "properties": {
+            "extractions": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        target.feature: {"type": "string"},
+                        attr_name: {
+                            "type": "object",
+                            "properties": json_properties,
+                            "required": required,
+                            "additionalProperties": False,
+                        },
+                    },
+                    "required": [target.feature, attr_name],
+                    "additionalProperties": False,
+                },
+            },
+        },
+        "required": ["extractions"],
+        "additionalProperties": False,
+    }
+
+
 
 
 def build_examples(target: ExtractionTarget, max_examples: int) -> list[ExampleData]:
@@ -131,12 +161,27 @@ def build_examples(target: ExtractionTarget, max_examples: int) -> list[ExampleD
     return examples
 
 
-def _primary_field_name(target: ExtractionTarget) -> str | None:
+def _primary_key_fields(target: ExtractionTarget) -> list[str]:
+    """主键字段：标识性字段组合（材料牌号/项目名称/尺寸厚度/试验温度/方向等）。
+
+    单牌号文档（如 GH4169）所有记录牌号相同；同一项目在不同尺寸档位/温度下
+    标准要求不同，主键必须包含尺寸厚度/试验温度等行级标识，否则误合并。
+    """
     fields = target.fields or []
-    for f in fields:
-        if f.get("required") and f.get("name"):
-            return f["name"]
-    return fields[0].get("name") if fields else None
+    names = [f.get("name") for f in fields if f.get("name")]
+    # 标识字段优先（存在即加入）
+    prefer = ["材料牌号", "项目名称", "尺寸厚度", "试验温度", "方向", "锻件类型", "试样状态"]
+    keys = [n for n in prefer if n in names]
+    if len(keys) >= 2:
+        return keys
+    required = [f.get("name") for f in fields if f.get("required") and f.get("name")]
+    return required or names
+
+
+def _primary_field_name(target: ExtractionTarget) -> str | None:
+    """兼容旧调用：返回首个主键字段。"""
+    keys = _primary_key_fields(target)
+    return keys[0] if keys else None
 
 
 def _parse_result(
@@ -202,15 +247,26 @@ def _alignment_rank(record: dict) -> int:
 
 
 def _dedupe_records(records: list[dict], target: ExtractionTarget) -> list[dict]:
-    """按主键字段归一化去重；同一主键保留对齐更精确的记录，否则保留首次。"""
-    pk = _primary_field_name(target)
-    if not pk:
+    """按主键字段组合归一化去重；同一主键保留对齐更精确的记录，否则保留首次。
+
+    主键用「材料牌号 + 项目名称」组合：单牌号文档（如 GH4169）所有记录牌号相同，
+    仅按牌号去重会把不同项目/尺寸档位的记录误合并。
+    """
+    pk_fields = _primary_key_fields(target)
+    if not pk_fields:
         return _json_dedupe(records)
-    seen: dict[str, dict] = {}
+
+    def _key_of(r: dict):
+        parts = []
+        for f in pk_fields:
+            v = r.get(f)
+            parts.append(str(v).strip().lower() if v not in (None, "") else "")
+        return tuple(parts) if any(parts) else None
+
+    seen: dict[tuple, dict] = {}
     out: list[dict] = []
     for r in records:
-        val = r.get(pk)
-        key = str(val).strip().lower() if val not in (None, "") else None
+        key = _key_of(r)
         if key is None:
             if r not in out:
                 out.append(r)
@@ -285,7 +341,13 @@ async def extract_category_pkg(
             overhead=overhead,
             max_tokens=max_tokens,
         )
-    max_buffer = max(500, min(max_char_buffer, per_chunk_budget))
+    if segments is not None and len(segments) == 1:
+        # 一次拼接模式：单段整块送入，max_buffer 覆盖整段（窗口余量内），
+        # 避免 LangExtract 按 6000 字符切块导致跨表关联割裂。
+        seg_len = len(segments[0].get("content") or "")
+        max_buffer = max(max_char_buffer, seg_len, 500)
+    else:
+        max_buffer = max(500, min(max_char_buffer, per_chunk_budget))
     if segments is None:
         segments = [{"type": "text", "content": context}]
     est_chunks = len(segments)

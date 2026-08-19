@@ -261,7 +261,15 @@ export interface GlobalRetrievalConfig {
   category_recall: { mode: 'loose' | 'strict' | 'off'; top_k: number; per_dim_top_k: number }
   query_embed: { content_max_chars: number; dedupe_similarity_threshold: number }
   hybrid: { enabled: boolean; rrf_k: number; dense_weight: number; keyword_weight: number; keyword_min_hits: number }
-  reranker: { enabled: boolean; model: string; top_n: number }
+  reranker: {
+    enabled: boolean
+    model: string
+    top_n: number
+    threshold?: number
+    category_filter_enabled?: boolean
+    block_filter_enabled?: boolean
+    rerank_query_enabled?: boolean
+  }
 }
 
 export interface GlobalEngineConfig {

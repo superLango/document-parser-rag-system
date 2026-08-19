@@ -116,6 +116,14 @@ class CrossEncoderReranker:
                 if CrossEncoderReranker._device == "cuda":
                     logits = logits.cpu()
                 for h, score in zip(batch_hits, logits[:, 0].tolist()):
+                    # 分数写回 hit（供抽取上下文阈值过滤使用）
+                    if isinstance(h, dict):
+                        h["rerank_score"] = float(score)
+                    else:
+                        try:
+                            h.rerank_score = float(score)
+                        except Exception:
+                            pass
                     scored.append((float(score), h))
             scored.sort(key=lambda x: x[0], reverse=True)
             return scored

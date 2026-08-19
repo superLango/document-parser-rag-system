@@ -52,6 +52,7 @@ class SearchResult:
     has_table: bool = False
     score: float = 0.0
     keyword_matched: bool = False
+    rerank_score: float | None = None
 
 
 def _vector_literal(vec: list[float]) -> str:
@@ -87,6 +88,7 @@ class RetrievalService:
         query: str,
         top_k: int | None = None,
         filters: SearchFilters | None = None,
+        rerank_query: str | None = None,
         retrieval_config: dict | None = None,
         per_dim_top_k: int | None = None,
     ) -> list[SearchResult]:
@@ -169,7 +171,13 @@ class RetrievalService:
         raw_hits = [self._to_hit(chunk_map[cid], score, cid in kw_set) for cid, score in top]
         reranker = get_reranker(rcfg)
         reranker_top_n = int((rcfg.get("reranker") or {}).get("top_n") or top_k)
-        reranked = await reranker.rerank(query, raw_hits, min(reranker_top_n, top_k))
+        # 重排 query 与检索 query 分离：rerank_query 传入时用于重排打分
+        # （类别抽取场景：检索用精简术语召回，重排用完整术语+Schema 字段提升相关性打分）
+        reranked = await reranker.rerank(
+            (rerank_query or query).strip() or query,
+            raw_hits,
+            min(reranker_top_n, top_k),
+        )
         logger.info(
             "检索完成",
             kb_id=str(kb_id),

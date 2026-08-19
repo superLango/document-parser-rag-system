@@ -262,6 +262,14 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
             <Field label="重排模型" hint="重排模型路径或标识（当前语义精排固定使用 BGE-M3，该字段为标识记录）" type="text" value={cfg.retrieval.reranker.model} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, model: String(v) })} />
             <Field label="重排后 top_n" hint="重排后保留并送入抽取的块数；开启重排后生效（预留）" value={cfg.retrieval.reranker.top_n} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, top_n: num(v, 15) })} />
           </div>
+          <div className="grid gap-1.5 sm:grid-cols-2">
+            <Field label="过滤阈值" hint="重排分数低于该阈值的类别/块被过滤；默认 0（正分保留），可调高收紧、调低放宽" type="number" step={0.1} value={cfg.retrieval.reranker.threshold ?? 0} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, threshold: num(v, 0) })} />
+            <div className="grid gap-1.5 content-start">
+              <ToggleField label="类别级过滤" hint="非「总是抽取」类别按重排分数阈值剔除（文档无该类数据时跳过，减少无效 LLM 调用）" value={cfg.retrieval.reranker.category_filter_enabled ?? true} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, category_filter_enabled: v })} />
+              <ToggleField label="块级过滤" hint="低分块不进入抽取上下文（仅保留与类别高相关的块）；「总是抽取」类别保留全部上下文" value={cfg.retrieval.reranker.block_filter_enabled ?? true} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, block_filter_enabled: v })} />
+              <ToggleField label="精选重排查询" hint="重排使用「类型名+文档频率精选术语+字段名」优化查询；关闭则回退原检索查询" value={cfg.retrieval.reranker.rerank_query_enabled ?? true} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'reranker', { ...cfg.retrieval.reranker, rerank_query_enabled: v })} />
+            </div>
+          </div>
         </div>
       </SectionCard>
 

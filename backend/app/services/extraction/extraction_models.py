@@ -21,6 +21,7 @@ class ExtractionTarget:
     confidence_threshold: float | None = None
     fields: list[dict] = field(default_factory=list)
     schema: dict = field(default_factory=dict)
+    document_id: str | None = None
     hits: list[dict] = field(default_factory=list)
     hit_score: float | None = None
     hit_count: int = 0
