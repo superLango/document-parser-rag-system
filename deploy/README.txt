@@ -2,6 +2,12 @@ hansonDoc_RAG 离线部署包
 ========================
 版本：2026-08-23（全容器化 · 后端与小模型分离）
 
+> 部署产物（镜像 tar、分卷、离线解压）已移出项目目录，存放于：
+>   /home/grainuser/hansondoc-release/
+>   ├── hansondoc-deploy-20260823.part_aa~ad（分卷，U 盘传输用）
+>   ├── images/（镜像 tar）
+>   └── offline_test/（部署验证解压）
+
 一、包内容
   images/hansondoc-backend.tar    后端镜像（不含小模型，约 6.3G）
   images/hansondoc-frontend.tar   前端镜像（nginx，约 67M）
