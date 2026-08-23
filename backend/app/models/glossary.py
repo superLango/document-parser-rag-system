@@ -62,6 +62,14 @@ class TermBase(Base):
     # 新表头名 → 原始字段/内置字段
     column_aliases: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
     sync_enabled: Mapped[bool] = mapped_column(default=False, nullable=False)
+    # 定时同步 cron 表达式（5 段标准 cron；空 = 未配置定时同步）
+    sync_cron: Mapped[str] = mapped_column(String(64), default="", nullable=False)
+    # 下次执行时间（调度器计算，供前端展示）
+    sync_next_run_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # 最近一次定时同步状态：idle / success / failed
+    sync_status: Mapped[str] = mapped_column(String(16), default="idle", nullable=False)
+    # 最近一次同步失败原因（截断存储）
+    sync_last_error: Mapped[str] = mapped_column(Text, default="", nullable=False)
     last_synced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     status: Mapped[str] = mapped_column(String(16), default="active", nullable=False)
     created_by: Mapped[uuid.UUID | None] = mapped_column(

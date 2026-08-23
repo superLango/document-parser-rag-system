@@ -1,0 +1,151 @@
+{
+  "retrieval": {
+    "top_k": 15,
+    "candidate_mult": 2,
+    "weights": {
+      "title": 0.2,
+      "content": 0.8
+    },
+    "default_confidence_threshold": 0.035,
+    "context_top_k": 20,
+    "context": {
+      "chars_per_token": 1.5,
+      "min_keep_chars": 200,
+      "truncate_marker": "\n[...内容截断...]",
+      "sort_mode": "page",
+      "retry_rerank_on_empty": true
+    },
+    "category_recall": {
+      "mode": "loose",
+      "top_k": 8,
+      "per_dim_top_k": 10
+    },
+    "data_route_top_k": 10,
+    "meta_route_top_k": 5,
+    "query_embed": {
+      "content_max_chars": 2000,
+      "dedupe_similarity_threshold": 0.85
+    },
+    "hybrid": {
+      "enabled": true,
+      "rrf_k": 60.0,
+      "dense_weight": 1.0,
+      "keyword_weight": 1.2,
+      "keyword_min_hits": 1
+    },
+    "reranker": {
+      "enabled": true,
+      "model": "/home/grainuser/hansonDoc_RAG/models/bge-reranker-v2-m3",
+      "top_n": 15,
+      "threshold": 0.0,
+      "category_filter_enabled": true,
+      "block_filter_enabled": false,
+      "rerank_query_enabled": true
+    }
+  },
+  "llm_engine": "BaseExtract",
+  "llm_engine_params": {
+    "temperature": 0.0,
+    "top_p": 0.1,
+    "top_k": 20,
+    "max_tokens": 100000,
+    "timeout": 1800,
+    "enable_thinking": false,
+    "concurrency": {
+      "max_concurrency": 32,
+      "cross_category": 32,
+      "within_category": 1
+    },
+    "batch": {
+      "single_threshold": 100000,
+      "batch_chars": 6000,
+      "overlap": 500,
+      "context_truncate": 60000
+    }
+  },
+  "llm_resource": {
+    "enabled": true,
+    "api_base": "http://192.168.0.65:31510/v1",
+    "model": "qwen3.5",
+    "api_key_len": 7,
+    "timeout": 300
+  },
+  "targets": {
+    "total": 41,
+    "skipped": [],
+    "special_requirement_samples": {
+      "热膨胀": "测试测试"
+    }
+  },
+  "sample_categories": {
+    "室温拉伸": {
+      "status": "ready(送模型前)",
+      "query_chars": 14,
+      "hits": 14,
+      "rerank_scores_range": [
+        -5.311,
+        1.789
+      ],
+      "context_chars": 24605,
+      "sort_first_block": "[正文][第 2 页]\n前 言\n本标准代替 GB/T 1220—1992《不锈钢棒》。\n本标准与 GB/T 1220-1992标准相比，主要变化如下：\n——增加",
+      "special_requirement": "",
+      "prompt_user_head": "[任务类别]:室温拉伸 | [特殊要求]: | [抽取要求]:请从文档内容中抽取室温拉伸相关的检测数据记录。 | 每条记录包含材料牌号、项目名称、单位、标准要求、试验方法、位置、方向、尺寸厚度、试样状态、取样数量、取样说明、锻件类型、试验温度等信息。 | 注意： | 1. 项目名称必须从提供的项目列表：[[断面收缩率(Z), 抗拉强度(Rm), 下屈服强度(ReL), 规定非比例延伸强度(Rp0.2), 规定非比例伸长应力(σp0.2), 断裂总伸长率(At), 规定塑性延伸强度(Rp0.2), 屈服强度YS(offset=0.2%)"
+    },
+    "化学成分": {
+      "status": "ready(送模型前)",
+      "query_chars": 14,
+      "hits": 13,
+      "rerank_scores_range": [
+        -6.325,
+        1.959
+      ],
+      "context_chars": 23869,
+      "sort_first_block": "[正文][第 2 页]\n前 言\n本标准代替 GB/T 1220—1992《不锈钢棒》。\n本标准与 GB/T 1220-1992标准相比，主要变化如下：\n——增加",
+      "special_requirement": "",
+      "prompt_user_head": "[任务类别]:化学成分 | [特殊要求]: | [抽取要求]:请从文档内容中抽取化学成分相关的检测数据记录。 | 每条记录包含材料牌号、项目名称、单位、标准要求、试验方法、位置、方向、尺寸厚度、试样状态、取样数量、取样说明、锻件类型、试验温度等信息。 | 注意： | 1. 项目名称必须从提供的项目列表：[[Sr, V, Be, Cd, La, Sn, Ge, Ca, Si, Na, In, C, Br, Li, Ni, Sc, O, Cu, Ga, P, Mo, F, Au, Hg, Sb, S, K, B, Ag, Al, H, B"
+    },
+    "热处理制度": {
+      "status": "ready(送模型前)",
+      "query_chars": 37,
+      "hits": 12,
+      "rerank_scores_range": [
+        -4.407,
+        1.513
+      ],
+      "context_chars": 10151,
+      "sort_first_block": "[正文][第 5 页]\nGB/T 702—2004 热轧圆钢和方钢尺寸、外形、重量及允许偏差（GB/T 702—2004，ISO 1035-1：1980，Hot",
+      "special_requirement": "",
+      "prompt_user_head": "[任务类别]:热处理制度 | [抽取要求]:请从文档内容中抽取热处理制度相关的热处理数据记录。 | 每条记录包含材料牌号、项目大类、工艺名称、工序名称、装炉温度、升温速率、保温温度、保温时间、降温速率、出炉温度、冷却介质、介质温度等信息。 | 注意： | 1. 项目大类必须从提供的项目大类列表：[[相变点, 断口, 脱碳层, 晶间腐蚀, 抗氧化, 室温拉伸, 低温拉伸, 高温拉伸, 布氏硬度, 室温持久, 高温光滑持久, 循环持久, 弯曲, 低倍, 高倍组织, 晶粒度, 蠕变, 非金属夹杂, 铁素体, 裂纹扩展速率, 淬透性, 落"
+    },
+    "标准信息": {
+      "status": "ready(送模型前)",
+      "query_chars": 25,
+      "hits": 11,
+      "rerank_scores_range": [
+        -2.821,
+        1.496
+      ],
+      "context_chars": 14420,
+      "sort_first_block": "[正文][第 1 页]\n中华人民共和国国家标准\nGB/T 1220—2007\n代替 GB/T 1220—1992",
+      "special_requirement": "",
+      "prompt_user_head": "[任务类别]:标准信息 | [抽取要求]:请从文档内容中抽取标准信息相关的数据。完整阅读文档，如果文档中没有该类别的数据，返回空 | 只抽取该文件标准名称和标准编号，其他方法编号、方法名称一律不抽取 | [字段定义]:标准名称、标准编号 | [输出格式]:object | [文档内容]:[正文][第 1 页] | 中华人民共和国国家标准 | GB/T 1220—2007 | 代替 GB/T 1220—1992 |  | [正文][第 1 页] | 不 锈 钢 棒 | 不 锈 钢 棒 | Stainless steel bars | 2007-05-14 发布 | 2007-"
+    },
+    "晶粒度": {
+      "status": "ready(送模型前)",
+      "query_chars": 14,
+      "hits": 14,
+      "rerank_scores_range": [
+        -6.154,
+        1.136
+      ],
+      "context_chars": 15450,
+      "sort_first_block": "[正文][第 4 页]\n1 范围\n本标准规定了不锈钢棒（圆钢、方钢、扁钢、六角钢和八角钢的总称，以下简称钢棒）的尺寸、外形、技术要求、试验方法、验收规则、包装标",
+      "special_requirement": "",
+      "prompt_user_head": "[任务类别]:晶粒度 | [特殊要求]: | [抽取要求]:请从文档内容中抽取晶粒度相关的检测数据记录。 | 每条记录包含材料牌号、项目名称、单位、标准要求、试验方法、位置、方向、尺寸厚度、试样状态、取样数量、取样说明、锻件类型、试验温度等信息。 | 注意： | 1. 项目名称必须从提供的项目列表：[[晶粒度, 平均晶粒度, 铁素体晶粒度, 奥氏体晶粒度, 表面晶粒度]]中匹配，如果匹配不到，默认为空，不得随意捏造项目名称 | 2. 试验方法必须从提供的方法列表：[[YB/T 5148-1993, GB/T6394-2017, GB/T6"
+    },
+    "热膨胀": {
+      "status": "skipped",
+      "reason": "重排分数低于阈值（最高 -1.7534401416778564 < 0.0）"
+    }
+  }
+}

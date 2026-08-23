@@ -63,12 +63,16 @@ async def _build_targets(cfg, db: AsyncSession, kb_id) -> tuple[list[ExtractionT
                         reason="术语集无可用名称，未展开",
                     ))
                     continue
+                req_map = cat.get("special_requirements") or {}
                 for name in names:
                     t = ExtractionTarget(**{**base.__dict__, "feature": name})
+                    t.special_requirement = str(req_map.get(name) or "").strip()
                     targets.append(t)
             else:
                 tb_name = term_bases.get(str(cat.get("name_term_base_id") or ""), "")
                 base.feature = _category_display_name(cat, tb_name)
+                req_map = cat.get("special_requirements") or {}
+                base.special_requirement = str(req_map.get(base.feature) or "").strip()
                 targets.append(base)
     return targets, skipped
 
@@ -491,7 +495,16 @@ async def build_one(
         label = (qs.get("label") or "").strip()
         tb_id = qs.get("term_base_id")
         if label and tb_id:
-            t.term_data[label] = await load_term_base(
+            rows = await load_term_base(
                 db, kb_id, uuid.UUID(str(tb_id))
             )
+            # 术语集按 group_field 过滤：有则只保留当前类别的记录，
+            # 无则展示全部（Prompt 中 ${label.field} 渲染与此一致）
+            gf = (qs.get("group_field") or "").strip()
+            if gf:
+                rows = [
+                    r for r in rows
+                    if str(_read(r, gf) or "").strip() == target.feature
+                ]
+            t.term_data[label] = rows
     return t, None

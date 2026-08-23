@@ -15,9 +15,11 @@ from app.api.deps import activate_kb_context, require_not_pending
 from app.api.v1.endpoints.kb_documents import _require_editor
 from app.core.config import settings
 from app.core.database import get_db
+from app.core.exceptions import BusinessException, ErrorCode
 from app.core.response import success
 from app.middleware.audit_log import audit_action
 from app.models.document import Document, DocumentTask
+from app.schemas.extraction import ExtractionResultUpdate
 from app.services import kb_service
 from app.services.extraction import extraction_task_service, result_store
 
@@ -106,11 +108,19 @@ async def get_extraction_status(
         )
     ).scalar_one_or_none()
     latest = await result_store.get_latest(db, kb_id, document_id)
+    # 任务驱动：存在 queued/running 任务时以任务状态为准，
+    # 避免旧结果 completed 导致前端误判"已抽完"（重新抽取立即完成问题）。
+    if task is not None and task.status in ("queued", "running"):
+        status = "running" if task.status == "running" else "queued"
+        progress = latest.progress if latest and latest.status == "running" else 0
+    else:
+        status = latest.status if latest else None
+        progress = latest.progress if latest else 0
     return success(data={
         "task_id": task.task_id if task else None,
         "task_status": task.status if task else None,
-        "status": latest.status if latest else None,
-        "progress": latest.progress if latest else 0,
+        "status": status,
+        "progress": progress,
         "error": latest.error if latest else None,
     })
 
@@ -140,6 +150,32 @@ async def get_extraction_result(
     if simple:
         data = result_store.to_simple_view(data)
     return success(data=data)
+
+
+@router.put("/{document_id}/result")
+@audit_action(action="extraction.result_update", resource_type="extraction")
+async def update_extraction_result(
+    kb_id: uuid.UUID, document_id: uuid.UUID,
+    payload: ExtractionResultUpdate, request: Request,
+    db: AsyncSession = Depends(get_db), current_user=Depends(require_not_pending),
+) -> dict:
+    """保存人工编辑后的抽取结果（新增/修改/删除记录与类型，版本 +1）。"""
+    kb = await _kb_access(kb_id, db=db, current_user=current_user)
+    _require_editor(kb)
+    latest = await result_store.get_latest(db, kb_id, document_id)
+    if latest is None:
+        raise BusinessException(code=ErrorCode.BUSINESS_NOT_FOUND, message="尚无抽取结果，无法保存")
+    saved = await result_store.save_result(
+        db, kb_id, document_id,
+        schema_template_id=latest.schema_template_id,
+        schema_name=latest.schema_name,
+        categories=payload.categories,
+        summary=latest.summary or {},
+        timing=latest.timing or {},
+        status="completed",
+        progress=100,
+    )
+    return success(data={"version": saved.version}, message="抽取结果已保存")
 
 
 @router.get("/{document_id}/history")

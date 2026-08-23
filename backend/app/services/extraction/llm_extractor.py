@@ -16,8 +16,10 @@ from app.services.llm.llm_client import LLMError
 
 logger = get_logger(__name__)
 
-# 当前 LLM 上下文窗口（Qwen3.6-35B-A3B-FP8 max_model_len=55000）
-MODEL_CONTEXT_WINDOW_TOKENS = 55000
+# LLM 上下文窗口（按部署模型配置，见 settings.LLM_CONTEXT_WINDOW_TOKENS）
+from app.core.config import settings as _settings
+
+MODEL_CONTEXT_WINDOW_TOKENS = _settings.LLM_CONTEXT_WINDOW_TOKENS
 # 输入预算安全余量（Prompt 模板/系统提示等固定开销）
 _INPUT_RESERVE_TOKENS = 3000
 
@@ -69,11 +71,21 @@ def _normalize_records(data) -> list[dict]:
 
 
 def parse_records(text: str, schema: dict) -> list[dict]:
+    """解析 LLM 输出：优先整体 JSON；失败则容错提取首个 JSON 数组/对象。"""
     cleaned = _strip_fences(text)
+    data = None
     try:
         data = json.loads(cleaned)
-    except ValueError as exc:
-        raise LLMError(f"LLM 输出不是合法 JSON：{exc}") from exc
+    except ValueError:
+        # 容错：从输出中提取第一个完整 JSON 数组（模型可能带解释文字）
+        for m in re.finditer(r"\[.*?\]", cleaned, re.DOTALL):
+            try:
+                data = json.loads(m.group(0))
+                break
+            except ValueError:
+                continue
+        if data is None:
+            raise LLMError(f"LLM 输出不是合法 JSON：{cleaned[:200]}")
     return _normalize_records(data)
 
 
@@ -116,42 +128,23 @@ async def _call_llm(client, system: str, user: str, *, engine_params: dict, max_
 
 
 async def _extract_base(cfg, target, context: str, client, engine_params: dict) -> list[dict]:
+    """BaseExtract 直抽：整段上下文拼入 Prompt，一次给模型（不截断、不分段）。
+
+    json_mode 默认关闭：vLLM 的 json_object 约束会把输出压成单对象（每类别仅 1 条），
+    与脚本验证路线（无 response_format）不一致；可经 engine_params.json_mode 开启。
+    """
     system, user = prompt_renderer.render_category(cfg, target, context)
     max_tokens = target.max_tokens or engine_params.get("max_tokens") or 4096
-    batch_cfg = engine_params.get("batch") or {}
-    input_budget = input_char_budget(max_tokens)
-    single_threshold = min(int(batch_cfg.get("single_threshold") or 8000), input_budget)
-    batch_chars = min(int(batch_cfg.get("batch_chars") or 6000), input_budget)
-    overlap = int(batch_cfg.get("overlap") or 500)
-
-    async def _call(user_text: str) -> str:
-        return await _call_llm(client, system, user_text, engine_params=engine_params, max_tokens=max_tokens, json_mode=True)
-
-    if len(context) <= single_threshold:
-        return parse_records(await _call(user), target.schema)
-
-    # 拆分 chunk 多次抽取，不截断；任一片段失败即整体失败（不静默丢数据）
-    all_records: list[dict] = []
-    segments = split_context(context, batch_chars, overlap, input_budget)
-    for idx, batch_text in enumerate(segments, start=1):
-        start_ch = (idx - 1) * batch_chars + 1
-        end_ch = min(idx * batch_chars, len(context))
-        logger.info("片段开始", feature=target.feature, segment=idx, total=len(segments), chars=len(batch_text))
-        try:
-            all_records.extend(parse_records(await _call(f"{user}\n\n[片段 {start_ch}-{end_ch}]\n{batch_text}"), target.schema))
-        except LLMError as exc:
-            logger.error("片段失败", feature=target.feature, segment=idx, error=str(exc))
-            raise LLMError(f"片段 {idx} 抽取失败：{exc}") from exc
-        logger.info("片段完成", feature=target.feature, segment=idx)
-    return _dedupe_records(all_records)
+    json_mode = bool(engine_params.get("json_mode", False))
+    return parse_records(
+        await _call_llm(client, system, user, engine_params=engine_params, max_tokens=max_tokens, json_mode=json_mode),
+        target.schema,
+    )
 
 
 async def extract_category(cfg, target, context: str, client, engine_params: dict, engine: str = "BaseExtract") -> list[dict]:
-    """BaseExtract 直抽；LangExtractPkg 由 pipeline 走原包适配器，不进入此函数。"""
-    batch_cfg = engine_params.get("batch") or {}
-    max_tokens = target.max_tokens or engine_params.get("max_tokens") or 4096
-    input_budget = input_char_budget(max_tokens)
-    context_truncate = min(int(batch_cfg.get("context_truncate") or 32000), input_budget)
-    if len(context) > context_truncate:
-        context = context[:context_truncate]
+    """BaseExtract 直抽：整段上下文一次给模型（不截断、不分段）。
+
+    LangExtractPkg 由 pipeline 走原包适配器，不进入此函数。
+    """
     return await _extract_base(cfg, target, context, client, engine_params)

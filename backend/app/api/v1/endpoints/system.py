@@ -90,6 +90,16 @@ async def storage_health(
     )
 
 
+@router.get("/models/status")
+async def model_warmup_status(
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
+    # 模型预热状态（启动时异步预热结果，供排查模型不可用）
+    from app.services.model_warmup import model_warmup
+
+    return success(data=model_warmup.status())
+
+
 @router.get("/info")
 async def system_info(
     current_user: User = Depends(get_current_active_user),

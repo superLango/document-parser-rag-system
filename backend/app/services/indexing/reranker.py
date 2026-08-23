@@ -9,7 +9,6 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 from typing import Any, Protocol
 
 
@@ -49,6 +48,10 @@ class SemanticReranker:
         return [h for _, h in scored[:top_k]]
 
 
+from app.core.logging import get_logger
+
+logger = get_logger(__name__)
+
 class CrossEncoderReranker:
     """bge-reranker 交叉编码重排（reranker.model 指向模型目录）。"""
 
@@ -80,7 +83,7 @@ class CrossEncoderReranker:
         CrossEncoderReranker._device = "cuda" if torch.cuda.is_available() else "cpu"
         if CrossEncoderReranker._device == "cuda":
             CrossEncoderReranker._model = CrossEncoderReranker._model.to("cuda")
-        logging.getLogger(__name__).info(
+        logger.info(
             "交叉编码重排模型已加载", model=self.model_path, device=CrossEncoderReranker._device
         )
 
@@ -122,7 +125,7 @@ class CrossEncoderReranker:
                     else:
                         try:
                             h.rerank_score = float(score)
-                        except Exception:
+                        except Exception:  # noqa: BLE001, S110
                             pass
                     scored.append((float(score), h))
             scored.sort(key=lambda x: x[0], reverse=True)
@@ -132,7 +135,7 @@ class CrossEncoderReranker:
             # 后台进程偶发死锁兜底：超时回退直通，避免整任务卡死
             scored = await asyncio.wait_for(asyncio.to_thread(_score), timeout=60)
         except (asyncio.TimeoutError, Exception):  # noqa: BLE001
-            logging.getLogger(__name__).warning(
+            logger.warning(
                 "交叉编码重排超时，回退直通", model=self.model_path
             )
             return hits[:top_k]

@@ -16,6 +16,11 @@ from app.models.extraction import (
 )
 
 
+class ExtractionResultUpdate(BaseModel):
+    """手动编辑后的抽取结果保存（新增/修改/删除记录与类型）。"""
+    categories: list[dict] = Field(default_factory=list)
+
+
 class SchemaTemplateCreate(BaseModel):
     name: str = Field(min_length=1, max_length=128)
     description: str = Field(default="", max_length=2000)
@@ -55,6 +60,8 @@ class SchemaCategoryCreate(BaseModel):
     name_term_base_id: str | None = None
     name_term_field: str = Field(default="", max_length=128)
     query_sources: list[QuerySource] = Field(default_factory=list)
+    # 术语集展开类别的特殊要求映射（{"类别名": "要求文本"}），Prompt 用 ${special_requirement} 组装
+    special_requirements: dict[str, str] | None = Field(default=None)
     is_active: bool = True
     sort_order: int = 0
 
@@ -85,6 +92,7 @@ class SchemaCategoryUpdate(BaseModel):
     name_term_base_id: str | None = None
     name_term_field: str | None = Field(default=None, max_length=128)
     query_sources: list[QuerySource] | None = None
+    special_requirements: dict[str, str] | None = Field(default=None)
     is_active: bool | None = None
     sort_order: int | None = None
 
@@ -133,6 +141,15 @@ class SchemaFieldUpdate(BaseModel):
         if v is not None and v not in FIELD_TYPES:
             raise ValueError(f"无效字段类型：{v}")
         return v
+
+
+class PromptPreviewRequest(BaseModel):
+    """Prompt 预览渲染：与真实抽取共用后端 prompt_renderer，保证所见即所得。"""
+    schema_template_id: str | None = None
+    category_id: str | None = None
+    group_value: str | None = Field(default=None, max_length=128, description="术语集展开类别名（预览指定类别）")
+    system_prompt: str | None = Field(default=None, max_length=20000)
+    user_prompt: str | None = Field(default=None, max_length=40000)
 
 
 class PromptCreate(BaseModel):
@@ -230,8 +247,6 @@ class ScriptRunRequest(BaseModel):
 # ============================================================
 class GlobalContextConfig(BaseModel):
     chars_per_token: float = Field(default=1.5, gt=0)
-    min_keep_chars: int = Field(default=200, ge=0)
-    truncate_marker: str = Field(default="\n[...内容截断...]", max_length=200)
 
 
 class GlobalRetrievalWeights(BaseModel):
@@ -269,6 +284,14 @@ class GlobalRerankerConfig(BaseModel):
     enabled: bool = False
     model: str = Field(default="", max_length=500)
     top_n: int = Field(default=15, ge=1)
+    # 抽取过滤开关（与 DEFAULT_GLOBAL_CONFIG.reranker 保持一致）：
+    # threshold 重排分数阈值；category_filter_enabled 类别级过滤；
+    # block_filter_enabled 块级过滤；rerank_query_enabled 重排专用精选 query。
+    # 缺少这些字段会导致 Pydantic 静默丢弃，保存后回落默认值（无法关闭）。
+    threshold: float = Field(default=0.0)
+    category_filter_enabled: bool = True
+    block_filter_enabled: bool = True
+    rerank_query_enabled: bool = True
 
 
 class GlobalRetrievalConfig(BaseModel):
@@ -279,6 +302,8 @@ class GlobalRetrievalConfig(BaseModel):
     context_top_k: int = Field(default=20, ge=1)
     context_max_tokens: int = Field(default=28000, ge=1)
     context: GlobalContextConfig = Field(default_factory=GlobalContextConfig)
+    data_route_top_k: int = Field(default=10, ge=1)
+    meta_route_top_k: int = Field(default=5, ge=1)
     category_recall: GlobalCategoryRecallConfig = Field(default_factory=GlobalCategoryRecallConfig)
     query_embed: GlobalQueryEmbedConfig = Field(default_factory=GlobalQueryEmbedConfig)
     hybrid: GlobalHybridConfig = Field(default_factory=GlobalHybridConfig)
@@ -302,7 +327,7 @@ class GlobalBaseExtractConfig(BaseModel):
     temperature: float = Field(default=0.0, ge=0, le=2)
     top_p: float = Field(default=0.1, ge=0, le=1)
     top_k: int = Field(default=20, ge=1)
-    max_tokens: int = Field(default=32768, ge=1)
+    max_tokens: int = Field(default=100000, ge=1)
     timeout: int = Field(default=300, ge=1)
     enable_thinking: bool = False
     concurrency: GlobalConcurrencyConfig = Field(default_factory=GlobalConcurrencyConfig)

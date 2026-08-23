@@ -23,6 +23,7 @@ const SYSTEM_PARAMS = [
   { label: 'context（文档上下文）', placeholder: '${context}' },
   { label: 'return_type（返回类型）', placeholder: '${return_type}' },
   { label: 'prev_brands（前批牌号）', placeholder: '${prev_brands}' },
+  { label: 'special_requirement（类别特殊要求，Schema 中按术语类别配置）', placeholder: '${special_requirement}' },
 ]
 
 interface EditorField { id: string; name: string; type: string; description: string; example: string | null; required: boolean }
@@ -38,6 +39,7 @@ interface EditorCategory {
   query_sources: TermRef[]
   user_prompt: string
   fields: EditorField[]
+  special_requirements?: Record<string, string>
 }
 
 function manualTermValue(t: TermItem, field: string): unknown {
@@ -92,6 +94,7 @@ export default function KbPromptEditorPage() {
   const [activeCatId, setActiveCatId] = useState('')
   const [saving, setSaving] = useState(false)
   const [testResult, setTestResult] = useState<PromptTestResult | null>(null)
+  const [testLoading, setTestLoading] = useState(false)
   const [testCatName, setTestCatName] = useState('')
   const cacheRef = useRef<Map<string, Map<string, string[]>>>(new Map())
 
@@ -125,6 +128,7 @@ export default function KbPromptEditorPage() {
             query_sources: (c.query_sources ?? []).map((q) => ({ ...q })),
             user_prompt: catMap.get(c.id) || '',
             fields: c.fields ?? [],
+            special_requirements: c.special_requirements ?? {},
           }))
           setCategories(cats)
           if (cats.length > 0) setActiveCatId(cats[0].id)
@@ -202,29 +206,6 @@ export default function KbPromptEditorPage() {
     setCategories((prev) => prev.map((c) => (c.id === catId ? { ...c, user_prompt: v } : c)))
   }
 
-  function buildSchemaPreview(cat: EditorCategory): string {
-    const properties: Record<string, Record<string, unknown>> = {}
-    for (const f of cat.fields) {
-      const prop: Record<string, unknown> = { type: f.type }
-      if (f.required) prop.required = true
-      if (f.description) prop.description = f.description
-      if (f.example) prop.example = f.example
-      properties[f.name] = prop
-    }
-    return JSON.stringify({ type: cat.return_type || 'array', properties }, null, 2)
-  }
-
-  function buildTermRefMap(cat: EditorCategory | null): Map<string, { baseId: string; groupField?: string }> {
-    const m = new Map<string, { baseId: string; groupField?: string }>()
-    for (const b of termBases) m.set(b.name, { baseId: b.id })
-    if (cat) {
-      for (const qs of cat.query_sources) {
-        if (qs.label) m.set(qs.label, { baseId: qs.term_base_id, groupField: qs.group_field || undefined })
-      }
-    }
-    return m
-  }
-
   async function loadAllTermBaseRows(baseId: string): Promise<TermItem[]> {
     const rows: TermItem[] = []
     let page = 1
@@ -258,64 +239,6 @@ export default function KbPromptEditorPage() {
     return first?.[0] || ''
   }
 
-  async function ensureTermBaseValues(text: string, cat: EditorCategory | null, groupValue = '') {
-    const refMap = buildTermRefMap(cat)
-    const jobs: { base: TermBase; field: string; filter?: { groupField: string; groupValue: string } }[] = []
-    const seen = new Set<string>()
-    const re = /\$\{([^{}]+)\}/g
-    let m: RegExpExecArray | null
-    while ((m = re.exec(text))) {
-      const key = String(m[1]).trim()
-      if (!key.includes('.')) continue
-      const [label, field] = key.split('.', 2)
-      const ref = refMap.get(label)
-      if (!ref) continue
-      const base = termBases.find((b) => b.id === ref.baseId)
-      if (!base) continue
-      const jobKey = `${ref.baseId}:${field}:${ref.groupField || ''}:${groupValue}`
-      if (seen.has(jobKey)) continue
-      seen.add(jobKey)
-      jobs.push({ base, field, filter: ref.groupField && groupValue ? { groupField: ref.groupField, groupValue } : undefined })
-    }
-    for (const job of jobs) {
-      try { await ensureFieldValue(job.base.id, job.base, job.field, job.filter) } catch { /* 保留占位符 */ }
-    }
-  }
-
-  function renderUserPrompt(text: string, cat: EditorCategory | null, groupValue = ''): string {
-    if (!text) return text
-    const fieldMap = new Map((cat?.fields || []).map((f) => [f.name, f]))
-    const refMap = buildTermRefMap(cat)
-    return text.replace(/\$\{([^{}]+)\}/g, (full, raw) => {
-      const key = String(raw).trim()
-      if (key.includes('.')) {
-        const [fname, attr] = key.split('.', 2)
-        const ref = refMap.get(fname)
-        if (ref) {
-          const fieldCache = cacheRef.current.get(ref.baseId)
-          const values = fieldCache ? fieldCache.get(attr) || fieldCache.get(attr.toLowerCase()) : undefined
-          if (values && values.length > 0) return `[${values.join(', ')}]`
-          return full
-        }
-        const f = fieldMap.get(fname)
-        if (f) {
-          if (attr === '类型') return f.type
-          if (attr === '必填') return f.required ? '是' : '否'
-          if (attr === '描述') return f.description
-          if (attr === '示例') return f.example || ''
-          if (attr === '枚举' || attr === '术语集') return ''
-        }
-        return full
-      }
-      if (fieldMap.has(key)) return key
-      if (key === 'feature') return cat ? groupValue || categoryDisplayName(cat) : ''
-      if (key === 'feature_descript') return cat?.description || ''
-      if (key === 'schema') return cat ? buildSchemaPreview(cat) : ''
-      if (key === 'return_type') return cat?.return_type || 'array'
-      return full
-    })
-  }
-
   function categoryDisplayName(cat: EditorCategory | null): string {
     if (!cat) return ''
     if (cat.name && cat.name.trim()) return cat.name
@@ -330,9 +253,23 @@ export default function KbPromptEditorPage() {
     const cat = scope === 'schema' ? activeCat : null
     const userText = scope === 'simple' ? simpleUserPrompt : cat?.user_prompt || ''
     const groupValue = scope === 'schema' && cat ? await termBaseFirstValue(cat) : ''
-    await ensureTermBaseValues(userText, cat, groupValue)
     setTestCatName(scope === 'schema' && cat ? groupValue || categoryDisplayName(cat) : '')
-    setTestResult({ system: systemPrompt, user: renderUserPrompt(userText, cat, groupValue) })
+    setTestLoading(true)
+    try {
+      // 与真实抽取共用后端 prompt_renderer，保证预览所见即所得
+      const res = await promptApi.preview(kb.id, {
+        schema_template_id: prompt?.schema_template_id || undefined,
+        category_id: cat?.id || undefined,
+        group_value: groupValue || undefined,
+        system_prompt: systemPrompt,
+        user_prompt: userText,
+      })
+      setTestResult({ system: res.system, user: res.user })
+    } catch (err) {
+      setTestResult({ system: systemPrompt, user: `预览失败：${err instanceof ApiError ? err.message : '未知错误'}` })
+    } finally {
+      setTestLoading(false)
+    }
   }
 
   async function save() {
@@ -415,10 +352,10 @@ export default function KbPromptEditorPage() {
               <textarea id="user-prompt-simple" value={simpleUserPrompt} onChange={(e) => setSimpleUserPrompt(e.target.value)} rows={14} spellCheck={false} disabled={!canManage}
                 className="w-full rounded-md border border-input bg-card px-3 py-2 font-mono text-sm shadow-soft focus-visible:border-primary/50 disabled:opacity-60" data-testid="user-prompt-input" />
               <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Info className="h-3.5 w-3.5" /> 可用占位符：${'{feature}'}、${'{feature_descript}'}、${'{schema}'}、${'{context}'}、${'{return_type}'}、${'{prev_brands}'}
+                <Info className="h-3.5 w-3.5" /> 可用占位符：${'{feature}'}、${'{feature_descript}'}、${'{schema}'}、${'{context}'}、${'{return_type}'}、${'{prev_brands}'}、${'{special_requirement}'}
               </p>
               <div className="flex justify-end">
-                <Button variant="outline" size="sm" onClick={runTest} className="gap-1"><Play className="h-4 w-4" /> 测试组装</Button>
+                <Button variant="outline" size="sm" onClick={runTest} disabled={testLoading} className="gap-1"><Play className="h-4 w-4" /> {testLoading ? '组装中...' : '测试组装'}</Button>
               </div>
             </div>
             <TestPanel result={testResult} catName={testCatName} />
@@ -524,7 +461,7 @@ export default function KbPromptEditorPage() {
                       className="flex-1 rounded-md border border-input bg-card px-3 py-2 font-mono text-sm shadow-soft focus-visible:border-primary/50 disabled:opacity-60" data-testid="schema-user-input" />
                   )}
                   <div className="flex justify-end">
-                    <Button variant="outline" size="sm" onClick={runTest} className="gap-1"><Play className="h-4 w-4" /> 测试组装</Button>
+                    <Button variant="outline" size="sm" onClick={runTest} disabled={testLoading} className="gap-1"><Play className="h-4 w-4" /> {testLoading ? '组装中...' : '测试组装'}</Button>
                   </div>
                 </div>
 

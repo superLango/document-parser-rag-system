@@ -1,5 +1,7 @@
 """HansonDOC RAG（重构版）FastAPI 应用入口。"""
 
+import asyncio
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -18,6 +20,7 @@ from app.core.logging import add_trace_id_middleware, get_logger
 from app.core.response import register_exception_handlers
 from app.middleware.ip_whitelist import IpWhitelistMiddleware
 from app.services.bootstrap import ensure_initial_admin, ensure_rbac_seed
+from app.services.model_warmup import model_warmup
 
 logger = get_logger(__name__)
 
@@ -33,6 +36,9 @@ async def lifespan(app: FastAPI):
     )
     await ensure_initial_admin()
     await ensure_rbac_seed()
+    # 异步模型预热：不阻塞 API 启动；状态见 /api/v1/system/models/status
+    if settings.MODEL_WARMUP_ENABLED:
+        asyncio.create_task(model_warmup.warmup_all())
     yield
     try:
         await engine.dispose()

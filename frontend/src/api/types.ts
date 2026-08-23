@@ -344,6 +344,10 @@ export interface TermBase {
   columns: Array<{ name: string; type: string; label: string }>
   column_aliases: Record<string, string>
   sync_enabled: boolean
+  sync_cron: string
+  sync_next_run_at: string | null
+  sync_status: string
+  sync_last_error: string
   last_synced_at: string | null
   status: string
   term_count: number

@@ -110,6 +110,18 @@ class Settings(BaseSettings):
     EMBEDDING_MAX_LENGTH: int = 8192  # BGE-M3 最大序列（大表格块友好）
     EMBEDDING_DIM: int = 1024  # BGE-M3 输出维度（D2 已确认）
 
+    # ---------- 模型预热（启动时异步加载/检测，避免流程中模型不可用） ----------
+    MODEL_WARMUP_ENABLED: bool = True  # 后端启动时执行模型预热
+    # 跳过外部 vLLM 预热（llm_qwen/glm_ocr）：容器化部署时 OCR/LLM 独立运行
+    MODEL_WARMUP_SKIP_EXTERNAL: bool = True
+    RERANKER_MODEL_DIR: str = str(
+        Path(__file__).resolve().parents[3] / "models" / "bge-reranker-v2-m3"
+    )
+    LLM_SERVER_URL: str = "http://127.0.0.1:9988/v1"  # Qwen3.6 vLLM 服务
+    LLM_SERVER_MODEL: str = "Qwen3.6-35B-A3B-FP8"
+    # LLM 上下文窗口（tokens）：按部署模型调整，内网 qwen3.5 为 131072
+    LLM_CONTEXT_WINDOW_TOKENS: int = 131072
+
     # ---------- BM25（S5/D4：jieba 词法检索，零 LLM） ----------
     BM25_K1: float = 1.5
     BM25_B: float = 0.75

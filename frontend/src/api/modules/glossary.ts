@@ -9,6 +9,7 @@ export interface GlossaryCreatePayload {
   columns?: Array<{ name: string; type: string; label: string }>
   column_aliases?: Record<string, string>
   sync_enabled?: boolean
+  sync_cron?: string
 }
 
 export const glossaryApi = {
@@ -42,6 +43,9 @@ export const glossaryApi = {
   sync(kbId: string, baseId: string): Promise<{ imported: number; total: number; skipped: number }> {
     return http.post(`/kb/${kbId}/term-bases/${baseId}/sync`)
   },
+  validateCron(kbId: string, cron: string): Promise<{ cron: string; next_run_at: string }> {
+    return http.post(`/kb/${kbId}/term-bases/cron-validate`, { cron })
+  },
   batchSaveTerms(
     kbId: string,
     baseId: string,
@@ -64,5 +68,8 @@ export const glossaryApi = {
   },
   listTerms(kbId: string, params?: { page?: number; page_size?: number; term_base_id?: string; keyword?: string; search_field?: string }): Promise<Paginated<TermItem>> {
     return http.get<Paginated<TermItem>>(`/kb/${kbId}/terms`, { params })
+  },
+  listExpandedNames(kbId: string, baseId: string, field?: string): Promise<{ items: string[] }> {
+    return http.get(`/kb/${kbId}/term-bases/${baseId}/expanded-names`, { params: field ? { field } : undefined })
   },
 }

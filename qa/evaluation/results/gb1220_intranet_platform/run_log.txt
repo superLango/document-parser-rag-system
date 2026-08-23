@@ -1,0 +1,15 @@
+===== 1) 登录 =====
+token 获取成功
+===== 2) 测试内网 LLM 连通 =====
+{"code":0,"message":"success","data":{"ok":true},"trace_id":""}
+===== 3) 触发 GB-T1220 抽取 =====
+{"code":0,"message":"success","data":{"task_id":"e0a0f074-9603-41e0-8e2e-69d806fc6932","status":"queued"},"trace_id":""}
+===== 4) 轮询抽取状态（每 10s，最长 40 分钟）=====
+[15:09:13] running 20 None
+[15:11:14] running 40 None
+[15:34:08] completed 100 None
+===== 5) 获取结果并保存 =====
+结果已保存: /home/grainuser/hansonDoc_RAG/qa/evaluation/results/gb1220_intranet_platform/run.json
+总耗时: 1505s
+status: None
+error: None

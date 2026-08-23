@@ -95,6 +95,9 @@ class SchemaCategory(Base):
     )
     name_term_field: Mapped[str] = mapped_column(String(128), default="", nullable=False)
     query_sources: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    # 术语集展开类别的特殊要求：{"室温拉伸": "特殊要求文本", ...}
+    # Prompt 模板中用 ${special_requirement} 组装，未配置的展开类别渲染为空。
+    special_requirements: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)

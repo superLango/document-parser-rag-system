@@ -19,6 +19,7 @@ from app.core.response import paginated, success
 from app.middleware.audit_log import audit_action
 from app.models.user import User
 from app.schemas.glossary import (
+    CronValidateRequest,
     DbTablesRequest,
     PreviewSqlRequest,
     TermBaseCreateRequest,
@@ -35,6 +36,31 @@ from app.services import kb_service
 from app.services.glossary import source_db, term_base_service, term_service
 
 router = APIRouter(prefix="/kb/{kb_id}/term-bases", tags=["知识库-术语集"])
+
+
+@router.post("/cron-validate")
+async def validate_cron_expr(
+    kb_id: uuid.UUID, payload: CronValidateRequest, request: Request,
+    db: AsyncSession = Depends(get_db), current_user: User = Depends(require_not_pending),
+) -> dict:
+    """校验 cron 表达式并返回下次执行时间（定时同步配置预览）。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    data = await term_base_service.validate_cron(payload.cron)
+    return success(data=data)
+
+
+@router.get("/{term_base_id}/expanded-names")
+async def list_term_base_expanded_names(
+    kb_id: uuid.UUID, term_base_id: uuid.UUID,
+    field: str | None = Query(default=None, description="取值字段名（如 NAME/term_name），缺省用 term_name"),
+    db: AsyncSession = Depends(get_db), current_user: User = Depends(require_not_pending),
+) -> dict:
+    """返回术语集按指定字段展开的类别名列表（与 Schema 术语类别展开一致）。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    from app.services import extraction_config_service
+
+    names = await extraction_config_service.list_term_base_expanded_names(db, kb_id, term_base_id, field)
+    return success(data={"items": names})
 
 
 async def _kb_access(

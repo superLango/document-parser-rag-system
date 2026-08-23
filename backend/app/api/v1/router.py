@@ -7,6 +7,7 @@ from app.api.v1.endpoints import (
     audit_logs,
     auth,
     dashboard,
+    integration,
     kb,
     kb_documents,
     kb_extraction,
@@ -38,3 +39,4 @@ api_router.include_router(api_keys.router)
 api_router.include_router(audit_logs.router)
 api_router.include_router(dashboard.router)
 api_router.include_router(system.router)
+api_router.include_router(integration.router)

@@ -40,6 +40,38 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def _clean_cron(expr: str) -> str:
+    """清洗 cron 表达式：空白/注释去除，返回标准表达式。"""
+    expr = (expr or "").strip().strip("@").strip()
+    if not expr:
+        return ""
+    if len(expr) > 64:
+        raise BusinessException(code=ErrorCode.VALIDATION_ERROR, message="cron 表达式过长（≤64 字符）")
+    validate_cron(expr)
+    return expr
+
+
+def validate_cron(expr: str) -> dict:
+    """校验 cron 表达式并返回下次执行时间（croniter）。"""
+    from croniter import croniter
+
+    try:
+        it = croniter(expr, datetime.now(timezone.utc))
+        nxt = it.get_next(datetime)
+    except (ValueError, KeyError) as exc:
+        raise BusinessException(
+            code=ErrorCode.VALIDATION_ERROR, message=f"无效的 cron 表达式：{exc}"
+        ) from exc
+    return {"cron": expr, "next_run_at": nxt.isoformat()}
+
+
+def _compute_next_run(expr: str, base_time: datetime | None = None) -> datetime:
+    from croniter import croniter
+
+    it = croniter(expr, base_time or datetime.now(timezone.utc))
+    return it.get_next(datetime)
+
+
 def _validate_source_config(source_type: str, config: dict) -> None:
     """创建/更新时提前校验外部源地址（SSRF 防护前置，失败转 400）。"""
     if not config:
@@ -68,6 +100,10 @@ def _serialize_base(base: TermBase, term_count: int = 0, masked: bool = True) ->
         "columns": base.columns or [],
         "column_aliases": base.column_aliases or {},
         "sync_enabled": base.sync_enabled,
+        "sync_cron": base.sync_cron,
+        "sync_next_run_at": base.sync_next_run_at.isoformat() if base.sync_next_run_at else None,
+        "sync_status": base.sync_status,
+        "sync_last_error": base.sync_last_error,
         "last_synced_at": base.last_synced_at.isoformat() if base.last_synced_at else None,
         "status": base.status,
         "term_count": term_count,
@@ -161,6 +197,7 @@ async def create_term_base(
         columns=data.get("columns") or [],
         column_aliases=data.get("column_aliases") or {},
         sync_enabled=bool(data.get("sync_enabled")),
+        sync_cron=_clean_cron(data.get("sync_cron") or ""),
         created_by=user_id,
     )
     db.add(base)
@@ -229,6 +266,15 @@ async def update_term_base(
         base.column_aliases = data["column_aliases"] or {}
     if "sync_enabled" in data:
         base.sync_enabled = bool(data["sync_enabled"])
+    if "sync_cron" in data and data["sync_cron"] is not None:
+        expr = _clean_cron(str(data["sync_cron"]))
+        if expr:
+            # 合法 cron 才保存，并立即计算下次执行时间
+            base.sync_cron = expr
+            base.sync_next_run_at = _compute_next_run(expr)
+        else:
+            base.sync_cron = ""
+            base.sync_next_run_at = None
     await db.commit()
     return _serialize_base(base)
 
@@ -440,6 +486,10 @@ async def sync_term_base(
     )
     count = await import_terms(db, kb_id, base_id, user_id, mapped, source_type=base.source_type)
     base.last_synced_at = now
+    base.sync_status = "success"
+    base.sync_last_error = ""
+    if base.sync_cron:
+        base.sync_next_run_at = _compute_next_run(base.sync_cron)
     await db.commit()
     return {
         "imported": count,
@@ -449,11 +499,12 @@ async def sync_term_base(
 
 
 async def list_syncable_bases(db: AsyncSession, limit: int) -> list[TermBase]:
-    """扫描 sync_enabled 的术语集（cron 用）。"""
+    """扫描 sync_enabled 且配置了 cron 的术语集（按 cron 定时同步用）。"""
     rows = (
         await db.execute(
             select(TermBase).where(
                 TermBase.sync_enabled.is_(True),
+                TermBase.sync_cron != "",
                 TermBase.status == "active",
                 TermBase.deleted_at.is_(None),
             )
@@ -462,3 +513,11 @@ async def list_syncable_bases(db: AsyncSession, limit: int) -> list[TermBase]:
         )
     ).scalars().all()
     return list(rows)
+
+
+async def mark_sync_failed(db: AsyncSession, kb_id: uuid.UUID, base_id: uuid.UUID, error: str) -> None:
+    """定时同步失败回写状态（失败不自动重试，等下次 cron）。"""
+    base = await get_term_base(db, kb_id, base_id)
+    base.sync_status = "failed"
+    base.sync_last_error = (error or "")[:500]
+    await db.commit()

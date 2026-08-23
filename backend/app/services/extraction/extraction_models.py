@@ -19,6 +19,8 @@ class ExtractionTarget:
     top_k: int | None = None
     max_tokens: int | None = None
     confidence_threshold: float | None = None
+    # 术语集展开类别的特殊要求（Schema 类别 special_requirements 按 feature 匹配）
+    special_requirement: str = ""
     fields: list[dict] = field(default_factory=list)
     schema: dict = field(default_factory=dict)
     document_id: str | None = None
@@ -36,9 +38,12 @@ class CategoryResult:
     missing_fields: list[str] = field(default_factory=list)
     hit_score: float | None = None
     hit_count: int = 0
+    # 主排序抽取为 0 条后是否已用重排排序重试
+    retried: bool = False
+    retry: dict | None = None
 
     def to_dict(self) -> dict:
-        return {
+        d = {
             "feature": self.feature,
             "records": self.records,
             "rejected": self.rejected,
@@ -46,6 +51,11 @@ class CategoryResult:
             "hit_score": self.hit_score,
             "hit_count": self.hit_count,
         }
+        if self.retried:
+            d["retried"] = True
+            if self.retry is not None:
+                d["retry"] = self.retry
+        return d
 
 
 @dataclass

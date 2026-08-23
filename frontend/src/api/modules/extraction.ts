@@ -27,6 +27,10 @@ export interface ExtractionCategory {
   missing_fields: string[]
   hit_score?: number | null
   hit_count?: number
+  /** 主排序（页码）抽取为 0 条后，是否已用重排排序重试 */
+  retried?: boolean
+  /** 重排重试的详情（mode / records / context_chars） */
+  retry?: { mode?: string; records?: number; context_chars?: number } | null
 }
 
 export interface ExtractionResultData {
@@ -82,6 +86,9 @@ export const extractionApi = {
   },
   remove(kbId: string, docId: string): Promise<unknown> {
     return http.delete(`/kb/${kbId}/extraction/${docId}/result`)
+  },
+  updateResult(kbId: string, docId: string, categories: unknown[]): Promise<{ version: number }> {
+    return http.put(`/kb/${kbId}/extraction/${docId}/result`, { categories })
   },
   async exportCsv(kbId: string, docId: string): Promise<void> {
     const token = getAccessToken()

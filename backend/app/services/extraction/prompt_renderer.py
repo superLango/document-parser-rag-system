@@ -47,10 +47,15 @@ def render_category(cfg, target, context: str) -> tuple[str, str]:
         "field_defs": build_field_defs(target),
         "format_instruction": "只输出 JSON，不要输出解释。",
         "whitelist_section": "",
+        # 脚本直调路线：${prev_brands} 替换为空（BaseExtract 单轮无前批牌号）
         "prev_brands_section": "",
+        "prev_brands": "",
         "query_terms": "、".join(target.query_terms or []),
         "feature_descript": target.description,
         "return_type": target.return_type or "array",
+        # 术语类别特殊要求（Schema 按展开类别名配置；未配置为空串）
+        "special_requirement": target.special_requirement,
+        "category_requirement": target.special_requirement,
         "schema": schema_json,
     }
 

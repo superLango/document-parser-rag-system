@@ -38,8 +38,14 @@ async def _get_document(db: AsyncSession, kb_id, document_id) -> Document:
     return doc
 
 
-async def start_document_extraction(db: AsyncSession, kb_id, document_id) -> dict:
-    """创建抽取任务与 outbox（editor+ 由端点层控制）。"""
+async def start_document_extraction(
+    db: AsyncSession, kb_id, document_id, schema_template_id=None,
+) -> dict:
+    """创建抽取任务与 outbox（editor+ 由端点层控制）。
+
+    schema_template_id：系统对接按 prompt 指定 Schema 模板时传入，
+    抽取只处理该模板下的类别。
+    """
     await db.execute(
         text("SELECT pg_advisory_xact_lock(hashtext(:k))"),
         {"k": f"extract:{document_id}"},
@@ -72,13 +78,17 @@ async def start_document_extraction(db: AsyncSession, kb_id, document_id) -> dic
         task_id=task_id,
         type="document_extraction",
         status="queued",
-        checkpoint={},
+        checkpoint={"schema_template_id": str(schema_template_id)} if schema_template_id else {},
     )
     db.add(task)
     db.add(TaskOutbox(
         task_id=task_id,
         type="document_extraction",
-        payload={"document_id": str(document_id), "kb_id": str(kb_id)},
+        payload={
+            "document_id": str(document_id),
+            "kb_id": str(kb_id),
+            **({"schema_template_id": str(schema_template_id)} if schema_template_id else {}),
+        },
         status="pending",
     ))
     await db.commit()
@@ -117,9 +127,11 @@ async def run_extraction_task(db: AsyncSession, document_id: uuid.UUID, kb_id: u
                 db, kb_id, document_id, status="running", progress=progress
             )
 
+        schema_template_id = ((task.checkpoint or {}).get("schema_template_id")) if task else None
         result = await pipeline.run(
             kb_id=str(kb_id), document_id=str(document_id), progress_cb=_on_progress,
             db=db,  # 沿用外部 session（含 KB RLS 上下文）；不传会导致内部自建 session 检索不完整
+            schema_template_id=schema_template_id,
         )
         # E3 后：result 含 categories/summary/timing/schema 信息，落库并完成
         saved = await result_store.save_result(

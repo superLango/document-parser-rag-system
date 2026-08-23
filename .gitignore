@@ -75,3 +75,12 @@ mineru/
 
 # ===== 测试文档样本（本地测试资产，不推送） =====
 test_doc/
+
+# ===== 部署产物（大文件/二进制/业务数据，不入库） =====
+deploy/*
+!deploy/README.txt
+!deploy/initdb/
+!deploy/initdb/**
+!deploy/scripts/
+!deploy/scripts/**
+backup/

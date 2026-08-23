@@ -318,7 +318,11 @@ async def extract_category_pkg(
     max_examples = int(engine_params.get("max_examples") or 0)
 
     examples = build_examples(target, max_examples)
-    output_schema = build_output_schema(target)
+    # XGrammar 输出约束开关（默认开；实验/兼容场景可关闭，改用纯 prompt JSON 约束）
+    if engine_params.get("output_schema_enabled", True):
+        output_schema = build_output_schema(target)
+    else:
+        output_schema = None
     # 原包约束：output_schema（XGrammar）与 fence_output 互斥；保留更强的 XGrammar 约束
     if output_schema is not None and fence_output:
         logger.warning(

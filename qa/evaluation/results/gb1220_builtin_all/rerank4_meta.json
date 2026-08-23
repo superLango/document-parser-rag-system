@@ -1,0 +1,53 @@
+{
+ "wall_clock_sec": 59.1,
+ "categories": [
+  {
+   "feature": "标准信息",
+   "status": "done",
+   "records": 0,
+   "context_chars": 14430,
+   "prompt_tokens": 9921,
+   "completion_tokens": 27,
+   "elapsed_sec": 2.9,
+   "tokens_per_sec": 9.2,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "晶粒度",
+   "status": "done",
+   "records": 13,
+   "context_chars": 15394,
+   "prompt_tokens": 10668,
+   "completion_tokens": 1195,
+   "elapsed_sec": 12.6,
+   "tokens_per_sec": 95.0,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "洛氏硬度",
+   "status": "done",
+   "records": 0,
+   "context_chars": 21690,
+   "prompt_tokens": 14401,
+   "completion_tokens": 2,
+   "elapsed_sec": 2.1,
+   "tokens_per_sec": 0.9,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "热处理制度",
+   "status": "done",
+   "records": 28,
+   "context_chars": 10103,
+   "prompt_tokens": 7180,
+   "completion_tokens": 3452,
+   "elapsed_sec": 30.9,
+   "tokens_per_sec": 111.6,
+   "finish_reason": "stop",
+   "parse_error": null
+  }
+ ]
+}

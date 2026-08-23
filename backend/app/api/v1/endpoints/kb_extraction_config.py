@@ -16,6 +16,7 @@ from app.models.user import User
 from app.schemas.extraction import (
     GlobalConfigSave,
     PromptCreate,
+    PromptPreviewRequest,
     PromptSaveRequest,
     PromptUpdate,
     RuleGroupCreate,
@@ -146,6 +147,17 @@ async def delete_schema_category(
     return success(message="Schema 类别已删除")
 
 
+@schema_router.get("/{template_id}/categories/{category_id}/expanded-names")
+async def list_expanded_category_names(
+    kb_id: uuid.UUID, template_id: uuid.UUID, category_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db), current_user: User = Depends(require_not_pending),
+) -> dict:
+    """返回类别展开后的全部类别名（术语集来源展开/手动类别自身），供配置特殊要求。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    names = await svc.list_expanded_category_names(db, kb_id, template_id, category_id)
+    return success(data={"items": names})
+
+
 @schema_router.post("/{template_id}/categories/{category_id}/fields")
 @audit_action(action="schema_field.create", resource_type="schema_field")
 async def create_schema_field(
@@ -210,6 +222,24 @@ async def save_global_config(
     _require_editor(kb)
     data = await svc.save_global_config(db, kb_id, payload.model_dump())
     return success(data=data, message="全局配置已保存")
+
+
+@cfg_router.post("/prompts/preview")
+async def preview_prompt(
+    kb_id: uuid.UUID, payload: PromptPreviewRequest, request: Request,
+    db: AsyncSession = Depends(get_db), current_user: User = Depends(require_not_pending),
+) -> dict:
+    """Prompt 预览渲染（与真实抽取同一套后端逻辑，所见即所得）。"""
+    await _kb_access(kb_id, db=db, current_user=current_user)
+    data = await svc.preview_prompt(
+        db, kb_id,
+        schema_template_id=payload.schema_template_id,
+        category_id=payload.category_id,
+        group_value=payload.group_value,
+        system_prompt=payload.system_prompt,
+        user_prompt=payload.user_prompt,
+    )
+    return success(data=data)
 
 
 @cfg_router.get("/prompts")

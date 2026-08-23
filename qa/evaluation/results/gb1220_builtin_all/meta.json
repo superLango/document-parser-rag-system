@@ -1,0 +1,683 @@
+{
+ "categories_total": 41,
+ "done": 21,
+ "skipped": [
+  [
+   "相变点",
+   "重排分数低于阈值（最高 -2.1313209533691406 < 0.0）"
+  ],
+  [
+   "断口",
+   "重排分数低于阈值（最高 -0.9973196983337402 < 0.0）"
+  ],
+  [
+   "脱碳层",
+   "重排分数低于阈值（最高 -1.369368314743042 < 0.0）"
+  ],
+  [
+   "低温拉伸",
+   "重排分数低于阈值（最高 -0.1198405921459198 < 0.0）"
+  ],
+  [
+   "室温持久",
+   "重排分数低于阈值（最高 -0.9223859906196594 < 0.0）"
+  ],
+  [
+   "高温光滑持久",
+   "重排分数低于阈值（最高 -2.837275981903076 < 0.0）"
+  ],
+  [
+   "循环持久",
+   "重排分数低于阈值（最高 -2.6234450340270996 < 0.0）"
+  ],
+  [
+   "高倍组织",
+   "重排分数低于阈值（最高 -0.5395107269287109 < 0.0）"
+  ],
+  [
+   "蠕变",
+   "重排分数低于阈值（最高 -0.35118910670280457 < 0.0）"
+  ],
+  [
+   "裂纹扩展速率",
+   "重排分数低于阈值（最高 -1.0248169898986816 < 0.0）"
+  ],
+  [
+   "落锤",
+   "重排分数低于阈值（最高 -2.5515451431274414 < 0.0）"
+  ],
+  [
+   "备样",
+   "重排分数低于阈值（最高 -0.26798051595687866 < 0.0）"
+  ],
+  [
+   "缺口持久",
+   "重排分数低于阈值（最高 -3.685685157775879 < 0.0）"
+  ],
+  [
+   "α层",
+   "重排分数低于阈值（最高 -0.9704724550247192 < 0.0）"
+  ],
+  [
+   "低周疲劳",
+   "重排分数低于阈值（最高 -3.91667103767395 < 0.0）"
+  ],
+  [
+   "高周疲劳",
+   "重排分数低于阈值（最高 -3.486436605453491 < 0.0）"
+  ],
+  [
+   "步冷实验",
+   "重排分数低于阈值（最高 -0.7516546845436096 < 0.0）"
+  ],
+  [
+   "应力疲劳",
+   "重排分数低于阈值（最高 -3.2535018920898438 < 0.0）"
+  ],
+  [
+   "扭转",
+   "重排分数低于阈值（最高 -1.7103924751281738 < 0.0）"
+  ],
+  [
+   "热膨胀",
+   "重排分数低于阈值（最高 -1.7534401416778564 < 0.0）"
+  ]
+ ],
+ "total_records": 1042,
+ "total_prompt_tokens": 446950,
+ "total_completion_tokens": 138515,
+ "total_tokens": 585465,
+ "wall_clock_sec": 761.4,
+ "sum_extract_sec": 1817.4,
+ "avg_completion_tokens_per_sec": 181.9,
+ "avg_total_tokens_per_sec": 769.0,
+ "categories": [
+  {
+   "feature": "标准信息",
+   "status": "done",
+   "records": 1,
+   "mode": "page",
+   "retried": false,
+   "retry": null,
+   "context_chars": 14495,
+   "hits": 11,
+   "prompt_tokens": 9963,
+   "completion_tokens": 27,
+   "total_tokens": 9990,
+   "elapsed_sec": 1.1,
+   "tokens_per_sec": 24.3,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "相变点",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -2.1313209533691406 < 0.0）"
+  },
+  {
+   "feature": "断口",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -0.9973196983337402 < 0.0）"
+  },
+  {
+   "feature": "脱碳层",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -1.369368314743042 < 0.0）"
+  },
+  {
+   "feature": "晶间腐蚀",
+   "status": "done",
+   "records": 33,
+   "mode": "page",
+   "retried": false,
+   "retry": null,
+   "context_chars": 13120,
+   "hits": 13,
+   "prompt_tokens": 9936,
+   "completion_tokens": 3587,
+   "total_tokens": 13523,
+   "elapsed_sec": 64.3,
+   "tokens_per_sec": 55.8,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "抗氧化",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 22116,
+    "hits": 15,
+    "prompt_tokens": 15575,
+    "completion_tokens": 2,
+    "elapsed_sec": 1.4,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 22284,
+   "hits": 15,
+   "prompt_tokens": 31261,
+   "completion_tokens": 4,
+   "total_tokens": 31265,
+   "elapsed_sec": 1.7,
+   "tokens_per_sec": 2.3,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "室温拉伸",
+   "status": "done",
+   "records": 309,
+   "mode": "page",
+   "retried": false,
+   "retry": null,
+   "context_chars": 24702,
+   "hits": 14,
+   "prompt_tokens": 16425,
+   "completion_tokens": 46437,
+   "total_tokens": 62862,
+   "elapsed_sec": 533.7,
+   "tokens_per_sec": 87.0,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "低温拉伸",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -0.1198405921459198 < 0.0）"
+  },
+  {
+   "feature": "高温拉伸",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 23374,
+    "hits": 14,
+    "prompt_tokens": 15508,
+    "completion_tokens": 2,
+    "elapsed_sec": 1.3,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 23519,
+   "hits": 14,
+   "prompt_tokens": 31110,
+   "completion_tokens": 4,
+   "total_tokens": 31114,
+   "elapsed_sec": 1.5,
+   "tokens_per_sec": 2.6,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "布氏硬度",
+   "status": "done",
+   "records": 60,
+   "mode": "page",
+   "retried": false,
+   "retry": null,
+   "context_chars": 15704,
+   "hits": 13,
+   "prompt_tokens": 11170,
+   "completion_tokens": 8148,
+   "total_tokens": 19318,
+   "elapsed_sec": 131.0,
+   "tokens_per_sec": 62.2,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "室温持久",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -0.9223859906196594 < 0.0）"
+  },
+  {
+   "feature": "高温光滑持久",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -2.837275981903076 < 0.0）"
+  },
+  {
+   "feature": "循环持久",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -2.6234450340270996 < 0.0）"
+  },
+  {
+   "feature": "弯曲",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 18698,
+    "hits": 15,
+    "prompt_tokens": 12240,
+    "completion_tokens": 2,
+    "elapsed_sec": 1.0,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 18852,
+   "hits": 15,
+   "prompt_tokens": 24580,
+   "completion_tokens": 4,
+   "total_tokens": 24584,
+   "elapsed_sec": 1.5,
+   "tokens_per_sec": 2.7,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "低倍",
+   "status": "done",
+   "records": 6,
+   "mode": "page",
+   "retried": false,
+   "retry": null,
+   "context_chars": 9244,
+   "hits": 12,
+   "prompt_tokens": 7759,
+   "completion_tokens": 698,
+   "total_tokens": 8457,
+   "elapsed_sec": 18.8,
+   "tokens_per_sec": 37.2,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "高倍组织",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -0.5395107269287109 < 0.0）"
+  },
+  {
+   "feature": "晶粒度",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 15394,
+    "hits": 14,
+    "prompt_tokens": 10598,
+    "completion_tokens": 2,
+    "elapsed_sec": 1.5,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 15549,
+   "hits": 14,
+   "prompt_tokens": 21370,
+   "completion_tokens": 4,
+   "total_tokens": 21374,
+   "elapsed_sec": 1.7,
+   "tokens_per_sec": 2.4,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "蠕变",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -0.35118910670280457 < 0.0）"
+  },
+  {
+   "feature": "非金属夹杂",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 9538,
+    "hits": 13,
+    "prompt_tokens": 7343,
+    "completion_tokens": 2,
+    "elapsed_sec": 1.5,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 9691,
+   "hits": 13,
+   "prompt_tokens": 14787,
+   "completion_tokens": 4,
+   "total_tokens": 14791,
+   "elapsed_sec": 1.7,
+   "tokens_per_sec": 2.4,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "铁素体",
+   "status": "done",
+   "records": 36,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 36,
+    "context_chars": 14820,
+    "hits": 12,
+    "prompt_tokens": 10324,
+    "completion_tokens": 5042,
+    "elapsed_sec": 84.1,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 14948,
+   "hits": 12,
+   "prompt_tokens": 20648,
+   "completion_tokens": 10084,
+   "total_tokens": 30732,
+   "elapsed_sec": 168.2,
+   "tokens_per_sec": 60.0,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "裂纹扩展速率",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -1.0248169898986816 < 0.0）"
+  },
+  {
+   "feature": "淬透性",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 25810,
+    "hits": 14,
+    "prompt_tokens": 16853,
+    "completion_tokens": 2,
+    "elapsed_sec": 2.8,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 25964,
+   "hits": 14,
+   "prompt_tokens": 33805,
+   "completion_tokens": 4,
+   "total_tokens": 33809,
+   "elapsed_sec": 3.3,
+   "tokens_per_sec": 1.2,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "落锤",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -2.5515451431274414 < 0.0）"
+  },
+  {
+   "feature": "化学成分",
+   "status": "done",
+   "records": 511,
+   "mode": "page",
+   "retried": false,
+   "retry": null,
+   "context_chars": 23980,
+   "hits": 13,
+   "prompt_tokens": 17801,
+   "completion_tokens": 55284,
+   "total_tokens": 73085,
+   "elapsed_sec": 625.3,
+   "tokens_per_sec": 88.4,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "备样",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -0.26798051595687866 < 0.0）"
+  },
+  {
+   "feature": "洛氏硬度",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 21690,
+    "hits": 14,
+    "prompt_tokens": 14397,
+    "completion_tokens": 2,
+    "elapsed_sec": 2.6,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 21832,
+   "hits": 14,
+   "prompt_tokens": 28889,
+   "completion_tokens": 4,
+   "total_tokens": 28893,
+   "elapsed_sec": 4.3,
+   "tokens_per_sec": 0.9,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "维氏硬度",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 21331,
+    "hits": 13,
+    "prompt_tokens": 14186,
+    "completion_tokens": 2,
+    "elapsed_sec": 3.2,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 21466,
+   "hits": 13,
+   "prompt_tokens": 28385,
+   "completion_tokens": 4,
+   "total_tokens": 28389,
+   "elapsed_sec": 4.4,
+   "tokens_per_sec": 0.9,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "缺口持久",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -3.685685157775879 < 0.0）"
+  },
+  {
+   "feature": "组合持久",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 27322,
+    "hits": 14,
+    "prompt_tokens": 17881,
+    "completion_tokens": 2,
+    "elapsed_sec": 3.9,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 27477,
+   "hits": 14,
+   "prompt_tokens": 35814,
+   "completion_tokens": 4,
+   "total_tokens": 35818,
+   "elapsed_sec": 5.0,
+   "tokens_per_sec": 0.8,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "夏比冲击",
+   "status": "done",
+   "records": 45,
+   "mode": "page",
+   "retried": false,
+   "retry": null,
+   "context_chars": 24636,
+   "hits": 14,
+   "prompt_tokens": 16240,
+   "completion_tokens": 6913,
+   "total_tokens": 23153,
+   "elapsed_sec": 111.2,
+   "tokens_per_sec": 62.2,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "室温缺口拉伸",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 26369,
+    "hits": 15,
+    "prompt_tokens": 17303,
+    "completion_tokens": 2,
+    "elapsed_sec": 2.1,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 26527,
+   "hits": 15,
+   "prompt_tokens": 34686,
+   "completion_tokens": 4,
+   "total_tokens": 34690,
+   "elapsed_sec": 4.1,
+   "tokens_per_sec": 1.0,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "塔形",
+   "status": "done",
+   "records": 1,
+   "mode": "page",
+   "retried": false,
+   "retry": null,
+   "context_chars": 6617,
+   "hits": 12,
+   "prompt_tokens": 5378,
+   "completion_tokens": 101,
+   "total_tokens": 5479,
+   "elapsed_sec": 4.3,
+   "tokens_per_sec": 23.7,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "α层",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -0.9704724550247192 < 0.0）"
+  },
+  {
+   "feature": "低周疲劳",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -3.91667103767395 < 0.0）"
+  },
+  {
+   "feature": "高周疲劳",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -3.486436605453491 < 0.0）"
+  },
+  {
+   "feature": "步冷实验",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -0.7516546845436096 < 0.0）"
+  },
+  {
+   "feature": "应力疲劳",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -3.2535018920898438 < 0.0）"
+  },
+  {
+   "feature": "高温缺口拉伸",
+   "status": "done",
+   "records": 0,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 0,
+    "context_chars": 24134,
+    "hits": 14,
+    "prompt_tokens": 16242,
+    "completion_tokens": 2,
+    "elapsed_sec": 1.3,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 24284,
+   "hits": 14,
+   "prompt_tokens": 32583,
+   "completion_tokens": 4,
+   "total_tokens": 32587,
+   "elapsed_sec": 1.5,
+   "tokens_per_sec": 2.7,
+   "finish_reason": "stop",
+   "parse_error": null
+  },
+  {
+   "feature": "扭转",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -1.7103924751281738 < 0.0）"
+  },
+  {
+   "feature": "热膨胀",
+   "status": "skipped",
+   "reason": "重排分数低于阈值（最高 -1.7534401416778564 < 0.0）"
+  },
+  {
+   "feature": "热处理制度",
+   "status": "done",
+   "records": 40,
+   "mode": "page",
+   "retried": true,
+   "retry": {
+    "mode": "rerank",
+    "records": 40,
+    "context_chars": 10103,
+    "hits": 12,
+    "prompt_tokens": 7180,
+    "completion_tokens": 3596,
+    "elapsed_sec": 64.4,
+    "finish_reason": "stop",
+    "parse_error": null
+   },
+   "context_chars": 10231,
+   "hits": 12,
+   "prompt_tokens": 14360,
+   "completion_tokens": 7192,
+   "total_tokens": 21552,
+   "elapsed_sec": 128.8,
+   "tokens_per_sec": 55.8,
+   "finish_reason": "stop",
+   "parse_error": null
+  }
+ ]
+}

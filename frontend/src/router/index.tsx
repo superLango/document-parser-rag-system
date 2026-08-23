@@ -28,6 +28,7 @@ import KbGlossaryEditorPage from '@/views/kb/KbGlossaryEditorPage'
 import KbVectorSearchPage from '@/views/kb/KbVectorSearchPage'
 import KbStructuredExtractionPage from '@/views/kb/KbStructuredExtractionPage'
 import KbExtractionDetailPage from '@/views/kb/KbExtractionDetailPage'
+import IntegrationTaskResultPage from '@/views/integration/IntegrationTaskResultPage'
 import WorkspacesPage from '@/views/WorkspacesPage'
 import ApiKeysPage from '@/views/ApiKeysPage'
 import InvitationsPage from '@/views/InvitationsPage'
@@ -106,6 +107,7 @@ export const router = createBrowserRouter([
       { path: 'kb/invitations', element: <InvitationsPage /> },
       { path: 'workspaces', element: <WorkspacesPage /> },
       { path: 'api-keys', element: <ApiKeysPage /> },
+      { path: 'integration/task/:taskId', element: <IntegrationTaskResultPage /> },
       {
         path: 'admin/users',
         element: (

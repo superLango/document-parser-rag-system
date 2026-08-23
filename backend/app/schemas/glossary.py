@@ -45,6 +45,7 @@ class TermBaseCreateRequest(BaseModel):
     columns: list[dict] = Field(default_factory=list)
     column_aliases: dict[str, str] = Field(default_factory=dict)
     sync_enabled: bool = False
+    sync_cron: str = Field(default="", max_length=64)
     auto_import: bool = False
     import_data: list[dict] | None = None
 
@@ -56,6 +57,12 @@ class TermBaseUpdateRequest(BaseModel):
     columns: list[dict] | None = None
     column_aliases: dict[str, str] | None = None
     sync_enabled: bool | None = None
+    sync_cron: str | None = Field(default=None, max_length=64)
+
+
+class CronValidateRequest(BaseModel):
+    """cron 表达式校验（前端实时预览下次执行时间）。"""
+    cron: str = Field(min_length=1, max_length=64)
 
 
 class TestApiRequest(ApiSourceConfig):

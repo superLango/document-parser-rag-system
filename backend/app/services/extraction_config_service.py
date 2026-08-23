@@ -49,7 +49,13 @@ DEFAULT_GLOBAL_CONFIG: dict = {
         "default_confidence_threshold": 0.35,
         "context_top_k": 30,
         "context_max_tokens": 28000,
-        "context": {"chars_per_token": 1.5, "min_keep_chars": 200, "truncate_marker": "\n[...内容截断...]"},
+        "context": {
+            "chars_per_token": 1.5,
+            # 上下文排序：page=页码排序（主流程）/ rerank=重排分数降序
+            "sort_mode": "page",
+            # 类别抽取为 0 条时，自动改用重排排序再抽一次（附录类内容兜底）
+            "retry_rerank_on_empty": True,
+        },
         "category_recall": {"mode": "loose", "top_k": 8, "per_dim_top_k": 10},
         # 上下文检索分两路（2026-08）：数据路召回复核表（术语集），元信息路召回复核项目表/方法/取样（字段名）
         "data_route_top_k": 10,
@@ -73,19 +79,19 @@ DEFAULT_GLOBAL_CONFIG: dict = {
         },
     },
     "llm": {
-        # 引擎收敛：默认 LangExtractPkg（原包官方特性：sentence-aware 分块/
-        # 共指窗口/并行/多轮/对齐）；BaseExtract 仅作历史兜底，前端已停用。
-        "engine": "LangExtractPkg",
+        # 引擎：默认 BaseExtract（自研直抽：一次拼接 + 分批不截断 + 全参数可配）；
+        # LangExtractPkg（原包）保留可切换，但不再作为默认。
+        "engine": "BaseExtract",
         "engines": {
             "BaseExtract": {
-                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 32768,
-                "timeout": 300, "enable_thinking": False,
-                "concurrency": {"max_concurrency": 24, "cross_category": 24, "within_category": 1},
-                "batch": {"single_threshold": 8000, "batch_chars": 6000, "overlap": 500, "context_truncate": 32000},
+                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 100000,
+                "timeout": 1800, "enable_thinking": False,
+                "concurrency": {"max_concurrency": 32, "cross_category": 32, "within_category": 1},
+                "batch": {"single_threshold": 100000, "batch_chars": 6000, "overlap": 500, "context_truncate": 60000},
             },
             "LangExtractPkg": {
                 # 输出预算下调，输入预算自动放大（防 400/截断）
-                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 24000,
+                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 100000,
                 "timeout": 600, "enable_thinking": False,
                 # 单轮抽取优先保证完整（多轮仅放大耗时，first-pass 已覆盖大多数）
                 "format_type": "JSON", "fence_output": False, "max_examples": 3, "passes": 1,
@@ -94,7 +100,7 @@ DEFAULT_GLOBAL_CONFIG: dict = {
                 "max_char_buffer": 6000, "context_window_chars": 500,
                 # 并行：batch×workers，建议与 vLLM --max-num-seqs 一致
                 "batch_length": 8, "max_workers": 8,
-                "concurrency": {"max_concurrency": 8, "cross_category": 8, "within_category": 8},
+                "concurrency": {"max_concurrency": 32, "cross_category": 32, "within_category": 32},
             },
         },
     },
@@ -185,6 +191,148 @@ def _serialize_field(f: SchemaField) -> dict:
     }
 
 
+def _clean_special_requirements(raw) -> dict:
+    """清洗特殊要求映射：仅保留 str 值、非空文本、长度上限。"""
+    out: dict = {}
+    for k, v in (raw or {}).items():
+        if not isinstance(v, str) or not v.strip():
+            continue
+        out[str(k)[:128]] = v.strip()[:1000]
+    return out
+
+
+async def preview_prompt(
+    db: AsyncSession,
+    kb_id,
+    *,
+    schema_template_id: str | None = None,
+    category_id: str | None = None,
+    group_value: str | None = None,
+    system_prompt: str | None = None,
+    user_prompt: str | None = None,
+) -> dict:
+    """Prompt 预览渲染：与真实抽取共用 prompt_renderer，保证所见即所得。
+
+    - 传入覆盖文本（编辑中未保存）优先，缺省时渲染空模板文本；
+    - 术语集类别按 group_value 指定展开类别（含 special_requirement / term_data 过滤）；
+    - context 用占位说明（预览不检索）。
+    """
+    from types import SimpleNamespace
+
+    from app.services.extraction import prompt_renderer
+    from app.services.extraction.extraction_models import ExtractionTarget
+    from app.services.extraction.term_base_loader import _read, load_term_base
+
+    system = system_prompt if system_prompt is not None else ""
+    user = user_prompt if user_prompt is not None else ""
+    target: ExtractionTarget | None = None
+    if category_id and schema_template_id:
+        tpl = await get_schema_template(db, kb_id, schema_template_id)
+        cat = next(
+            (c for c in tpl.get("categories") or [] if str(c.get("id")) == str(category_id)),
+            None,
+        )
+        if cat is None:
+            raise BusinessException(code=ErrorCode.BUSINESS_NOT_FOUND, message="类别不存在")
+        if group_value and group_value.strip():
+            feature = group_value.strip()
+        elif cat.get("name_source") == "term_base" and cat.get("name_term_base_id"):
+            tb_name = (
+                await db.execute(
+                    select(TermBase.name).where(
+                        TermBase.id == uuid.UUID(str(cat["name_term_base_id"]))
+                    )
+                )
+            ).scalar_one_or_none()
+            feature = tb_name or "术语类别"
+        else:
+            feature = cat.get("name") or "未命名类别"
+        target = ExtractionTarget(
+            feature=feature,
+            category_id=str(cat["id"]),
+            template_id=str(tpl["id"]),
+            description=cat.get("description") or "",
+            return_type=cat.get("return_type") or "array",
+            extraction_strategy=cat.get("extraction_strategy") or "auto",
+            fields=cat.get("fields") or [],
+            special_requirement=str((cat.get("special_requirements") or {}).get(feature) or "").strip(),
+        )
+        properties: dict = {}
+        for f in target.fields:
+            prop: dict = {"type": f.get("type") or "string"}
+            if f.get("required"):
+                prop["required"] = True
+            if f.get("description"):
+                prop["description"] = f["description"]
+            if f.get("example"):
+                prop["example"] = f["example"]
+            properties[f["name"]] = prop
+        target.schema = {"type": target.return_type, "properties": properties}
+        for qs in cat.get("query_sources") or []:
+            label = (qs.get("label") or "").strip()
+            tb_id = qs.get("term_base_id")
+            if label and tb_id:
+                rows = await load_term_base(db, kb_id, uuid.UUID(str(tb_id)))
+                gf = (qs.get("group_field") or "").strip()
+                if gf:
+                    rows = [
+                        r for r in rows
+                        if str(_read(r, gf) or "").strip() == feature
+                    ]
+                target.term_data[label] = rows
+    else:
+        # simple 模式/无类别：空 target 渲染（feature/schema 等占位符为空）
+        target = ExtractionTarget(
+            feature="",
+            category_id=category_id or "",
+            template_id=schema_template_id or "",
+        )
+    cfg = SimpleNamespace(prompt_templates=[{
+        "schema_template_id": schema_template_id or "",
+        "categories": [{
+            "category_id": category_id or "",
+            "system_prompt": system,
+            "user_prompt": user,
+        }],
+    }])
+    ctx = "（文档上下文将在实际抽取时注入）"
+    rendered_system, rendered_user = prompt_renderer.render_category(cfg, target, ctx)
+    return {"system": rendered_system, "user": rendered_user}
+
+
+async def list_term_base_expanded_names(db, kb_id, term_base_id, field: str | None = None) -> list[str]:
+    """按术语集 + 取值字段返回展开类别名（与 Schema 类别展开语义一致）。
+
+    前端新建/编辑类别配置特殊要求时直接调用，避免依赖术语列表接口的字段序列化。
+    """
+    from app.services.extraction.term_base_loader import (
+        distinct_field_values,
+        load_term_base,
+    )
+
+    rows = await load_term_base(db, kb_id, uuid.UUID(str(term_base_id)))
+    f = (field or "").strip() or "term_name"
+    return distinct_field_values(rows, f, 200)
+
+
+async def list_expanded_category_names(db, kb_id, template_id, category_id) -> list[str]:
+    """返回类别展开后的全部类别名（供前端配置术语类别特殊要求）。
+
+    name_source=term_base 时按名称字段从术语集取值（与类别展开上限一致）；
+    手动类别返回自身名称（若填写）。
+    """
+    c = await _get_category(db, kb_id, template_id, category_id)
+    if c.name_source != "term_base" or c.name_term_base_id is None:
+        return [c.name] if c.name.strip() else []
+    from app.services.extraction.term_base_loader import (
+        distinct_field_values,
+        load_term_base,
+    )
+
+    rows = await load_term_base(db, kb_id, c.name_term_base_id)
+    return distinct_field_values(rows, c.name_term_field or "term_name", 200)
+
+
 def _serialize_category(c: SchemaCategory, fields: list[SchemaField] | None = None) -> dict:
     return {
         "id": str(c.id),
@@ -202,6 +350,7 @@ def _serialize_category(c: SchemaCategory, fields: list[SchemaField] | None = No
         "name_term_base_id": str(c.name_term_base_id) if c.name_term_base_id else None,
         "name_term_field": c.name_term_field,
         "query_sources": c.query_sources or [],
+        "special_requirements": c.special_requirements or {},
         "is_active": c.is_active,
         "sort_order": c.sort_order,
         "fields": [_serialize_field(f) for f in (fields or [])],
@@ -392,6 +541,7 @@ async def create_schema_category(db, kb_id, template_id, data: dict) -> dict:
         name_term_base_id=uuid.UUID(str(data["name_term_base_id"])) if data.get("name_term_base_id") else None,
         name_term_field=(data.get("name_term_field") or "")[:128],
         query_sources=query_sources,
+        special_requirements=_clean_special_requirements(data.get("special_requirements")),
         is_active=bool(data.get("is_active", True)),
         sort_order=int(data.get("sort_order") or 0),
     )
@@ -420,6 +570,8 @@ async def update_schema_category(db, kb_id, template_id, category_id, data: dict
         query_sources = [_qs_to_dict(q) for q in data["query_sources"]]
         await _validate_term_base_ref(db, kb_id, c.name_source, c.name_term_base_id, query_sources)
         c.query_sources = query_sources
+    if "special_requirements" in data and data["special_requirements"] is not None:
+        c.special_requirements = _clean_special_requirements(data["special_requirements"])
     if "is_active" in data:
         c.is_active = bool(data["is_active"])
     if "sort_order" in data:

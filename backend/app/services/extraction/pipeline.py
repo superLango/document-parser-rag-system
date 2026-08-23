@@ -28,15 +28,22 @@ async def run(
     progress_cb=None,
     llm_client=None,
     db=None,
+    schema_template_id=None,
 ) -> dict:
     """执行抽取流水线。
 
     llm_client 用于测试注入；为 None 时从 KB 资源配置构建。
+    schema_template_id：仅抽取指定 Schema 模板（系统对接按 prompt 选择时使用）。
     """
     total_start = time.monotonic()
     session = db if db is not None else AsyncSessionLocal()
     try:
         cfg = await extraction_resolver.resolve(session, kb_id)
+        if schema_template_id:
+            cfg.schema_templates = [
+                t for t in cfg.schema_templates
+                if str(t.get("id")) == str(schema_template_id)
+            ]
         await _progress(progress_cb, 10, "解析抽取配置")
 
         targets, skipped = await category_builder.build_targets(
@@ -148,30 +155,74 @@ async def _extract_single(session, cfg, target, client, engine, engine_params, r
         # context_top_k：拼接上下文的最大块数（超出部分按相关性截断）
         ctx_top_k = target.top_k or int(retrieval_cfg.get("top_k") or 10)
         ctx_top_k = min(ctx_top_k, int(retrieval_cfg.get("context_top_k") or ctx_top_k))
-        # 一次拼接抽取：候选按重排分数降序拼接为单段（模型自行跨表关联）
-        context = context_assembler.assemble_full_sorted(hits, top_k=ctx_top_k)
-        segments = [{"type": "text", "content": context}]
+        # 上下文排序（全局配置 retrieval.context）：
+        #   sort_mode：page=页码排序（主流程，正常文档阅读顺序）/ rerank=重排分数降序
+        #   retry_rerank_on_empty：主排序抽取为 0 条时，自动用重排排序再抽一次
+        context_cfg = context_cfg or {}
+        sort_mode = str(context_cfg.get("sort_mode") or "page")
+        primary_mode = sort_mode if sort_mode in ("page", "rerank") else "page"
+        retry_rerank = bool(context_cfg.get("retry_rerank_on_empty", True))
+
+        def _make_context(mode: str) -> str:
+            if mode == "rerank":
+                return context_assembler.assemble_full_sorted(hits, top_k=ctx_top_k)
+            return context_assembler.assemble_page_order(hits, top_k=ctx_top_k)
+
+        async def _run_engine(ctx: str) -> list[dict]:
+            segments = [{"type": "text", "content": ctx}]
+            if engine == "LangExtractPkg":
+                from app.services.extraction import lang_pkg_extractor
+
+                return await lang_pkg_extractor.extract_category_pkg(
+                    kb_id=cfg.kb_id, cfg=cfg, target=target, context=ctx, segments=segments,
+                    engine_params=engine_params, llm_endpoint=llm_endpoint or {}, llm_sem=llm_sem,
+                )
+            return await llm_extractor.extract_category(cfg, target, ctx, client, engine_params, engine=engine)
+
+        context = _make_context(primary_mode)
+        # 主排序上下文为空时，若允许重试则直接切重排
+        if not context.strip() and retry_rerank and primary_mode != "rerank":
+            primary_mode = "rerank"
+            context = _make_context(primary_mode)
         if not context.strip():
             return CategoryResult(
                 feature=target.feature, records=[], rejected=[],
                 hit_score=target.hit_score, hit_count=target.hit_count,
             )
+        # 上下文规模预估（chars_per_token / context_max_tokens 接线）：
+        # 只做预估与告警，不截断——整段拼入 Prompt 一次给模型。
+        chars_per_token = float(context_cfg.get("chars_per_token") or 1.5)
+        est_tokens = int(len(context) / max(0.1, chars_per_token))
+        ctx_token_limit = int(retrieval_cfg.get("context_max_tokens") or 0)
+        if ctx_token_limit > 0 and est_tokens > ctx_token_limit:
+            logger.warning(
+                "上下文预估 token 超限（整段仍发送）",
+                feature=target.feature, est_tokens=est_tokens, limit=ctx_token_limit,
+                context_chars=len(context),
+            )
         logger.info(
             "类别开始", feature=target.feature,
-            context_chars=len(context), segment_count=len(segments), engine=engine,
+            context_chars=len(context), est_tokens=est_tokens,
+            sort_mode=primary_mode, engine=engine,
         )
-
-        if engine == "LangExtractPkg":
-            from app.services.extraction import lang_pkg_extractor
-
-            records = await lang_pkg_extractor.extract_category_pkg(
-                kb_id=cfg.kb_id, cfg=cfg, target=target, context=context, segments=segments,
-                engine_params=engine_params, llm_endpoint=llm_endpoint or {}, llm_sem=llm_sem,
-            )
-        else:
-            records = await llm_extractor.extract_category(cfg, target, context, client, engine_params, engine=engine)
-        logger.info("LLM 完成", feature=target.feature, records=len(records))
-        # 规则组脚本：post 后处理 + validation 校验
+        records = await _run_engine(context)
+        retried = False
+        retry_info = None
+        if not records and retry_rerank and primary_mode != "rerank":
+            context2 = _make_context("rerank")
+            if context2.strip():
+                logger.info("类别 0 条，切换重排排序重试", feature=target.feature, context_chars=len(context2))
+                records2 = await _run_engine(context2)
+                retried = True
+                retry_info = {
+                    "mode": "rerank",
+                    "records": len(records2),
+                    "context_chars": len(context2),
+                }
+                if records2:
+                    records = records2
+        logger.info("LLM 完成", feature=target.feature, records=len(records), retried=retried)
+        # 规则组脚本：post 后处理 + validation 校验（仅对最终采用的一轮结果执行一次）
         rules = _rules_for_category(cfg, target.category_id)
         kept, rejected = records, []
         if rules:
@@ -185,6 +236,7 @@ async def _extract_single(session, cfg, target, client, engine, engine_params, r
         return CategoryResult(
             feature=target.feature, records=kept, rejected=rejected,
             missing_fields=missing, hit_score=target.hit_score, hit_count=target.hit_count,
+            retried=retried, retry=retry_info,
         )
     except Exception as exc:
         logger.error("类别抽取异常", feature=target.feature, error=str(exc))

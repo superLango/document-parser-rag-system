@@ -1,0 +1,1 @@
+\i /backup/dump.sql

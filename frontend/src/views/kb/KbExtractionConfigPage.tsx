@@ -96,8 +96,14 @@ export default function KbExtractionConfigPage() {
     rerank_top_k: '' as string | number, max_tokens: '' as string | number,
     name_source: 'manual', name_term_base_id: '', name_term_field: '',
     query_sources: [] as QuerySource[], is_active: true,
+    special_requirements: {} as Record<string, string>,
   })
   const [catSaving, setCatSaving] = useState(false)
+  // 术语集展开类别名（用于配置特殊要求）
+  const [expandedNames, setExpandedNames] = useState<string[]>([])
+  const [expandedLoading, setExpandedLoading] = useState(false)
+  const [expandedKeyword, setExpandedKeyword] = useState('')
+  const [expandedError, setExpandedError] = useState('')
 
   // 字段弹窗
   const [fieldOpen, setFieldOpen] = useState(false)
@@ -206,8 +212,10 @@ export default function KbExtractionConfigPage() {
       name: '', description: '', return_type: 'array', extraction_strategy: 'auto',
       fixed_query: '', confidence_threshold: '', top_k: '', rerank_top_k: '', max_tokens: '',
       name_source: 'manual', name_term_base_id: '', name_term_field: '',
-      query_sources: [], is_active: true,
+      query_sources: [], is_active: true, special_requirements: {},
     })
+    setExpandedNames([])
+    setExpandedKeyword('')
     setCatOpen(true)
   }
 
@@ -222,7 +230,10 @@ export default function KbExtractionConfigPage() {
       name_source: cat.name_source, name_term_base_id: cat.name_term_base_id ?? '',
       name_term_field: cat.name_term_field, query_sources: cat.query_sources.map((q) => ({ ...q })),
       is_active: cat.is_active,
+      special_requirements: cat.special_requirements ?? {},
     })
+    setExpandedNames([])
+    setExpandedKeyword('')
     setCatOpen(true)
   }
 
@@ -286,6 +297,11 @@ export default function KbExtractionConfigPage() {
     if (catForm.extraction_strategy === 'auto') {
       payload.confidence_threshold = catForm.confidence_threshold === '' ? null : Number(catForm.confidence_threshold)
     }
+    const nonEmptyReq: Record<string, string> = {}
+    for (const [k, v] of Object.entries(catForm.special_requirements)) {
+      if (v.trim()) nonEmptyReq[k] = v.trim()
+    }
+    payload.special_requirements = nonEmptyReq
     setCatSaving(true)
     try {
       if (catEdit) {
@@ -304,6 +320,33 @@ export default function KbExtractionConfigPage() {
       setCatSaving(false)
     }
   }
+
+  // 术语集来源：加载展开类别名（后端专用接口，与类别展开语义一致）
+  useEffect(() => {
+    if (!catOpen || catForm.name_source !== 'term_base' || !catForm.name_term_base_id || !catForm.name_term_field) {
+      setExpandedNames([])
+      setExpandedKeyword('')
+      setExpandedError('')
+      return
+    }
+    let cancelled = false
+    setExpandedLoading(true)
+    ;(async () => {
+      try {
+        const res = await glossaryApi.listExpandedNames(kb.id, catForm.name_term_base_id, catForm.name_term_field)
+        if (!cancelled) {
+          setExpandedNames(res.items || [])
+          setExpandedError('')
+        }
+      } catch (err) {
+        if (!cancelled) setExpandedError(err instanceof ApiError ? err.message : '加载展开类别失败')
+      } finally {
+        if (!cancelled) setExpandedLoading(false)
+      }
+    })()
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catOpen, catForm.name_source, catForm.name_term_base_id, catForm.name_term_field, kb.id])
 
   function requestDeleteCategory(cat: SchemaCategory) {
     if (!selected) return
@@ -836,6 +879,52 @@ export default function KbExtractionConfigPage() {
           <label className="block text-xs font-medium text-muted-foreground">固定 Query 文本
             <Input value={catForm.fixed_query} onChange={(e) => setCatForm({ ...catForm, fixed_query: e.target.value })} placeholder="如：标准名称 标准编号 文件编号" className="mt-1 h-10" />
           </label>
+
+          {/* 术语类别特殊要求（仅术语集来源） */}
+          {catForm.name_source === 'term_base' && (
+            <div className="space-y-2 rounded-xl border border-border p-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-medium text-muted-foreground">术语类别特殊要求</p>
+                {expandedLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
+              </div>
+              <p className="text-[11px] leading-tight text-muted-foreground/80">
+                对术语集展开的每个类别单独设置特殊抽取要求；Prompt 模板中用{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">$&lcub;special_requirement&rcub;</code>{' '}
+                组装，未配置的类别渲染为空。
+              </p>
+              {expandedError ? (
+                <p className="py-3 text-center text-xs text-destructive">加载展开类别失败：{expandedError}</p>
+              ) : expandedNames.length === 0 ? (
+                <p className="py-3 text-center text-xs text-muted-foreground">暂无展开类别（请确认已选择名称来源术语集与取值字段）</p>
+              ) : (
+                <>
+                  <Input
+                    value={expandedKeyword}
+                    onChange={(e) => setExpandedKeyword(e.target.value)}
+                    placeholder={`搜索 ${expandedNames.length} 个类别...`}
+                    className="h-8"
+                  />
+                  <div className="max-h-56 space-y-1.5 overflow-y-auto pr-1">
+                    {expandedNames.filter((n) => !expandedKeyword || n.includes(expandedKeyword)).map((name) => (
+                      <label key={name} className="block rounded-lg bg-muted/30 p-2">
+                        <span className="mb-1 block text-xs font-medium text-foreground">{name}</span>
+                        <textarea
+                          value={catForm.special_requirements[name] ?? ''}
+                          onChange={(e) => setCatForm((f) => ({ ...f, special_requirements: { ...f.special_requirements, [name]: e.target.value } }))}
+                          rows={1}
+                          placeholder="填写该类别的特殊抽取要求（可选）"
+                          className="min-h-[32px] w-full resize-y rounded-md border border-input bg-card px-2 py-1 text-xs shadow-soft focus-visible:border-primary/50"
+                        />
+                      </label>
+                    ))}
+                    {expandedNames.filter((n) => !expandedKeyword || n.includes(expandedKeyword)).length === 0 && (
+                      <p className="py-3 text-center text-xs text-muted-foreground">无匹配类别</p>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Query 关联（挂载到 Query 的术语集） */}
           <div className="space-y-2 rounded-xl border border-border p-3">

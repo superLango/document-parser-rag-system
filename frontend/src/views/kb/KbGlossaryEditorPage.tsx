@@ -14,11 +14,19 @@ import { PageHeader } from '@/components/PageHeader'
 import { Pagination } from '@/components/ui/pagination'
 import { Select } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useToast } from '@/components/ui/toast'
 import { formatDateTime } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth'
 import { useKbDetail } from './KbDetailLayout'
+
+const CRON_PRESETS = [
+  { label: '每小时', value: '0 * * * *' },
+  { label: '每天凌晨 2 点', value: '0 2 * * *' },
+  { label: '每周一 2 点', value: '0 2 * * 1' },
+  { label: '每月 1 号 2 点', value: '0 2 1 * *' },
+]
 
 const SOURCE_META: Record<string, { label: string; icon: React.ReactNode }> = {
   manual: { label: '手动录入', icon: <Hand className="h-3 w-3" /> },
@@ -50,6 +58,12 @@ export default function KbGlossaryEditorPage() {
 
   const [editableRows, setEditableRows] = useState<EditableRow[]>([])
   const [infoForm, setInfoForm] = useState({ name: '', description: '' })
+  // 定时同步（cron）
+  const [syncEnabled, setSyncEnabled] = useState(false)
+  const [syncCronDraft, setSyncCronDraft] = useState('')
+  const [syncCronNext, setSyncCronNext] = useState<string | null>(null)
+  const [syncCronError, setSyncCronError] = useState('')
+  const [syncCronSaving, setSyncCronSaving] = useState(false)
   const [savingAll, setSavingAll] = useState(false)
   const [syncing, setSyncing] = useState(false)
   const [syncConfirmOpen, setSyncConfirmOpen] = useState(false)
@@ -106,7 +120,11 @@ export default function KbGlossaryEditorPage() {
   }, [items])
 
   useEffect(() => {
-    if (base) setInfoForm({ name: base.name, description: base.description || '' })
+    if (base) {
+      setInfoForm({ name: base.name, description: base.description || '' })
+      setSyncEnabled(base.sync_enabled)
+      setSyncCronDraft(base.sync_cron || '')
+    }
   }, [base])
 
   function invalidate() {
@@ -224,6 +242,47 @@ export default function KbGlossaryEditorPage() {
     }
   }
 
+  async function validateCronDraft(expr: string) {
+    const text = expr.trim()
+    if (!text) {
+      setSyncCronNext(null)
+      setSyncCronError('')
+      return
+    }
+    try {
+      const r = await glossaryApi.validateCron(kb.id, text)
+      setSyncCronNext(r.next_run_at)
+      setSyncCronError('')
+    } catch (err) {
+      setSyncCronNext(null)
+      setSyncCronError(err instanceof ApiError ? err.message : 'cron 表达式无效')
+    }
+  }
+
+  async function saveSyncCron() {
+    if (!base || !canManage) return
+    const expr = syncCronDraft.trim()
+    if (expr && syncCronError) {
+      toast('warning', '请先修正 cron 表达式')
+      return
+    }
+    if (syncEnabled && !expr) {
+      toast('warning', '启用定时同步需填写 cron 表达式')
+      return
+    }
+    setSyncCronSaving(true)
+    try {
+      await glossaryApi.update(kb.id, base.id, { sync_enabled: syncEnabled, sync_cron: expr })
+      toast('success', syncEnabled ? '定时同步已保存' : '定时同步已停用')
+      invalidate()
+    } catch (err) {
+      const msg = err instanceof ApiError ? err.message : err instanceof Error ? err.message : '保存失败'
+      toast('error', '保存失败', msg)
+    } finally {
+      setSyncCronSaving(false)
+    }
+  }
+
   function openAliasPanel() {
     if (!base) return
     const aliases = base.column_aliases ?? {}
@@ -334,6 +393,65 @@ export default function KbGlossaryEditorPage() {
           <label className="block text-xs font-medium text-muted-foreground">描述
             <textarea value={infoForm.description} onChange={(e) => setInfoForm({ ...infoForm, description: e.target.value })} disabled={!isManual || !canManage} rows={2} placeholder="描述该术语集的适用范围与用途" className="mt-1 min-h-[60px] w-full rounded-md border border-input bg-card px-3 py-2 text-sm shadow-soft focus-visible:border-primary/50 focus-visible:shadow-glow disabled:opacity-60" data-testid="info-desc-input" />
           </label>
+
+          {/* 定时同步（cron，仅外部数据源） */}
+          {!isManual && (
+            <div className="rounded-xl border border-border/60 bg-muted/20 p-3">
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm font-medium text-foreground">定时同步（cron）</p>
+                {base && base.sync_status && (
+                  <Badge variant={base.sync_status === 'failed' ? 'destructive' : 'secondary'} className="text-[10px]">
+                    {base.sync_status === 'failed' ? '上次失败' : base.sync_status === 'success' ? '同步成功' : '未同步'}
+                  </Badge>
+                )}
+              </div>
+              <p className="mb-2 text-[11px] leading-tight text-muted-foreground/80">
+                按 cron 表达式定时从数据源同步词条（清空重导）；保存后由后台每分钟扫描触发，无需重启服务。
+              </p>
+              <label className="mb-3 flex items-center justify-between gap-2 rounded-lg bg-card/60 px-2.5 py-2 text-sm">
+                <span>
+                  <span className="font-medium text-foreground">启用定时同步</span>
+                  <span className="block text-[11px] leading-tight text-muted-foreground/80">开启后按下方表达式自动同步；关闭后不再自动同步</span>
+                </span>
+                <Switch checked={syncEnabled} onCheckedChange={setSyncEnabled} disabled={!canManage} />
+              </label>
+              <div className="grid gap-2 sm:grid-cols-[190px_1fr]">
+                <Select value="" onChange={(e) => { const v = e.target.value; if (v) { setSyncCronDraft(v); void validateCronDraft(v) } }} disabled={!canManage} className="h-9">
+                  <option value="">常用预设…</option>
+                  {CRON_PRESETS.map((c) => <option key={c.value} value={c.value}>{c.label}（{c.value}）</option>)}
+                </Select>
+                <Input
+                  value={syncCronDraft}
+                  onChange={(e) => { setSyncCronDraft(e.target.value); void validateCronDraft(e.target.value) }}
+                  placeholder="如 0 2 * * *（分 时 日 月 周）"
+                  disabled={!canManage}
+                  className="h-9 font-mono"
+                  data-testid="sync-cron-input"
+                />
+              </div>
+              {syncCronError ? (
+                <p className="mt-1.5 text-xs text-destructive">cron 表达式无效：{syncCronError}</p>
+              ) : syncCronNext ? (
+                <p className="mt-1.5 text-xs text-success">下次执行：{formatDateTime(syncCronNext)}</p>
+              ) : null}
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <Button size="sm" onClick={saveSyncCron} disabled={!canManage || syncCronSaving} className="gap-1.5" data-testid="btn-save-sync-cron">
+                  {syncCronSaving && <Loader2 className="h-3.5 w-3.5 animate-spin" />} 保存定时同步
+                </Button>
+                {base?.last_synced_at && (
+                  <span className="text-xs text-muted-foreground">上次同步：{formatDateTime(base.last_synced_at)}</span>
+                )}
+                {base?.sync_next_run_at && (
+                  <span className="text-xs text-muted-foreground">下次执行：{formatDateTime(base.sync_next_run_at)}</span>
+                )}
+              </div>
+              {base?.sync_last_error && (
+                <p className="mt-2 rounded-md border border-destructive/30 bg-destructive/5 px-2.5 py-1.5 text-xs text-destructive">
+                  上次同步失败：{base.sync_last_error}
+                </p>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 

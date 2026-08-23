@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { AlertCircle, ArrowLeft, Braces, CheckCircle2, ChevronRight, Clock, Database, FileText, History, Loader2, Sparkles, Table, Trash2, Zap } from 'lucide-react'
+import { AlertCircle, ArrowLeft, Braces, CheckCircle2, ChevronRight, Clock, Database, FileText, History, Loader2, Plus, Save, Sparkles, Table, Trash2, Zap } from 'lucide-react'
 import { extractionApi, type ExtractionCategory, type ExtractionHistoryItem, type ExtractionResultData } from '@/api/modules/extraction'
 import { extractionConfigApi, type SchemaTemplate } from '@/api/modules/extractionConfig'
-import { getAccessToken } from '@/api/client'
+import { ApiError, getAccessToken } from '@/api/client'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -62,6 +62,11 @@ export default function KbExtractionDetailPage() {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  // 结果人工编辑（draft）
+  const draftRef = useRef<ExtractionCategory[] | null>(null)
+  const [draftCategories, setDraftCategories] = useState<ExtractionCategory[] | null>(null)
+  const [savingResult, setSavingResult] = useState(false)
+  const [deleteCatTarget, setDeleteCatTarget] = useState<number | null>(null)
 
   const currentStep = progress >= 100 ? 4 : progress >= 60 ? 3 : progress >= 40 ? 2 : progress >= 10 ? 1 : 1
 
@@ -222,6 +227,63 @@ export default function KbExtractionDetailPage() {
       setDeleting(false)
     }
   }
+
+  function getDraft(): ExtractionCategory[] {
+    if (!draftRef.current && result) {
+      draftRef.current = JSON.parse(JSON.stringify(result.categories || []))
+      setDraftCategories(draftRef.current)
+    }
+    return draftRef.current ?? []
+  }
+
+  function commitDraft(next: ExtractionCategory[]) {
+    draftRef.current = next
+    setDraftCategories(next)
+  }
+
+  function updateCell(catIdx: number, rowIdx: number, field: string, value: string) {
+    commitDraft(getDraft().map((c, i) => (i === catIdx ? { ...c, records: (c.records || []).map((r, ri) => (ri === rowIdx ? { ...r, [field]: value } : r)) } : c)))
+  }
+
+  function addRecord(catIdx: number) {
+    const cat = getDraft()[catIdx]
+    const fields = headersOf(cat)
+    const blank: Record<string, unknown> = {}
+    for (const f of fields) blank[f] = ''
+    commitDraft(getDraft().map((c, i) => (i === catIdx ? { ...c, records: [...(c.records || []), blank] } : c)))
+  }
+
+  function deleteRecord(catIdx: number, rowIdx: number) {
+    commitDraft(getDraft().map((c, i) => (i === catIdx ? { ...c, records: (c.records || []).filter((_, ri) => ri !== rowIdx) } : c)))
+  }
+
+  function deleteCategory(catIdx: number) {
+    commitDraft(getDraft().filter((_, i) => i !== catIdx))
+    setDeleteCatTarget(null)
+  }
+
+  function cancelDraft() {
+    draftRef.current = null
+    setDraftCategories(null)
+  }
+
+  async function saveDraft() {
+    if (!draftRef.current) return
+    setSavingResult(true)
+    try {
+      await extractionApi.updateResult(kb.id, documentId!, draftRef.current)
+      toast('success', '保存成功', '抽取结果已更新（版本 +1）')
+      cancelDraft()
+      await loadResult()
+    } catch (err) {
+      toast('error', '保存失败', err instanceof ApiError ? err.message : '保存失败')
+    } finally {
+      setSavingResult(false)
+    }
+  }
+
+  const dirty = draftCategories != null && JSON.stringify(draftCategories) !== JSON.stringify(result?.categories ?? [])
+  const displayCategories = draftCategories ?? result?.categories ?? []
 
   async function exportCsv() {
     try {
@@ -438,46 +500,95 @@ export default function KbExtractionDetailPage() {
                     )}
                   </div>
                 )}
-                {result && viewMode === 'table' && (result.categories?.length ?? 0) > 0 && (
+                {result && viewMode === 'table' && displayCategories.length > 0 && (
                   <div className="space-y-2">
-                    {result.categories.map((cat) => {
+                    {displayCategories.map((cat, catIdx) => {
                       const headers = headersOf(cat)
                       const expanded = expandedCats.has(cat.feature)
                       return (
                         <div key={cat.feature} className="overflow-hidden rounded-xl border border-border/60">
-                          <button
-                            onClick={() => setExpandedCats((st) => { const n = new Set(st); if (n.has(cat.feature)) n.delete(cat.feature); else n.add(cat.feature); return n })}
-                            className="flex w-full items-center gap-3 px-3.5 py-3 text-left hover:bg-muted/40"
-                          >
-                            <ChevronRight className={`h-4 w-4 text-primary transition-transform ${expanded ? 'rotate-90' : ''}`} />
-                            <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-semibold">{cat.feature}</p>
-                              <p className="text-xs text-muted-foreground">{(cat.records || []).length} 条记录</p>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              {cat.hit_score != null && <Badge variant="outline" className="text-[10px]">{cat.hit_score.toFixed(3)}</Badge>}
-                              <Badge variant="secondary" className="text-[10px]">{headers.length} 字段</Badge>
-                            </div>
-                          </button>
+                          <div className="flex items-center gap-3 px-3.5 py-3">
+                            <button
+                              onClick={() => setExpandedCats((st) => { const n = new Set(st); if (n.has(cat.feature)) n.delete(cat.feature); else n.add(cat.feature); return n })}
+                              className="flex min-w-0 flex-1 items-center gap-3 text-left"
+                            >
+                              <ChevronRight className={`h-4 w-4 text-primary transition-transform ${expanded ? 'rotate-90' : ''}`} />
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-semibold">{cat.feature}</p>
+                                <p className="text-xs text-muted-foreground">{(cat.records || []).length} 条记录</p>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                {cat.hit_score != null && <Badge variant="outline" className="text-[10px]">{cat.hit_score.toFixed(3)}</Badge>}
+                                {cat.retried && (
+                                  <Badge variant="outline" className="text-[10px] text-warning border-warning/30 bg-warning/5" title={cat.retry?.records != null ? `重排重试后出 ${cat.retry.records} 条` : '重排重试后仍无记录'}>
+                                    <Sparkles className="mr-1 h-2.5 w-2.5" /> 重排重试
+                                  </Badge>
+                                )}
+                                <Badge variant="secondary" className="text-[10px]">{headers.length} 字段</Badge>
+                              </div>
+                            </button>
+                            {canManage && (
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive hover:text-destructive" title="删除该类型" onClick={() => setDeleteCatTarget(catIdx)}>
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
+                          </div>
                           {expanded && (
-                            <div className="overflow-x-auto border-t border-border/50">
-                              <table className="w-full min-w-max border-collapse text-xs">
-                                <thead>
-                                  <tr className="bg-muted/50">
-                                    {headers.map((h) => <th key={h} className="whitespace-nowrap border-b border-border/40 px-3 py-2 text-left font-semibold text-muted-foreground">{h}</th>)}
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {(cat.records || []).map((rec, ri) => (
-                                    <tr key={ri} className="hover:bg-primary/[0.03]">
-                                      {headers.map((h) => <td key={h} className="border-b border-border/30 px-3 py-2 align-top">{cellValue(rec[h])}</td>)}
+                            <div className="border-t border-border/50">
+                              {canManage && (
+                                <div className="flex justify-end bg-muted/20 px-3 py-1.5">
+                                  <Button size="sm" variant="outline" className="h-7 gap-1 text-[11px]" onClick={() => addRecord(catIdx)}>
+                                    <Plus className="h-3 w-3" /> 新增记录
+                                  </Button>
+                                </div>
+                              )}
+                              <div className="overflow-x-auto">
+                                <table className="w-full min-w-max border-collapse text-xs">
+                                  <thead>
+                                    <tr className="bg-muted/50">
+                                      {headers.map((h) => <th key={h} className="whitespace-nowrap border-b border-border/40 px-3 py-2 text-left font-semibold text-muted-foreground">{h}</th>)}
+                                      {canManage && <th className="w-10 border-b border-border/40 px-2 py-2" />}
                                     </tr>
-                                  ))}
-                                  {(cat.records || []).length === 0 && (
-                                    <tr><td className="px-3 py-6 text-center text-muted-foreground">该类别无记录</td></tr>
-                                  )}
-                                </tbody>
-                              </table>
+                                  </thead>
+                                  <tbody>
+                                    {(cat.records || []).map((rec, ri) => (
+                                      <tr key={ri} className="hover:bg-primary/[0.03]">
+                                        {headers.map((h) => (
+                                          <td key={h} className="border-b border-border/30 px-1 py-0.5 align-top">
+                                            {canManage ? (
+                                              <input
+                                                value={cellValue(rec[h])}
+                                                onChange={(e) => updateCell(catIdx, ri, h, e.target.value)}
+                                                className="w-full min-w-[90px] rounded border border-transparent bg-transparent px-1.5 py-1.5 outline-none transition-colors hover:border-border/60 focus:border-primary/50 focus:bg-card"
+                                              />
+                                            ) : (
+                                              <span className="block px-1.5 py-1.5">{cellValue(rec[h])}</span>
+                                            )}
+                                          </td>
+                                        ))}
+                                        {canManage && (
+                                          <td className="border-b border-border/30 px-1 py-1 text-center">
+                                            <button
+                                              className="rounded p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                                              title="删除该记录"
+                                              onClick={() => deleteRecord(catIdx, ri)}
+                                            >
+                                              <Trash2 className="h-3.5 w-3.5" />
+                                            </button>
+                                          </td>
+                                        )}
+                                      </tr>
+                                    ))}
+                                    {(cat.records || []).length === 0 && (
+                                      <tr>
+                                        <td className="px-3 py-6 text-center text-muted-foreground" colSpan={headers.length + (canManage ? 1 : 0)}>
+                                          {canManage ? '该类别暂无记录，可点击上方「新增记录」添加' : '该类别无记录'}
+                                        </td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           )}
                         </div>
@@ -486,7 +597,7 @@ export default function KbExtractionDetailPage() {
                   </div>
                 )}
                 {result && viewMode === 'json' && (result.categories?.length ?? 0) > 0 && (
-                  <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-border/50 bg-muted/40 p-4 font-mono text-xs">{JSON.stringify(result, null, 2)}</pre>
+                  <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-border/50 bg-muted/40 p-4 font-mono text-xs">{JSON.stringify(draftCategories ?? result, null, 2)}</pre>
                 )}
                 {result && status === 'failed' && (
                   <div className="rounded-xl border border-warning/30 bg-warning/5 p-3.5">
@@ -509,6 +620,30 @@ export default function KbExtractionDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* 右下角保存（人工编辑结果后） */}
+      {dirty && canManage && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-xl border border-border/60 bg-card p-2 shadow-lg">
+          <Button onClick={saveDraft} disabled={savingResult} className="gap-1.5" data-testid="btn-save-result">
+            {savingResult ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+            {savingResult ? '保存中...' : '保存修改'}
+          </Button>
+          <Button variant="ghost" size="sm" onClick={cancelDraft}>取消</Button>
+        </div>
+      )}
+
+      {/* 删除类型确认 */}
+      <Dialog open={deleteCatTarget != null} onOpenChange={(o) => { if (!o) setDeleteCatTarget(null) }} title="删除类型" className="max-w-md">
+        <p className="text-sm text-muted-foreground">
+          确定删除类型「{deleteCatTarget != null ? displayCategories[deleteCatTarget]?.feature : ''}」及其全部记录吗？保存后生效。
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <Button variant="ghost" onClick={() => setDeleteCatTarget(null)}>取消</Button>
+          <Button variant="destructive" onClick={() => { if (deleteCatTarget != null) deleteCategory(deleteCatTarget) }} className="gap-1.5">
+            <Trash2 className="h-3.5 w-3.5" /> 删除
+          </Button>
+        </div>
+      </Dialog>
 
       <Dialog open={historyOpen} onOpenChange={(o) => { if (!o) setHistoryOpen(false) }} title="抽取历史记录" className="max-w-2xl">
         {historyLoading ? (

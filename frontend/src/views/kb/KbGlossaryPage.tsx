@@ -334,6 +334,12 @@ export default function KbGlossaryPage() {
 
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-primary/60" />{base.term_count} 条术语</span>
+                    {base.sync_enabled && base.sync_cron && (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className={`h-1.5 w-1.5 rounded-full ${base.sync_status === 'failed' ? 'bg-destructive' : 'bg-success'}`} />
+                        定时同步：{base.sync_cron}
+                      </span>
+                    )}
                     {base.last_synced_at && (
                       <span className="inline-flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40" />上次同步：{new Date(base.last_synced_at).toLocaleDateString()}</span>
                     )}

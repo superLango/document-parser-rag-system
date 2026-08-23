@@ -67,8 +67,9 @@ class OpenAICompatibleClient:
             payload["top_p"] = float(top_p)
         if top_k is not None:
             payload["top_k"] = int(top_k)
-        if enable_thinking:
-            payload["chat_template_kwargs"] = {"enable_thinking": True}
+        if enable_thinking is not None:
+            # 显式传 False 以关闭 thinking（与脚本直调一致，防止输出带思考内容）
+            payload["chat_template_kwargs"] = {"enable_thinking": bool(enable_thinking)}
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
         try:

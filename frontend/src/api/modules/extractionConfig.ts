@@ -37,6 +37,7 @@ export interface SchemaCategory {
   name_term_base_id: string | null
   name_term_field: string
   query_sources: QuerySource[]
+  special_requirements?: Record<string, string>
   is_active: boolean
   sort_order: number
   fields: SchemaField[]
@@ -84,6 +85,9 @@ export const extractionConfigApi = {
   deleteSchemaField(kbId: string, templateId: string, categoryId: string, fieldId: string): Promise<unknown> {
     return http.delete(`/kb/${kbId}/schema-templates/${templateId}/categories/${categoryId}/fields/${fieldId}`)
   },
+  listExpandedCategoryNames(kbId: string, templateId: string, categoryId: string): Promise<{ items: string[] }> {
+    return http.get(`/kb/${kbId}/schema-templates/${templateId}/categories/${categoryId}/expanded-names`)
+  },
 }
 
 
@@ -129,6 +133,15 @@ export const promptApi = {
     },
   ): Promise<PromptTemplate> {
     return http.put(`/kb/${kbId}/extraction-config/prompts/${promptId}/save`, data)
+  },
+  preview(kbId: string, data: {
+    schema_template_id?: string
+    category_id?: string
+    group_value?: string
+    system_prompt?: string
+    user_prompt?: string
+  }): Promise<{ system: string; user: string }> {
+    return http.post(`/kb/${kbId}/extraction-config/prompts/preview`, data)
   },
   remove(kbId: string, promptId: string): Promise<unknown> {
     return http.delete(`/kb/${kbId}/extraction-config/prompts/${promptId}`)
@@ -257,7 +270,13 @@ export interface GlobalRetrievalConfig {
   default_confidence_threshold: number
   context_top_k: number
   context_max_tokens: number
-  context: { chars_per_token: number; min_keep_chars: number; truncate_marker: string }
+  data_route_top_k: number
+  meta_route_top_k: number
+  context: {
+    chars_per_token: number
+    sort_mode: 'page' | 'rerank'
+    retry_rerank_on_empty: boolean
+  }
   category_recall: { mode: 'loose' | 'strict' | 'off'; top_k: number; per_dim_top_k: number }
   query_embed: { content_max_chars: number; dedupe_similarity_threshold: number }
   hybrid: { enabled: boolean; rrf_k: number; dense_weight: number; keyword_weight: number; keyword_min_hits: number }

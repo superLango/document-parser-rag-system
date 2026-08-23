@@ -1,0 +1,155 @@
+name: hansondoc
+
+x-backend-env: &backend-env
+  TASK_EXECUTOR: arq
+  MODEL_WARMUP_ENABLED: "true"
+  MODEL_WARMUP_SKIP_EXTERNAL: "true"
+  DATABASE_URL: postgresql+asyncpg://hansondoc:${POSTGRES_PASSWORD:-change_me}@postgres:5432/hanson_doc_rag
+  REDIS_URL: redis://:${REDIS_PASSWORD:-hansondocrag}@redis:6379/0
+  MINIO_ENDPOINT: minio:9000
+  MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+  MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+  MINIO_BUCKET_PREFIX: hansondoc
+  GLMOCR_SERVER_URL: http://host.docker.internal:9977/v1/chat/completions
+  LLM_SERVER_URL: http://host.docker.internal:9988/v1
+  LLM_SERVER_MODEL: ${LLM_SERVER_MODEL:-Qwen3.6-35B-A3B-FP8}
+  EMBEDDING_MODEL_DIR: /app/models/bge-m3
+  RERANKER_MODEL_DIR: /app/models/bge-reranker-v2-m3
+  PARSEKIT_LAYOUT_MODEL_DIR: /app/models/pp_doclayoutv3
+  # 脚本 kb_tools 回调后端（worker 容器内 127.0.0.1 是自身，必须指向 backend 服务）
+  SCRIPT_EMBED_BASE_URL: http://backend:8000
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg18
+    environment:
+      POSTGRES_DB: hanson_doc_rag
+      POSTGRES_USER: hansondoc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+    ports:
+      - "15432:5432"
+    volumes:
+      # PG18+ 镜像要求挂载 /var/lib/postgresql（数据在版本子目录，便于 pg_upgrade）
+      - pgdata:/var/lib/postgresql
+      - ./deploy/initdb:/docker-entrypoint-initdb.d:ro
+      - ./backup:/backup:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hansondoc -d hanson_doc_rag"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:-hansondocrag}"]
+    ports:
+      - "16379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-hansondocrag}", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio-init:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://minio:9000 ${MINIO_ACCESS_KEY:-minioadmin} ${MINIO_SECRET_KEY:-minioadmin}; do sleep 2; done;
+      mc mb -p local/hansondoc || true;
+      echo 'MinIO bucket 初始化完成';
+      "
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: hansondoc-backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    environment: *backend-env
+    ports:
+      - "18000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # 小模型由宿主机目录挂载（离线部署：模型目录单独传输，改代码无需重传模型）
+      - ./models/bge-m3:/app/models/bge-m3:ro
+      - ./models/bge-reranker-v2-m3:/app/models/bge-reranker-v2-m3:ro
+      - ./models/pp_doclayoutv3:/app/models/pp_doclayoutv3:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+
+  worker:
+    image: hansondoc-backend
+    command: arq app.tasks.arq_worker.WorkerSettings
+    environment: *backend-env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./models/bge-m3:/app/models/bge-m3:ro
+      - ./models/bge-reranker-v2-m3:/app/models/bge-reranker-v2-m3:ro
+      - ./models/pp_doclayoutv3:/app/models/pp_doclayoutv3:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    image: hansondoc-frontend
+    ports:
+      - "18080:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  miniodata:

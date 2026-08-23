@@ -52,6 +52,34 @@ def assemble_segments(
     return segments
 
 
+def assemble_page_order(
+    hits: list[dict],
+    *,
+    top_k: int = 15,
+) -> str:
+    """按页码顺序拼接上下文（正常文档阅读顺序）。
+
+    与 assemble_full_sorted（重排分数降序）互补：
+    - 正文前部内容（化学成分等）页码排序效果好；
+    - 附录类内容（热处理制度等）重排排序效果好。
+    正式流程主排序默认页码；某类别抽取为 0 条时自动切重排再抽一次。
+    """
+    hits_sorted = sorted(
+        hits,
+        key=lambda h: (
+            int((h.get("source_pages") or [0])[0]) if (h.get("source_pages") or []) else 9999,
+            h.get("chunk_id", ""),
+        ),
+    )[:top_k]
+    parts: list[str] = []
+    for h in hits_sorted:
+        pages = h.get("source_pages") or []
+        page_txt = f"[第 {pages[0]} 页]" if pages else ""
+        kind = "表格" if h.get("has_table") else "正文"
+        parts.append(f"[{kind}]{page_txt}\n{h.get('content') or ''}")
+    return "\n\n".join(parts)
+
+
 def assemble_full_sorted(
     hits: list[dict],
     *,

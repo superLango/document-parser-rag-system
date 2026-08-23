@@ -203,10 +203,26 @@ export default function KbGlobalConfig({ kbId, canManage }: Props) {
           <Field label="标题路权重" hint="title 向量在稠密融合中的权重（0~1）；标题准确度高的文档可适当调高" type="number" step={0.05} min={0} value={cfg.retrieval.weights.title} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'weights', { ...cfg.retrieval.weights, title: num(v, 0.2) })} />
           <Field label="正文路权重" hint="content 向量在稠密融合中的权重（0~1）；正文语义为主，建议保持较高值" type="number" step={0.05} min={0} value={cfg.retrieval.weights.content} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'weights', { ...cfg.retrieval.weights, content: num(v, 0.8) })} />
           <Field label="上下文 top_k" hint="拼接抽取上下文的最大块数，超出部分按相关性截断；值越大上下文越全但越费 token" value={cfg.retrieval.context_top_k} disabled={!canManage} onChange={(v) => patch('retrieval', { context_top_k: num(v, 20) })} />
-          <Field label="上下文最大 token" hint="拼接上下文的 token 上限，防止超出模型窗口导致请求失败" value={cfg.retrieval.context_max_tokens} disabled={!canManage} onChange={(v) => patch('retrieval', { context_max_tokens: num(v, 28000) })} />
-          <Field label="字符/token 估算系数" hint="用字符数估算 token 的系数：中文约 1.5 字符/token；值越小估算出的 token 越多" type="number" step={0.1} min={0.1} value={cfg.retrieval.context.chars_per_token} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'context', { ...cfg.retrieval.context, chars_per_token: num(v, 1.5) })} />
-          <Field label="上下文尾部最小保留字符" hint="按相关性截断时，上下文尾部至少保留的字符数，避免截断丢失关键信息" value={cfg.retrieval.context.min_keep_chars} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'context', { ...cfg.retrieval.context, min_keep_chars: num(v, 200) })} />
-          <Field label="截断标记文本" hint="上下文截断处插入的占位标记，用于提示模型内容已被截断" type="text" value={cfg.retrieval.context.truncate_marker} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'context', { ...cfg.retrieval.context, truncate_marker: String(v) })} />
+          <Field label="数据路召回块数" hint="第二段上下文检索时，数据路（术语集值召回复核数据表）最多进入抽取上下文的块数；数据表多的文档可调高" value={cfg.retrieval.data_route_top_k} disabled={!canManage} onChange={(v) => patch('retrieval', { data_route_top_k: num(v, 10) })} />
+          <Field label="元信息路召回块数" hint="第二段上下文检索时，元信息路（fixed_query 字段词召回复核项目表/试验方法/取样）最多进入抽取上下文的块数；防止方法/取样被数据表挤掉" value={cfg.retrieval.meta_route_top_k} disabled={!canManage} onChange={(v) => patch('retrieval', { meta_route_top_k: num(v, 5) })} />
+          <Field label="上下文预估 token 上限" hint="上下文 token 预估上限（字符数÷chars_per_token）；超出仅记录告警，不会截断——上下文整段拼入 Prompt 一次给模型" value={cfg.retrieval.context_max_tokens} disabled={!canManage} onChange={(v) => patch('retrieval', { context_max_tokens: num(v, 28000) })} />
+          <Field label="字符/token 估算系数" hint="用字符数估算 token 的系数：中文约 1.5 字符/token；用于上下文 token 预估与超限告警（不参与截断）" type="number" step={0.1} min={0.1} value={cfg.retrieval.context.chars_per_token} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'context', { ...cfg.retrieval.context, chars_per_token: num(v, 1.5) })} />
+
+          <div className="space-y-1 rounded-lg bg-muted/30 p-2">
+            <label className="text-xs font-medium text-muted-foreground">上下文排序模式</label>
+            <Select
+              value={cfg.retrieval.context.sort_mode ?? 'page'}
+              disabled={!canManage}
+              onChange={(e) => patchNested('retrieval', 'context', { ...cfg.retrieval.context, sort_mode: e.target.value as 'page' | 'rerank' })}
+              className="mt-0.5 h-8"
+              data-testid="global-context-sort-mode"
+            >
+              <option value="page">页码排序（按文档阅读顺序）</option>
+              <option value="rerank">重排分数降序</option>
+            </Select>
+            <p className="text-[11px] leading-tight text-muted-foreground/80">主流程默认按页码排序；附录类内容（如热处理制度）若主排序抽不到，会在下方开关开启时自动切重排重试</p>
+          </div>
+          <ToggleField label="0 条自动重排重试" hint="某类别主排序抽取结果为 0 条时，自动改用重排分数排序再抽一次，避免附录类内容漏抽（仅 sort_mode=page 时生效）" value={cfg.retrieval.context.retry_rerank_on_empty ?? true} disabled={!canManage} onChange={(v) => patchNested('retrieval', 'context', { ...cfg.retrieval.context, retry_rerank_on_empty: v })} />
         </div>
 
         <div className="space-y-1.5 rounded-lg border border-primary/15 bg-primary/5 p-2">
