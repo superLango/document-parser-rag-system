@@ -70,22 +70,57 @@ def _normalize_records(data) -> list[dict]:
     return [r for r in records if isinstance(r, dict)]
 
 
+def _extract_json_block(text: str) -> str | None:
+    """括号平衡提取第一个完整 JSON 数组/对象（字符串内 ] } 不截断）。"""
+    for open_ch, close_ch in (("[", "]"), ("{", "}")):
+        start = text.find(open_ch)
+        if start < 0:
+            continue
+        depth = 0
+        in_str = False
+        esc = False
+        for i in range(start, len(text)):
+            c = text[i]
+            if in_str:
+                if esc:
+                    esc = False
+                elif c == "\\":
+                    esc = True
+                elif c == '"':
+                    in_str = False
+            else:
+                if c == '"':
+                    in_str = True
+                elif c == open_ch:
+                    depth += 1
+                elif c == close_ch:
+                    depth -= 1
+                    if depth == 0:
+                        return text[start:i + 1]
+    return None
+
+
 def parse_records(text: str, schema: dict) -> list[dict]:
-    """解析 LLM 输出：优先整体 JSON；失败则容错提取首个 JSON 数组/对象。"""
+    """解析 LLM 输出：优先整体 JSON；失败则括号平衡提取首个 JSON 数组/对象。"""
     cleaned = _strip_fences(text)
     data = None
     try:
         data = json.loads(cleaned)
     except ValueError:
-        # 容错：从输出中提取第一个完整 JSON 数组（模型可能带解释文字）
-        for m in re.finditer(r"\[.*?\]", cleaned, re.DOTALL):
+        block = _extract_json_block(cleaned)
+        if block is not None:
             try:
-                data = json.loads(m.group(0))
-                break
+                data = json.loads(block)
             except ValueError:
-                continue
+                data = None
         if data is None:
-            raise LLMError(f"LLM 输出不是合法 JSON：{cleaned[:200]}")
+            # 诊断：失败时保存完整原始输出
+            try:
+                with open("/tmp/llm_raw_output.txt", "w", encoding="utf-8") as _f:
+                    _f.write(cleaned)
+            except Exception:
+                pass
+            raise LLMError(f"LLM 输出不是合法 JSON（len={len(cleaned)}）：{cleaned[:200]}")
     return _normalize_records(data)
 
 
