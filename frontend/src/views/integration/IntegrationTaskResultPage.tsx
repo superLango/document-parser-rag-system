@@ -29,7 +29,7 @@ export default function IntegrationTaskResultPage() {
     if (!taskId) return
     try {
       const res = await integrationApi.status(taskId)
-      setTask(res.data)
+      setTask(res)
     } catch { /* 瞬时失败忽略 */ }
   }, [taskId])
 
@@ -53,7 +53,7 @@ export default function IntegrationTaskResultPage() {
     setRetriggering(true)
     try {
       const res = await integrationApi.retrigger(taskId)
-      setTask(res.data)
+      setTask(res)
       toast('success', '已重新触发', '任务将重新执行 OCR 解析与结构化抽取')
     } catch (err) {
       toast('error', '重触发失败', err instanceof ApiError ? err.message : '未知错误')
@@ -68,7 +68,7 @@ export default function IntegrationTaskResultPage() {
 
   const completed = task?.extract_status === 'completed'
   const failed = task?.ocr_status === 'failed' || task?.extract_status === 'failed'
-  const iframeUrl = task?.document_id && task?.kb_id ? `/kb/${task.kb_id}/extraction/${task.document_id}` : null
+  const iframeUrl = task?.document_id && task?.kb_id ? `/extraction/${task.kb_id}/${task.document_id}` : null
 
   return (
     <div className="flex h-screen flex-col bg-background">

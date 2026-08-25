@@ -18,10 +18,10 @@ export interface IntegrationTaskStatus {
 }
 
 export const integrationApi = {
-  status(taskId: string): Promise<{ data: IntegrationTaskStatus }> {
+  status(taskId: string): Promise<IntegrationTaskStatus> {
     return http.get(`/integration/tasks/${taskId}/status`)
   },
-  retrigger(taskId: string): Promise<{ data: IntegrationTaskStatus }> {
+  retrigger(taskId: string): Promise<IntegrationTaskStatus> {
     return http.post(`/integration/tasks/${taskId}/retrigger`)
   },
 }

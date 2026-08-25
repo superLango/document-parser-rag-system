@@ -36,7 +36,7 @@ function headersOf(cat: ExtractionCategory): string[] {
   return keys
 }
 
-export default function KbExtractionDetailPage() {
+export default function KbExtractionDetailPage({ standalone = false }: { standalone?: boolean } = {}) {
   const { documentId } = useParams<{ documentId: string }>()
   const { kb } = useKbDetail()
   const user = useAuthStore((s) => s.user)
@@ -306,10 +306,14 @@ export default function KbExtractionDetailPage() {
     <div className="flex h-screen flex-col bg-background">
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border/50 px-4 py-3 backdrop-blur">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={() => navigate(`/kb/${kb.id}/extraction`)} className="gap-1.5">
-            <ArrowLeft className="h-4 w-4" /> 返回列表
-          </Button>
-          <div className="h-5 w-px bg-border/60" />
+          {!standalone && (
+            <>
+              <Button variant="ghost" size="sm" onClick={() => navigate(`/kb/${kb.id}/extraction`)} className="gap-1.5">
+                <ArrowLeft className="h-4 w-4" /> 返回列表
+              </Button>
+              <div className="h-5 w-px bg-border/60" />
+            </>
+          )}
           <div>
             <h1 className="flex items-center gap-2 text-sm font-medium">
               <FileText className="h-4 w-4 text-primary/70" />

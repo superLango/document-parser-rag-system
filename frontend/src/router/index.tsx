@@ -28,6 +28,7 @@ import KbGlossaryEditorPage from '@/views/kb/KbGlossaryEditorPage'
 import KbVectorSearchPage from '@/views/kb/KbVectorSearchPage'
 import KbStructuredExtractionPage from '@/views/kb/KbStructuredExtractionPage'
 import KbExtractionDetailPage from '@/views/kb/KbExtractionDetailPage'
+import KbExtractionStandaloneLayout from '@/views/kb/KbExtractionStandaloneLayout'
 import IntegrationTaskResultPage from '@/views/integration/IntegrationTaskResultPage'
 import WorkspacesPage from '@/views/WorkspacesPage'
 import ApiKeysPage from '@/views/ApiKeysPage'
@@ -107,7 +108,6 @@ export const router = createBrowserRouter([
       { path: 'kb/invitations', element: <InvitationsPage /> },
       { path: 'workspaces', element: <WorkspacesPage /> },
       { path: 'api-keys', element: <ApiKeysPage /> },
-      { path: 'integration/task/:taskId', element: <IntegrationTaskResultPage /> },
       {
         path: 'admin/users',
         element: (
@@ -133,6 +133,16 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  { path: '/integration/task/:taskId', element: <IntegrationTaskResultPage /> },
+  {
+    path: '/extraction/:kbId/:documentId',
+    element: (
+      <RequireAuth>
+        <KbExtractionStandaloneLayout />
+      </RequireAuth>
+    ),
+    children: [{ index: true, element: <KbExtractionDetailPage standalone /> }],
   },
   {
     path: '/kb/:kbId/documents/:docId/viewer',
