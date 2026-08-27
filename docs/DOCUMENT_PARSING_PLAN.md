@@ -449,11 +449,11 @@ RuleLayoutEngine 的可插拔代码已清除（权重文件保留于 models/）�
 ## 附录 2：PP-DocLayoutV3 引擎（2026-08 定版）
 
 - 引擎：`PPDocLayoutEngine`（唯一版面引擎，V2/DocLayout-YOLO/Rule 已移除）
-- 权重：`models/pp_doclayoutv3/model.safetensors`（官方 safetensors 版，
-  SHA256=`5ea422c6...9e2b85e` 锁定）
+- 权重：`models/pp_doclayoutv3_finetuned_v1/model.safetensors`（项目微调 safetensors 版，
+  SHA256=`5c27e59c...8504eee` 锁定）
 - 特点：非平面文档支持、多点框（polygon_points）、端到端阅读顺序；25 类与 V2 一致
-- 配置：`PARSEKIT_LAYOUT_MODEL_DIR=models/pp_doclayoutv3`（唯一引擎）、
-  `PARSEKIT_LAYOUT_CONF_THRESHOLD=0.4`
+- 配置：`PARSEKIT_LAYOUT_MODEL_DIR=models/pp_doclayoutv3_finetuned_v1`（唯一引擎）、
+  `PARSEKIT_LAYOUT_CONF_THRESHOLD=0.5`（与 X-AnyLabeling 默认阈值一致）
 - 单例缓存：`pipeline._ENGINE_CACHE` 进程内缓存引擎（模型仅加载一次），
   避免重复解析反复加载 133MB 权重与 GPU 显存累积
 

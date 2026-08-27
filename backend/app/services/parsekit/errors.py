@@ -18,7 +18,7 @@ class PageParseError(ParsekitError):
 
 
 class LayoutModelUnavailable(ParsekitError):
-    """DocLayout-YOLO 权重/运行依赖缺失。"""
+    """版面模型权重或运行依赖缺失。"""
 
 
 class OcrStageError(ParsekitError):

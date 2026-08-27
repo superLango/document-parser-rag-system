@@ -17,14 +17,14 @@ bash scripts/docker_build.sh
 - `hansondoc-backend`：python:3.13 + torch cu130 + 全量依赖，**不含小模型** ≈ 6.7G；
 - `hansondoc-frontend`：vite 构建 → nginx ≈ 50M。
 
-**小模型不进镜像**（离线部署传 tar 体积考虑）：模型由宿主机目录卷挂载（`models/bge-m3`、`models/bge-reranker-v2-m3`、`models/pp_doclayoutv3`，约 5G），单独传输一次即可；**改后端代码重建镜像时模型目录无需重传**。
+**小模型不进镜像**（离线部署传 tar 体积考虑）：模型由宿主机目录卷挂载（`models/bge-m3`、`models/bge-reranker-v2-m3`、`models/pp_doclayoutv3_finetuned_v1`，约 5G），单独传输一次即可；**改后端代码重建镜像时模型目录无需重传**。
 
 ## 三、部署
 
 ```bash
 cp .env.example .env   # 修改密码等
 # 部署机放置小模型目录（与镜像 tar 分离传输）：
-#   models/bge-m3、models/bge-reranker-v2-m3、models/pp_doclayoutv3
+#   models/bge-m3、models/bge-reranker-v2-m3、models/pp_doclayoutv3_finetuned_v1
 bash scripts/db_export.sh   # 从现有 PostgreSQL 导出 backup/dump.sql（首次需要）
 docker compose up -d
 ```

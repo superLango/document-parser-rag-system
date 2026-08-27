@@ -98,7 +98,7 @@ LLM_SERVER_MODEL=Qwen3.6-35B-A3B-FP8
 # 模型路径（镜像内）
 EMBEDDING_MODEL_DIR=/app/models/bge-m3
 RERANKER_MODEL_DIR=/app/models/bge-reranker-v2-m3
-PARSEKIT_LAYOUT_MODEL_DIR=/app/models/pp_doclayoutv3
+PARSEKIT_LAYOUT_MODEL_DIR=/app/models/pp_doclayoutv3_finetuned_v1
 ```
 
 `extra_hosts: host.docker.internal:host-gateway`（backend/worker 添加，访问宿主机 vLLM）。

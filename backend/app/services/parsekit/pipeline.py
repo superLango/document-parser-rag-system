@@ -31,8 +31,8 @@ class ParseOptions:
     """解析参数（与配置项一一对应）。"""
 
     dpi: int = 200
-    layout_model_dir: str = str(PROJECT_ROOT / "models" / "pp_doclayoutv3")
-    layout_conf_threshold: float = 0.4
+    layout_model_dir: str = str(PROJECT_ROOT / "models" / "pp_doclayoutv3_finetuned_v1")
+    layout_conf_threshold: float = 0.5
     header_footer_mode: str = "rule"
     partial_on_page_failure: bool = True
     page_concurrency: int = 4

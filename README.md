@@ -6,10 +6,10 @@
 ## 当前状态
 
 - 2026-08-11：**阶段 0（框架/登录/权限/工作台）+ P1/P2（RBAC/知识库/工作空间/API Key）+ 文档解析 Phase 1-6 已完成**。
-- 文档解析 Phase 2/3：parsekit 管线（渲染→页眉页脚擦除（U3 方案 A 胜出）→DocLayout-YOLO 真实版面→阅读顺序→
+- 文档解析 Phase 2/3：parsekit 管线（渲染→页眉页脚擦除（U3 方案 A 胜出）→微调 PP-DocLayoutV3 真实版面→阅读顺序→
   GLM-OCR（vLLM 9977）→Markdown 拼装）已接入真实任务状态机；`test_doc/` 样本可产出含 OCR 文本/表格 HTML/LaTeX 的
   result.md、layout.json（v1.2，含结构树与 U8 跨页表格标记）与页面图；提供页面缩略图预览与
-  7 天中间产物清理（U14）。DocLayout-YOLO 权重位于 `models/doclayout_yolo/`（SHA256 锁定，不入 Git）。
+  7 天中间产物清理（U14）。微调权重位于 `models/pp_doclayoutv3_finetuned_v1/`（SHA256 锁定，不入 Git）。
 - 旧版完整源码保留在 [`document-parser-rag-system/`](document-parser-rag-system/)，
   作为**冻结基线**与功能参考，重构期间不直接修改。
 - 新代码已按 `docs/` 下的规范建设：`backend/`（FastAPI）+ `frontend/`（React）。
@@ -49,13 +49,13 @@ node qa/functional/e2e_p0.mjs   # P0 回归
 node qa/functional/e2e_p1.mjs   # P1 知识库/邀请/待审批
 node qa/functional/e2e_p2.mjs   # P2 工作空间/群组/API Key/导出
 node qa/functional/e2e_phase2.mjs  # 文档解析 Phase 2（上传/预览/重解析/失败/权限 UI）
-node qa/functional/e2e_phase3.mjs  # 文档解析 Phase 3（DocLayout-YOLO + GLM-OCR 真实解析）
+node qa/functional/e2e_phase3.mjs  # 文档解析 Phase 3（微调 PP-DocLayoutV3 + GLM-OCR 真实解析）
 node qa/functional/e2e_phase4.mjs  # 文档解析 Phase 4（页面缩略图预览/结构树产物）
 node qa/functional/e2e_phase5.mjs  # 文档解析 Phase 5（上传弹窗/进度/预览/layout 调试/任务列表/移动端）
 node qa/functional/e2e_phase5_boundary.mjs   # Phase 5 前端边界（文件校验/搜索/移动端）
 node qa/functional/e2e_phase5_security.mjs   # Phase 5 权限 UI 与越权
 node qa/functional/evaluate_phase6.mjs  # Phase 6 评测 CLI 功能测试
-# Phase 6 评测（真实 doclayout + GLM-OCR，约 1-3 分钟）
+# Phase 6 评测（微调 PP-DocLayoutV3 + GLM-OCR，约 1-3 分钟）
 cd backend && PYTHONPATH=. .venv/bin/python ../qa/evaluation/evaluate_phase6.py --subset all
 ```
 

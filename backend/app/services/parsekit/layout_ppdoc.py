@@ -1,6 +1,6 @@
-"""PP-DocLayoutV3 版面分析引擎（唯一版面引擎，2026-08 定版）。
+"""微调 PP-DocLayoutV3 版面分析引擎（唯一版面引擎，2026-08 定版）。
 
-模型：PaddlePaddle/PP-DocLayoutV3_safetensors
+基座：PaddlePaddle/PP-DocLayoutV3_safetensors；部署权重为项目微调版本。
 - 架构：RT-DETR 检测 + 阅读顺序 head；支持非平面文档、多点框
   （polygon_points）、端到端阅读顺序；
 - 25 类版面元素（id2label 见 config.json），输出按阅读顺序排列；
@@ -25,14 +25,14 @@ from .types import BBox, LayoutBlock, RenderPage
 logger = get_logger(__name__)
 
 MODEL_REPO = "PaddlePaddle/PP-DocLayoutV3_safetensors"
-EXPECTED_SHA256 = "5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e"
+EXPECTED_SHA256 = "5c27e59c325631afb799058f35421c34e66a13442aad7307b5443c3468504eee"
 
 
 class PPDocLayoutEngine:
-    """PP-DocLayoutV3 真实推理引擎（transformers 加载）。
+    """微调 PP-DocLayoutV3 真实推理引擎（transformers 加载）。
 
-    权重：models/pp_doclayoutv3/model.safetensors
-    （官方 safetensors 版，SHA256 锁定，见 EXPECTED_SHA256）。
+    权重：models/pp_doclayoutv3_finetuned_v1/model.safetensors
+    （项目微调 safetensors 版，SHA256 锁定，见 EXPECTED_SHA256）。
     """
 
     name = "ppdoclayoutv3"
@@ -45,18 +45,23 @@ class PPDocLayoutEngine:
         "algorithm": "text",
         "content": "text",
         "text": "text",
+        "vertical_text": "text",
         "number": "text",
         "aside_text": "aside_text",
         "reference": "footnote",  # 参考文献条目按脚注类处理
         "reference_content": "footnote",
         "footnote": "footnote",
         "vision_footnote": "footnote",
+        "footer_image": None,
+        "header_image": None,
         "figure_title": "image_caption",
         "table_caption": "table_caption",
         "image": "image",
         "chart": "image",  # 图表并入图片类，交由 OCR 识别
         "table": "table",
         "formula": "formula",
+        "display_formula": "formula",
+        "inline_formula": "formula",
         "formula_number": "formula",  # 编号并入公式块
         "header": None,  # 页眉页脚由 header_footer 阶段处理，丢弃
         "footer": None,
@@ -94,7 +99,7 @@ class PPDocLayoutEngine:
         if not self.model_dir.exists():
             raise LayoutModelUnavailable(
                 f"PP-DocLayoutV3 权重未部署：目录不存在 {self.model_dir}。"
-                "请将权重放入 models/pp_doclayoutv3/ 后重试。"
+                "请将微调权重放入 models/pp_doclayoutv3_finetuned_v1/ 后重试。"
             )
         weight = self.model_dir / "model.safetensors"
         if not weight.exists():
@@ -158,7 +163,7 @@ class PPDocLayoutEngine:
         }
         self._model = model
         logger.info(
-            "PP-DocLayoutV3 已加载",
+            "微调 PP-DocLayoutV3 已加载",
             model_dir=str(self.model_dir),
             device=self.device,
             classes=len(self._id2label),

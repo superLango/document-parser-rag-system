@@ -51,12 +51,15 @@ class GLMOCRBackend(OCRBackend):
         self.model = model or settings.GLMOCR_MODEL
         self.max_tokens = max_tokens or settings.GLMOCR_MAX_TOKENS
         self.timeout = timeout or settings.GLMOCR_TIMEOUT_SECONDS
-        self.retries = (
-            settings.GLMOCR_RETRIES if retries is None else retries
-        )
+        self.retries = settings.GLMOCR_RETRIES if retries is None else retries
         self.max_edge = max_edge or settings.GLMOCR_MAX_EDGE
         self.min_edge = min_edge or settings.GLMOCR_MIN_EDGE
-        self._client = client or httpx.Client(timeout=self.timeout)
+        # GLM-OCR 是本机回环服务；忽略 Clash 等进程级代理，避免 httpx 在
+        # 请求路由前初始化无关的 SOCKS transport。
+        self._client = client or httpx.Client(
+            timeout=self.timeout,
+            trust_env=False,
+        )
 
     @staticmethod
     def _prepare_image(image_bytes: bytes, max_edge: int, min_edge: int) -> str:
@@ -66,7 +69,10 @@ class GLMOCRBackend(OCRBackend):
         longest = max(width, height)
         if longest > max_edge:
             scale = max_edge / longest
-            new_size = (max(min_edge, int(width * scale)), max(min_edge, int(height * scale)))
+            new_size = (
+                max(min_edge, int(width * scale)),
+                max(min_edge, int(height * scale)),
+            )
             img = img.resize(new_size, Image.LANCZOS)
         buf = io.BytesIO()
         img.save(buf, format="PNG")
@@ -107,10 +113,7 @@ class GLMOCRBackend(OCRBackend):
                 resp.raise_for_status()
                 data = resp.json()
                 content = (
-                    data.get("choices", [{}])[0]
-                    .get("message", {})
-                    .get("content")
-                    or ""
+                    data.get("choices", [{}])[0].get("message", {}).get("content") or ""
                 ).strip()
                 if not content:
                     raise OcrBlockError("GLM-OCR 返回空内容")

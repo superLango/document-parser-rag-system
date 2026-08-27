@@ -17,7 +17,7 @@ hansonDoc_RAG 离线部署包
   images/mc.tar                   MinIO 客户端（bucket 初始化，约 80M）
   models/bge-m3                   嵌入模型（约 2.6G）
   models/bge-reranker-v2-m3       重排模型（约 2.2G）
-  models/pp_doclayoutv3           版面模型（约 128M）
+  models/pp_doclayoutv3_finetuned_v1  微调版面模型（约 128M）
   docker-compose.yml              编排（6 服务：pg/redis/minio/backend/worker/frontend）
   .env.example                    环境变量模板（复制为 .env 修改）
   initdb/                         数据初始化脚本（01-vector / 02-恢复dump / 03-清理）

@@ -1,4 +1,4 @@
-"""L1 单元测试：DocLayout-YOLO 真实引擎（M18 补测）+ GLM-OCR 拦截层（M19）。"""
+"""L1 单元测试：微调 PP-DocLayoutV3 引擎 + GLM-OCR 拦截层。"""
 
 import base64
 import hashlib
@@ -10,7 +10,6 @@ from pathlib import Path
 import httpx
 import pymupdf
 import pytest
-
 from app.services.ocr_backend.glmocr import GLMOCRBackend, OcrBlockError
 from app.services.parsekit import InvalidParseOptions, ParseOptions, parse_pdf
 from app.services.parsekit.layout_ppdoc import PPDocLayoutEngine
@@ -60,12 +59,12 @@ class FakeHttpClient:
 
 
 # ---------- M18 补测：PP-DocLayoutV3 真实权重完整性/加载/推理 ----------
-PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3"
+PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3_finetuned_v1"
 TEST_DOC = Path("/home/grainuser/hansonDoc_RAG/test_doc")
 
 
 async def test_ppdoclayoutv3_weights_hash_locked():
-    'V3 权重 SHA256 与 EXPECTED_SHA256 精确一致。'
+    "V3 权重 SHA256 与 EXPECTED_SHA256 精确一致。"
 
     from app.services.parsekit.layout_ppdoc import EXPECTED_SHA256
 
@@ -111,6 +110,23 @@ async def test_ppdoclayoutv3_engine_page_failure_partial(monkeypatch):
 
 
 # ---------- M19 L1：GLMOCRBackend ----------
+async def test_glmocr_local_client_ignores_environment_proxy(monkeypatch):
+    client_options = {}
+
+    class SpyHttpClient:
+        def __init__(self, **kwargs):
+            client_options.update(kwargs)
+
+    monkeypatch.setattr(
+        "app.services.ocr_backend.glmocr.httpx.Client",
+        SpyHttpClient,
+    )
+
+    GLMOCRBackend()
+
+    assert client_options["trust_env"] is False
+
+
 async def test_glmocr_success_parse():
     backend = GLMOCRBackend(
         server_url="http://fake/v1/chat/completions",
@@ -294,7 +310,7 @@ async def test_rule_engine_skips_ocr_blocks():
 
 # ================= PP-DocLayoutV3 引擎（真实样本坐标验证） =================
 
-PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3"
+PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3_finetuned_v1"
 
 
 async def test_ppdoclayoutv3_engine_load_and_infer():

@@ -192,7 +192,7 @@ export default function KbDocumentsPage() {
       <PageHeader
         eyebrow="解析"
         title="文档解析"
-        description="上传 PDF 后进入待解析状态，手动点击“开始解析”执行 DocLayout-YOLO 版面分析 + GLM-OCR 识别"
+        description="上传 PDF 后进入待解析状态，手动点击“开始解析”执行微调 PP-DocLayoutV3 版面分析 + GLM-OCR 识别"
         actions={
           canManage ? (
             <Button onClick={openUploadDialog} disabled={uploading} data-testid="open-upload">
