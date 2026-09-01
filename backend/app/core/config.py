@@ -73,6 +73,13 @@ class Settings(BaseSettings):
     TASK_HEARTBEAT_SECONDS: int = 10
     DOCUMENT_MAX_SIZE_MB: int = 100
 
+    # ---------- 一站式任务状态回调 ----------
+    INTEGRATION_STATUS_CALLBACK_URL: str = (
+        "http://192.168.0.141:4001/oapi/aiDocParse/receiveParseStatus"
+    )
+    INTEGRATION_STATUS_CALLBACK_TIMEOUT_SECONDS: int = 10
+    INTEGRATION_STATUS_CALLBACK_MAX_ATTEMPTS: int = 3
+
     # ---------- 文档解析管线（Phase 2 parsekit） ----------
     # 版面引擎固定 PP-DocLayoutV3（唯一引擎，2026-08 定版）
     PARSEKIT_LAYOUT_MODEL_DIR: str = str(

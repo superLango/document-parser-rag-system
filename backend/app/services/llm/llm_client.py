@@ -26,7 +26,7 @@ class OpenAICompatibleClient:
         base_url: str,
         model: str,
         api_key: str = "",
-        timeout: int = 300,
+        timeout: int = 3600,
         transport: httpx.AsyncBaseTransport | None = None,
     ) -> None:
         parsed = urlparse(base_url)
@@ -73,28 +73,44 @@ class OpenAICompatibleClient:
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
         try:
-            async with httpx.AsyncClient(timeout=timeout or self.timeout, transport=self._transport) as client:
+            async with httpx.AsyncClient(timeout=timeout or self.timeout, transport=self._transport, trust_env=False) as client:
                 resp = await client.post(
                     f"{self.base_url}/chat/completions",
                     headers=self._headers(),
                     json=payload,
                 )
         except httpx.HTTPError as exc:
+            from app.core.logging import get_logger as _gl
+            _gl(__name__).error("LLM 请求异常", url=f"{self.base_url}/chat/completions", err=str(exc)[:300])
             raise LLMError(f"LLM 请求失败：{exc}") from exc
         if resp.status_code != 200:
+            from app.core.logging import get_logger as _gl
+            _gl(__name__).error(
+                "LLM 调用失败", status=resp.status_code,
+                resp_text=(resp.text or '')[:300], url=f"{self.base_url}/chat/completions",
+            )
             raise LLMError(
                 f"LLM 调用失败（{resp.status_code}）：{(resp.text or '')[:300]}"
             )
         try:
             data = resp.json()
-            return data["choices"][0]["message"]["content"]
+            content = data["choices"][0]["message"]["content"]
+            from app.core.logging import get_logger as _gl
+            _gl(__name__).info(
+                "LLM client 响应成功", url=f"{self.base_url}/chat/completions",
+                model=self.model, content_len=len(content or ""),
+                content_head=(content or "")[:300],
+            )
+            return content
         except (KeyError, IndexError, ValueError) as exc:
+            from app.core.logging import get_logger as _gl
+            _gl(__name__).error("LLM 响应格式异常", exc=str(exc)[:200], resp_text=(resp.text or '')[:300])
             raise LLMError(f"LLM 响应格式异常：{exc}") from exc
 
     async def ping(self) -> None:
         """连通性测试：GET /models 或 /v1/models。"""
         try:
-            async with httpx.AsyncClient(timeout=min(self.timeout, 15), transport=self._transport) as client:
+            async with httpx.AsyncClient(timeout=min(self.timeout, 15), transport=self._transport, trust_env=False) as client:
                 resp = await client.get(f"{self.base_url}/models", headers=self._headers())
         except httpx.HTTPError as exc:
             raise LLMError(f"LLM 连接失败：{exc}") from exc

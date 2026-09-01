@@ -4,12 +4,11 @@
 node_modules
 frontend/node_modules
 backend/.venv
+backend/venv
 mineru
 lightrag
 document-parser-rag-system
-models/bge-reranker-base
-models/doclayout_yolo
-models/pp_doclayoutv2
+models
 qa
 test_doc
 docs

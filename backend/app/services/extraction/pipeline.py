@@ -11,6 +11,7 @@ from app.core.logging import get_logger
 from app.services import kb_resource_service
 from app.services.extraction import (
     category_builder,
+    category_builder_v2,
     context_assembler,
     extraction_resolver,
     llm_extractor,
@@ -104,22 +105,74 @@ async def run(
 
         async def extract_one(target):
             async with sem:
+                # 上下文组装用与检索一致的配置(V3 时 k40; V1 时全局)
+                _rcfg = v3_retrieval_cfg if retrieval_route == "v3" else retrieval_cfg
+                _ccfg = v3_context_cfg if retrieval_route == "v3" else context_cfg
                 return await _extract_single(
-                    session, cfg, target, client, engine, engine_params, retrieval_cfg,
-                    context_cfg, script_timeout, str(document_id), term_data, llm_endpoint,
+                    session, cfg, target, client, engine, engine_params, _rcfg,
+                    _ccfg, script_timeout, str(document_id), term_data, llm_endpoint,
                     llm_sem=llm_sem,
                 )
 
         # 流式：逐个类别完成检索/重排后立即进入抽取，不等全部类别检索完
+        # 检索路线开关: retrieval.route=v3 时走 V3(文档感知术语+语义证据+候选放大+阈值-5),
+        # 否则走 V1(现状)。V1/V3 并存, 可配置切换。
+        # V3 并行优化(2026-08-29): 类别检索 asyncio.gather + Semaphore 并发;
+        # GPU 推理(embed/rerank)仍由 embedding 单线程锁与 reranker 类级缓存序列化,
+        # 并发主要重叠 DB ANN/BM25 IO 与语义证据缓存。并发度由 global_config.retrieval.route_concurrency 控制(默认 8)。
+        retrieval_route = (retrieval_cfg.get("route") or "v3")  # 2026-08-29: 默认 V3(证据判定+完整候选/无重排), 仅显式 v1 回退旧链路
+        route_conc = int((retrieval_cfg.get("route_concurrency") or 8))
+        # V3 配置(检索 + 上下文组装统一): 全局 retrieval 叠加 LARGE_CANDIDATES(k40)
+        # 保证「检索 60 块」能完整送 LLM(修正 ctx_top_k 被全局 15 截断的问题)
+        v3_retrieval_cfg = retrieval_cfg
+        v3_context_cfg = context_cfg
         extract_tasks: list[asyncio.Task] = []
-        for t in targets:
-            built, sk = await category_builder.build_one(
-                cfg, session, kb_id=kb_id, document_id=document_id, target=t,
+        if retrieval_route == "v3":
+            rr = (retrieval_cfg.get("reranker") or {})
+            v3_override = {**category_builder_v2.LARGE_CANDIDATES}
+            v3_override["reranker"] = {**rr, "threshold": -5.0,
+                                       "semantic_evidence_enabled": True}
+            # 组装上下文也读取 k40 的 top_k/context_top_k(含 context.sort_mode)
+            v3_retrieval_cfg = {**retrieval_cfg, **category_builder_v2.LARGE_CANDIDATES}
+            v3_context_cfg = {
+                **context_cfg,
+                **((category_builder_v2.LARGE_CANDIDATES.get("context") or {})),
+            }
+            _sem = asyncio.Semaphore(route_conc)
+
+            async def _build_v3(t):
+                async with _sem:
+                    return await category_builder_v2.build_one_v2(
+                        cfg, session, kb_id=kb_id, document_id=document_id, target=t,
+                        retrieval_override=v3_override,
+                    )
+
+            built_list = await asyncio.gather(
+                *(_build_v3(t) for t in targets), return_exceptions=True,
             )
-            if built is None:
-                if sk is not None:
-                    skipped.append(sk)
-                continue
+            built_targets: list[tuple] = []
+            for t, r in zip(targets, built_list):
+                if isinstance(r, Exception):
+                    logger.error("类别检索异常(V3)", feature=t.feature, error=str(r))
+                    continue
+                built, sk = r
+                if built is None:
+                    if sk is not None:
+                        skipped.append(sk)
+                    continue
+                built_targets.append(built)
+        else:
+            built_targets = []
+            for t in targets:
+                built, sk = await category_builder.build_one(
+                    cfg, session, kb_id=kb_id, document_id=document_id, target=t,
+                )
+                if built is None:
+                    if sk is not None:
+                        skipped.append(sk)
+                    continue
+                built_targets.append(built)
+        for built in built_targets:
             logger.info("类别检索完成，进入抽取", feature=built.feature, hit_count=built.hit_count)
             extract_tasks.append(asyncio.create_task(extract_one(built)))
         await _progress(progress_cb, 40, "开始类别抽取")

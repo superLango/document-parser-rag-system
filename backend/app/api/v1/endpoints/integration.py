@@ -100,3 +100,14 @@ async def integration_retrigger(
     await _superuser_ctx(db)
     itask = await integration_service.retrigger(db, task_id)
     return success(data=integration_service.to_view(itask), message="任务已重新触发")
+
+@router.get("/tasks/{task_id}/session-token")
+async def integration_session_token(
+    task_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """匿名会话令牌：免登录打开结果页（结果页内嵌的系统抽取页需登录，
+    该令牌以系统管理员身份签发(2小时有效)，供前端自动注入以完成编辑。"""
+    await _superuser_ctx(db)
+    data = await integration_service.issue_session_token(db, task_id)
+    return success(data=data, message="会话令牌已签发")

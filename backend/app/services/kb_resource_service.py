@@ -35,7 +35,7 @@ def _to_view(raw: dict) -> dict:
         "api_base": raw.get("api_base", ""),
         "model": raw.get("model", ""),
         "api_key_masked": mask_api_key(raw.get("api_key", "")),
-        "timeout": int(raw.get("timeout") or 300),
+        "timeout": int(raw.get("timeout") or 3600),
     }
 
 
@@ -55,7 +55,7 @@ async def save_llm_resource(db: AsyncSession, kb_id, data: dict) -> dict:
         "model": (data.get("model") or "").strip(),
         # 未传新 key 时保留旧 key
         "api_key": (data.get("api_key") or "").strip() or old.get("api_key", ""),
-        "timeout": int(data.get("timeout") or 300),
+        "timeout": int(data.get("timeout") or 3600),
     }
     services[SERVICE_KEY] = new
     config["services"] = services
@@ -78,7 +78,7 @@ async def test_llm_resource(db: AsyncSession, kb_id, data: dict | None = None) -
             base_url=api_base,
             model=model,
             api_key=(raw.get("api_key") or "").strip(),
-            timeout=int(raw.get("timeout") or 300),
+            timeout=int(raw.get("timeout") or 3600),
         )
         await client.ping()
         return {"ok": True}
@@ -104,5 +104,5 @@ async def build_llm_client(db: AsyncSession, kb_id) -> OpenAICompatibleClient:
         base_url=raw["api_base"],
         model=raw["model"],
         api_key=raw.get("api_key", ""),
-        timeout=int(raw.get("timeout") or 300),
+        timeout=int(raw.get("timeout") or 3600),
     )

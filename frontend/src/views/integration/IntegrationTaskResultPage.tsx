@@ -4,7 +4,8 @@ import {
   AlertCircle, ArrowLeft, CheckCircle2, Clock, FileText, Loader2, RefreshCcw,
 } from 'lucide-react'
 import { integrationApi, type IntegrationTaskStatus } from '@/api/modules/integration'
-import { ApiError } from '@/api/client'
+import { ApiError, setTokens } from '@/api/client'
+import { isAuthenticated, useAuthStore } from '@/stores/auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
@@ -24,6 +25,22 @@ export default function IntegrationTaskResultPage() {
   const [loading, setLoading] = useState(true)
   const [retriggering, setRetriggering] = useState(false)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const fetchUser = useAuthStore((s) => s.fetchUser)
+
+  // 免登录打开结果页: 未登录时自动获取匿名会话令牌并按管理员登录(仅本任务上下文)
+  useEffect(() => {
+    let cancelled = false
+    async function ensureSession() {
+      if (!taskId || isAuthenticated()) return
+      try {
+        const res = await integrationApi.sessionToken(taskId)
+        setTokens(res.token)
+        if (!cancelled) await fetchUser()
+      } catch { /* 获取失败则维持原逻辑(用户可手动登录) */ }
+    }
+    void ensureSession()
+    return () => { cancelled = true }
+  }, [taskId, fetchUser])
 
   const load = useCallback(async () => {
     if (!taskId) return

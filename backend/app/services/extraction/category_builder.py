@@ -39,6 +39,9 @@ async def _build_targets(cfg, db: AsyncSession, kb_id) -> tuple[list[ExtractionT
             if cat.get("extraction_strategy") == "never":
                 continue
             fields = cat.get("fields") or []
+            # 关键修复(2026-08-30): 深拷贝 query_sources, 避免 term_base 展开的
+            # 所有类别共享同一 list 引用 -> term_data 互相覆盖/污染(热膨胀术语泄漏到其他类别)
+            qs_copy = [dict(q) for q in (cat.get("query_sources") or [])]
             base = ExtractionTarget(
                 feature="",
                 category_id=cat["id"],
@@ -47,7 +50,7 @@ async def _build_targets(cfg, db: AsyncSession, kb_id) -> tuple[list[ExtractionT
                 return_type=cat.get("return_type") or "array",
                 extraction_strategy=cat.get("extraction_strategy") or "auto",
                 fixed_query=cat.get("fixed_query") or "",
-                query_sources=cat.get("query_sources") or [],
+                query_sources=qs_copy,
                 top_k=cat.get("top_k"),
                 max_tokens=cat.get("max_tokens"),
                 confidence_threshold=cat.get("confidence_threshold"),
@@ -65,7 +68,12 @@ async def _build_targets(cfg, db: AsyncSession, kb_id) -> tuple[list[ExtractionT
                     continue
                 req_map = cat.get("special_requirements") or {}
                 for name in names:
-                    t = ExtractionTarget(**{**base.__dict__, "feature": name})
+                    # 每个展开类别独立深拷贝 query_sources, 避免共享引用导致
+                    # term_data 互相污染(2026-08-30 根因修复)
+                    _t_dict = dict(base.__dict__)
+                    _t_dict["query_sources"] = [dict(q) for q in (cat.get("query_sources") or [])]
+                    t = ExtractionTarget(**_t_dict)
+                    t.feature = name
                     t.special_requirement = str(req_map.get(name) or "").strip()
                     targets.append(t)
             else:
@@ -138,7 +146,7 @@ async def _build_query_terms(
         if group_field:
             rows = [
                 r for r in rows
-                if str(_read(r, group_field) or "").strip() == target.feature
+                if _group_match(str(_read(r, group_field) or "").strip(), target.feature)
             ]
         field = qs.get("value_field") or "term_name"
         main_limit = int(qs.get("query_main_limit") or 30)
@@ -158,6 +166,21 @@ async def _build_query_terms(
             values = distinct_field_values(rows, field, main_limit)
             terms.extend(values)
     return list(dict.fromkeys(terms))
+
+
+
+_GROUP_SEP_RE = re.compile(r"[、,，/|;；\s]+")
+
+
+def _group_match(gv: str, feature: str) -> bool:
+    """group_field 匹配: 包含匹配(支持拼接多类型)。"""
+    gv = (gv or "").strip()
+    if not gv or not feature:
+        return False
+    if feature in gv:
+        return True
+    parts = [p2.strip() for p2 in _GROUP_SEP_RE.split(gv) if p2.strip()]
+    return feature in parts
 
 
 # 文档全文缓存（按 document_id，避免每类别重复统计）
@@ -203,7 +226,7 @@ async def _select_terms_by_doc_frequency(
     for row in rows:
         if group_field:
             gv = str(_read(row, group_field) or "").strip()
-            if gv and gv != feature:
+            if gv and not _group_match(gv, feature):
                 continue
         cw = _term_core(str(_read(row, field) or ""))
         if not cw or len(cw) > 20:
@@ -292,7 +315,7 @@ async def _build_data_query(
         if group_field:
             rows = [
                 r for r in rows
-                if str(_read(r, group_field) or "").strip() == target.feature
+                if _group_match(str(_read(r, group_field) or "").strip(), target.feature)
             ]
         field = qs.get("value_field") or "term_name"
         main_limit = int(qs.get("query_main_limit") or 30)
@@ -504,7 +527,7 @@ async def build_one(
             if gf:
                 rows = [
                     r for r in rows
-                    if str(_read(r, gf) or "").strip() == target.feature
+                    if _group_match(str(_read(r, gf) or "").strip(), target.feature)
                 ]
             t.term_data[label] = rows
     return t, None

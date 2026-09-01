@@ -1,0 +1,13 @@
+# 本地离线构建(复用已有 base 镜像, 不下载基础镜像/依赖)
+# 前提: 本地已有 hansondoc-backend:base-20260823 (含 torch + 全部 pip 依赖)
+# 用法: docker build -f backend/Dockerfile.localbase -t hansondoc-backend:latest .
+FROM hansondoc-backend:base-20260823
+
+WORKDIR /app
+
+# 仅重新 COPY 应用代码层(依赖层已含在 base 中)
+COPY backend /app/backend
+
+# 关键: 恢复工作目录(与正式 Dockerfile 一致, 否则 entrypoint 的
+#       alembic 迁移在 /app 下找不到 alembic.ini -> 容器启动失败)
+WORKDIR /app/backend

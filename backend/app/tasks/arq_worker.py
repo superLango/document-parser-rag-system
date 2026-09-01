@@ -1,19 +1,19 @@
 """arq Worker：文档解析任务 + Outbox 分发（Phase 1）。"""
 
+import asyncio
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import ClassVar
 from urllib.parse import unquote, urlparse
-
-from arq import cron
-from arq.connections import RedisSettings
-from sqlalchemy import text
 
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
 from app.core.logging import get_logger
 from app.models.document import TaskOutbox
 from app.services import document_service
+from arq import cron
+from arq.connections import RedisSettings
+from sqlalchemy import text
 
 logger = get_logger(__name__)
 
@@ -24,62 +24,104 @@ async def _superuser_session():
     return db
 
 
-async def _update_integration_task(db, document_id, **patch) -> None:
+async def _update_integration_task(db, document_id, **patch) -> list[str]:
     """按 document_id 更新对接任务状态（无对接任务则跳过）。"""
-    from sqlalchemy import update
-
     from app.models.integration_task import IntegrationTask
+    from sqlalchemy import select
 
-    await db.execute(
-        update(IntegrationTask)
-        .where(IntegrationTask.document_id == document_id)
-        .values(**patch, updated_at=datetime.now(timezone.utc))
+    tasks = (
+        (
+            await db.execute(
+                select(IntegrationTask).where(
+                    IntegrationTask.document_id == document_id
+                )
+            )
+        )
+        .scalars()
+        .all()
+    )
+    for task in tasks:
+        for key, value in patch.items():
+            setattr(task, key, value)
+        task.updated_at = datetime.now(timezone.utc)
+    return [str(task.task_id) for task in tasks]
+
+
+async def _notify_integration_terminal(
+    task_ids: list[str] | None, status: str, reason: str = ""
+) -> None:
+    """通知全部关联的一站式任务；网络失败不影响 Worker 业务状态。"""
+    from app.services.integration_callback import send_status_callback
+
+    if not task_ids:
+        return
+    await asyncio.gather(
+        *(send_status_callback(task_id, status, reason) for task_id in task_ids)
     )
 
 
 async def _trigger_integration_extract(db, kb_id, document_id) -> None:
     """索引完成后：存在待抽取的对接任务则自动触发抽取（带 schema_template_id）。"""
-    from sqlalchemy import select
-
     from app.models.integration_task import IntegrationTask
     from app.services.extraction import extraction_task_service
+    from sqlalchemy import select
 
     itask = (
-        await db.execute(
-            select(IntegrationTask).where(
-                IntegrationTask.document_id == document_id,
-                IntegrationTask.extract_status == "pending",
+        (
+            await db.execute(
+                select(IntegrationTask).where(
+                    IntegrationTask.document_id == document_id,
+                    IntegrationTask.extract_status == "pending",
+                )
             )
         )
-    ).scalars().first()
+        .scalars()
+        .first()
+    )
     if itask is None:
         return
     await db.execute(
         text("SELECT set_config('app.current_kb', :kb, true)"), {"kb": str(kb_id)}
     )
     await extraction_task_service.start_document_extraction(
-        db, kb_id, document_id,
-        schema_template_id=str(itask.schema_template_id) if itask.schema_template_id else None,
+        db,
+        kb_id,
+        document_id,
+        schema_template_id=str(itask.schema_template_id)
+        if itask.schema_template_id
+        else None,
     )
     itask.extract_status = "queued"
     itask.extract_progress = 0
     itask.updated_at = datetime.now(timezone.utc)
 
 
-async def _apply_extract_result(db, document_id, result) -> None:
+async def _apply_extract_result(
+    db, document_id, result
+) -> tuple[list[str], str, str]:
     """按抽取任务结果回写对接任务状态（成功取 version，失败回写错误原因）。"""
     if isinstance(result, dict) and result.get("status") == "completed":
-        await _update_integration_task(
-            db, document_id,
-            extract_status="completed", extract_progress=100,
-            result_version=result.get("version"), error="",
+        task_ids = await _update_integration_task(
+            db,
+            document_id,
+            extract_status="completed",
+            extract_progress=100,
+            result_version=result.get("version"),
+            error="",
         )
+        return task_ids, "success", ""
     else:
-        err = (result.get("error") if isinstance(result, dict) else str(result)) or "结构化抽取失败"
-        await _update_integration_task(
-            db, document_id, extract_status="failed", extract_progress=100,
+        err = (
+            result.get("error") if isinstance(result, dict) else str(result)
+        ) or "结构化抽取失败"
+        task_ids = await _update_integration_task(
+            db,
+            document_id,
+            extract_status="failed",
+            extract_progress=100,
             error=str(err)[:500],
         )
+        return task_ids, "failed", str(err)[:500]
 
 
 async def parse_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
@@ -98,11 +140,26 @@ async def parse_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
             await document_service.enqueue_index_task(
                 db, uuid.UUID(kb_id), uuid.UUID(document_id)
             )
-        except Exception:
+        except Exception as exc:
             logger.exception("自动触发索引失败", document_id=document_id)
+            await db.rollback()
+            reason = f"自动触发索引失败：{exc}"[:500]
+            task_ids = await _update_integration_task(
+                db,
+                uuid.UUID(document_id),
+                ocr_status="failed",
+                error=reason,
+            )
+            await db.commit()
+            await _notify_integration_terminal(task_ids, "failed", reason)
+            if task_ids:
+                return result
         await db.commit()
         await _update_integration_task(
-            db, uuid.UUID(document_id), ocr_status="completed", ocr_progress=100,
+            db,
+            uuid.UUID(document_id),
+            ocr_status="completed",
+            ocr_progress=100,
         )
         await db.commit()
         return result
@@ -116,10 +173,14 @@ async def parse_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
             logger.exception("标记任务失败时出错", document_id=document_id)
         await db.rollback()
         try:
-            await _update_integration_task(
-                db, uuid.UUID(document_id), ocr_status="failed", error=str(exc)[:500],
+            task_ids = await _update_integration_task(
+                db,
+                uuid.UUID(document_id),
+                ocr_status="failed",
+                error=str(exc)[:500],
             )
             await db.commit()
+            await _notify_integration_terminal(task_ids, "failed", str(exc)[:500])
         except Exception:
             logger.exception("回写对接任务 OCR 失败状态出错", document_id=document_id)
         raise
@@ -143,8 +204,19 @@ async def index_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
         try:
             await _trigger_integration_extract(db, kb_id, uuid.UUID(document_id))
             await db.commit()
-        except Exception:
+        except Exception as exc:
             logger.exception("自动触发对接抽取失败", document_id=document_id)
+            await db.rollback()
+            reason = f"自动触发结构化抽取失败：{exc}"[:500]
+            task_ids = await _update_integration_task(
+                db,
+                uuid.UUID(document_id),
+                extract_status="failed",
+                extract_progress=100,
+                error=reason,
+            )
+            await db.commit()
+            await _notify_integration_terminal(task_ids, "failed", reason)
         return result
     except Exception as exc:
         await db.rollback()
@@ -156,10 +228,14 @@ async def index_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
             logger.exception("标记索引任务失败时出错", document_id=document_id)
         await db.rollback()
         try:
-            await _update_integration_task(
-                db, uuid.UUID(document_id), ocr_status="failed", error=str(exc)[:500],
+            task_ids = await _update_integration_task(
+                db,
+                uuid.UUID(document_id),
+                ocr_status="failed",
+                error=str(exc)[:500],
             )
             await db.commit()
+            await _notify_integration_terminal(task_ids, "failed", str(exc)[:500])
         except Exception:
             logger.exception("回写对接任务 OCR 失败状态出错", document_id=document_id)
         raise
@@ -180,16 +256,24 @@ async def extract_document_task(ctx: dict, document_id: str, kb_id: str) -> dict
         result = await extraction_task_service.run_extraction_task(
             db, uuid.UUID(document_id), uuid.UUID(kb_id)
         )
-        await _apply_extract_result(db, uuid.UUID(document_id), result)
+        task_ids, status, reason = await _apply_extract_result(
+            db, uuid.UUID(document_id), result
+        )
         await db.commit()
+        await _notify_integration_terminal(task_ids, status, reason)
         return result
     except Exception as exc:
         await db.rollback()
         try:
-            await _update_integration_task(
-                db, uuid.UUID(document_id), extract_status="failed", error=str(exc)[:500],
+            task_ids = await _update_integration_task(
+                db,
+                uuid.UUID(document_id),
+                extract_status="failed",
+                extract_progress=100,
+                error=str(exc)[:500],
             )
             await db.commit()
+            await _notify_integration_terminal(task_ids, "failed", str(exc)[:500])
         except Exception:
             logger.exception("回写对接任务抽取失败状态出错", document_id=document_id)
         raise
@@ -245,9 +329,8 @@ async def dispatch_term_sync_cron(ctx: dict) -> int:
 
     按各术语集 sync_cron 表达式匹配当前分钟窗口；Redis 幂等键防止同分钟重复入队。
     """
-    from croniter import croniter
-
     from app.services.glossary import term_base_service
+    from croniter import croniter
 
     db = await _superuser_session()
     try:
@@ -270,7 +353,9 @@ async def dispatch_term_sync_cron(ctx: dict) -> int:
         try:
             nxt = croniter(base.sync_cron, window_start).get_next(datetime)
         except Exception:  # noqa: BLE001 - 表达式异常跳过该术语集
-            logger.warning("术语集 cron 表达式无效", base_id=str(base.id), cron=base.sync_cron)
+            logger.warning(
+                "术语集 cron 表达式无效", base_id=str(base.id), cron=base.sync_cron
+            )
             continue
         if nxt > now:
             continue
@@ -356,6 +441,7 @@ class WorkerSettings:
 
         if settings.MODEL_WARMUP_ENABLED:
             await model_warmup.warmup_all()
+
     # 任务时长取决于文档/上下文/输出长度，无法预估；arq 要求数值型超时，
     # 设 7 天作为"实际不超时"的安全网，避免误杀仍在抽取的任务。
     # 显式停止/关闭时由 CancelledError 处理落 failed。

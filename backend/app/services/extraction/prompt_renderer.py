@@ -90,4 +90,16 @@ def render_category(cfg, target, context: str) -> tuple[str, str]:
     def render(text: str) -> str:
         return re.sub(r"\$\{([^{}]+)\}", sub, text or "")
 
+    # 诊断: 抓运行时 term_data(labels + 每个 label 前3个值), 对比"热膨胀 vs 化学成分"
+    try:
+        from app.services.extraction.term_base_loader import field_values as _fv
+        _td = target.term_data or {}
+        _diag = {}
+        for _lbl, _rows in _td.items():
+            _diag[_lbl] = _fv(_rows, "NAME")[:3] if _lbl == "检测项目" else _fv(_rows, "METHOD_CODE")[:3]
+        from app.core.logging import get_logger as _gl
+        _gl(__name__).warning("render_category 诊断", feature=target.feature, term_data_diag=_diag)
+    except Exception:  # noqa: BLE001
+        pass
+
     return render(system), render(user)

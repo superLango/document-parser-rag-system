@@ -1,6 +1,6 @@
 # Docker 部署手册（hansonDoc_RAG · 全容器化）
 
-> 配套方案：[DOCKER_BUILD_PLAN.md](./DOCKER_BUILD_PLAN.md) · 2026-08-23
+> 配套方案：[DOCKER_BUILD_PLAN.md](./DOCKER_BUILD_PLAN.md) · 2026-08-28
 
 ## 一、前置条件
 
@@ -69,3 +69,56 @@ docker exec hansondoc-postgres-1 psql -U hansondoc -d hanson_doc_rag -c "SELECT 
 2. **模型预热**：容器启动仅预热嵌入/重排/版面（跳过外部 vLLM），约 30s。
 3. **重新初始化数据**：删除 PG 卷后 `docker compose up -d` 会重新执行 initdb（需重新导出 dump）。
 4. 首次构建后端镜像较慢（torch cu130 下载 + 模型 COPY），约 10 分钟+。
+
+## 八、仅更新 ARM64 后端镜像
+
+后端代码变更时，前端、数据库、Redis、MinIO 和宿主机模型目录均不需要重建。
+2026-08-28 状态回调版本的原始离线产物：
+
+```text
+hansondoc-backend-arm64-20260828-status-callback.tar
+SHA256: 59ad4bc71dab435f9fcd4771cad58f3708b59297226fb71c41168053378eb6d6
+```
+
+通过 FAT32 U 盘传输时使用 1.9GB 分段文件，避免超过 4GB 单文件限制：
+
+```text
+hansondoc-backend-arm64-20260828-status-callback.tar.part-00
+hansondoc-backend-arm64-20260828-status-callback.tar.part-01
+hansondoc-backend-arm64-20260828-status-callback.tar.part-02
+hansondoc-backend-arm64-20260828-status-callback.tar.part-03
+hansondoc-backend-arm64-20260828-status-callback.parts.sha256
+```
+
+在目标设备执行：
+
+```bash
+cd /path/to/hansonDoc_RAG
+docker tag hansondoc-backend:latest hansondoc-backend:rollback-before-20260828
+
+cd /path/to/image-parts
+sha256sum -c hansondoc-backend-arm64-20260828-status-callback.parts.sha256
+cat hansondoc-backend-arm64-20260828-status-callback.tar.part-* | docker load
+
+cd /path/to/hansonDoc_RAG
+
+docker image inspect hansondoc-backend:latest --format '{{.Architecture}} {{.Id}}'
+
+docker compose up -d --no-deps --force-recreate backend worker
+```
+
+`backend` 与 `worker` 共用同一镜像，必须一起重建容器。验证：
+
+```bash
+curl -fsS http://127.0.0.1:18000/health
+docker compose logs --tail=200 backend worker
+docker compose exec worker python -c "from app.core.config import settings; print(settings.INTEGRATION_STATUS_CALLBACK_URL)"
+docker compose exec worker python -c "import socket; socket.create_connection(('192.168.0.141', 4001), 5).close(); print('callback tcp ok')"
+```
+
+连通性检查只建立 TCP 连接，不发送虚假的业务状态。需要回滚时：
+
+```bash
+docker tag hansondoc-backend:rollback-before-20260828 hansondoc-backend:latest
+docker compose up -d --no-deps --force-recreate backend worker
+```

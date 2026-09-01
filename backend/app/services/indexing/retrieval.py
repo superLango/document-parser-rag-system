@@ -91,6 +91,7 @@ class RetrievalService:
         rerank_query: str | None = None,
         retrieval_config: dict | None = None,
         per_dim_top_k: int | None = None,
+        skip_rerank: bool = False,
     ) -> list[SearchResult]:
         """执行混合检索。
 
@@ -173,11 +174,26 @@ class RetrievalService:
         reranker_top_n = int((rcfg.get("reranker") or {}).get("top_n") or top_k)
         # 重排 query 与检索 query 分离：rerank_query 传入时用于重排打分
         # （类别抽取场景：检索用精简术语召回，重排用完整术语+Schema 字段提升相关性打分）
-        reranked = await reranker.rerank(
-            (rerank_query or query).strip() or query,
-            raw_hits,
-            min(reranker_top_n, top_k),
-        )
+        # rerank 候选控制(2026-08-29): raw_hits 为 RRF 融合后 top_k(k40),
+        # 若全量送入 CrossEncoder 逐批打分, 候选多(40)时 GPU 推理耗时高(41类×5-10s)。
+        # 仅对前 max(top_n, 25) 个候选精排(取 top_n), 兼顾召回与耗时:
+        #   top_n=15 → 输入 25 候选(RSL 保留, 避免 top17-25 的高相关块被重排窗口遗漏)
+        #   top_n=40 → 输入 40(全量)
+        # rerank 候选控制(2026-08-29 v2): 直接只对前 reranker_top_n(top_n=15)
+        # 候选精排——因为最终只保留 top_n, 额外候选精排是浪费(实测 25 → 3.4s,
+        # 15 → ~2s; 且上下文排序页序时 rerank 分主要用于过滤/0条重试)。
+        rerank_candidates = raw_hits[: min(reranker_top_n, len(raw_hits))]
+        if skip_rerank:
+            # 跳过重排: 不截断到 reranker_top_n —— 返回完整 top_k 候选
+            # (数据路 top_k=40 / 元信息路 top_k=20 应完整保留; 之前被 min(reranker_top_n,top_k)=15
+            #  压住导致两路各只返回 15, 候选 60→30 的隐藏退化)
+            reranked = raw_hits[:top_k]
+        else:
+            reranked = await reranker.rerank(
+                (rerank_query or query).strip() or query,
+                rerank_candidates,
+                min(reranker_top_n, top_k),
+            )
         logger.info(
             "检索完成",
             kb_id=str(kb_id),

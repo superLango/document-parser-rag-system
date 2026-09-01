@@ -24,4 +24,7 @@ export const integrationApi = {
   retrigger(taskId: string): Promise<IntegrationTaskStatus> {
     return http.post(`/integration/tasks/${taskId}/retrigger`)
   },
+  sessionToken(taskId: string): Promise<{ task_id: string; token: string; document_id: string | null; kb_id: string }> {
+    return http.get(`/integration/tasks/${taskId}/session-token`)
+  },
 }

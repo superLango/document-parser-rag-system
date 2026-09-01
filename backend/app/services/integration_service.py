@@ -182,3 +182,24 @@ async def retrigger(db: AsyncSession, task_id) -> IntegrationTask:
     await db.commit()
     await db.refresh(itask)
     return itask
+
+
+async def issue_session_token(db: AsyncSession, task_id):
+    """签发对接任务匿名会话令牌(免登录编辑结果页)。
+
+    校验任务存在后, 以系统超管身份签发短期 JWT; 仅允许携带该任务上下文使用
+    (payload 内嵌 task_id/document_id/kb_id 供审计; 前端在打开结果页前调用)。
+    """
+    itask = await get_task(db, task_id)
+    from app.core.security import create_access_token
+    from datetime import timedelta
+
+    token = create_access_token(
+        data={"sub": "admin", "ctx": "integration_task", "task_id": str(itask.task_id),
+              "document_id": str(itask.document_id) if itask.document_id else None,
+              "kb_id": str(itask.kb_id)},
+        expires_delta=timedelta(hours=2),
+    )
+    return {"task_id": str(itask.task_id), "token": token,
+            "document_id": str(itask.document_id) if itask.document_id else None,
+            "kb_id": str(itask.kb_id)}

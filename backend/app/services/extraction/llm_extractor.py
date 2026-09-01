@@ -147,7 +147,7 @@ def _dedupe_records(records: list[dict]) -> list[dict]:
 
 
 async def _call_llm(client, system: str, user: str, *, engine_params: dict, max_tokens: int, json_mode: bool) -> str:
-    return await client.complete(
+    content = await client.complete(
         [
             {"role": "system", "content": system},
             {"role": "user", "content": user},
@@ -155,11 +155,28 @@ async def _call_llm(client, system: str, user: str, *, engine_params: dict, max_
         json_mode=json_mode,
         temperature=float(engine_params.get("temperature") or 0.0),
         max_tokens=max_tokens,
-        timeout=int(engine_params.get("timeout") or 300),
+        timeout=int(engine_params.get("timeout") or 3600),
         top_p=engine_params.get("top_p"),
         top_k=engine_params.get("top_k"),
         enable_thinking=bool(engine_params.get("enable_thinking")),
     )
+    # 诊断: 打印原始 LLM 响应(截断 500 字符)与长度, 便于定位"返回空数组/解析失败"
+    logger.info(
+        "LLM 原始响应", 
+        resp_len=len(content or ""),
+        resp_head=(content or "")[:500],
+    )
+    # 完整请求摘要: system/user 长度+前200字符+上下文规模(便于对比前后两次调用差异)
+    logger.info(
+        "LLM 请求摘要",
+        system_len=len(system or ""),
+        user_len=len(user or ""),
+        system_head=(system or "")[:200],
+        user_head=(user or "")[:200],
+        user_tail=(user or "")[-200:],
+        terms_sample=(user or "").find("[") ,  # noqa: WPS601 placeholder
+    )
+    return content
 
 
 async def _extract_base(cfg, target, context: str, client, engine_params: dict) -> list[dict]:
@@ -169,12 +186,46 @@ async def _extract_base(cfg, target, context: str, client, engine_params: dict) 
     与脚本验证路线（无 response_format）不一致；可经 engine_params.json_mode 开启。
     """
     system, user = prompt_renderer.render_category(cfg, target, context)
+    # 诊断: 保存后端真实发送的 prompt(每个类别都保存, 每次覆盖, 供对比手动成功版)
+    try:
+        import os, re as _re
+        feat = getattr(target, "feature", "?")
+        _safe = _re.sub(r'[\\/:*?"<>|\s]+', '_', str(feat))[:64] or 'unknown'
+        with open(f"/tmp/backend_sent_prompt_{_safe}.txt", "w", encoding="utf-8") as _f:
+            _f.write(f"=== SYSTEM ({len(system or '')}) ===\n{system}\n=== USER ({len(user or '')}) ===\n{user}")
+    except Exception:  # noqa: BLE001
+        pass
     max_tokens = target.max_tokens or engine_params.get("max_tokens") or 4096
     json_mode = bool(engine_params.get("json_mode", False))
-    return parse_records(
-        await _call_llm(client, system, user, engine_params=engine_params, max_tokens=max_tokens, json_mode=json_mode),
-        target.schema,
+    logger.info(
+        "LLM 抽取开始",
+        feature=getattr(target, "feature", None),
+        context_chars=len(context or ""),
+        system_chars=len(system or ""),
+        user_chars=len(user or ""),
+        max_tokens=max_tokens,
+        json_mode=json_mode,
     )
+    raw = await _call_llm(client, system, user, engine_params=engine_params, max_tokens=max_tokens, json_mode=json_mode)
+    try:
+        records = parse_records(raw, target.schema)
+    except Exception as exc:  # noqa: BLE001
+        # 保留原始输出供诊断
+        try:
+            import os
+            with open("/tmp/llm_parse_fail.txt", "a", encoding="utf-8") as _f:
+                _f.write(f"\n===== {getattr(target, 'feature', '?')} =====\nRAW: {raw[:3000]}\nERR: {exc}\n")
+        except Exception:  # noqa: BLE001
+            pass
+        raise
+    logger.info(
+        "LLM 抽取解析完成",
+        feature=getattr(target, "feature", None),
+        records=len(records),
+        raw_len=len(raw or ""),
+        raw_head=(raw or "")[:200],
+    )
+    return records
 
 
 async def extract_category(cfg, target, context: str, client, engine_params: dict, engine: str = "BaseExtract") -> list[dict]:
