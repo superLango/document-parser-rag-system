@@ -21,10 +21,14 @@ async def send_status_callback(
     task_id: uuid.UUID | str,
     status: str,
     reason: str = "",
+    parse_time: float | None = None,
     *,
     client: httpx.AsyncClient | None = None,
 ) -> bool:
-    """发送一站式任务终态；失败只记录日志，不反向改变业务任务状态。"""
+    """发送一站式任务终态；失败只记录日志，不反向改变业务任务状态。
+
+    parse_time: 成功时 OCR+解析+抽取总耗时(秒); 失败/未完成为 None(null)。
+    """
     if status not in _ALLOWED_STATUSES:
         raise ValueError(f"不支持的一站式任务回调状态：{status}")
 
@@ -37,6 +41,8 @@ async def send_status_callback(
         "task_id": str(task_id),
         "status": status,
         "reason": reason[:500] if status == STATUS_FAILED else "",
+        # 解析耗时(秒): 成功有值, 否则 null
+        "parse_time": round(float(parse_time), 2) if parse_time is not None else None,
     }
     attempts = max(1, settings.INTEGRATION_STATUS_CALLBACK_MAX_ATTEMPTS)
     owns_client = client is None

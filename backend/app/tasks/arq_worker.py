@@ -48,7 +48,7 @@ async def _update_integration_task(db, document_id, **patch) -> list[str]:
 
 
 async def _notify_integration_terminal(
-    task_ids: list[str] | None, status: str, reason: str = ""
+    task_ids: list[str] | None, status: str, reason: str = "", parse_time: float | None = None
 ) -> None:
     """通知全部关联的一站式任务；网络失败不影响 Worker 业务状态。"""
     from app.services.integration_callback import send_status_callback
@@ -56,7 +56,7 @@ async def _notify_integration_terminal(
     if not task_ids:
         return
     await asyncio.gather(
-        *(send_status_callback(task_id, status, reason) for task_id in task_ids)
+        *(send_status_callback(task_id, status, reason, parse_time) for task_id in task_ids)
     )
 
 
@@ -98,8 +98,8 @@ async def _trigger_integration_extract(db, kb_id, document_id) -> None:
 
 async def _apply_extract_result(
     db, document_id, result
-) -> tuple[list[str], str, str]:
-    """按抽取任务结果回写对接任务状态（成功取 version，失败回写错误原因）。"""
+) -> tuple[list[str], str, str, float | None]:
+    """按抽取任务结果回写对接任务状态（成功取 version/耗时，失败回写错误原因）。"""
     if isinstance(result, dict) and result.get("status") == "completed":
         task_ids = await _update_integration_task(
             db,
@@ -109,7 +109,15 @@ async def _apply_extract_result(
             result_version=result.get("version"),
             error="",
         )
-        return task_ids, "success", ""
+        # 解析耗时(秒): 取 pipeline timing.total_sec
+        parse_time = None
+        timing = result.get("timing") if isinstance(result, dict) else None
+        if isinstance(timing, dict):
+            try:
+                parse_time = float(timing.get("total_sec"))
+            except (TypeError, ValueError):
+                parse_time = None
+        return task_ids, "success", "", parse_time
     else:
         err = (
             result.get("error") if isinstance(result, dict) else str(result)
@@ -121,7 +129,7 @@ async def _apply_extract_result(
             extract_progress=100,
             error=str(err)[:500],
         )
-        return task_ids, "failed", str(err)[:500]
+        return task_ids, "failed", str(err)[:500], None
 
 
 async def parse_document_task(ctx: dict, document_id: str, kb_id: str) -> dict:
@@ -256,11 +264,11 @@ async def extract_document_task(ctx: dict, document_id: str, kb_id: str) -> dict
         result = await extraction_task_service.run_extraction_task(
             db, uuid.UUID(document_id), uuid.UUID(kb_id)
         )
-        task_ids, status, reason = await _apply_extract_result(
+        task_ids, status, reason, parse_time = await _apply_extract_result(
             db, uuid.UUID(document_id), result
         )
         await db.commit()
-        await _notify_integration_terminal(task_ids, status, reason)
+        await _notify_integration_terminal(task_ids, status, reason, parse_time)
         return result
     except Exception as exc:
         await db.rollback()

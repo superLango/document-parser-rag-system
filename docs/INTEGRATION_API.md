@@ -20,12 +20,13 @@
 {
   "task_id": "4e7a864c-4904-45b7-b424-2f95e2a6fdde",
   "status": "success",
-  "reason": ""
+  "reason": "",
+  "parse_time": 312.45
 }
 ```
 
-- 解析、索引或抽取出现无法继续的错误时，`status=failed`，`reason` 为失败原因；
-- 全流程完成且抽取结果成功落库后，`status=success`，`reason` 为空字符串；
+- 解析、索引或抽取出现无法继续的错误时，`status=failed`，`reason` 为失败原因，`parse_time` 为 `null`；
+- 全流程完成且抽取结果成功落库后，`status=success`，`reason` 为空字符串，`parse_time` 为 OCR+解析+结构化抽取总耗时（秒）；
 - 回调网络失败会有限重试并记录日志，不会反向改变一站式任务的业务状态。
 
 ### 整体流程
