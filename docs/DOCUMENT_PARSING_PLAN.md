@@ -449,13 +449,43 @@ RuleLayoutEngine 的可插拔代码已清除（权重文件保留于 models/）�
 ## 附录 2：PP-DocLayoutV3 引擎（2026-08 定版）
 
 - 引擎：`PPDocLayoutEngine`（唯一版面引擎，V2/DocLayout-YOLO/Rule 已移除）
-- 权重：`models/pp_doclayoutv3_finetuned_v1/model.safetensors`（项目微调 safetensors 版，
-  SHA256=`5c27e59c...8504eee` 锁定）
+- 权重：`models/pp_doclayoutv3_finetuned_v2/model.safetensors`（项目微调 V2 safetensors 版，
+  SHA256=`5b76c1ff...c53cc3` 锁定，当前默认）
+- 可选权重：
+  - `models/pp_doclayoutv3/model.safetensors`（官方版，SHA256=`5ea422c6...e2b85e`）
+  - `models/pp_doclayoutv3_finetuned_v1/model.safetensors`（微调 V1，
+    SHA256=`5c27e59c...8504eee`）
 - 特点：非平面文档支持、多点框（polygon_points）、端到端阅读顺序；25 类与 V2 一致
-- 配置：`PARSEKIT_LAYOUT_MODEL_DIR=models/pp_doclayoutv3_finetuned_v1`（唯一引擎）、
+- 配置：`PARSEKIT_LAYOUT_MODEL_DIR=models/pp_doclayoutv3_finetuned_v2`（默认）、
   `PARSEKIT_LAYOUT_CONF_THRESHOLD=0.5`（与 X-AnyLabeling 默认阈值一致）
 - 单例缓存：`pipeline._ENGINE_CACHE` 进程内缓存引擎（模型仅加载一次），
   避免重复解析反复加载 133MB 权重与 GPU 显存累积
+
+### 版面模型切换
+
+推荐使用项目选择器，它会先校验目标模型 SHA256，再原子更新 `backend/.env`：
+
+```bash
+bash scripts/select_layout_model.sh official --restart
+bash scripts/select_layout_model.sh v1 --restart
+bash scripts/select_layout_model.sh v2 --restart
+```
+
+也可以手工修改 `backend/.env`，不修改代码：
+
+```bash
+PARSEKIT_LAYOUT_MODEL_DIR=/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3_finetuned_v2
+bash scripts/restart_services.sh
+```
+
+可将目录末尾替换为 `pp_doclayoutv3`（官方版）或
+`pp_doclayoutv3_finetuned_v1`（V1）。加载器只接受上述三套已登记 SHA256，未知权重会
+明确报错。若坚持修改代码默认值，需先删除 `backend/.env` 中的同名覆盖项，再同步修改：
+
+1. `backend/app/core/config.py` 中 `PARSEKIT_LAYOUT_MODEL_DIR`；
+2. `backend/app/services/parsekit/pipeline.py` 中 `ParseOptions.layout_model_dir`。
+
+修改后必须重启 FastAPI 与 arq Worker；已有解析结果不会自动重算，需手动重新解析。
 
 ### V2/V3 对比（全量 20 样本，--skip-ocr，GPU，阈值 0.4）
 | 指标 | V2 | V3 |

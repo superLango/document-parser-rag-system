@@ -25,7 +25,8 @@ RUN pip install -r /app/requirements.txt \
 COPY backend /app/backend
 
 # 小模型权重：不打包进镜像（离线部署传 tar 体积大），由宿主机目录卷挂载到 /app/models
-# 部署机需提供 models/bge-m3、models/bge-reranker-v2-m3、models/pp_doclayoutv3_finetuned_v1
+# 部署机需提供 models/bge-m3、models/bge-reranker-v2-m3、
+# models/pp_doclayoutv3_finetuned_v2（官方版/V1 为可选回退模型）
 
 COPY backend/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh

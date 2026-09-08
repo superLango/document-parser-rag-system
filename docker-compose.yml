@@ -15,7 +15,7 @@ x-backend-env: &backend-env
   LLM_SERVER_MODEL: ${LLM_SERVER_MODEL:-Qwen3.6-35B-A3B-FP8}
   EMBEDDING_MODEL_DIR: /app/models/bge-m3
   RERANKER_MODEL_DIR: /app/models/bge-reranker-v2-m3
-  PARSEKIT_LAYOUT_MODEL_DIR: /app/models/pp_doclayoutv3_finetuned_v1
+  PARSEKIT_LAYOUT_MODEL_DIR: /app/models/pp_doclayoutv3_finetuned_v2
   # 脚本 kb_tools 回调后端（worker 容器内 127.0.0.1 是自身，必须指向 backend 服务）
   SCRIPT_EMBED_BASE_URL: http://backend:8000
 
@@ -97,7 +97,7 @@ services:
       # 小模型由宿主机目录挂载（离线部署：模型目录单独传输，改代码无需重传模型）
       - ./models/bge-m3:/app/models/bge-m3:ro
       - ./models/bge-reranker-v2-m3:/app/models/bge-reranker-v2-m3:ro
-      - ./models/pp_doclayoutv3_finetuned_v1:/app/models/pp_doclayoutv3_finetuned_v1:ro
+      - ./models/pp_doclayoutv3_finetuned_v2:/app/models/pp_doclayoutv3_finetuned_v2:ro
     deploy:
       resources:
         reservations:
@@ -124,7 +124,7 @@ services:
     volumes:
       - ./models/bge-m3:/app/models/bge-m3:ro
       - ./models/bge-reranker-v2-m3:/app/models/bge-reranker-v2-m3:ro
-      - ./models/pp_doclayoutv3_finetuned_v1:/app/models/pp_doclayoutv3_finetuned_v1:ro
+      - ./models/pp_doclayoutv3_finetuned_v2:/app/models/pp_doclayoutv3_finetuned_v2:ro
     deploy:
       resources:
         reservations:

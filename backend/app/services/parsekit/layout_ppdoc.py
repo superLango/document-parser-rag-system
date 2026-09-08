@@ -1,6 +1,7 @@
-"""微调 PP-DocLayoutV3 版面分析引擎（唯一版面引擎，2026-08 定版）。
+"""PP-DocLayoutV3 版面分析引擎（唯一版面引擎，2026-08 定版）。
 
-基座：PaddlePaddle/PP-DocLayoutV3_safetensors；部署权重为项目微调版本。
+基座：PaddlePaddle/PP-DocLayoutV3_safetensors；部署权重可在官方版、微调 V1、
+微调 V2 之间切换，默认使用微调 V2。
 - 架构：RT-DETR 检测 + 阅读顺序 head；支持非平面文档、多点框
   （polygon_points）、端到端阅读顺序；
 - 25 类版面元素（id2label 见 config.json），输出按阅读顺序排列；
@@ -25,14 +26,24 @@ from .types import BBox, LayoutBlock, RenderPage
 logger = get_logger(__name__)
 
 MODEL_REPO = "PaddlePaddle/PP-DocLayoutV3_safetensors"
-EXPECTED_SHA256 = "5c27e59c325631afb799058f35421c34e66a13442aad7307b5443c3468504eee"
+DEFAULT_MODEL_VARIANT = "v2"
+MODEL_SHA256_BY_VARIANT: dict[str, str] = {
+    "official": "5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e",
+    "v1": "5c27e59c325631afb799058f35421c34e66a13442aad7307b5443c3468504eee",
+    "v2": "5b76c1ff4b5b0305e8c6f7e09ae71fbe1f64740abb1e67a206e12d6e82c53cc3",
+}
+MODEL_VARIANT_BY_SHA256 = {
+    digest: variant for variant, digest in MODEL_SHA256_BY_VARIANT.items()
+}
+# 保留默认模型哈希常量，供现有部署完整性检查与测试使用。
+EXPECTED_SHA256 = MODEL_SHA256_BY_VARIANT[DEFAULT_MODEL_VARIANT]
 
 
 class PPDocLayoutEngine:
-    """微调 PP-DocLayoutV3 真实推理引擎（transformers 加载）。
+    """PP-DocLayoutV3 真实推理引擎（transformers 加载）。
 
-    权重：models/pp_doclayoutv3_finetuned_v1/model.safetensors
-    （项目微调 safetensors 版，SHA256 锁定，见 EXPECTED_SHA256）。
+    默认权重：models/pp_doclayoutv3_finetuned_v2/model.safetensors。
+    官方版、V1、V2 均使用已知 SHA256 白名单校验。
     """
 
     name = "ppdoclayoutv3"
@@ -79,6 +90,7 @@ class PPDocLayoutEngine:
         self.device = device or self._pick_device()
         self.conf_threshold = float(conf_threshold)
         self.verify_hash = bool(verify_hash)
+        self.model_variant: str | None = None
         self._model: Any | None = None
         self._processor: Any | None = None
         self._id2label: dict[int, str] = {}
@@ -98,8 +110,8 @@ class PPDocLayoutEngine:
     def _validate(self) -> None:
         if not self.model_dir.exists():
             raise LayoutModelUnavailable(
-                f"PP-DocLayoutV3 权重未部署：目录不存在 {self.model_dir}。"
-                "请将微调权重放入 models/pp_doclayoutv3_finetuned_v1/ 后重试。"
+                f"PP-DocLayoutV3 权重未部署：目录不存在 {self.model_dir}。请部署"
+                "官方版、微调 V1 或微调 V2 权重后重试。"
             )
         weight = self.model_dir / "model.safetensors"
         if not weight.exists():
@@ -118,10 +130,15 @@ class PPDocLayoutEngine:
             for chunk in iter(lambda: f.read(1024 * 1024), b""):
                 h.update(chunk)
         actual = h.hexdigest()
-        if actual != EXPECTED_SHA256:
+        self.model_variant = MODEL_VARIANT_BY_SHA256.get(actual)
+        if self.model_variant is None:
+            expected = ", ".join(
+                f"{variant}={digest[:16]}..."
+                for variant, digest in MODEL_SHA256_BY_VARIANT.items()
+            )
             raise LayoutModelUnavailable(
-                f"PP-DocLayoutV3 权重校验失败：期望 {EXPECTED_SHA256[:16]}...，"
-                f"实际 {actual[:16]}...。请重新下载官方权重。"
+                f"PP-DocLayoutV3 权重校验失败：仅支持 {expected}；"
+                f"实际 {actual[:16]}...。"
             )
 
     def _load_model(self):
@@ -163,8 +180,9 @@ class PPDocLayoutEngine:
         }
         self._model = model
         logger.info(
-            "微调 PP-DocLayoutV3 已加载",
+            "PP-DocLayoutV3 已加载",
             model_dir=str(self.model_dir),
+            model_variant=self.model_variant or "unverified",
             device=self.device,
             classes=len(self._id2label),
         )

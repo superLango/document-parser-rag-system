@@ -74,9 +74,9 @@ class Settings(BaseSettings):
     DOCUMENT_MAX_SIZE_MB: int = 100
 
     # ---------- 文档解析管线（Phase 2 parsekit） ----------
-    # 版面引擎固定为微调 PP-DocLayoutV3（唯一引擎，2026-08 定版）
+    # 版面引擎固定为 PP-DocLayoutV3，权重默认使用微调 V2
     PARSEKIT_LAYOUT_MODEL_DIR: str = str(
-        Path(__file__).resolve().parents[3] / "models" / "pp_doclayoutv3_finetuned_v1"
+        Path(__file__).resolve().parents[3] / "models" / "pp_doclayoutv3_finetuned_v2"
     )
     # 置信度阈值（与 X-AnyLabeling 默认值一致；调低提升召回、调高提升精确率）
     PARSEKIT_LAYOUT_CONF_THRESHOLD: float = 0.5

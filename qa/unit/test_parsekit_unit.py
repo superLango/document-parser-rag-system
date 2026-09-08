@@ -186,6 +186,60 @@ async def test_enhanced_mode_rejected_after_ab():
     assert any("Page 1 of 3" in e.text for e in result.erased)
 
 
+async def test_pipeline_keeps_large_table_containing_repeated_top_text(monkeypatch):
+    """重复表头被判为页眉时，不应连带删除覆盖正文区域的大表格。"""
+    import app.services.parsekit.pipeline as pipeline_mod
+
+    class _TableEngine:
+        failures: ClassVar[list] = []
+
+        def analyze(self, pages, progress=None):
+            return [
+                [
+                    LayoutBlock(
+                        type="table",
+                        bbox=BBox(0.05, 0.08, 0.95, 0.92),
+                        page_index=page.page_index,
+                        confidence=0.96,
+                        source="ppdoclayoutv3",
+                    ),
+                    LayoutBlock(
+                        type="footnote",
+                        bbox=BBox(0.12, 0.94, 0.86, 0.97),
+                        page_index=page.page_index,
+                        confidence=0.76,
+                        source="ppdoclayoutv3",
+                    ),
+                ]
+                for page in pages
+            ]
+
+    monkeypatch.setattr(
+        pipeline_mod, "_get_layout_engine", lambda options: _TableEngine()
+    )
+    data = make_pdf(
+        [
+            [
+                {"text": "TEST CERTIFICATION (EN 10204)", "x": 245, "y": 100},
+                {"text": f"page body {page}", "x": 80, "y": 300},
+            ]
+            for page in range(1, 4)
+        ]
+    )
+
+    result = parse_pdf(
+        data,
+        options=ParseOptions(dpi=100, ocr_enabled=False),
+    )
+
+    for page in result.layout["pages"]:
+        assert [block["type"] for block in page["blocks"]] == [
+            "table",
+            "footnote",
+        ]
+    assert result.stats["margin_blocks_dropped"] == 0
+
+
 # ---------- L1M18-06 阅读顺序（两栏） ----------
 async def test_reading_order_two_columns():
     blocks = [

@@ -9,7 +9,8 @@
 - 文档解析 Phase 2/3：parsekit 管线（渲染→页眉页脚擦除（U3 方案 A 胜出）→微调 PP-DocLayoutV3 真实版面→阅读顺序→
   GLM-OCR（vLLM 9977）→Markdown 拼装）已接入真实任务状态机；`test_doc/` 样本可产出含 OCR 文本/表格 HTML/LaTeX 的
   result.md、layout.json（v1.2，含结构树与 U8 跨页表格标记）与页面图；提供页面缩略图预览与
-  7 天中间产物清理（U14）。微调权重位于 `models/pp_doclayoutv3_finetuned_v1/`（SHA256 锁定，不入 Git）。
+  7 天中间产物清理（U14）。默认使用 `models/pp_doclayoutv3_finetuned_v2/`；官方版、V1、V2
+  均按 SHA256 锁定且不入 Git，可通过 `PARSEKIT_LAYOUT_MODEL_DIR` 切换。
 - 旧版完整源码保留在 [`document-parser-rag-system/`](document-parser-rag-system/)，
   作为**冻结基线**与功能参考，重构期间不直接修改。
 - 新代码已按 `docs/` 下的规范建设：`backend/`（FastAPI）+ `frontend/`（React）。

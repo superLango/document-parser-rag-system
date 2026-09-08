@@ -59,7 +59,7 @@ class FakeHttpClient:
 
 
 # ---------- M18 补测：PP-DocLayoutV3 真实权重完整性/加载/推理 ----------
-PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3_finetuned_v1"
+PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3_finetuned_v2"
 TEST_DOC = Path("/home/grainuser/hansonDoc_RAG/test_doc")
 
 
@@ -310,7 +310,7 @@ async def test_rule_engine_skips_ocr_blocks():
 
 # ================= PP-DocLayoutV3 引擎（真实样本坐标验证） =================
 
-PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3_finetuned_v1"
+PPDOCV3_MODEL_DIR = "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3_finetuned_v2"
 
 
 async def test_ppdoclayoutv3_engine_load_and_infer():

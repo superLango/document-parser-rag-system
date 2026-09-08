@@ -31,7 +31,7 @@ class ParseOptions:
     """解析参数（与配置项一一对应）。"""
 
     dpi: int = 200
-    layout_model_dir: str = str(PROJECT_ROOT / "models" / "pp_doclayoutv3_finetuned_v1")
+    layout_model_dir: str = str(PROJECT_ROOT / "models" / "pp_doclayoutv3_finetuned_v2")
     layout_conf_threshold: float = 0.5
     header_footer_mode: str = "rule"
     partial_on_page_failure: bool = True
@@ -111,7 +111,9 @@ def _drop_erased_overlap_blocks(
         for block in blocks:
             overlap = False
             for box in erased_boxes:
-                if block.bbox.overlap_ratio(box) <= 0.15 and box.overlap_ratio(block.bbox) <= 0.15:
+                # 只按版面块自身被覆盖的比例决定是否删除。若反向比例也参与
+                # 判定，小型重复页眉完全落在大表格内时会误删整张表格。
+                if block.bbox.overlap_ratio(box) <= 0.15:
                     continue
                 # 底部页脚区只删除文本类块，避免跨页表格/图片与页脚重叠被误删
                 if box.y0 >= 0.84 and block.type not in (
