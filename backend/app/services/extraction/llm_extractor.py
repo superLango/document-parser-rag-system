@@ -21,7 +21,7 @@ from app.core.config import settings as _settings
 
 MODEL_CONTEXT_WINDOW_TOKENS = _settings.LLM_CONTEXT_WINDOW_TOKENS
 # 输入预算安全余量（Prompt 模板/系统提示等固定开销）
-_INPUT_RESERVE_TOKENS = 6000
+_INPUT_RESERVE_TOKENS = 3000
 
 
 def input_char_budget(max_tokens: int, chars_per_token: float = 1.5) -> int:

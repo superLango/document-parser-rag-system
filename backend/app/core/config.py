@@ -126,8 +126,8 @@ class Settings(BaseSettings):
     )
     LLM_SERVER_URL: str = "http://127.0.0.1:9988/v1"  # Qwen3.6 vLLM 服务
     LLM_SERVER_MODEL: str = "Qwen3.6-35B-A3B-FP8"
-    # LLM 上下文窗口（tokens）：按部署模型调整，内网 Qwen3.6 为 262144（256K）
-    LLM_CONTEXT_WINDOW_TOKENS: int = 262144
+    # LLM 上下文窗口（tokens）：按部署模型调整，当前服务为 131072（128K）
+    LLM_CONTEXT_WINDOW_TOKENS: int = 131072
 
     # ---------- BM25（S5/D4：jieba 词法检索，零 LLM） ----------
     BM25_K1: float = 1.5
