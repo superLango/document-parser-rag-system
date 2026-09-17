@@ -48,7 +48,7 @@ DEFAULT_GLOBAL_CONFIG: dict = {
         "weights": {"title": 0.2, "content": 0.8},
         "default_confidence_threshold": 0.35,
         "context_top_k": 30,
-        "context_max_tokens": 28000,
+        "context_max_tokens": 56000,
         "context": {
             "chars_per_token": 1.5,
             # 上下文排序：page=页码排序（主流程）/ rerank=重排分数降序
@@ -84,14 +84,14 @@ DEFAULT_GLOBAL_CONFIG: dict = {
         "engine": "BaseExtract",
         "engines": {
             "BaseExtract": {
-                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 100000,
+                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 200000,
                 "timeout": 1800, "enable_thinking": False,
                 "concurrency": {"max_concurrency": 32, "cross_category": 32, "within_category": 1},
-                "batch": {"single_threshold": 100000, "batch_chars": 6000, "overlap": 500, "context_truncate": 60000},
+                "batch": {"single_threshold": 200000, "batch_chars": 6000, "overlap": 500, "context_truncate": 120000},
             },
             "LangExtractPkg": {
                 # 输出预算下调，输入预算自动放大（防 400/截断）
-                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 100000,
+                "temperature": 0.0, "top_p": 0.1, "top_k": 20, "max_tokens": 200000,
                 "timeout": 600, "enable_thinking": False,
                 # 单轮抽取优先保证完整（多轮仅放大耗时，first-pass 已覆盖大多数）
                 "format_type": "JSON", "fence_output": False, "max_examples": 3, "passes": 1,
