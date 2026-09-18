@@ -25,7 +25,9 @@ from .types import BBox, LayoutBlock, RenderPage
 logger = get_logger(__name__)
 
 MODEL_REPO = "PaddlePaddle/PP-DocLayoutV3_safetensors"
-EXPECTED_SHA256 = "5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e"
+EXPECTED_SHA256 = "5b76c1ff4b5b0305e8c6f7e09ae71fbe1f64740abb1e67a206e12d6e82c53cc3"  # v2 微调版(当前启用)
+# 允许的历史版本(官方 v1), 便于回滚/对比
+ALLOWED_SHA256 = {EXPECTED_SHA256, "5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e"}
 
 
 class PPDocLayoutEngine:
@@ -113,10 +115,10 @@ class PPDocLayoutEngine:
             for chunk in iter(lambda: f.read(1024 * 1024), b""):
                 h.update(chunk)
         actual = h.hexdigest()
-        if actual != EXPECTED_SHA256:
+        if actual not in ALLOWED_SHA256:
             raise LayoutModelUnavailable(
                 f"PP-DocLayoutV3 权重校验失败：期望 {EXPECTED_SHA256[:16]}...，"
-                f"实际 {actual[:16]}...。请重新下载官方权重。"
+                f"实际 {actual[:16]}...。允许的哈希: {sorted(h[:8] for h in ALLOWED_SHA256)}"
             )
 
     def _load_model(self):
