@@ -300,7 +300,7 @@ class GlobalRetrievalConfig(BaseModel):
     weights: GlobalRetrievalWeights = Field(default_factory=GlobalRetrievalWeights)
     default_confidence_threshold: float = Field(default=0.35, ge=0, le=1)
     context_top_k: int = Field(default=20, ge=1)
-    context_max_tokens: int = Field(default=43000, ge=1)
+    context_max_tokens: int = Field(default=53000, ge=1)
     context: GlobalContextConfig = Field(default_factory=GlobalContextConfig)
     data_route_top_k: int = Field(default=10, ge=1)
     meta_route_top_k: int = Field(default=5, ge=1)
@@ -320,14 +320,14 @@ class GlobalBatchConfig(BaseModel):
     single_threshold: int = Field(default=8000, ge=1)
     batch_chars: int = Field(default=6000, ge=1)
     overlap: int = Field(default=500, ge=0)
-    context_truncate: int = Field(default=64000, ge=1)
+    context_truncate: int = Field(default=79000, ge=1)
 
 
 class GlobalBaseExtractConfig(BaseModel):
     temperature: float = Field(default=0.0, ge=0, le=2)
     top_p: float = Field(default=0.1, ge=0, le=1)
     top_k: int = Field(default=20, ge=1)
-    max_tokens: int = Field(default=85000, ge=1)
+    max_tokens: int = Field(default=75000, ge=1)
     timeout: int = Field(default=300, ge=1)
     enable_thinking: bool = False
     concurrency: GlobalConcurrencyConfig = Field(default_factory=GlobalConcurrencyConfig)
