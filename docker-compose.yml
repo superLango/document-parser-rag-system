@@ -18,6 +18,8 @@ x-backend-env: &backend-env
   PARSEKIT_LAYOUT_MODEL_DIR: /app/models/pp_doclayoutv3
   # 脚本 kb_tools 回调后端（worker 容器内 127.0.0.1 是自身，必须指向 backend 服务）
   SCRIPT_EMBED_BASE_URL: http://backend:8000
+  # 一站式任务状态回调地址（2026-09-20 由 192.168.0.141 改为 172.16.1.33）
+  INTEGRATION_STATUS_CALLBACK_URL: http://172.16.1.33/oapi/aiDocParse/receiveParseStatus
 
 services:
   postgres:

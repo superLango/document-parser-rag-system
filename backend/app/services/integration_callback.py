@@ -24,15 +24,18 @@ async def send_status_callback(
     parse_time: float | None = None,
     *,
     client: httpx.AsyncClient | None = None,
+    url: str | None = None,
 ) -> bool:
     """发送一站式任务终态；失败只记录日志，不反向改变业务任务状态。
 
     parse_time: 成功时 OCR+解析+抽取总耗时(秒); 失败/未完成为 None(null)。
+    url: 按知识库解析出的回调地址（knowledge_bases.config.callback.url）；
+         为 None 时回退全局配置 INTEGRATION_STATUS_CALLBACK_URL。
     """
     if status not in _ALLOWED_STATUSES:
         raise ValueError(f"不支持的一站式任务回调状态：{status}")
 
-    url = settings.INTEGRATION_STATUS_CALLBACK_URL.strip()
+    url = (url or settings.INTEGRATION_STATUS_CALLBACK_URL).strip()
     if not url:
         logger.warning("一站式任务状态回调地址为空，跳过回调", task_id=str(task_id))
         return False
@@ -63,6 +66,7 @@ async def send_status_callback(
                     task_id=str(task_id),
                     status=status,
                     attempt=attempt,
+                    url=url,
                     result=(response_data or {}).get("result")
                     if isinstance(response_data, dict)
                     else None,
@@ -74,6 +78,7 @@ async def send_status_callback(
                     task_id=str(task_id),
                     status=status,
                     attempt=attempt,
+                    url=url,
                     error=str(exc)[:500],
                 )
                 if attempt < attempts:

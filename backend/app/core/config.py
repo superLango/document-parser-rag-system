@@ -74,8 +74,9 @@ class Settings(BaseSettings):
     DOCUMENT_MAX_SIZE_MB: int = 100
 
     # ---------- 一站式任务状态回调 ----------
+    # 2026-09-20：回调地址改为 172.16.1.33（原 192.168.0.141）；可用环境变量覆盖
     INTEGRATION_STATUS_CALLBACK_URL: str = (
-        "http://192.168.0.141:4001/oapi/aiDocParse/receiveParseStatus"
+        "http://172.16.1.33/oapi/aiDocParse/receiveParseStatus"
     )
     INTEGRATION_STATUS_CALLBACK_TIMEOUT_SECONDS: int = 10
     INTEGRATION_STATUS_CALLBACK_MAX_ATTEMPTS: int = 3
@@ -97,6 +98,17 @@ class Settings(BaseSettings):
     PARSEKIT_OCR_ENABLED: bool = True
     PARSEKIT_OCR_FAILURE_POLICY: str = "partial"  # partial | failed（U13）
     PARSEKIT_INTERMEDIATE_RETENTION_DAYS: int = 7  # U14：pages 中间产物保留天数
+    # 分块阶段丢弃被重复识别的表格（同一张表输出两份 → 抽取结果重复）。
+    # 判定只看表格自身归一化文本，与文档领域无关；置 False 可回退旧行为。
+    CHUNK_TABLE_DEDUPE_ENABLED: bool = True
+
+    # ---------- 任务派发自愈（outbox 卡住重投） ----------
+    # 已派发但 worker 在此时长内仍未开工（DocumentTask 仍为 queued）的 outbox 行会被重置重投。
+    PARSE_DISPATCH_RETRY_AFTER_SECONDS: int = 60
+    # cron 派发器每轮自动回收卡住的 outbox 行（worker 重启 / Redis 作业丢失后自愈）。
+    TASK_STUCK_REAPER_ENABLED: bool = True
+    # 回收判定阈值：claimed/enqueued 超过该时长且关联任务仍为 queued 才重投。
+    TASK_STUCK_REAPER_SECONDS: int = 300
 
     # ---------- GLM-OCR（Phase 3，U6/U7/U13） ----------
     GLMOCR_SERVER_URL: str = "http://127.0.0.1:9977/v1/chat/completions"

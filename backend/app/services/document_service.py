@@ -19,6 +19,7 @@ logger = get_logger(__name__)
 PARSE_STAGES = ["rendering", "layout", "ocr", "rebuild"]
 INDEX_STAGES = ["chunking", "embedding", "storing"]
 INDEX_TASK_TYPE = "document_index"
+PARSE_TASK_TYPE = "document_parse"
 
 
 def _now() -> datetime:
@@ -31,6 +32,22 @@ def _ocr_base_from_object_key(object_key: str) -> str | None:
     if len(parts) >= 4 and parts[1] == "originals":
         return f"{parts[0]}/ocr/{parts[2]}/"
     return None
+
+
+def _ocr_base_from_document(document) -> str | None:
+    """推导文档 ocr 产物目录前缀（优先用文档自身产物路径，其次回退对象键）。
+
+    注意：originals/{上传任务id} 与 ocr/{解析任务id} 可能不是同一个 id
+    （一站式对接上传时 originals 路径用的是对接任务 id，解析任务另建 task_id），
+    因此必须以 layout_path / markdown_path 所在目录为准，否则页面预览取不到图。
+    """
+    for path in (
+        getattr(document, "layout_path", None),
+        getattr(document, "markdown_path", None),
+    ):
+        if path and "/ocr/" in path:
+            return path.rsplit("/", 1)[0] + "/"
+    return _ocr_base_from_object_key(document.object_key)
 
 
 def _artifact_keys(kb_id: uuid.UUID, task_id: str) -> dict:
@@ -112,40 +129,33 @@ async def start_document_parse(
         raise BusinessException(
             code=ErrorCode.BUSINESS_NOT_FOUND, message="文档不存在"
         )
-    active = (
+    active_task = (
         await db.execute(
-            select(func.count())
-            .select_from(DocumentTask)
+            select(DocumentTask)
             .where(
                 DocumentTask.document_id == document_id,
+                DocumentTask.type == PARSE_TASK_TYPE,
                 DocumentTask.status.in_(("queued", "running")),
             )
+            .order_by(DocumentTask.created_at.desc())
+            .limit(1)
         )
-    ).scalar_one()
-    if active > 0:
-        task = (
+    ).scalars().first()
+
+    if active_task is not None:
+        outbox = (
             await db.execute(
-                select(DocumentTask)
-                .where(
-                    DocumentTask.document_id == document_id,
-                    DocumentTask.status.in_(("queued", "running")),
-                )
-                .order_by(DocumentTask.created_at)
-                .limit(1)
+                select(TaskOutbox).where(TaskOutbox.task_id == active_task.task_id)
             )
-        ).scalar_one()
-        if task.status == "queued":
-            # 上传创建的任务可能尚未写 outbox，补写后返回
-            outbox = (
-                await db.execute(
-                    select(TaskOutbox).where(TaskOutbox.task_id == task.task_id)
-                )
-            ).scalar_one_or_none()
+        ).scalar_one_or_none()
+
+        if active_task.status == "queued":
             if outbox is None:
+                # 上传创建的任务可能尚未写 outbox，补写后返回
                 db.add(
                     TaskOutbox(
-                        task_id=task.task_id,
-                        type="document_parse",
+                        task_id=active_task.task_id,
+                        type=PARSE_TASK_TYPE,
                         payload={
                             "document_id": str(document.id),
                             "kb_id": str(kb_id),
@@ -154,11 +164,65 @@ async def start_document_parse(
                     )
                 )
                 await db.commit()
-            return task
-        raise BusinessException(
-            code=ErrorCode.BUSINESS_NOT_FOUND,
-            message="文档正在解析中，请稍后重试",
-        )
+                return active_task
+            if outbox.status in ("pending", "claimed"):
+                # 派发器（每 TASK_DISPATCH_INTERVAL_SECONDS 秒）即将处理
+                return active_task
+            if outbox.status == "done":
+                # 作业已完成但任务未收尾（历史上 run_parse_task 取错行导致）：关闭僵尸任务后重建
+                logger.warning(
+                    "关闭僵尸解析任务并重建",
+                    task_id=active_task.task_id,
+                    document_id=str(document_id),
+                )
+                active_task.status = "completed"
+                active_task.updated_at = _now()
+                await db.flush()
+            elif outbox.status == "enqueued":
+                enqueued_at = outbox.enqueued_at
+                waited = (
+                    (_now() - enqueued_at).total_seconds()
+                    if enqueued_at is not None
+                    else float("inf")
+                )
+                retry_after = max(10, int(settings.PARSE_DISPATCH_RETRY_AFTER_SECONDS))
+                if waited < retry_after:
+                    return active_task
+                # 已派发但 worker 从未认领（任务仍是 queued）→ 重置为 pending 让派发器重投
+                logger.warning(
+                    "解析任务派发超时，重置 outbox 等待重投",
+                    task_id=active_task.task_id,
+                    document_id=str(document_id),
+                    waited_seconds=round(waited, 1),
+                )
+                outbox.status = "pending"
+                outbox.enqueued_at = None
+                await db.commit()
+                return active_task
+            else:
+                return active_task
+        else:  # running
+            heartbeat = active_task.heartbeat_at
+            idle = (
+                (_now() - heartbeat).total_seconds()
+                if heartbeat is not None
+                else float("inf")
+            )
+            if idle < max(60, int(settings.TASK_STUCK_REAPER_SECONDS)):
+                raise BusinessException(
+                    code=ErrorCode.BUSINESS_NOT_FOUND,
+                    message="文档正在解析中，请稍后重试",
+                )
+            # 心跳超时的僵尸 running 任务：关闭后重建
+            logger.warning(
+                "解析任务心跳超时，关闭僵尸任务并重建",
+                task_id=active_task.task_id,
+                document_id=str(document_id),
+                idle_seconds=round(idle, 1),
+            )
+            active_task.status = "failed"
+            active_task.error = {"message": "解析任务心跳超时，已由重解析重建"}
+            await db.flush()
 
     task = DocumentTask(
         kb_id=kb_id,
@@ -323,7 +387,7 @@ async def get_page_image(
         )
     if page_index < 1 or page_index > document.page_count:
         raise ValidationException(message="页码越界")
-    base = _ocr_base_from_object_key(document.object_key)
+    base = _ocr_base_from_document(document)
     if not base:
         raise ValidationException(message="页面产物路径缺失")
     key = f"{base}pages/page-{page_index:04d}.png"
@@ -362,7 +426,7 @@ async def cleanup_expired_pages(
     ).scalars().all()
     cleaned = 0
     for document in rows:
-        base = _ocr_base_from_object_key(document.object_key)
+        base = _ocr_base_from_document(document)
         if not base:
             continue
         try:
@@ -761,17 +825,70 @@ async def mark_outbox(
     await db.commit()
 
 
+async def requeue_stale_outbox(
+    db: AsyncSession, older_than_seconds: int | None = None
+) -> int:
+    """把"已派发/已认领但 worker 从未开工"的 outbox 行重置为 pending，交派发器重投。
+
+    触发场景：Redis 作业丢失、worker 重启、或 dispatcher 在 claim 与 enqueue 之间中断，
+    会让 outbox 行永久停在 claimed/enqueued，`claim_outbox` 只捞 pending → 永不重投，
+    表现为"接口返回已触发，任务却一动不动"。
+
+    安全前提：三条执行链路开工时都会先把对应 DocumentTask 置为 running
+    （run_parse_task / run_index_task / extraction_task_service.run_extract_task），
+    因此"关联任务仍为 queued"的行一定是没被认领的作业，不会重投正在跑的任务。
+    """
+    seconds = int(
+        older_than_seconds
+        if older_than_seconds is not None
+        else settings.TASK_STUCK_REAPER_SECONDS
+    )
+    result = await db.execute(
+        text(
+            """
+            UPDATE task_outbox o
+               SET status = 'pending', enqueued_at = NULL
+             WHERE o.status IN ('claimed', 'enqueued')
+               AND COALESCE(o.enqueued_at, o.created_at)
+                   < now() - make_interval(secs => cast(:secs as double precision))
+               AND EXISTS (
+                     SELECT 1 FROM document_tasks t
+                      WHERE t.task_id = o.task_id AND t.status = 'queued'
+                   )
+            RETURNING o.id, o.type
+            """
+        ),
+        {"secs": seconds},
+    )
+    rows = result.fetchall()
+    await db.commit()
+    if rows:
+        logger.warning(
+            "重投卡住的 outbox 任务",
+            count=len(rows),
+            older_than_seconds=seconds,
+            types=sorted({r[1] for r in rows}),
+        )
+    return len(rows)
+
+
 async def run_parse_task(
     db: AsyncSession, document_id: uuid.UUID, kb_id: uuid.UUID
 ) -> dict:
     """Phase 2 解析流水线：渲染→擦除→版面→顺序→拼装→产物落库。"""
     document = await get_document(db, kb_id, document_id)
+    # 必须按 type 过滤并取最新一条：否则会更新到同文档的 index/extraction 任务或历史旧任务，
+    # 导致真正待执行的 parse 任务永远停留在 queued（僵尸任务）。
     task = (
         await db.execute(
-            select(DocumentTask).where(
+            select(DocumentTask)
+            .where(
                 DocumentTask.document_id == document_id,
                 DocumentTask.kb_id == kb_id,
+                DocumentTask.type == PARSE_TASK_TYPE,
             )
+            .order_by(DocumentTask.created_at.desc())
+            .limit(1)
         )
     ).scalars().first()
     if task is None:
@@ -907,14 +1024,20 @@ async def fail_task(
     kb_id: uuid.UUID,
     document_id: uuid.UUID,
     error: str,
+    task_type: str = PARSE_TASK_TYPE,
 ) -> None:
     document = await get_document(db, kb_id, document_id)
+    # 与 run_parse_task 一致：按 type 过滤 + 取最新，避免把失败状态写到别的任务上
     task = (
         await db.execute(
-            select(DocumentTask).where(
+            select(DocumentTask)
+            .where(
                 DocumentTask.document_id == document_id,
                 DocumentTask.kb_id == kb_id,
+                DocumentTask.type == task_type,
             )
+            .order_by(DocumentTask.created_at.desc())
+            .limit(1)
         )
     ).scalars().first()
     document.status = "failed"

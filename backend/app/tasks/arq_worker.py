@@ -50,13 +50,32 @@ async def _update_integration_task(db, document_id, **patch) -> list[str]:
 async def _notify_integration_terminal(
     task_ids: list[str] | None, status: str, reason: str = "", parse_time: float | None = None
 ) -> None:
-    """通知全部关联的一站式任务；网络失败不影响 Worker 业务状态。"""
+    """通知全部关联的一站式任务；网络失败不影响 Worker 业务状态。
+
+    回调地址按知识库解析（knowledge_bases.config.callback.url），未配置则用全局默认，
+    以支持不同知识库回调到不同接口（如质保书 receiveParseCrStatus）。
+    """
     from app.services.integration_callback import send_status_callback
+    from app.services import integration_service
 
     if not task_ids:
         return
+
+    urls: dict[str, str] = {}
+    try:
+        db = await _superuser_session()
+        try:
+            urls = await integration_service.resolve_callback_urls(db, task_ids)
+        finally:
+            await db.close()
+    except Exception:
+        logger.exception("解析知识库回调地址失败，回退全局默认地址")
+
     await asyncio.gather(
-        *(send_status_callback(task_id, status, reason, parse_time) for task_id in task_ids)
+        *(
+            send_status_callback(task_id, status, reason, parse_time, url=urls.get(task_id))
+            for task_id in task_ids
+        )
     )
 
 
@@ -375,9 +394,21 @@ async def dispatch_term_sync_cron(ctx: dict) -> int:
 
 
 async def dispatch_outbox(ctx: dict) -> int:
-    """扫描 pending outbox → 入队 arq → 标记 enqueued。"""
+    """扫描 pending outbox → 入队 arq → 标记 enqueued。
+
+    先做一次自愈：把"已派发但 worker 从未开工"（关联任务仍为 queued）的行重置为
+    pending 重投，避免 Redis 作业丢失 / worker 重启后任务永久卡住。
+    """
     db = await _superuser_session()
     try:
+        if settings.TASK_STUCK_REAPER_ENABLED:
+            try:
+                requeued = await document_service.requeue_stale_outbox(db)
+                if requeued:
+                    logger.warning("outbox 自愈重投完成", requeued=requeued)
+            except Exception:
+                logger.exception("outbox 自愈重投失败")
+                await db.rollback()
         rows = await document_service.claim_outbox(db, limit=20)
     finally:
         await db.close()

@@ -41,7 +41,11 @@ async def list_extractable_documents(
     kb_id: uuid.UUID, request: Request,
     db: AsyncSession = Depends(get_db), current_user=Depends(require_not_pending),
 ) -> dict:
-    """已完成解析+索引的可抽取文档列表。"""
+    """已完成解析+索引的可抽取文档列表。
+
+    process_status 允许 completed 与 partial：部分页解析失败的文档（partial）
+    其成功页仍已入库索引，同样可抽取；返回 process_status 供前端做提示。
+    """
     await _kb_access(kb_id, db=db, current_user=current_user)
     rows = (
         await db.execute(
@@ -49,7 +53,7 @@ async def list_extractable_documents(
             .where(
                 Document.kb_id == kb_id,
                 Document.deleted_at.is_(None),
-                Document.process_status == "completed",
+                Document.process_status.in_(("completed", "partial")),
                 Document.index_status == "indexed",
             )
             .order_by(Document.updated_at.desc())
@@ -64,6 +68,7 @@ async def list_extractable_documents(
             "file_size": doc.file_size,
             "page_count": doc.page_count,
             "status": doc.status,
+            "process_status": doc.process_status,
             "extraction_status": doc.extraction_status,
             "latest_schema_name": latest.schema_name if latest else None,
             "history_count": await result_store.history_count(db, kb_id, doc.id),

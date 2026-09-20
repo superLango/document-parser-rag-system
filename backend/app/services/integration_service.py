@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import uuid
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import BusinessException, ErrorCode
@@ -203,3 +203,51 @@ async def issue_session_token(db: AsyncSession, task_id):
     return {"task_id": str(itask.task_id), "token": token,
             "document_id": str(itask.document_id) if itask.document_id else None,
             "kb_id": str(itask.kb_id)}
+
+
+async def resolve_callback_urls(db: AsyncSession, task_ids) -> dict[str, str]:
+    """按知识库解析一站式回调地址（不同知识库可回调到不同接口）。
+
+    取值优先级：knowledge_bases.config->'callback'->>'url' → 全局 settings.INTEGRATION_STATUS_CALLBACK_URL。
+    例：质保书库配置 .../receiveParseCrStatus，其余库沿用全局 .../receiveParseStatus。
+    """
+    from app.core.config import settings
+
+    ids: list[uuid.UUID] = []
+    for t in task_ids or []:
+        try:
+            ids.append(uuid.UUID(str(t)))
+        except (ValueError, TypeError):
+            continue
+    if not ids:
+        return {}
+
+    rows = (
+        await db.execute(
+            select(IntegrationTask.task_id, IntegrationTask.kb_id).where(
+                IntegrationTask.task_id.in_(ids)
+            )
+        )
+    ).all()
+    if not rows:
+        return {}
+
+    default_url = (settings.INTEGRATION_STATUS_CALLBACK_URL or "").strip()
+    kb_ids = {r[1] for r in rows if r[1] is not None}
+    per_kb: dict[str, str] = {}
+    if kb_ids:
+        kb_rows = (
+            await db.execute(
+                text(
+                    "SELECT id::text, config->'callback'->>'url' FROM knowledge_bases "
+                    "WHERE id = ANY(:ids)"
+                ),
+                {"ids": list(kb_ids)},
+            )
+        ).all()
+        per_kb = {str(r[0]): ((r[1] or "").strip() or default_url) for r in kb_rows}
+
+    return {
+        str(r[0]): per_kb.get(str(r[1]), default_url) if r[1] is not None else default_url
+        for r in rows
+    }

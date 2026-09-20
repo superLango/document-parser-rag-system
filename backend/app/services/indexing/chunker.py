@@ -18,6 +18,7 @@ from __future__ import annotations
 import re
 from collections import OrderedDict
 
+from app.core.config import settings
 from app.core.logging import get_logger
 
 from .models import ChildChunk, DocumentElement, ParentChunk
@@ -55,6 +56,35 @@ _TABLE_NUM_RE = re.compile(r"表\s*[0-9]+")
 # 独立页码文本（版面模型常把页眉/页脚页码识别为 text 块，长度为 1~3 位数字）
 _PAGE_NUM_RE = re.compile(r"^\d{1,3}$")
 
+# 重复表格去重：版面/OCR 有时对同一张表输出两份内容（HTML 结构或个别字符不同），
+# 会在抽取阶段造成同一条数据被输出多次。判定只用表格自身文本，与文档领域无关：
+# 归一化（去标签/空白/标点）后取字符 3-gram 集合，用"包含度"比较（容忍长度差异）。
+TABLE_DUP_SIM_SAME_PAGE = 0.90   # 同页近乎重复
+TABLE_DUP_SIM_CROSS_PAGE = 0.98  # 跨页几乎完全一致（表格跨页被识别两次）
+_TABLE_SHINGLE_K = 3
+_HTML_TAG_RE = re.compile(r"<[^>]*>")
+_TABLE_NOISE_RE = re.compile(r"[\s\u3000\u200b，,。.;；:：、·\-—–_/|]+")
+
+
+def _table_shingles(content: str) -> frozenset[str]:
+    """表格归一化指纹：去 HTML 标签/空白/标点后取字符 3-gram 集合。"""
+    text = _TABLE_NOISE_RE.sub("", _HTML_TAG_RE.sub("", content or ""))
+    if not text:
+        return frozenset()
+    if len(text) < _TABLE_SHINGLE_K:
+        return frozenset({text})
+    return frozenset(
+        text[i : i + _TABLE_SHINGLE_K] for i in range(len(text) - _TABLE_SHINGLE_K + 1)
+    )
+
+
+def _containment(a: frozenset[str], b: frozenset[str]) -> float:
+    """较小集合被较大集合覆盖的比例（可容忍两份重复文本长度不同）。"""
+    if not a or not b:
+        return 0.0
+    small, big = (a, b) if len(a) <= len(b) else (b, a)
+    return len(small & big) / len(small)
+
 class HierarchyChunker:
     """层级父子分块器。"""
 
@@ -89,6 +119,8 @@ class HierarchyChunker:
         elements = self._elements_from_layout(layout)
         if not elements:
             return [], []
+        # 重复识别的表格只保留一份，避免同一份数据被抽取多次
+        elements = self._dedupe_table_elements(elements, doc_id=doc_id)
 
         # 按层级路径分组（保持阅读顺序）
         path_groups: OrderedDict[str, list[DocumentElement]] = OrderedDict()
@@ -136,6 +168,50 @@ class HierarchyChunker:
         return elem.type in ("text", "page_title") and bool(
             _PAGE_NUM_RE.match((elem.content or "").strip())
         )
+
+    def _dedupe_table_elements(
+        self, elements: list[DocumentElement], *, doc_id: str = ""
+    ) -> list[DocumentElement]:
+        """丢弃被重复识别的表格元素（保留首次出现者，阅读顺序与页码不变）。
+
+        仅对 has_table 元素生效，比较各自归一化文本的 3-gram 包含度：
+        同页 >= TABLE_DUP_SIM_SAME_PAGE、跨页 >= TABLE_DUP_SIM_CROSS_PAGE。
+        内容不同的表格（数据不同）包含度低，不会被误删。
+        """
+        if not getattr(settings, "CHUNK_TABLE_DEDUPE_ENABLED", True):
+            return elements
+        seen: list[tuple[int, frozenset[str]]] = []
+        kept: list[DocumentElement] = []
+        dropped = 0
+        for elem in elements:
+            if not elem.has_table:
+                kept.append(elem)
+                continue
+            sig = _table_shingles(elem.content)
+            page = int(elem.page or 0)
+            duplicate = False
+            for prev_page, prev_sig in seen:
+                threshold = (
+                    TABLE_DUP_SIM_SAME_PAGE
+                    if prev_page == page
+                    else TABLE_DUP_SIM_CROSS_PAGE
+                )
+                if _containment(sig, prev_sig) >= threshold:
+                    duplicate = True
+                    break
+            if duplicate:
+                dropped += 1
+                continue
+            seen.append((page, sig))
+            kept.append(elem)
+        if dropped:
+            logger.info(
+                "表格重复元素已去重",
+                doc_id=doc_id,
+                dropped=dropped,
+                table_count=len(seen),
+            )
+        return kept
 
     def _elements_from_tree(self, tree: dict) -> list[DocumentElement]:
         """深度遍历 document_tree 生成元素（面包屑栈式维护）。"""
