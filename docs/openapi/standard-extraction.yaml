@@ -1,0 +1,2591 @@
+openapi: 3.1.0
+info:
+  title: Hanson 金属标准拆分平台 API
+  version: 0.1.0-draft
+  description: |
+    M1.9a API 草案，以最终前端消费为准。
+
+    端点分两类：
+    - `x-status: implemented`：当前引擎已实现，可直接联调；
+    - `x-status: planned`：M1.9 平台化目标契约，尚未实现。
+
+    标记为 implemented 的端点由 `tools/export_openapi.py` 生成实时契约，
+    并与 `metal-doc-agent/tests/test_openapi.py` 做路由一致性校验。
+  contact:
+    name: Hanson Doc Parse
+servers:
+  - url: http://127.0.0.1:8765
+    description: 本地引擎 / 开发环境
+  - url: https://api.example.local
+    description: 生产（占位，M1.9 部署时替换）
+tags:
+  - name: auth
+    description: 登录与当前用户
+  - name: jobs
+    description: 引擎任务（当前实现）
+  - name: documents
+    description: 文档、拆分结果与证据
+  - name: knowledge-bases
+    description: 知识库
+  - name: tasks
+    description: 解析/拆分任务中心
+  - name: api-keys
+    description: 外部对接密钥
+  - name: audit
+    description: 审计日志
+  - name: standard-extractions
+    description: 标准拆分（目标契约）
+  - name: business-dictionary
+    description: 业务词典（项目大类 / 检测项目 / 试验方法）
+  - name: system
+    description: 健康检查与配方
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      tags: [system]
+      operationId: getHealth
+      summary: 健康检查
+      x-status: implemented
+      security: []
+      responses:
+        "200":
+          description: 服务正常
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /v1/recipes:
+    get:
+      tags: [system]
+      operationId: listRecipes
+      summary: 覆盖模板列表
+      x-status: implemented
+      responses:
+        "200":
+          description: 模板名与字段数
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [name]
+                  properties:
+                    name:
+                      type: string
+                    field_count:
+                      type: integer
+                    required_count:
+                      type: integer
+
+  /v1/auth/login:
+    post:
+      tags: [auth]
+      operationId: login
+      summary: 账号密码登录
+      x-status: implemented
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: 访问令牌与用户
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/auth/me:
+    get:
+      tags: [auth]
+      operationId: getCurrentPrincipal
+      summary: 当前用户或 API Key 身份
+      x-status: implemented
+      responses:
+        "200":
+          description: 身份信息
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/knowledge-bases:
+    get:
+      tags: [knowledge-bases]
+      operationId: listKnowledgeBases
+      summary: 我参与的知识库
+      x-status: implemented
+      responses:
+        "200":
+          description: 知识库列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/KnowledgeBase"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [knowledge-bases]
+      operationId: createKnowledgeBase
+      summary: 创建知识库（创建者为 owner）
+      x-status: implemented
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KnowledgeBaseCreate"
+      responses:
+        "201":
+          description: 知识库
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KnowledgeBase"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/knowledge-bases/{kb_id}:
+    get:
+      tags: [knowledge-bases]
+      operationId: getKnowledgeBase
+      summary: 知识库详情（含文档数）
+      x-status: implemented
+      parameters:
+        - name: kb_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 知识库
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KnowledgeBase"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/tasks:
+    get:
+      tags: [tasks]
+      operationId: listTasks
+      summary: 知识库内的解析/拆分任务（缺省为当前用户全部知识库）
+      x-status: implemented
+      parameters:
+        - name: kb_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 任务列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/tasks/{job_id}:
+    get:
+      tags: [tasks]
+      operationId: getTask
+      summary: 任务详情
+      x-status: implemented
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 任务
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/tasks/{job_id}/retry:
+    post:
+      tags: [tasks]
+      operationId: retryTask
+      summary: 重试失败或待复核任务
+      x-status: implemented
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: 已重新排队
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/api-keys:
+    get:
+      tags: [api-keys]
+      operationId: listApiKeys
+      summary: 我的 API Key（不含明文）
+      x-status: implemented
+      responses:
+        "200":
+          description: API Key 列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApiKey"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [api-keys]
+      operationId: createApiKey
+      summary: 创建 API Key（明文只返回一次）
+      x-status: implemented
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiKeyCreate"
+      responses:
+        "201":
+          description: 新密钥
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKey"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/api-keys/{key_id}:
+    delete:
+      tags: [api-keys]
+      operationId: revokeApiKey
+      summary: 撤销 API Key
+      x-status: implemented
+      parameters:
+        - name: key_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: 已撤销
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/audit-logs:
+    get:
+      tags: [audit]
+      operationId: listAuditLogs
+      summary: 审计日志
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 审计日志列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuditLog"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /v1/share/{token}:
+    get:
+      tags: [documents]
+      operationId: getSharedDocument
+      summary: 短期签名分享（无需登录）
+      x-status: implemented
+      security: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 文档、任务与拆分结果
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/business-dictionary:
+    get:
+      tags: [business-dictionary]
+      operationId: getBusinessDictionary
+      summary: 查询业务词典快照
+      x-status: implemented
+      parameters:
+        - name: type
+          in: query
+          description: 词典类型
+          schema:
+            type: string
+            enum: [category, item, method]
+        - name: q
+          in: query
+          description: 名称或别名包含的关键字
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 词典版本、统计与条目
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessDictionary"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [business-dictionary]
+      operationId: syncBusinessDictionary
+      summary: 同步业务词典
+      description: 从业务系统或快照重新导入，返回差异与版本。
+      x-status: planned
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source:
+                  type: string
+                  enum: [snapshot, api, db]
+                path:
+                  type: string
+      responses:
+        "200":
+          description: 同步结果
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [version, added, removed, changed]
+                properties:
+                  version:
+                    type: string
+                  added:
+                    type: integer
+                  removed:
+                    type: integer
+                  changed:
+                    type: integer
+
+  /v1/jobs:
+    post:
+      tags: [jobs]
+      operationId: createJob
+      summary: 上传文档并创建解析任务
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                template:
+                  type: string
+                  default: product_full
+                ocr:
+                  type: string
+                  enum: [mock, glm]
+                  default: mock
+                extractor:
+                  type: string
+                  enum: [mock, qwen]
+                  default: mock
+      responses:
+        "201":
+          description: 新任务
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobState"
+        "200":
+          description: 幂等重放
+          headers:
+            X-Idempotent-Replay:
+              schema:
+                type: string
+                const: "true"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobState"
+        "415":
+          $ref: "#/components/responses/BadRequest"
+    get:
+      tags: [jobs]
+      operationId: listJobs
+      summary: 任务列表
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 按创建时间倒序
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobState"
+
+  /v1/jobs/{job_id}:
+    get:
+      tags: [jobs]
+      operationId: getJob
+      summary: 任务状态
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: 任务状态
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobState"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/jobs/{job_id}/result:
+    get:
+      tags: [jobs]
+      operationId: getJobResult
+      summary: 文档、表格、记录与覆盖结果
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: DocumentResult
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/items:
+    get:
+      tags: [jobs]
+      operationId: getJobItems
+      summary: 项目清单（含业务大类与检测项目匹配）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: 对齐后的 ItemInventory；无词典时返回未对齐版本
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemInventory"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/records:
+    get:
+      tags: [jobs]
+      operationId: getJobRecords
+      summary: 抽取记录（牌号 × 条件 × 属性）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Record 列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Record"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/alignment:
+    get:
+      tags: [jobs]
+      operationId: getJobAlignment
+      summary: 业务对齐结果
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: AlignmentResult
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlignmentResult"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/new-terms:
+    get:
+      tags: [jobs]
+      operationId: getJobNewTerms
+      summary: 新词候选（项目大类 / 检测项目 / 试验方法）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: NewTermStore
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewTermStore"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/clauses:
+    get:
+      tags: [jobs]
+      operationId: getJobClauses
+      summary: 条款记录
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: ClauseRecord 列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClauseRecord"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/links:
+    get:
+      tags: [jobs]
+      operationId: getJobTableClauseLinks
+      summary: 表-条款链接
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: TableClauseLinks
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/coverage-audit:
+    get:
+      tags: [jobs]
+      operationId: getJobCoverageAudit
+      summary: 覆盖审计（测量列、条款提及、孤儿表）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: CoverageAudit
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/evidence:
+    get:
+      tags: [jobs]
+      operationId: getJobEvidence
+      summary: 证据列表
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Evidence 列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Evidence"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/audit:
+    get:
+      tags: [jobs]
+      operationId: getJobAudit
+      summary: 人类可读审核报告
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: Markdown
+          content:
+            text/markdown:
+              schema:
+                type: string
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/trace:
+    get:
+      tags: [jobs]
+      operationId: getJobTrace
+      summary: 运行轨迹与版本
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: trace.json
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/artifacts:
+    get:
+      tags: [jobs]
+      operationId: getJobArtifacts
+      summary: 产物清单（SHA256 + 大小）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: ArtifactManifest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtifactManifest"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/artifacts/verify:
+    get:
+      tags: [jobs]
+      operationId: verifyJobArtifacts
+      summary: 校验产物完整性
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: 校验结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerificationResult"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/jobs/{job_id}/retry:
+    post:
+      tags: [jobs]
+      operationId: retryJob
+      summary: 重试失败或待复核任务
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "202":
+          description: 已重新排队
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobState"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents:
+    post:
+      tags: [documents]
+      operationId: createDocument
+      summary: 上传文档（平台文档模型）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                kb_id:
+                  type: string
+                template:
+                  type: string
+      responses:
+        "201":
+          description: 文档摘要
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentOut"
+    get:
+      tags: [documents]
+      operationId: listDocuments
+      summary: 文档列表
+      x-status: implemented
+      parameters:
+        - name: kb_id
+          in: query
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: 文档摘要列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DocumentOut"
+
+  /v1/documents/{document_id}:
+    get:
+      tags: [documents]
+      operationId: getDocument
+      summary: 文档详情与解析状态
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: 文档摘要
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentOut"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/documents/{document_id}/parse:
+    post:
+      tags: [documents]
+      operationId: parseDocument
+      summary: 开始解析与标准拆分
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "202":
+          description: 任务已排队
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobState"
+
+  /v1/documents/{document_id}/items:
+    get:
+      tags: [documents]
+      operationId: getDocumentItems
+      summary: 文档项目清单
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: ItemInventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemInventory"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/records:
+    get:
+      tags: [documents]
+      operationId: getDocumentRecords
+      summary: 文档记录（结果索引表）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: Record 列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Record"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/alignment:
+    get:
+      tags: [documents]
+      operationId: getDocumentAlignment
+      summary: 文档业务对齐结果
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: AlignmentResult
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlignmentResult"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/result:
+    get:
+      tags: [documents]
+      operationId: getDocumentResult
+      summary: 记录 / 条款 / 覆盖结果
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: DocumentResult
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/results/sync:
+    post:
+      tags: [documents]
+      operationId: syncDocumentResults
+      summary: 将当前任务产物同步到结果索引表
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "202":
+          description: 同步计数
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/evidence:
+    get:
+      tags: [documents]
+      operationId: getDocumentEvidence
+      summary: 证据列表
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Evidence 列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Evidence"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/new-terms:
+    get:
+      tags: [documents]
+      operationId: getDocumentNewTerms
+      summary: 新词候选
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: NewTermStore
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewTermStore"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/new-terms/review:
+    post:
+      tags: [documents]
+      operationId: reviewDocumentNewTerm
+      summary: 确认/映射/拒绝新词并回流词典
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewTermReviewRequest"
+      responses:
+        "200":
+          description: 复核结果与新词列表
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewTermReviewResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/documents/{document_id}/reviews:
+    get:
+      tags: [documents]
+      operationId: listDocumentReviews
+      summary: 新词复核记录
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: 复核记录
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReviewEvent"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/documents/{document_id}/field-reviews:
+    get:
+      tags: [documents]
+      operationId: listDocumentFieldReviews
+      summary: 字段级复核事件
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: 字段复核事件列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FieldReview"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [documents]
+      operationId: createDocumentFieldReview
+      summary: 提交单个字段复核
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FieldReviewRequest"
+      responses:
+        "201":
+          description: 字段复核事件
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FieldReview"
+        "403":
+          description: 需要 user token
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: 任务未就绪或文档已确认锁定
+
+  /v1/documents/{document_id}/field-reviews/batch:
+    post:
+      tags: [documents]
+      operationId: createDocumentFieldReviewBatch
+      summary: 批量提交字段复核
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FieldReviewBatchRequest"
+      responses:
+        "200":
+          description: 字段复核事件列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FieldReview"
+        "403":
+          description: 需要 user token
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: 任务未就绪或文档已确认锁定
+        "422":
+          description: 事件数量非法
+
+  /v1/documents/{document_id}/field-diff:
+    get:
+      tags: [documents]
+      operationId: getDocumentFieldDiff
+      summary: 机器抽取与人工修正差异
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: 字段差异列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FieldDiff"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/review-risks:
+    get:
+      tags: [documents]
+      operationId: getDocumentReviewRisks
+      summary: 复核风险分级与高风险字段
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: 文档风险汇总
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentRisk"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/evidence/{evidence_id}:
+    get:
+      tags: [documents]
+      operationId: getDocumentEvidenceItem
+      summary: 单条证据（用于记录值定位）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+        - name: evidence_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 证据
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Evidence"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/documents/{document_id}/clauses:
+    get:
+      tags: [documents]
+      operationId: getDocumentClauses
+      summary: 条款列表
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: ClauseRecord 列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClauseRecord"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/links:
+    get:
+      tags: [documents]
+      operationId: getDocumentLinks
+      summary: 表-条款链接
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: TableClauseLinks
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/coverage-audit:
+    get:
+      tags: [documents]
+      operationId: getDocumentCoverageAudit
+      summary: 覆盖审计
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: CoverageAudit
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/preview:
+    get:
+      tags: [documents]
+      operationId: getDocumentPreview
+      summary: 页列表、页图与版面索引
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: 预览清单
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Preview"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/documents/{document_id}/pages/{page_no}/image:
+    get:
+      tags: [documents]
+      operationId: getDocumentPageImage
+      summary: 页图 PNG
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+        - name: page_no
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: PNG 页图
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/documents/{document_id}/pages/{page_no}/layout:
+    get:
+      tags: [documents]
+      operationId: getDocumentPageLayout
+      summary: 页版面块（bbox 归一化 0..1）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+        - name: page_no
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 版面块
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LayoutPage"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/documents/{document_id}/share:
+    post:
+      tags: [documents]
+      operationId: shareDocument
+      summary: 生成短期签名分享链接
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      responses:
+        "200":
+          description: 分享令牌
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Share"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/documents/{document_id}/review:
+    post:
+      tags: [documents]
+      operationId: reviewDocument
+      summary: 文档整体复核（提交/确认锁定）
+      x-status: implemented
+      parameters:
+        - $ref: "#/components/parameters/DocumentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentReviewRequest"
+      responses:
+        "200":
+          description: 复核状态
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentReviewResult"
+        "409":
+          description: 状态不允许或仍有待处理新词
+
+  /v1/standard-extractions:
+    post:
+      tags: [standard-extractions]
+      operationId: createStandardExtraction
+      summary: 创建标准拆分任务
+      x-status: planned
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [document_id]
+              properties:
+                document_id:
+                  type: string
+                template:
+                  type: string
+                dictionary_version:
+                  type: string
+      responses:
+        "201":
+          description: 任务
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobState"
+
+  /v1/standard-extractions/{extraction_id}:
+    get:
+      tags: [standard-extractions]
+      operationId: getStandardExtraction
+      summary: 拆分任务状态
+      x-status: planned
+      parameters:
+        - $ref: "#/components/parameters/ExtractionId"
+      responses:
+        "200":
+          description: 任务状态
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobState"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/standard-extractions/{extraction_id}/items:
+    get:
+      tags: [standard-extractions]
+      operationId: getStandardExtractionItems
+      summary: 拆分结果项目清单
+      x-status: planned
+      parameters:
+        - $ref: "#/components/parameters/ExtractionId"
+      responses:
+        "200":
+          description: ItemInventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemInventory"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/standard-extractions/{extraction_id}/result:
+    get:
+      tags: [standard-extractions]
+      operationId: getStandardExtractionResult
+      summary: 记录 / 条款 / 覆盖结果
+      x-status: planned
+      parameters:
+        - $ref: "#/components/parameters/ExtractionId"
+      responses:
+        "200":
+          description: DocumentResult
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/standard-extractions/{extraction_id}/evidence:
+    get:
+      tags: [standard-extractions]
+      operationId: getStandardExtractionEvidence
+      summary: 证据列表
+      x-status: planned
+      parameters:
+        - $ref: "#/components/parameters/ExtractionId"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Evidence 列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Evidence"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/standard-extractions/{extraction_id}/new-terms:
+    get:
+      tags: [standard-extractions]
+      operationId: getStandardExtractionNewTerms
+      summary: 新词候选
+      x-status: planned
+      parameters:
+        - $ref: "#/components/parameters/ExtractionId"
+      responses:
+        "200":
+          description: NewTermStore
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewTermStore"
+        "409":
+          $ref: "#/components/responses/NotReady"
+
+  /v1/standard-extractions/{extraction_id}/review:
+    post:
+      tags: [standard-extractions]
+      operationId: reviewStandardExtraction
+      summary: 提交复核（单角色）
+      x-status: planned
+      parameters:
+        - $ref: "#/components/parameters/ExtractionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewRequest"
+      responses:
+        "200":
+          description: 复核结果
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: M1.9 平台登录后签发的访问令牌
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 外部系统对接（API Key）
+  parameters:
+    JobId:
+      name: job_id
+      in: path
+      required: true
+      schema:
+        type: string
+    DocumentId:
+      name: document_id
+      in: path
+      required: true
+      schema:
+        type: string
+    ExtractionId:
+      name: extraction_id
+      in: path
+      required: true
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 2000
+        default: 200
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: 未认证或令牌失效
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: 无权限（作用域或知识库成员）
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotReady:
+      description: 产物尚未生成（任务未完成）
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    BadRequest:
+      description: 请求不合法
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Error:
+      type: object
+      required: [detail]
+      properties:
+        detail:
+          description: 错误描述或结构化错误对象
+          oneOf:
+            - type: string
+            - type: object
+              additionalProperties: true
+        trace_id:
+          type: string
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+
+    UserOut:
+      type: object
+      required: [id, username, role]
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        display_name:
+          type: string
+        role:
+          type: string
+
+    TokenResponse:
+      type: object
+      required: [access_token, token_type, expires_in, user]
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          const: bearer
+        expires_in:
+          type: integer
+        user:
+          $ref: "#/components/schemas/UserOut"
+
+    KnowledgeBaseCreate:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    KnowledgeBase:
+      type: object
+      required: [id, name, owner_id]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        owner_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        document_count:
+          type: integer
+
+    Task:
+      type: object
+      required: [document_id, job_id, status]
+      properties:
+        document_id:
+          type: string
+        kb_id:
+          type: [string, "null"]
+        job_id:
+          type: string
+        kind:
+          type: string
+        version:
+          type: integer
+        locked:
+          type: boolean
+        status:
+          type: string
+          enum: [queued, running, succeeded, failed, review]
+        stage:
+          type: string
+        progress:
+          type: integer
+        error:
+          type: [string, "null"]
+        result_status:
+          type: [string, "null"]
+        summary:
+          type: object
+          additionalProperties: true
+        source_name:
+          type: [string, "null"]
+        created_at:
+          type: [string, "null"]
+
+    DocumentOut:
+      type: object
+      required: [id, kb_id, file_name, status]
+      properties:
+        id:
+          type: string
+        kb_id:
+          type: string
+        file_name:
+          type: string
+        sha256:
+          type: string
+        status:
+          type: string
+          enum: [uploaded, queued, running, succeeded, failed, review]
+        job_id:
+          type: [string, "null"]
+        review_status:
+          type: string
+          enum: [draft, review, confirmed]
+        review_version:
+          type: integer
+        confirmed_job_id:
+          type: [string, "null"]
+        confirmed_by:
+          type: [string, "null"]
+        confirmed_at:
+          type: [string, "null"]
+          format: date-time
+        results_job_id:
+          type: [string, "null"]
+        results_synced_at:
+          type: [string, "null"]
+          format: date-time
+        standard_no:
+          type: [string, "null"]
+        title:
+          type: [string, "null"]
+        created_at:
+          type: string
+          format: date-time
+        task:
+          $ref: "#/components/schemas/Task"
+
+    DocumentReviewRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          enum: [submit, confirm]
+        reason:
+          type: string
+
+    DocumentReviewResult:
+      type: object
+      required: [document_id, review_status, review_version]
+      properties:
+        document_id:
+          type: string
+        review_status:
+          type: string
+          enum: [draft, review, confirmed]
+        review_version:
+          type: integer
+        job_id:
+          type: [string, "null"]
+        confirmed_job_id:
+          type: [string, "null"]
+        pending_new_terms:
+          type: integer
+        confirmed_by:
+          type: [string, "null"]
+        confirmed_at:
+          type: [string, "null"]
+          format: date-time
+        message:
+          type: string
+
+    Share:
+      type: object
+      required: [token, expires_at, path]
+      properties:
+        token:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        path:
+          type: string
+
+    PreviewPage:
+      type: object
+      required: [page_no, markdown]
+      properties:
+        page_no:
+          type: integer
+        markdown:
+          type: string
+        image:
+          type: [string, "null"]
+          description: 产物内相对路径
+        layout:
+          type: [string, "null"]
+        image_url:
+          type: [string, "null"]
+        layout_url:
+          type: [string, "null"]
+
+    Preview:
+      type: object
+      required: [doc_id, page_count, pages]
+      properties:
+        doc_id:
+          type: string
+        page_count:
+          type: integer
+        pages:
+          type: array
+          items:
+            $ref: "#/components/schemas/PreviewPage"
+
+    LayoutBlock:
+      type: object
+      required: [type, bbox, order]
+      properties:
+        type:
+          type: string
+        bbox:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items:
+            type: number
+        order:
+          type: integer
+        confidence:
+          type: number
+        text:
+          type: [string, "null"]
+        error:
+          type: [string, "null"]
+        structural:
+          type: object
+          additionalProperties: true
+
+    LayoutPage:
+      type: object
+      required: [page_no, blocks]
+      properties:
+        page_no:
+          type: integer
+        width:
+          type: [number, "null"]
+        height:
+          type: [number, "null"]
+        dpi:
+          type: [integer, "null"]
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/LayoutBlock"
+
+    ApiKeyCreate:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+
+    ApiKey:
+      type: object
+      required: [id, name, prefix, scopes]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        prefix:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        revoked_at:
+          type: [string, "null"]
+        key:
+          type: [string, "null"]
+          description: 仅创建响应返回一次
+
+    AuditLog:
+      type: object
+      required: [id, action]
+      properties:
+        id:
+          type: string
+        actor_id:
+          type: string
+        actor_type:
+          type: string
+        action:
+          type: string
+        target_type:
+          type: string
+        target_id:
+          type: string
+        detail:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    JobState:
+      type: object
+      required: [job_id, status, stage, progress]
+      properties:
+        job_id:
+          type: string
+        status:
+          type: string
+          enum: [queued, running, succeeded, failed, review]
+        stage:
+          type: string
+        progress:
+          type: integer
+          minimum: 0
+          maximum: 100
+        result_status:
+          type: [string, "null"]
+        doc_path:
+          type: string
+        out_dir:
+          type: string
+        error:
+          type: [string, "null"]
+        source_name:
+          type: [string, "null"]
+        source_sha256:
+          type: [string, "null"]
+        created_at:
+          type: [string, "null"]
+        updated_at:
+          type: [string, "null"]
+        finished_at:
+          type: [string, "null"]
+        idempotency_key:
+          type: [string, "null"]
+        attempts:
+          type: integer
+        options:
+          type: object
+          additionalProperties:
+            type: string
+        summary:
+          type: object
+          additionalProperties:
+            type: integer
+        artifact_manifest:
+          type: [string, "null"]
+
+    PropertyMatch:
+      type: object
+      required: [raw, match_type, status]
+      properties:
+        raw:
+          type: string
+          description: 属性代码，如 Rm / Rp0.2 / HBW / C
+        canonical_id:
+          type: [string, "null"]
+        canonical_name:
+          type: [string, "null"]
+        match_type:
+          type: string
+          enum: [exact, alias, semantic, edit_distance, new, ambiguous]
+        score:
+          type: number
+        category_code:
+          type: [string, "null"]
+        category_name:
+          type: [string, "null"]
+        dictionary_version:
+          type: string
+        status:
+          type: string
+          enum: [matched, new, ambiguous]
+        reason:
+          type: [string, "null"]
+
+    ExtractedValue:
+      type: object
+      required: [raw]
+      properties:
+        raw:
+          type: string
+        value:
+          type: [number, "null"]
+        text:
+          type: [string, "null"]
+        unit:
+          type: [string, "null"]
+        comparator:
+          type: string
+          enum: [eq, min, max, range, text, na]
+        lower:
+          type: [number, "null"]
+        upper:
+          type: [number, "null"]
+        condition:
+          type: [string, "null"]
+        evidence_id:
+          type: string
+
+    Record:
+      type: object
+      required: [record_id, properties]
+      properties:
+        record_id:
+          type: string
+        source_table_id:
+          type: [string, "null"]
+        grade:
+          type: [string, "null"]
+        grade_level:
+          type: [string, "null"]
+        condition:
+          type: [string, "null"]
+        facets:
+          type: object
+          additionalProperties:
+            type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/ExtractedValue"
+
+    ClauseRecord:
+      type: object
+      required: [clause_id, kind, status]
+      properties:
+        clause_id:
+          type: string
+        title:
+          type: [string, "null"]
+        page_no:
+          type: [integer, "null"]
+        kind:
+          type: string
+          enum:
+            - scope
+            - normative_reference
+            - terms
+            - technical_requirement
+            - inspection
+            - sampling
+            - test_method
+            - delivery
+            - packaging
+            - other
+        fields:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/ExtractedValue"
+        applies_to:
+          type: array
+          items:
+            type: string
+        evidence:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [found, missing, ambiguous, not_applicable]
+
+    Evidence:
+      type: object
+      required: [evidence_id, page_no]
+      properties:
+        evidence_id:
+          type: string
+        page_no:
+          type: integer
+        table_id:
+          type: [string, "null"]
+        row:
+          type: [integer, "null"]
+        col:
+          type: [integer, "null"]
+        quote:
+          type: string
+        bbox:
+          type: array
+          items:
+            type: number
+        artifact_uri:
+          type: [string, "null"]
+
+    ItemInventoryEntry:
+      type: object
+      required: [item_raw, item_family]
+      properties:
+        item_raw:
+          type: string
+        item_canonical:
+          type: [string, "null"]
+        item_family:
+          type: string
+        facets:
+          type: object
+          additionalProperties:
+            type: string
+        properties:
+          type: array
+          items:
+            type: string
+        property_matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/PropertyMatch"
+        business_code:
+          type: [string, "null"]
+        business_name:
+          type: [string, "null"]
+        business_category_code:
+          type: [string, "null"]
+        business_category_name:
+          type: [string, "null"]
+        match_type:
+          type: [string, "null"]
+        match_score:
+          type: [number, "null"]
+        method_standard:
+          type: [string, "null"]
+        method_code:
+          type: [string, "null"]
+        method_name:
+          type: [string, "null"]
+        method_match_type:
+          type: [string, "null"]
+        dictionary_version:
+          type: [string, "null"]
+        status:
+          type: string
+        source:
+          type: string
+        page_no:
+          type: [integer, "null"]
+        table_id:
+          type: [string, "null"]
+        clause_id:
+          type: [string, "null"]
+        evidence:
+          type: array
+          items:
+            type: string
+
+    ItemInventory:
+      type: object
+      required: [doc_id, items]
+      properties:
+        doc_id:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemInventoryEntry"
+        unknown_candidates:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        not_applicable:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        coverage:
+          type: object
+          additionalProperties: true
+        recipe_ids:
+          type: array
+          items:
+            type: string
+
+    CanonicalMatch:
+      type: object
+      required: [raw, match_type, status]
+      properties:
+        raw:
+          type: string
+        canonical_id:
+          type: [string, "null"]
+        canonical_name:
+          type: [string, "null"]
+        match_type:
+          type: string
+          enum: [exact, alias, granularity, semantic, edit_distance, new, ambiguous]
+        score:
+          type: number
+        dictionary_version:
+          type: string
+        evidence:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [matched, new, ambiguous]
+        reason:
+          type: [string, "null"]
+        category_code:
+          type: [string, "null"]
+        category_name:
+          type: [string, "null"]
+
+    NewTerm:
+      type: object
+      required: [type, raw, status]
+      properties:
+        type:
+          type: string
+          enum: [category, item, method]
+        raw:
+          type: string
+        family:
+          type: [string, "null"]
+        facets:
+          type: object
+          additionalProperties:
+            type: string
+        suggested_code:
+          type: [string, "null"]
+        reason:
+          type: string
+        evidence:
+          type: array
+          items:
+            type: string
+        frequency:
+          type: integer
+          minimum: 1
+        status:
+          type: string
+          enum: [pending, active, rejected]
+        dictionary_version:
+          type: [string, "null"]
+
+    NewTermStore:
+      type: object
+      required: [dictionary_version, terms]
+      properties:
+        dictionary_version:
+          type: string
+        terms:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewTerm"
+
+    NewTermReviewRequest:
+      type: object
+      required: [type, raw, action]
+      properties:
+        type:
+          type: string
+          enum: [category, item, method]
+        raw:
+          type: string
+        action:
+          type: string
+          enum: [accept, map, reject]
+        business_code:
+          type: [string, "null"]
+        business_name:
+          type: [string, "null"]
+        target_code:
+          type: [string, "null"]
+        category_code:
+          type: [string, "null"]
+        category_name:
+          type: [string, "null"]
+        standard_no:
+          type: [string, "null"]
+        reason:
+          type: string
+
+    NewTermReviewResult:
+      type: object
+      required: [action, type, raw, term_status, matched, new_terms]
+      properties:
+        action:
+          type: string
+        type:
+          type: string
+        raw:
+          type: string
+        term_status:
+          type: string
+        applied_code:
+          type: [string, "null"]
+        matched:
+          type: boolean
+        new_terms:
+          $ref: "#/components/schemas/NewTermStore"
+
+    ReviewEvent:
+      type: object
+      required: [id, document_id, term_type, raw, action, actor_id]
+      properties:
+        id:
+          type: string
+        document_id:
+          type: string
+        term_type:
+          type: string
+        raw:
+          type: string
+        action:
+          type: string
+        target_code:
+          type: [string, "null"]
+        business_code:
+          type: [string, "null"]
+        business_name:
+          type: [string, "null"]
+        actor_id:
+          type: string
+        reason:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    FieldReviewRequest:
+      type: object
+      required: [field_path, action]
+      properties:
+        field_path:
+          type: string
+          minLength: 5
+          maxLength: 255
+        action:
+          type: string
+          enum: [accept, edit, reject]
+        old_value:
+          type: object
+          additionalProperties: true
+        new_value:
+          type: [object, "null"]
+          additionalProperties: true
+        reason:
+          type: string
+
+    FieldReviewBatchRequest:
+      type: object
+      required: [events]
+      properties:
+        events:
+          type: array
+          maxItems: 200
+          items:
+            $ref: "#/components/schemas/FieldReviewRequest"
+
+    FieldReview:
+      type: object
+      required: [id, document_id, job_id, version, field_path, action, reviewer]
+      properties:
+        id:
+          type: string
+        document_id:
+          type: string
+        job_id:
+          type: string
+        version:
+          type: integer
+        field_path:
+          type: string
+        action:
+          type: string
+        old_value:
+          type: object
+          additionalProperties: true
+        new_value:
+          type: [object, "null"]
+          additionalProperties: true
+        reason:
+          type: string
+        reviewer:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    FieldDiff:
+      type: object
+      required: [field_path, record_id, property, action, reviewer, created_at]
+      properties:
+        field_path:
+          type: string
+        record_id:
+          type: string
+        property:
+          type: string
+        action:
+          type: string
+        machine:
+          type: [object, "null"]
+          additionalProperties: true
+        human:
+          type: [object, "null"]
+          additionalProperties: true
+        reason:
+          type: string
+        reviewer:
+          type: string
+        created_at:
+          type: string
+        changed:
+          type: boolean
+
+    RiskField:
+      type: object
+      required: [field_path, record_id, property, level]
+      properties:
+        field_path:
+          type: string
+        record_id:
+          type: string
+        property:
+          type: string
+        level:
+          type: string
+        reasons:
+          type: array
+          items:
+            type: string
+        evidence_id:
+          type: [string, "null"]
+        page_no:
+          type: [integer, "null"]
+
+    DocumentRisk:
+      type: object
+      required: [document_id, level]
+      properties:
+        document_id:
+          type: string
+        level:
+          type: string
+        counts:
+          type: object
+          additionalProperties:
+            type: integer
+        high_risk_fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/RiskField"
+        fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/RiskField"
+
+    AlignmentResult:
+      type: object
+      required: [doc_id, dictionary_version]
+      properties:
+        doc_id:
+          type: string
+        dictionary_version:
+          type: string
+        item_matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/CanonicalMatch"
+        property_matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/PropertyMatch"
+        method_matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/CanonicalMatch"
+        new_terms:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewTerm"
+        summary:
+          type: object
+          additionalProperties:
+            type: number
+
+    BusinessDictionaryEntry:
+      type: object
+      required: [business_code, business_name, type]
+      properties:
+        business_code:
+          type: string
+        business_name:
+          type: string
+        type:
+          type: string
+          enum: [category, item, method]
+        family:
+          type: [string, "null"]
+        facets:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        aliases:
+          type: array
+          items:
+            type: string
+        standard_no:
+          type: [string, "null"]
+        category_code:
+          type: [string, "null"]
+        category_name:
+          type: [string, "null"]
+        status:
+          type: string
+          enum: [active, inactive, pending]
+        version:
+          type: [string, "null"]
+
+    BusinessDictionary:
+      type: object
+      required: [version, counts, total, entries]
+      properties:
+        version:
+          type: string
+        source:
+          type: string
+        counts:
+          type: object
+          required: [categories, items, methods]
+          properties:
+            categories:
+              type: integer
+            items:
+              type: integer
+            methods:
+              type: integer
+        total:
+          type: integer
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/BusinessDictionaryEntry"
+
+    ReviewRequest:
+      type: object
+      properties:
+        decision:
+          type: string
+          enum: [accept, reject, map_to_existing]
+        target_code:
+          type: [string, "null"]
+        comment:
+          type: [string, "null"]
+        reviewer:
+          type: [string, "null"]
+
+    ArtifactEntry:
+      type: object
+      required: [path, role, size, sha256]
+      properties:
+        path:
+          type: string
+        role:
+          type: string
+        content_type:
+          type: string
+        size:
+          type: integer
+        sha256:
+          type: string
+        required:
+          type: boolean
+
+    ArtifactManifest:
+      type: object
+      required: [job_id, doc_id, artifacts]
+      properties:
+        job_id:
+          type: string
+        doc_id:
+          type: string
+        created_at:
+          type: string
+        artifacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArtifactEntry"
+
+    VerificationResult:
+      type: object
+      required: [ok, checked, issues]
+      properties:
+        ok:
+          type: boolean
+        checked:
+          type: integer
+        issues:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string

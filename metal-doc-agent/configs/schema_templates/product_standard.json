@@ -1,0 +1,232 @@
+{
+  "schema_version": "0.1.0",
+  "template_id": "6e2ad0d7-f92a-4663-b5cf-ae01c2378fa7",
+  "name": "产品标准抽取模板",
+  "slim": true,
+  "source": "hansonDoc_RAG schema_templates/产品标准抽取模板（deploy_pack/data_full.sql，2026-09-01）",
+  "categories": [
+    {
+      "key": "items",
+      "name": "",
+      "display_name": "检测项目",
+      "return_type": "array",
+      "name_source": "term_base",
+      "name_term_field": "NAME",
+      "fixed_query": "材料牌号，试验方法，位置，方向，尺寸厚度，试样状态，取样数量，取样说明，锻件类型，试验温度",
+      "fields": [
+        {
+          "name": "项目名称",
+          "type": "string",
+          "required": true,
+          "description": "该检测类型下的项目名称，从该类型下的item术语集中获取使名称归一化",
+          "example": "抗拉强度 Rm"
+        },
+        {
+          "name": "材料牌号",
+          "type": "string",
+          "required": true,
+          "description": "该检测类型下的牌号，如果出现新旧牌号，统一取新牌号，其他的不取",
+          "example": "GH4169"
+        },
+        {
+          "name": "标准要求",
+          "type": "string",
+          "required": true,
+          "description": "对应项目的检测标准要求，如果出现不大于、不小于、小于、大于等这类，要转化为数学符号",
+          "example": "≥960"
+        },
+        {
+          "name": "单位",
+          "type": "string",
+          "required": false,
+          "required_when": "numeric",
+          "description": "对应项目的单位；数值型项目必填，定性项目可为空",
+          "example": "Mpa"
+        },
+        {
+          "name": "试验方法",
+          "type": "string",
+          "required": false,
+          "description": "获取对应检测类别对应项目的试验方法；术语集存在多版本时优先取最新年代号，不存在则保留原抽取结果",
+          "example": "GB/T 228.1-2021"
+        },
+        {
+          "name": "试验温度",
+          "type": "string",
+          "required": false,
+          "description": "获取标准规定样品试验温度",
+          "example": "500"
+        },
+        {
+          "name": "位置",
+          "type": "string",
+          "required": false,
+          "description": "该类别取样时的取样位置",
+          "example": "D/4"
+        },
+        {
+          "name": "方向",
+          "type": "string",
+          "required": false,
+          "description": "该类别取样的方向",
+          "example": "纵向"
+        },
+        {
+          "name": "尺寸厚度",
+          "type": "string",
+          "required": false,
+          "description": "获取样品规定的尺寸厚度，截面尺寸，棒材尺寸等全都算作尺寸厚度",
+          "example": "≤300"
+        },
+        {
+          "name": "试样状态",
+          "type": "string",
+          "required": false,
+          "description": "获取样品的试样状态",
+          "example": "铸态"
+        },
+        {
+          "name": "取样数量",
+          "type": "number",
+          "required": false,
+          "description": "该类型对取样的要求，取几个样品；取一批视为 1 个样品，一批取 5 个则为 5",
+          "example": "3"
+        },
+        {
+          "name": "取样说明",
+          "type": "string",
+          "required": false,
+          "description": "该类型取样品时的一些说明",
+          "example": "氢含量在产品上取样"
+        },
+        {
+          "name": "锻件类型",
+          "type": "string",
+          "required": false,
+          "description": "获取标准要求样品的锻件类型",
+          "example": "锻件棒材"
+        }
+      ]
+    },
+    {
+      "key": "standard_info",
+      "name": "标准信息",
+      "display_name": "标准信息",
+      "return_type": "object",
+      "name_source": "manual",
+      "name_term_field": "",
+      "fixed_query": "标准名称，标准编号，文件编号，标准号，代替，替代，发布，实施，现行，废止，国家标准，GB/T，GB，GJB，GJB/T，ISO，YB/T，HB，Q/S，行业标准，企业标准，国军标，ICS，版本号，年号",
+      "fields": [
+        {
+          "name": "标准名称",
+          "type": "string",
+          "required": true,
+          "description": "抽取标准文档中的标准名称",
+          "example": "大型合金结构钢锻件 技术条件"
+        },
+        {
+          "name": "标准编号",
+          "type": "string",
+          "required": true,
+          "description": "抽取标准文件中的标准编号",
+          "example": "GB/T 33084-2016"
+        }
+      ]
+    },
+    {
+      "key": "heat_treatment",
+      "name": "热处理制度",
+      "display_name": "热处理制度",
+      "return_type": "array",
+      "name_source": "manual",
+      "name_term_field": "",
+      "fixed_query": "热处理制度，回火，淬火，时效，升温速率，保温时间，退火",
+      "fields": [
+        {
+          "name": "工序名称",
+          "type": "string",
+          "required": true,
+          "description": "热处理所做的工序的名称",
+          "example": "时效"
+        },
+        {
+          "name": "工艺名称",
+          "type": "string",
+          "required": true,
+          "description": "获取热处理工艺的名称",
+          "example": "固溶"
+        },
+        {
+          "name": "材料牌号",
+          "type": "string",
+          "required": true,
+          "description": "标准文件要求热处理制度的材料牌号",
+          "example": "GH4169"
+        },
+        {
+          "name": "项目大类",
+          "type": "string",
+          "required": true,
+          "description": "获取热处理制度对应的检测类别，可以从项目大类术语集中获取",
+          "example": "室温拉伸"
+        },
+        {
+          "name": "保温温度",
+          "type": "string",
+          "required": true,
+          "description": "热处理规定的保温温度",
+          "example": "600"
+        },
+        {
+          "name": "保温时间",
+          "type": "string",
+          "required": true,
+          "description": "热处理规定的保温时间",
+          "example": "24h"
+        },
+        {
+          "name": "升温速率",
+          "type": "string",
+          "required": true,
+          "description": "热处理制度规定的升温速率",
+          "example": "50/h"
+        },
+        {
+          "name": "降温速率",
+          "type": "string",
+          "required": true,
+          "description": "热处理规定的降温速率",
+          "example": "30/h"
+        },
+        {
+          "name": "装炉温度",
+          "type": "string",
+          "required": true,
+          "description": "热处理规定的装炉温度",
+          "example": "600"
+        },
+        {
+          "name": "出炉温度",
+          "type": "string",
+          "required": true,
+          "description": "热处理规定的出炉温度",
+          "example": "60"
+        },
+        {
+          "name": "冷却介质",
+          "type": "string",
+          "required": true,
+          "description": "热处理规定使用的冷却介质",
+          "example": "空冷"
+        },
+        {
+          "name": "介质温度",
+          "type": "string",
+          "required": true,
+          "description": "热处理规定的冷却介质的温度",
+          "example": "26"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_94c651e0bd",
+  "standard_no": null,
+  "title": "be26fecfa3a0486d8b6566e0300937311675407000327",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 12,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\be26fecfa3a0486d8b6566e0300937311675407000327.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T3",
+      "page_no": 6,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-fb07275d90",
+          "grade": "Fe",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-7d13b24f56",
+          "grade": "C",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-7ced8d5d10",
+          "grade": "N",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 5,
+                "col": 3,
+                "clause_id": null,
+                "quote": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-d095599f46",
+          "grade": "H",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-b9a198f32e",
+          "grade": "O",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-e6c5e0e96b",
+          "grade": "其它",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 5,
+                "col": 7,
+                "clause_id": null,
+                "quote": "注：首五批要检测其他总量，检验元素包括：Cu、Cr。生产满五批以后，当需方认为必要时可抽检，抽检结果超过0.3%时则该批铸锭认为不合格。"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

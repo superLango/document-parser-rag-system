@@ -1,0 +1,13 @@
+{
+  "doc_id": "gjb2057a_2018",
+  "items": [
+    {"item_canonical": "化学成分", "item_family": "chemical_composition", "note": "化学成分分析取样位置"},
+    {"item_canonical": "室温拉伸", "item_family": "tensile", "facets": {"temperature": "室温"}, "note": "抗拉强度 Rm 表"},
+    {"item_canonical": "布氏硬度", "item_family": "hardness", "facets": {"hardness_scale": "brinell"}, "note": "HBW"},
+    {"item_canonical": "低倍组织", "item_family": "metallography", "note": "低倍组织检验"},
+    {"item_canonical": "断口组织", "item_family": "metallography", "note": "断口组织检验"},
+    {"item_canonical": "显微组织", "item_family": "metallography", "note": "显微组织检验"},
+    {"item_canonical": "超声检测", "item_family": "ndt", "note": "超声"}
+  ],
+  "unknown_ok": []
+}

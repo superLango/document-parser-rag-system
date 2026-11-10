@@ -1,0 +1,236 @@
+{
+  "doc_id": "gb-t-33084-2016-9ff5f216",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "facets": {},
+      "required": true,
+      "note": "化学成分"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "required": true,
+      "note": "硬度"
+    },
+    {
+      "item_canonical": "夏比冲击",
+      "item_family": "impact",
+      "facets": {
+        "impact_type": "夏比"
+      },
+      "required": true,
+      "note": "冲击"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "拉伸"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T1": {
+      "clause_id": "5.1",
+      "quote": "5. 1.1 供方应对每炉（每包）钢水进行熔炼分析，分析结果应符合表1规定。"
+    },
+    "T10": {
+      "clause_id": "5.2",
+      "quote": "锻件的室温力学性能应符合表3的规定。"
+    },
+    "T11": {
+      "clause_id": "5.2",
+      "quote": "锻件的室温力学性能应符合表3的规定。"
+    },
+    "T12": {
+      "clause_id": "6.2.1",
+      "quote": "6. 2.1.1 根据锻件的不同用途和要求参照表4选定级别及检验项目。"
+    },
+    "T2": {
+      "clause_id": "5.1",
+      "quote": "5. 1.1 供方应对每炉（每包）钢水进行熔炼分析，分析结果应符合表1规定。"
+    },
+    "T3": {
+      "clause_id": "5.1",
+      "quote": "5. 1.1 供方应对每炉（每包）钢水进行熔炼分析，分析结果应符合表1规定。"
+    },
+    "T5": {
+      "clause_id": "5.2",
+      "quote": "锻件的室温力学性能应符合表3的规定。"
+    },
+    "T7": {
+      "clause_id": "5.2",
+      "quote": "锻件的室温力学性能应符合表3的规定。"
+    },
+    "T9": {
+      "clause_id": "5.2",
+      "quote": "锻件的室温力学性能应符合表3的规定。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T10",
+    "T11",
+    "T12",
+    "T2",
+    "T3",
+    "T5",
+    "T7",
+    "T9"
+  ],
+  "clauses": [
+    {
+      "clause_id": "4.1",
+      "kind": "other",
+      "quote": "经需方同意，也可采用保证质量的其他方法冶炼。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2",
+      "kind": "other",
+      "quote": "锻件应采用钢锭或钢坯锻造成形。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3",
+      "kind": "other",
+      "quote": "锻件应进行高温回火或正火加回火或其他方式缓慢冷却，以改善组织和机械加工性能。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4.2",
+      "kind": "delivery",
+      "quote": "交货锻件的尺寸、公差和表面粗糙度等要求应符合需方订货图样的规定。",
+      "fields": {
+        "requirement": "交货锻件的尺寸、公差和表面粗糙度等要求应符合需方订货图样的规定。"
+      }
+    },
+    {
+      "clause_id": "5.1",
+      "kind": "other",
+      "quote": "5. 1.1 供方应对每炉（每包）钢水进行熔炼分析，分析结果应符合表1规定。多炉合浇时报告权重平均分析结果。 5. 1.2 当需方有特殊要求时，供方应对锻件进行成品分析，其具体要求应在合同或图样中规定。成品分析结果应符合表1规定，但允许有表2规定的偏差。 表1 化学成分 %（质量分数）",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.1.1",
+      "kind": "technical_requirement",
+      "quote": "供方应对每炉（每包）钢水进行熔炼分析，分析结果应符合表1规定。多炉合浇时报告权重平均分析结果。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.1.2",
+      "kind": "technical_requirement",
+      "quote": "当需方有特殊要求时，供方应对锻件进行成品分析，其具体要求应在合同或图样中规定。成品分析结果应符合表1规定，但允许有表2规定的偏差。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2",
+      "kind": "technical_requirement",
+      "quote": "锻件的室温力学性能应符合表3的规定。 表3 力学性能",
+      "fields": {
+        "requirement": "锻件的室温力学性能应符合表3的规定。"
+      }
+    },
+    {
+      "clause_id": "6",
+      "kind": "inspection",
+      "quote": "检验规则和试验方法 11",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.1.1",
+      "kind": "test_method",
+      "quote": "化学成分分析应按GB/T223规定的方法或经需方认可的能保证分析质量的其他方法进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.1.2.1",
+      "kind": "sampling",
+      "quote": "每炉（包）钢水应在浇注时取样测定钢水的化学成分。",
+      "fields": {
+        "sample_location": "每炉（包）钢水应在浇注时取样测定钢水的化学成分"
+      }
+    },
+    {
+      "clause_id": "6.1.2.2",
+      "kind": "technical_requirement",
+      "quote": "当无法进行熔炼分析时，允许用成品分析代替熔炼分析，其分析结果应符合成品分析要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.2.1",
+      "kind": "inspection",
+      "quote": "6. 2.1.1 根据锻件的不同用途和要求参照表4选定级别及检验项目。 表4级别及检验项目",
+      "fields": {
+        "sample_quantity": "检验项目和取样数量"
+      }
+    },
+    {
+      "clause_id": "6.2.2",
+      "kind": "sampling",
+      "quote": "6. 2.2.1 除合同或订货协议、订货图样允许用模拟试件代替外，锻件的拉伸、冲击试样应取自锻件的延长部位（加长段或加大部分）或余块。 6. 2.2.2 取样方向应符合以下规定： a) 轴类、方形或长方形锻件，其拉伸、冲击试样方向应取轴向（纵向）； b) 空心筒体、圆盘、环形锻件，其拉伸、冲击试样方向应取切向（圆周方向）。 6. 2.2.3 当订货图样没有规定取样位置时，可按下列情况进行取样： a",
+      "fields": {
+        "direction": "取样位置和方向",
+        "sample_location": "取样位置和方向"
+      }
+    },
+    {
+      "clause_id": "6.2.2.2",
+      "kind": "sampling",
+      "quote": "取样方向应符合以下规定：",
+      "fields": {
+        "requirement": "取样方向应符合以下规定：",
+        "direction": "a) 轴类、方形或长方形锻件，其拉伸、冲击方向应取轴向（纵向）； b) 空心筒体、圆盘、环形锻件，其拉伸、冲击方向应取切向（圆周方向）"
+      }
+    },
+    {
+      "clause_id": "6.2.2.3",
+      "kind": "sampling",
+      "quote": "当订货图样没有规定取样位置时，可按下列情况进行取样：",
+      "fields": {
+        "sample_location": "实心轴类锻件的试样取自距表面三分之一半径处，方形和长方形锻件的试样取自沿对角线顶点到中心的三分之一处（见图1）；空心筒体锻件的试样取自二分之一壁厚处（见图2）；圆盘锻件，当在外径加大部位取样时，试样应取自加大部分二分之一高度处；当在加长部位取样时，试样应取自距外缘三分之一半径处或至少距边缘 20mm 处（见图3）；环形锻件，当在外径加大部位取样时，试样应取自加大部分二分之一高度处；当在加长部位取样时，试样应取自二分之一壁厚处（见图4）"
+      }
+    },
+    {
+      "clause_id": "6.2.3",
+      "kind": "test_method",
+      "quote": "试验方法",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.2.3.1",
+      "kind": "technical_requirement",
+      "quote": "拉伸试验应按 GB/T 228.1 的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.2.3.2",
+      "kind": "other",
+      "quote": "冲击试验按GB/T229的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.3",
+      "kind": "technical_requirement",
+      "quote": "按GB/T231.1规定的方法对锻件进行布氏硬度检验。按硬度验收的锻件，布氏硬度应符合表3规定，不按硬度验收的锻件，其硬度值也应记录在质量证明书中，并报告需方。要求硬度时，对需检验的锻件在具有代表性的截面上检查三点。",
+      "fields": {
+        "requirement": "按硬度验收的锻件，布氏硬度应符合表3规定，不按硬度验收的锻件，其硬度值也应记录在质量证明书中，并报告需方。",
+        "method_standard": "GB/T231.1"
+      }
+    },
+    {
+      "clause_id": "6.4.2",
+      "kind": "technical_requirement",
+      "quote": "b) 当进行U型缺口冲击试验时，若某一试验结果不合格，可在原试样相邻部位取双倍试样进行复试，两个试样的复试结果均应符合规定。",
+      "fields": {}
+    }
+  ]
+}

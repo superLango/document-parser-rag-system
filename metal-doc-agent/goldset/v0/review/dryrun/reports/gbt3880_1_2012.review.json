@@ -1,0 +1,698 @@
+{
+  "doc_id": "gbt3880_1_2012",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 1.0,
+    "cell_value_agreement": 0.6885,
+    "comparator_unit_agreement": 0.6885,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 5,
+    "record_keys_match": 5,
+    "cells_total": 61,
+    "cells_value_match": 42,
+    "cells_strict_match": 42,
+    "clause_fields_total": 4,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [],
+  "record_keys_only_b": [],
+  "value_diffs": [
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4006",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4006",
+      "field": "Ni",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 3,
+          "col": 7,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4006",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4006",
+      "field": "Ti",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 3,
+          "col": 10,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4006",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4006",
+      "field": "other_impurities_single",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 3,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4006",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4006",
+      "field": "other_impurities_total",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 3,
+          "col": 12,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4007",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4007",
+      "field": "Co",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.05Co",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "0.05Co",
+        "unit": "%",
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 4,
+          "col": 9,
+          "clause_id": null,
+          "quote": "0.05Co"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4007",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4007",
+      "field": "other_impurities_single",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 4,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4007",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4007",
+      "field": "other_impurities_total",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 4,
+          "col": 12,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4015",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4015",
+      "field": "Cr",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 5,
+          "col": 6,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4015",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4015",
+      "field": "Ni",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 5,
+          "col": 7,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4015",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4015",
+      "field": "Ti",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 5,
+          "col": 10,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4015",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4015",
+      "field": "other_impurities_single",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 5,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "4015",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-4015",
+      "field": "other_impurities_total",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 5,
+          "col": 12,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "5040",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-5040",
+      "field": "Ni",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 6,
+          "col": 7,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "5040",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-5040",
+      "field": "Ti",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 6,
+          "col": 10,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "5040",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-5040",
+      "field": "other_impurities_single",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 17,
+          "table_id": "T13",
+          "row": 6,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "5040",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-5040",
+      "field": "other_impurities_total",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 17,
+          "table_id": "T13",
+          "row": 6,
+          "col": 12,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "5449",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-5449",
+      "field": "Ni",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": "T13",
+          "row": 7,
+          "col": 7,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "5449",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-5449",
+      "field": "other_impurities_single",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 17,
+          "table_id": "T13",
+          "row": 7,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T13",
+      "record_key": [
+        "5449",
+        ""
+      ],
+      "record_id": "gbt3880_1_2012-T13-5449",
+      "field": "other_impurities_total",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 17,
+          "table_id": "T13",
+          "row": 7,
+          "col": 12,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    }
+  ],
+  "clause_field_diffs": [
+    {
+      "clause_id": "3.2",
+      "field": "chemical_composition",
+      "a": {
+        "raw": "4006、4007、4015、5040、5449合金的化学成分应符合表5的规定，其他牌号的产品化学成分应符合GB/T3190的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "4006、4007、4015、5040、5449合金的化学成分应符合表5的规定，其他牌号的产品化学成分应符合GB/T3190的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.2",
+          "quote": "4006、4007、4015、5040、5449合金的化学成分应符合表5的规定，其他牌号的产品化学成分应符合GB/T3190的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.7",
+      "field": "conductivity_requirement",
+      "a": {
+        "raw": "7075合金的T73、T76状态，7475合金的T76、T761状态及7010合金的T73、T74和T76状态的板材，其电导率应符合表7规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "7075合金的T73、T76状态，7475合金的T76、T761状态及7010合金的T73、T74和T76状态的板材，其电导率应符合表7规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 18,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.7",
+          "quote": "7075合金的T73、T76状态，7475合金的T76、T761状态及7010合金的T73、T74和T76状态的板材，其电导率应符合表7规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.4.1",
+      "field": "routine_inspection",
+      "a": {
+        "raw": "每批产品出厂前均应进行化学成分、室温拉伸力学性能、尺寸偏差和外观质量的检验。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "每批产品出厂前均应进行化学成分、室温拉伸力学性能、尺寸偏差和外观质量的检验。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 25,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.4.1",
+          "quote": "每批产品出厂前均应进行化学成分、室温拉伸力学性能、尺寸偏差和外观质量的检验。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.5",
+      "field": "sampling_reference",
+      "a": {
+        "raw": "产品取样应符合表11、表12的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "产品取样应符合表11、表12的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 25,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.5",
+          "quote": "产品取样应符合表11、表12的规定。"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

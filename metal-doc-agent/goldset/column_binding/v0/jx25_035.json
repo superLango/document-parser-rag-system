@@ -1,0 +1,52 @@
+{
+  "version": "v0",
+  "doc_id": "jx25_035",
+  "source_run": "runs/m1.5_qwen/jx25_035",
+  "tables": {
+    "T1": {
+      "expected_recipe": "chemical_element_rows_v1",
+      "columns": {
+        "0": {"role": "row_key"},
+        "1": {"role": "measure", "family": "chemical_composition", "property": "C"},
+        "2": {"role": "measure", "family": "chemical_composition", "property": "Si"},
+        "3": {"role": "measure", "family": "chemical_composition", "property": "Mn"},
+        "4": {"role": "measure", "family": "chemical_composition", "property": "S"},
+        "5": {"role": "measure", "family": "chemical_composition", "property": "P"},
+        "6": {"role": "measure", "family": "chemical_composition", "property": "Cr"},
+        "7": {"role": "measure", "family": "chemical_composition", "property": "Ni"}
+      }
+    },
+    "T2": {
+      "expected_recipe": "mechanical_properties_v1",
+      "columns": {
+        "0": {"role": "condition"},
+        "1": {"role": "condition"},
+        "2": {"role": "measure", "family": "tensile", "property": "Rm"},
+        "3": {"role": "measure", "family": "tensile", "property": "Rp0.2"},
+        "4": {"role": "measure", "family": "tensile", "property": "A"},
+        "5": {"role": "measure", "family": "tensile", "property": "Z"},
+        "6": {"role": "measure", "family": "hardness", "property": "HBW", "facets": {"hardness_scale": "brinell"}},
+        "7": {"role": "measure", "family": "impact", "property": "KU5"}
+      }
+    },
+    "T3": {
+      "expected_recipe": null,
+      "columns": {
+        "0": {"role": "condition"},
+        "1": {"role": "condition"},
+        "2": {"role": "condition"},
+        "3": {"role": "measure", "family": "stress_rupture", "property": "持久时间"}
+      }
+    },
+    "T5": {
+      "expected_recipe": "inspection_rules_v1",
+      "columns": {
+        "0": {"role": "row_index"},
+        "1": {"role": "row_key"},
+        "2": {"role": "condition"},
+        "3": {"role": "condition"},
+        "4": {"role": "method"}
+      }
+    }
+  }
+}

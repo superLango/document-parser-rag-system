@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt3191_2010",
+  "standard_no": "GB/T 3191-2010",
+  "title": "铝及铝合金挤压棒材",
+  "doc_type": "gb_t",
+  "material": "铝合金",
+  "product_form": "挤压棒材",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "B-unassigned",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "B 独立标注模板：请仅依据源文填写，不得复制 A 份；完成后运行 gold verify。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 4,
+      "caption": "表1 牌号、类别、状态和规格",
+      "profile": "classification",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T9",
+      "page_no": 9,
+      "caption": "表7 室温纵向拉伸力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T16",
+      "page_no": 17,
+      "caption": "表12 力学性能取样数量",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": []
+}

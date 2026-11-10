@@ -1,0 +1,410 @@
+{
+  "doc_id": "gjb2294a_2014",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 0.1613,
+    "cell_value_agreement": 0.9091,
+    "comparator_unit_agreement": 0.9091,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 31,
+    "record_keys_match": 5,
+    "cells_total": 55,
+    "cells_value_match": 50,
+    "cells_strict_match": 50,
+    "clause_fields_total": 4,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [
+    [
+      "T5",
+      "06Cr18Ni10Ti",
+      "固溶:1010~1150°C|方向未规定|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "06Cr18Ni9",
+      "固溶:1010~1150°C|方向未规定|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "12Cr18Ni9",
+      "固溶:1010~1150°C|方向未规定|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "17Cr18Ni9",
+      "固溶:1100~1150°C|方向未规定|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "45Cr14Ni14W2Mo",
+      "820°C退火|方向未规定|试样毛坯25"
+    ]
+  ],
+  "record_keys_only_b": [
+    [
+      "T1",
+      "-",
+      "奥氏体型"
+    ],
+    [
+      "T1",
+      "022Cr19Ni10",
+      "奥氏体型"
+    ],
+    [
+      "T1",
+      "06Cr18Ni11Nb",
+      "奥氏体型"
+    ],
+    [
+      "T1",
+      "12Cr17Mn9Ni4N",
+      "奥氏体型"
+    ],
+    [
+      "T1",
+      "12Cr18Mn8Ni5N",
+      "奥氏体型"
+    ],
+    [
+      "T1",
+      "12Cr18Ni9a",
+      "奥氏体型"
+    ],
+    [
+      "T1",
+      "14Cr23Ni18",
+      "奥氏体型"
+    ],
+    [
+      "T1",
+      "20Cr13Mn9Ni4",
+      "奥氏体型"
+    ],
+    [
+      "T5",
+      "-",
+      "固溶:1010~1150°C|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "022Cr19Ni10",
+      "固溶:1050~1100°C|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "06Cr18Ni10Ti",
+      "固溶:1010~1150°C|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "06Cr18Ni11Nb",
+      "固溶:1050~1150°C|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "06Cr18Ni9",
+      "固溶:1010~1150°C|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "12Cr17Mn9Ni4N",
+      "固溶:1050~1100°C|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "12Cr18Mn8Ni5N",
+      "固溶:1010~1120°C|试样毛坯25"
+    ],
+    [
+      "T5",
+      "12Cr18Ni9",
+      "固溶:1010~1150°C|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "14Cr23Ni18",
+      "固溶:1100~1150°C|水或空气|试样毛坯25"
+    ],
+    [
+      "T5",
+      "17Cr18Ni9",
+      "固溶:1100~1150°C|水冷|试样毛坯25"
+    ],
+    [
+      "T5",
+      "20Cr13Mn9Ni4",
+      "固溶:1050~1120°C|试样毛坯25"
+    ],
+    [
+      "T5",
+      "24Cr18Ni8W2",
+      "交货状态"
+    ],
+    [
+      "T5",
+      "45Cr14Ni14W2Mo",
+      "820°C退火|试样毛坯25"
+    ]
+  ],
+  "value_diffs": [
+    {
+      "table_id": "T1",
+      "record_key": [
+        "06Cr18Ni10Ti",
+        "奥氏体型"
+      ],
+      "record_id": "gjb2294a-T1-06Cr18Ni10Ti",
+      "field": "Ti",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "Ti:5×C~0.70",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "5×C~0.70",
+        "unit": "%",
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T1",
+          "row": 6,
+          "col": 15,
+          "clause_id": null,
+          "quote": "Ti:5×C~0.70"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "06Cr18Ni9a",
+        "奥氏体型"
+      ],
+      "record_id": "gjb2294a-T1-06Cr18Ni9a",
+      "field": "Other",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T1",
+          "row": 2,
+          "col": 15,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "17Cr18Ni9a",
+        "奥氏体型"
+      ],
+      "record_id": "gjb2294a-T1-17Cr18Ni9a",
+      "field": "Other",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T1",
+          "row": 4,
+          "col": 15,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "24Cr18Ni8W2",
+        "奥氏体型"
+      ],
+      "record_id": "gjb2294a-T1-24Cr18Ni8W2",
+      "field": "Other",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T1",
+          "row": 10,
+          "col": 15,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "45Cr14Ni14W2Mo",
+        "奥氏体型"
+      ],
+      "record_id": "gjb2294a-T1-45Cr14Ni14W2Mo",
+      "field": "Other",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T1",
+          "row": 12,
+          "col": 15,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    }
+  ],
+  "clause_field_diffs": [
+    {
+      "clause_id": "3.1",
+      "field": "smelting_method",
+      "a": {
+        "raw": "钢应采用电弧炉+炉外精炼、电弧炉+炉外精炼+电渣重熔或非真空感应炉+电渣重熔方法冶炼。经供需双方协商，也可采用其他方法冶炼。具体冶炼方法应在合同中注明。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "钢应采用电弧炉+炉外精炼、电弧炉+炉外精炼+电渣重熔或非真空感应炉+电渣重熔方法冶炼。经供需双方协商，也可采用其他方法冶炼。具体冶炼方法应在合同中注明。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 4,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.1",
+          "quote": "钢应采用电弧炉+炉外精炼、电弧炉+炉外精炼+电渣重熔或非真空感应炉+电渣重熔方法冶炼。经供需双方协商，也可采用其他方法冶炼。具体冶炼方法应在合同中注明。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.2.1",
+      "field": "chemical_requirement",
+      "a": {
+        "raw": "钢的牌号和化学成分（熔炼分析）应符合表1的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "钢的牌号和化学成分（熔炼分析）应符合表1的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 4,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.2.1",
+          "quote": "钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "4.2.2",
+      "field": "inspection_rule",
+      "a": {
+        "raw": "质量一致性检验项目、取样部位、取样数量及相应要求和检验方法的章条号应符合表11的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "质量一致性检验项目、取样部位、取样数量及相应要求和检验方法的章条号应符合表11的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 15,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "4.2.2",
+          "quote": "质量一致性检验项目、取样部位、取样数量及相应要求和检验方法的章条号应符合表11的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "4.3.3",
+      "field": "tensile_method",
+      "a": {
+        "raw": "拉伸试验用试样的取样位置按GB/T2975的规定，试样制备和试验方法按GB/T228.1规定执行。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "拉伸试验用试样的取样位置按GB/T2975的规定，试样制备和试验方法按GB/T228.1规定执行。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "4.3.3",
+          "quote": "拉伸试验用试样的取样位置按GB/T2975的规定，试样制备和试验方法按GB/T228.1规定执行。"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

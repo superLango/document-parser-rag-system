@@ -1,0 +1,415 @@
+{
+  "doc_id": "gb-t-4437-1-2015-9469fdea",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "facets": {},
+      "required": true,
+      "note": "化学成分"
+    },
+    {
+      "item_canonical": "洛氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "rockwell"
+      },
+      "required": true,
+      "note": "硬度,不小于"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "低倍组织"
+    },
+    {
+      "item_canonical": "显微组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "显微组织"
+    },
+    {
+      "item_canonical": "外观质量",
+      "item_family": "surface",
+      "facets": {},
+      "required": true,
+      "note": "外观质量"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "室温拉伸试验结果"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T1": {
+      "clause_id": "3.1.1",
+      "quote": "管材的牌号及供应状态应符合表1的规定。"
+    },
+    "T10": {
+      "clause_id": "3.6",
+      "quote": "对于7075合金T73、T73510、T73511状态供货的管材有电导率要求时，应供需双方协商并在订货单（或合同）中注明，其电导率应符合表5规定；"
+    },
+    "T11": {
+      "clause_id": "3.9",
+      "quote": "对于厚度大于或等于 20.00mm 的7075合金T73、T73510、T73511状态供货的管材，当订货单（或合同）中注明检验应力腐蚀性能时，其管材的应力腐蚀性能应符合表6的规定。"
+    },
+    "T12": {
+      "clause_id": "3.11",
+      "quote": "3. 11.2 管材低倍组织试样上的非金属夹杂物、化合物偏析或金属间化合物应符合表7的规定。"
+    },
+    "T13": {
+      "clause_id": "4.5",
+      "quote": "管材的电导率在拉伸试样的样坯上进行测试，测量部位按表8规定，测试方法按GB/T12966规定进行。"
+    },
+    "T14": {
+      "clause_id": "5.5",
+      "quote": "管材的取样应符合表9的规定。"
+    },
+    "T15": {
+      "clause_id": "5.5",
+      "quote": "管材的取样应符合表9的规定。"
+    },
+    "T2": {
+      "clause_id": "3.2",
+      "quote": "5051A、6041、6042、6162、6064、6066、7178牌号的化学成分应符合表2的规定，其他牌号的化学成分应符合GB/T3190的规定。"
+    },
+    "T3": {
+      "clause_id": "3.4",
+      "quote": "管材的纵向室温拉伸力学性能应符合表3的规定。"
+    },
+    "T4": {
+      "clause_id": "3.4",
+      "quote": "管材的纵向室温拉伸力学性能应符合表3的规定。"
+    },
+    "T5": {
+      "clause_id": "3.4",
+      "quote": "管材的纵向室温拉伸力学性能应符合表3的规定。"
+    },
+    "T7": {
+      "clause_id": "3.4",
+      "quote": "管材的纵向室温拉伸力学性能应符合表3的规定。"
+    },
+    "T9": {
+      "clause_id": "3.5",
+      "quote": "管材的硬度参考值如表4所示。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T10",
+    "T11",
+    "T12",
+    "T13",
+    "T14",
+    "T15",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T7",
+    "T9"
+  ],
+  "clauses": [
+    {
+      "clause_id": "3.1.1",
+      "kind": "technical_requirement",
+      "quote": "管材的牌号及供应状态应符合表1的规定。需方需要其他牌号、供应状态时，由供需双方商定后在订货单（或合同）中注明。 表1 牌号及供应状态",
+      "fields": {
+        "requirement": "管材的牌号及供应状态应符合表1的规定。"
+      }
+    },
+    {
+      "clause_id": "3.2",
+      "kind": "technical_requirement",
+      "quote": "5051A、6041、6042、6162、6064、6066、7178牌号的化学成分应符合表2的规定，其他牌号的化学成分应符合GB/T3190的规定。 表2 化学成分",
+      "fields": {
+        "requirement": "5051A、6041、6042、6162、6064、6066、7178牌号的化学成分应符合表2的规定，其他牌号的化学成分应符合GB/T3190的规定。"
+      }
+    },
+    {
+      "clause_id": "3.3",
+      "kind": "technical_requirement",
+      "quote": "除O、H111及淬火状态供货的管材外，其他状态供货的管材尺寸偏差应符合GB/T4436中普通级的规定，需要高精级、超高精级或需方有特殊要求时，应在订货单（或合同）中注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.4",
+      "kind": "technical_requirement",
+      "quote": "管材的纵向室温拉伸力学性能应符合表3的规定。壁厚超出表3规定的管材，其力学性能由供需双方协商确定，并在订货单（或合同）中注明，无注明时附实测结果。 表3 室温拉伸力学性能",
+      "fields": {
+        "requirement": "管材的纵向室温拉伸力学性能应符合表3的规定。"
+      }
+    },
+    {
+      "clause_id": "3.6",
+      "kind": "technical_requirement",
+      "quote": "对于7075合金T73、T73510、T73511状态供货的管材有电导率要求时，应供需双方协商并在订货单（或合同）中注明，其电导率应符合表5规定；对其他合金的管材有电导率要求时，由供需双方协商确定，并在订货单（或合同）中注明。 表5 电导率",
+      "fields": {
+        "requirement": "对于7075合金T73、T73510、T73511状态供货的管材有电导率要求时，应供需双方协商并在订货单（或合同）中注明，其电导率应符合表5规定；"
+      }
+    },
+    {
+      "clause_id": "3.7",
+      "kind": "other",
+      "quote": "订货单（或合同）中注明检验剥落腐蚀性能的管材，当订货单（或合同）中注明按GB/T22639检测时，其产品的剥落腐蚀试验结果不应出现EB~ED级。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.8",
+      "kind": "other",
+      "quote": "对管材有晶间腐蚀性能要求时，应供需双方协商，并在订货单（或合同）中注明晶间腐蚀深度要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.9",
+      "kind": "technical_requirement",
+      "quote": "对于厚度大于或等于 20.00mm 的7075合金T73、T73510、T73511状态供货的管材，当订货单（或合同）中注明检验应力腐蚀性能时，其管材的应力腐蚀性能应符合表6的规定。其他合金管材有应力腐蚀性能要求时，应供需双方协商并在订货单（或合同）中注明。 表6 应力腐蚀性能",
+      "fields": {
+        "requirement": "对于厚度大于或等于 20.00mm 的7075合金T73、T73510、T73511状态供货的管材，当订货单（或合同）中注明检验应力腐蚀性能时，其管材的应力腐蚀性能应符合表6的规定。"
+      }
+    },
+    {
+      "clause_id": "3.10",
+      "kind": "other",
+      "quote": "对管材有超声波探伤性能要求时，应供需双方协商，并在订货单（或合同）中注明超声波检验及检验级别。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.11",
+      "kind": "other",
+      "quote": "3. 11.1 管材的低倍组织试样上不得有裂纹、缩尾、气孔、光亮晶粒存在。 3. 11.2 管材低倍组织试样上的非金属夹杂物、化合物偏析或金属间化合物应符合表7的规定。 表7 低倍组织试样上非金属夹杂物、化合物偏析或金属间化合物",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.11.2",
+      "kind": "technical_requirement",
+      "quote": "表7 低倍组织试样上非金属夹杂物、化合物偏析或金属间化合物 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "4",
+      "kind": "test_method",
+      "quote": "试验方法",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.1.1",
+      "kind": "test_method",
+      "quote": "化学成分分析方法应符合GB/T20975或GB/T7999的规定，仲裁分析应采用GB/T20975规定的方法。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.1.3",
+      "kind": "test_method",
+      "quote": "“Al”含量按GB/T3190规定的方法计算，计算“Al”含量时，取常规分析元素与怀疑超量的非常规分析元素分析数值的和值作为“元素含量总和”。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.1.4",
+      "kind": "other",
+      "quote": "分析数值的判定采用修约比较法，数值修约规则按GB/T8170的有关规定进行，修约数位应与表2或GB/T3190规定的极限数位一致。",
+      "fields": {
+        "method_standard": "GB/T8170"
+      }
+    },
+    {
+      "clause_id": "4.2",
+      "kind": "technical_requirement",
+      "quote": "管材的尺寸偏差测量方法应符合GB/T4436的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3",
+      "kind": "technical_requirement",
+      "quote": "管材的室温纵向拉伸力学性能试验方法应符合GB/T16865的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4.1",
+      "kind": "test_method",
+      "quote": "管材的韦氏硬度试验方法按YS/T420的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4.2",
+      "kind": "test_method",
+      "quote": "管材的布氏硬度试验方法按GB/T231的规定进行。",
+      "fields": {
+        "method_standard": "GB/T231"
+      }
+    },
+    {
+      "clause_id": "4.4.3",
+      "kind": "test_method",
+      "quote": "管材的洛氏硬度试验方法按GB/T230的规定进行。",
+      "fields": {
+        "method_standard": "GB/T230"
+      }
+    },
+    {
+      "clause_id": "4.5",
+      "kind": "other",
+      "quote": "管材的电导率在拉伸试样的样坯上进行测试，测量部位按表8规定，测试方法按GB/T12966规定进行。 表8 电导率测量部位",
+      "fields": {
+        "method_standard": "GB/T12966"
+      }
+    },
+    {
+      "clause_id": "4.6",
+      "kind": "technical_requirement",
+      "quote": "管材的剥落腐蚀试验方法应按GB/T22639的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.7",
+      "kind": "technical_requirement",
+      "quote": "5times xtimes 系合金管材的晶间腐蚀试验方法应按GB/T26491的规定进行，其他合金管材料的晶间腐蚀试验方法应按GB/T7998的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.8",
+      "kind": "other",
+      "quote": "厚度大于或等于 20mm 的管材应力腐蚀试验试样为C环环形试样，试验方法按GB/T22640规定的方法进行检验。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.9",
+      "kind": "other",
+      "quote": "管材的超声波检验方法按GB/T6519或供需双方商定的方法进行检验。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.10",
+      "kind": "technical_requirement",
+      "quote": "管材的低倍组织检验方法应符合GB/T3246.2的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.11",
+      "kind": "technical_requirement",
+      "quote": "管材的显微组织检验方法应符合GB/T3246.1的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.1.2",
+      "kind": "sampling",
+      "quote": "需方应对收到的产品按本部分的规定进行检验。检验结果与本部分及订货单（或合同）的规定不符时，应以书面形式向供方提出，由供需双方协商解决。属于表面质量及尺寸偏差的异议，应在收到产品之日起一个月内提出，属于其他性能的异议，应在收到产品之日起3个月内提出。如需仲裁，可委托供需双方认可的单位进行，并在需方共同取样。",
+      "fields": {
+        "sample_location": "如需仲裁，可委托供需双方认可的单位进行，并在需方共同取样"
+      }
+    },
+    {
+      "clause_id": "5.4.1",
+      "kind": "inspection",
+      "quote": "每批管材出厂前均应进行化学成分、尺寸偏差、室温拉伸力学性能、低倍组织和外观质量的检验。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.4.4",
+      "kind": "inspection",
+      "quote": "订货单（或合同）中注明检验电导率的管材，应进行电导率检验。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.4.5",
+      "kind": "inspection",
+      "quote": "订货单（或合同）中注明检验剥落腐蚀性能的管材，首批供货或工艺发生重大变化时，应检验产品的剥落腐蚀性能。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.4.6",
+      "kind": "inspection",
+      "quote": "订货单（或合同）中注明检验晶间腐蚀性能的管材，首批供货或工艺发生重大变化时，应检验产品的晶间腐蚀性能。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.4.7",
+      "kind": "inspection",
+      "quote": "订货单（或合同）中注明检验应力腐蚀性能的管材，首批供货或工艺发生重大变化时，应检验产品的应力腐蚀性能。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.5",
+      "kind": "sampling",
+      "quote": "管材的取样应符合表9的规定。 表9 取样规定",
+      "fields": {
+        "requirement": "管材的取样应符合表9的规定。",
+        "sample_location": "管材的取样应符合表9"
+      }
+    },
+    {
+      "clause_id": "5.6.4",
+      "kind": "sampling",
+      "quote": "任一试样的电导率不合格时，判该批（或热处理炉）不合格。但允许供方进行重复热处理，重新取样检验室温拉伸力学性能和电导率。",
+      "fields": {
+        "sample_location": "但允许供方进行重复热处理，重新取样检验室温拉伸力学性能和电导率"
+      }
+    },
+    {
+      "clause_id": "5.6.5",
+      "kind": "sampling",
+      "quote": "任一试样的剥落腐蚀性能不合格时，判该批（或热处理炉）管材不合格。但允许供方进行重复热处理，重新取样检验室温拉伸力学性能、电导率和剥落腐蚀性能、应力腐蚀性能。",
+      "fields": {
+        "sample_location": "但允许供方进行重复热处理，重新取样检验室温拉伸力学性能、电导率和剥落腐蚀性能、应力腐蚀性能"
+      }
+    },
+    {
+      "clause_id": "5.6.6",
+      "kind": "sampling",
+      "quote": "任一试样的晶间腐蚀性能不合格时，判该批（或热处理炉）管材不合格。但允许供方进行重复热处理，重新取样检验室温拉伸力学性能、电导率和晶间腐蚀性能。",
+      "fields": {
+        "sample_location": "但允许供方进行重复热处理，重新取样检验室温拉伸力学性能、电导率和晶间腐蚀性能"
+      }
+    },
+    {
+      "clause_id": "5.6.7",
+      "kind": "sampling",
+      "quote": "任一试样的应力腐蚀性能不合格时，判该批（或热处理炉）管材不合格。但允许供方进行重复热处理，重新取样实验室温拉伸力学性能、电导率和应力腐蚀性能。",
+      "fields": {
+        "sample_location": "但允许供方进行重复热处理，重新取样实验室温拉伸力学性能、电导率和应力腐蚀性能"
+      }
+    },
+    {
+      "clause_id": "5.6.9",
+      "kind": "technical_requirement",
+      "quote": "任一试样的低倍组织不合格时，按如下判定：",
+      "fields": {
+        "requirement": "b) 因缩尾、粗晶环、成层不合格时，允许从管材挤压尾端切去一段重复试验，直至合格，则该批中的其他管材均应按受检管材上述缺陷分布的最大长度切尾或逐根检验，合格者交货。",
+        "judgment": "a) 因裂纹、光亮晶粒、非金属夹杂物、化合物偏析或金属间化合物等冶金缺陷不合格时，判该批管材不合格。"
+      }
+    },
+    {
+      "clause_id": "6.1.1",
+      "kind": "other",
+      "quote": "注：需中断交货的管材，挤压管尾端应打印“W”标识。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.1.2",
+      "kind": "packaging",
+      "quote": "管材的包装箱标志应符合GB/T3199的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.2",
+      "kind": "packaging",
+      "quote": "其他按GB/T3199规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.3",
+      "kind": "technical_requirement",
+      "quote": "管材的运输和贮存应符合GB/T3199的规定。",
+      "fields": {}
+    }
+  ]
+}

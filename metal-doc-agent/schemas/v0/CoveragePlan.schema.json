@@ -1,0 +1,100 @@
+{
+  "$defs": {
+    "CoverageItem": {
+      "properties": {
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "status": {
+          "default": "missing",
+          "enum": [
+            "found",
+            "missing",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "expected_locations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Locations",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "field"
+      ],
+      "title": "CoverageItem",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "producer_version": {
+      "default": "0.1.0",
+      "title": "Producer Version",
+      "type": "string"
+    },
+    "standard_no": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Standard No"
+    },
+    "template": {
+      "default": "product_full",
+      "title": "Template",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/CoverageItem"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "title": "CoveragePlan",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

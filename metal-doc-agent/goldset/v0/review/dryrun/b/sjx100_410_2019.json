@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "sjx100_410_2019",
+  "standard_no": "100.410SJX-D-2019-027",
+  "title": "1Cr12Ni3MoVN钢前机匣上下半部锻件",
+  "doc_type": "enterprise",
+  "material": "1Cr12Ni3MoVN钢",
+  "product_form": "机匣锻件",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "agent-B-dryrun",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "AI dry-run B：由 runs/m1_qwen_s8 生成，仅覆盖 chemical/mechanical 记录；inspection/classification/clause 不在本次范围；不得作为 verified 依据。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 2,
+      "caption": "表1",
+      "profile": "unknown",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T2",
+      "page_no": 3,
+      "caption": "表2",
+      "profile": "inspection",
+      "orientation": "item_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T3",
+      "page_no": 6,
+      "caption": null,
+      "profile": "unknown",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": [
+    "AI dry-run B"
+  ]
+}

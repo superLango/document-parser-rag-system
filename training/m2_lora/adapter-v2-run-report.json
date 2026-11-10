@@ -1,0 +1,25 @@
+{
+  "model": "/home/grainuser/models/models/Qwen3.5-9B",
+  "train_samples": 692,
+  "eval_samples": 110,
+  "epochs": 2.0,
+  "batch": 1,
+  "grad_accum": 16,
+  "lr": 0.0001,
+  "max_seq": 1536,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05
+  },
+  "elapsed_seconds": 1725.1,
+  "final_metrics": {
+    "train_runtime": 1724.9723,
+    "train_samples_per_second": 0.802,
+    "train_steps_per_second": 0.051,
+    "total_flos": 2.7587671587311616e+16,
+    "train_loss": 0.059229980328712954,
+    "epoch": 2.0,
+    "step": 88
+  }
+}

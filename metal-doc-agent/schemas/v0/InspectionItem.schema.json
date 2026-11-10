@@ -1,0 +1,117 @@
+{
+  "properties": {
+    "item": {
+      "title": "Item",
+      "type": "string"
+    },
+    "category": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Category"
+    },
+    "quantities": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Quantities",
+      "type": "object"
+    },
+    "sample_location": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sample Location"
+    },
+    "requirement_clause": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Requirement Clause"
+    },
+    "method_clause": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Method Clause"
+    },
+    "method_standard": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Method Standard"
+    },
+    "status": {
+      "default": "found",
+      "enum": [
+        "found",
+        "ambiguous",
+        "not_applicable"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "evidence_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence Id"
+    },
+    "note": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Note"
+    }
+  },
+  "required": [
+    "item"
+  ],
+  "title": "InspectionItem",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

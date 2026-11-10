@@ -1,0 +1,48 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  engine:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: metal-doc-agent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install engine
+        run: pip install -e ".[dev,api,yaml]"
+      - name: Install platform
+        run: pip install -e ../apps/api
+      - name: Engine tests
+        run: python -m unittest discover -s tests -q
+      - name: Platform tests
+        working-directory: apps/api
+        run: python -m unittest discover -s tests -q
+      - name: Export composed OpenAPI
+        working-directory: apps/api
+        run: python tools/export_openapi.py
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install web
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm --filter @hanson/web typecheck
+      - name: Build
+        run: pnpm --filter @hanson/web build

@@ -1,0 +1,71 @@
+{
+  "title": "Metal Agent · Production",
+  "uid": "metal-agent-prod",
+  "schemaVersion": 39,
+  "refresh": "30s",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Jobs by status",
+      "targets": [
+        {
+          "expr": "engine_jobs",
+          "legendFormat": "{{status}}"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Queue backlog by lane",
+      "targets": [
+        {
+          "expr": "engine_queue_items",
+          "legendFormat": "{{lane}}"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 }
+    },
+    {
+      "type": "stat",
+      "title": "Failure ratio",
+      "targets": [{ "expr": "engine_job_failure_ratio" }],
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 8 }
+    },
+    {
+      "type": "stat",
+      "title": "Documents in review",
+      "targets": [{ "expr": "platform_documents{status=\"review\"}" }],
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Field review events",
+      "targets": [
+        {
+          "expr": "platform_field_review_events",
+          "legendFormat": "{{action}}"
+        }
+      ],
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "p95 pipeline latency (s)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(engine_pipeline_seconds_bucket[15m])) by (le))"
+        }
+      ],
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 14 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Model endpoints up",
+      "targets": [
+        { "expr": "up{job=~\"model-.*\"}", "legendFormat": "{{job}}" }
+      ],
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 14 }
+    }
+  ]
+}

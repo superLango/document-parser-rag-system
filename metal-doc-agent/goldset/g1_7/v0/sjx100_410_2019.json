@@ -1,0 +1,100 @@
+{
+  "doc_id": "100-410sjx-d-2019-027-1cr12ni3movn钢前机匣上下半部锻件-4cff58d4",
+  "items": [
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "facets": {},
+      "required": true,
+      "note": "超声波"
+    }
+  ],
+  "items_unknown_ok": [
+    "理化"
+  ],
+  "links": {
+    "T1": {
+      "clause_id": "1",
+      "quote": "1 锻件状态 锻件状态要求如表1所示： 表1"
+    },
+    "T2": {
+      "clause_id": "2.2.2",
+      "quote": "检验项目数量及位置 各理化检验项目和数量见表2，取样位置见图1、图2。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T2"
+  ],
+  "clauses": [
+    {
+      "clause_id": "1",
+      "kind": "other",
+      "quote": "1 锻件状态 锻件状态要求如表1所示： 表1",
+      "fields": {
+        "requirement": "锻件状态要求如表1所示。"
+      }
+    },
+    {
+      "clause_id": "2.1.3",
+      "kind": "technical_requirement",
+      "quote": "锻件用原材料其他要求应符合410JX（通用）-D-S9-6503，原材料经复验合格后方可投产。",
+      "fields": {}
+    },
+    {
+      "clause_id": "2.2.1",
+      "kind": "sampling",
+      "quote": "锻件理化检测在取自锻件本体的试环上进行，试环应取自位于或相当于铸锭头部的锻件，试环应与同批锻件经过相同的热处理过程后切下；供方在1/2件试环上进行理化检验，另1/2件打上相应标志随同批锻件发往需方复验用。",
+      "fields": {
+        "sample_location": "取自锻件本体的试环，试环应取自位于或相当于铸锭头部的锻件",
+        "sample_quantity": "供方在1/2件试环上进行理化检验"
+      }
+    },
+    {
+      "clause_id": "2.2.2",
+      "kind": "inspection",
+      "quote": "检验项目数量及位置 各理化检验项目和数量见表2，取样位置见图1、图2。",
+      "fields": {
+        "requirement": "在试环上进行化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织检验，按410JX（通用）-D-S9-6503机匣锻件验收。",
+        "sample_quantity": "见表2"
+      }
+    },
+    {
+      "clause_id": "2.2.3",
+      "kind": "inspection",
+      "quote": "锻件应逐件进行上下端面圆周方向均布4点（共计8点）的硬度检查，硬度值HB=286-331。",
+      "fields": {
+        "requirement": "锻件应逐件进行上下端面圆周方向均布4点（共计8点）的硬度检查。",
+        "sample_quantity": "逐件，上下端面圆周方向均布4点（共计8点）",
+        "judgment": "HB=286-331"
+      }
+    },
+    {
+      "clause_id": "2.2.4",
+      "kind": "inspection",
+      "quote": "2.2.4 超声探伤要求 锻件应逐件按HB/Z59进行超声波检验，按A级验收。",
+      "fields": {
+        "requirement": "锻件应逐件按HB/Z59进行超声波检验，按A级验收。",
+        "method_standard": "HB/Z59"
+      }
+    },
+    {
+      "clause_id": "2.2.5",
+      "kind": "technical_requirement",
+      "quote": "锻件其他要求应符合410JX（通用）-D-S9-6503机匣锻件及锻件图纸。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.1.1",
+      "kind": "inspection",
+      "quote": "供货方在锻件试制前应进行工艺方案评审，试制批锻件出、入厂检验及加工合格后，由订货方组织进行锻件质量评审。供货方在锻件交付前完成首件鉴定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.2",
+      "kind": "technical_requirement",
+      "quote": "锻件用原材料管控，锻件的质量评审要求，锻件工艺、检验和质量控制，文件管理，质量证明、记录与可追溯性和能力与资质要求，不合格品处理，包装与运输，保密要求应符合410JX（通用）-D-001中相应内容。",
+      "fields": {}
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "jx25_035",
+  "standard_no": "JX-25-035",
+  "title": "GH4698高温合金棒材采购技术协议",
+  "doc_type": "agreement",
+  "material": "GH4698高温合金",
+  "product_form": "棒材",
+  "source_type": "digital_native",
+  "annotation": {
+    "status": "draft",
+    "annotator": "B-unassigned",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "B 独立标注模板：请仅依据源文填写，不得复制 A 份；完成后运行 gold verify。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 2,
+      "caption": "表1 GH4698 合金化学成分（wt%）",
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T2",
+      "page_no": 2,
+      "caption": "表2 3H698-BД合金力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T5",
+      "page_no": 4,
+      "caption": "表4 检验项目、取样部位、试验方法",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": []
+}

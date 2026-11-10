@@ -1,0 +1,32 @@
+{
+  "version": "v0",
+  "doc_id": "gjb2057a_2018",
+  "source_run": "runs/m1.5_qwen/gjb2057a_2018",
+  "tables": {
+    "T2": {
+      "expected_recipe": "mechanical_properties_v1",
+      "columns": {
+        "0": {"role": "row_key"},
+        "1": {"role": "condition"},
+        "2": {"role": "condition"},
+        "3": {"role": "condition"},
+        "4": {"role": "measure", "family": "tensile", "property": "Rm"},
+        "5": {"role": "measure", "family": "tensile", "property": "Rp0.2"},
+        "6": {"role": "measure", "family": "tensile", "property": "A"},
+        "7": {"role": "measure", "family": "hardness", "property": "HBW", "facets": {"hardness_scale": "brinell"}},
+        "8": {"role": "unknown", "status": "unmapped"}
+      }
+    },
+    "T4": {
+      "expected_recipe": null,
+      "columns": {
+        "0": {"role": "row_key"},
+        "1": {"role": "row_key"},
+        "2": {"role": "condition"},
+        "3": {"role": "condition"},
+        "4": {"role": "method"},
+        "5": {"role": "method"}
+      }
+    }
+  }
+}

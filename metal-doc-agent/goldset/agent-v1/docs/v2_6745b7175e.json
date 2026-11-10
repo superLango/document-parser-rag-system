@@ -1,0 +1,358 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_6745b7175e",
+  "standard_no": null,
+  "title": "d124b18682ec421381850c9c7b2293f61788921846837",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 14,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\d124b18682ec421381850c9c7b2293f61788921846837.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 2,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-37ba7f2047",
+          "grade": "主要元素、% Al",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-78dae84a95",
+          "grade": "主要元素、% V",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-7c99cd93dd",
+          "grade": "杂质元素，不大于，% Si",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-168b184a06",
+          "grade": "杂质元素，不大于，% Fe",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-0b87bbc975",
+          "grade": "杂质元素，不大于，% C",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-3c9688452a",
+          "grade": "杂质元素，不大于，% B",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-f0df74cc17",
+          "grade": "杂质元素，不大于，% Y",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-b8f376336c",
+          "grade": "杂质元素，不大于，% N",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-8921c78d86",
+          "grade": "杂质元素，不大于，% II",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-e2a305247e",
+          "grade": "杂质元素，不大于，% O",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-4089ad652c",
+          "grade": "杂质元素，不大于，% 其他元素 单一",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 11,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-f5d5d32742",
+          "grade": "杂质元素，不大于，% 其他元素 总和",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Sn": {
+              "raw": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "value": null,
+              "text": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 4,
+                "col": 12,
+                "clause_id": null,
+                "quote": "注：其他元素由供方保证、常规检验可不分析。需方要求并在合同中注明时应予检验，其他元素包括Sn、Mo、Cu、Mn、Zr等。"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

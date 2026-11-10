@@ -1,0 +1,220 @@
+{
+  "regression_version": 1,
+  "label": "qwen-s8",
+  "created_at": "2026-10-26T14:24:02.006047+00:00",
+  "schema_version": "0.1.0",
+  "goldset_version": "v0",
+  "metadata": {},
+  "summary": {
+    "record_f1": 0.8823,
+    "field_f1": 0.8176,
+    "value_accuracy": 0.9263,
+    "inspection_accuracy": 0.0,
+    "classification_accuracy": 0.0,
+    "clause_accuracy": 0.0,
+    "evidence_rate": 1.0,
+    "coverage_rate": 0.85
+  },
+  "documents": {
+    "qdu302_2015": {
+      "record_f1": 1.0,
+      "field_f1": 1.0,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 0.75
+    },
+    "gbt40303_2021": {
+      "record_f1": 1.0,
+      "field_f1": 0.9262,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gjb2057a_2018": {
+      "record_f1": 0.9231,
+      "field_f1": 0.96,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 0.75
+    },
+    "gbt1591_2018": {
+      "record_f1": 0.9,
+      "field_f1": 0.8608,
+      "value_accuracy": 0.9444,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gbt14992_2015": {
+      "record_f1": 1.0,
+      "field_f1": 0.9655,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 0.75
+    },
+    "gbt3191_1998": {
+      "record_f1": 0.5714,
+      "field_f1": 0.5714,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 0.75
+    },
+    "gbt3191_2010": {
+      "record_f1": 1.0,
+      "field_f1": 1.0,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 0.75
+    },
+    "gbt1220_2007": {
+      "record_f1": 0.7059,
+      "field_f1": 0.458,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gbt33084_2016": {
+      "record_f1": 1.0,
+      "field_f1": 0.9682,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gbt3203_2016": {
+      "record_f1": 0.7778,
+      "field_f1": 0.8596,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gbt3880_1_2012": {
+      "record_f1": 1.0,
+      "field_f1": 0.8156,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 0.75
+    },
+    "gbt4437_1_2015": {
+      "record_f1": 1.0,
+      "field_f1": 0.8398,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gbt6892_2015": {
+      "record_f1": 0.9677,
+      "field_f1": 0.9058,
+      "value_accuracy": 0.9619,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gjb2294a_2014": {
+      "record_f1": 1.0,
+      "field_f1": 0.8715,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gjb5301_2004": {
+      "record_f1": 0.8,
+      "field_f1": 0.7559,
+      "value_accuracy": 0.8571,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "gjb3325a_2019": {
+      "record_f1": 1.0,
+      "field_f1": 0.9773,
+      "value_accuracy": 0.9556,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "jx25_035": {
+      "record_f1": 1.0,
+      "field_f1": 0.8889,
+      "value_accuracy": 0.95,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "mas7079_b": {
+      "record_f1": 1.0,
+      "field_f1": 1.0,
+      "value_accuracy": 1.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 0.5
+    },
+    "qs10_0351_2004": {
+      "record_f1": 1.0,
+      "field_f1": 0.7273,
+      "value_accuracy": 0.8571,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 1.0,
+      "coverage_rate": 1.0
+    },
+    "sjx100_410_2019": {
+      "record_f1": 0.0,
+      "field_f1": 0.0,
+      "value_accuracy": 0.0,
+      "inspection_accuracy": 0.0,
+      "classification_accuracy": 0.0,
+      "clause_accuracy": 0.0,
+      "evidence_rate": 0.0,
+      "coverage_rate": 0.0
+    }
+  }
+}

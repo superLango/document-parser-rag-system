@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt1220_2007",
+  "standard_no": "GB/T 1220-2007",
+  "title": "不锈钢棒",
+  "doc_type": "gb_t",
+  "material": "不锈钢",
+  "product_form": "棒材",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "B-unassigned",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "B 独立标注模板：请仅依据源文填写，不得复制 A 份；完成后运行 gold verify。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 8,
+      "caption": "表1 奥氏体型不锈钢的化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T7",
+      "page_no": 13,
+      "caption": "表6 经固溶处理（见表A.1）的奥氏体型钢棒或试样的力学性能（续）",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T16",
+      "page_no": 19,
+      "caption": "表16 钢棒检验项目、取样数量、取样部位及试验方法",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": []
+}

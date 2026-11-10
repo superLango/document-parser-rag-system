@@ -1,0 +1,1997 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt33084_2016",
+  "standard_no": "GB/T 33084-2016",
+  "title": "大型合金结构钢锻件 技术条件",
+  "doc_type": "gb_t",
+  "material": "合金结构钢",
+  "product_form": "大型锻件",
+  "source_type": "digital_native",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft-s7",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "依据数字原生 Markdown 原文与 tablegrid 索引标注，未使用模型/抽取预测值。",
+      "T1、T5 为 scope=partial；T12 级别 I~V 已全部标注（scope=full）。",
+      "表3 未规定试验方向，direction 记为『未规定』，取样方向见 6.2.2。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 5,
+      "caption": "表1 化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "M1-S7 draft：仅标注 5 个牌号行（row=1 30Mn2、row=3 45Mn2、row=4 20SiMn、row=9 20MnMoNb、row=17 40Cr），其余 16 行及第6~7页表1（续）待补。单位为%（质量分数），P≤/S≤ 按表头记为 max，『-』记为 na。",
+      "records": [
+        {
+          "record_id": "gbt33084-T1-30Mn2",
+          "grade": "30Mn2",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.27~0.34",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.27,
+              "upper": 0.34,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.27~0.34"
+              }
+            },
+            "Si": {
+              "raw": "0.17~0.37",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.17,
+              "upper": 0.37,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.17~0.37"
+              }
+            },
+            "Mn": {
+              "raw": "1.40~1.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.4,
+              "upper": 1.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 4,
+                "clause_id": null,
+                "quote": "1.40~1.80"
+              }
+            },
+            "P": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "S": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "Cr": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ni": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "其他": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 1,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt33084-T1-45Mn2",
+          "grade": "45Mn2",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.42~0.49",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.42,
+              "upper": 0.49,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.42~0.49"
+              }
+            },
+            "Si": {
+              "raw": "0.17~0.37",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.17,
+              "upper": 0.37,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.17~0.37"
+              }
+            },
+            "Mn": {
+              "raw": "1.40~1.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.4,
+              "upper": 1.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "1.40~1.80"
+              }
+            },
+            "P": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "S": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "Cr": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ni": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "其他": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt33084-T1-20SiMn",
+          "grade": "20SiMn",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.16~0.22",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.16,
+              "upper": 0.22,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.16~0.22"
+              }
+            },
+            "Si": {
+              "raw": "0.60~0.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.6,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.60~0.80"
+              }
+            },
+            "Mn": {
+              "raw": "1.00~1.30",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.0,
+              "upper": 1.3,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "1.00~1.30"
+              }
+            },
+            "P": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "S": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "Cr": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ni": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "其他": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt33084-T1-20MnMoNb",
+          "grade": "20MnMoNb",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.16~0.23",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.16,
+              "upper": 0.23,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.16~0.23"
+              }
+            },
+            "Si": {
+              "raw": "0.17~0.37",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.17,
+              "upper": 0.37,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.17~0.37"
+              }
+            },
+            "Mn": {
+              "raw": "1.20~1.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.2,
+              "upper": 1.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 4,
+                "clause_id": null,
+                "quote": "1.20~1.50"
+              }
+            },
+            "P": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "S": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "Cr": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ni": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "0.45~0.60",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.45,
+              "upper": 0.6,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.45~0.60"
+              }
+            },
+            "其他": {
+              "raw": "Nb 0.020~0.045",
+              "value": null,
+              "text": "Nb 0.020~0.045",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 10,
+                "clause_id": null,
+                "quote": "Nb 0.020~0.045"
+              }
+            }
+          },
+          "note": "『其他』列为复合元素规定 Nb 0.020~0.045，按原文 text 记录，未拆成单值。"
+        },
+        {
+          "record_id": "gbt33084-T1-40Cr",
+          "grade": "40Cr",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.37~0.44",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.37,
+              "upper": 0.44,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.37~0.44"
+              }
+            },
+            "Si": {
+              "raw": "0.17~0.37",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.17,
+              "upper": 0.37,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.17~0.37"
+              }
+            },
+            "Mn": {
+              "raw": "0.50~0.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.50~0.80"
+              }
+            },
+            "P": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "S": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "Cr": {
+              "raw": "0.80~1.10",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 1.1,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.80~1.10"
+              }
+            },
+            "Ni": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "其他": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 17,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T5",
+      "page_no": 8,
+      "caption": "表3 力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "M1-S7 draft：仅标注 6 行（row=1、2、9、25、40、48）；表3 其余行及第10~14页续表（T7/T9/T10/T11）未标注。表3 未规定试验方向，direction 记为『未规定』，取样方向见 6.2.2。表头 Rm/RcL/A/Z/KU2 为≥（min）；表面硬度按单元格 ≤/~ 判定。",
+      "records": [
+        {
+          "record_id": "gbt33084-T5-30Mn2-调质-≤100",
+          "grade": "30Mn2",
+          "grade_level": null,
+          "condition": "30Mn2 / 调质 / ≤100 / 方向未规定",
+          "facets": {
+            "heat_treatment": "调质",
+            "size": "≤100",
+            "direction": "未规定"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "685",
+              "value": 685.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 1,
+                "col": 4,
+                "clause_id": null,
+                "quote": "685"
+              }
+            },
+            "Rp0.2": {
+              "raw": "440",
+              "value": 440.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 1,
+                "col": 5,
+                "clause_id": null,
+                "quote": "440"
+              }
+            },
+            "A": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 1,
+                "col": 6,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "Z": {
+              "raw": "50",
+              "value": 50.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 1,
+                "col": 7,
+                "clause_id": null,
+                "quote": "50"
+              }
+            },
+            "KU2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 1,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HBW": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 1,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt33084-T5-30Mn2-调质->100~300",
+          "grade": "30Mn2",
+          "grade_level": null,
+          "condition": "30Mn2 / 调质 / >100~300 / 方向未规定",
+          "facets": {
+            "heat_treatment": "调质",
+            "size": ">100~300",
+            "direction": "未规定"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "635",
+              "value": 635.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "635"
+              }
+            },
+            "Rp0.2": {
+              "raw": "410",
+              "value": 410.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "410"
+              }
+            },
+            "A": {
+              "raw": "16",
+              "value": 16.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "16"
+              }
+            },
+            "Z": {
+              "raw": "45",
+              "value": 45.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "45"
+              }
+            },
+            "KU2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 2,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HBW": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 2,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt33084-T5-20SiMn-正火+回火-≤600",
+          "grade": "20SiMn",
+          "grade_level": null,
+          "condition": "20SiMn / 正火+回火 / ≤600 / 方向未规定",
+          "facets": {
+            "heat_treatment": "正火+回火",
+            "size": "≤600",
+            "direction": "未规定"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "470",
+              "value": 470.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 9,
+                "col": 4,
+                "clause_id": null,
+                "quote": "470"
+              }
+            },
+            "Rp0.2": {
+              "raw": "265",
+              "value": 265.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 9,
+                "col": 5,
+                "clause_id": null,
+                "quote": "265"
+              }
+            },
+            "A": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 9,
+                "col": 6,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 9,
+                "col": 7,
+                "clause_id": null,
+                "quote": "30"
+              }
+            },
+            "KU2": {
+              "raw": "39",
+              "value": 39.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 9,
+                "col": 8,
+                "clause_id": null,
+                "quote": "39"
+              }
+            },
+            "HBW": {
+              "raw": "143~187",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "range",
+              "lower": 143.0,
+              "upper": 187.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 9,
+                "col": 9,
+                "clause_id": null,
+                "quote": "143~187"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt33084-T5-20MnMoNb-正火+回火-≥500",
+          "grade": "20MnMoNb",
+          "grade_level": null,
+          "condition": "20MnMoNb / 正火+回火 / ≥500 / 方向未规定",
+          "facets": {
+            "heat_treatment": "正火+回火",
+            "size": "≥500",
+            "direction": "未规定"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "510",
+              "value": 510.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 25,
+                "col": 4,
+                "clause_id": null,
+                "quote": "510"
+              }
+            },
+            "Rp0.2": {
+              "raw": "315",
+              "value": 315.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 25,
+                "col": 5,
+                "clause_id": null,
+                "quote": "315"
+              }
+            },
+            "A": {
+              "raw": "14",
+              "value": 14.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 25,
+                "col": 6,
+                "clause_id": null,
+                "quote": "14"
+              }
+            },
+            "Z": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 25,
+                "col": 7,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "KU2": {
+              "raw": "39",
+              "value": 39.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 25,
+                "col": 8,
+                "clause_id": null,
+                "quote": "39"
+              }
+            },
+            "HBW": {
+              "raw": "156~207",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "range",
+              "lower": 156.0,
+              "upper": 207.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T5",
+                "row": 25,
+                "col": 9,
+                "clause_id": null,
+                "quote": "156~207"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt33084-T5-20Cr-一次淬火+回火-15(试样)",
+          "grade": "20Cr",
+          "grade_level": null,
+          "condition": "20Cr / 一次淬火+回火 / 15(试样) / 方向未规定",
+          "facets": {
+            "heat_treatment": "一次淬火+回火",
+            "size": "15(试样)",
+            "direction": "未规定"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "835",
+              "value": 835.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 40,
+                "col": 4,
+                "clause_id": null,
+                "quote": "835"
+              }
+            },
+            "Rp0.2": {
+              "raw": "540",
+              "value": 540.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 40,
+                "col": 5,
+                "clause_id": null,
+                "quote": "540"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 40,
+                "col": 6,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 40,
+                "col": 7,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "KU2": {
+              "raw": "47",
+              "value": 47.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 40,
+                "col": 8,
+                "clause_id": null,
+                "quote": "47"
+              }
+            },
+            "HBW": {
+              "raw": "≥250",
+              "value": 250.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 40,
+                "col": 9,
+                "clause_id": null,
+                "quote": "≥250"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt33084-T5-40Cr-调质->500~800",
+          "grade": "40Cr",
+          "grade_level": null,
+          "condition": "40Cr / 调质 / >500~800 / 方向未规定",
+          "facets": {
+            "heat_treatment": "调质",
+            "size": ">500~800",
+            "direction": "未规定"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "590",
+              "value": 590.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 48,
+                "col": 4,
+                "clause_id": null,
+                "quote": "590"
+              }
+            },
+            "Rp0.2": {
+              "raw": "345",
+              "value": 345.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 48,
+                "col": 5,
+                "clause_id": null,
+                "quote": "345"
+              }
+            },
+            "A": {
+              "raw": "8",
+              "value": 8.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 48,
+                "col": 6,
+                "clause_id": null,
+                "quote": "8"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 48,
+                "col": 7,
+                "clause_id": null,
+                "quote": "30"
+              }
+            },
+            "KU2": {
+              "raw": "16",
+              "value": 16.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 48,
+                "col": 8,
+                "clause_id": null,
+                "quote": "16"
+              }
+            },
+            "HBW": {
+              "raw": "176~241",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "range",
+              "lower": 176.0,
+              "upper": 241.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 48,
+                "col": 9,
+                "clause_id": null,
+                "quote": "176~241"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T12",
+      "page_no": 15,
+      "caption": "表4 级别及检验项目",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "M1-S7 draft：级别 I~V 已全部标注。I 级检验项目为『-』，不设检验项；II~V 级按（级别, 检验项目）拆分为 8 个条目。组批条件无独立字段，记入各条 note。",
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "硬度",
+          "category": "II级",
+          "quantities": {
+            "硬度": "每批锻件检验5%，但不少于5件"
+          },
+          "sample_location": null,
+          "requirement_clause": "6.2.1.1",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 15,
+            "table_id": "T12",
+            "row": 3,
+            "col": 1,
+            "clause_id": null,
+            "quote": "硬度"
+          },
+          "note": "组批条件：同熔炼炉号,同热处理炉次。"
+        },
+        {
+          "item": "硬度",
+          "category": "III级",
+          "quantities": {
+            "硬度": "逐件试验"
+          },
+          "sample_location": null,
+          "requirement_clause": "6.2.1.1",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 15,
+            "table_id": "T12",
+            "row": 4,
+            "col": 1,
+            "clause_id": null,
+            "quote": "硬度"
+          },
+          "note": "组批条件：单件。"
+        },
+        {
+          "item": "拉伸",
+          "category": "IV级",
+          "quantities": {
+            "力学性能": "每批锻件抽检2%，但不少于2件，同一锻件取一组试样"
+          },
+          "sample_location": null,
+          "requirement_clause": "6.2.1.1",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 15,
+            "table_id": "T12",
+            "row": 5,
+            "col": 1,
+            "clause_id": null,
+            "quote": "拉伸、冲击、硬度"
+          },
+          "note": "组批条件：同熔炼炉号，同热处理炉次。源文检验项目单元格为『拉伸、冲击、硬度』。"
+        },
+        {
+          "item": "冲击",
+          "category": "IV级",
+          "quantities": {
+            "力学性能": "每批锻件抽检2%，但不少于2件，同一锻件取一组试样"
+          },
+          "sample_location": null,
+          "requirement_clause": "6.2.1.1",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 15,
+            "table_id": "T12",
+            "row": 5,
+            "col": 1,
+            "clause_id": null,
+            "quote": "拉伸、冲击、硬度"
+          },
+          "note": "组批条件：同熔炼炉号，同热处理炉次。源文检验项目单元格为『拉伸、冲击、硬度』。"
+        },
+        {
+          "item": "硬度",
+          "category": "IV级",
+          "quantities": {
+            "硬度": "逐件试验"
+          },
+          "sample_location": null,
+          "requirement_clause": "6.2.1.1",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 15,
+            "table_id": "T12",
+            "row": 5,
+            "col": 1,
+            "clause_id": null,
+            "quote": "拉伸、冲击、硬度"
+          },
+          "note": "组批条件：同熔炼炉号，同热处理炉次。源文检验项目单元格为『拉伸、冲击、硬度』。"
+        },
+        {
+          "item": "拉伸",
+          "category": "V级",
+          "quantities": {
+            "力学性能": "取一组试样，逐件试验"
+          },
+          "sample_location": null,
+          "requirement_clause": "6.2.1.1",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 15,
+            "table_id": "T12",
+            "row": 6,
+            "col": 1,
+            "clause_id": null,
+            "quote": "拉伸、冲击、硬度"
+          },
+          "note": "组批条件：单件。源文检验项目单元格为『拉伸、冲击、硬度』。"
+        },
+        {
+          "item": "冲击",
+          "category": "V级",
+          "quantities": {
+            "力学性能": "取一组试样，逐件试验"
+          },
+          "sample_location": null,
+          "requirement_clause": "6.2.1.1",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 15,
+            "table_id": "T12",
+            "row": 6,
+            "col": 1,
+            "clause_id": null,
+            "quote": "拉伸、冲击、硬度"
+          },
+          "note": "组批条件：单件。源文检验项目单元格为『拉伸、冲击、硬度』。"
+        },
+        {
+          "item": "硬度",
+          "category": "V级",
+          "quantities": {
+            "硬度": "逐件试验"
+          },
+          "sample_location": null,
+          "requirement_clause": "6.2.1.1",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 15,
+            "table_id": "T12",
+            "row": 6,
+            "col": 1,
+            "clause_id": null,
+            "quote": "拉伸、冲击、硬度"
+          },
+          "note": "组批条件：单件。源文检验项目单元格为『拉伸、冲击、硬度』。"
+        }
+      ],
+      "classification_items": []
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "5.3",
+      "title": "硬度",
+      "page_no": 14,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "hardness_deviation_same_forging": {
+          "raw": "40HBW",
+          "value": 40.0,
+          "text": null,
+          "unit": "HBW",
+          "comparator": "max",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 14,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.3",
+            "quote": "同一锻件的硬度偏差不超过40HBW"
+          }
+        },
+        "hardness_relative_difference_same_batch": {
+          "raw": "50HBW",
+          "value": 50.0,
+          "text": null,
+          "unit": "HBW",
+          "comparator": "max",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 14,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.3",
+            "quote": "同一批锻件的硬度相对差不超过 50HBW"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 14,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "5.3",
+        "quote": "锻件只要求按硬度验收时，同一锻件的硬度偏差不超过40HBW，同一批锻件的硬度相对差不超过 50HBW。"
+      },
+      "note": "硬度绝对值在同时要求拉伸性能时不作为验收依据。"
+    },
+    {
+      "clause_id": "6.2.2",
+      "title": "取样位置和方向",
+      "page_no": 15,
+      "kind": "sampling",
+      "status": "found",
+      "fields": {
+        "direction_axis": {
+          "raw": "轴向（纵向）",
+          "value": null,
+          "text": "轴向（纵向）",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 15,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "6.2.2",
+            "quote": "轴类、方形或长方形锻件，其拉伸、冲击试样方向应取轴向（纵向）；"
+          }
+        },
+        "direction_tangential": {
+          "raw": "切向（圆周方向）",
+          "value": null,
+          "text": "切向（圆周方向）",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 15,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "6.2.2",
+            "quote": "空心筒体、圆盘、环形锻件，其拉伸、冲击试样方向应取切向（圆周方向）。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 15,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "6.2.2",
+        "quote": "6. 2.2.2 取样方向应符合以下规定："
+      },
+      "note": null
+    },
+    {
+      "clause_id": "6.2.3",
+      "title": "试验方法",
+      "page_no": 17,
+      "kind": "test_method",
+      "status": "found",
+      "fields": {
+        "tensile_method": {
+          "raw": "GB/T 228.1",
+          "value": null,
+          "text": "GB/T 228.1",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 17,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "6.2.3",
+            "quote": "拉伸试验应按 GB/T 228.1 的规定进行。"
+          }
+        },
+        "impact_method": {
+          "raw": "GB/T229",
+          "value": null,
+          "text": "GB/T229",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 17,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "6.2.3",
+            "quote": "冲击试验按GB/T229的规定进行。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 17,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "6.2.3",
+        "quote": "6. 2.3.1 拉伸试验应按 GB/T 228.1 的规定进行。"
+      },
+      "note": null
+    }
+  ],
+  "notes": [
+    "本文件为 M1-S7 draft，仅作字段级真值样本，未经双人复核，不得用于 M1 退出评审。",
+    "T1 未标注第6~7页表1（续）；T5 未标注第10~14页表3（续）；T12 全标。"
+  ]
+}

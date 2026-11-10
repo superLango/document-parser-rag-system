@@ -1,0 +1,365 @@
+{
+  "doc_id": "gb-t-3191-1998-c15ff448",
+  "items": [
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "尺寸"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "棒材的低倍组织检验"
+    },
+    {
+      "item_canonical": "显微组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "棒材的显微组织检验"
+    },
+    {
+      "item_canonical": "持久",
+      "item_family": "stress_rupture",
+      "facets": {},
+      "required": true,
+      "note": "棒材的高温持久性能试验"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "抗拉强度σb"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T1": {
+      "clause_id": "4.1.1",
+      "quote": "棒材的牌号、状态、规格应符合表1的规定。"
+    },
+    "T10": {
+      "clause_id": "4.5",
+      "quote": "4. 5.5 当对粗晶环有要求，并在合同中注明时，其低倍试片上的粗晶环深度应符合表9的规定。"
+    },
+    "T11": {
+      "clause_id": "6.4",
+      "quote": "6. 4.2.2 棒材室温纵向力学性能取样个数应按表10中的规定。"
+    },
+    "T12": {
+      "clause_id": "6.4",
+      "quote": "6. 4.2.2 棒材室温纵向力学性能取样个数应按表10中的规定。"
+    },
+    "T13": {
+      "clause_id": "附录A",
+      "quote": "附 录 A"
+    },
+    "T14": {
+      "clause_id": "附录A",
+      "quote": "附 录 A"
+    },
+    "T2": {
+      "clause_id": "4.3",
+      "quote": "4. 3.1 棒材的直径（方棒、六角棒指内切圆直径）及其允许偏差应符合表2的规定。"
+    },
+    "T3": {
+      "clause_id": "4.3",
+      "quote": "4. 3.1 棒材的直径（方棒、六角棒指内切圆直径）及其允许偏差应符合表2的规定。"
+    },
+    "T4": {
+      "clause_id": "4.3",
+      "quote": "4. 3.1 棒材的直径（方棒、六角棒指内切圆直径）及其允许偏差应符合表2的规定。"
+    },
+    "T5": {
+      "clause_id": "4.3",
+      "quote": "4. 3.1 棒材的直径（方棒、六角棒指内切圆直径）及其允许偏差应符合表2的规定。"
+    },
+    "T6": {
+      "clause_id": "4.4",
+      "quote": "4. 4.1 棒材的室温纵向力学性能应符合表6的规定。"
+    },
+    "T7": {
+      "clause_id": "4.4",
+      "quote": "4. 4.1 棒材的室温纵向力学性能应符合表6的规定。"
+    },
+    "T8": {
+      "clause_id": "4.4",
+      "quote": "4. 4.1 棒材的室温纵向力学性能应符合表6的规定。"
+    },
+    "T9": {
+      "clause_id": "4.4",
+      "quote": "4. 4.1 棒材的室温纵向力学性能应符合表6的规定。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T10",
+    "T11",
+    "T12",
+    "T13",
+    "T14",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T9"
+  ],
+  "clauses": [
+    {
+      "clause_id": "2",
+      "kind": "other",
+      "quote": "GB/T 228-87金属拉伸试验方法 GB/T3190-1996变形铝及铝合金化学成分 GB/T3199-1996铝及铝合金加工产品的包装、标志、运输、贮存 GB/T 3246-82铝及铝合金加工制品显微组织检验方法 GB/T3247-82铝及铝合金加工制品低倍组织检验方法 GB/T 6395-86金属高温拉伸持久试",
+      "fields": {}
+    },
+    {
+      "clause_id": "3",
+      "kind": "other",
+      "quote": "h) 选择项目（如是否要求高强度？是否须作高温持久试验？是否不允许有成层？对粗品环是否有要求？若不注明则一律按普通棒供货）；",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.1.1",
+      "kind": "technical_requirement",
+      "quote": "棒材的牌号、状态、规格应符合表1的规定。 表1 牌号、状态、规格",
+      "fields": {
+        "requirement": "棒材的牌号、状态、规格应符合表1的规定。"
+      }
+    },
+    {
+      "clause_id": "4.2",
+      "kind": "technical_requirement",
+      "quote": "棒材的化学成分应符合GB/T3190的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3",
+      "kind": "other",
+      "quote": "4. 3.1 棒材的直径（方棒、六角棒指内切圆直径）及其允许偏差应符合表2的规定。 表2 棒材直径及其允许偏差 mm",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.1",
+      "kind": "technical_requirement",
+      "quote": "表2 棒材直径及其允许偏差 mm ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.2",
+      "kind": "technical_requirement",
+      "quote": "表3 棒材弯曲度 mtn ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.3",
+      "kind": "technical_requirement",
+      "quote": "表4 方棒、六角棒的扭拧度 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.6",
+      "kind": "technical_requirement",
+      "quote": "表5 方棒、六角棒的最大圆角半径 nim ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4",
+      "kind": "other",
+      "quote": "4. 4.1 棒材的室温纵向力学性能应符合表6的规定。 表6 棒材室温纵向力学性能",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4.1",
+      "kind": "technical_requirement",
+      "quote": "表6 棒材室温纵向力学性能 ## Table 表6（完） ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4.2",
+      "kind": "technical_requirement",
+      "quote": "表7 高强度铝合金棒材室温纵向力学性能 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4.3",
+      "kind": "technical_requirement",
+      "quote": "2A02、2A16合金棒材，若在合同中注明作高温持久试验时，其高温持久纵向力学性能应符合表",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.5.1",
+      "kind": "other",
+      "quote": "棒材低倍组织试片上不允许有裂纹及缩尾，除5A05、5A06外的其他合金不允许有化合物偏析聚集和非金属夹杂物存在。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.5.2",
+      "kind": "other",
+      "quote": "对于5A06合金棒材，允许有少量小于 0.1 ~mm 的分散点状非金属夹杂物及金属间化合物。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.5.3",
+      "kind": "other",
+      "quote": "棒材低倍试片上的成层深度不允许超过该棒材的负偏差之半，但必须保证最小直径。供模锻用棒材，当直径小于 120mm ，不允许有成层时可在合同中注明，经供需双方协商也可以供应 120sim 300mm 的无成层棒材。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.5.5",
+      "kind": "technical_requirement",
+      "quote": "表9 棒材粗晶环最大允许深度 mm ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.6",
+      "kind": "other",
+      "quote": "棒材显微组织不允许有过烧。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.7.1",
+      "kind": "other",
+      "quote": "棒材表面不允许有裂纹、气泡、腐蚀斑点。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5",
+      "kind": "test_method",
+      "quote": "试验方法",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.1",
+      "kind": "test_method",
+      "quote": "棒材化学成分的仲裁分析方法应按GB/T6987的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2",
+      "kind": "test_method",
+      "quote": "棒材的室温纵向拉伸试验按GB/T228的规定进行。",
+      "fields": {
+        "method_standard": "GB/T228"
+      }
+    },
+    {
+      "clause_id": "5.3",
+      "kind": "test_method",
+      "quote": "棒材的高温持久性能试验按GB/T6395的规定进行。 5. 4 低倍组织检验方法 棒材的低倍组织检验按GB/T3247的规定进行。 5. 5 显微组织检验方法 棒材的显微组织检验按GB/T3246的规定进行。 5. 6 尺寸测量方法 棒材直径用精度不低于 0.02mm 的量具测量，长度用米尺测量。 5. 7 表面质量检验方法 棒材的表面质量用目视检查，当缺陷深度难以确定时，可以打磨后测量。",
+      "fields": {
+        "method_standard": "GB/T6395"
+      }
+    },
+    {
+      "clause_id": "5.4",
+      "kind": "test_method",
+      "quote": "低倍组织检验方法",
+      "fields": {
+        "method_standard": "GB/T3247"
+      }
+    },
+    {
+      "clause_id": "5.5",
+      "kind": "test_method",
+      "quote": "显微组织检验方法",
+      "fields": {
+        "method_standard": "GB/T3246"
+      }
+    },
+    {
+      "clause_id": "6.1.2",
+      "kind": "sampling",
+      "quote": "需方应对收到的产品按本标准的规定进行检验，如检验结果与本标准（或订货合同）的规定不符时，应按GB/T3199的有关规定向供方提出，由供需双方协商解决。如需仲裁，仲裁取样在需方由供需双方共同进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.3",
+      "kind": "inspection",
+      "quote": "每批棒材应进行外形、尺寸偏差、力学性能、表面质量检验；",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.4",
+      "kind": "sampling",
+      "quote": "6. 4.1 化学成分取样按 GB/T 17432 的规定。 6. 4.2 室温纵向力学性能的取样 6. 4.2.1 室温纵向力学性能试样应符合GB/T16865的规定。每根棒材取一个试样。 6. 4.2.2 棒材室温纵向力学性能取样个数应按表10中的规定。 表10 棒材室温纵向力学性能取样个数",
+      "fields": {
+        "sample_location": "取样"
+      }
+    },
+    {
+      "clause_id": "6.4.1",
+      "kind": "sampling",
+      "quote": "化学成分取样按 GB/T 17432 的规定。",
+      "fields": {
+        "sample_location": "化学成分取样按 GB/T 17432",
+        "method_standard": "GB/T17432"
+      }
+    },
+    {
+      "clause_id": "6.4.2",
+      "kind": "sampling",
+      "quote": "室温纵向力学性能的取样",
+      "fields": {
+        "sample_location": "室温纵向力学性能的取样"
+      }
+    },
+    {
+      "clause_id": "6.4.2.1",
+      "kind": "technical_requirement",
+      "quote": "室温纵向力学性能试样应符合GB/T16865的规定。每根棒材取一个试样。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.4.2.2",
+      "kind": "sampling",
+      "quote": "棒材室温纵向力学性能取样个数应按表10中的规定。",
+      "fields": {
+        "requirement": "棒材室温纵向力学性能取样个数应按表10中的规定。",
+        "sample_location": "有规定非比例伸长应力要求的棒材，作每批根数的 2%，但不少于2根"
+      }
+    },
+    {
+      "clause_id": "6.4.3",
+      "kind": "sampling",
+      "quote": "低倍组织试样，按批在棒材尾端切取，每根棒材切取一个，取样个数按表11规定。",
+      "fields": {
+        "sample_location": "表11 棒材低倍试样取样个数 ## Table"
+      }
+    },
+    {
+      "clause_id": "6.4.4",
+      "kind": "sampling",
+      "quote": "显微组织取样，取每批（热处理炉）根数的 2% ，但不少于两根。",
+      "fields": {
+        "sample_location": "显微组织取样，取每批（热处理炉）根数的 2%，但不少于两根"
+      }
+    },
+    {
+      "clause_id": "7.1.1",
+      "kind": "inspection",
+      "quote": "a) 供方技术监督部门的检印； b) 合金牌号； c) 供应状态； d) 批号。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1.3",
+      "kind": "packaging",
+      "quote": "棒材的包装箱标志应符合GB/T3199的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.2",
+      "kind": "packaging",
+      "quote": "其他要求应符合GB/T3199的规定。",
+      "fields": {}
+    }
+  ]
+}

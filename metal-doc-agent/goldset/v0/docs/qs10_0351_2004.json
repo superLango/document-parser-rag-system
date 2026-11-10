@@ -1,0 +1,738 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "qs10_0351_2004",
+  "standard_no": "Q/S10-0351-2004",
+  "title": "TA15钛合金锻制棒材",
+  "doc_type": "enterprise",
+  "material": "TA15钛合金",
+  "product_form": "锻制棒材",
+  "source_type": "digital_native",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft-s7",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "M1-S7 draft：依据数字原生 Markdown 原文与 tablegrid 索引标注，未使用模型/抽取预测值。",
+      "表1 实际仅 1 个数据行（tablegrid row=3），已按全部 13 个元素列标注；表注单列未纳入属性。",
+      "表2 比较符按表头/原文：σb 为 885~1130（range），δ5/Ψ/AK 为 ≥（min），σ0.2 为实测（text）。",
+      "表4 源文实为质量一致性检验项目表，按 inspection 标注，非化学成分表；仅标注前 6 项。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T2",
+      "page_no": 6,
+      "caption": "表1 化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "M1-S7 draft：仅标注表1 唯一数据行（row=3）的全部 13 个元素列；表注（其他元素/氢含量说明）待补。",
+      "records": [
+        {
+          "record_id": "qs10-T2-TA15",
+          "grade": "TA15",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Ti": {
+              "raw": "基",
+              "value": null,
+              "text": "基",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 0,
+                "clause_id": null,
+                "quote": "基"
+              }
+            },
+            "Al": {
+              "raw": "5.50~7.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 5.5,
+              "upper": 7.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "5.50~7.00"
+              }
+            },
+            "Mo": {
+              "raw": "0.50~2.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 2.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.50~2.00"
+              }
+            },
+            "V": {
+              "raw": "0.80~2.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 2.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.80~2.50"
+              }
+            },
+            "Zr": {
+              "raw": "1.50~2.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.5,
+              "upper": 2.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "1.50~2.50"
+              }
+            },
+            "C": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "Fe": {
+              "raw": "0.25",
+              "value": 0.25,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.25"
+              }
+            },
+            "Si": {
+              "raw": "0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.15"
+              }
+            },
+            "O": {
+              "raw": "0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.15"
+              }
+            },
+            "N": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "H": {
+              "raw": "0.012",
+              "value": 0.012,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.012"
+              }
+            },
+            "其他元素-单一": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "其他元素-总和": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T2",
+                "row": 3,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T3",
+      "page_no": 6,
+      "caption": "表2 室温力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "M1-S7 draft：仅标注表2 唯一数据行（row=1），试验温度 20℃ 作为 condition/facets；其余说明待补。",
+      "records": [
+        {
+          "record_id": "qs10-T3-TA15-退火-直径150~300mm-横向",
+          "grade": "TA15",
+          "grade_level": null,
+          "condition": "退火 / 直径150mm~300mm / 横向 / 20℃",
+          "facets": {
+            "product_form": "锻制棒材",
+            "heat_treatment": "退火",
+            "direction": "横向",
+            "test_temperature": "20℃"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "885~1130",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 885.0,
+              "upper": 1130.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "885~1130"
+              }
+            },
+            "Rp0.2": {
+              "raw": "实测",
+              "value": null,
+              "text": "实测",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "实测"
+              }
+            },
+            "A": {
+              "raw": "≥8",
+              "value": 8.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥8"
+              }
+            },
+            "Z": {
+              "raw": "≥20",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥20"
+              }
+            },
+            "AK": {
+              "raw": "≥28",
+              "value": 28.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥28"
+              }
+            },
+            "HB(d)": {
+              "raw": "3.3~3.8",
+              "value": null,
+              "text": null,
+              "unit": "mm",
+              "comparator": "range",
+              "lower": 3.3,
+              "upper": 3.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 6,
+                "clause_id": null,
+                "quote": "3.3~3.8"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T5",
+      "page_no": 8,
+      "caption": "表4 质量一致性检验项目",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "M1-S7 draft：仅标注表4 前 6 项（化学成分、室温拉伸、室温冲击、高温拉伸、布氏硬度、高温持久），低倍组织、高倍组织、β转变温度、超声波检验、形状/尺寸、外观质量 6 项待补。",
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "化学成分",
+          "category": null,
+          "quantities": {
+            "default": "1"
+          },
+          "sample_location": "一",
+          "requirement_clause": "3.2",
+          "method_clause": "4.3.1",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 8,
+            "table_id": "T5",
+            "row": 1,
+            "col": 0,
+            "clause_id": null,
+            "quote": "化学成分"
+          },
+          "note": "取样部位原文为“一”。"
+        },
+        {
+          "item": "室温拉伸",
+          "category": null,
+          "quantities": {
+            "default": "2"
+          },
+          "sample_location": "相当于铸锭头部棒材上切取,D/4弦向",
+          "requirement_clause": "3.4",
+          "method_clause": "4.3.2",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 8,
+            "table_id": "T5",
+            "row": 2,
+            "col": 0,
+            "clause_id": null,
+            "quote": "室温拉伸"
+          },
+          "note": null
+        },
+        {
+          "item": "室温冲击",
+          "category": null,
+          "quantities": {
+            "default": "2"
+          },
+          "sample_location": "相当于铸锭头部棒材上切取,D/4弦向",
+          "requirement_clause": "3.4",
+          "method_clause": "4.3.3",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 8,
+            "table_id": "T5",
+            "row": 3,
+            "col": 0,
+            "clause_id": null,
+            "quote": "室温冲击"
+          },
+          "note": null
+        },
+        {
+          "item": "高温拉伸",
+          "category": null,
+          "quantities": {
+            "default": "2"
+          },
+          "sample_location": "相当于铸锭头部棒材上切取,D/4弦向",
+          "requirement_clause": "3.4",
+          "method_clause": "4.3.4",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 8,
+            "table_id": "T5",
+            "row": 4,
+            "col": 0,
+            "clause_id": null,
+            "quote": "高温拉伸"
+          },
+          "note": null
+        },
+        {
+          "item": "布氏硬度",
+          "category": null,
+          "quantities": {
+            "default": "1"
+          },
+          "sample_location": "相当于铸锭头部棒材上切取,D/4弦向",
+          "requirement_clause": "3.4",
+          "method_clause": "4.3.5",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 8,
+            "table_id": "T5",
+            "row": 5,
+            "col": 0,
+            "clause_id": null,
+            "quote": "布氏硬度"
+          },
+          "note": null
+        },
+        {
+          "item": "高温持久",
+          "category": null,
+          "quantities": {
+            "default": "2"
+          },
+          "sample_location": "相当于铸锭头部棒材上切取,D/4弦向",
+          "requirement_clause": "3.4",
+          "method_clause": "4.3.6",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 8,
+            "table_id": "T5",
+            "row": 6,
+            "col": 0,
+            "clause_id": null,
+            "quote": "高温持久"
+          },
+          "note": null
+        }
+      ],
+      "classification_items": []
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "3.2",
+      "title": "化学成分",
+      "page_no": 5,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "合金的化学成分应符合表1的规定。",
+          "value": null,
+          "text": "合金的化学成分应符合表1的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 5,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.2",
+            "quote": "合金的化学成分应符合表1的规定。"
+          }
+        }
+      },
+      "applies_to": [
+        "TA15"
+      ],
+      "evidence": {
+        "page_no": 5,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.2",
+        "quote": "合金的化学成分应符合表1的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "3.4.2.1",
+      "title": "室温力学性能",
+      "page_no": 6,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "direction": {
+          "raw": "横向",
+          "value": null,
+          "text": "横向",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 6,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.2.1",
+            "quote": "从棒材上切取的横向试样经3.4.1热处理后的室温力学性能应符合表2的规定。"
+          }
+        },
+        "test_temperature": {
+          "raw": "室温",
+          "value": null,
+          "text": "室温",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 6,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.2.1",
+            "quote": "从棒材上切取的横向试样经3.4.1热处理后的室温力学性能应符合表2的规定。"
+          }
+        }
+      },
+      "applies_to": [
+        "TA15"
+      ],
+      "evidence": {
+        "page_no": 6,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.4.2.1",
+        "quote": "从棒材上切取的横向试样经3.4.1热处理后的室温力学性能应符合表2的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "4.2.2",
+      "title": "检验项目",
+      "page_no": 7,
+      "kind": "inspection",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "质量一致性检验项目、取样数量和取样部位以及相应要求和检验方法的章、条号应符合表4的规定。",
+          "value": null,
+          "text": "质量一致性检验项目、取样数量和取样部位以及相应要求和检验方法的章、条号应符合表4的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 7,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.2.2",
+            "quote": "质量一致性检验项目、取样数量和取样部位以及相应要求和检验方法的章、条号应符合表4的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 7,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.2.2",
+        "quote": "质量一致性检验项目、取样数量和取样部位以及相应要求和检验方法的章、条号应符合表4的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "4.3.1",
+      "title": "化学成分分析",
+      "page_no": 8,
+      "kind": "test_method",
+      "status": "found",
+      "fields": {
+        "test_method": {
+          "raw": "GB/T4698",
+          "value": null,
+          "text": "GB/T4698",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 8,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.3.1",
+            "quote": "合金的化学成分分析按GB/T4698进行。"
+          }
+        }
+      },
+      "applies_to": [
+        "TA15"
+      ],
+      "evidence": {
+        "page_no": 8,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.3.1",
+        "quote": "合金的化学成分分析按GB/T4698进行。"
+      },
+      "note": null
+    }
+  ],
+  "notes": [
+    "未标注 T1/T3(表3 高温力学)/T4(低倍/高倍组织图相关表)：本次任务仅覆盖 T2、T3(表2)、T5(表4)。",
+    "T5 的 tablegrid profile 标为 chemical_composition，但源文表4 为质量一致性检验项目表，按 inspection 标注。"
+  ]
+}

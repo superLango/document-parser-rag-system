@@ -1,0 +1,61 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_876f007c85",
+  "standard_no": null,
+  "title": "Wuxi Paike New Materials Manufacturing Process Plan 无锡派克新材料科技股份有限公司 工艺规程",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 15,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\de83cbe42abd48d6816991f2e5785765.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T6",
+      "page_no": 4,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-2f7447ec23",
+          "grade": "Billet weight下料重量",
+          "grade_level": null,
+          "condition": "Part Dimension产品规格",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "3183",
+              "value": 3183.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "Part Dimension产品规格",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T6",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "3183"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

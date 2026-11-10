@@ -1,0 +1,315 @@
+{
+  "doc_id": "gjb-2057a-2018-f4d3ebaf",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "note": "化学成分分析取样位置"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "note": "抗拉强度 Rm 表"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "note": "HBW"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "note": "低倍组织检验"
+    },
+    {
+      "item_canonical": "断口组织",
+      "item_family": "metallography",
+      "note": "断口组织检验"
+    },
+    {
+      "item_canonical": "显微组织",
+      "item_family": "metallography",
+      "note": "显微组织检验"
+    },
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "note": "超声"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T1": {
+      "clause_id": "3.2",
+      "quote": "锻件的氢含量应符合表1的规定。"
+    },
+    "T2": {
+      "clause_id": "3.3",
+      "quote": "锻件的室温拉伸力学性能及布氏硬度应符合表2的规定。"
+    },
+    "T3": {
+      "clause_id": "3.5.3",
+      "quote": "表3 低倍组织和断口组织中的氧化膜"
+    },
+    "T4": {
+      "clause_id": "4.2.3",
+      "quote": "4. 2.3.1 锻件的化学成分分析取样位置按GB/T17432的规定进行，其他项目的取样位置应符合供需双方签订的图样或合同的要求，取样数量应符合表4的规定。"
+    },
+    "T5": {
+      "clause_id": "6.5.1",
+      "quote": "6. 5.1 新旧牌号对照见表5。"
+    },
+    "T6": {
+      "clause_id": "6.5.2",
+      "quote": "表5 新旧牌号对照表"
+    },
+    "T7": {
+      "clause_id": "A.7",
+      "quote": "相对允许误差见表A.1。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+  ],
+  "clauses": [
+    {
+      "clause_id": "2",
+      "kind": "other",
+      "quote": "GB/T231.1 金属材料布氏硬度试验第1部分：试验方法 GB/T3190变形铝及铝合金化学成分 GB/T3199 铝及铝合金加工产品 包装、标志、运输、贮存 GB/T3246.1变形铝及铝合金制品组织检验方法 第1部分：显微组织检验方法 GB/T3246.2变形铝及铝合金制品组织检验方法 第2部分：低倍组织检验方法",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.1",
+      "kind": "technical_requirement",
+      "quote": "锻件的化学成分应符合GB/T3190的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.2",
+      "kind": "technical_requirement",
+      "quote": "锻件的氢含量应符合表1的规定。 表1 氢含量",
+      "fields": {
+        "requirement": "锻件的氢含量应符合表1的规定。"
+      }
+    },
+    {
+      "clause_id": "A.3.2",
+      "kind": "technical_requirement",
+      "quote": "氢气纯度应不低于 99.99%（体积分数）。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.3",
+      "kind": "technical_requirement",
+      "quote": "锻件的室温拉伸力学性能及布氏硬度应符合表2的规定。凡以H112、O状态交货的锻件应取样进行试样热处理，热处理制度应满足GJB1694的相关要求，其性能检测结果应符合表2中T6状态性能要求。",
+      "fields": {
+        "requirement": "锻件的室温拉伸力学性能及布氏硬度应符合表2的规定。"
+      }
+    },
+    {
+      "clause_id": "A.3.3",
+      "kind": "technical_requirement",
+      "quote": "氮气（或氩气）纯度均应不低于 99.995% （体积分数）。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.4",
+      "kind": "technical_requirement",
+      "quote": "锻件的超声检测结果应符合GB/T6519-2013中A级或AA级的要求，具体检测方式、级别和部位 应在合同或图样中注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.1",
+      "kind": "other",
+      "quote": "模锻件的低倍组织流线应沿着受检面的外形分布，不允许有穿流与严重的涡流，或满足供需双方商定的低倍组织标样照片。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.2",
+      "kind": "other",
+      "quote": "低倍组织中不允许有裂纹、气孔、折叠、偏析聚集和非金属夹杂物等缺陷。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.3",
+      "kind": "technical_requirement",
+      "quote": "表3 低倍组织和断口组织中的氧化膜",
+      "fields": {
+        "requirement": "低倍组织中的氧化膜缺陷应符合表3的规定。"
+      }
+    },
+    {
+      "clause_id": "3.5.4",
+      "kind": "sampling",
+      "quote": "低倍组织中的晶粒度应不大于4级。当晶粒度大于4级时，允许从该区域取样检测室温拉伸力学性能，不能切取室温拉伸力学性能试样的应检测布氏硬度，室温拉伸力学性能或硬度均应检测合格。",
+      "fields": {
+        "requirement": "低倍组织中的晶粒度应不大于4级。",
+        "sample_location": "当晶粒度大于4级时，允许从该区域取样检测室温拉伸力学性能，不能切取室温拉伸力学性能试样的应检测布氏硬度，室温拉伸力学性能或硬度均应检测合格"
+      }
+    },
+    {
+      "clause_id": "3.6",
+      "kind": "technical_requirement",
+      "quote": "断口组织中的氧化膜缺陷应符合表3的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.7",
+      "kind": "other",
+      "quote": "锻件的显微组织不允许有残留的铸造组织。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.8",
+      "kind": "technical_requirement",
+      "quote": "锻件的尺寸、外形及允许偏差应符合供需双方签订的图样或合同的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.10.2",
+      "kind": "other",
+      "quote": "锻件在时效完成后、交付需方前，不允许再进行可能产生附加应力的任何形式的校正工序。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.11",
+      "kind": "other",
+      "quote": "在验收合格的锻件上，应逐件打印如下标志（或贴标签）： a) 供方技术监督部门的检印；",
+      "fields": {}
+    },
+    {
+      "clause_id": "A.4",
+      "kind": "other",
+      "quote": "仪器应满足下列要求： a) 测量范围： 0.01mu g / gsim 2.0mu g / g;",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2.2.1",
+      "kind": "inspection",
+      "quote": "每批锻件出厂前应按表4的规定进行检验。",
+      "fields": {
+        "requirement": "每批锻件出厂前应按表4的规定进行检验。"
+      }
+    },
+    {
+      "clause_id": "4.2.2.3",
+      "kind": "inspection",
+      "quote": "合同中增加的检验项目，应按合同规定进行。",
+      "fields": {
+        "requirement": "合同中增加的检验项目，应按合同规定进行。"
+      }
+    },
+    {
+      "clause_id": "4.2.3",
+      "kind": "sampling",
+      "quote": "4. 2.3.1 锻件的化学成分分析取样位置按GB/T17432的规定进行，其他项目的取样位置应符合供需双方签订的图样或合同的要求，取样数量应符合表4的规定。锻环的试样方向见图1。 表4 检验项目及取样",
+      "fields": {
+        "sample_location": "取样"
+      }
+    },
+    {
+      "clause_id": "4.2.3.1",
+      "kind": "sampling",
+      "quote": "锻件的化学成分分析取样位置按GB/T17432的规定进行，其他项目的取样位置应符合供需双方签订的图样或合同的要求，取样数量应符合表4的规定。锻环的试样方向见图1。",
+      "fields": {
+        "requirement": "锻件的化学成分分析取样位置按GB/T17432的规定进行，其他项目的取样位置应符合供需双方签订的图样或合同的要求，取样数量应符合表4的规定。",
+        "sample_quantity": "表4 检验项目及取样 ## Table 图1 锻环试样方向示意图",
+        "sample_location": "表4 检验项目及取样 ## Table 图1 锻环试样方向示意图"
+      }
+    },
+    {
+      "clause_id": "4.2.3.2",
+      "kind": "sampling",
+      "quote": "供方应根据合同要求，按热处理炉次或生产批次提供力学性能试验用料给需方，试验用料的试样取样方向、取样位置应符合双方签订的锻件图样规定。",
+      "fields": {
+        "requirement": "供方应根据合同要求，按热处理炉次或生产批次提供力学性能试验用料给需方，试验用料的试样取样方向、取样位置应符合双方签订的锻件图样规定。",
+        "direction": "供方应根据合同要求，按热处理炉次或生产批次提供力学性能试验用料给需方，试验用料的取样方向、取样位置应符合双方签订的锻件图样规定",
+        "sample_location": "供方应根据合同要求按热处理炉次或生产批次提供力学性能试验用料给需方，试验用料的试样取样方向、取样位置应符合双方签订的锻件图样规定"
+      }
+    },
+    {
+      "clause_id": "4.3.2",
+      "kind": "other",
+      "quote": "锻件的氢含量检测可采用在线液态测氢或固态测氢，复验或仲裁时采用固态测氢。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.3",
+      "kind": "other",
+      "quote": "锻件的室温拉伸力学性能检验按GB/T16865的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.4",
+      "kind": "other",
+      "quote": "锻件的超声检测按GB/T6519-2013的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.5",
+      "kind": "other",
+      "quote": "锻件的低倍组织检验按GB/T3246.2的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.6",
+      "kind": "other",
+      "quote": "锻件的断口组织检验按GB/T3246.2的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.7",
+      "kind": "other",
+      "quote": "锻件的显微组织检验按GB/T3246.1的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.8",
+      "kind": "other",
+      "quote": "锻件的尺寸及外形可采用钢板尺、卷尺、卡尺、专用工具或划线法测量。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.1",
+      "kind": "packaging",
+      "quote": "锻件是否涂油应在合同中注明，其他按GB/T3199规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2",
+      "kind": "technical_requirement",
+      "quote": "锻件的包装箱标志应符合 GB/T3199的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "A.5.3",
+      "kind": "technical_requirement",
+      "quote": "试样应用精密车床加工成圆柱形，并除去试样的所有表皮，加工后试样的具体尺寸应符合测氢仪器的要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "A.5.4",
+      "kind": "technical_requirement",
+      "quote": "加工好的试样应立即进行分析，若需保存，应保存在密闭、干燥的容器中，保存时间应不超过4h，否则，试样应重新加工。",
+      "fields": {}
+    },
+    {
+      "clause_id": "A.6.1",
+      "kind": "technical_requirement",
+      "quote": "分析前仪器应按说明书的要求充分预热，使其各项指标达到设定值。",
+      "fields": {}
+    }
+  ]
+}

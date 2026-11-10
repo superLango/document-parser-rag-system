@@ -1,0 +1,82 @@
+{
+  "properties": {
+    "table_id": {
+      "title": "Table Id",
+      "type": "string"
+    },
+    "clause_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Clause Id"
+    },
+    "clause_title": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Clause Title"
+    },
+    "page_no": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page No"
+    },
+    "basis": {
+      "default": "none",
+      "enum": [
+        "explicit",
+        "caption",
+        "section",
+        "nearest",
+        "continuation",
+        "none"
+      ],
+      "title": "Basis",
+      "type": "string"
+    },
+    "confidence": {
+      "default": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "evidence": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence"
+    }
+  },
+  "required": [
+    "table_id"
+  ],
+  "title": "TableClauseLink",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

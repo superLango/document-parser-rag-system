@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "source": "docs/hard-tables.md",
+  "tables": [
+    {
+      "doc_id": "gbt1591_2018",
+      "table_id": "T1",
+      "reason": "5 行表头；C 按厚度拆子列；OCR 粘连",
+      "status": "partial"
+    },
+    {
+      "doc_id": "gbt40303_2021",
+      "table_id": "T3",
+      "reason": "3 个级别块、27 元素、OCR 跨页",
+      "status": "pass"
+    },
+    {
+      "doc_id": "gbt40303_2021",
+      "table_id": "T4",
+      "reason": "力学表行列错位、多条件；fixture 修复 >80/>125 行",
+      "status": "pass"
+    },
+    {
+      "doc_id": "gbt40303_2021",
+      "table_id": "T6",
+      "reason": "缺列已通过 fixture 补齐；表头 Rp0.5/KU2 与 T4 不同，主动保持独立表",
+      "status": "partial"
+    },
+    {
+      "doc_id": "gbt40303_2021",
+      "table_id": "T9",
+      "reason": "检验表跨页续表",
+      "status": "pass"
+    },
+    {
+      "doc_id": "gbt40303_2021",
+      "table_id": "T14",
+      "reason": "已重建为 11 列并补齐 A 行；已合并 T15，merged_pages=[17,18]",
+      "status": "pass"
+    },
+    {
+      "doc_id": "gbt40303_2021",
+      "table_id": "T15",
+      "reason": "去尾列并保留不小于；已合并进 T14",
+      "status": "pass"
+    },
+    {
+      "doc_id": "gbt1220_2007",
+      "table_id": "T7",
+      "reason": "表头缺断面收缩率Z；fixture 恢复 Z 列",
+      "status": "pass"
+    },
+    {
+      "doc_id": "gbt3191_1998",
+      "table_id": "T6",
+      "reason": "T6 2A11/2A12 与 T7 6061 行错位；fixture 修复伸长率与直径",
+      "status": "pass"
+    },
+    {
+      "doc_id": "jx25_035",
+      "table_id": "T1",
+      "reason": "转置化学表（元素为行）",
+      "status": "pass"
+    },
+    {
+      "doc_id": "jx25_035",
+      "table_id": "T6",
+      "reason": "caption 缺失；fixture 设为 附录A 化学成分试验标准",
+      "status": "pass"
+    },
+    {
+      "doc_id": "qdu302_2015",
+      "table_id": "T2",
+      "reason": "多行表头、方向条件",
+      "status": "pass"
+    }
+  ]
+}

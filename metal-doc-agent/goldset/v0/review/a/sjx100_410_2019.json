@@ -1,0 +1,474 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "sjx100_410_2019",
+  "standard_no": "100.410SJX-D-2019-027",
+  "title": "1Cr12Ni3MoVN钢前机匣上下半部锻件",
+  "doc_type": "enterprise",
+  "material": "1Cr12Ni3MoVN钢",
+  "product_form": "机匣锻件",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft-s7",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "M1-S7 draft：仅标注 T2（表2，第3页）全部 7 个检验项和 4 条条款（2.2.1、2.2.2、2.2.3、2.2.4），其余待补。",
+      "源文表2是『理化检验项目数量及位置』表（检验项目/取样部位/方向/数量），并非化学成分表；解析结果中的 chemical_composition 与源文不符，本标注按源文标为 inspection，未编造元素列或元素值。",
+      "T1（第2页，表1）为锻件状态/供应状态表；T3（第6页）为文件发放/发放单位登记表，均非化学成分、力学性能或检验数据表，按 unknown 保留并说明，不标注数据行。",
+      "T2 的『方向』列在 InspectionItem 中并入 sample_location 展示：室温拉伸/艾氏冲击/断口为弦向，低倍组织/高倍组织为径轴向，硬度方向为『-』。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 2,
+      "caption": "表1",
+      "profile": "unknown",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "M1-S7 draft：源文表1为锻件状态表，列含序号/锻件图号/名称/检验类别/供应状态/关、重特性，不属于 v0 的化学成分、力学性能或检验项目数据表；本 draft 不标注数据，其余待补。",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T2",
+      "page_no": 3,
+      "caption": "表2",
+      "profile": "inspection",
+      "orientation": "item_rows",
+      "scope": "partial",
+      "note": "M1-S7 draft：源文表2为理化检验项目数量及位置表，非化学成分表；仅标注全部 7 个检验项（方向并入取样部位展示），其余待补。",
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "化学成分",
+          "category": null,
+          "quantities": {
+            "default": "每炉1"
+          },
+          "sample_location": "试环",
+          "requirement_clause": "2.2.2",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 3,
+            "table_id": "T2",
+            "row": 1,
+            "col": 0,
+            "clause_id": null,
+            "quote": "化学成分"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸",
+          "category": null,
+          "quantities": {
+            "default": "2"
+          },
+          "sample_location": "试环（弦向）",
+          "requirement_clause": "2.2.2",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 3,
+            "table_id": "T2",
+            "row": 2,
+            "col": 0,
+            "clause_id": null,
+            "quote": "室温拉伸"
+          },
+          "note": null
+        },
+        {
+          "item": "硬度",
+          "category": null,
+          "quantities": {
+            "default": "3"
+          },
+          "sample_location": "试环",
+          "requirement_clause": "2.2.2",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 3,
+            "table_id": "T2",
+            "row": 3,
+            "col": 0,
+            "clause_id": null,
+            "quote": "硬度"
+          },
+          "note": "方向列为『-』。"
+        },
+        {
+          "item": "艾氏冲击",
+          "category": null,
+          "quantities": {
+            "default": "2"
+          },
+          "sample_location": "试环（弦向）",
+          "requirement_clause": "2.2.2",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 3,
+            "table_id": "T2",
+            "row": 4,
+            "col": 0,
+            "clause_id": null,
+            "quote": "艾氏冲击"
+          },
+          "note": null
+        },
+        {
+          "item": "断口",
+          "category": null,
+          "quantities": {
+            "default": "2"
+          },
+          "sample_location": "试环（弦向）",
+          "requirement_clause": "2.2.2",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 3,
+            "table_id": "T2",
+            "row": 5,
+            "col": 0,
+            "clause_id": null,
+            "quote": "断口"
+          },
+          "note": null
+        },
+        {
+          "item": "低倍组织",
+          "category": null,
+          "quantities": {
+            "default": "对称各1"
+          },
+          "sample_location": "试环（径轴向）",
+          "requirement_clause": "2.2.2",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 3,
+            "table_id": "T2",
+            "row": 6,
+            "col": 0,
+            "clause_id": null,
+            "quote": "低倍组织"
+          },
+          "note": null
+        },
+        {
+          "item": "高倍组织",
+          "category": null,
+          "quantities": {
+            "default": "3"
+          },
+          "sample_location": "试环（径轴向）",
+          "requirement_clause": "2.2.2",
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 3,
+            "table_id": "T2",
+            "row": 7,
+            "col": 0,
+            "clause_id": null,
+            "quote": "高倍组织"
+          },
+          "note": null
+        }
+      ],
+      "classification_items": []
+    },
+    {
+      "table_id": "T3",
+      "page_no": 6,
+      "caption": null,
+      "profile": "unknown",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "M1-S7 draft：源文第6页表实际为文件发放/发放单位登记表（列含序号/客户文件编号/派克文件编号/名称/发放单位），不是力学性能或检验表，故不标注数据行；其余待补。",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "2.2.1",
+      "title": "理化件选取和分配",
+      "page_no": 2,
+      "kind": "sampling",
+      "status": "found",
+      "fields": {
+        "sample_location": {
+          "raw": "取自锻件本体的试环",
+          "value": null,
+          "text": "取自锻件本体的试环",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 2,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.1",
+            "quote": "锻件理化检测在取自锻件本体的试环上进行，试环应取自位于或相当于铸锭头部的锻件，试环应与同批锻件经过相同的热处理过程后切下；供方在1/2件试环上进行理化检验，另1/2件打上相应标志随同批锻件发往需方复验用。"
+          }
+        },
+        "sample_allocation": {
+          "raw": "供方在1/2件试环上进行理化检验，另1/2件打上相应标志随同批锻件发往需方复验用",
+          "value": null,
+          "text": "1/2件试环理化检验，另1/2件随同批锻件发往需方复验",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 2,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.1",
+            "quote": "供方在1/2件试环上进行理化检验，另1/2件打上相应标志随同批锻件发往需方复验用。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 2,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "2.2.1",
+        "quote": "锻件理化检测在取自锻件本体的试环上进行，试环应取自位于或相当于铸锭头部的锻件，试环应与同批锻件经过相同的热处理过程后切下；供方在1/2件试环上进行理化检验，另1/2件打上相应标志随同批锻件发往需方复验用。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "2.2.2",
+      "title": "理化检验项目规定",
+      "page_no": 3,
+      "kind": "inspection",
+      "status": "found",
+      "fields": {
+        "inspection_items": {
+          "raw": "化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织",
+          "value": null,
+          "text": "化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.2",
+            "quote": "在试环上进行化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织检验，按410JX（通用）-D-S9-6503机匣锻件验收。"
+          }
+        },
+        "acceptance_basis": {
+          "raw": "410JX（通用）-D-S9-6503机匣锻件",
+          "value": null,
+          "text": "410JX（通用）-D-S9-6503机匣锻件",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.2",
+            "quote": "在试环上进行化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织检验，按410JX（通用）-D-S9-6503机匣锻件验收。"
+          }
+        },
+        "sample_location": {
+          "raw": "试环",
+          "value": null,
+          "text": "试环",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.2",
+            "quote": "在试环上进行化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织检验，按410JX（通用）-D-S9-6503机匣锻件验收。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 3,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "2.2.2",
+        "quote": "在试环上进行化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织检验，按410JX（通用）-D-S9-6503机匣锻件验收。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "2.2.3",
+      "title": "锻件本体硬度检验",
+      "page_no": 4,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "hardness_range": {
+          "raw": "HB=286-331",
+          "value": null,
+          "text": null,
+          "unit": "HB",
+          "comparator": "range",
+          "lower": 286.0,
+          "upper": 331.0,
+          "condition": null,
+          "evidence": {
+            "page_no": 4,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.3",
+            "quote": "硬度值HB=286-331"
+          }
+        },
+        "sample_quantity": {
+          "raw": "逐件",
+          "value": null,
+          "text": "逐件",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 4,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.3",
+            "quote": "锻件应逐件进行上下端面圆周方向均布4点（共计8点）的硬度检查"
+          }
+        },
+        "sample_location": {
+          "raw": "上下端面圆周方向均布4点（共计8点）",
+          "value": null,
+          "text": "上下端面圆周方向均布4点（共计8点）",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 4,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.3",
+            "quote": "上下端面圆周方向均布4点（共计8点）"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 4,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "2.2.3",
+        "quote": "锻件应逐件进行上下端面圆周方向均布4点（共计8点）的硬度检查，硬度值HB=286-331。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "2.2.4",
+      "title": "超声探伤要求",
+      "page_no": 4,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "test_method": {
+          "raw": "HB/Z59",
+          "value": null,
+          "text": "HB/Z59",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 4,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.4",
+            "quote": "锻件应逐件按HB/Z59进行超声波检验，按A级验收。"
+          }
+        },
+        "acceptance_level": {
+          "raw": "A级",
+          "value": null,
+          "text": "A级",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 4,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "2.2.4",
+            "quote": "按A级验收"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 4,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "2.2.4",
+        "quote": "锻件应逐件按HB/Z59进行超声波检验，按A级验收。"
+      },
+      "note": null
+    }
+  ],
+  "notes": [
+    "T1（表1，第2页）为锻件状态/供应状态表，T3（第6页）为文件发放/发放单位登记表，均未按数据表标注。",
+    "本文件源文没有化学成分或力学性能数值表；化学成分、力学性能等验收要求通过 410JX（通用）-D-S9-6503 及表2检验项目执行。"
+  ]
+}

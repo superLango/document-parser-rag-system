@@ -1,0 +1,2227 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt1591_2018",
+  "standard_no": "GB/T 1591-2018",
+  "title": "低合金高强度结构钢",
+  "doc_type": "gb_t",
+  "material": "低合金高强度钢",
+  "product_form": "型钢/板带",
+  "source_type": "digital_native",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft-s7",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "依据源文 Markdown 与 runs/m1s7/gbt1591_2018/tablegrid 的 TableGrid 逐单元格核对；未使用模型预测值反推。T1 已按 17 列统一列定义：col0 钢级、col1 质量等级、col2 C≤40h、col3 C>40、col4 Si … col16 B。",
+      "T1/T9/T15 均按 scope=partial 标注，未标注范围见各表 note。",
+      "T1 的 C 两个厚度子列分别记 col2/col3；Q390B/Q420B 等单值 C 行在 TableGrid 中复制到两列，非 C 元素列统一为 col4-16。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 8,
+      "caption": "表1 热轧钢的牌号及化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "scope=partial：仅标注 Q355B、Q355C（≤40h/>40 两条）、Q390B、Q420B、Q460C；Q355D、Q390C/D、Q420C 未标注。T1 统一为 17 列：col0 钢级、col1 质量等级、col2 C≤40h、col3 C>40、col4 Si、col5 Mn、col6 P、col7 S、col8 Nb、col9 V、col10 Ti、col11 Cr、col12 Ni、col13 Cu、col14 Mo、col15 N、col16 B。Q355B/Q460C 的 C 单元格跨两列；Q355C 按子列分别标注。Q355C 行的 P/S 单元格在源表中缺失，无法唯一确定上下限，按规则跳过该值并在记录 note 说明。",
+      "records": [
+        {
+          "record_id": "gbt1591-T1-Q355B-热轧",
+          "grade": "Q355B",
+          "grade_level": null,
+          "condition": "热轧 / C 列覆盖 ≤40h 与 >40",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "C": {
+              "raw": "0.24",
+              "value": 0.24,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "≤40h及>40",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.24"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.60",
+              "value": 1.6,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.60"
+              }
+            },
+            "P": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "S": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "Nb": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ti": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "N": {
+              "raw": "0.012",
+              "value": 0.012,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.012"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt1591-T1-Q355C-热轧-≤40h",
+          "grade": "Q355C",
+          "grade_level": null,
+          "condition": "热轧 / ≤40h",
+          "facets": {
+            "heat_treatment": "热轧",
+            "thickness": "≤40h"
+          },
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "≤40h",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.60",
+              "value": 1.6,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.60"
+              }
+            },
+            "Nb": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ti": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "N": {
+              "raw": "0.012",
+              "value": 0.012,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.012"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": "P/S 单元格在 TableGrid 第 6 行为空，源文无法唯一确定其上下限，按规则跳过这两个值。"
+        },
+        {
+          "record_id": "gbt1591-T1-Q355C-热轧->40",
+          "grade": "Q355C",
+          "grade_level": null,
+          "condition": "热轧 / >40",
+          "facets": {
+            "heat_treatment": "热轧",
+            "thickness": ">40"
+          },
+          "properties": {
+            "C": {
+              "raw": "0.22",
+              "value": 0.22,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": ">40",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.22"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.60",
+              "value": 1.6,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.60"
+              }
+            },
+            "Nb": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ti": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "N": {
+              "raw": "0.012",
+              "value": 0.012,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.012"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": "P/S 单元格在 TableGrid 第 6 行为空，源文无法唯一确定其上下限，按规则跳过这两个值。"
+        },
+        {
+          "record_id": "gbt1591-T1-Q390B-热轧",
+          "grade": "Q390B",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.70",
+              "value": 1.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.70"
+              }
+            },
+            "P": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "S": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.50",
+              "value": 0.5,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.50"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt1591-T1-Q420B-热轧",
+          "grade": "Q420B",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.70",
+              "value": 1.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.70"
+              }
+            },
+            "P": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "S": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.80"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt1591-T1-Q460C-热轧",
+          "grade": "Q460C",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "≤40h及>40",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.80",
+              "value": 1.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.80"
+              }
+            },
+            "P": {
+              "raw": "0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.030"
+              }
+            },
+            "S": {
+              "raw": "0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.030"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.80"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            },
+            "B": {
+              "raw": "0.004",
+              "value": 0.004,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 16,
+                "clause_id": null,
+                "quote": "0.004"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T9",
+      "page_no": 14,
+      "caption": "表7 热轧钢材的拉伸性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "scope=partial：仅标注各牌号组的 ≤16mm 上屈服强度 ReH 与 ≤100mm 抗拉强度 Rm；其余厚度列、断后伸长率 A（表8）和冲击（表11）未标注。源表无试样方向列，方向按 7.4.1.5（公称宽度不小于600mm的钢板及钢带取横向，其他钢材取纵向）。表7 的 ReH 脚注允许用 Rp0.2 替代，本表按表头记 ReH。",
+      "records": [
+        {
+          "record_id": "gbt1591-T9-Q355B、Q355C-热轧-≤16",
+          "grade": "Q355B、Q355C",
+          "grade_level": null,
+          "condition": "热轧 / ≤16mm（ReH）/≤100mm（Rm）/ 方向按7.4.1.5",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "ReH": {
+              "raw": "355",
+              "value": 355.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "≤16mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "355"
+              }
+            },
+            "Rm": {
+              "raw": "470~630",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 470.0,
+              "upper": 630.0,
+              "condition": "≤100mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 4,
+                "col": 11,
+                "clause_id": null,
+                "quote": "470~630"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt1591-T9-Q355D-热轧-≤16",
+          "grade": "Q355D",
+          "grade_level": null,
+          "condition": "热轧 / ≤16mm（ReH）/≤100mm（Rm）/ 方向按7.4.1.5",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "ReH": {
+              "raw": "355",
+              "value": 355.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "≤16mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "355"
+              }
+            },
+            "Rm": {
+              "raw": "470~630",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 470.0,
+              "upper": 630.0,
+              "condition": "≤100mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 5,
+                "col": 11,
+                "clause_id": null,
+                "quote": "470~630"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt1591-T9-Q390B、Q390C、Q390D-热轧-≤16",
+          "grade": "Q390B、Q390C、Q390D",
+          "grade_level": null,
+          "condition": "热轧 / ≤16mm（ReH）/≤100mm（Rm）/ 方向按7.4.1.5",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "ReH": {
+              "raw": "390",
+              "value": 390.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "≤16mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "390"
+              }
+            },
+            "Rm": {
+              "raw": "490~650",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 490.0,
+              "upper": 650.0,
+              "condition": "≤100mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 6,
+                "col": 11,
+                "clause_id": null,
+                "quote": "490~650"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt1591-T9-Q420B、Q420C-热轧-≤16",
+          "grade": "Q420B、Q420C",
+          "grade_level": null,
+          "condition": "热轧 / ≤16mm（ReH）/≤100mm（Rm）/ 方向按7.4.1.5",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "ReH": {
+              "raw": "420",
+              "value": 420.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "≤16mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "420"
+              }
+            },
+            "Rm": {
+              "raw": "520~680",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 520.0,
+              "upper": 680.0,
+              "condition": "≤100mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 7,
+                "col": 11,
+                "clause_id": null,
+                "quote": "520~680"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt1591-T9-Q460C-热轧-≤16",
+          "grade": "Q460C",
+          "grade_level": null,
+          "condition": "热轧 / ≤16mm（ReH）/≤100mm（Rm）/ 方向按7.4.1.5",
+          "facets": {
+            "heat_treatment": "热轧"
+          },
+          "properties": {
+            "ReH": {
+              "raw": "460",
+              "value": 460.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "≤16mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "460"
+              }
+            },
+            "Rm": {
+              "raw": "550~720",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 550.0,
+              "upper": 720.0,
+              "condition": "≤100mm",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 8,
+                "col": 11,
+                "clause_id": null,
+                "quote": "550~720"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T15",
+      "page_no": 20,
+      "caption": "表13 钢材检验项目、取样数量、取样方法和试验方法",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "scope=partial：标注表中全部 8 个检验项目。源表无“要求条款”列，requirement_clause 按对应技术要求章条补注；method_clause 仅在试验方法列写“见8.x”时填写。",
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "化学成分",
+          "category": null,
+          "quantities": {
+            "default": "1个/炉"
+          },
+          "sample_location": "GB/T 20066",
+          "requirement_clause": "7.1",
+          "method_clause": "见8.2",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 20,
+            "table_id": "T15",
+            "row": 1,
+            "col": 1,
+            "clause_id": null,
+            "quote": "化学成分"
+          },
+          "note": null
+        },
+        {
+          "item": "拉伸试验",
+          "category": null,
+          "quantities": {
+            "default": "1个/批"
+          },
+          "sample_location": "钢材的一端,GB/T 2975-2018",
+          "requirement_clause": "7.4.1",
+          "method_clause": null,
+          "method_standard": "GB/T 228.1",
+          "status": "found",
+          "evidence": {
+            "page_no": 20,
+            "table_id": "T15",
+            "row": 2,
+            "col": 1,
+            "clause_id": null,
+            "quote": "拉伸试验"
+          },
+          "note": null
+        },
+        {
+          "item": "弯曲试验",
+          "category": null,
+          "quantities": {
+            "default": "1个/批"
+          },
+          "sample_location": "钢材的一端,GB/T 2975-2018",
+          "requirement_clause": "7.4.3",
+          "method_clause": null,
+          "method_standard": "GB/T 232",
+          "status": "found",
+          "evidence": {
+            "page_no": 20,
+            "table_id": "T15",
+            "row": 3,
+            "col": 1,
+            "clause_id": null,
+            "quote": "弯曲试验"
+          },
+          "note": null
+        },
+        {
+          "item": "冲击试验",
+          "category": null,
+          "quantities": {
+            "default": "3个/批"
+          },
+          "sample_location": "钢材的一端",
+          "requirement_clause": "7.4.2",
+          "method_clause": "见8.3",
+          "method_standard": "GB/T 229",
+          "status": "found",
+          "evidence": {
+            "page_no": 20,
+            "table_id": "T15",
+            "row": 4,
+            "col": 1,
+            "clause_id": null,
+            "quote": "冲击试验"
+          },
+          "note": null
+        },
+        {
+          "item": "厚度方向性能试验",
+          "category": null,
+          "quantities": {
+            "default": "3个/批"
+          },
+          "sample_location": "GB/T 5313",
+          "requirement_clause": "7.4.1.4",
+          "method_clause": null,
+          "method_standard": "GB/T 5313",
+          "status": "found",
+          "evidence": {
+            "page_no": 20,
+            "table_id": "T15",
+            "row": 5,
+            "col": 1,
+            "clause_id": null,
+            "quote": "厚度方向性能试验"
+          },
+          "note": null
+        },
+        {
+          "item": "无损检验",
+          "category": null,
+          "quantities": {
+            "default": "逐张(卷、根、支)"
+          },
+          "sample_location": "-",
+          "requirement_clause": "7.6",
+          "method_clause": null,
+          "method_standard": "双方协商",
+          "status": "found",
+          "evidence": {
+            "page_no": 20,
+            "table_id": "T15",
+            "row": 6,
+            "col": 1,
+            "clause_id": null,
+            "quote": "无损检验"
+          },
+          "note": null
+        },
+        {
+          "item": "尺寸、外形",
+          "category": null,
+          "quantities": {
+            "default": "逐张(卷、根、支)"
+          },
+          "sample_location": "-",
+          "requirement_clause": "6",
+          "method_clause": null,
+          "method_standard": "相应精度的量具",
+          "status": "found",
+          "evidence": {
+            "page_no": 20,
+            "table_id": "T15",
+            "row": 7,
+            "col": 1,
+            "clause_id": null,
+            "quote": "尺寸、外形"
+          },
+          "note": null
+        },
+        {
+          "item": "表面质量",
+          "category": null,
+          "quantities": {
+            "default": "逐张(卷、根、支)"
+          },
+          "sample_location": "-",
+          "requirement_clause": "7.5",
+          "method_clause": null,
+          "method_standard": "目视及测量",
+          "status": "found",
+          "evidence": {
+            "page_no": 20,
+            "table_id": "T15",
+            "row": 8,
+            "col": 1,
+            "clause_id": null,
+            "quote": "表面质量"
+          },
+          "note": null
+        }
+      ],
+      "classification_items": []
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "7.1.1",
+      "title": "热轧钢的化学成分",
+      "page_no": 7,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。",
+          "value": null,
+          "text": "热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 7,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "7.1.1",
+            "quote": "热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+          }
+        }
+      },
+      "applies_to": [
+        "Q355",
+        "Q390",
+        "Q420",
+        "Q460"
+      ],
+      "evidence": {
+        "page_no": 7,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "7.1.1",
+        "quote": "热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "7.4.1.1",
+      "title": "热轧钢材的拉伸性能",
+      "page_no": 13,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "热轧钢材的拉伸性能应符合表7和表8的规定。",
+          "value": null,
+          "text": "热轧钢材的拉伸性能应符合表7和表8的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 13,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "7.4.1.1",
+            "quote": "热轧钢材的拉伸性能应符合表7和表8的规定。"
+          }
+        }
+      },
+      "applies_to": [
+        "Q355",
+        "Q390",
+        "Q420",
+        "Q460"
+      ],
+      "evidence": {
+        "page_no": 13,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "7.4.1.1",
+        "quote": "热轧钢材的拉伸性能应符合表7和表8的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "7.4.1.5",
+      "title": "拉伸试样方向",
+      "page_no": 13,
+      "kind": "test_method",
+      "status": "found",
+      "fields": {
+        "direction": {
+          "raw": "对于公称宽度不小于600mm的钢板及钢带，拉伸试验取横向试样；其他钢材的拉伸试验取纵向试样。",
+          "value": null,
+          "text": "公称宽度不小于600mm的钢板及钢带取横向；其他钢材取纵向",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 13,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "7.4.1.5",
+            "quote": "拉伸试验取横向试样；其他钢材的拉伸试验取纵向试样。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 13,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "7.4.1.5",
+        "quote": "拉伸试验取横向试样；其他钢材的拉伸试验取纵向试样。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "7.4.2.1",
+      "title": "冲击试验温度及冲击吸收能量",
+      "page_no": 13,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。",
+          "value": null,
+          "text": "钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 13,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "7.4.2.1",
+            "quote": "钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 13,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "7.4.2.1",
+        "quote": "钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "8.3",
+      "title": "冲击试验取样位置",
+      "page_no": 19,
+      "kind": "sampling",
+      "status": "found",
+      "fields": {
+        "sample_location": {
+          "raw": "当需方无特殊要求时，冲击试验的取样位置按如下规定进行",
+          "value": null,
+          "text": "型钢按GB/T2975—2018图A.3；圆钢按图A.5；方钢按图A.9；钢板按图A.11",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 19,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "8.3",
+            "quote": "当需方无特殊要求时，冲击试验的取样位置按如下规定进行"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 19,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "8.3",
+        "quote": "当需方无特殊要求时，冲击试验的取样位置按如下规定进行"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "9.3",
+      "title": "取样数量",
+      "page_no": 19,
+      "kind": "inspection",
+      "status": "found",
+      "fields": {
+        "sample_quantity": {
+          "raw": "每批钢材的取样部位和取样数量见表13。",
+          "value": null,
+          "text": "每批钢材的取样部位和取样数量见表13。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 19,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "9.3",
+            "quote": "每批钢材的取样部位和取样数量见表13。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 19,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "9.3",
+        "quote": "每批钢材的取样部位和取样数量见表13。"
+      },
+      "note": null
+    }
+  ],
+  "notes": [
+    "T1 化学表按热轧状态标注，C 有 ≤40h/>40 两个厚度子列；Q355C 的 P/S 因网格缺失跳过。",
+    "T9 只标注极限厚度档；A 与冲击分别在表8、表11，未并入本表。",
+    "T15 检验表的 requirement_clause 为对应技术要求章条，非源表列值。"
+  ]
+}

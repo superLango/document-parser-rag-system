@@ -1,0 +1,194 @@
+{
+  "$defs": {
+    "ExtractedValue": {
+      "properties": {
+        "raw": {
+          "title": "Raw",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "comparator": {
+          "default": "eq",
+          "enum": [
+            "eq",
+            "min",
+            "max",
+            "range",
+            "text",
+            "na"
+          ],
+          "title": "Comparator",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lower"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upper"
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Condition"
+        },
+        "evidence_id": {
+          "default": "",
+          "title": "Evidence Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "raw"
+      ],
+      "title": "ExtractedValue",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "clause_id": {
+      "title": "Clause Id",
+      "type": "string"
+    },
+    "title": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Title"
+    },
+    "page_no": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page No"
+    },
+    "kind": {
+      "default": "other",
+      "enum": [
+        "scope",
+        "normative_reference",
+        "terms",
+        "technical_requirement",
+        "inspection",
+        "sampling",
+        "test_method",
+        "delivery",
+        "packaging",
+        "other"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "fields": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ExtractedValue"
+      },
+      "title": "Fields",
+      "type": "object"
+    },
+    "applies_to": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Applies To",
+      "type": "array"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "status": {
+      "default": "found",
+      "enum": [
+        "found",
+        "missing",
+        "ambiguous",
+        "not_applicable"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "clause_id"
+  ],
+  "title": "ClauseRecord",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

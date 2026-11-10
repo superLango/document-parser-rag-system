@@ -1,0 +1,550 @@
+{
+  "doc_id": "gbt40303_2021",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 1.0,
+    "cell_value_agreement": 0.8625,
+    "comparator_unit_agreement": 0.8625,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 3,
+    "record_keys_match": 3,
+    "cells_total": 80,
+    "cells_value_match": 69,
+    "cells_strict_match": 69,
+    "clause_fields_total": 8,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [],
+  "record_keys_only_b": [],
+  "value_diffs": [
+    {
+      "table_id": "T3",
+      "record_key": [
+        "优质级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-优质级",
+      "field": "Tl",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.000 1",
+        "value": 0.0001,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 15,
+          "col": 2,
+          "clause_id": null,
+          "quote": "0.000 1"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "Ag",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 8,
+          "col": 10,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "Bi",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 8,
+          "col": 7,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "Ca",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 8,
+          "col": 6,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "N",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 14,
+          "col": 3,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "O",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 14,
+          "col": 4,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "Pb",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 8,
+          "col": 9,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "Se",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 8,
+          "col": 11,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "Sn",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 8,
+          "col": 8,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "普通级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-普通级*",
+      "field": "Te",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": null,
+      "b": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 14,
+          "col": 1,
+          "clause_id": null,
+          "quote": "-"
+        }
+      }
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "高纯级",
+        ""
+      ],
+      "record_id": "gbt40303-T3-高纯级",
+      "field": "Tl",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.000 1",
+        "value": 0.0001,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T3",
+          "row": 16,
+          "col": 2,
+          "clause_id": null,
+          "quote": "0.000 1"
+        }
+      },
+      "b": null
+    }
+  ],
+  "clause_field_diffs": [
+    {
+      "clause_id": "7.3.1",
+      "field": "level_III_deformation",
+      "a": {
+        "raw": "变形量为12%~30%的冷拉变形",
+        "value": null,
+        "lower": 12.0,
+        "upper": 30.0,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.3.1",
+          "quote": "Ⅲ级：变形量为 12 %～ 30 % 的冷拉变形，磨光"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.3.1",
+      "field": "level_II_annealing",
+      "a": {
+        "raw": "955℃±10℃，保温不小于1h，空冷或更快冷却",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "955℃±10℃，保温不小于1h，空冷或更快冷却",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.3.1",
+          "quote": "955℃±10℃，保温不小于1h，空冷或更快冷却"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.3.1",
+      "field": "level_II_deformation",
+      "a": {
+        "raw": "变形量为8%~12%的冷拉变形",
+        "value": null,
+        "lower": 8.0,
+        "upper": 12.0,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.3.1",
+          "quote": "Ⅱ级：变形量为 8%～12% 的冷拉变形"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.3.1",
+      "field": "level_I_deformation",
+      "a": {
+        "raw": "变形量为8%~12%的冷拉变形",
+        "value": null,
+        "lower": 8.0,
+        "upper": 12.0,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.3.1",
+          "quote": "I级：变形量为 8 %～12 % 的冷拉变形，必要时磨光"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.3.2",
+      "field": "delivery_state",
+      "a": {
+        "raw": "热轧状态、经磨光或车光后交货",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "热轧状态、经磨光或车光后交货",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.3.2",
+          "quote": "热轧棒材以热轧状态、经磨光或车光后交货。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.4.1",
+      "field": "mechanical_requirement",
+      "a": {
+        "raw": "经热处理后试样的纵向力学性能应符合表3的规定",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "经热处理后试样的纵向力学性能应符合表3的规定",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.4.1",
+          "quote": "经热处理后试样的纵向力学性能应符合表3的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "9.2",
+      "field": "batch_rule",
+      "a": {
+        "raw": "每批由同一合金牌号、同一熔炼子炉号、同一规格、同一交货状态的棒材组成；油气用棒材可按母炉号组批，子炉号管理",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "每批由同一合金牌号、同一熔炼子炉号、同一规格、同一交货状态的棒材组成；油气用棒材可按母炉号组批，子炉号管理",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 13,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "9.2",
+          "quote": "每批应由同一合金牌号、同一熔炼子炉号、同一规格、同一交货状态的棒材组成。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "9.3",
+      "field": "sampling_reference",
+      "a": {
+        "raw": "取样数量和取样部位应符合表6的规定",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "取样数量和取样部位应符合表6的规定",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 13,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "9.3",
+          "quote": "取样数量和取样部位应符合表6的规定。"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

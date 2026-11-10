@@ -1,0 +1,1248 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt3191_2010",
+  "standard_no": "GB/T 3191-2010",
+  "title": "铝及铝合金挤压棒材",
+  "doc_type": "gb_t",
+  "material": "铝合金",
+  "product_form": "挤压棒材",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft-s7",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "标注依据 OCR Markdown / pages.json 与 TableGrid（T1/T9/T16）；PDF 为扫描件，未做页图目视复核。",
+      "表7 表头标注“不小于”，数值按 comparator=min；方向取 3.4.1“室温纵向拉伸”的纵向。",
+      "T16/表12 实为“取样数量”表（4 个牌号组×直径条件行），不是表11 的检验项目表；已按原表 4 行全部标注。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 4,
+      "caption": "表1 牌号、类别、状态和规格",
+      "profile": "classification",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "仅标注 8 个分类项（第 2、3、4、10、15、21、23、28 行）；其余行未标注。本表无旧牌号/旧状态/含义列：state 存“供货状态”，old_state 存“试样状态”，类别与规格写入 item.note。",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": [
+        {
+          "grade": "1070A",
+          "old_grade": null,
+          "state": "H112",
+          "old_state": "H112",
+          "meaning": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 2,
+            "col": 1,
+            "clause_id": null,
+            "quote": "1070A"
+          },
+          "note": "类别：Ⅰ类；供货状态：H112；试样状态：H112；规格：圆棒直径：5mm~600mm；方棒、六角棒对边距离：5mm~200mm。长度：1m~6m"
+        },
+        {
+          "grade": "1060",
+          "old_grade": null,
+          "state": "O",
+          "old_state": "O",
+          "meaning": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 3,
+            "col": 1,
+            "clause_id": null,
+            "quote": "1060"
+          },
+          "note": "类别：Ⅰ类；供货状态：O；试样状态：O；规格：圆棒直径：5mm~600mm；方棒、六角棒对边距离：5mm~200mm。长度：1m~6m"
+        },
+        {
+          "grade": "1060",
+          "old_grade": null,
+          "state": "H112",
+          "old_state": "H112",
+          "meaning": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 4,
+            "col": 1,
+            "clause_id": null,
+            "quote": "1060"
+          },
+          "note": "类别：Ⅰ类；供货状态：H112；试样状态：H112；规格：圆棒直径：5mm~600mm；方棒、六角棒对边距离：5mm~200mm。长度：1m~6m"
+        },
+        {
+          "grade": "2A02",
+          "old_grade": null,
+          "state": "T1、T6",
+          "old_state": "T62、T6",
+          "meaning": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 10,
+            "col": 0,
+            "clause_id": null,
+            "quote": "2A02"
+          },
+          "note": "类别：Ⅱ类；供货状态：T1、T6；试样状态：T62、T6；规格：圆棒直径：5mm~600mm；方棒、六角棒对边距离：5mm~200mm。长度：1m~6m"
+        },
+        {
+          "grade": "2A14",
+          "old_grade": null,
+          "state": "T1、T6、T6511",
+          "old_state": "T62、T6、T6511",
+          "meaning": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 15,
+            "col": 0,
+            "clause_id": null,
+            "quote": "2A14"
+          },
+          "note": "类别：Ⅱ类；供货状态：T1、T6、T6511；试样状态：T62、T6、T6511；规格：圆棒直径：5mm~600mm；方棒、六角棒对边距离：5mm~200mm。长度：1m~6m"
+        },
+        {
+          "grade": "2014、2014A",
+          "old_grade": null,
+          "state": "T4、T4510、T4511",
+          "old_state": "T4、T4510、T4511",
+          "meaning": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 21,
+            "col": 0,
+            "clause_id": null,
+            "quote": "2014、2014A"
+          },
+          "note": "类别：Ⅱ类；供货状态：T4、T4510、T4511；试样状态：T4、T4510、T4511；规格：圆棒直径：5mm~600mm；方棒、六角棒对边距离：5mm~200mm。长度：1m~6m"
+        },
+        {
+          "grade": "2017",
+          "old_grade": null,
+          "state": "T4",
+          "old_state": "T42、T4",
+          "meaning": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 23,
+            "col": 0,
+            "clause_id": null,
+            "quote": "2017"
+          },
+          "note": "类别：Ⅱ类；供货状态：T4；试样状态：T42、T4；规格：圆棒直径：5mm~600mm；方棒、六角棒对边距离：5mm~200mm。长度：1m~6m"
+        },
+        {
+          "grade": "3A21",
+          "old_grade": null,
+          "state": "H112",
+          "old_state": "H112",
+          "meaning": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 28,
+            "col": 1,
+            "clause_id": null,
+            "quote": "3A21"
+          },
+          "note": "类别：Ⅰ类；供货状态：H112；试样状态：H112；规格：圆棒直径：5mm~600mm；方棒、六角棒对边距离：5mm~200mm。长度：1m~6m"
+        }
+      ]
+    },
+    {
+      "table_id": "T9",
+      "page_no": 9,
+      "caption": "表7 室温纵向拉伸力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "仅标注 8 个数据行（第 3、4、5、11、12、15、21、22 行）；其余行及第 10~13 页表7 续表未标注。表头“不小于”统一 comparator=min；1060 O 状态的 Rm 为区间。",
+      "records": [
+        {
+          "record_id": "gbt3191-T9-1070A-H112-≤150.00",
+          "grade": "1070A",
+          "grade_level": null,
+          "condition": "H112 / H112 / ≤150.00mm / 纵向",
+          "facets": {
+            "heat_treatment": "H112",
+            "specimen_state": "H112",
+            "thickness": "≤150.00mm",
+            "direction": "纵向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "55",
+              "value": 55.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "55"
+              }
+            },
+            "Rp0.2": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "A": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "A50mm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T9-1060-O-≤150.00",
+          "grade": "1060",
+          "grade_level": null,
+          "condition": "O / O / ≤150.00mm / 纵向",
+          "facets": {
+            "heat_treatment": "O",
+            "specimen_state": "O",
+            "thickness": "≤150.00mm",
+            "direction": "纵向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "60~95",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 60.0,
+              "upper": 95.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "60~95"
+              }
+            },
+            "Rp0.2": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "A": {
+              "raw": "22",
+              "value": 22.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "22"
+              }
+            },
+            "A50mm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T9-1060-H112-≤150.00",
+          "grade": "1060",
+          "grade_level": null,
+          "condition": "H112 / H112 / ≤150.00mm / 纵向",
+          "facets": {
+            "heat_treatment": "H112",
+            "specimen_state": "H112",
+            "thickness": "≤150.00mm",
+            "direction": "纵向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "60",
+              "value": 60.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "60"
+              }
+            },
+            "Rp0.2": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "A": {
+              "raw": "22",
+              "value": 22.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 5,
+                "col": 6,
+                "clause_id": null,
+                "quote": "22"
+              }
+            },
+            "A50mm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 5,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T9-2A02-T1T6-≤150.00",
+          "grade": "2A02",
+          "grade_level": null,
+          "condition": "T1、T6 / T62、T6 / ≤150.00mm / 纵向",
+          "facets": {
+            "heat_treatment": "T1、T6",
+            "specimen_state": "T62、T6",
+            "thickness": "≤150.00mm",
+            "direction": "纵向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "430",
+              "value": 430.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 11,
+                "col": 4,
+                "clause_id": null,
+                "quote": "430"
+              }
+            },
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 11,
+                "col": 5,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 11,
+                "col": 6,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "A50mm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 11,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T9-2A06-T1T6-≤22.00",
+          "grade": "2A06",
+          "grade_level": null,
+          "condition": "T1、T6 / T62、T6 / ≤22.00mm / 纵向",
+          "facets": {
+            "heat_treatment": "T1、T6",
+            "specimen_state": "T62、T6",
+            "thickness": "≤22.00mm",
+            "direction": "纵向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "430",
+              "value": 430.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 12,
+                "col": 4,
+                "clause_id": null,
+                "quote": "430"
+              }
+            },
+            "Rp0.2": {
+              "raw": "285",
+              "value": 285.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 12,
+                "col": 5,
+                "clause_id": null,
+                "quote": "285"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 12,
+                "col": 6,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "A50mm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 12,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T9-2A11-T1T4-≤150.00",
+          "grade": "2A11",
+          "grade_level": null,
+          "condition": "T1、T4 / T42、T4 / ≤150.00mm / 纵向",
+          "facets": {
+            "heat_treatment": "T1、T4",
+            "specimen_state": "T42、T4",
+            "thickness": "≤150.00mm",
+            "direction": "纵向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 15,
+                "col": 4,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "215",
+              "value": 215.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 15,
+                "col": 5,
+                "clause_id": null,
+                "quote": "215"
+              }
+            },
+            "A": {
+              "raw": "12",
+              "value": 12.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 15,
+                "col": 6,
+                "clause_id": null,
+                "quote": "12"
+              }
+            },
+            "A50mm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 15,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T9-2A14-T1T6T6511->22.00~150.00",
+          "grade": "2A14",
+          "grade_level": null,
+          "condition": "T1、T6、T6511 / T62、T6、T6511 / >22.00~150.00mm / 纵向",
+          "facets": {
+            "heat_treatment": "T1、T6、T6511",
+            "specimen_state": "T62、T6、T6511",
+            "thickness": ">22.00~150.00mm",
+            "direction": "纵向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "450",
+              "value": 450.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 21,
+                "col": 4,
+                "clause_id": null,
+                "quote": "450"
+              }
+            },
+            "Rp0.2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 21,
+                "col": 5,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 21,
+                "col": 6,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "A50mm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 21,
+                "col": 7,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T9-2014-2014A-T4T4510T4511-≤25.00",
+          "grade": "2014、2014A",
+          "grade_level": null,
+          "condition": "T4、T4510、T4511 / T4、T4510、T4511 / ≤25.00mm / 纵向",
+          "facets": {
+            "heat_treatment": "T4、T4510、T4511",
+            "specimen_state": "T4、T4510、T4511",
+            "thickness": "≤25.00mm",
+            "direction": "纵向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 22,
+                "col": 4,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "230",
+              "value": 230.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 22,
+                "col": 5,
+                "clause_id": null,
+                "quote": "230"
+              }
+            },
+            "A": {
+              "raw": "13",
+              "value": 13.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 22,
+                "col": 6,
+                "clause_id": null,
+                "quote": "13"
+              }
+            },
+            "A50mm": {
+              "raw": "11",
+              "value": 11.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T9",
+                "row": 22,
+                "col": 7,
+                "clause_id": null,
+                "quote": "11"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T16",
+      "page_no": 17,
+      "caption": "表12 力学性能取样数量",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "表12 为“取样数量”表，共 4 个数据行（牌号组1 含 ≤50.00mm 与 >50.00mm 两行；牌号组2、3 各 1 行），已全部标注。表头行不计为检验项。表11（T15）载明该取样数量用于力学性能（要求 3.4、方法 4.3）。",
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "力学性能取样数量（牌号组1，≤50.00mm）",
+          "category": "力学性能",
+          "quantities": {
+            "取样根数占每批(或每炉)根数的百分比": "≥5%",
+            "每批(或每炉)最少取样根数": "2"
+          },
+          "sample_location": null,
+          "requirement_clause": null,
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 17,
+            "table_id": "T16",
+            "row": 2,
+            "col": 0,
+            "clause_id": null,
+            "quote": "7A04、7A09、2A02、2A06、2A11、2A12、2A13、2A16、2017、2024、2014、2014A、2017A、5A12、5005、5005A、5019、5049、5251、5154A、5454、5754、5083、5086、6101A、6005、6005A、6110A、6351、6060、7A15、7075"
+          },
+          "note": "直径条件：≤50.00mm；牌号组原文见 evidence.quote。"
+        },
+        {
+          "item": "力学性能取样数量（牌号组1，>50.00mm）",
+          "category": "力学性能",
+          "quantities": {
+            "取样根数占每批(或每炉)根数的百分比": "≥2%",
+            "每批(或每炉)最少取样根数": "2"
+          },
+          "sample_location": null,
+          "requirement_clause": null,
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 17,
+            "table_id": "T16",
+            "row": 3,
+            "col": 0,
+            "clause_id": null,
+            "quote": "7A04、7A09、2A02、2A06、2A11、2A12、2A13、2A16、2017、2024、2014、2014A、2017A、5A12、5005、5005A、5019、5049、5251、5154A、5454、5754、5083、5086、6101A、6005、6005A、6110A、6351、6060、7A15、7075"
+          },
+          "note": "直径条件：>50.00mm；牌号组原文见 evidence.quote。"
+        },
+        {
+          "item": "力学性能取样数量（牌号组2，所有直径）",
+          "category": "力学性能",
+          "quantities": {
+            "取样根数占每批(或每炉)根数的百分比": "-",
+            "每批(或每炉)最少取样根数": "2"
+          },
+          "sample_location": null,
+          "requirement_clause": null,
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 17,
+            "table_id": "T16",
+            "row": 4,
+            "col": 0,
+            "clause_id": null,
+            "quote": "6A02、2A50、2A70、2A80、2A90、2A14、6063、6061、6082、6063A、6463、7003、7005、7020、7021、7022、7049A"
+          },
+          "note": "直径条件：“所有”；百分比列为“-”（不按百分比，仅最少 2 根）。"
+        },
+        {
+          "item": "力学性能取样数量（牌号组3，所有直径）",
+          "category": "力学性能",
+          "quantities": {
+            "取样根数占每批(或每炉)根数的百分比": "≥2%",
+            "每批(或每炉)最少取样根数": "2"
+          },
+          "sample_location": null,
+          "requirement_clause": null,
+          "method_clause": null,
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 17,
+            "table_id": "T16",
+            "row": 5,
+            "col": 0,
+            "clause_id": null,
+            "quote": "1070A、1060、1050A、1035、1200、8A06、5A02、5A03、5A05、5A06、3A21、5052、3003、3102、4A11、4032"
+          },
+          "note": "直径条件：“所有”。"
+        }
+      ],
+      "classification_items": []
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "3.1.1",
+      "title": "牌号、类别、状态和规格",
+      "page_no": 3,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "棒材的牌号、类别、状态和规格应符合表1的规定。",
+          "value": null,
+          "text": "棒材的牌号、类别、状态和规格应符合表1的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.1.1",
+            "quote": "棒材的牌号、类别、状态和规格应符合表1的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 3,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.1.1",
+        "quote": "棒材的牌号、类别、状态和规格应符合表1的规定。"
+      },
+      "note": "表1 对应 T1；本标注仅覆盖 T1 的 8 个分类项。"
+    },
+    {
+      "clause_id": "3.4.1",
+      "title": "室温纵向拉伸力学性能",
+      "page_no": 9,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "test_temperature": {
+          "raw": "室温",
+          "value": null,
+          "text": "室温",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 9,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.1",
+            "quote": "棒材的室温纵向拉伸力学性能应符合表7的规定。"
+          }
+        },
+        "direction": {
+          "raw": "纵向",
+          "value": null,
+          "text": "纵向",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 9,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.1",
+            "quote": "棒材的室温纵向拉伸力学性能应符合表7的规定。"
+          }
+        },
+        "requirement": {
+          "raw": "棒材的室温纵向拉伸力学性能应符合表7的规定。",
+          "value": null,
+          "text": "棒材的室温纵向拉伸力学性能应符合表7的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 9,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.1",
+            "quote": "棒材的室温纵向拉伸力学性能应符合表7的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 9,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.4.1",
+        "quote": "棒材的室温纵向拉伸力学性能应符合表7的规定。"
+      },
+      "note": "表7 对应 T9；方向“纵向”、温度“室温”取自本条。"
+    },
+    {
+      "clause_id": "4.3",
+      "title": "力学性能试验方法",
+      "page_no": 16,
+      "kind": "test_method",
+      "status": "found",
+      "fields": {
+        "test_method_room_temperature": {
+          "raw": "棒材的室温纵向拉伸力学性能按GB/T228规定的方法进行检验。",
+          "value": null,
+          "text": "GB/T228",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 16,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.3",
+            "quote": "棒材的室温纵向拉伸力学性能按GB/T228规定的方法进行检验。"
+          }
+        },
+        "test_method_high_temperature": {
+          "raw": "棒材的高温持久纵向拉伸力学性能按GB/T2039规定的方法进行检验。",
+          "value": null,
+          "text": "GB/T2039",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 16,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.3",
+            "quote": "棒材的高温持久纵向拉伸力学性能按GB/T2039规定的方法进行检验。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 16,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.3",
+        "quote": "棒材的室温纵向拉伸力学性能按GB/T228规定的方法进行检验。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "5.3",
+      "title": "检验项目",
+      "page_no": 16,
+      "kind": "inspection",
+      "status": "found",
+      "fields": {
+        "mandatory_items": {
+          "raw": "每批棒材出厂前应进行化学成分、尺寸偏差、力学性能和表面质量的检验。",
+          "value": null,
+          "text": "化学成分、尺寸偏差、力学性能、表面质量",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 16,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.3",
+            "quote": "每批棒材出厂前应进行化学成分、尺寸偏差、力学性能和表面质量的检验。"
+          }
+        },
+        "low_magnification_condition": {
+          "raw": "直径大于或等于 20.00 mm的棒材应进行低倍组织检验",
+          "value": null,
+          "text": "直径大于或等于 20.00 mm的棒材应进行低倍组织检验",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 16,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.3",
+            "quote": "直径大于或等于 20.00 mm的棒材应进行低倍组织检验"
+          }
+        },
+        "microstructure_condition": {
+          "raw": "4A11、4032合金和淬火后的棒材应进行显微组织检验",
+          "value": null,
+          "text": "4A11、4032合金和淬火后的棒材应进行显微组织检验",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 16,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.3",
+            "quote": "4A11、4032合金和淬火后的棒材应进行显微组织检验"
+          }
+        },
+        "ultrasonic_condition": {
+          "raw": "合同（或订货单）中注明超声波检验的棒材应进行超声波检验",
+          "value": null,
+          "text": "合同（或订货单）中注明超声波检验的棒材应进行超声波检验",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 16,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.3",
+            "quote": "合同（或订货单）中注明超声波检验的棒材应进行超声波检验"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 16,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "5.3",
+        "quote": "每批棒材出厂前应进行化学成分、尺寸偏差、力学性能和表面质量的检验。"
+      },
+      "note": "取样规定见 5.4 与表11（T15）；表12（T16）给出力学性能取样数量。"
+    }
+  ],
+  "notes": [
+    "本标注仅覆盖 T1（表1）、T9（表7）、T16（表12）及 4 条条款；表2~表6、表8~表11、表7 其余行未标注。",
+    "表12 原表仅 4 个数据行，任务所述“5 个检验项”与 TableGrid 不一致，按源文 4 行标注。"
+  ]
+}

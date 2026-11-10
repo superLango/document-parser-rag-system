@@ -1,0 +1,465 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_21acb76d8c",
+  "standard_no": null,
+  "title": "CAP1000 山东海阳核电站三期工程项目",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 26,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\17d722e0e9d9445a9f3a443abcb572d31792472615612.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T7",
+      "page_no": 8,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-83585fa583",
+          "grade": "熔炼分析",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.0428",
+              "value": 0.0428,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.0428"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "Si": {
+              "raw": "≤1.00",
+              "value": 1.0,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤1.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            },
+            "Ni": {
+              "raw": "8.00-11.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 8.0,
+              "upper": 11.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 6,
+                "col": 1,
+                "clause_id": null,
+                "quote": "8.00-11.00"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-3e5e7096f8",
+          "grade": "成品分析",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.0428",
+              "value": 0.0428,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.0428"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.04",
+              "value": 2.04,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤2.04"
+              }
+            },
+            "Si": {
+              "raw": "≤1.05",
+              "value": 1.05,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤1.05"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            },
+            "Ni": {
+              "raw": "7.90-11.15",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 7.9,
+              "upper": 11.15,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T7",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "7.90-11.15"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T8",
+      "page_no": 9,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-0ae939ee69",
+          "grade": "熔炼分析",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cr": {
+              "raw": "18.00-20.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 18.0,
+              "upper": 20.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T8",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "18.00-20.00"
+              }
+            },
+            "N": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T8",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            },
+            "Co": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T8",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-e4f1e96c86",
+          "grade": "成品分析",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cr": {
+              "raw": "17.80-20.20",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 17.8,
+              "upper": 20.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T8",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "17.80-20.20"
+              }
+            },
+            "N": {
+              "raw": "≤0.11",
+              "value": 0.11,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T8",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.11"
+              }
+            },
+            "Co": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T8",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T17",
+      "page_no": 16,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-d6eba1f098",
+          "grade": null,
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "B": {
+              "raw": "≤2.0",
+              "value": 2.0,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T17",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤2.0"
+              }
+            },
+            "C": {
+              "raw": "≤1.5",
+              "value": 1.5,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T17",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤1.5"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

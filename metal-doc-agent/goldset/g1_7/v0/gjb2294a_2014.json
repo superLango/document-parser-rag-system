@@ -1,0 +1,530 @@
+{
+  "doc_id": "gjb-2294a-2014-01d923a1",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "facets": {},
+      "required": true,
+      "note": "化学成分"
+    },
+    {
+      "item_canonical": "晶间腐蚀",
+      "item_family": "corrosion",
+      "facets": {},
+      "required": true,
+      "note": "晶间腐蚀"
+    },
+    {
+      "item_canonical": "外形",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "外形"
+    },
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "尺寸"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "required": true,
+      "note": "交货硬度"
+    },
+    {
+      "item_canonical": "夏比冲击",
+      "item_family": "impact",
+      "facets": {
+        "impact_type": "夏比"
+      },
+      "required": true,
+      "note": "冲击"
+    },
+    {
+      "item_canonical": "DS类夹杂物",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "DS类夹杂物"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "低倍组织"
+    },
+    {
+      "item_canonical": "发纹",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "发纹"
+    },
+    {
+      "item_canonical": "晶粒度",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "晶粒度"
+    },
+    {
+      "item_canonical": "自由铁素体",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "自由铁素体"
+    },
+    {
+      "item_canonical": "非金属夹杂物",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "非金属夹杂物"
+    },
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "facets": {},
+      "required": true,
+      "note": "超声检测"
+    },
+    {
+      "item_canonical": "外观质量",
+      "item_family": "surface",
+      "facets": {},
+      "required": true,
+      "note": "外观质量"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "拉伸"
+    },
+    {
+      "item_canonical": "顶锻",
+      "item_family": "upset",
+      "facets": {},
+      "required": true,
+      "note": "顶锻"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T1": {
+      "clause_id": "3.2",
+      "quote": "3. 2.1 钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+    },
+    "T10": {
+      "clause_id": "3.5.2",
+      "quote": "3. 5.2.1 公称尺寸不小于16mm的电弧炉+炉外精炼+电渣重熔钢棒或非真空感应炉+电渣重熔钢棒 (Y25Cr13Ni2除外)采用塔形试样检验发纹，其结果应符合表6的规定。"
+    },
+    "T11": {
+      "clause_id": "3.6.1",
+      "quote": "3. 6.1.1 电弧炉+炉外精炼+电渣重熔钢棒或非真空感应炉+电渣重熔钢棒应检验非金属夹杂物 （Y25Cr13Ni2除外），其结果应符合表7的规定。"
+    },
+    "T12": {
+      "clause_id": "3.9",
+      "quote": "3. 9.1 钢棒尺寸、外形及允许偏差应符合表8的规定。"
+    },
+    "T13": {
+      "clause_id": "3.10",
+      "quote": "3. 10.1 压力加工用（包括顶锻及冷拔坯料）钢棒表面不允许有目视可见的裂纹、结疤、折叠及夹杂。"
+    },
+    "T14": {
+      "clause_id": "3.10",
+      "quote": "3. 10.1 压力加工用（包括顶锻及冷拔坯料）钢棒表面不允许有目视可见的裂纹、结疤、折叠及夹杂。"
+    },
+    "T15": {
+      "clause_id": "4.2.2",
+      "quote": "质量一致性检验项目、取样部位、取样数量及相应要求和检验方法的章条号应符合表11的规定。"
+    },
+    "T16": {
+      "clause_id": "4.3.7",
+      "quote": "4. 3.7.2 公称尺寸大于150mm的钢棒，塔形试样按表12规定，也可改锻成150mm进行检验。"
+    },
+    "T2": {
+      "clause_id": "3.2",
+      "quote": "3. 2.1 钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+    },
+    "T3": {
+      "clause_id": "3.2",
+      "quote": "3. 2.1 钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+    },
+    "T4": {
+      "clause_id": "3.3",
+      "quote": "热处理状态交货钢棒的硬度应符合表2的规定，冷拉状态钢棒的硬度由供需双方协商规定。"
+    },
+    "T5": {
+      "clause_id": "3.4",
+      "quote": "3. 4.1 在交货状态的钢棒上切取试样毛坯，经热处理后制成试样测定力学性能应符合表3的规定。"
+    },
+    "T6": {
+      "clause_id": "3.4",
+      "quote": "3. 4.1 在交货状态的钢棒上切取试样毛坯，经热处理后制成试样测定力学性能应符合表3的规定。"
+    },
+    "T7": {
+      "clause_id": "3.4",
+      "quote": "3. 4.1 在交货状态的钢棒上切取试样毛坯，经热处理后制成试样测定力学性能应符合表3的规定。"
+    },
+    "T8": {
+      "clause_id": "3.4",
+      "quote": "3. 4.1 在交货状态的钢棒上切取试样毛坯，经热处理后制成试样测定力学性能应符合表3的规定。"
+    },
+    "T9": {
+      "clause_id": "3.4",
+      "quote": "3. 4.1 在交货状态的钢棒上切取试样毛坯，经热处理后制成试样测定力学性能应符合表3的规定。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T10",
+    "T11",
+    "T12",
+    "T13",
+    "T14",
+    "T15",
+    "T16",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T9"
+  ],
+  "clauses": [
+    {
+      "clause_id": "2",
+      "kind": "other",
+      "quote": "GB/T222 钢的成品化学成分允许偏差 GB/T 223.3 钢铁及合金化学分析方法 二安替吡啉甲烷磷钼酸重量法测定磷量 GB/T 223.4 钢铁及合金 锰含量的测定 电位滴定或可视滴定法 GB/T 223.5 钢铁 酸溶硅和全硅含量的测定 还原型硅钼酸盐分光光度法 GB/T 223.8 钢铁及合金化学分析方法 氟",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.1",
+      "kind": "test_method",
+      "quote": "经供需双方协商，也可采用其他方法冶炼。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.2",
+      "kind": "other",
+      "quote": "3. 2.1 钢的牌号和化学成分（熔炼分析）应符合表1的规定。 表1牌号及化学成分",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.2.1",
+      "kind": "technical_requirement",
+      "quote": "表1牌号及化学成分 ## Table 表1（续） ## Table 表1（续） ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.2.2",
+      "kind": "technical_requirement",
+      "quote": "钢棒化学成分允许偏差应符合GB/T222的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.3",
+      "kind": "other",
+      "quote": "3. 3.1 钢棒一般以热处理或冷拉状态交货。热处理状态交货钢棒的硬度应符合表2的规定，冷拉状态钢棒的硬度由供需双方协商规定。 表2交货状态及硬度",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.3.1",
+      "kind": "delivery",
+      "quote": "钢棒一般以热处理或冷拉状态交货。热处理状态交货钢棒的硬度应符合表2的规定，冷拉状态钢棒的硬度由供需双方协商规定。",
+      "fields": {
+        "requirement": "热处理状态交货钢棒的硬度应符合表2的规定，冷拉状态钢棒的硬度由供需双方协商规定。"
+      }
+    },
+    {
+      "clause_id": "3.4",
+      "kind": "other",
+      "quote": "3. 4.1 在交货状态的钢棒上切取试样毛坯，经热处理后制成试样测定力学性能应符合表3的规定。对固溶状态交货的钢棒，其试样毛坯可不再进行固溶处理。 表3 力学性能",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.4.1",
+      "kind": "delivery",
+      "quote": "在交货状态的钢棒上切取试样毛坯，经热处理后制成试样测定力学性能应符合表3的规定。对固溶状态交货的钢棒，其试样毛坯可不再进行固溶处理。",
+      "fields": {
+        "requirement": "在交货状态的钢棒上切取试样毛坯，经热处理后制成试样测定力学性能应符合表3的规定。"
+      }
+    },
+    {
+      "clause_id": "3.5.1.1",
+      "kind": "other",
+      "quote": "钢棒横截面酸浸低倍试片上不允许有目视可见的缩孔、气泡、裂纹、空洞、夹杂、翻皮及白点。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.1.2",
+      "kind": "technical_requirement",
+      "quote": "表4 炉外精炼钢棒低倍组织合格级别 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.1.3",
+      "kind": "technical_requirement",
+      "quote": "表5 电渣重熔钢棒低倍组织合格级别 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.2",
+      "kind": "other",
+      "quote": "3. 5.2.1 公称尺寸不小于16mm的电弧炉+炉外精炼+电渣重熔钢棒或非真空感应炉+电渣重熔钢棒 (Y25Cr13Ni2除外)采用塔形试样检验发纹，其结果应符合表6的规定。如供方能保证发纹合格也可不做检验，但应在质量证明书中注明发纹合格。 表6 电渣重熔钢棒发纹合格级别",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.2.1",
+      "kind": "technical_requirement",
+      "quote": "公称尺寸不小于16mm的电弧炉+炉外精炼+电渣重熔钢棒或非真空感应炉+电渣重熔钢棒 (Y25Cr13Ni2除外)采用塔形试样检验发纹，其结果应符合表6的规定。如供方能保证发纹合格也可不做检验，但应在质量证明书中注明发纹合格。",
+      "fields": {
+        "requirement": "公称尺寸不小于16mm的电弧炉+炉外精炼+电渣重熔钢棒或非真空感应炉+电渣重熔钢棒 (Y25Cr13Ni2除外)采用塔形试样检验发纹，其结果应符合表6的规定。",
+        "judgment": "表6 电渣重熔钢棒发纹合格级别 ## Table"
+      }
+    },
+    {
+      "clause_id": "3.6.1",
+      "kind": "other",
+      "quote": "3. 6.1.1 电弧炉+炉外精炼+电渣重熔钢棒或非真空感应炉+电渣重熔钢棒应检验非金属夹杂物 （Y25Cr13Ni2除外），其结果应符合表7的规定。 3. 6.1.2 根据需方要求，电弧炉+炉外精炼钢可检验非金属夹杂物，其结果应符合表7的规定。 3. 6.1.3 根据需方要求，并在合同中注明，可进行DS类夹杂物检验，其合格级别由供需双方协商确定。 表7 非金属夹杂物合格级别",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.6.1.1",
+      "kind": "inspection",
+      "quote": "（Y25Cr13Ni2除外），其结果应符合表7的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.6.1.2",
+      "kind": "technical_requirement",
+      "quote": "根据需方要求，电弧炉+炉外精炼钢可检验非金属夹杂物，其结果应符合表7的规定。",
+      "fields": {
+        "requirement": "根据需方要求，电弧炉+炉外精炼钢可检验非金属夹杂物，其结果应符合表7的规定。"
+      }
+    },
+    {
+      "clause_id": "3.6.1.3",
+      "kind": "other",
+      "quote": "根据需方要求，并在合同中注明，可进行DS类夹杂物检验，其合格级别由供需双方协商确定。",
+      "fields": {
+        "judgment": "表7 非金属夹杂物合格级别 ## Table"
+      }
+    },
+    {
+      "clause_id": "3.6.3.1",
+      "kind": "other",
+      "quote": "12Cr17Mn9Ni4N钢棒应在固溶状态下进行晶间腐蚀试验，腐蚀后弯曲试样外表面不允许有因晶间腐蚀而产生的裂纹。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.6.3.2",
+      "kind": "other",
+      "quote": "根据需求，并在合同中注明，06Cr18Ni9、1Cr18Ni9Ti、06Cr18Ni10Ti、022Cr19Ni10、 06Cr18Ni11Nb、14Cr18Ni11Si4A1Ti钢棒可进行晶间腐蚀试验，腐蚀后弯曲试样外表面不允许有因晶间腐蚀而产生的裂纹。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.6.3.3",
+      "kind": "test_method",
+      "quote": "晶间腐蚀试验方法按GB/T4334-2008中E法规定。如要求其他方法，可由供需双方协商确规定。",
+      "fields": {
+        "method_standard": "GB/T4334-2008"
+      }
+    },
+    {
+      "clause_id": "3.6.4.1",
+      "kind": "inspection",
+      "quote": "14Cr12Ni2WMoVNb钢棒应检验自由铁素体，在任何视场中的自由铁素体均不应超过视场面积的 5%。检验自由铁素体试样的热处理状态与测定力学性能试样的状态相同。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.7",
+      "kind": "other",
+      "quote": "根据需方要求并在合同中注明，热（冷）顶锻用钢棒应进行热（冷）顶锻试验。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.8.1",
+      "kind": "other",
+      "quote": "钢棒（或坯）应进行纵波检测。纵波检测的级别参照GB/T4162-2008表4中的AA、A、B级，其合格级别均应在合同中注明。根据需方要求，也可选择其他级别。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.8.2",
+      "kind": "other",
+      "quote": "根据需方要求，可按GB/T4162-2008规定增加横波检测。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.9",
+      "kind": "other",
+      "quote": "3. 9.1 钢棒尺寸、外形及允许偏差应符合表8的规定。 3. 9.2 除表8规定之外其他截面形状钢棒的尺寸、外形及允许偏差由双方协商确定。 3. 9.3 钢棒按实际重量交货。 表8尺寸、外形及允许偏差",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.9.1",
+      "kind": "technical_requirement",
+      "quote": "钢棒尺寸、外形及允许偏差应符合表8的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.10",
+      "kind": "other",
+      "quote": "3. 10.1 压力加工用（包括顶锻及冷拔坯料）钢棒表面不允许有目视可见的裂纹、结疤、折叠及夹杂。如有上述缺陷应予以清除，清除深度从钢棒实际尺寸算起应符合表9的规定，清除宽度不小于深度的5倍，同一截面达到最大清除深度的不应多于一处，允许有从实际尺寸算起不超过公差之半的个别细小划痕、压痕、麻点存在。 单位为毫米 表9 压力加工用钢棒同一截面允许清除深度",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.10.1",
+      "kind": "technical_requirement",
+      "quote": "单位为毫米 表9 压力加工用钢棒同一截面允许清除深度 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.10.3",
+      "kind": "other",
+      "quote": "冷拉钢棒外观质量按GB/T4226-2009规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.11",
+      "kind": "technical_requirement",
+      "quote": "对于公称尺寸大于 60mm的钢棒，炉外精炼钢钢棒应按头部进行管理，电渣重熔钢钢棒应按头尾管理，并在钢棒（相当于钢锭头部或头部、尾部的位置）打上明显的标记。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2.2",
+      "kind": "inspection",
+      "quote": "质量一致性检验项目、取样部位、取样数量及相应要求和检验方法的章条号应符合表11的规定。 表11 检验项目、取样部位、取样数量及要求",
+      "fields": {
+        "requirement": "质量一致性检验项目、取样部位、取样数量及相应要求和检验方法的章条号应符合表11的规定。",
+        "sample_quantity": "质量一致性检验项目、取样部位、取样数量及相应要求和检验方法的章条号应符合表11的规定。"
+      }
+    },
+    {
+      "clause_id": "4.2.3.1",
+      "kind": "sampling",
+      "quote": "钢的化学成分分析结果不合格时，允许重新取样对不合格元素进行分析，若复验结果仍不合格，则该炉钢判为不合格。",
+      "fields": {
+        "sample_location": "钢的化学成分分析结果不合格时，允许重新取样对不合格元素进行分析，若复验结果仍不合格，则该炉钢判为不合格"
+      }
+    },
+    {
+      "clause_id": "4.2.3.3",
+      "kind": "sampling",
+      "quote": "低倍组织检验不合格时，则该支钢棒判为不合格。允许同锭的其他支钢棒逐支取样检验，合格者可交货。",
+      "fields": {
+        "sample_location": "允许同锭的其他支钢棒逐支取样检验，合格者可交货"
+      }
+    },
+    {
+      "clause_id": "4.2.3.4",
+      "kind": "other",
+      "quote": "超声检测时，在规定的灵敏度内，如果出现杂乱信号或一次底波反射与正常组织钢棒比较有大于6dB降低时，应进行冶金分析以确定其原因，钢棒的合格与否，应以冶金分析为依据。若超声检测不合格时，判单支不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.1",
+      "kind": "other",
+      "quote": "化学成分分析取样按GB/T20066规定执行，化学分析方法按GB/T223.3、GB/T223.4、GB/T223.5、 GB/T 223.8、GB/T 223.11、GB/T 223.13、GB/T 223.14、GB/T 223.16、GB/T 223.17、GB/T 223.25、 GB/T 223.26、GB/",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.2",
+      "kind": "delivery",
+      "quote": "钢棒的交货硬度试验方法按GB/T231.1规定执行。",
+      "fields": {
+        "method_standard": "GB/T231.1"
+      }
+    },
+    {
+      "clause_id": "4.3.3",
+      "kind": "other",
+      "quote": "拉伸试验用试样的取样位置按GB/T2975的规定，试样制备和试验方法按GB/T228.1规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.4",
+      "kind": "other",
+      "quote": "冲击试验用试样的取样位置按GB/T2975的规定，试样制备和试验方法按GB/T229规定执行，采用U型缺口试样和 2mm摆锤刀刃。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.5",
+      "kind": "other",
+      "quote": "试样硬度的取样按GB/T2975的规定执行，布氏硬度试验方法按GB/T231.1规定执行，洛氏硬度试验方法按GB/T230.1规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.6",
+      "kind": "other",
+      "quote": "低倍浸蚀按GB/T226规定执行，炉外精炼钢棒按GB/T1979评级图片进行评定，电渣重熔钢棒按ASTMA604评级图片进行评定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.7",
+      "kind": "other",
+      "quote": "4. 3.7.1 塔型发纹试样的制备与检验按GB/T10121或GB/T15711规定执行。仲裁时以GB/T15711为准。 4. 3.7.2 公称尺寸大于150mm的钢棒，塔形试样按表12规定，也可改锻成150mm进行检验。 单位为毫米 表12 塔型发纹试样",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.7.1",
+      "kind": "other",
+      "quote": "塔型发纹试样的制备与检验按GB/T10121或GB/T15711规定执行。仲裁时以GB/T15711为准。",
+      "fields": {
+        "method_standard": "GB/T10121"
+      }
+    },
+    {
+      "clause_id": "4.3.8",
+      "kind": "other",
+      "quote": "非金属夹杂物检验按GB/T10561-2005中A法规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.9",
+      "kind": "other",
+      "quote": "晶粒度检验按GB/T6394的规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.10",
+      "kind": "other",
+      "quote": "晶间腐蚀检验按GB/T4334-2008中E法的规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.11.1",
+      "kind": "other",
+      "quote": "14Cr12Ni2WMoVNb钢棒在通过钢棒轴心的纵向试样上按YB/T4402-2014检验自由铁素体按YB/T4402-2014中附录A的图A.2和图A.3进行评定。",
+      "fields": {
+        "method_standard": "YB/T4402-2014"
+      }
+    },
+    {
+      "clause_id": "4.3.13",
+      "kind": "other",
+      "quote": "超声检测按GB/T 4162-2008的规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5",
+      "kind": "delivery",
+      "quote": "钢棒的包装、标志及质量证明书应按GB/T2101的规定。",
+      "fields": {}
+    }
+  ]
+}

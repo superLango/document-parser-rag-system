@@ -1,0 +1,2276 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gjb2057a_2018",
+  "standard_no": "GJB 2057A-2018",
+  "title": "航天用2219铝合金锻件规范",
+  "doc_type": "gjb",
+  "material": "2219铝合金",
+  "product_form": "锻件/锻环",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "agent-B-dryrun",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "AI dry-run B：由 runs/m1_qwen_s8 生成，仅覆盖 chemical/mechanical 记录；inspection/classification/clause 不在本次范围；不得作为 verified 依据。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 3,
+      "caption": "表1 氢含量",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T2",
+      "page_no": 4,
+      "caption": "表2 力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [
+        {
+          "record_id": "rec-2225db0956",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "模锻件 / ≤100 / T6 / 平行于流线",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "400",
+              "value": 400.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "模锻件 / ≤100 / T6 / 平行于流线",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "400"
+              }
+            },
+            "Rp0.2": {
+              "raw": "265",
+              "value": 265.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "模锻件 / ≤100 / T6 / 平行于流线",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "265"
+              }
+            },
+            "A": {
+              "raw": "7",
+              "value": 7.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "模锻件 / ≤100 / T6 / 平行于流线",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "7"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "模锻件 / ≤100 / T6 / 平行于流线",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-033136a365",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "模锻件 / ≤100 / T6 / 非平行于流线",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "385",
+              "value": 385.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "模锻件 / ≤100 / T6 / 非平行于流线",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "385"
+              }
+            },
+            "Rp0.2": {
+              "raw": "250",
+              "value": 250.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "模锻件 / ≤100 / T6 / 非平行于流线",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "250"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "模锻件 / ≤100 / T6 / 非平行于流线",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "模锻件 / ≤100 / T6 / 非平行于流线",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-2b08d93504",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / ≤100 / T6 / 纵向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "400",
+              "value": 400.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "400"
+              }
+            },
+            "Rp0.2": {
+              "raw": "276",
+              "value": 276.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "276"
+              }
+            },
+            "A": {
+              "raw": "6",
+              "value": 6.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "6"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-bc0779fb70",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / ≤100 / T6 / 横向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "380",
+              "value": 380.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "380"
+              }
+            },
+            "Rp0.2": {
+              "raw": "255",
+              "value": 255.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "255"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 6,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-daecf7fb55",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / ≤100 / T6 / 高向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "365",
+              "value": 365.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "365"
+              }
+            },
+            "Rp0.2": {
+              "raw": "240",
+              "value": 240.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 5,
+                "clause_id": null,
+                "quote": "240"
+              }
+            },
+            "A": {
+              "raw": "2",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 6,
+                "clause_id": null,
+                "quote": "2"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-8828cc39e3",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / >100~150 / T6 / 纵向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "390",
+              "value": 390.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 4,
+                "clause_id": null,
+                "quote": "390"
+              }
+            },
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 5,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "A": {
+              "raw": "5",
+              "value": 5.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 6,
+                "clause_id": null,
+                "quote": "5"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-8fd38587e8",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / >100~150 / T6 / 横向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 4,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "245",
+              "value": 245.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 5,
+                "clause_id": null,
+                "quote": "245"
+              }
+            },
+            "A": {
+              "raw": "3",
+              "value": 3.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 6,
+                "clause_id": null,
+                "quote": "3"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-5d08cb2f59",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / >100~150 / T6 / 高向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "345",
+              "value": 345.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 9,
+                "col": 4,
+                "clause_id": null,
+                "quote": "345"
+              }
+            },
+            "Rp0.2": {
+              "raw": "225",
+              "value": 225.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 9,
+                "col": 5,
+                "clause_id": null,
+                "quote": "225"
+              }
+            },
+            "A": {
+              "raw": "2",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 9,
+                "col": 6,
+                "clause_id": null,
+                "quote": "2"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / >100~150 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 9,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-d0bd362a72",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / ≤100 / T652 / 纵向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "430",
+              "value": 430.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 10,
+                "col": 4,
+                "clause_id": null,
+                "quote": "430"
+              }
+            },
+            "Rp0.2": {
+              "raw": "345",
+              "value": 345.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 10,
+                "col": 5,
+                "clause_id": null,
+                "quote": "345"
+              }
+            },
+            "A": {
+              "raw": "6",
+              "value": 6.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 10,
+                "col": 6,
+                "clause_id": null,
+                "quote": "6"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 10,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-cbc3e490ce",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / ≤100 / T652 / 横向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "430",
+              "value": 430.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 11,
+                "col": 4,
+                "clause_id": null,
+                "quote": "430"
+              }
+            },
+            "Rp0.2": {
+              "raw": "340",
+              "value": 340.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 11,
+                "col": 5,
+                "clause_id": null,
+                "quote": "340"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 11,
+                "col": 6,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 11,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-fd6b75cf1e",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "自由锻件 / ≤100 / T652 / 高向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "415",
+              "value": 415.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 12,
+                "col": 4,
+                "clause_id": null,
+                "quote": "415"
+              }
+            },
+            "Rp0.2": {
+              "raw": "320",
+              "value": 320.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 12,
+                "col": 5,
+                "clause_id": null,
+                "quote": "320"
+              }
+            },
+            "A": {
+              "raw": "3",
+              "value": 3.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 12,
+                "col": 6,
+                "clause_id": null,
+                "quote": "3"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "自由锻件 / ≤100 / T652 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 12,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-d0c1dc5ae1",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / ≤100 / T6 / 纵向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "400",
+              "value": 400.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 13,
+                "col": 4,
+                "clause_id": null,
+                "quote": "400"
+              }
+            },
+            "Rp0.2": {
+              "raw": "276",
+              "value": 276.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 13,
+                "col": 5,
+                "clause_id": null,
+                "quote": "276"
+              }
+            },
+            "A": {
+              "raw": "6",
+              "value": 6.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 13,
+                "col": 6,
+                "clause_id": null,
+                "quote": "6"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 13,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-4908476ea2",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / ≤100 / T6 / 横向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "380",
+              "value": 380.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 14,
+                "col": 4,
+                "clause_id": null,
+                "quote": "380"
+              }
+            },
+            "Rp0.2": {
+              "raw": "255",
+              "value": 255.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 14,
+                "col": 5,
+                "clause_id": null,
+                "quote": "255"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 14,
+                "col": 6,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 14,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-6cb117d15d",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / ≤100 / T6 / 高向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "365",
+              "value": 365.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 15,
+                "col": 4,
+                "clause_id": null,
+                "quote": "365"
+              }
+            },
+            "Rp0.2": {
+              "raw": "240",
+              "value": 240.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 15,
+                "col": 5,
+                "clause_id": null,
+                "quote": "240"
+              }
+            },
+            "A": {
+              "raw": "3",
+              "value": 3.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 15,
+                "col": 6,
+                "clause_id": null,
+                "quote": "3"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 15,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-64ee597082",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >100~200 / T6 / 纵向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "390",
+              "value": 390.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 16,
+                "col": 4,
+                "clause_id": null,
+                "quote": "390"
+              }
+            },
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 16,
+                "col": 5,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "A": {
+              "raw": "5",
+              "value": 5.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 16,
+                "col": 6,
+                "clause_id": null,
+                "quote": "5"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 16,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-14af4061bb",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >100~200 / T6 / 横向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 17,
+                "col": 4,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "245",
+              "value": 245.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 17,
+                "col": 5,
+                "clause_id": null,
+                "quote": "245"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 17,
+                "col": 6,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 17,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-b9fe86e2c3",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >100~200 / T6 / 高向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "345",
+              "value": 345.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 18,
+                "col": 4,
+                "clause_id": null,
+                "quote": "345"
+              }
+            },
+            "Rp0.2": {
+              "raw": "225",
+              "value": 225.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 18,
+                "col": 5,
+                "clause_id": null,
+                "quote": "225"
+              }
+            },
+            "A": {
+              "raw": "3",
+              "value": 3.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 18,
+                "col": 6,
+                "clause_id": null,
+                "quote": "3"
+              }
+            },
+            "HB": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T6 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 18,
+                "col": 7,
+                "clause_id": null,
+                "quote": "100"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-078f59dbbe",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / ≤100 / T852 / 纵向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "425",
+              "value": 425.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 19,
+                "col": 4,
+                "clause_id": null,
+                "quote": "425"
+              }
+            },
+            "Rp0.2": {
+              "raw": "345",
+              "value": 345.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 19,
+                "col": 5,
+                "clause_id": null,
+                "quote": "345"
+              }
+            },
+            "A": {
+              "raw": "6",
+              "value": 6.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 19,
+                "col": 6,
+                "clause_id": null,
+                "quote": "6"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 19,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-4540edc7af",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / ≤100 / T852 / 横向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "425",
+              "value": 425.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 20,
+                "col": 4,
+                "clause_id": null,
+                "quote": "425"
+              }
+            },
+            "Rp0.2": {
+              "raw": "340",
+              "value": 340.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 20,
+                "col": 5,
+                "clause_id": null,
+                "quote": "340"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 20,
+                "col": 6,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 20,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-17ae13e3d6",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / ≤100 / T852 / 高向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "415",
+              "value": 415.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 21,
+                "col": 4,
+                "clause_id": null,
+                "quote": "415"
+              }
+            },
+            "Rp0.2": {
+              "raw": "315",
+              "value": 315.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 21,
+                "col": 5,
+                "clause_id": null,
+                "quote": "315"
+              }
+            },
+            "A": {
+              "raw": "3",
+              "value": 3.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 21,
+                "col": 6,
+                "clause_id": null,
+                "quote": "3"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / ≤100 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 21,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-3c809769e7",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >100~200 / T852 / 纵向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "390",
+              "value": 390.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 22,
+                "col": 4,
+                "clause_id": null,
+                "quote": "390"
+              }
+            },
+            "Rp0.2": {
+              "raw": "290",
+              "value": 290.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 22,
+                "col": 5,
+                "clause_id": null,
+                "quote": "290"
+              }
+            },
+            "A": {
+              "raw": "5",
+              "value": 5.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 22,
+                "col": 6,
+                "clause_id": null,
+                "quote": "5"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 22,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-542107690d",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >100~200 / T852 / 横向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "375",
+              "value": 375.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 23,
+                "col": 4,
+                "clause_id": null,
+                "quote": "375"
+              }
+            },
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 23,
+                "col": 5,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 23,
+                "col": 6,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 23,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-9706171425",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >100~200 / T852 / 高向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 24,
+                "col": 4,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 24,
+                "col": 5,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "A": {
+              "raw": "3",
+              "value": 3.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 24,
+                "col": 6,
+                "clause_id": null,
+                "quote": "3"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >100~200 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 24,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-4610d6e43c",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >200~250 / T852 / 纵向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 25,
+                "col": 4,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "290",
+              "value": 290.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 25,
+                "col": 5,
+                "clause_id": null,
+                "quote": "290"
+              }
+            },
+            "A": {
+              "raw": "5",
+              "value": 5.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 25,
+                "col": 6,
+                "clause_id": null,
+                "quote": "5"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 纵向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 25,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-80355ae6d8",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >200~250 / T852 / 横向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 26,
+                "col": 4,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 26,
+                "col": 5,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 26,
+                "col": 6,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 横向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 26,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-f25a54f034",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / >200~250 / T852 / 高向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "360",
+              "value": 360.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 27,
+                "col": 4,
+                "clause_id": null,
+                "quote": "360"
+              }
+            },
+            "Rp0.2": {
+              "raw": "260",
+              "value": 260.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 27,
+                "col": 5,
+                "clause_id": null,
+                "quote": "260"
+              }
+            },
+            "A": {
+              "raw": "3",
+              "value": 3.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 27,
+                "col": 6,
+                "clause_id": null,
+                "quote": "3"
+              }
+            },
+            "HB": {
+              "raw": "115",
+              "value": 115.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / >200~250 / T852 / 高向",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 27,
+                "col": 7,
+                "clause_id": null,
+                "quote": "115"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-b64ab2d3b8",
+          "grade": "2219",
+          "grade_level": null,
+          "condition": "锻环(含轧环) / 注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "value": null,
+              "text": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / 注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 28,
+                "col": 4,
+                "clause_id": null,
+                "quote": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。"
+              }
+            },
+            "Rp0.2": {
+              "raw": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "value": null,
+              "text": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / 注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 28,
+                "col": 5,
+                "clause_id": null,
+                "quote": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。"
+              }
+            },
+            "A": {
+              "raw": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "value": null,
+              "text": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / 注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 28,
+                "col": 6,
+                "clause_id": null,
+                "quote": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。"
+              }
+            },
+            "HB": {
+              "raw": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "value": null,
+              "text": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "unit": "HBW",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "锻环(含轧环) / 注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 28,
+                "col": 7,
+                "clause_id": null,
+                "quote": "注：依据锻环生产工艺不同，轧制成型的锻环横向性能的取样方向为轴向，高向性能的取样方向为径向；锻造成型的锻环横向性能的取样方向为径向，高向性能的取样方向为轴向。"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T4",
+      "page_no": 6,
+      "caption": "表4 检验项目及取样",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": [
+    "AI dry-run B"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "version": "v0",
+  "doc_id": "qdu302_2015",
+  "source_run": "runs/m1.5_qwen/qdu302_2015",
+  "tables": {
+    "T2": {
+      "expected_recipe": "mechanical_properties_v1",
+      "columns": {
+        "0": {"role": "row_key"},
+        "1": {"role": "condition"},
+        "2": {"role": "condition"},
+        "3": {"role": "measure", "family": "tensile", "property": "Rm", "facets": {"temperature": "室温"}},
+        "4": {"role": "measure", "family": "tensile", "property": "Rp0.2", "facets": {"temperature": "室温"}},
+        "5": {"role": "measure", "family": "tensile", "property": "A", "facets": {"temperature": "室温"}},
+        "6": {"role": "measure", "family": "hardness", "property": "HBW", "facets": {"hardness_scale": "brinell"}},
+        "7": {"role": "measure", "family": "tensile", "property": "E", "facets": {"temperature": "室温"}}
+      }
+    },
+    "T3": {
+      "expected_recipe": "inspection_rules_v1",
+      "columns": {
+        "0": {"role": "row_key"},
+        "1": {"role": "condition"},
+        "2": {"role": "condition"},
+        "3": {"role": "condition"},
+        "4": {"role": "condition"},
+        "5": {"role": "method"},
+        "6": {"role": "method"}
+      }
+    }
+  }
+}

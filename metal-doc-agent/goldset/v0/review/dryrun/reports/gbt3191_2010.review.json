@@ -1,0 +1,341 @@
+{
+  "doc_id": "gbt3191_2010",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 0.3478,
+    "cell_value_agreement": 1.0,
+    "comparator_unit_agreement": 1.0,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 23,
+    "record_keys_match": 8,
+    "cells_total": 32,
+    "cells_value_match": 32,
+    "cells_strict_match": 32,
+    "clause_fields_total": 10,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [],
+  "record_keys_only_b": [
+    [
+      "T9",
+      "1035、8A06",
+      "<=150.00|H112|纵向"
+    ],
+    [
+      "T9",
+      "1035、8A06",
+      "<=150.00|O|纵向"
+    ],
+    [
+      "T9",
+      "1050A",
+      "<=150.00|H112|纵向"
+    ],
+    [
+      "T9",
+      "1200",
+      "<=150.00|H112|纵向"
+    ],
+    [
+      "T9",
+      "1350",
+      "<=150.00|H112|纵向"
+    ],
+    [
+      "T9",
+      "2014、2014A",
+      ">150.00~200.00|T4|T4510|T4511|纵向"
+    ],
+    [
+      "T9",
+      "2014、2014A",
+      ">25.00~75.00|T4|T4510|T4511|纵向"
+    ],
+    [
+      "T9",
+      "2014、2014A",
+      ">75.00~150.00|T4|T4510|T4511|纵向"
+    ],
+    [
+      "T9",
+      "2A06",
+      ">100.00~150.00|T1|T6|T62|纵向"
+    ],
+    [
+      "T9",
+      "2A06",
+      ">22.00~100.00|T1|T6|T62|纵向"
+    ],
+    [
+      "T9",
+      "2A12",
+      "<=22.00|T1|T4|T42|纵向"
+    ],
+    [
+      "T9",
+      "2A12",
+      ">22.00~150.00|T1|T4|T42|纵向"
+    ],
+    [
+      "T9",
+      "2A13",
+      "<=22.00|T1|T4|T42|纵向"
+    ],
+    [
+      "T9",
+      "2A13",
+      ">22.00~150.00|T1|T4|T42|纵向"
+    ],
+    [
+      "T9",
+      "2A14",
+      "<=22.00|T1|T6|T62|T6511|纵向"
+    ]
+  ],
+  "value_diffs": [],
+  "clause_field_diffs": [
+    {
+      "clause_id": "3.1.1",
+      "field": "requirement",
+      "a": {
+        "raw": "棒材的牌号、类别、状态和规格应符合表1的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "棒材的牌号、类别、状态和规格应符合表1的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.1.1",
+          "quote": "棒材的牌号、类别、状态和规格应符合表1的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4.1",
+      "field": "direction",
+      "a": {
+        "raw": "纵向",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "纵向",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 9,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4.1",
+          "quote": "棒材的室温纵向拉伸力学性能应符合表7的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4.1",
+      "field": "requirement",
+      "a": {
+        "raw": "棒材的室温纵向拉伸力学性能应符合表7的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "棒材的室温纵向拉伸力学性能应符合表7的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 9,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4.1",
+          "quote": "棒材的室温纵向拉伸力学性能应符合表7的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4.1",
+      "field": "test_temperature",
+      "a": {
+        "raw": "室温",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "室温",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 9,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4.1",
+          "quote": "棒材的室温纵向拉伸力学性能应符合表7的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "4.3",
+      "field": "test_method_high_temperature",
+      "a": {
+        "raw": "棒材的高温持久纵向拉伸力学性能按GB/T2039规定的方法进行检验。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "GB/T2039",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "4.3",
+          "quote": "棒材的高温持久纵向拉伸力学性能按GB/T2039规定的方法进行检验。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "4.3",
+      "field": "test_method_room_temperature",
+      "a": {
+        "raw": "棒材的室温纵向拉伸力学性能按GB/T228规定的方法进行检验。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "GB/T228",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "4.3",
+          "quote": "棒材的室温纵向拉伸力学性能按GB/T228规定的方法进行检验。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.3",
+      "field": "low_magnification_condition",
+      "a": {
+        "raw": "直径大于或等于 20.00 mm的棒材应进行低倍组织检验",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "直径大于或等于 20.00 mm的棒材应进行低倍组织检验",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.3",
+          "quote": "直径大于或等于 20.00 mm的棒材应进行低倍组织检验"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.3",
+      "field": "mandatory_items",
+      "a": {
+        "raw": "每批棒材出厂前应进行化学成分、尺寸偏差、力学性能和表面质量的检验。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "化学成分、尺寸偏差、力学性能、表面质量",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.3",
+          "quote": "每批棒材出厂前应进行化学成分、尺寸偏差、力学性能和表面质量的检验。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.3",
+      "field": "microstructure_condition",
+      "a": {
+        "raw": "4A11、4032合金和淬火后的棒材应进行显微组织检验",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "4A11、4032合金和淬火后的棒材应进行显微组织检验",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.3",
+          "quote": "4A11、4032合金和淬火后的棒材应进行显微组织检验"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.3",
+      "field": "ultrasonic_condition",
+      "a": {
+        "raw": "合同（或订货单）中注明超声波检验的棒材应进行超声波检验",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "合同（或订货单）中注明超声波检验的棒材应进行超声波检验",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.3",
+          "quote": "合同（或订货单）中注明超声波检验的棒材应进行超声波检验"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

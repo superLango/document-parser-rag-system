@@ -1,0 +1,1809 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt3880_1_2012",
+  "standard_no": "GB/T 3880.1-2012",
+  "title": "一般工业用铝及铝合金板、带材 第1部分：一般要求",
+  "doc_type": "gb_t",
+  "material": "铝合金",
+  "product_form": "板/带材",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft-s7",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "T13 表5 源文实际仅含 5 个牌号行（4006、4007、4015、5040、5449），按源文标注 5 条记录；任务描述中的 8 个牌号行与源文不符。",
+      "T13 中值为“-”的单元格按未规定处理，不进入标注值；第10列（索引9）表头为“-”，仅4007为“0.05Co”，按原文文本标注为 Co。",
+      "T17、T24 按要求行建立检验项，scope=partial，表头、表注及合并说明未单列为检验项。",
+      "T17 源 Markdown 表格 HTML 中“<”“>”被转义为 &lt;/&gt;，quote 按渲染后的单元格原文记录（与 TableGrid cell 一致）。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T13",
+      "page_no": 16,
+      "caption": "表5 化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "表5 分列于第16页（4006、4007、4015）与第17页（5040、5449），全部牌号行已标注；值为“-”的单元格按未规定处理，不标注。4007 第9列（索引9）表头为“-”，单元格原文为“0.05Co”，按文本标注为 Co。",
+      "records": [
+        {
+          "record_id": "gbt3880_1_2012-T13-4006",
+          "grade": "4006",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Si": {
+              "raw": "0.80~1.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 1.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.80~1.20"
+              }
+            },
+            "Fe": {
+              "raw": "0.50~0.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.50~0.80"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            },
+            "Mn": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "Mg": {
+              "raw": "≤0.01",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.01"
+              }
+            },
+            "Cr": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "Zn": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "other_impurities_single": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 11,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "other_impurities_total": {
+              "raw": "≤0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 12,
+                "clause_id": null,
+                "quote": "≤0.15"
+              }
+            },
+            "Al": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 3,
+                "col": 13,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3880_1_2012-T13-4007",
+          "grade": "4007",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Si": {
+              "raw": "1.00~1.70",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.0,
+              "upper": 1.7,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "1.00~1.70"
+              }
+            },
+            "Fe": {
+              "raw": "0.40~1.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.4,
+              "upper": 1.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.40~1.00"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "Mn": {
+              "raw": "0.80~1.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 1.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.80~1.50"
+              }
+            },
+            "Mg": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "Cr": {
+              "raw": "0.05~0.25",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.05,
+              "upper": 0.25,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.05~0.25"
+              }
+            },
+            "Ni": {
+              "raw": "0.15~0.70",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.15,
+              "upper": 0.7,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.15~0.70"
+              }
+            },
+            "Zn": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            },
+            "Co": {
+              "raw": "0.05Co",
+              "value": null,
+              "text": "0.05Co",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.05Co"
+              }
+            },
+            "Ti": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            },
+            "other_impurities_single": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 11,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "other_impurities_total": {
+              "raw": "≤0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 12,
+                "clause_id": null,
+                "quote": "≤0.15"
+              }
+            },
+            "Al": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 4,
+                "col": 13,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            }
+          },
+          "note": "第9列（索引9）表头为“-”，原单元格为“0.05Co”，元素名与比较方向未在表头明确，按原文文本标注为 Co。"
+        },
+        {
+          "record_id": "gbt3880_1_2012-T13-4015",
+          "grade": "4015",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Si": {
+              "raw": "1.40~2.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.4,
+              "upper": 2.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "1.40~2.20"
+              }
+            },
+            "Fe": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "Mn": {
+              "raw": "0.60~1.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.6,
+              "upper": 1.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.60~1.20"
+              }
+            },
+            "Mg": {
+              "raw": "0.10~0.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.1,
+              "upper": 0.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.10~0.50"
+              }
+            },
+            "Zn": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "other_impurities_single": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 11,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "other_impurities_total": {
+              "raw": "≤0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 12,
+                "clause_id": null,
+                "quote": "≤0.15"
+              }
+            },
+            "Al": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 16,
+                "table_id": "T13",
+                "row": 5,
+                "col": 13,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3880_1_2012-T13-5040",
+          "grade": "5040",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Si": {
+              "raw": "≤0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.30"
+              }
+            },
+            "Fe": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.25",
+              "value": 0.25,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.25"
+              }
+            },
+            "Mn": {
+              "raw": "0.90~1.40",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.9,
+              "upper": 1.4,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.90~1.40"
+              }
+            },
+            "Mg": {
+              "raw": "1.00~1.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.0,
+              "upper": 1.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.00~1.50"
+              }
+            },
+            "Cr": {
+              "raw": "0.10~0.30",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.1,
+              "upper": 0.3,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.10~0.30"
+              }
+            },
+            "Zn": {
+              "raw": "≤0.25",
+              "value": 0.25,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.25"
+              }
+            },
+            "other_impurities_single": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 11,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "other_impurities_total": {
+              "raw": "≤0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 12,
+                "clause_id": null,
+                "quote": "≤0.15"
+              }
+            },
+            "Al": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 6,
+                "col": 13,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3880_1_2012-T13-5449",
+          "grade": "5449",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Si": {
+              "raw": "≤0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.40"
+              }
+            },
+            "Fe": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.30"
+              }
+            },
+            "Mn": {
+              "raw": "0.60~1.10",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.6,
+              "upper": 1.1,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.60~1.10"
+              }
+            },
+            "Mg": {
+              "raw": "1.60~2.60",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.6,
+              "upper": 2.6,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.60~2.60"
+              }
+            },
+            "Cr": {
+              "raw": "≤0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤0.30"
+              }
+            },
+            "Zn": {
+              "raw": "≤0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.30"
+              }
+            },
+            "Ti": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 10,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            },
+            "other_impurities_single": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 11,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "other_impurities_total": {
+              "raw": "≤0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 12,
+                "clause_id": null,
+                "quote": "≤0.15"
+              }
+            },
+            "Al": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 17,
+                "table_id": "T13",
+                "row": 7,
+                "col": 13,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T17",
+      "page_no": 19,
+      "caption": "表7 电导率",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "scope=partial：以表7数据行建立18个电导率判定要求项；表头、表注a/b/c及合并单元格说明未单列为检验项，力学性能与合格判定写入各条 note。",
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "电导率",
+          "category": "7075/T73/<22.0(38.0)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 1,
+            "col": 2,
+            "clause_id": null,
+            "quote": "<22.0(38.0)"
+          },
+          "note": "力学性能：任何值；合格判定：不合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7075/T73/22.0~23.0(38.0~39.7)/Rp0.2大于规定值85MPa以上",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 2,
+            "col": 2,
+            "clause_id": null,
+            "quote": "22.0~23.0(38.0~39.7)"
+          },
+          "note": "力学性能：符合标准规定,且Rp0.2大于规定值85MPa以上；合格判定：不合格（脚注b）。"
+        },
+        {
+          "item": "电导率",
+          "category": "7075/T73/22.0~23.0(38.0~39.7)/Rp0.2不大于规定值85MPa",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 3,
+            "col": 2,
+            "clause_id": null,
+            "quote": "22.0~23.0(38.0~39.7)"
+          },
+          "note": "力学性能：符合标准规定,且Rp0.2不大于规定值85MPa；合格判定：合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7075/T73/>23.0(39.7)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 4,
+            "col": 2,
+            "clause_id": null,
+            "quote": ">23.0(39.7)"
+          },
+          "note": "力学性能：符合标准规定；合格判定：合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7075/T76/<21.0(36.3)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 5,
+            "col": 2,
+            "clause_id": null,
+            "quote": "<21.0(36.3)"
+          },
+          "note": "力学性能：任何值；合格判定：不合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7075/T76/21.0~22.0(36.3~38.0)/Rp0.2大于规定值85MPa以上",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 6,
+            "col": 2,
+            "clause_id": null,
+            "quote": "21.0~22.0(36.3~38.0)"
+          },
+          "note": "力学性能：符合标准规定,且Rp0.2大于规定值85MPa以上；合格判定：不合格（脚注c）。"
+        },
+        {
+          "item": "电导率",
+          "category": "7075/T76/21.0~22.0(36.3~38.0)/Rp0.2不大于规定值85MPa",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 7,
+            "col": 2,
+            "clause_id": null,
+            "quote": "21.0~22.0(36.3~38.0)"
+          },
+          "note": "力学性能：符合标准规定,且Rp0.2不大于规定值85MPa；合格判定：合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7075/T76/≥22.0(38.0)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 8,
+            "col": 2,
+            "clause_id": null,
+            "quote": "≥22.0(38.0)"
+          },
+          "note": "力学性能：符合标准规定；合格判定：合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7475/T76、T761/<22.0(38.0)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 9,
+            "col": 2,
+            "clause_id": null,
+            "quote": "<22.0(38.0)"
+          },
+          "note": "力学性能：任何值；合格判定：不合格。应补充人工时效,然后重新检测电导率和规定非比例延伸强度。"
+        },
+        {
+          "item": "电导率",
+          "category": "7475/T76、T761/22.0~22.6(38.0~39.0)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 10,
+            "col": 2,
+            "clause_id": null,
+            "quote": "22.0~22.6(38.0~39.0)"
+          },
+          "note": "力学性能：符合标准规定；合格判定：不合格。应补充人工时效,然后重新检测电导率和规定非比例延伸强度。"
+        },
+        {
+          "item": "电导率",
+          "category": "7475/T76、T761/≥22.6(39.0)/Rp0.2大于规定值62MPa以上",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 11,
+            "col": 2,
+            "clause_id": null,
+            "quote": "≥22.6(39.0)"
+          },
+          "note": "力学性能：符合标准规定,且Rp0.2大于规定值62MPa以上；合格判定：不合格。应补充人工时效,然后重新检测电导率和规定非比例延伸强度。"
+        },
+        {
+          "item": "电导率",
+          "category": "7475/T76、T761/≥22.6(39.0)/Rp0.2不大于规定值62MPa",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 12,
+            "col": 2,
+            "clause_id": null,
+            "quote": "≥22.6(39.0)"
+          },
+          "note": "力学性能：符合标准规定,且Rp0.2不大于规定值62MPa；合格判定：合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7010/T73/<23.8(41.1)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 13,
+            "col": 2,
+            "clause_id": null,
+            "quote": "<23.8(41.1)"
+          },
+          "note": "力学性能：任何值；合格判定：不合格。厚板可重新热处理或人工时效,新重检验力学性能和电导率。"
+        },
+        {
+          "item": "电导率",
+          "category": "7010/T73/≥23.8(41.1)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 14,
+            "col": 2,
+            "clause_id": null,
+            "quote": "≥23.8(41.1)"
+          },
+          "note": "力学性能：符合标准规定；合格判定：合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7010/T74/<23.2(40.0)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 15,
+            "col": 2,
+            "clause_id": null,
+            "quote": "<23.2(40.0)"
+          },
+          "note": "力学性能：任何值；合格判定：不合格。厚板可重新热处理或人工时效,新重检验力学性能和电导率。"
+        },
+        {
+          "item": "电导率",
+          "category": "7010/T74/≥23.2(40.0)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 16,
+            "col": 2,
+            "clause_id": null,
+            "quote": "≥23.2(40.0)"
+          },
+          "note": "力学性能：符合标准规定；合格判定：合格。"
+        },
+        {
+          "item": "电导率",
+          "category": "7010/T76/<22.6(39.0)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 17,
+            "col": 2,
+            "clause_id": null,
+            "quote": "<22.6(39.0)"
+          },
+          "note": "力学性能：任何值；合格判定：不合格。厚板可重新热处理或人工时效,新重检验力学性能和电导率。"
+        },
+        {
+          "item": "电导率",
+          "category": "7010/T76/≥22.6(39.0)",
+          "quantities": {},
+          "sample_location": null,
+          "requirement_clause": "3.7",
+          "method_clause": "4.6",
+          "method_standard": "GB/T 12966",
+          "status": "found",
+          "evidence": {
+            "page_no": 19,
+            "table_id": "T17",
+            "row": 18,
+            "col": 2,
+            "clause_id": null,
+            "quote": "≥22.6(39.0)"
+          },
+          "note": "力学性能：符合标准规定；合格判定：合格。"
+        }
+      ],
+      "classification_items": []
+    },
+    {
+      "table_id": "T24",
+      "page_no": 26,
+      "caption": "表12 室温拉伸力学性能的取样数量",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "scope=partial：以表12数据行建立11个取样数量要求项；表头及合并单元格说明未单列为检验项。",
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "室温拉伸力学性能",
+          "category": "1×××、8×××/H112",
+          "quantities": {
+            "每批所取板材张数/%": "2%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 1,
+            "col": 3,
+            "clause_id": null,
+            "quote": "2"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "1×××、8×××/除H112外的其他状态",
+          "quantities": {
+            "每批所取板材张数/%": "厚度不大于0.50mm的板材和H1X状态的板材，取样数量为0.1%，其余为1%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 2,
+            "col": 3,
+            "clause_id": null,
+            "quote": "厚度不大于0.50mm的板材和H1X状态的板材，取样数量为0.1%，其余为1%"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "3×××、4×××、5×××/5A02、5A03、5A05、5A06、5083、5086、5082、5182、5754、5454/H112",
+          "quantities": {
+            "每批所取板材张数/%": "5%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 3,
+            "col": 3,
+            "clause_id": null,
+            "quote": "5"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "3×××、4×××、5×××/5A02、5A03、5A05、5A06、5083、5086、5082、5182、5754、5454/除H112外的其他状态",
+          "quantities": {
+            "每批所取板材张数/%": "10%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 4,
+            "col": 3,
+            "clause_id": null,
+            "quote": "10"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "3×××、4×××、5×××/其他合金/H112",
+          "quantities": {
+            "每批所取板材张数/%": "2%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 5,
+            "col": 3,
+            "clause_id": null,
+            "quote": "2"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "3×××、4×××、5×××/其他合金/除H112外的其他状态",
+          "quantities": {
+            "每批所取板材张数/%": "5%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 6,
+            "col": 3,
+            "clause_id": null,
+            "quote": "5"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "2×××、6×××、7×××/7A04、7A09、7075/O、T6、T62",
+          "quantities": {
+            "每批所取板材张数/%": "10%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 7,
+            "col": 3,
+            "clause_id": null,
+            "quote": "10"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "2×××、6×××、7×××/7A04、7A09、7075/其他状态",
+          "quantities": {
+            "每批所取板材张数/%": "5%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 8,
+            "col": 3,
+            "clause_id": null,
+            "quote": "5"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "2×××、6×××、7×××/6A02、2A11、2014、2014A/T4、T6",
+          "quantities": {
+            "每批所取板材张数/%": "10%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 9,
+            "col": 3,
+            "clause_id": null,
+            "quote": "10"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "2×××、6×××、7×××/6A02、2A11、2014、2014A/其他状态",
+          "quantities": {
+            "每批所取板材张数/%": "5%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 10,
+            "col": 3,
+            "clause_id": null,
+            "quote": "5"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸力学性能",
+          "category": "2×××、6×××、7×××/其他合金/所有",
+          "quantities": {
+            "每批所取板材张数/%": "5%",
+            "试样数量/个": "2个"
+          },
+          "sample_location": null,
+          "requirement_clause": "3.5",
+          "method_clause": "4.4",
+          "method_standard": "GB/T 16865",
+          "status": "found",
+          "evidence": {
+            "page_no": 26,
+            "table_id": "T24",
+            "row": 11,
+            "col": 3,
+            "clause_id": null,
+            "quote": "5"
+          },
+          "note": null
+        }
+      ],
+      "classification_items": []
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "3.2",
+      "title": "化学成分",
+      "page_no": 16,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "chemical_composition": {
+          "raw": "4006、4007、4015、5040、5449合金的化学成分应符合表5的规定，其他牌号的产品化学成分应符合GB/T3190的规定。",
+          "value": null,
+          "text": "4006、4007、4015、5040、5449合金的化学成分应符合表5的规定，其他牌号的产品化学成分应符合GB/T3190的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 16,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.2",
+            "quote": "4006、4007、4015、5040、5449合金的化学成分应符合表5的规定，其他牌号的产品化学成分应符合GB/T3190的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 16,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.2",
+        "quote": "4006、4007、4015、5040、5449合金的化学成分应符合表5的规定，其他牌号的产品化学成分应符合GB/T3190的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "3.7",
+      "title": "电导率",
+      "page_no": 18,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "conductivity_requirement": {
+          "raw": "7075合金的T73、T76状态，7475合金的T76、T761状态及7010合金的T73、T74和T76状态的板材，其电导率应符合表7规定。",
+          "value": null,
+          "text": "7075合金的T73、T76状态，7475合金的T76、T761状态及7010合金的T73、T74和T76状态的板材，其电导率应符合表7规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 18,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.7",
+            "quote": "7075合金的T73、T76状态，7475合金的T76、T761状态及7010合金的T73、T74和T76状态的板材，其电导率应符合表7规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 18,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.7",
+        "quote": "7075合金的T73、T76状态，7475合金的T76、T761状态及7010合金的T73、T74和T76状态的板材，其电导率应符合表7规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "5.4.1",
+      "title": "出厂检验项目",
+      "page_no": 25,
+      "kind": "inspection",
+      "status": "found",
+      "fields": {
+        "routine_inspection": {
+          "raw": "每批产品出厂前均应进行化学成分、室温拉伸力学性能、尺寸偏差和外观质量的检验。",
+          "value": null,
+          "text": "每批产品出厂前均应进行化学成分、室温拉伸力学性能、尺寸偏差和外观质量的检验。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 25,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.4.1",
+            "quote": "每批产品出厂前均应进行化学成分、室温拉伸力学性能、尺寸偏差和外观质量的检验。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 25,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "5.4.1",
+        "quote": "每批产品出厂前均应进行化学成分、室温拉伸力学性能、尺寸偏差和外观质量的检验。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "5.5",
+      "title": "取样",
+      "page_no": 25,
+      "kind": "sampling",
+      "status": "found",
+      "fields": {
+        "sampling_reference": {
+          "raw": "产品取样应符合表11、表12的规定。",
+          "value": null,
+          "text": "产品取样应符合表11、表12的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 25,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.5",
+            "quote": "产品取样应符合表11、表12的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 25,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "5.5",
+        "quote": "产品取样应符合表11、表12的规定。"
+      },
+      "note": null
+    }
+  ],
+  "notes": [
+    "T13 表5 为跨页表（第16、17页），行号按合并后的 TableGrid 0 基索引。",
+    "T17 表7 与 T24 表12 均按要求行建立检验项，未把表注当作独立检验项。"
+  ]
+}

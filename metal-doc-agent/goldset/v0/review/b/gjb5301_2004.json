@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gjb5301_2004",
+  "standard_no": "GJB 5301-2004",
+  "title": "航空用高温合金环形件规范",
+  "doc_type": "gjb",
+  "material": "高温合金",
+  "product_form": "环形件",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "B-unassigned",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "B 独立标注模板：请仅依据源文填写，不得复制 A 份；完成后运行 gold verify。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T2",
+      "page_no": 5,
+      "caption": "表2 化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T5",
+      "page_no": 9,
+      "caption": "表4（续）",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T6",
+      "page_no": 10,
+      "caption": "表5",
+      "profile": "inspection",
+      "orientation": "item_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": []
+}

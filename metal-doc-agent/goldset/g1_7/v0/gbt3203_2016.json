@@ -1,0 +1,477 @@
+{
+  "doc_id": "gb-t-3203-2016-9363c97d",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "facets": {},
+      "required": true,
+      "note": "化学成分"
+    },
+    {
+      "item_canonical": "外形",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "外形"
+    },
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "尺寸"
+    },
+    {
+      "item_canonical": "末端淬透性",
+      "item_family": "hardenability",
+      "facets": {},
+      "required": true,
+      "note": "末端淬透性"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "required": true,
+      "note": "交货硬度/HBW不大于"
+    },
+    {
+      "item_canonical": "洛氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "rockwell"
+      },
+      "required": true,
+      "note": "洛氏硬度"
+    },
+    {
+      "item_canonical": "硬度",
+      "item_family": "hardness",
+      "facets": {},
+      "required": true,
+      "note": "交货硬度"
+    },
+    {
+      "item_canonical": "夏比冲击",
+      "item_family": "impact",
+      "facets": {
+        "impact_type": "夏比"
+      },
+      "required": true,
+      "note": "冲击"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "低倍"
+    },
+    {
+      "item_canonical": "塔形发纹",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "塔形发纹"
+    },
+    {
+      "item_canonical": "显微组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "显微组织"
+    },
+    {
+      "item_canonical": "晶粒度",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "晶粒度"
+    },
+    {
+      "item_canonical": "脱碳层",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "脱碳层"
+    },
+    {
+      "item_canonical": "非金属夹杂物",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "非金属夹杂物"
+    },
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "facets": {},
+      "required": true,
+      "note": "超声检测"
+    },
+    {
+      "item_canonical": "表面质量",
+      "item_family": "surface",
+      "facets": {},
+      "required": true,
+      "note": "表面质量"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "拉伸"
+    }
+  ],
+  "items_unknown_ok": [
+    "力学性能"
+  ],
+  "links": {
+    "T1": {
+      "clause_id": "5.1.1",
+      "quote": "钢材的直径及其允许偏差应符合表1的规定。"
+    },
+    "T10": {
+      "clause_id": "6.7",
+      "quote": "钢材横向酸浸试片上不应有残余缩孔、 皮下气泡、裂纹、翻皮、夹渣、白点和过烧，一般疏松、中心疏松、锭型偏析和中心偏析应符合表10的规定。"
+    },
+    "T11": {
+      "clause_id": "6.8",
+      "quote": "高级优质钢不允许发纹存在，优质钢的发纹应不超过表11的规定。"
+    },
+    "T12": {
+      "clause_id": "6.9",
+      "quote": "生产厂应对每炉钢进行非金属夹杂物检验，按GB/T10561-2005中的A法进行评级，A类、B类、C类、D类夹杂物检验结果的平均值应不超过表12规定。"
+    },
+    "T13": {
+      "clause_id": "6.12",
+      "quote": "6. 12.1 热轧(锻)圆钢表面每边总脱碳层深度应符合表13规定。"
+    },
+    "T14": {
+      "clause_id": "6.13",
+      "quote": "6. 13.1 钢材应加工良好，表面不应有裂纹、折叠、拉裂、结疤和夹杂等其他对使用有害的缺陷。"
+    },
+    "T15": {
+      "clause_id": "7",
+      "quote": "7. 1 钢材的检验项目和试验方法应符合表15的规定。"
+    },
+    "T2": {
+      "clause_id": "5.1.1",
+      "quote": "钢材的直径及其允许偏差应符合表1的规定。"
+    },
+    "T3": {
+      "clause_id": "5.1.1",
+      "quote": "钢材的直径及其允许偏差应符合表1的规定。"
+    },
+    "T4": {
+      "clause_id": "6.1",
+      "quote": "6. 1.1 钢的牌号及化学成分（熔炼分析）应符合表4的规定。"
+    },
+    "T5": {
+      "clause_id": "6.1.2",
+      "quote": "表5 钢中残余元素含量"
+    },
+    "T6": {
+      "clause_id": "6.1.2",
+      "quote": "表5 钢中残余元素含量"
+    },
+    "T7": {
+      "clause_id": "6.3",
+      "quote": "钢材的交货状态应符合表7的规定。"
+    },
+    "T8": {
+      "clause_id": "6.5",
+      "quote": "经热处理毛坯制成的试样测定钢材的纵向力学性能应符合表8的规定。"
+    },
+    "T9": {
+      "clause_id": "6.6",
+      "quote": "钢材的末端淬透性应符合表9的规定。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T10",
+    "T11",
+    "T12",
+    "T13",
+    "T14",
+    "T15",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T9"
+  ],
+  "clauses": [
+    {
+      "clause_id": "5.1.1",
+      "kind": "technical_requirement",
+      "quote": "钢材的直径及其允许偏差应符合表1的规定。 表 1 钢材的直径及其允许偏差",
+      "fields": {
+        "requirement": "钢材的直径及其允许偏差应符合表1的规定。"
+      }
+    },
+    {
+      "clause_id": "5.1.2.1",
+      "kind": "delivery",
+      "quote": "钢材的交货长度应符合表2的规定。",
+      "fields": {
+        "requirement": "钢材的交货长度应符合表2的规定。"
+      }
+    },
+    {
+      "clause_id": "5.1.2.2",
+      "kind": "scope",
+      "quote": "钢材应在规定长度范围内以齐尺长度交货，每捆中最长与最短钢材的长度差应不大于 1000 mm。",
+      "fields": {
+        "requirement": "钢材应在规定长度范围内以齐尺长度交货，每捆中最长与最短钢材的长度差应不大于 1000 mm。"
+      }
+    },
+    {
+      "clause_id": "5.2.1",
+      "kind": "technical_requirement",
+      "quote": "钢材的弯曲度和不圆度应符合表3规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.3.1",
+      "kind": "sampling",
+      "quote": "热轧(锻)圆钢端头应锯切或剪切整齐，不应有飞边、毛刺及影响使用的切斜和压扁。圆钢一般不允许气割。在个别情况下（主要指取样时）允许每批中不多于6支钢材的一端用气割。经供需双方协商，并在合同中注明，可一端或两端倒角交货。",
+      "fields": {
+        "sample_location": "热轧(锻)圆钢端头应锯切或剪切整齐，不应有飞边、毛刺及影响使用的切斜和压扁"
+      }
+    },
+    {
+      "clause_id": "6.1",
+      "kind": "other",
+      "quote": "6. 1.1 钢的牌号及化学成分（熔炼分析）应符合表4的规定。除非得到用户同意，生产厂不应有意加入钙及其合金脱氧或控制非金属夹杂物形态。 表4 钢的牌号及化学成分",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.1.1",
+      "kind": "technical_requirement",
+      "quote": "表4 钢的牌号及化学成分 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.1.2",
+      "kind": "technical_requirement",
+      "quote": "表5 钢中残余元素含量",
+      "fields": {
+        "requirement": "钢中残余元素含量应符合表5的规定。"
+      }
+    },
+    {
+      "clause_id": "6.1.3",
+      "kind": "technical_requirement",
+      "quote": "钢材(或坯)的氧含量应不大于 0.0015% ，但电流重熔钢的氧含量可不大于 0.0020% 。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.1.4",
+      "kind": "technical_requirement",
+      "quote": "表 6 成品化学成分允许偏差 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.2",
+      "kind": "test_method",
+      "quote": "钢应采用真空脱气或电流重熔冶炼。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.3",
+      "kind": "delivery",
+      "quote": "钢材的交货状态应符合表7的规定。经供需双方协商，并在合同上注明，也可以其他状态交货。 表7 钢材的交货状态",
+      "fields": {
+        "requirement": "钢材的交货状态应符合表7的规定。"
+      }
+    },
+    {
+      "clause_id": "6.4",
+      "kind": "delivery",
+      "quote": "钢材的交货硬度应符合表7的规定。其他交货状态钢材的硬度由供需双方协商，并在合同中注明。",
+      "fields": {
+        "requirement": "钢材的交货硬度应符合表7的规定。"
+      }
+    },
+    {
+      "clause_id": "6.5",
+      "kind": "technical_requirement",
+      "quote": "根据用户要求，钢材可进行力学性能检测。经热处理毛坯制成的试样测定钢材的纵向力学性能应符合表8的规定。 表 8 钢材的纵向力学性能",
+      "fields": {
+        "requirement": "经热处理毛坯制成的试样测定钢材的纵向力学性能应符合表8的规定。"
+      }
+    },
+    {
+      "clause_id": "6.6",
+      "kind": "technical_requirement",
+      "quote": "钢材的末端淬透性应符合表9的规定。 表 9 钢材的末端淬透性",
+      "fields": {
+        "requirement": "钢材的末端淬透性应符合表9的规定。"
+      }
+    },
+    {
+      "clause_id": "6.7",
+      "kind": "other",
+      "quote": "6. 7.1 公称直径不大于 150mm 的钢材应进行酸浸低倍检验。钢材横向酸浸试片上不应有残余缩孔、 皮下气泡、裂纹、翻皮、夹渣、白点和过烧，一般疏松、中心疏松、锭型偏析和中心偏析应符合表10的规定。 表 10 低倍缺陷合格级别",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.7.1",
+      "kind": "inspection",
+      "quote": "皮下气泡、裂纹、翻皮、夹渣、白点和过烧，一般疏松、中心疏松、锭型偏析和中心偏析应符合表10的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.8",
+      "kind": "other",
+      "quote": "公称直径为 16mmsim 150mm 的钢材应进行塔形发纹酸浸试样检验。高级优质钢不允许发纹存在，优质钢的发纹应不超过表11的规定。 表11 塔形发纹合格级别",
+      "fields": {
+        "requirement": "高级优质钢不允许发纹存在，优质钢的发纹应不超过表11的规定。",
+        "judgment": "表11 塔形发纹合格级别 ## Table"
+      }
+    },
+    {
+      "clause_id": "6.9",
+      "kind": "other",
+      "quote": "钢材应具有高的纯洁度，即非金属夹杂物含量应尽量少。生产厂应对每炉钢进行非金属夹杂物检验，按GB/T10561-2005中的A法进行评级，A类、B类、C类、D类夹杂物检验结果的平均值应不超过表12规定。DS类夹杂物检验结果的最大值不应超过表12规定。 表12 非金属夹杂物合格级别",
+      "fields": {
+        "requirement": "生产厂应对每炉钢进行非金属夹杂物检验，按GB/T10561-2005中的A法进行评级，A类、B类、C类、D类夹杂物检验结果的平均值应不超过表12规定。",
+        "method_standard": "GB/T10561-2005",
+        "judgment": "表12 非金属夹杂物合格级别 ## Table"
+      }
+    },
+    {
+      "clause_id": "6.11",
+      "kind": "other",
+      "quote": "根据需方要求，可进行带状组织检测，其取样部位、检测方法和评级标准由供双方协商确定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.12",
+      "kind": "other",
+      "quote": "6. 12.1 热轧(锻)圆钢表面每边总脱碳层深度应符合表13规定。 表13 脱碳层允许深度 单位为毫米",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.12.1",
+      "kind": "technical_requirement",
+      "quote": "表13 脱碳层允许深度 单位为毫米 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.12.2",
+      "kind": "technical_requirement",
+      "quote": "冷拉圆钢表面每边总脱碳层深度应不超过公称直径的 0.8% 。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.12.3",
+      "kind": "other",
+      "quote": "银亮圆钢表面不允许有脱碳层。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.13",
+      "kind": "other",
+      "quote": "6. 13.1 钢材应加工良好，表面不应有裂纹、折叠、拉裂、结疤和夹杂等其他对使用有害的缺陷。冷拉圆钢表面应洁净、无锈蚀。如有上述缺陷，供方应清除，清除深度应符合表14的规定。 表14 表面有害缺陷清除深度的要求 单位为毫米",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.13.1",
+      "kind": "technical_requirement",
+      "quote": "表14 表面有害缺陷清除深度的要求 单位为毫米 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "7",
+      "kind": "other",
+      "quote": "7. 1 钢材的检验项目和试验方法应符合表15的规定。 7.2 化学成分分析方法(除外)按 GB/T 223.5. GB/T 223.9. GB/T 223.11. GB/T 223.19. GB/T 223.23. GB/T 223.26. GB/T 223.59. GB/T 223.60. GB/T 223.63. GB/T 223.68. GB/T 223.69. GB/T 223.77. ",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1",
+      "kind": "test_method",
+      "quote": "钢材的检验项目和试验方法应符合表15的规定。",
+      "fields": {
+        "requirement": "钢材的检验项目和试验方法应符合表15的规定。"
+      }
+    },
+    {
+      "clause_id": "7.3",
+      "kind": "test_method",
+      "quote": "塔形试样尺寸为：第一阶梯直径为 D-6 mm，第二阶梯直径为 Dtimes 2/3 ，第三阶梯直径为 Dtimes 1/2 其中D为钢材公称直径，每阶长度为 50mm 。试验方法按GB/T15711的规定进行。",
+      "fields": {
+        "method_standard": "GB/T15711"
+      }
+    },
+    {
+      "clause_id": "7.4",
+      "kind": "sampling",
+      "quote": "非金属夹杂物取样部位：连铸钢从任意不同支钢材上切取试样，共6个试料；模铸或电渣重熔钢从任意3支钢锭所成的钢材中对应头、尾上切取，共6个试料；按GB/T10561-2005中的A法进行评级。7.5 晶粒度检验方法按GB/T6394-2002的规定进行，采用渗碳法检测，也可以用模拟渗碳法，但仲裁时用渗碳法。",
+      "fields": {
+        "sample_quantity": "表15 钢材的检验项目、取样数量、取样部位和试验方法 ## Table",
+        "sample_location": "表15 钢材的检验项目、取样数量、取样部位和试验方法 ## Table"
+      }
+    },
+    {
+      "clause_id": "8.2",
+      "kind": "technical_requirement",
+      "quote": "但供方应按电流炉号提供化学成分，并在钢材上注明渣电炉号。",
+      "fields": {}
+    },
+    {
+      "clause_id": "8.3",
+      "kind": "inspection",
+      "quote": "每批钢材的取样数量和取样部位应符合表15的规定。",
+      "fields": {
+        "requirement": "每批钢材的取样数量和取样部位应符合表15的规定。",
+        "sample_quantity": "每批钢材的取样数量和取样部位应符合表15的规定。"
+      }
+    },
+    {
+      "clause_id": "8.4.1",
+      "kind": "inspection",
+      "quote": "若检验项目中有任一检验项目不合格时（白点、非金属夹杂物除外），可重新取样对不合格项目进行复验，取样数量与初验相同（氧含量除外），复验合格则该批钢材判为合格；若复验结果仍不合格，则该批钢材应判为不合格。",
+      "fields": {
+        "sample_quantity": "若检验项目中有任一检验项目不合格时（白点、非金属夹杂物除外），可重新取样对不合格项目进行复验，取样数量与初验相同（氧含量除外），复验合格则该批钢材判为合格；"
+      }
+    },
+    {
+      "clause_id": "8.4.2",
+      "kind": "other",
+      "quote": "若氧含量不合格时，可在钢材上任意取三个试样进行复验，其检验结果的平均值应不大于标准的规定值，其中允许有一个试样超过标准规定值，但不应超过标准值加 0.0003% 。",
+      "fields": {
+        "requirement": "若氧含量不合格时，可在钢材上任意取三个试样进行复验，其检验结果的平均值应不大于标准的规定值，其中允许有一个试样超过标准规定值，但不应超过标准值加 0.0003% 。"
+      }
+    },
+    {
+      "clause_id": "8.4.3",
+      "kind": "inspection",
+      "quote": "若初验不合格的试样超过检验试样的一半时，说明该批钢质量较差，则不允许复验，以确保交货钢材的质量。但允许供方重新处理后作为新的一批检查和验收。",
+      "fields": {}
+    },
+    {
+      "clause_id": "9",
+      "kind": "packaging",
+      "quote": "一修改了非金属夹杂物检验标准、取样方法和取样数量，并增加了氮化钛评级要求(见表6.9，1982年版2.7)；",
+      "fields": {}
+    },
+    {
+      "clause_id": "9.1",
+      "kind": "packaging",
+      "quote": "钢材包装、标志和质量证明书应符合 GB/T 2101的相关规定。",
+      "fields": {}
+    }
+  ]
+}

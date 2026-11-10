@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# Local data and outputs
+runs/
+logs/
+/data/
+apps/api/data/
+metal-doc-agent/data/jobs/
+metal-doc-agent/data/uploads/
+metal-doc-agent/data/m2/
+metal-doc-agent/data/queues/
+metal-doc-agent/data/batches/
+metal-doc-agent/runs/
+metal-doc-agent/eval/
+metal-doc-agent/logs/
+e2e/.tmp/
+**/secret.key
+**/platform.db
+deploy/*.log
+
+# Large test corpora (not shipped; upload your own PDFs at runtime)
+汉唐标准/
+标准文件/
+extracted_json/
+
+# Frontend/package caches and generated artifacts
+.pnpm-store/
+.trae-html-share-packages/
+.screenshots/
+**/__pycache__/
+{{.Destination}}{{println}}{{end}}
+
+# Secrets
+.env
+.env.*
+**/business_dictionary.local.json

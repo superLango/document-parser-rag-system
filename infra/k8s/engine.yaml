@@ -1,0 +1,310 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: engine-api
+  namespace: metal-agent
+  labels:
+    app: engine-api
+    plane: engine
+    pool: prod
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: engine-api
+  template:
+    metadata:
+      labels:
+        app: engine-api
+        plane: engine
+        pool: prod
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8010"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: engine-api
+          image: ghcr.io/hanson/metal-agent-engine:0.1.0
+          imagePullPolicy: IfNotPresent
+          command:
+            ["uvicorn", "metal_doc_agent.api:app", "--host", "0.0.0.0", "--port", "8010"]
+          ports:
+            - name: http
+              containerPort: 8010
+          envFrom:
+            - configMapRef:
+                name: engine-config
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          volumeMounts:
+            - name: engine-data
+              mountPath: /data/engine
+            - name: platform-data
+              mountPath: /data/platform
+              readOnly: true
+      volumes:
+        - name: engine-data
+          persistentVolumeClaim:
+            claimName: engine-data
+        - name: platform-data
+          persistentVolumeClaim:
+            claimName: platform-data
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: engine-api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: engine-api
+  namespace: metal-agent
+  labels:
+    app: engine-api
+spec:
+  type: ClusterIP
+  selector:
+    app: engine-api
+  ports:
+    - name: http
+      port: 8010
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-prod
+  namespace: metal-agent
+  labels:
+    app: worker-prod
+    plane: engine
+    pool: prod
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: worker-prod
+  template:
+    metadata:
+      labels:
+        app: worker-prod
+        plane: engine
+        pool: prod
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: worker
+          image: ghcr.io/hanson/metal-agent-engine:0.1.0
+          command:
+            ["python", "-m", "metal_doc_agent.worker", "--watch", "--limit", "4"]
+          envFrom:
+            - configMapRef:
+                name: engine-config
+          env:
+            - name: WORKER_POOL
+              value: production
+            - name: METAL_DOC_ORCHESTRATE
+              value: "1"
+          readinessProbe:
+            exec:
+              command: ["python", "-c", "import metal_doc_agent"]
+            initialDelaySeconds: 3
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          volumeMounts:
+            - name: engine-data
+              mountPath: /data/engine
+            - name: platform-data
+              mountPath: /data/platform
+              readOnly: true
+      volumes:
+        - name: engine-data
+          persistentVolumeClaim:
+            claimName: engine-data
+        - name: platform-data
+          persistentVolumeClaim:
+            claimName: platform-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-explore
+  namespace: metal-agent
+  labels:
+    app: worker-explore
+    plane: engine
+    pool: explore
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: worker-explore
+  template:
+    metadata:
+      labels:
+        app: worker-explore
+        plane: engine
+        pool: explore
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: worker
+          image: ghcr.io/hanson/metal-agent-engine:0.1.0
+          command:
+            ["python", "-m", "metal_doc_agent.worker", "--watch", "--limit", "4"]
+          envFrom:
+            - configMapRef:
+                name: engine-config
+          env:
+            - name: WORKER_POOL
+              value: explore
+            - name: METAL_DOC_ORCHESTRATE
+              value: "0"
+          livenessProbe:
+            exec:
+              command: ["python", "-c", "import metal_doc_agent"]
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          volumeMounts:
+            - name: engine-data
+              mountPath: /data/engine
+            - name: platform-data
+              mountPath: /data/platform
+              readOnly: true
+      volumes:
+        - name: engine-data
+          persistentVolumeClaim:
+            claimName: engine-data
+        - name: platform-data
+          persistentVolumeClaim:
+            claimName: platform-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-human
+  namespace: metal-agent
+  labels:
+    app: worker-human
+    plane: engine
+    pool: human
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: worker-human
+  template:
+    metadata:
+      labels:
+        app: worker-human
+        plane: engine
+        pool: human
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: worker
+          image: ghcr.io/hanson/metal-agent-engine:0.1.0
+          command:
+            ["python", "-m", "metal_doc_agent.worker", "--watch", "--limit", "2"]
+          envFrom:
+            - configMapRef:
+                name: engine-config
+          env:
+            - name: WORKER_POOL
+              value: human
+            - name: METAL_DOC_ORCHESTRATE
+              value: "1"
+          livenessProbe:
+            exec:
+              command: ["python", "-c", "import metal_doc_agent"]
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          volumeMounts:
+            - name: engine-data
+              mountPath: /data/engine
+            - name: platform-data
+              mountPath: /data/platform
+              readOnly: true
+      volumes:
+        - name: engine-data
+          persistentVolumeClaim:
+            claimName: engine-data
+        - name: platform-data
+          persistentVolumeClaim:
+            claimName: platform-data

@@ -1,0 +1,4067 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gjb2294a_2014",
+  "standard_no": "GJB 2294A-2014",
+  "title": "航空用不锈钢及耐热钢棒规范",
+  "doc_type": "gjb",
+  "material": "不锈钢/耐热钢",
+  "product_form": "棒材",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "agent-B-dryrun",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "AI dry-run B：由 runs/m1_qwen_s8 生成，仅覆盖 chemical/mechanical 记录；inspection/classification/clause 不在本次范围；不得作为 verified 依据。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 5,
+      "caption": "表1 牌号及化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [
+        {
+          "record_id": "rec-73458ac24b",
+          "grade": "06Cr18Ni9a",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.07",
+              "value": 0.07,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.07"
+              }
+            },
+            "Si": {
+              "raw": "≤0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.80"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "17.00~19.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 19.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 9,
+                "clause_id": null,
+                "quote": "17.00~19.00"
+              }
+            },
+            "Ni": {
+              "raw": "8.00~11.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 8.0,
+              "upper": 11.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 10,
+                "clause_id": null,
+                "quote": "8.00~11.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-acdefa254f",
+          "grade": "12Cr18Ni9a",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.12",
+              "value": 0.12,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.12"
+              }
+            },
+            "Si": {
+              "raw": "≤0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.80"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "17.00~19.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 19.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 9,
+                "clause_id": null,
+                "quote": "17.00~19.00"
+              }
+            },
+            "Ni": {
+              "raw": "8.00~10.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 8.0,
+              "upper": 10.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 10,
+                "clause_id": null,
+                "quote": "8.00~10.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-b126be97ff",
+          "grade": "17Cr18Ni9a",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.13~0.21",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.13,
+              "upper": 0.21,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.13~0.21"
+              }
+            },
+            "Si": {
+              "raw": "≤0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.80"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "17.00~19.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 19.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "17.00~19.00"
+              }
+            },
+            "Ni": {
+              "raw": "8.00~10.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 8.0,
+              "upper": 10.5,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "8.00~10.50"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-dbefca65c7",
+          "grade": "-",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.12",
+              "value": 0.12,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.12"
+              }
+            },
+            "Si": {
+              "raw": "≤0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.80"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "17.00~19.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 19.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 9,
+                "clause_id": null,
+                "quote": "17.00~19.00"
+              }
+            },
+            "Ni": {
+              "raw": "8.00~11.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 8.0,
+              "upper": 11.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 10,
+                "clause_id": null,
+                "quote": "8.00~11.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 5,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-2e2b065753",
+          "grade": "06Cr18Ni10Ti",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.08",
+              "value": 0.08,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.08"
+              }
+            },
+            "Si": {
+              "raw": "≤1.00",
+              "value": 1.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤1.00"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "17.00~19.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 19.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 9,
+                "clause_id": null,
+                "quote": "17.00~19.00"
+              }
+            },
+            "Ni": {
+              "raw": "9.00~12.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 9.0,
+              "upper": 12.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 10,
+                "clause_id": null,
+                "quote": "9.00~12.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 6,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-20f2145faf",
+          "grade": "022Cr19Ni10",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.030"
+              }
+            },
+            "Si": {
+              "raw": "≤1.00",
+              "value": 1.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤1.00"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "18.00~20.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 18.0,
+              "upper": 20.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 9,
+                "clause_id": null,
+                "quote": "18.00~20.00"
+              }
+            },
+            "Ni": {
+              "raw": "8.00~12.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 8.0,
+              "upper": 12.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 10,
+                "clause_id": null,
+                "quote": "8.00~12.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 7,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-91548c76ef",
+          "grade": "06Cr18Ni11Nb",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.08",
+              "value": 0.08,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.08"
+              }
+            },
+            "Si": {
+              "raw": "≤1.00",
+              "value": 1.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤1.00"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "17.00~19.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 19.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 9,
+                "clause_id": null,
+                "quote": "17.00~19.00"
+              }
+            },
+            "Ni": {
+              "raw": "9.00~13.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 9.0,
+              "upper": 13.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 10,
+                "clause_id": null,
+                "quote": "9.00~13.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 8,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-b4b61b9f5a",
+          "grade": "14Cr23Ni18",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.18",
+              "value": 0.18,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.18"
+              }
+            },
+            "Si": {
+              "raw": "≤1.00",
+              "value": 1.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤1.00"
+              }
+            },
+            "Mn": {
+              "raw": "≤2.00",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "22.00~25.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 22.0,
+              "upper": 25.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 9,
+                "clause_id": null,
+                "quote": "22.00~25.00"
+              }
+            },
+            "Ni": {
+              "raw": "17.00~20.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 20.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 10,
+                "clause_id": null,
+                "quote": "17.00~20.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 9,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-8e412fbcde",
+          "grade": "24Cr18Ni8W2",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.21~0.28",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.21,
+              "upper": 0.28,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.21~0.28"
+              }
+            },
+            "Si": {
+              "raw": "0.30~0.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.3,
+              "upper": 0.8,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.30~0.80"
+              }
+            },
+            "Mn": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "P": {
+              "raw": "≤0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.030"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "17.00~19.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 19.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 9,
+                "clause_id": null,
+                "quote": "17.00~19.00"
+              }
+            },
+            "Ni": {
+              "raw": "7.50~8.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 7.5,
+              "upper": 8.5,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 10,
+                "clause_id": null,
+                "quote": "7.50~8.50"
+              }
+            },
+            "W": {
+              "raw": "2.00~2.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 2.0,
+              "upper": 2.5,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 11,
+                "clause_id": null,
+                "quote": "2.00~2.50"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 10,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-8c7d12bfb6",
+          "grade": "20Cr13Mn9Ni4",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.15~0.30",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.15,
+              "upper": 0.3,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.15~0.30"
+              }
+            },
+            "Si": {
+              "raw": "≤0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.80"
+              }
+            },
+            "Mn": {
+              "raw": "8.00~10.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 8.0,
+              "upper": 10.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 6,
+                "clause_id": null,
+                "quote": "8.00~10.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.040",
+              "value": 0.04,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.040"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "12.00~14.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 12.0,
+              "upper": 14.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 9,
+                "clause_id": null,
+                "quote": "12.00~14.00"
+              }
+            },
+            "Ni": {
+              "raw": "3.70~5.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 3.7,
+              "upper": 5.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 10,
+                "clause_id": null,
+                "quote": "3.70~5.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 11,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-bd41785fa9",
+          "grade": "45Cr14Ni14W2Mo",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.40~0.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.4,
+              "upper": 0.5,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.40~0.50"
+              }
+            },
+            "Si": {
+              "raw": "≤0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.80"
+              }
+            },
+            "Mn": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "P": {
+              "raw": "≤0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.030"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "13.00~15.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 13.0,
+              "upper": 15.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 9,
+                "clause_id": null,
+                "quote": "13.00~15.00"
+              }
+            },
+            "Ni": {
+              "raw": "13.00~15.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 13.0,
+              "upper": 15.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 10,
+                "clause_id": null,
+                "quote": "13.00~15.00"
+              }
+            },
+            "W": {
+              "raw": "2.00~2.75",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 2.0,
+              "upper": 2.75,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 11,
+                "clause_id": null,
+                "quote": "2.00~2.75"
+              }
+            },
+            "Mo": {
+              "raw": "0.25~0.40",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.25,
+              "upper": 0.4,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.25~0.40"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 12,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-d0e3fd3309",
+          "grade": "12Cr18Mn8Ni5N",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            },
+            "Si": {
+              "raw": "≤1.00",
+              "value": 1.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤1.00"
+              }
+            },
+            "Mn": {
+              "raw": "7.50~10.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 7.5,
+              "upper": 10.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 6,
+                "clause_id": null,
+                "quote": "7.50~10.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.040",
+              "value": 0.04,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.040"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "17.00~19.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 17.0,
+              "upper": 19.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 9,
+                "clause_id": null,
+                "quote": "17.00~19.00"
+              }
+            },
+            "Ni": {
+              "raw": "4.00~6.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 4.0,
+              "upper": 6.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 10,
+                "clause_id": null,
+                "quote": "4.00~6.00"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 13,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-d50e3e3ce0",
+          "grade": "12Cr17Mn9Ni4N",
+          "grade_level": null,
+          "condition": "奥氏体型",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.12",
+              "value": 0.12,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.12"
+              }
+            },
+            "Si": {
+              "raw": "≤0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.80"
+              }
+            },
+            "Mn": {
+              "raw": "8.00~10.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 8.0,
+              "upper": 10.5,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 6,
+                "clause_id": null,
+                "quote": "8.00~10.50"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 8,
+                "clause_id": null,
+                "quote": "≤0.015"
+              }
+            },
+            "Cr": {
+              "raw": "16.00~18.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 16.0,
+              "upper": 18.0,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 9,
+                "clause_id": null,
+                "quote": "16.00~18.00"
+              }
+            },
+            "Ni": {
+              "raw": "3.50~4.50",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 3.5,
+              "upper": 4.5,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 10,
+                "clause_id": null,
+                "quote": "3.50~4.50"
+              }
+            },
+            "W": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "奥氏体型",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 14,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T5",
+      "page_no": 9,
+      "caption": "表3 力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [
+        {
+          "record_id": "rec-5dea108aee",
+          "grade": "06Cr18Ni9",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "520",
+              "value": 520.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 3,
+                "col": 10,
+                "clause_id": null,
+                "quote": "520"
+              }
+            },
+            "Rp0.2": {
+              "raw": "205",
+              "value": 205.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 3,
+                "col": 11,
+                "clause_id": null,
+                "quote": "205"
+              }
+            },
+            "A": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 3,
+                "col": 12,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "Z": {
+              "raw": "60",
+              "value": 60.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 3,
+                "col": 13,
+                "clause_id": null,
+                "quote": "60"
+              }
+            },
+            "KV2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 3,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 3,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-727ab2138a",
+          "grade": "12Cr18Ni9",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "520",
+              "value": 520.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "520"
+              }
+            },
+            "Rp0.2": {
+              "raw": "205",
+              "value": 205.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 4,
+                "col": 11,
+                "clause_id": null,
+                "quote": "205"
+              }
+            },
+            "A": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 4,
+                "col": 12,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "Z": {
+              "raw": "60",
+              "value": 60.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 4,
+                "col": 13,
+                "clause_id": null,
+                "quote": "60"
+              }
+            },
+            "KV2": {
+              "raw": "98",
+              "value": 98.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 4,
+                "col": 14,
+                "clause_id": null,
+                "quote": "98"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 4,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-805f4805bd",
+          "grade": "17Cr18Ni9",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1100~1150°C / 水冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "590",
+              "value": 590.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 5,
+                "col": 10,
+                "clause_id": null,
+                "quote": "590"
+              }
+            },
+            "Rp0.2": {
+              "raw": "215",
+              "value": 215.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 5,
+                "col": 11,
+                "clause_id": null,
+                "quote": "215"
+              }
+            },
+            "A": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 5,
+                "col": 12,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "Z": {
+              "raw": "55",
+              "value": 55.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 5,
+                "col": 13,
+                "clause_id": null,
+                "quote": "55"
+              }
+            },
+            "KV2": {
+              "raw": "98",
+              "value": 98.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 5,
+                "col": 14,
+                "clause_id": null,
+                "quote": "98"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 5,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-221b223055",
+          "grade": "-",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "540",
+              "value": 540.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 6,
+                "col": 10,
+                "clause_id": null,
+                "quote": "540"
+              }
+            },
+            "Rp0.2": {
+              "raw": "196",
+              "value": 196.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 6,
+                "col": 11,
+                "clause_id": null,
+                "quote": "196"
+              }
+            },
+            "A": {
+              "raw": "45",
+              "value": 45.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 6,
+                "col": 12,
+                "clause_id": null,
+                "quote": "45"
+              }
+            },
+            "Z": {
+              "raw": "55",
+              "value": 55.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 6,
+                "col": 13,
+                "clause_id": null,
+                "quote": "55"
+              }
+            },
+            "KV2": {
+              "raw": "98",
+              "value": 98.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 6,
+                "col": 14,
+                "clause_id": null,
+                "quote": "98"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 6,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-a3d839441d",
+          "grade": "06Cr18Ni10Ti",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "520",
+              "value": 520.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 7,
+                "col": 10,
+                "clause_id": null,
+                "quote": "520"
+              }
+            },
+            "Rp0.2": {
+              "raw": "205",
+              "value": 205.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 7,
+                "col": 11,
+                "clause_id": null,
+                "quote": "205"
+              }
+            },
+            "A": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 7,
+                "col": 12,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "Z": {
+              "raw": "50",
+              "value": 50.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 7,
+                "col": 13,
+                "clause_id": null,
+                "quote": "50"
+              }
+            },
+            "KV2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 7,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 7,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-e8f11d2f9b",
+          "grade": "022Cr19Ni10",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "480",
+              "value": 480.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 8,
+                "col": 10,
+                "clause_id": null,
+                "quote": "480"
+              }
+            },
+            "Rp0.2": {
+              "raw": "177",
+              "value": 177.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 8,
+                "col": 11,
+                "clause_id": null,
+                "quote": "177"
+              }
+            },
+            "A": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 8,
+                "col": 12,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "Z": {
+              "raw": "60",
+              "value": 60.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 8,
+                "col": 13,
+                "clause_id": null,
+                "quote": "60"
+              }
+            },
+            "KV2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 8,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 8,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-420d73418a",
+          "grade": "06Cr18Ni11Nb",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1050~1150°C / 水冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "520",
+              "value": 520.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 9,
+                "col": 10,
+                "clause_id": null,
+                "quote": "520"
+              }
+            },
+            "Rp0.2": {
+              "raw": "205",
+              "value": 205.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 9,
+                "col": 11,
+                "clause_id": null,
+                "quote": "205"
+              }
+            },
+            "A": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 9,
+                "col": 12,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "Z": {
+              "raw": "50",
+              "value": 50.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 9,
+                "col": 13,
+                "clause_id": null,
+                "quote": "50"
+              }
+            },
+            "KV2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 9,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1150°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 9,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-8df0fc1478",
+          "grade": "14Cr23Ni18",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1100~1150°C / 水或空气",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "570",
+              "value": 570.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水或空气",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 10,
+                "col": 10,
+                "clause_id": null,
+                "quote": "570"
+              }
+            },
+            "Rp0.2": {
+              "raw": "245",
+              "value": 245.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水或空气",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 10,
+                "col": 11,
+                "clause_id": null,
+                "quote": "245"
+              }
+            },
+            "A": {
+              "raw": "35",
+              "value": 35.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水或空气",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 10,
+                "col": 12,
+                "clause_id": null,
+                "quote": "35"
+              }
+            },
+            "Z": {
+              "raw": "50",
+              "value": 50.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水或空气",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 10,
+                "col": 13,
+                "clause_id": null,
+                "quote": "50"
+              }
+            },
+            "KV2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水或空气",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 10,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1100~1150°C / 水或空气",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 10,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-bb1a1eb3b7",
+          "grade": "24Cr18Ni8W2",
+          "grade_level": null,
+          "condition": "交货状态",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "785",
+              "value": 785.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "交货状态",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 11,
+                "col": 10,
+                "clause_id": null,
+                "quote": "785"
+              }
+            },
+            "Rp0.2": {
+              "raw": "390",
+              "value": 390.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "交货状态",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 11,
+                "col": 11,
+                "clause_id": null,
+                "quote": "390"
+              }
+            },
+            "A": {
+              "raw": "20",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "交货状态",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 11,
+                "col": 12,
+                "clause_id": null,
+                "quote": "20"
+              }
+            },
+            "Z": {
+              "raw": "35",
+              "value": 35.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "交货状态",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 11,
+                "col": 13,
+                "clause_id": null,
+                "quote": "35"
+              }
+            },
+            "KV2": {
+              "raw": "47",
+              "value": 47.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "交货状态",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 11,
+                "col": 14,
+                "clause_id": null,
+                "quote": "47"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "交货状态",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 11,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-74779fd6d5",
+          "grade": "20Cr13Mn9Ni4",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1050~1120°C",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "635",
+              "value": 635.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 12,
+                "col": 10,
+                "clause_id": null,
+                "quote": "635"
+              }
+            },
+            "Rp0.2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 12,
+                "col": 11,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "A": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 12,
+                "col": 12,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Z": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 12,
+                "col": 13,
+                "clause_id": null,
+                "quote": "40"
+              }
+            },
+            "KV2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 12,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 12,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-e951f19428",
+          "grade": "45Cr14Ni14W2Mo",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 820℃退火",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "705",
+              "value": 705.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 820℃退火",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 13,
+                "col": 10,
+                "clause_id": null,
+                "quote": "705"
+              }
+            },
+            "Rp0.2": {
+              "raw": "315",
+              "value": 315.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 820℃退火",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 13,
+                "col": 11,
+                "clause_id": null,
+                "quote": "315"
+              }
+            },
+            "A": {
+              "raw": "20",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 820℃退火",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 13,
+                "col": 12,
+                "clause_id": null,
+                "quote": "20"
+              }
+            },
+            "Z": {
+              "raw": "35",
+              "value": 35.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 820℃退火",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 13,
+                "col": 13,
+                "clause_id": null,
+                "quote": "35"
+              }
+            },
+            "KV2": {
+              "raw": "39",
+              "value": 39.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 820℃退火",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 13,
+                "col": 14,
+                "clause_id": null,
+                "quote": "39"
+              }
+            },
+            "HB": {
+              "raw": "197~285",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "range",
+              "lower": 197.0,
+              "upper": 285.0,
+              "condition": "试样毛坯25 / 820℃退火",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 13,
+                "col": 15,
+                "clause_id": null,
+                "quote": "197~285"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-41cfa48437",
+          "grade": "12Cr18Mn8Ni5N",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1010~1120°C",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "635",
+              "value": 635.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 14,
+                "col": 10,
+                "clause_id": null,
+                "quote": "635"
+              }
+            },
+            "Rp0.2": {
+              "raw": "295",
+              "value": 295.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 14,
+                "col": 11,
+                "clause_id": null,
+                "quote": "295"
+              }
+            },
+            "A": {
+              "raw": "45",
+              "value": 45.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 14,
+                "col": 12,
+                "clause_id": null,
+                "quote": "45"
+              }
+            },
+            "Z": {
+              "raw": "60",
+              "value": 60.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 14,
+                "col": 13,
+                "clause_id": null,
+                "quote": "60"
+              }
+            },
+            "KV2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 14,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1010~1120°C",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 14,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-acbe750c81",
+          "grade": "12Cr17Mn9Ni4N",
+          "grade_level": null,
+          "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "690",
+              "value": 690.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 15,
+                "col": 10,
+                "clause_id": null,
+                "quote": "690"
+              }
+            },
+            "Rp0.2": {
+              "raw": "345",
+              "value": 345.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 15,
+                "col": 11,
+                "clause_id": null,
+                "quote": "345"
+              }
+            },
+            "A": {
+              "raw": "45",
+              "value": 45.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 15,
+                "col": 12,
+                "clause_id": null,
+                "quote": "45"
+              }
+            },
+            "Z": {
+              "raw": "55",
+              "value": 55.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 15,
+                "col": 13,
+                "clause_id": null,
+                "quote": "55"
+              }
+            },
+            "KV2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 15,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "HB": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "试样毛坯25 / 固溶:1050~1100°C / 水冷",
+              "evidence": {
+                "page_no": 9,
+                "table_id": "T5",
+                "row": 15,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T15",
+      "page_no": 15,
+      "caption": "表11 检验项目、取样部位、取样数量及要求",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": [
+    "AI dry-run B"
+  ]
+}

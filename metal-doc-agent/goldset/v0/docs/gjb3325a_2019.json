@@ -1,0 +1,1357 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gjb3325a_2019",
+  "standard_no": "GJB 3325A-2019",
+  "title": "航天固体火箭发动机用超高强度钢锻件规范",
+  "doc_type": "gjb",
+  "material": "超高强度钢",
+  "product_form": "锻件",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft-s7",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "M1-S7 draft：T1/T4/T8 为草稿标注，T2/T3/T5/T6/T7/T9/T10 未标注。",
+      "T1 中 31Si2MnCrMoVE 的 Cr、Mo、V 单元格源文为空，未标注。",
+      "T4 冲击吸收能量表头为 KU1（U 型缺口），按规范字段 KV2 记录；断裂韧度 KIC 为表内字段。",
+      "T8 仅标注第 1~8 项（第 5 页），第 9~12 项（第 6 页续表）待补。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 3,
+      "caption": "表1 牌号及化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "M1-S7 draft：已标注 3 个牌号数据行及有值元素列；31Si2MnCrMoVE 的 Cr/Mo/V 单元格源文为空未标注；表2/表3 未标。",
+      "records": [
+        {
+          "record_id": "gjb3325a-T1-30Si2MnCrMoVE",
+          "grade": "30Si2MnCrMoVE",
+          "grade_level": null,
+          "condition": "熔炼分析",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.27~0.32",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.27,
+              "upper": 0.32,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.27~0.32"
+              }
+            },
+            "Mn": {
+              "raw": "0.70~1.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.7,
+              "upper": 1.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.70~1.00"
+              }
+            },
+            "Si": {
+              "raw": "1.40~1.70",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.4,
+              "upper": 1.7,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "1.40~1.70"
+              }
+            },
+            "S": {
+              "raw": "≤0.008",
+              "value": 0.008,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.008"
+              }
+            },
+            "P": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "Ni": {
+              "raw": "0.25a",
+              "value": null,
+              "text": "按计算量加入,报实测值,不作判定依据",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.25a"
+              }
+            },
+            "Cr": {
+              "raw": "1.00~1.30",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.0,
+              "upper": 1.3,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "1.00~1.30"
+              }
+            },
+            "Mo": {
+              "raw": "0.40~0.55",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.4,
+              "upper": 0.55,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.40~0.55"
+              }
+            },
+            "V": {
+              "raw": "0.08~0.15",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.08,
+              "upper": 0.15,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.08~0.15"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.25",
+              "value": 0.25,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 10,
+                "clause_id": null,
+                "quote": "≤0.25"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gjb3325a-T1-31Si2MnCrMoVE",
+          "grade": "31Si2MnCrMoVE",
+          "grade_level": null,
+          "condition": "熔炼分析",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.28~0.33",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.28,
+              "upper": 0.33,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.28~0.33"
+              }
+            },
+            "Mn": {
+              "raw": "0.70~1.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.7,
+              "upper": 1.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.70~1.00"
+              }
+            },
+            "Si": {
+              "raw": "1.40~1.70",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.4,
+              "upper": 1.7,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "1.40~1.70"
+              }
+            },
+            "S": {
+              "raw": "≤0.008",
+              "value": 0.008,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.008"
+              }
+            },
+            "P": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "Ni": {
+              "raw": "0.25a",
+              "value": null,
+              "text": "按计算量加入,报实测值,不作判定依据",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.25a"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.25",
+              "value": 0.25,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 10,
+                "clause_id": null,
+                "quote": "≤0.25"
+              }
+            }
+          },
+          "note": "源文 Cr、Mo、V 单元格为空，未标注。"
+        },
+        {
+          "record_id": "gjb3325a-T1-30Cr3SiNiMoVA",
+          "grade": "30Cr3SiNiMoVA",
+          "grade_level": null,
+          "condition": "熔炼分析",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.28~0.34",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.28,
+              "upper": 0.34,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.28~0.34"
+              }
+            },
+            "Mn": {
+              "raw": "0.50~0.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.50~0.80"
+              }
+            },
+            "Si": {
+              "raw": "0.90~1.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.9,
+              "upper": 1.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.90~1.20"
+              }
+            },
+            "S": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "P": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "Ni": {
+              "raw": "0.80~1.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 1.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.80~1.20"
+              }
+            },
+            "Cr": {
+              "raw": "2.80~3.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 2.8,
+              "upper": 3.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "2.80~3.20"
+              }
+            },
+            "Mo": {
+              "raw": "0.60~0.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.6,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.60~0.80"
+              }
+            },
+            "V": {
+              "raw": "0.05~0.15",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.05,
+              "upper": 0.15,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.05~0.15"
+              }
+            },
+            "Cu": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T4",
+      "page_no": 4,
+      "caption": "表4 力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "M1-S7 draft：已标注全部 3 个牌号数据行及 6 项性能；冲击吸收能量表头为 KU1（U 型缺口），按 KV2 记录；表4脚注未建记录。",
+      "records": [
+        {
+          "record_id": "gjb3325a-T4-30Si2MnCrMoVE",
+          "grade": "30Si2MnCrMoVE",
+          "grade_level": null,
+          "condition": "推荐热处理制度：正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+          "facets": {
+            "heat_treatment": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "≥1620",
+              "value": 1620.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥1620"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥1320",
+              "value": 1320.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥1320"
+              }
+            },
+            "A": {
+              "raw": "≥9.0",
+              "value": 9.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥9.0"
+              }
+            },
+            "Z": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KV2": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "KU1",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KIC": {
+              "raw": "≥80",
+              "value": 80.0,
+              "text": null,
+              "unit": "MPa·m^1/2",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≥80"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gjb3325a-T4-31Si2MnCrMoVE",
+          "grade": "31Si2MnCrMoVE",
+          "grade_level": null,
+          "condition": "推荐热处理制度：正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+          "facets": {
+            "heat_treatment": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "≥1620",
+              "value": 1620.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥1620"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥1320",
+              "value": 1320.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥1320"
+              }
+            },
+            "A": {
+              "raw": "≥9.0",
+              "value": 9.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥9.0"
+              }
+            },
+            "Z": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KV2": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "KU1",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KIC": {
+              "raw": "≥80",
+              "value": 80.0,
+              "text": null,
+              "unit": "MPa·m^1/2",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≥80"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gjb3325a-T4-30Cr3SiNiMoVA",
+          "grade": "30Cr3SiNiMoVA",
+          "grade_level": null,
+          "condition": "推荐热处理制度：正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷",
+          "facets": {
+            "heat_treatment": "正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "≥1715",
+              "value": 1715.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥1715"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥1370",
+              "value": 1370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥1370"
+              }
+            },
+            "A": {
+              "raw": "≥9.0",
+              "value": 9.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥9.0"
+              }
+            },
+            "Z": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KV2": {
+              "raw": "≥47",
+              "value": 47.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "KU1",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≥47"
+              }
+            },
+            "KIC": {
+              "raw": "≥93",
+              "value": 93.0,
+              "text": null,
+              "unit": "MPa·m^1/2",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≥93"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T8",
+      "page_no": 5,
+      "caption": "表8 检验项目表",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "M1-S7 draft：仅标注第 1~8 项（第 5 页表8），第 9~12 项（第 6 页续表）待补。",
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "化学成分",
+          "category": null,
+          "quantities": {
+            "default": "1个/炉"
+          },
+          "sample_location": "GB/T20066",
+          "requirement_clause": "3.2.1",
+          "method_clause": "4.3.1",
+          "method_standard": "GB/T223、GB/T4336、GB/T20123",
+          "status": "found",
+          "evidence": {
+            "page_no": 5,
+            "table_id": "T8",
+            "row": 1,
+            "col": 1,
+            "clause_id": null,
+            "quote": "化学成分"
+          },
+          "note": null
+        },
+        {
+          "item": "交货硬度",
+          "category": null,
+          "quantities": {
+            "default": "每批数量的5%"
+          },
+          "sample_location": "不同锻件",
+          "requirement_clause": "3.3",
+          "method_clause": "4.3.2",
+          "method_standard": "GB/T231.1",
+          "status": "found",
+          "evidence": {
+            "page_no": 5,
+            "table_id": "T8",
+            "row": 2,
+            "col": 1,
+            "clause_id": null,
+            "quote": "交货硬度"
+          },
+          "note": null
+        },
+        {
+          "item": "室温拉伸",
+          "category": "力学性能",
+          "quantities": {
+            "default": "2个/批"
+          },
+          "sample_location": "锻件本体或90方塔检样GB/T2975",
+          "requirement_clause": "3.4.1",
+          "method_clause": "4.3.3",
+          "method_standard": "GB/T228.1",
+          "status": "found",
+          "evidence": {
+            "page_no": 5,
+            "table_id": "T8",
+            "row": 3,
+            "col": 1,
+            "clause_id": null,
+            "quote": "室温拉伸"
+          },
+          "note": null
+        },
+        {
+          "item": "室温冲击",
+          "category": "力学性能",
+          "quantities": {
+            "default": "2个/批"
+          },
+          "sample_location": "锻件本体或90方塔检样GB/T2975",
+          "requirement_clause": "3.4.1",
+          "method_clause": "4.3.4",
+          "method_standard": "GB/T229",
+          "status": "found",
+          "evidence": {
+            "page_no": 5,
+            "table_id": "T8",
+            "row": 4,
+            "col": 1,
+            "clause_id": null,
+            "quote": "室温冲击"
+          },
+          "note": null
+        },
+        {
+          "item": "断裂韧性",
+          "category": "力学性能",
+          "quantities": {
+            "default": "3个/批"
+          },
+          "sample_location": "锻件本体或90方塔检样GB/T2975",
+          "requirement_clause": "3.4.2",
+          "method_clause": "4.3.5",
+          "method_standard": "GB/T4161",
+          "status": "found",
+          "evidence": {
+            "page_no": 5,
+            "table_id": "T8",
+            "row": 5,
+            "col": 1,
+            "clause_id": null,
+            "quote": "断裂韧性"
+          },
+          "note": null
+        },
+        {
+          "item": "低倍",
+          "category": null,
+          "quantities": {
+            "default": "2个/批"
+          },
+          "sample_location": "锻件本体或90方塔检样",
+          "requirement_clause": "3.5",
+          "method_clause": "4.3.6",
+          "method_standard": "GB/T226、GB/T1979、GJB9443",
+          "status": "found",
+          "evidence": {
+            "page_no": 5,
+            "table_id": "T8",
+            "row": 6,
+            "col": 1,
+            "clause_id": null,
+            "quote": "低倍"
+          },
+          "note": null
+        },
+        {
+          "item": "非金属夹杂物",
+          "category": null,
+          "quantities": {
+            "default": "2个/批"
+          },
+          "sample_location": "锻件本体或90方塔检样",
+          "requirement_clause": "3.6",
+          "method_clause": "4.3.7",
+          "method_standard": "GB/T10561-2005",
+          "status": "found",
+          "evidence": {
+            "page_no": 5,
+            "table_id": "T8",
+            "row": 7,
+            "col": 1,
+            "clause_id": null,
+            "quote": "非金属夹杂物"
+          },
+          "note": null
+        },
+        {
+          "item": "晶粒度",
+          "category": null,
+          "quantities": {
+            "default": "2个/批"
+          },
+          "sample_location": "锻件本体或90方塔检样",
+          "requirement_clause": "3.7",
+          "method_clause": "4.3.8",
+          "method_standard": "GB/T6394",
+          "status": "found",
+          "evidence": {
+            "page_no": 5,
+            "table_id": "T8",
+            "row": 8,
+            "col": 1,
+            "clause_id": null,
+            "quote": "晶粒度"
+          },
+          "note": null
+        }
+      ],
+      "classification_items": []
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "3.2.1",
+      "title": "牌号和化学成分",
+      "page_no": 3,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "chemical_requirement": {
+          "raw": "钢的牌号和化学成分（熔炼分析）应符合表1的规定",
+          "value": null,
+          "text": "钢的牌号和化学成分（熔炼分析）应符合表1的规定",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.2.1",
+            "quote": "钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 3,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.2.1",
+        "quote": "钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "3.4.1",
+      "title": "拉伸性能",
+      "page_no": 3,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "mechanical_requirement": {
+          "raw": "在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定",
+          "value": null,
+          "text": "在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.1",
+            "quote": "在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定。"
+          }
+        },
+        "sample_location": {
+          "raw": "锻件本体或90方烙检样",
+          "value": null,
+          "text": "锻件本体或90方烙检样",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.1",
+            "quote": "锻件本体或90方烙检样"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 3,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.4.1",
+        "quote": "在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "3.4.2",
+      "title": "断裂韧度",
+      "page_no": 3,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "锻件的断裂韧度按表4规定执行",
+          "value": null,
+          "text": "锻件的断裂韧度按表4规定执行",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.2",
+            "quote": "锻件的断裂韧度按表4规定执行。"
+          }
+        },
+        "direction": {
+          "raw": "垂直流线方向",
+          "value": null,
+          "text": "垂直流线方向",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 3,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "3.4.2",
+            "quote": "垂直流线方向"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 3,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "3.4.2",
+        "quote": "锻件的断裂韧度按表4规定执行。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "4.2.2",
+      "title": "取样数量和取样部位",
+      "page_no": 5,
+      "kind": "sampling",
+      "status": "found",
+      "fields": {
+        "sample_quantity": {
+          "raw": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定",
+          "value": null,
+          "text": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 5,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.2.2",
+            "quote": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 5,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.2.2",
+        "quote": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "4.3.3",
+      "title": "室温拉伸",
+      "page_no": 6,
+      "kind": "test_method",
+      "status": "found",
+      "fields": {
+        "sample_location": {
+          "raw": "GB/T2975",
+          "value": null,
+          "text": "GB/T2975",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 6,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.3.3",
+            "quote": "取样和试样制备按GB/T2975的规定"
+          }
+        },
+        "test_method": {
+          "raw": "GB/T228.1",
+          "value": null,
+          "text": "GB/T228.1",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 6,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.3.3",
+            "quote": "试验方法按GB/T228.1的规定"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 6,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.3.3",
+        "quote": "拉伸试验用试样的取样和试样制备按GB/T2975的规定，试验方法按GB/T228.1的规定进行。"
+      },
+      "note": null
+    }
+  ],
+  "notes": [
+    "M1-S7 draft：仅标注 T1、T4、T8；T2/T3/T5/T6/T7/T9/T10 未标注。",
+    "T1 为熔炼分析化学成分表；31Si2MnCrMoVE 的 Cr/Mo/V 源文空白未标注。",
+    "T8 标注第 1~8 项，第 9~12 项（第 6 页续表）待补。"
+  ]
+}

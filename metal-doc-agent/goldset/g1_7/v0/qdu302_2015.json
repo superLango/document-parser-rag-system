@@ -1,0 +1,280 @@
+{
+  "doc_id": "q-du-302-2015-ef31d773",
+  "items": [
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "note": "T2 力学性能"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "note": "T2/T3"
+    },
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "note": "T1 尺寸偏差"
+    },
+    {
+      "item_canonical": "形状和尺寸",
+      "item_family": "dimension",
+      "note": "T3 检验项目"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "note": "T3"
+    },
+    {
+      "item_canonical": "显微组织",
+      "item_family": "metallography",
+      "note": "T3"
+    },
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "note": "T3 超声波检测"
+    },
+    {
+      "item_canonical": "表面质量",
+      "item_family": "surface",
+      "note": "T3"
+    }
+  ],
+  "items_unknown_ok": [
+    "力学性能"
+  ],
+  "links": {
+    "T1": {
+      "clause_id": "4.4.1",
+      "quote": "轧制锻件的热处理状态应符合表1的规定。"
+    },
+    "T2": {
+      "clause_id": "4.5",
+      "quote": "轧制锻件热处理后的硬度、力学性能应符合表2的规定。"
+    },
+    "T3": {
+      "clause_id": "5.2.1",
+      "quote": "质量一致性检验项目、取样数量、取样部位、要求和检验方法按表3的规定进行。"
+    },
+    "T4": {
+      "clause_id": "5.2.3.2",
+      "quote": "表4 力学试样数量与标识方法"
+    },
+    "T5": {
+      "clause_id": "5.2.5",
+      "quote": "确保批产轧制锻件产品性能质量一致性，需记录工艺参数控制的偏差情况，提供设计方，如表 5 所示。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5"
+  ],
+  "clauses": [
+    {
+      "clause_id": "1",
+      "kind": "sampling",
+      "quote": "本标准规定了战术武器型号产品舱段用高度为 400mmsim 1500mm 、直径为 Phi 500mmsim Phi 1500mm2A14 铝合金锥/筒形轧制锻件（以下简称轧制锻件）的技术要求、质量保证规定和交货准备。 本标准适用于战术武器型号产品舱段用高度为 400mmsim 1500mm 、直径为 Phi 500mmsim Phi 1500mm2A14 铝合金锥/筒形轧制锻件的工艺设计及验收。",
+      "fields": {
+        "sample_location": "类件应每批逐件在轧制锻件本体上取样，进行力学性能检测"
+      }
+    },
+    {
+      "clause_id": "4.2.1",
+      "kind": "technical_requirement",
+      "quote": "毛坯材料化学成份应符合 GB/T3190规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2.2",
+      "kind": "technical_requirement",
+      "quote": "毛坯材料在铸造时应进行过滤和液态测氢，氢含量应不大于 0.18ml / 100g ，测试要求应符合 GJB5909规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4.1",
+      "kind": "technical_requirement",
+      "quote": "轧制锻件的热处理状态应符合表1的规定。当需以其他热处理状态供应时，由订货方与承制方双方商定，并在专用文件中注明。 表1 轧制锻件的热处理状态",
+      "fields": {
+        "requirement": "轧制锻件的热处理状态应符合表1的规定。"
+      }
+    },
+    {
+      "clause_id": "4.4.2",
+      "kind": "technical_requirement",
+      "quote": "轧制锻件形状和尺寸、加工余量应符合订货协议要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.5",
+      "kind": "technical_requirement",
+      "quote": "轧制锻件热处理后的硬度、力学性能应符合表2的规定。 表2 轧制锻件室温力学性能",
+      "fields": {
+        "requirement": "轧制锻件热处理后的硬度、力学性能应符合表2的规定。"
+      }
+    },
+    {
+      "clause_id": "4.6",
+      "kind": "other",
+      "quote": "轧制锻件的显微组织中不允许有过烧。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.7",
+      "kind": "other",
+      "quote": "轧制锻件的低倍组织不允许有肉眼可见的裂纹、分层、偏析聚集和非金属夹杂物等缺陷。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.8.2",
+      "kind": "other",
+      "quote": "轧制锻件要求逐件进行超声波探伤，探伤方向为外径方向，高度方向探伤要求按需可在订货协议中明确。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.8.3",
+      "kind": "technical_requirement",
+      "quote": "轧制锻件超声波检测应符合GB/T6519中规定的A级标准。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.9.2",
+      "kind": "other",
+      "quote": "轧制锻件表面不允许存在裂纹、分层、折叠和轧制引起的机械损伤等缺陷。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.9.3",
+      "kind": "technical_requirement",
+      "quote": "轧制锻件的加工表面上，允许有凹坑、压伤存在，其深度应不超过单边加工余量的1/3。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.1",
+      "kind": "inspection",
+      "quote": "质量一致性检验项目、取样数量、取样部位、要求和检验方法按表3的规定进行。 表3 质量一致性检验项目",
+      "fields": {
+        "sample_quantity": "质量一致性检验项目、取样数量、取样部位、要求和检验方法按表3的规定进行。"
+      }
+    },
+    {
+      "clause_id": "5.2.3",
+      "kind": "sampling",
+      "quote": "硬度试样、力学试样、显微组织及低倍组织试样的切取方向和位置规定如图2所示。 图2 轧制锻件取样示意图",
+      "fields": {
+        "direction": "硬度、力学、显微组织及低倍组织的切取方向和位置规定如图2所示",
+        "sample_location": "硬度试样、力学试样、显微组织及低倍组织试样的切取方向和位置规定如图2所示"
+      }
+    },
+    {
+      "clause_id": "5.2.3.1",
+      "kind": "other",
+      "quote": "## 5.2.3.1.1 取样数量 I、II、III类件每批逐件检查硬度。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.3.2",
+      "kind": "other",
+      "quote": "力学性能",
+      "fields": {
+        "sample_quantity": "## 5.2.3.2.1 取样数量"
+      }
+    },
+    {
+      "clause_id": "5.2.3.6",
+      "kind": "other",
+      "quote": "轧制锻件应逐件检查形状和尺寸。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.3.7",
+      "kind": "other",
+      "quote": "轧制锻件应逐件检查表面质量。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.4.4",
+      "kind": "other",
+      "quote": "不允许出现偏析聚集。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.4.5",
+      "kind": "other",
+      "quote": "原则上对超声波检测不符合GB/T6519中规定的A级标准要求的轧制锻件，则判为不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.5",
+      "kind": "other",
+      "quote": "确保批产轧制锻件产品性能质量一致性，需记录工艺参数控制的偏差情况，提供设计方，如表 5 所示。 表5 工艺参数偏差记录",
+      "fields": {
+        "requirement": "确保批产轧制锻件产品性能质量一致性，需记录工艺参数控制的偏差情况，提供设计方，如表 5 所示。"
+      }
+    },
+    {
+      "clause_id": "5.2.6.1",
+      "kind": "other",
+      "quote": "硬度试验按GB/T231.1的规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.6.2",
+      "kind": "other",
+      "quote": "室温拉伸试验按GB/T228的规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.6.3",
+      "kind": "other",
+      "quote": "显微组织按GB/T3246.1的规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.6.4",
+      "kind": "other",
+      "quote": "低倍组织按GB/T3246.2的规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.6.5",
+      "kind": "other",
+      "quote": "超声波检测按GB/T6519中规定的A级标准，或按供需双方商定其它相关标准指标进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.6.6",
+      "kind": "other",
+      "quote": "应采用专用量具等方法检验轧制锻件形状和尺寸。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2.6.7",
+      "kind": "other",
+      "quote": "有特殊要求时，可采用无损检测（荧光或者色）、抛光或订货方与承制方双方商定的其他方法检测表面质量。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.1",
+      "kind": "other",
+      "quote": "轧制锻件应打钢印交付，应注明设计单位、本标准号、产品代号、批次号、序号。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.3",
+      "kind": "packaging",
+      "quote": "轧制锻件的包装、运输方法应按照GB/T3199或者在生产合同/技术协议中注明。",
+      "fields": {}
+    }
+  ]
+}

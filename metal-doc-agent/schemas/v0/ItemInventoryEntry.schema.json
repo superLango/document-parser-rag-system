@@ -1,0 +1,222 @@
+{
+  "properties": {
+    "item_raw": {
+      "title": "Item Raw",
+      "type": "string"
+    },
+    "item_canonical": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Item Canonical"
+    },
+    "item_family": {
+      "default": "unknown",
+      "title": "Item Family",
+      "type": "string"
+    },
+    "facets": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Facets",
+      "type": "object"
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Properties"
+    },
+    "method_standard": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Method Standard"
+    },
+    "source": {
+      "default": "clause",
+      "enum": [
+        "inspection_table",
+        "property_table",
+        "clause",
+        "reference",
+        "manual"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "clause_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Clause Id"
+    },
+    "page_no": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page No"
+    },
+    "table_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Table Id"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "status": {
+      "default": "probable",
+      "enum": [
+        "confirmed",
+        "probable",
+        "new",
+        "ambiguous",
+        "not_applicable"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "business_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Business Code"
+    },
+    "business_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Business Name"
+    },
+    "match_type": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Match Type"
+    },
+    "match_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Match Score"
+    },
+    "method_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Method Code"
+    },
+    "method_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Method Name"
+    },
+    "method_match_type": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Method Match Type"
+    },
+    "dictionary_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dictionary Version"
+    }
+  },
+  "required": [
+    "item_raw"
+  ],
+  "title": "ItemInventoryEntry",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

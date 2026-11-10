@@ -1,0 +1,227 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_aae054ccf1",
+  "standard_no": null,
+  "title": "霞浦核电1、2 号机组 反应堆冷却剂泵RSR750 挡圈用 锻件制造大纲",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 16,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\bb2621dac0174ff39091830f3cfef14d1791967756454.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T3",
+      "page_no": 6,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-41765cbfdf",
+          "grade": "要求值",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "Mn": {
+              "raw": "0.50~1.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 1.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.50~1.00"
+              }
+            },
+            "P": {
+              "raw": "≤0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.030"
+              }
+            },
+            "S": {
+              "raw": "≤0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.030"
+              }
+            },
+            "Si": {
+              "raw": "≤0.60",
+              "value": 0.6,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.60"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T4",
+      "page_no": 7,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-d22b7903f9",
+          "grade": "要求值",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Ni": {
+              "raw": "3.5~5.5",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 3.5,
+              "upper": 5.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 7,
+                "table_id": "T4",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "3.5~5.5"
+              }
+            },
+            "Cr": {
+              "raw": "11.5~14.0",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 11.5,
+              "upper": 14.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 7,
+                "table_id": "T4",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "11.5~14.0"
+              }
+            },
+            "Mo": {
+              "raw": "0.50~1.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 1.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 7,
+                "table_id": "T4",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.50~1.00"
+              }
+            },
+            "Co": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 7,
+                "table_id": "T4",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

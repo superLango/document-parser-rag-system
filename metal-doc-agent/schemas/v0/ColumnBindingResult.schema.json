@@ -1,0 +1,251 @@
+{
+  "$defs": {
+    "ColumnBinding": {
+      "properties": {
+        "column": {
+          "title": "Column",
+          "type": "integer"
+        },
+        "header_path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Header Path",
+          "type": "array"
+        },
+        "item_family": {
+          "default": "unknown",
+          "title": "Item Family",
+          "type": "string"
+        },
+        "item_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Raw"
+        },
+        "property": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Property"
+        },
+        "role": {
+          "default": "unknown",
+          "enum": [
+            "row_key",
+            "row_index",
+            "condition",
+            "measure",
+            "method",
+            "remark",
+            "unknown"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "facets": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Facets",
+          "type": "object"
+        },
+        "confidence": {
+          "default": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "status": {
+          "default": "unmapped",
+          "enum": [
+            "bound",
+            "conflict",
+            "ambiguous",
+            "unmapped"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "evidence": {
+          "additionalProperties": true,
+          "title": "Evidence",
+          "type": "object"
+        }
+      },
+      "required": [
+        "column"
+      ],
+      "title": "ColumnBinding",
+      "type": "object"
+    },
+    "ItemGroup": {
+      "properties": {
+        "group_id": {
+          "title": "Group Id",
+          "type": "string"
+        },
+        "item_family": {
+          "title": "Item Family",
+          "type": "string"
+        },
+        "item_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Raw"
+        },
+        "columns": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Columns",
+          "type": "array"
+        },
+        "facets": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Facets",
+          "type": "object"
+        },
+        "status": {
+          "default": "bound",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "group_id",
+        "item_family"
+      ],
+      "title": "ItemGroup",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "producer_version": {
+      "default": "0.1.0",
+      "title": "Producer Version",
+      "type": "string"
+    },
+    "table_id": {
+      "title": "Table Id",
+      "type": "string"
+    },
+    "recipe_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Recipe Id"
+    },
+    "match_status": {
+      "default": "unknown",
+      "enum": [
+        "exact",
+        "candidate",
+        "unknown"
+      ],
+      "title": "Match Status",
+      "type": "string"
+    },
+    "bindings": {
+      "items": {
+        "$ref": "#/$defs/ColumnBinding"
+      },
+      "title": "Bindings",
+      "type": "array"
+    },
+    "item_groups": {
+      "items": {
+        "$ref": "#/$defs/ItemGroup"
+      },
+      "title": "Item Groups",
+      "type": "array"
+    },
+    "conflicts": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Conflicts",
+      "type": "array"
+    },
+    "ambiguous": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Ambiguous",
+      "type": "array"
+    },
+    "unmapped_columns": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Unmapped Columns",
+      "type": "array"
+    }
+  },
+  "required": [
+    "table_id"
+  ],
+  "title": "ColumnBindingResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

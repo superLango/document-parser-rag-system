@@ -1,0 +1,314 @@
+{
+  "doc_id": "gjb3325a_2019",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 1.0,
+    "cell_value_agreement": 0.9556,
+    "comparator_unit_agreement": 0.9556,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 6,
+    "record_keys_match": 6,
+    "cells_total": 45,
+    "cells_value_match": 43,
+    "cells_strict_match": 43,
+    "clause_fields_total": 8,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [],
+  "record_keys_only_b": [],
+  "value_diffs": [
+    {
+      "table_id": "T1",
+      "record_key": [
+        "30Si2MnCrMoVE",
+        "熔炼分析"
+      ],
+      "record_id": "gjb3325a-T1-30Si2MnCrMoVE",
+      "field": "Ni",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.25a",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "按计算量加入,报实测值,不作判定依据",
+        "unit": "%",
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": "T1",
+          "row": 2,
+          "col": 6,
+          "clause_id": null,
+          "quote": "0.25a"
+        }
+      },
+      "b": {
+        "raw": "0.25a",
+        "value": 0.25,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": "熔炼分析",
+        "evidence": {
+          "page_no": 3,
+          "table_id": "T1",
+          "row": 2,
+          "col": 6,
+          "clause_id": null,
+          "quote": "0.25a"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "31Si2MnCrMoVE",
+        "熔炼分析"
+      ],
+      "record_id": "gjb3325a-T1-31Si2MnCrMoVE",
+      "field": "Ni",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.25a",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "按计算量加入,报实测值,不作判定依据",
+        "unit": "%",
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": "T1",
+          "row": 3,
+          "col": 6,
+          "clause_id": null,
+          "quote": "0.25a"
+        }
+      },
+      "b": {
+        "raw": "0.25a",
+        "value": 0.25,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": "熔炼分析",
+        "evidence": {
+          "page_no": 3,
+          "table_id": "T1",
+          "row": 3,
+          "col": 6,
+          "clause_id": null,
+          "quote": "0.25a"
+        }
+      }
+    }
+  ],
+  "clause_field_diffs": [
+    {
+      "clause_id": "3.2.1",
+      "field": "chemical_requirement",
+      "a": {
+        "raw": "钢的牌号和化学成分（熔炼分析）应符合表1的规定",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "钢的牌号和化学成分（熔炼分析）应符合表1的规定",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.2.1",
+          "quote": "钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4.1",
+      "field": "mechanical_requirement",
+      "a": {
+        "raw": "在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4.1",
+          "quote": "在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4.1",
+      "field": "sample_location",
+      "a": {
+        "raw": "锻件本体或90方烙检样",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "锻件本体或90方烙检样",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4.1",
+          "quote": "锻件本体或90方烙检样"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4.2",
+      "field": "direction",
+      "a": {
+        "raw": "垂直流线方向",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "垂直流线方向",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4.2",
+          "quote": "垂直流线方向"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4.2",
+      "field": "requirement",
+      "a": {
+        "raw": "锻件的断裂韧度按表4规定执行",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "锻件的断裂韧度按表4规定执行",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4.2",
+          "quote": "锻件的断裂韧度按表4规定执行。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "4.2.2",
+      "field": "sample_quantity",
+      "a": {
+        "raw": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "4.2.2",
+          "quote": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "4.3.3",
+      "field": "sample_location",
+      "a": {
+        "raw": "GB/T2975",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "GB/T2975",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 6,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "4.3.3",
+          "quote": "取样和试样制备按GB/T2975的规定"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "4.3.3",
+      "field": "test_method",
+      "a": {
+        "raw": "GB/T228.1",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "GB/T228.1",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 6,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "4.3.3",
+          "quote": "试验方法按GB/T228.1的规定"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

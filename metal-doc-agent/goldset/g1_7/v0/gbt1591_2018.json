@@ -1,0 +1,393 @@
+{
+  "doc_id": "gb-t-1591-2018-f1a3b46f",
+  "items": [
+    {
+      "item_canonical": "弯曲",
+      "item_family": "bend",
+      "facets": {},
+      "required": true,
+      "note": "弯曲试验"
+    },
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "facets": {},
+      "required": true,
+      "note": "化学成分"
+    },
+    {
+      "item_canonical": "厚度方向性能试验",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "厚度方向性能试验"
+    },
+    {
+      "item_canonical": "外形",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "外形"
+    },
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "尺寸"
+    },
+    {
+      "item_canonical": "-60℃夏比冲击",
+      "item_family": "impact",
+      "facets": {
+        "temperature": "-60℃",
+        "impact_type": "夏比"
+      },
+      "required": true,
+      "note": "冲击试验"
+    },
+    {
+      "item_canonical": "无损检验",
+      "item_family": "ndt",
+      "facets": {},
+      "required": true,
+      "note": "无损检验"
+    },
+    {
+      "item_canonical": "表面质量",
+      "item_family": "surface",
+      "facets": {},
+      "required": true,
+      "note": "表面质量"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "拉伸试验"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T1": {
+      "clause_id": "7.1",
+      "quote": "7. 1.1 热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+    },
+    "T10": {
+      "clause_id": "7.4.2",
+      "quote": "7. 4.2.1 钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。"
+    },
+    "T11": {
+      "clause_id": "7.4.1",
+      "quote": "7. 4.1.1 热轧钢材的拉伸性能应符合表7和表8的规定。"
+    },
+    "T12": {
+      "clause_id": "7.4.1",
+      "quote": "7. 4.1.1 热轧钢材的拉伸性能应符合表7和表8的规定。"
+    },
+    "T13": {
+      "clause_id": "7.4.2",
+      "quote": "7. 4.2.1 钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。"
+    },
+    "T14": {
+      "clause_id": "7.4.3",
+      "quote": "7. 4.3.1 根据需方要求，钢材可进行弯曲试验，其指标应符合表12的规定。"
+    },
+    "T15": {
+      "clause_id": "9.3",
+      "quote": "每批钢材的取样部位和取样数量见表13。"
+    },
+    "T16": {
+      "clause_id": "附录A",
+      "quote": "表A.1 国内外标准牌号对照"
+    },
+    "T17": {
+      "clause_id": "附录A",
+      "quote": "表 A.1 （续）"
+    },
+    "T2": {
+      "clause_id": "7.1",
+      "quote": "7. 1.1 热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+    },
+    "T3": {
+      "clause_id": "7.1",
+      "quote": "7. 1.1 热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+    },
+    "T4": {
+      "clause_id": "7.1",
+      "quote": "7. 1.1 热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+    },
+    "T5": {
+      "clause_id": "7.1",
+      "quote": "7. 1.1 热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+    },
+    "T6": {
+      "clause_id": "7.1",
+      "quote": "7. 1.1 热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+    },
+    "T8": {
+      "clause_id": "7.1",
+      "quote": "7. 1.1 热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+    },
+    "T9": {
+      "clause_id": "7.4.1",
+      "quote": "7. 4.1.1 热轧钢材的拉伸性能应符合表7和表8的规定。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T10",
+    "T11",
+    "T12",
+    "T13",
+    "T14",
+    "T15",
+    "T16",
+    "T17",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T8",
+    "T9"
+  ],
+  "clauses": [
+    {
+      "clause_id": "4.2",
+      "kind": "other",
+      "quote": "当需方要求钢板具有厚度方向性能时，则在上述规定的牌号后加上代表厚度方向（Z向）性能级别的符号，如：Q355NDZ25。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.2",
+      "kind": "other",
+      "quote": "f) 冲击试验温度及冲击试验取样方向（见表11）；",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.1",
+      "kind": "technical_requirement",
+      "quote": "热轧钢棒的尺寸、外形、重量及允许偏差应符合GB/T702的规定，具体组别应在合同注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.2",
+      "kind": "technical_requirement",
+      "quote": "热轧型钢的尺寸、外形、重量及允许偏差应符合GB/T706的规定，具体组别应在合同注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.3",
+      "kind": "technical_requirement",
+      "quote": "GB/T 1591----2018 注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.4",
+      "kind": "technical_requirement",
+      "quote": "热轧 H型钢和剖分T型钢的尺寸、外形、重量及允许偏差应符合GB/T11263的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1",
+      "kind": "other",
+      "quote": "7. 1.1 热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。 7. 1.2 正火及正火轧制钢的牌号及化学成分（熔炼分析）应符合表3的规定，其碳当量值应符合表4的规定。 7. 1.3 热机械轧制钢的牌号及化学成分（熔炼分析）应符合表5的规定，其碳当量值应符合表6的规定。当热机械轧制钢的碳含量不大于 0.12% 时，宜采用焊接裂纹敏感性指数(Pcm)代替碳当量评估钢材",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1.1",
+      "kind": "technical_requirement",
+      "quote": "热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1.2",
+      "kind": "technical_requirement",
+      "quote": "正火及正火轧制钢的牌号及化学成分（熔炼分析）应符合表3的规定，其碳当量值应符合表4的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1.3",
+      "kind": "technical_requirement",
+      "quote": "热机械轧制钢的牌号及化学成分（熔炼分析）应符合表5的规定，其碳当量值应符合表6的规定。当热机械轧制钢的碳含量不大于 0.12% 时，宜采用焊接裂纹敏感性指数(Pcm)代替碳当量评估钢材的可焊性，Pcm值应符合表6的规定。经供需双方协商，可指定采用碳当量或焊接裂纹敏感性指数评估钢材的可焊性，当未指定时，供方可任选其一。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1.7",
+      "kind": "technical_requirement",
+      "quote": "当需方要求保证厚度方向性能钢板时，硫含量应符合GB/T5313的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1.9",
+      "kind": "technical_requirement",
+      "quote": "当需万要求进行成品化学成分分析时，则应进行成品分析，其化学成分允许偏差应符合 GB/T222的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.1",
+      "kind": "other",
+      "quote": "7. 4.1.1 热轧钢材的拉伸性能应符合表7和表8的规定。 7. 4.1.2 正火，正火轧制钢材的拉伸性能应符合表9的规定。 7. 4.1.3 热机械轧制（TMCP）钢材的拉伸性能应符合表10的规定。 7. 4.1.4 根据需方要求，并在合同中注明，要求钢板厚度方向性能时，钢材厚度方向的断面收缩率应按GB/T5313的规定。 7. 4.1.5 对于公称宽度不小于 600mm 的钢板及钢带，拉伸试",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.1.1",
+      "kind": "technical_requirement",
+      "quote": "热轧钢材的拉伸性能应符合表7和表8的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.1.2",
+      "kind": "technical_requirement",
+      "quote": "正火，正火轧制钢材的拉伸性能应符合表9的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.1.3",
+      "kind": "technical_requirement",
+      "quote": "热机械轧制（TMCP）钢材的拉伸性能应符合表10的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.1.4",
+      "kind": "technical_requirement",
+      "quote": "根据需方要求，并在合同中注明，要求钢板厚度方向性能时，钢材厚度方向的断面收缩率应按GB/T5313的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.1.5",
+      "kind": "other",
+      "quote": "对于公称宽度不小于 600mm 的钢板及钢带，拉伸试验取横向试样；其他钢材的拉伸试验取纵向试样。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.2",
+      "kind": "other",
+      "quote": "7. 4.2.1 钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。 7. 4.2.2 公称厚度不小于 6mm 或公称直径不小于 12mm 的钢材应做冲击试验，冲击试样尺寸取 10mmtimes 10mmtimes 55mm 的标准试样；当钢材不足以制取标准试样时，应采用 10mmtimes 7.5mmtimes 55mm或 10 ~mm times 5 ~mm times",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.2.1",
+      "kind": "technical_requirement",
+      "quote": "钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.2.2",
+      "kind": "other",
+      "quote": "55mm或 10 ~mm times 5 ~mm times 55 ~mm 小尺寸试样，冲击吸收能量应分别为不小于表11规定值的 75%或 50% ，应优先采用较大尺寸试样。 注：对于型钢，厚度是指GB/T2975中规定的制备试样的厚度。 表7 热轧钢材的拉伸性能 ## Table 表8 热轧钢材的伸长率 ## Tab",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.3",
+      "kind": "other",
+      "quote": "7. 4.3.1 根据需方要求，钢材可进行弯曲试验，其指标应符合表12的规定。 7. 4.3.2 如供方能保证弯曲试验合格，可不做检验。 表12 弯曲试验",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.4.3.1",
+      "kind": "technical_requirement",
+      "quote": "根据需方要求，钢材可进行弯曲试验，其指标应符合表12的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.5.1.4",
+      "kind": "other",
+      "quote": "a) 采用适当的焊接方法； b) 在焊补前采用铲平或磨平等适当的方法完全除去钢板上的有害缺陷，除去部分的深度在钢板公称厚度的 20% 以内，单面的修磨面积合计应在钢板面积的 2% 以内； c) 钢板焊接部位的边缘上不得有咬边或重叠，堆高应高出轧制面 1.5mm 以上，然后用铲平或磨平等方法除去堆高； d) 热处理钢板焊",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.5.3.1",
+      "kind": "technical_requirement",
+      "quote": "型钢的表面质量应符合相关标准的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.5.4.1",
+      "kind": "technical_requirement",
+      "quote": "钢棒的表面质量应符合相关标准的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.6",
+      "kind": "other",
+      "quote": "经供需双方协商，可采用无损检测的方法检验钢材的内部质量，其检测标准和要求应在合同中规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "8",
+      "kind": "test_method",
+      "quote": "试验方法",
+      "fields": {}
+    },
+    {
+      "clause_id": "8.1",
+      "kind": "test_method",
+      "quote": "钢材的各项检验的检验项目和试验方法应符合表13的规定。",
+      "fields": {
+        "requirement": "钢材的各项检验的检验项目和试验方法应符合表13的规定。"
+      }
+    },
+    {
+      "clause_id": "8.2",
+      "kind": "test_method",
+      "quote": "钢的化学成分试验一般按GB/T4336、GB/T20123、GB/T20124、GB/T20125或通用的化学分析方法进行，仲裁时按GB/T223.3、GB/T223.9、GB/T223.11、GB/T223.14、GB/T223.17、GB/T223.18、GB/T223.23、GB/T223.26、GB/T223.",
+      "fields": {}
+    },
+    {
+      "clause_id": "8.3",
+      "kind": "sampling",
+      "quote": "当需方无特殊要求时，冲击试验的取样位置按如下规定进行：",
+      "fields": {
+        "sample_location": "型钢按GB/T2975-2018图A.3；圆钢，当公称直径 d leqslant 25mm 、 25mm < d leqslant 50mm 及 d > 50mm 时，分别按GB/T2975-2018图A.5中、、；方钢，当边长不大于 50 mm时按 GB/T2975-2018图A.9中，当边长大于 50 mm时按 GB/T2975-2018图A.9中；钢板，当公称厚度不大于 40mm 时按GB/T2975-2018图A.11中，当公称厚度大于 40mm 时按GB/T2975-2018图A.11中",
+        "method_standard": "GB/T2975-2018"
+      }
+    },
+    {
+      "clause_id": "9.2.1",
+      "kind": "delivery",
+      "quote": "钢材应成批验收。每批应由同一牌号、同一炉号、同一规格、同一交货状态的钢材组成，每批重量应不大于 60t，但卷重大于 30t 的钢带和连轧板可按两个轧制卷组成一批；对容积大于 200t 转炉冶炼的型钢，每批重量不大于 80t。经供需双方协商，可每炉检验2批。",
+      "fields": {
+        "requirement": "每批应由同一牌号、同一炉号、同一规格、同一交货状态的钢材组成，每批重量应不大于 60t，但卷重大于 30t 的钢带和连轧板可按两个轧制卷组成一批；"
+      }
+    },
+    {
+      "clause_id": "9.2.3",
+      "kind": "technical_requirement",
+      "quote": "对于要求厚度方向力学性能试验的钢材，组批规则应符合GB/T5313的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "9.3",
+      "kind": "inspection",
+      "quote": "每批钢材的取样部位和取样数量见表13。 表13 钢材检验项目、取样数量、取样方法和试验方法",
+      "fields": {
+        "sample_quantity": "每批钢材的取样部位和取样数量见表13。"
+      }
+    },
+    {
+      "clause_id": "9.4",
+      "kind": "technical_requirement",
+      "quote": "钢材的复验与判定应符合GB/T17505的规定。",
+      "fields": {
+        "requirement": "钢材的复验与判定应符合GB/T17505的规定。"
+      }
+    },
+    {
+      "clause_id": "9.5",
+      "kind": "other",
+      "quote": "数值判定采用修约值比较法，数值修约按GB/T8170规定执行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "10",
+      "kind": "packaging",
+      "quote": "修改了试验方法和检验规则，明确了冲击试验的取样部位（见第8章、第9章，2008版第7章、第8章）；",
+      "fields": {}
+    }
+  ]
+}

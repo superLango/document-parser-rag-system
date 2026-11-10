@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hanson.local/schemas/recipe.schema.json",
+  "title": "Metal document extraction recipe (v1)",
+  "type": "object",
+  "required": ["recipe_id", "version", "status", "profile", "signature"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "producer_version": {"type": "string"},
+    "recipe_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Snake-case id; must equal the recipe file stem"
+    },
+    "version": {"type": "integer", "minimum": 1},
+    "status": {"type": "string", "enum": ["active", "candidate", "retired"]},
+    "profile": {
+      "type": "string",
+      "enum": [
+        "chemical_composition",
+        "mechanical_properties",
+        "inspection",
+        "dimension",
+        "classification",
+        "unknown"
+      ]
+    },
+    "signature": {"$ref": "#/$defs/signature"},
+    "bindings": {"type": "object"},
+    "rules": {"type": "object"},
+    "coverage_template": {"type": ["string", "null"]},
+    "business_dictionary": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": ["profile", "orientation", "n_cols", "blocks", "tokens"],
+      "properties": {
+        "profile": {"type": "string"},
+        "orientation": {
+          "type": "string",
+          "enum": ["grade_rows", "element_rows", "unknown"]
+        },
+        "n_cols": {"type": "integer", "minimum": 0},
+        "blocks": {"type": "integer", "minimum": 0},
+        "tokens": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "maxItems": 40
+        },
+        "multi_header": {"type": "boolean"},
+        "unit_set": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

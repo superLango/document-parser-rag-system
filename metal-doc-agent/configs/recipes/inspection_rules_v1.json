@@ -1,0 +1,23 @@
+{
+  "recipe_id": "inspection_rules_v1",
+  "version": 1,
+  "status": "active",
+  "profile": "inspection",
+  "signature": {
+    "profile": "inspection",
+    "orientation": "grade_rows",
+    "n_cols": 5,
+    "blocks": 0,
+    "tokens": ["检验项目", "取样数量", "取样部位", "试验方法", "判定"]
+  },
+  "bindings": {
+    "row_key": ["检验项目"],
+    "conditions": ["取样数量", "取样部位"],
+    "methods": ["试验方法"]
+  },
+  "rules": {
+    "row_is_item": true
+  },
+  "coverage_template": "product_full",
+  "business_dictionary": "material_master_v1"
+}

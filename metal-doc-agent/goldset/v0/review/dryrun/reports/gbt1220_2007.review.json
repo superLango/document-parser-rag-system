@@ -1,0 +1,1945 @@
+{
+  "doc_id": "gbt1220_2007",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 0.1176,
+    "cell_value_agreement": 0.9091,
+    "comparator_unit_agreement": 0.4545,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 51,
+    "record_keys_match": 6,
+    "cells_total": 66,
+    "cells_value_match": 60,
+    "cells_strict_match": 30,
+    "clause_fields_total": 4,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [
+    [
+      "T7",
+      "022Cr17Ni12Mo2",
+      "厚度或对边距离<=180|固溶处理|方向未规定|直径|边长"
+    ],
+    [
+      "T7",
+      "022Cr19Ni10N",
+      "厚度或对边距离<=180|固溶处理|方向未规定|直径|边长"
+    ],
+    [
+      "T7",
+      "06Cr17Ni12Mo2",
+      "厚度或对边距离<=180|固溶处理|方向未规定|直径|边长"
+    ],
+    [
+      "T7",
+      "06Cr25Ni20",
+      "厚度或对边距离<=180|固溶处理|方向未规定|直径|边长"
+    ],
+    [
+      "T7",
+      "10Cr18Ni12",
+      "厚度或对边距离<=180|固溶处理|方向未规定|直径|边长"
+    ]
+  ],
+  "record_keys_only_b": [
+    [
+      "T1",
+      "022Cr17Ni12Mo2",
+      ""
+    ],
+    [
+      "T1",
+      "022Cr17Ni12Mo2N",
+      ""
+    ],
+    [
+      "T1",
+      "022Cr18Ni14Mo2Cu2",
+      ""
+    ],
+    [
+      "T1",
+      "022Cr19Ni10N",
+      ""
+    ],
+    [
+      "T1",
+      "022Cr19Ni13Mo3",
+      ""
+    ],
+    [
+      "T1",
+      "03Cr18Ni16Mo5",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr17Ni12Mo2",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr17Ni12Mo2N",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr17Ni12Mo2Ti",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr18Ni11Nb",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr18Ni11Ti",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr18Ni12Mo2Cu2",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr18Ni13Si4",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr18Ni9Cu3",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr19Ni10N",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr19Ni13Mo3",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr19Ni9NbN",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr23Ni13",
+      ""
+    ],
+    [
+      "T1",
+      "06Cr25Ni20",
+      ""
+    ],
+    [
+      "T1",
+      "10Cr18Ni12",
+      ""
+    ],
+    [
+      "T1",
+      "Y12Cr18Ni9",
+      ""
+    ],
+    [
+      "T1",
+      "Y12Cr18Ni9Se",
+      ""
+    ],
+    [
+      "T7",
+      "022Cr17Ni12Mo2",
+      ""
+    ],
+    [
+      "T7",
+      "022Cr18Ni12Mo2N",
+      ""
+    ],
+    [
+      "T7",
+      "022Cr18Ni14Mo2Cu2",
+      ""
+    ],
+    [
+      "T7",
+      "022Cr19Ni10N",
+      ""
+    ],
+    [
+      "T7",
+      "022Cr19Ni13Mo3",
+      ""
+    ],
+    [
+      "T7",
+      "03Cr18Ni16Mo5",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr17Ni12Mo2",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr17Ni12Mo2N",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr17Ni12Mo8Ti",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr18Ni11Nb",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr18Ni11Ti",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr18Ni12Mo2ku2",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr18Ni13Si4",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr19Ni13Mo3",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr19Ni9NbN",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr23Ni13",
+      ""
+    ],
+    [
+      "T7",
+      "06Cr25Ni20",
+      ""
+    ],
+    [
+      "T7",
+      "10Cr18Ni12",
+      ""
+    ]
+  ],
+  "value_diffs": [
+    {
+      "table_id": "T1",
+      "record_key": [
+        "022Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-022Cr19Ni10",
+      "field": "C",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      },
+      "b": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "022Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-022Cr19Ni10",
+      "field": "Mn",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "2.00",
+        "value": 2.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 6,
+          "clause_id": null,
+          "quote": "2.00"
+        }
+      },
+      "b": {
+        "raw": "2.00",
+        "value": 2.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 6,
+          "clause_id": null,
+          "quote": "2.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "022Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-022Cr19Ni10",
+      "field": "P",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.045",
+        "value": 0.045,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.045"
+        }
+      },
+      "b": {
+        "raw": "0.045",
+        "value": 0.045,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.045"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "022Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-022Cr19Ni10",
+      "field": "S",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      },
+      "b": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "022Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-022Cr19Ni10",
+      "field": "Si",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      },
+      "b": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "022Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-022Cr19Ni10",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 9,
+          "col": 14,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "06Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-06Cr19Ni10",
+      "field": "C",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.08",
+        "value": 0.08,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.08"
+        }
+      },
+      "b": {
+        "raw": "0.08",
+        "value": 0.08,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.08"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "06Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-06Cr19Ni10",
+      "field": "Mn",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "2.00",
+        "value": 2.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 6,
+          "clause_id": null,
+          "quote": "2.00"
+        }
+      },
+      "b": {
+        "raw": "2.00",
+        "value": 2.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 6,
+          "clause_id": null,
+          "quote": "2.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "06Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-06Cr19Ni10",
+      "field": "P",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.045",
+        "value": 0.045,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.045"
+        }
+      },
+      "b": {
+        "raw": "0.045",
+        "value": 0.045,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.045"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "06Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-06Cr19Ni10",
+      "field": "S",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      },
+      "b": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "06Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-06Cr19Ni10",
+      "field": "Si",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      },
+      "b": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "06Cr19Ni10",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-06Cr19Ni10",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 8,
+          "col": 14,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Mn6Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Mn6Ni5N",
+      "field": "C",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      },
+      "b": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Mn6Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Mn6Ni5N",
+      "field": "P",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.050",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.050"
+        }
+      },
+      "b": {
+        "raw": "0.050",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.050"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Mn6Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Mn6Ni5N",
+      "field": "S",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      },
+      "b": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Mn6Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Mn6Ni5N",
+      "field": "Si",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      },
+      "b": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Mn6Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Mn6Ni5N",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 2,
+          "col": 14,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Ni7",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Ni7",
+      "field": "C",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      },
+      "b": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Ni7",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Ni7",
+      "field": "Mn",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "2.00",
+        "value": 2.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 6,
+          "clause_id": null,
+          "quote": "2.00"
+        }
+      },
+      "b": {
+        "raw": "2.00",
+        "value": 2.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 6,
+          "clause_id": null,
+          "quote": "2.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Ni7",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Ni7",
+      "field": "N",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.10",
+        "value": 0.1,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 13,
+          "clause_id": null,
+          "quote": "0.10"
+        }
+      },
+      "b": {
+        "raw": "0.10",
+        "value": 0.1,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 13,
+          "clause_id": null,
+          "quote": "0.10"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Ni7",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Ni7",
+      "field": "P",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.045",
+        "value": 0.045,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.045"
+        }
+      },
+      "b": {
+        "raw": "0.045",
+        "value": 0.045,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.045"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Ni7",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Ni7",
+      "field": "S",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      },
+      "b": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Ni7",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Ni7",
+      "field": "Si",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      },
+      "b": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr17Ni7",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr17Ni7",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 4,
+          "col": 14,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Mn9Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Mn9Ni5N",
+      "field": "C",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      },
+      "b": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Mn9Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Mn9Ni5N",
+      "field": "P",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.050",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.050"
+        }
+      },
+      "b": {
+        "raw": "0.050",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.050"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Mn9Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Mn9Ni5N",
+      "field": "S",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      },
+      "b": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Mn9Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Mn9Ni5N",
+      "field": "Si",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      },
+      "b": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Mn9Ni5N",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Mn9Ni5N",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 3,
+          "col": 14,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Ni9",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Ni9",
+      "field": "C",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      },
+      "b": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 4,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Ni9",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Ni9",
+      "field": "Mn",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "2.00",
+        "value": 2.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 6,
+          "clause_id": null,
+          "quote": "2.00"
+        }
+      },
+      "b": {
+        "raw": "2.00",
+        "value": 2.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 6,
+          "clause_id": null,
+          "quote": "2.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Ni9",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Ni9",
+      "field": "N",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.10",
+        "value": 0.1,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 13,
+          "clause_id": null,
+          "quote": "0.10"
+        }
+      },
+      "b": {
+        "raw": "0.10",
+        "value": 0.1,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 13,
+          "clause_id": null,
+          "quote": "0.10"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Ni9",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Ni9",
+      "field": "P",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.045",
+        "value": 0.045,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.045"
+        }
+      },
+      "b": {
+        "raw": "0.045",
+        "value": 0.045,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 7,
+          "clause_id": null,
+          "quote": "0.045"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Ni9",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Ni9",
+      "field": "S",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      },
+      "b": {
+        "raw": "0.030",
+        "value": 0.03,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.030"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Ni9",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Ni9",
+      "field": "Si",
+      "value_ok": true,
+      "strict_ok": false,
+      "a": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      },
+      "b": {
+        "raw": "1.00",
+        "value": 1.0,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "eq",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 5,
+          "clause_id": null,
+          "quote": "1.00"
+        }
+      }
+    },
+    {
+      "table_id": "T1",
+      "record_key": [
+        "12Cr18Ni9",
+        ""
+      ],
+      "record_id": "gbt1220_2007-T1-12Cr18Ni9",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 8,
+          "table_id": "T1",
+          "row": 5,
+          "col": 14,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    }
+  ],
+  "clause_field_diffs": [
+    {
+      "clause_id": "7.3.1",
+      "field": "delivery_state",
+      "a": {
+        "raw": "切削加工用奥氏体型、奥氏体铁素体型钢棒应进行固溶处理，经供需双方协商，也可不进行处理。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "切削加工用奥氏体型、奥氏体铁素体型钢棒应进行固溶处理，经供需双方协商，也可不进行处理。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.3.1",
+          "quote": "切削加工用奥氏体型、奥氏体铁素体型钢棒应进行固溶处理，经供需双方协商，也可不进行处理。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.4.2",
+      "field": "mechanical_requirement",
+      "a": {
+        "raw": "经热处理的钢棒（除马氏体钢退火外），试样不再进行热处理，其力学性能应分别符合表6～表10的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "经热处理的钢棒（除马氏体钢退火外），试样不再进行热处理，其力学性能应分别符合表6～表10的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.4.2",
+          "quote": "经热处理的钢棒（除马氏体钢退火外），试样不再进行热处理，其力学性能应分别符合表6～表10的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "8",
+      "field": "inspection_reference",
+      "a": {
+        "raw": "每批钢棒的检验项目及试验方法应符合表16的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "每批钢棒的检验项目及试验方法应符合表16的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 19,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "8",
+          "quote": "每批钢棒的检验项目及试验方法应符合表16的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "9.2",
+      "field": "batch_rule",
+      "a": {
+        "raw": "每批由同一牌号、同一炉号、同一加工方法、同一尺寸和同一交货状态（同一热处理炉次）的钢棒组成。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "每批由同一牌号、同一炉号、同一加工方法、同一尺寸和同一交货状态（同一热处理炉次）的钢棒组成。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 19,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "9.2",
+          "quote": "每批由同一牌号、同一炉号、同一加工方法、同一尺寸和同一交货状态（同一热处理炉次）的钢棒组成。"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

@@ -1,0 +1,271 @@
+{
+  "doc_id": "mas7079-b版-叶片用gh4720li合金锻件-94e4da71",
+  "items": [
+    {
+      "item_canonical": "腐蚀和无损检测",
+      "item_family": "corrosion",
+      "facets": {},
+      "required": true,
+      "note": "腐蚀和无损检测"
+    },
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "尺寸"
+    },
+    {
+      "item_canonical": "形状",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "形状"
+    },
+    {
+      "item_canonical": "硬度",
+      "item_family": "hardness",
+      "facets": {},
+      "required": true,
+      "note": "硬度"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "低倍组织"
+    },
+    {
+      "item_canonical": "晶粒度",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "晶粒度"
+    },
+    {
+      "item_canonical": "荧光检测",
+      "item_family": "ndt",
+      "facets": {},
+      "required": true,
+      "note": "荧光渗透"
+    },
+    {
+      "item_canonical": "持久",
+      "item_family": "stress_rupture",
+      "facets": {},
+      "required": true,
+      "note": "高温持久"
+    },
+    {
+      "item_canonical": "外观质量",
+      "item_family": "surface",
+      "facets": {},
+      "required": true,
+      "note": "外观质量"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "拉伸"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T7": {
+      "clause_id": "3.4.2",
+      "quote": "400℃拉伸性能要求见表1，按ASTME21进行测试。"
+    },
+    "T8": {
+      "clause_id": "3.4.2",
+      "quote": "拉伸性能要求见表2，按ASTME21进行测试。"
+    },
+    "T9": {
+      "clause_id": "3.4.3",
+      "quote": "持久性能要求见表3，按ASTME139进行测试。 表3 持久性能"
+    },
+    "T12": {
+      "clause_id": "4.3.2",
+      "quote": "质量一致性检验项目、取样数量、取样部位以及相应要求的章条号应符合表4的规定。叶片锻件金相检验取样位置见附录A。"
+    }
+  },
+  "link_scope": [
+    "T7",
+    "T8",
+    "T9",
+    "T12"
+  ],
+  "clauses": [
+    {
+      "clause_id": "附录A",
+      "kind": "sampling",
+      "quote": "叶片锻件金相检验取样位置示意图见图A.1。",
+      "fields": {
+        "sample_location": "A-A截面：叶片纵向低倍试样取样位置；B-B截面：叶身横向晶粒度取样位置；C-C截面：榫头横向晶粒度取样位置。"
+      }
+    },
+    {
+      "clause_id": "3.1",
+      "kind": "technical_requirement",
+      "quote": "## Table 锻件用棒材应符合MAS7078的要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.3",
+      "kind": "technical_requirement",
+      "quote": "试样应按3.3.1和3.3.2中的一种进行热处理，热处理程序应符合MFS0300的要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.4.1",
+      "kind": "sampling",
+      "quote": "获取的标准力学性能试样按3.3与叶片锻件同炉热处理（标刻熔炼炉号、热处理炉次号）。试样的取样方案应在制造方法数据卡中详细说明。",
+      "fields": {
+        "sample_location": "试样的取样方案应在制造方法数据卡中详细说明"
+      }
+    },
+    {
+      "clause_id": "3.4.2",
+      "kind": "technical_requirement",
+      "quote": "400℃拉伸性能要求见表1，按ASTME21进行测试。",
+      "fields": {
+        "requirement": "400℃拉伸性能要求见表1，按ASTME21进行测试。",
+        "method_standard": "ASTM E21",
+        "temperature": "400℃、650℃"
+      }
+    },
+    {
+      "clause_id": "3.4.3",
+      "kind": "technical_requirement",
+      "quote": "持久性能要求见表3，按ASTME139进行测试。 表3 持久性能",
+      "fields": {
+        "requirement": "持久性能要求见表3，按ASTME139进行测试。",
+        "method_standard": "ASTM E139"
+      }
+    },
+    {
+      "clause_id": "3.5",
+      "kind": "technical_requirement",
+      "quote": "硬度应不小于38HRC或其相当值（参见ASTM E140），按ASTM E10或ASTM E103进行测试。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.6.1",
+      "kind": "other",
+      "quote": "在叶片锻件的纵向低倍试样上不允许有目视可见的裂纹、折叠、空洞、夹杂、偏析、夹渣及其它冶金缺陷；",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.7",
+      "kind": "other",
+      "quote": "成品叶片按MFS0702进行荧光渗透检测(不允许喷丸后进行)，不允许有裂纹、折叠、分层、孔洞、夹杂等缺陷。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.8",
+      "kind": "technical_requirement",
+      "quote": "叶片锻件的形状、尺寸和公差应符合供需双方签定的图样的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.9",
+      "kind": "other",
+      "quote": "叶片锻件表面不允许有裂纹、折叠、分层、夹杂、空洞等缺陷。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.1",
+      "kind": "technical_requirement",
+      "quote": "## Table 质量控制应符合MAS1801的相关要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2",
+      "kind": "inspection",
+      "quote": "产品的供方应向需方提供检验试验的所有试样，并负责完成所有要求进行的试验。需方保留在需要时进行抽样检验和验证试验的权利，以保证产品符合本标准的要求。",
+      "fields": {
+        "requirement": "产品的供方应向需方提供检验试验的所有试样，并负责完成所有要求进行的试验。"
+      }
+    },
+    {
+      "clause_id": "4.3",
+      "kind": "inspection",
+      "quote": "4.3.1 组批规则 叶片锻件应成批提交验收。每批应由同一零件号、同一熔炼炉号、同一投产批和同一热处理炉批的锻件组成。",
+      "fields": {
+        "requirement": "叶片锻件应成批提交验收。"
+      }
+    },
+    {
+      "clause_id": "4.3.2",
+      "kind": "inspection",
+      "quote": "质量一致性检验项目、取样数量、取样部位以及相应要求的章条号应符合表4的规定。叶片锻件金相检验取样位置见附录A。",
+      "fields": {
+        "requirement": "质量一致性检验项目、取样数量、取样部位以及相应要求的章条号应符合表4的规定。",
+        "sample_quantity": "按表4规定",
+        "sample_location": "叶片锻件金相检验取样位置见附录A"
+      }
+    },
+    {
+      "clause_id": "4.3.3",
+      "kind": "inspection",
+      "quote": "力学性能某项检验结果不合格时，允许从该批叶片锻件中取双倍数量的试样对不合格项目进行复验，复验结果即使只有一个试样不合格即判为该复验结果不合格",
+      "fields": {
+        "requirement": "力学性能某项检验结果不合格时，允许从该批叶片锻件中取双倍数量的试样对不合格项目进行复验，复验结果即使只有一个试样不合格即判为该复验结果不合格。"
+      }
+    },
+    {
+      "clause_id": "4.3.3.2",
+      "kind": "inspection",
+      "quote": "高、低倍组织某项检验结果不合格时，该批叶片锻件判为不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.3.3",
+      "kind": "inspection",
+      "quote": "腐蚀或无损检测检验结果不合格时，该叶片锻件判为不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.3.4",
+      "kind": "inspection",
+      "quote": "形状、尺寸或外观质量检验不合格时，该叶片锻件判为不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.4",
+      "kind": "technical_requirement",
+      "quote": "试样的机加工应符合MAS1807或需方规定的其它要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5",
+      "kind": "delivery",
+      "quote": "5.1 标识 叶片锻件应在设计图纸规定处标刻热处理炉号、锻件批号和叶片序号。",
+      "fields": {
+        "requirement": "叶片锻件应在设计图纸规定处标刻热处理炉号、锻件批号和叶片序号。"
+      }
+    },
+    {
+      "clause_id": "5.3",
+      "kind": "packaging",
+      "quote": "产品应按照商业惯例做好装运准备以保证运输部门接收和安全交付。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6",
+      "kind": "other",
+      "quote": "供方在所有报价单上和承接采购单时应注明本标准的编号及其修订内容。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7",
+      "kind": "other",
+      "quote": "图A.1中各截面分别为不同金相检验项目取样位置： A-A截面：叶片纵向低倍试样取样位置；",
+      "fields": {}
+    }
+  ]
+}

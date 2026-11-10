@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gjb3325a_2019",
+  "standard_no": "GJB 3325A-2019",
+  "title": "航天固体火箭发动机用超高强度钢锻件规范",
+  "doc_type": "gjb",
+  "material": "超高强度钢",
+  "product_form": "锻件",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "B-unassigned",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "B 独立标注模板：请仅依据源文填写，不得复制 A 份；完成后运行 gold verify。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 3,
+      "caption": "表1 牌号及化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T4",
+      "page_no": 4,
+      "caption": "表4 力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T8",
+      "page_no": 5,
+      "caption": "表8 检验项目表",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": []
+}

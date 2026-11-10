@@ -1,0 +1,11 @@
+{
+  "currency": "CNY",
+  "ocr_per_page": 0.0,
+  "extract_per_call": 0.0,
+  "cpu_second": 0.0,
+  "token_per_1k": 0.0,
+  "pending_fields": ["ocr_per_page", "extract_per_call", "cpu_second", "token_per_1k"],
+  "confirmed_by": "",
+  "confirmed_at": "",
+  "note": "Fill business-confirmed unit prices before using money estimates. Zero means only resource units are reported."
+}

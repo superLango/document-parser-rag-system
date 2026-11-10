@@ -1,0 +1,191 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "ext_67c749bc76",
+  "standard_no": null,
+  "title": "728e72b0f2e64ff5bcec0974f6f4146c1787136380607",
+  "doc_type": "agreement",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 15,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\728e72b0f2e64ff5bcec0974f6f4146c1787136380607.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T2",
+      "page_no": 4,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-fe6e15c62d",
+          "grade": "30CrMnSiA",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.28~0.34",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.28,
+              "upper": 0.34,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.28~0.34"
+              }
+            },
+            "Mn": {
+              "raw": "0.8~1.1",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 1.1,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.8~1.1"
+              }
+            },
+            "Si": {
+              "raw": "0.9~1.2",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.9,
+              "upper": 1.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.9~1.2"
+              }
+            },
+            "S": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "P": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Cr": {
+              "raw": "0.8~1.1",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 1.1,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.8~1.1"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T4",
+      "page_no": 5,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-3708e809f9",
+          "grade": "30CrMnSiA",
+          "grade_level": null,
+          "condition": "正火加回火",
+          "facets": {},
+          "properties": {
+            "HB": {
+              "raw": "4.0~4.8",
+              "value": null,
+              "text": null,
+              "unit": "mm",
+              "comparator": "range",
+              "lower": 4.0,
+              "upper": 4.8,
+              "condition": "正火加回火",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T4",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "4.0~4.8"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

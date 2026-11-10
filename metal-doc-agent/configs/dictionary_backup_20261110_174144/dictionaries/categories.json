@@ -1,0 +1,685 @@
+{
+  "schema_version": "0.1.0",
+  "producer_version": "0.1.0",
+  "version": "hanson-58583e54",
+  "source": "offline_snapshot",
+  "entries": [
+    {
+      "business_code": "CATEGORY:44",
+      "business_name": "α层",
+      "type": "category",
+      "family": "metallography",
+      "facets": {},
+      "aliases": [
+        "α相"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:1",
+      "business_name": "低倍",
+      "type": "category",
+      "family": "metallography",
+      "facets": {},
+      "aliases": [
+        "低倍组织"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:45",
+      "business_name": "低周疲劳",
+      "type": "category",
+      "family": "fatigue",
+      "facets": {},
+      "aliases": [
+        "低循环疲劳"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:12",
+      "business_name": "低温拉伸",
+      "type": "category",
+      "family": "tensile",
+      "facets": {
+        "temperature": [
+          "低温"
+        ]
+      },
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:27",
+      "business_name": "化学成分",
+      "type": "category",
+      "family": "chemical_composition",
+      "facets": {},
+      "aliases": [
+        "化学分析"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:43",
+      "business_name": "塔形",
+      "type": "category",
+      "family": "metallography",
+      "facets": {},
+      "aliases": [
+        "塔形发纹"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:30",
+      "business_name": "备样",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:40",
+      "business_name": "夏比冲击",
+      "type": "category",
+      "family": "impact",
+      "facets": {
+        "impact_type": [
+          "夏比"
+        ]
+      },
+      "aliases": [
+        "冲击"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:11",
+      "business_name": "室温拉伸",
+      "type": "category",
+      "family": "tensile",
+      "facets": {
+        "temperature": [
+          "室温"
+        ]
+      },
+      "aliases": [
+        "常温拉伸"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:16",
+      "business_name": "室温持久",
+      "type": "category",
+      "family": "stress_rupture",
+      "facets": {
+        "temperature": [
+          "室温"
+        ]
+      },
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:42",
+      "business_name": "室温缺口拉伸",
+      "type": "category",
+      "family": "tensile",
+      "facets": {
+        "temperature": [
+          "室温"
+        ]
+      },
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:14",
+      "business_name": "布氏硬度",
+      "type": "category",
+      "family": "hardness",
+      "facets": {
+        "hardness_scale": [
+          "brinell"
+        ]
+      },
+      "aliases": [
+        "HBW"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:49",
+      "business_name": "应力疲劳",
+      "type": "category",
+      "family": "fatigue",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:19",
+      "business_name": "弯曲",
+      "type": "category",
+      "family": "bend",
+      "facets": {},
+      "aliases": [
+        "冷弯"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:18",
+      "business_name": "循环持久",
+      "type": "category",
+      "family": "stress_rupture",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:57",
+      "business_name": "扭转",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [
+        "扭转试验"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:10",
+      "business_name": "抗氧化",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [
+        "抗氧化性"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:7",
+      "business_name": "断口",
+      "type": "category",
+      "family": "metallography",
+      "facets": {},
+      "aliases": [
+        "断口组织"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:3",
+      "business_name": "晶粒度",
+      "type": "category",
+      "family": "metallography",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:9",
+      "business_name": "晶间腐蚀",
+      "type": "category",
+      "family": "corrosion",
+      "facets": {},
+      "aliases": [
+        "晶间腐蚀试验"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:48",
+      "business_name": "步冷实验",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [
+        "步冷试验"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:31",
+      "business_name": "洛氏硬度",
+      "type": "category",
+      "family": "hardness",
+      "facets": {
+        "hardness_scale": [
+          "rockwell"
+        ]
+      },
+      "aliases": [
+        "HRC",
+        "HRB"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:25",
+      "business_name": "淬透性",
+      "type": "category",
+      "family": "hardenability",
+      "facets": {},
+      "aliases": [
+        "末端淬透性"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:67",
+      "business_name": "热膨胀",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [
+        "线膨胀"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:6",
+      "business_name": "相变点",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [
+        "相变温度"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:39",
+      "business_name": "组合持久",
+      "type": "category",
+      "family": "stress_rupture",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:32",
+      "business_name": "维氏硬度",
+      "type": "category",
+      "family": "hardness",
+      "facets": {
+        "hardness_scale": [
+          "vickers"
+        ]
+      },
+      "aliases": [
+        "HV"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:37",
+      "business_name": "缺口持久",
+      "type": "category",
+      "family": "stress_rupture",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:8",
+      "business_name": "脱碳层",
+      "type": "category",
+      "family": "metallography",
+      "facets": {},
+      "aliases": [
+        "脱碳层深度"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:26",
+      "business_name": "落锤",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:20",
+      "business_name": "蠕变",
+      "type": "category",
+      "family": "creep",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:24",
+      "business_name": "裂纹扩展速率",
+      "type": "category",
+      "family": "fatigue",
+      "facets": {},
+      "aliases": [
+        "疲劳裂纹扩展速率",
+        "裂纹扩展"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:5",
+      "business_name": "铁素体",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [
+        "自由铁素体"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:4",
+      "business_name": "非金属夹杂",
+      "type": "category",
+      "family": null,
+      "facets": {},
+      "aliases": [
+        "非金属夹杂物",
+        "夹杂物"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:2",
+      "business_name": "高倍组织",
+      "type": "category",
+      "family": "metallography",
+      "facets": {},
+      "aliases": [
+        "显微组织"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:46",
+      "business_name": "高周疲劳",
+      "type": "category",
+      "family": "fatigue",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:17",
+      "business_name": "高温光滑持久",
+      "type": "category",
+      "family": "stress_rupture",
+      "facets": {
+        "temperature": [
+          "高温"
+        ]
+      },
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:13",
+      "business_name": "高温拉伸",
+      "type": "category",
+      "family": "tensile",
+      "facets": {
+        "temperature": [
+          "高温"
+        ]
+      },
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:55",
+      "business_name": "高温缺口拉伸",
+      "type": "category",
+      "family": "tensile",
+      "facets": {
+        "temperature": [
+          "高温"
+        ]
+      },
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:68",
+      "business_name": "尺寸",
+      "type": "category",
+      "family": "dimension",
+      "facets": {},
+      "aliases": [
+        "形状和尺寸"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:69",
+      "business_name": "表面质量",
+      "type": "category",
+      "family": "surface",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:70",
+      "business_name": "超声波检测",
+      "type": "category",
+      "family": "ndt",
+      "facets": {},
+      "aliases": [],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:71",
+      "business_name": "应力腐蚀",
+      "type": "category",
+      "family": "corrosion",
+      "facets": {},
+      "aliases": [
+        "应力腐蚀性能",
+        "抗应力腐蚀性能",
+        "应力腐蚀试验"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    },
+    {
+      "business_code": "CATEGORY:72",
+      "business_name": "剥落腐蚀",
+      "type": "category",
+      "family": "corrosion",
+      "facets": {},
+      "aliases": [
+        "剥落腐蚀性能",
+        "抗剥落腐蚀性能",
+        "剥落腐蚀试验"
+      ],
+      "standard_no": null,
+      "category_code": null,
+      "category_name": null,
+      "status": "active",
+      "version": "hanson-58583e54"
+    }
+  ]
+}

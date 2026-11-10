@@ -1,0 +1,17 @@
+{
+  "product_full": [
+    {"field": "document.standard_no", "required": true, "match": "document", "keywords": ["范围", "规范性引用文件"]},
+    {"field": "records.grade", "required": true, "match": "grade", "keywords": ["牌号", "技术要求"]},
+    {"field": "records.chemical_composition", "required": true, "match": "chemical", "keywords": ["化学成分"]},
+    {"field": "records.mechanical_properties", "required": true, "match": "mechanical", "keywords": ["力学性能", "试验方法"]},
+    {"field": "records.heat_treatment", "required": false, "match": "condition", "keywords": ["热处理", "交货状态"]},
+    {"field": "records.inspection", "required": false, "match": "inspection", "keywords": ["检验规则", "取样"]}
+  ],
+  "gjb": [
+    {"field": "document.standard_no", "required": true, "match": "document", "keywords": ["范围"]},
+    {"field": "records.grade", "required": true, "match": "grade", "keywords": ["牌号", "技术要求"]},
+    {"field": "records.chemical_composition", "required": true, "match": "chemical", "keywords": ["化学成分"]},
+    {"field": "records.mechanical_properties", "required": true, "match": "mechanical", "keywords": ["力学性能"]},
+    {"field": "records.inspection", "required": true, "match": "inspection", "keywords": ["检验规则", "取样"]}
+  ]
+}

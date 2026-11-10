@@ -1,0 +1,270 @@
+{
+  "doc_id": "gbt1591_2018",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 0.1364,
+    "cell_value_agreement": 1.0,
+    "comparator_unit_agreement": 1.0,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 22,
+    "record_keys_match": 3,
+    "cells_total": 42,
+    "cells_value_match": 42,
+    "cells_strict_match": 42,
+    "clause_fields_total": 6,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [
+    [
+      "T1",
+      "Q355B",
+      "C列覆盖<=40h与>40|热轧"
+    ],
+    [
+      "T1",
+      "Q355C",
+      "<=40h|热轧"
+    ],
+    [
+      "T1",
+      "Q355C",
+      ">40|热轧"
+    ],
+    [
+      "T9",
+      "Q355B、Q355C",
+      "<=100|<=16|ReH|Rm|方向按7.4.1.5|热轧"
+    ],
+    [
+      "T9",
+      "Q355D",
+      "<=100|<=16|ReH|Rm|方向按7.4.1.5|热轧"
+    ],
+    [
+      "T9",
+      "Q390B、Q390C、Q390D",
+      "<=100|<=16|ReH|Rm|方向按7.4.1.5|热轧"
+    ],
+    [
+      "T9",
+      "Q420B、Q420C",
+      "<=100|<=16|ReH|Rm|方向按7.4.1.5|热轧"
+    ],
+    [
+      "T9",
+      "Q460C",
+      "<=100|<=16|ReH|Rm|方向按7.4.1.5|热轧"
+    ]
+  ],
+  "record_keys_only_b": [
+    [
+      "T1",
+      "Q355B",
+      "热轧"
+    ],
+    [
+      "T1",
+      "Q355C",
+      "热轧"
+    ],
+    [
+      "T1",
+      "Q355D",
+      "热轧"
+    ],
+    [
+      "T1",
+      "Q390C",
+      "热轧"
+    ],
+    [
+      "T1",
+      "Q390D",
+      "热轧"
+    ],
+    [
+      "T1",
+      "Q420C",
+      "热轧"
+    ],
+    [
+      "T9",
+      "Q355B、Q355C",
+      "热轧"
+    ],
+    [
+      "T9",
+      "Q355D",
+      "265b"
+    ],
+    [
+      "T9",
+      "Q390B、Q390C、Q390D",
+      "热轧"
+    ],
+    [
+      "T9",
+      "Q420B、Q420C",
+      "热轧"
+    ],
+    [
+      "T9",
+      "Q460C",
+      "热轧"
+    ]
+  ],
+  "value_diffs": [],
+  "clause_field_diffs": [
+    {
+      "clause_id": "7.1.1",
+      "field": "requirement",
+      "a": {
+        "raw": "热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 7,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.1.1",
+          "quote": "热轧钢的牌号及化学成分（熔炼分析）应符合表1的规定，其碳当量值应符合表2的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.4.1.1",
+      "field": "requirement",
+      "a": {
+        "raw": "热轧钢材的拉伸性能应符合表7和表8的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "热轧钢材的拉伸性能应符合表7和表8的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 13,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.4.1.1",
+          "quote": "热轧钢材的拉伸性能应符合表7和表8的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.4.1.5",
+      "field": "direction",
+      "a": {
+        "raw": "对于公称宽度不小于600mm的钢板及钢带，拉伸试验取横向试样；其他钢材的拉伸试验取纵向试样。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "公称宽度不小于600mm的钢板及钢带取横向；其他钢材取纵向",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 13,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.4.1.5",
+          "quote": "拉伸试验取横向试样；其他钢材的拉伸试验取纵向试样。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "7.4.2.1",
+      "field": "requirement",
+      "a": {
+        "raw": "钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 13,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "7.4.2.1",
+          "quote": "钢材的夏比（V型缺口）冲击试验的试验温度及冲击吸收能量应符合表11的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "8.3",
+      "field": "sample_location",
+      "a": {
+        "raw": "当需方无特殊要求时，冲击试验的取样位置按如下规定进行",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "型钢按GB/T2975—2018图A.3；圆钢按图A.5；方钢按图A.9；钢板按图A.11",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 19,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "8.3",
+          "quote": "当需方无特殊要求时，冲击试验的取样位置按如下规定进行"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "9.3",
+      "field": "sample_quantity",
+      "a": {
+        "raw": "每批钢材的取样部位和取样数量见表13。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "每批钢材的取样部位和取样数量见表13。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 19,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "9.3",
+          "quote": "每批钢材的取样部位和取样数量见表13。"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

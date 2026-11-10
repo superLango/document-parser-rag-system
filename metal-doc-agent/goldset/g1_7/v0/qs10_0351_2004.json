@@ -1,0 +1,318 @@
+{
+  "doc_id": "q-s-10-0351-2004-3a503318",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "facets": {},
+      "required": true,
+      "note": "化学成分"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "required": true,
+      "note": "硬度"
+    },
+    {
+      "item_canonical": "室温夏比冲击",
+      "item_family": "impact",
+      "facets": {
+        "temperature": "室温",
+        "impact_type": "夏比"
+      },
+      "required": true,
+      "note": "室温冲击试验"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "低倍组织检验"
+    },
+    {
+      "item_canonical": "高倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "高倍组织检验"
+    },
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "facets": {},
+      "required": true,
+      "note": "超声波检验"
+    },
+    {
+      "item_canonical": "持久",
+      "item_family": "stress_rupture",
+      "facets": {},
+      "required": true,
+      "note": "高温持久试验"
+    },
+    {
+      "item_canonical": "外观质量",
+      "item_family": "surface",
+      "facets": {},
+      "required": true,
+      "note": "外观质量"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "拉伸"
+    },
+    {
+      "item_canonical": "高温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "高温"
+      },
+      "required": true,
+      "note": "高温拉伸试验"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T2": {
+      "clause_id": "3.2",
+      "quote": "3. 2 化学成分 合金的化学成分应符合表1的规定。"
+    },
+    "T3": {
+      "clause_id": "3.4.2.1",
+      "quote": "从棒材上切取的横向试样经3.4.1热处理后的室温力学性能应符合表2的规定。"
+    },
+    "T4": {
+      "clause_id": "3.4.2.2",
+      "quote": "从棒材上切取的横向试样经3.4.1热处理后的高温力学性能应符合表3的规定。"
+    },
+    "T5": {
+      "clause_id": "4.2.2",
+      "quote": "质量一致性检验项目、取样数量和取样部位以及相应要求和检验方法的章、条号应符合表4的规定。"
+    }
+  },
+  "link_scope": [
+    "T2",
+    "T3",
+    "T4",
+    "T5"
+  ],
+  "clauses": [
+    {
+      "clause_id": "3.1.1",
+      "kind": "technical_requirement",
+      "quote": "用于制造棒材的铸锭应采用真空自耗电弧炉熔炼，熔炼次数应为三次。最后一次熔炼稳定阶段的炉内压强应不大于 5Pa 。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.2",
+      "kind": "technical_requirement",
+      "quote": "3. 2 化学成分 合金的化学成分应符合表1的规定。",
+      "fields": {
+        "requirement": "合金的化学成分应符合表1的规定。"
+      }
+    },
+    {
+      "clause_id": "3.3",
+      "kind": "delivery",
+      "quote": "棒材以锻态，且经车光或磨光后交货。",
+      "fields": {
+        "requirement": "棒材以锻态，且经车光或磨光后交货。表面粗糙度Ra应不大于3.2μm。"
+      }
+    },
+    {
+      "clause_id": "3.4.2.1",
+      "kind": "technical_requirement",
+      "quote": "从棒材上切取的横向试样经3.4.1热处理后的室温力学性能应符合表2的规定。",
+      "fields": {
+        "requirement": "从棒材上切取的横向试样经3.4.1热处理后的室温力学性能应符合表2的规定。",
+        "temperature": "室温"
+      }
+    },
+    {
+      "clause_id": "3.4.2.2",
+      "kind": "technical_requirement",
+      "quote": "从棒材上切取的横向试样经3.4.1热处理后的高温力学性能应符合表3的规定。",
+      "fields": {
+        "requirement": "从棒材上切取的横向试样经3.4.1热处理后的高温力学性能应符合表3的规定。",
+        "temperature": "高温"
+      }
+    },
+    {
+      "clause_id": "3.5",
+      "kind": "technical_requirement",
+      "quote": "棒材横向低倍受检面上，不应有裂纹、缩尾、气孔、偏析、金属或非金属夹杂及其他冶金缺陷；",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.6",
+      "kind": "technical_requirement",
+      "quote": "棒材的高倍组织应符合图2的1~6级(9级评级图)图片要求。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.7",
+      "kind": "technical_requirement",
+      "quote": "每批棒材应按HB6623检测并提供实测的 beta 转变温度数据。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.8",
+      "kind": "technical_requirement",
+      "quote": "棒材的超声波检验按GB/T5193-2007的B级验收，可采用半声程法探伤。",
+      "fields": {
+        "requirement": "棒材的超声波检验按GB/T5193-2007的B级验收，可采用半声程法探伤。",
+        "method_standard": "GB/T5193-2007"
+      }
+    },
+    {
+      "clause_id": "3.9.3",
+      "kind": "technical_requirement",
+      "quote": "棒材的端面应切平整，切斜应不大于 5mm 。棒材弯曲度应不大于 5mm / m ；不圆度不应超出其直径的极限偏差。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2.2",
+      "kind": "inspection",
+      "quote": "质量一致性检验项目、取样数量和取样部位以及相应要求和检验方法的章、条号应符合表4的规定。对相当于铸锭头部和尾部位置的棒材，应有明显的符号标记，并在质量证明书中注明。",
+      "fields": {
+        "requirement": "质量一致性检验项目、取样数量和取样部位以及相应要求和检验方法的章、条号应符合表4的规定。",
+        "sample_quantity": "按表4规定",
+        "sample_location": "按表4规定"
+      }
+    },
+    {
+      "clause_id": "4.2.3",
+      "kind": "inspection",
+      "quote": "4. 2.3 判定与复验规则 4. 2.3.1 当化学成分分析结果不合格时，应重新取样，对不合格元素进行复验，复验结果仍不合格，则该批判为不合格。",
+      "fields": {
+        "requirement": "当化学成分分析结果不合格时，应重新取样，对不合格元素进行复验，复验结果仍不合格，则该批判为不合格。"
+      }
+    },
+    {
+      "clause_id": "4.2.3.1",
+      "kind": "sampling",
+      "quote": "当化学成分分析结果不合格时，应重新取样，对不合格元素进行复验，复验结果仍不合格，则该批判为不合格。",
+      "fields": {
+        "requirement": "当化学成分分析结果不合格时，应重新取样，对不合格元素进行复验，复验结果仍不合格，则该批判为不合格。",
+        "sample_location": "重新取样，对不合格元素进行复验"
+      }
+    },
+    {
+      "clause_id": "4.2.4",
+      "kind": "other",
+      "quote": "对已验收的棒材在随后的加工过程中发现不允许的冶金缺陷，并经供需双方确认后，应予退货。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.1",
+      "kind": "test_method",
+      "quote": "4.3.1 化学成分分析 合金的化学成分分析按GB/T4698进行。",
+      "fields": {
+        "method_standard": "GB/T4698"
+      }
+    },
+    {
+      "clause_id": "4.3.2",
+      "kind": "test_method",
+      "quote": "4.3.2 室温拉伸试验 室温拉伸试验按GB/T228.1进行。",
+      "fields": {
+        "method_standard": "GB/T228.1"
+      }
+    },
+    {
+      "clause_id": "4.3.3",
+      "kind": "test_method",
+      "quote": "4.3.3 室温冲击试验 室温冲击试验按GB/T229进行。",
+      "fields": {
+        "method_standard": "GB/T229"
+      }
+    },
+    {
+      "clause_id": "4.3.4",
+      "kind": "test_method",
+      "quote": "4.3.4 高温拉伸试验 高温拉伸试验按GB/T228.2进行。",
+      "fields": {
+        "method_standard": "GB/T228.2"
+      }
+    },
+    {
+      "clause_id": "4.3.5",
+      "kind": "test_method",
+      "quote": "4.3.5 布氏硬度试验 布氏硬度试验按GB/T231.1进行。",
+      "fields": {
+        "method_standard": "GB/T231.1"
+      }
+    },
+    {
+      "clause_id": "4.3.6",
+      "kind": "test_method",
+      "quote": "4.3.6 高温持久试验 高温持久试验按GB/T2039进行。",
+      "fields": {
+        "method_standard": "GB/T2039"
+      }
+    },
+    {
+      "clause_id": "4.3.7",
+      "kind": "test_method",
+      "quote": "4.3.7 低倍组织检验 低倍组织检验按GB/T5168进行。",
+      "fields": {
+        "method_standard": "GB/T5168"
+      }
+    },
+    {
+      "clause_id": "4.3.8",
+      "kind": "test_method",
+      "quote": "4.3.8 高倍组织检验验 高倍组织检验按GB/T5168进行。",
+      "fields": {
+        "method_standard": "GB/T5168"
+      }
+    },
+    {
+      "clause_id": "4.3.9",
+      "kind": "test_method",
+      "quote": "转变温度的检验按 HB 6623 进行。",
+      "fields": {
+        "method_standard": "HB6623"
+      }
+    },
+    {
+      "clause_id": "4.3.10",
+      "kind": "test_method",
+      "quote": "4.3.10 超声波检验 超声波检验按GB/T5193-2007进行。",
+      "fields": {
+        "method_standard": "GB/T5193-2007"
+      }
+    },
+    {
+      "clause_id": "5",
+      "kind": "delivery",
+      "quote": "5.1 包装、标志、运输和贮存 棒材的包装、标志、运输和贮存按GB/T8180进行。",
+      "fields": {
+        "requirement": "棒材的包装、标志、运输和贮存按GB/T8180进行。",
+        "method_standard": "GB/T8180"
+      }
+    },
+    {
+      "clause_id": "5.1",
+      "kind": "packaging",
+      "quote": "棒材的包装、标志、运输和贮存按GB/T8180进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.2",
+      "kind": "other",
+      "quote": "合同或订单中应注明下列内容： a) 本标准名称和编号；",
+      "fields": {}
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+name: metal-agent
+
+# Three-plane local stack:
+#   platform (api/web) + engine (api/workers) + external model plane (1.35).
+# GPU model processes are never started here.
+# Release drill: build/up with HANSON_RELEASE_TAG=<tag>; images are named
+# hanson-r1-<service>:<tag>, so rollback is `HANSON_RELEASE_TAG=<prev> up -d`.
+
+x-engine-env: &engine-env
+  METAL_DOC_HOME: /app/metal-doc-agent
+  METAL_DOC_DATA: /data/engine
+  METAL_DOC_OCR: ${METAL_DOC_OCR:-glm}
+  METAL_DOC_EXTRACTOR: ${METAL_DOC_EXTRACTOR:-qwen}
+  METAL_DOC_EXTRACTOR_PROMPT: ${METAL_DOC_EXTRACTOR_PROMPT:-native}
+  METAL_DOC_SFT_RULES_FIRST: ${METAL_DOC_SFT_RULES_FIRST:-0}
+  METAL_DOC_SFT_ROW_LIMIT: ${METAL_DOC_SFT_ROW_LIMIT:-0}
+  GLM_OCR_BASE_URL: ${GLM_OCR_BASE_URL:-http://192.168.188.75:9977/v1}
+  # Internal LAN endpoint: the public 35032-35035 port mapping is currently
+  # unavailable, and the LAN path was verified with a 200KB OCR request.
+  GLM_OCR_FALLBACK_BASE_URL: ${GLM_OCR_FALLBACK_BASE_URL:-}
+  GLM_OCR_STREAM: ${GLM_OCR_STREAM:-1}
+  GLM_OCR_TIMEOUT: ${GLM_OCR_TIMEOUT:-90}
+  LAYOUT_SERVICE_URL: ${LAYOUT_SERVICE_URL:-http://192.168.188.75:9979}
+  LAYOUT_SERVICE_FALLBACK_URL: ${LAYOUT_SERVICE_FALLBACK_URL:-http://192.168.188.75:9978}
+  LAYOUT_SERVICE_FALLBACK_URLS: ${LAYOUT_SERVICE_FALLBACK_URLS:-}
+  LAYOUT_TIMEOUT: ${LAYOUT_TIMEOUT:-60}
+  LAYOUT_SERVICE_TOKEN: ${LAYOUT_SERVICE_TOKEN:-}
+  QWEN_BASE_URL: ${QWEN_BASE_URL:-http://192.168.188.75:9991/v1}
+  QWEN_FALLBACK_BASE_URL: ${QWEN_FALLBACK_BASE_URL:-}
+  QWEN_MODEL: ${QWEN_MODEL:-Qwen3.6-35B-A3B-NVFP4}
+  QWEN_STREAM: ${QWEN_STREAM:-1}
+  QWEN_CONCURRENCY: ${QWEN_CONCURRENCY:-1}
+  SFT_BASE_URL: ${SFT_BASE_URL:-http://39.107.239.208:35035/v1}
+  SFT_FALLBACK_BASE_URL: ${SFT_FALLBACK_BASE_URL:-}
+  SFT_MODEL: ${SFT_MODEL:-Qwen3.6-35B-A3B-NVFP4}
+  MODEL_TIMEOUT: ${MODEL_TIMEOUT:-300}
+  MODEL_RETRIES: ${MODEL_RETRIES:-1}
+  MODEL_FAILOVER_PROBE_SECONDS: ${MODEL_FAILOVER_PROBE_SECONDS:-60}
+  METAL_DOC_RECIPE_ROUTING: ${METAL_DOC_RECIPE_ROUTING:-1}
+  METAL_DOC_ORCHESTRATE: ${METAL_DOC_ORCHESTRATE:-1}
+  METAL_DOC_DICTIONARY_CATEGORY_MODE: ${METAL_DOC_DICTIONARY_CATEGORY_MODE:-strict}
+  METAL_DOC_TOOL_TIMEOUT: ${METAL_DOC_TOOL_TIMEOUT:-900}
+  OCR_PAGE_CONCURRENCY: ${OCR_PAGE_CONCURRENCY:-1}
+  OCR_BLOCK_CONCURRENCY: ${OCR_BLOCK_CONCURRENCY:-2}
+  OCR_MAX_INFLIGHT: ${OCR_MAX_INFLIGHT:-2}
+  OCR_TABLE_INFLIGHT: ${OCR_TABLE_INFLIGHT:-2}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: hanson
+      POSTGRES_USER: hanson
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hanson -d hanson"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    profiles: ["extras"]
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  minio:
+    profiles: ["extras"]
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-hanson}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-change-me}
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    restart: unless-stopped
+
+  platform-api:
+    image: hanson-r1-platform-api:${HANSON_RELEASE_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.api
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    environment:
+      <<: *engine-env
+      HANSON_ENV: ${HANSON_ENV:-production}
+      HANSON_PLATFORM_DATA: /data/platform
+      HANSON_DATABASE_URL: postgresql+psycopg://hanson:${POSTGRES_PASSWORD:-change-me}@postgres:5432/hanson
+      HANSON_SECRET_KEY: ${HANSON_SECRET_KEY:-change-me-in-production}
+      HANSON_ENGINE_ROOT: /app/metal-doc-agent
+      HANSON_INLINE_JOBS: "false"
+      HANSON_DB_AUTO_CREATE: "false"
+      HANSON_REQUIRE_AUTH: ${HANSON_REQUIRE_AUTH:-false}
+      HANSON_ANONYMOUS_USERNAME: ${HANSON_ANONYMOUS_USERNAME:-embed_guest}
+      HANSON_ALLOW_EMBED: ${HANSON_ALLOW_EMBED:-true}
+      SELFHEAL_ENABLED: ${SELFHEAL_ENABLED:-0}
+      SELFHEAL_BASE_URL: ${SELFHEAL_BASE_URL:-http://host.docker.internal:8100}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn hanson_api.main:app --host 0.0.0.0 --port 8000"
+    volumes:
+      - platform-data:/data/platform
+      - engine-data:/data/engine
+      - ../../markdown:/app/markdown:ro
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  engine-api:
+    image: hanson-r1-engine-api:${HANSON_RELEASE_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.engine
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    environment: *engine-env
+    volumes:
+      - engine-data:/data/engine
+      - platform-data:/data/platform:ro
+      - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8010/ready')",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  worker-prod:
+    image: hanson-r1-worker-prod:${HANSON_RELEASE_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.engine
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    environment:
+      <<: *engine-env
+      WORKER_POOL: production
+    command: ["python", "-m", "metal_doc_agent.worker", "--watch", "--limit", "4"]
+    # Bypass the Docker bridge: streamed model responses intermittently stall
+    # for 90s through bridge/NAT on this host (measured 2026-11-02).
+    network_mode: host
+    volumes:
+      - engine-data:/data/engine
+      - platform-data:/data/platform:ro
+      - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
+    depends_on:
+      engine-api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker-explore:
+    image: hanson-r1-worker-explore:${HANSON_RELEASE_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.engine
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    environment:
+      <<: *engine-env
+      WORKER_POOL: explore
+      METAL_DOC_RECIPE_ROUTING: "0"
+    command: ["python", "-m", "metal_doc_agent.worker", "--watch", "--limit", "4"]
+    network_mode: host
+    volumes:
+      - engine-data:/data/engine
+      - platform-data:/data/platform:ro
+      - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
+    depends_on:
+      engine-api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    image: hanson-r1-web:${HANSON_RELEASE_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.web
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org}
+    ports:
+      - "8080:80"
+    depends_on:
+      platform-api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
+  platform-data:
+  engine-data:

@@ -1,0 +1,265 @@
+{
+  "doc_id": "sjx100_410_2019",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 1.0,
+    "cell_value_agreement": 1.0,
+    "comparator_unit_agreement": 1.0,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 0,
+    "record_keys_match": 0,
+    "cells_total": 0,
+    "cells_value_match": 0,
+    "cells_strict_match": 0,
+    "clause_fields_total": 10,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [],
+  "record_keys_only_b": [],
+  "value_diffs": [],
+  "clause_field_diffs": [
+    {
+      "clause_id": "2.2.1",
+      "field": "sample_allocation",
+      "a": {
+        "raw": "供方在1/2件试环上进行理化检验，另1/2件打上相应标志随同批锻件发往需方复验用",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "1/2件试环理化检验，另1/2件随同批锻件发往需方复验",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 2,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.1",
+          "quote": "供方在1/2件试环上进行理化检验，另1/2件打上相应标志随同批锻件发往需方复验用。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.1",
+      "field": "sample_location",
+      "a": {
+        "raw": "取自锻件本体的试环",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "取自锻件本体的试环",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 2,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.1",
+          "quote": "锻件理化检测在取自锻件本体的试环上进行，试环应取自位于或相当于铸锭头部的锻件，试环应与同批锻件经过相同的热处理过程后切下；供方在1/2件试环上进行理化检验，另1/2件打上相应标志随同批锻件发往需方复验用。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.2",
+      "field": "acceptance_basis",
+      "a": {
+        "raw": "410JX（通用）-D-S9-6503机匣锻件",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "410JX（通用）-D-S9-6503机匣锻件",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.2",
+          "quote": "在试环上进行化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织检验，按410JX（通用）-D-S9-6503机匣锻件验收。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.2",
+      "field": "inspection_items",
+      "a": {
+        "raw": "化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.2",
+          "quote": "在试环上进行化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织检验，按410JX（通用）-D-S9-6503机匣锻件验收。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.2",
+      "field": "sample_location",
+      "a": {
+        "raw": "试环",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "试环",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.2",
+          "quote": "在试环上进行化学成分、室温拉伸、硬度、艾氏冲击、断口、低倍组织、高倍组织检验，按410JX（通用）-D-S9-6503机匣锻件验收。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.3",
+      "field": "hardness_range",
+      "a": {
+        "raw": "HB=286-331",
+        "value": null,
+        "lower": 286.0,
+        "upper": 331.0,
+        "text": null,
+        "unit": "HB",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 4,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.3",
+          "quote": "硬度值HB=286-331"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.3",
+      "field": "sample_location",
+      "a": {
+        "raw": "上下端面圆周方向均布4点（共计8点）",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "上下端面圆周方向均布4点（共计8点）",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 4,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.3",
+          "quote": "上下端面圆周方向均布4点（共计8点）"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.3",
+      "field": "sample_quantity",
+      "a": {
+        "raw": "逐件",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "逐件",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 4,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.3",
+          "quote": "锻件应逐件进行上下端面圆周方向均布4点（共计8点）的硬度检查"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.4",
+      "field": "acceptance_level",
+      "a": {
+        "raw": "A级",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "A级",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 4,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.4",
+          "quote": "按A级验收"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2.4",
+      "field": "test_method",
+      "a": {
+        "raw": "HB/Z59",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "HB/Z59",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 4,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2.4",
+          "quote": "锻件应逐件按HB/Z59进行超声波检验，按A级验收。"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

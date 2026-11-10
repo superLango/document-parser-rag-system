@@ -1,0 +1,18 @@
+{
+  "doc_id": "jx25_035",
+  "items": [
+    {"item_canonical": "化学成分", "item_family": "chemical_composition", "note": "检验项目表"},
+    {"item_canonical": "室温拉伸", "item_family": "tensile", "facets": {"temperature": "室温"}, "note": "室温纵向拉伸"},
+    {"item_canonical": "室温夏比冲击", "item_family": "impact", "facets": {"temperature": "室温", "impact_type": "夏比"}, "note": "室温纵向冲击 KU5"},
+    {"item_canonical": "布氏硬度", "item_family": "hardness", "facets": {"hardness_scale": "brinell"}, "note": "HBW"},
+    {"item_canonical": "持久", "item_family": "stress_rupture", "facets": {"temperature": "高温"}, "note": "高温纵向持久"},
+    {"item_canonical": "低倍组织", "item_family": "metallography", "note": "低倍"},
+    {"item_canonical": "晶粒度", "item_family": "metallography", "note": "晶粒度"},
+    {"item_canonical": "超声检测", "item_family": "ndt", "note": "超声波检验"},
+    {"item_canonical": "外形", "item_family": "dimension", "note": "检验项目表"},
+    {"item_canonical": "尺寸", "item_family": "dimension", "note": "检验项目表"},
+    {"item_canonical": "外观质量", "item_family": "surface", "note": "检验项目表"},
+    {"item_canonical": "包装", "item_family": "marking", "note": "棒材的包装"}
+  ],
+  "unknown_ok": []
+}

@@ -1,0 +1,25 @@
+{
+  "recipe_id": "chemical_element_rows_v1",
+  "version": 1,
+  "status": "active",
+  "profile": "chemical_composition",
+  "signature": {
+    "profile": "chemical_composition",
+    "orientation": "element_rows",
+    "n_cols": 5,
+    "blocks": 1,
+    "tokens": ["元素", "牌号", "化学成分"]
+  },
+  "bindings": {
+    "row_key": ["元素"],
+    "conditions": ["牌号", "级别"],
+    "measures": {
+      "C": {"unit": "%", "family": "chemical_composition"}
+    }
+  },
+  "rules": {
+    "transposed": true,
+    "strip_footnote_marks": true
+  },
+  "coverage_template": "product_full"
+}

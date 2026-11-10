@@ -1,0 +1,515 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "jx25_035",
+  "standard_no": "JX-25-035",
+  "title": "GH4698高温合金棒材采购技术协议",
+  "doc_type": "agreement",
+  "material": "GH4698高温合金",
+  "product_form": "棒材",
+  "source_type": "digital_native",
+  "annotation": {
+    "status": "draft",
+    "annotator": "agent-B-dryrun",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "AI dry-run B：由 runs/m1_qwen_s8 生成，仅覆盖 chemical/mechanical 记录；inspection/classification/clause 不在本次范围；不得作为 verified 依据。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 2,
+      "caption": "表1 GH4698 合金化学成分（wt%）",
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [
+        {
+          "record_id": "rec-9a7b16b641",
+          "grade": "GH4698",
+          "grade_level": null,
+          "condition": "wt% / 化学成分",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.03~0.07",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.03,
+              "upper": 0.07,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.03~0.07"
+              }
+            },
+            "Si": {
+              "raw": "≤0.50",
+              "value": 0.5,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.50"
+              }
+            },
+            "Mn": {
+              "raw": "≤0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 1,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.40"
+              }
+            },
+            "S": {
+              "raw": "≤0.007",
+              "value": 0.007,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 1,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.007"
+              }
+            },
+            "P": {
+              "raw": "≤0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 1,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.015"
+              }
+            },
+            "Cr": {
+              "raw": "13~16",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 13.0,
+              "upper": 16.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 1,
+                "col": 6,
+                "clause_id": null,
+                "quote": "13~16"
+              }
+            },
+            "Ni": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 1,
+                "col": 7,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            },
+            "Ti": {
+              "raw": "2.35~2.75",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 2.35,
+              "upper": 2.75,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "2.35~2.75"
+              }
+            },
+            "Al": {
+              "raw": "1.45~1.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.45,
+              "upper": 1.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "1.45~1.80"
+              }
+            },
+            "Mo": {
+              "raw": "2.8~3.2",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 2.8,
+              "upper": 3.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "2.8~3.2"
+              }
+            },
+            "Nb": {
+              "raw": "1.9~2.2",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.9,
+              "upper": 2.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "1.9~2.2"
+              }
+            },
+            "Fe": {
+              "raw": "≤2.0",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤2.0"
+              }
+            },
+            "B": {
+              "raw": "≤0.008",
+              "value": 0.008,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤0.008"
+              }
+            },
+            "Pb": {
+              "raw": "≤0.001",
+              "value": 0.001,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≤0.001"
+              }
+            },
+            "Ce": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            },
+            "Sb": {
+              "raw": "≤0.001",
+              "value": 0.001,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.001"
+              }
+            },
+            "Sn": {
+              "raw": "≤0.001",
+              "value": 0.001,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 5,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.001"
+              }
+            },
+            "As": {
+              "raw": "≤0.001",
+              "value": 0.001,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T1",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.001"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T2",
+      "page_no": 2,
+      "caption": "表2 3H698-BД合金力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [
+        {
+          "record_id": "rec-98395d50ac",
+          "grade": "GH4698",
+          "grade_level": null,
+          "condition": "固溶+时效 / 固溶：1100-1200℃，保温8h，空冷；固溶：990-1010℃，保温4h，空冷；时效：765-785℃，保温16h，空冷; / 室温",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "≥1130",
+              "value": 1130.0,
+              "text": null,
+              "unit": "Mpa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "固溶+时效 / 固溶：1100-1200℃，保温8h，空冷；固溶：990-1010℃，保温4h，空冷；时效：765-785℃，保温16h，空冷; / 室温",
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T2",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥1130"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥705",
+              "value": 705.0,
+              "text": null,
+              "unit": "Mpa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "固溶+时效 / 固溶：1100-1200℃，保温8h，空冷；固溶：990-1010℃，保温4h，空冷；时效：765-785℃，保温16h，空冷; / 室温",
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T2",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥705"
+              }
+            },
+            "A": {
+              "raw": "≥17",
+              "value": 17.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "固溶+时效 / 固溶：1100-1200℃，保温8h，空冷；固溶：990-1010℃，保温4h，空冷；时效：765-785℃，保温16h，空冷; / 室温",
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T2",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥17"
+              }
+            },
+            "Z": {
+              "raw": "≥19",
+              "value": 19.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "固溶+时效 / 固溶：1100-1200℃，保温8h，空冷；固溶：990-1010℃，保温4h，空冷；时效：765-785℃，保温16h，空冷; / 室温",
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T2",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥19"
+              }
+            },
+            "HB": {
+              "raw": "341-293HB(3.30-3.55mm)",
+              "value": null,
+              "text": null,
+              "unit": "HB",
+              "comparator": "range",
+              "lower": 341.0,
+              "upper": 293.0,
+              "condition": "固溶+时效 / 固溶：1100-1200℃，保温8h，空冷；固溶：990-1010℃，保温4h，空冷；时效：765-785℃，保温16h，空冷; / 室温",
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T2",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "341-293HB(3.30-3.55mm)"
+              }
+            },
+            "KV2": {
+              "raw": "≥49",
+              "value": 49.0,
+              "text": null,
+              "unit": "cm",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "固溶+时效 / 固溶：1100-1200℃，保温8h，空冷；固溶：990-1010℃，保温4h，空冷；时效：765-785℃，保温16h，空冷; / 室温",
+              "evidence": {
+                "page_no": 2,
+                "table_id": "T2",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≥49"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T5",
+      "page_no": 4,
+      "caption": "表4 检验项目、取样部位、试验方法",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": [
+    "AI dry-run B"
+  ]
+}

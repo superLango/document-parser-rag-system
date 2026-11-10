@@ -1,0 +1,677 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "ext_2c4a17021b",
+  "standard_no": null,
+  "title": "5.2 铁素体含量和磁导率",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 12,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\7373a8d9a442443b9733ecc5fecd5cfe1787899964564.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T2",
+      "page_no": 5,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-aa1ea08b0b",
+          "grade": "元素含量，wt.% Min",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cr": {
+              "raw": "12.0",
+              "value": 12.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "12.0"
+              }
+            },
+            "Ni": {
+              "raw": "9.5",
+              "value": 9.5,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "9.5"
+              }
+            },
+            "B": {
+              "raw": "0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.70"
+              }
+            },
+            "W": {
+              "raw": "13.0",
+              "value": 13.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "13.0"
+              }
+            },
+            "Mo": {
+              "raw": "0",
+              "value": 0.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 6,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0"
+              }
+            },
+            "Mn": {
+              "raw": "0.2",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 7,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.2"
+              }
+            },
+            "Cu": {
+              "raw": "0",
+              "value": 0.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 8,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-5c30cac6a1",
+          "grade": "元素含量，wt.% Max",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cr": {
+              "raw": "18.0",
+              "value": 18.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "18.0"
+              }
+            },
+            "Ni": {
+              "raw": "14.0",
+              "value": 14.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "14.0"
+              }
+            },
+            "B": {
+              "raw": "2.0",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "2.0"
+              }
+            },
+            "W": {
+              "raw": "20.0",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "20.0"
+              }
+            },
+            "Mo": {
+              "raw": "1.0",
+              "value": 1.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "1.0"
+              }
+            },
+            "Mn": {
+              "raw": "2.0",
+              "value": 2.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "2.0"
+              }
+            },
+            "Cu": {
+              "raw": "0.1",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.1"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-6cd999cdfd",
+          "grade": "检测标准",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cr": {
+              "raw": "GB/T 223",
+              "value": 223.0,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "GB/T 223"
+              }
+            },
+            "Ni": {
+              "raw": "GB/T 223",
+              "value": 223.0,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "GB/T 223"
+              }
+            },
+            "B": {
+              "raw": "GB/T 223",
+              "value": 223.0,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "GB/T 223"
+              }
+            },
+            "W": {
+              "raw": "GB/T 23942-2009",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 2009.0,
+              "upper": 23942.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 5,
+                "col": 3,
+                "clause_id": null,
+                "quote": "GB/T 23942-2009"
+              }
+            },
+            "Mo": {
+              "raw": "GB/T 23942-2009",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 2009.0,
+              "upper": 23942.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 6,
+                "col": 3,
+                "clause_id": null,
+                "quote": "GB/T 23942-2009"
+              }
+            },
+            "Mn": {
+              "raw": "GB/T 23942-2009",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 2009.0,
+              "upper": 23942.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 7,
+                "col": 3,
+                "clause_id": null,
+                "quote": "GB/T 23942-2009"
+              }
+            },
+            "Cu": {
+              "raw": "GB/T 23942-2009",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 2009.0,
+              "upper": 23942.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 8,
+                "col": 3,
+                "clause_id": null,
+                "quote": "GB/T 23942-2009"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T6",
+      "page_no": 8,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-3e46e2e422",
+          "grade": null,
+          "grade_level": null,
+          "condition": "母材 / 室温(20℃)",
+          "facets": {},
+          "properties": {
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "母材 / 室温(20℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "Rm": {
+              "raw": "620",
+              "value": 620.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "母材 / 室温(20℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 1,
+                "col": 3,
+                "clause_id": null,
+                "quote": "620"
+              }
+            },
+            "A": {
+              "raw": "16",
+              "value": 16.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "母材 / 室温(20℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 1,
+                "col": 4,
+                "clause_id": null,
+                "quote": "16"
+              }
+            },
+            "KV2": {
+              "raw": "20",
+              "value": 20.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "母材 / 室温(20℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 1,
+                "col": 5,
+                "clause_id": null,
+                "quote": "20"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-0ef2f5fa02",
+          "grade": null,
+          "grade_level": null,
+          "condition": "母材 / 高温(250℃)",
+          "facets": {},
+          "properties": {
+            "Rp0.2": {
+              "raw": "200",
+              "value": 200.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "母材 / 高温(250℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "200"
+              }
+            },
+            "Rm": {
+              "raw": "550",
+              "value": 550.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "母材 / 高温(250℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "550"
+              }
+            },
+            "A": {
+              "raw": "16",
+              "value": 16.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "母材 / 高温(250℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "16"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-4cc04bbed2",
+          "grade": null,
+          "grade_level": null,
+          "condition": "焊缝 / 室温(20℃)",
+          "facets": {},
+          "properties": {
+            "Rp0.2": {
+              "raw": "220",
+              "value": 220.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "焊缝 / 室温(20℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "220"
+              }
+            },
+            "Rm": {
+              "raw": "550",
+              "value": 550.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "焊缝 / 室温(20℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "550"
+              }
+            },
+            "A": {
+              "raw": "16",
+              "value": 16.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "焊缝 / 室温(20℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "16"
+              }
+            },
+            "KV2": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "焊缝 / 室温(20℃)",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

@@ -1,0 +1,421 @@
+{
+  "doc_id": "gb-t-1220-2007-8393195c",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "facets": {},
+      "required": true,
+      "note": "化学成分"
+    },
+    {
+      "item_canonical": "晶间腐蚀",
+      "item_family": "corrosion",
+      "facets": {},
+      "required": true,
+      "note": "晶间腐蚀"
+    },
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "尺寸"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "required": true,
+      "note": "退火后钢棒的硬度"
+    },
+    {
+      "item_canonical": "洛氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "rockwell"
+      },
+      "required": true,
+      "note": "硬度"
+    },
+    {
+      "item_canonical": "硬度",
+      "item_family": "hardness",
+      "facets": {},
+      "required": true,
+      "note": "硬度"
+    },
+    {
+      "item_canonical": "维氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "vickers"
+      },
+      "required": true,
+      "note": "硬度"
+    },
+    {
+      "item_canonical": "夏比冲击",
+      "item_family": "impact",
+      "facets": {
+        "impact_type": "夏比"
+      },
+      "required": true,
+      "note": "冲击"
+    },
+    {
+      "item_canonical": "α相",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "α相"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "低倍组织"
+    },
+    {
+      "item_canonical": "塔形",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "塔形"
+    },
+    {
+      "item_canonical": "晶粒度",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "晶粒度"
+    },
+    {
+      "item_canonical": "非金属夹杂物",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "非金属夹杂物"
+    },
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "facets": {},
+      "required": true,
+      "note": "超声波检验"
+    },
+    {
+      "item_canonical": "表面",
+      "item_family": "surface",
+      "facets": {},
+      "required": true,
+      "note": "表面"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "拉伸"
+    },
+    {
+      "item_canonical": "顶锻",
+      "item_family": "upset",
+      "facets": {},
+      "required": true,
+      "note": "热顶锻"
+    }
+  ],
+  "items_unknown_ok": [
+    "经淬火回火后试样的力学性能和硬度"
+  ],
+  "links": {
+    "T1": {
+      "clause_id": "7.1",
+      "quote": "7. 1.1 钢的牌号、统一数字代号及化学成分（熔炼分析）应符合表1~表5的规定。"
+    },
+    "T10": {
+      "clause_id": "7.4",
+      "quote": "7. 4.1 各类型钢棒或试样的热处理制度参照附录A中表A.1~表A.5的规定。"
+    },
+    "T11": {
+      "clause_id": "7.5",
+      "quote": "根据需方要求，并由供需双方协商采用合适的试验方法，且在合同中注明，奥氏体型和奥氏体-铁素体型不锈钢棒可进行晶间腐蚀试验，其耐腐蚀性能见表11和表12。"
+    },
+    "T12": {
+      "clause_id": "7.5",
+      "quote": "根据需方要求，并由供需双方协商采用合适的试验方法，且在合同中注明，奥氏体型和奥氏体-铁素体型不锈钢棒可进行晶间腐蚀试验，其耐腐蚀性能见表11和表12。"
+    },
+    "T13": {
+      "clause_id": "7.6",
+      "quote": "7. 6.2 酸浸低倍组织合格级别应符合表13的规定。"
+    },
+    "T14": {
+      "clause_id": "7.8",
+      "quote": "7. 8.1 压力加工用钢棒的表面不允许有裂纹、结疤、折叠及夹杂，如有上述缺陷必须清除。"
+    },
+    "T15": {
+      "clause_id": "7.8.2",
+      "quote": "表15 切削加工用钢棒表面局部缺陷允许深度"
+    },
+    "T16": {
+      "clause_id": "8",
+      "quote": "每批钢棒的检验项目及试验方法应符合表16的规定。"
+    },
+    "T17": {
+      "clause_id": "附录A",
+      "quote": "（资料性附录） 不锈钢棒或试样的典型热处理制度 表 A.1 奥氏体型不锈钢棒或试样的典型热处理制度"
+    },
+    "T18": {
+      "clause_id": "附录A",
+      "quote": "（资料性附录） 不锈钢棒或试样的典型热处理制度 表 A.1 奥氏体型不锈钢棒或试样的典型热处理制度"
+    },
+    "T19": {
+      "clause_id": "附录A",
+      "quote": "（资料性附录） 不锈钢棒或试样的典型热处理制度 表 A.1 奥氏体型不锈钢棒或试样的典型热处理制度"
+    },
+    "T20": {
+      "clause_id": "附录A",
+      "quote": "（资料性附录） 不锈钢棒或试样的典型热处理制度 表 A.1 奥氏体型不锈钢棒或试样的典型热处理制度"
+    },
+    "T21": {
+      "clause_id": "附录A",
+      "quote": "（资料性附录） 不锈钢棒或试样的典型热处理制度 表 A.1 奥氏体型不锈钢棒或试样的典型热处理制度"
+    },
+    "T22": {
+      "clause_id": "附录A",
+      "quote": "（资料性附录） 不锈钢棒或试样的典型热处理制度 表 A.1 奥氏体型不锈钢棒或试样的典型热处理制度"
+    },
+    "T23": {
+      "clause_id": "附录A",
+      "quote": "（资料性附录） 不锈钢棒或试样的典型热处理制度 表 A.1 奥氏体型不锈钢棒或试样的典型热处理制度"
+    },
+    "T24": {
+      "clause_id": "附录B",
+      "quote": "表 B.1 （续）"
+    },
+    "T26": {
+      "clause_id": "附录B",
+      "quote": "表B.1 （续）"
+    },
+    "T28": {
+      "clause_id": "附录B",
+      "quote": "表B.1 （续）"
+    },
+    "T3": {
+      "clause_id": "7.4",
+      "quote": "7. 4.1 各类型钢棒或试样的热处理制度参照附录A中表A.1~表A.5的规定。"
+    },
+    "T4": {
+      "clause_id": "7.4",
+      "quote": "7. 4.1 各类型钢棒或试样的热处理制度参照附录A中表A.1~表A.5的规定。"
+    },
+    "T6": {
+      "clause_id": "7.4",
+      "quote": "7. 4.1 各类型钢棒或试样的热处理制度参照附录A中表A.1~表A.5的规定。"
+    },
+    "T7": {
+      "clause_id": "7.4",
+      "quote": "7. 4.1 各类型钢棒或试样的热处理制度参照附录A中表A.1~表A.5的规定。"
+    },
+    "T8": {
+      "clause_id": "7.4",
+      "quote": "7. 4.1 各类型钢棒或试样的热处理制度参照附录A中表A.1~表A.5的规定。"
+    },
+    "T9": {
+      "clause_id": "7.4",
+      "quote": "7. 4.1 各类型钢棒或试样的热处理制度参照附录A中表A.1~表A.5的规定。"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T10",
+    "T11",
+    "T12",
+    "T13",
+    "T14",
+    "T15",
+    "T16",
+    "T17",
+    "T18",
+    "T19",
+    "T20",
+    "T21",
+    "T22",
+    "T23",
+    "T24",
+    "T26",
+    "T28",
+    "T3",
+    "T4",
+    "T6",
+    "T7",
+    "T8",
+    "T9"
+  ],
+  "clauses": [
+    {
+      "clause_id": "6.1",
+      "kind": "technical_requirement",
+      "quote": "热轧圆钢和方钢的尺寸、外形及允许偏差应符合GB/T702-2004的规定，具体要求应在合同中注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.2",
+      "kind": "technical_requirement",
+      "quote": "热轧扁钢的尺寸、外形及其允许偏差应符合GB/T704-1988中的规定，具体要求应在合同中注 明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.3",
+      "kind": "technical_requirement",
+      "quote": "热轧六角钢和八角钢的尺寸、外形及允许偏差应符合GB/T705-1985中的规定，具体要求应在合同中注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.4",
+      "kind": "technical_requirement",
+      "quote": "锻制圆钢和方钢的尺寸、外形及允许偏差应符合GB/T908-1987的规定，具体要求应在合同中注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "6.5",
+      "kind": "technical_requirement",
+      "quote": "锻制扁钢的尺寸、外形及允许偏差应符合GB/T16761-1997的规定，具体要求应在合同中注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1",
+      "kind": "other",
+      "quote": "7. 1.1 钢的牌号、统一数字代号及化学成分（熔炼分析）应符合表1~表5的规定。 7. 1.2 钢棒的化学成分允许偏差应符合GB/T222的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1.1",
+      "kind": "technical_requirement",
+      "quote": "钢的牌号、统一数字代号及化学成分（熔炼分析）应符合表1~表5的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.1.2",
+      "kind": "technical_requirement",
+      "quote": "钢棒的化学成分允许偏差应符合GB/T222的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.2",
+      "kind": "test_method",
+      "quote": "除非在合同中另有规定，一般应采用初炼钢（水）加炉外精炼等工艺。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.3.1",
+      "kind": "other",
+      "quote": "切削加工用奥氏体型、奥氏体铁素体型钢棒应进行固溶处理，经供需双方协商，也可不进行处理。热压力加工用钢棒不进行固溶处理。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.3.2",
+      "kind": "other",
+      "quote": "铁素体型钢棒应进行退火处理，经供需双方协商，也可不进行处理。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.3.3",
+      "kind": "other",
+      "quote": "马氏体型钢棒应进行退火处理。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.5",
+      "kind": "other",
+      "quote": "根据需方要求，并由供需双方协商采用合适的试验方法，且在合同中注明，奥氏体型和奥氏体-铁素体型不锈钢棒可进行晶间腐蚀试验，其耐腐蚀性能见表11和表12。表11和表12以外牌号钢棒的耐腐蚀性能由供需双方协商确定。 表11 GB/T4334.1中 10% 草酸浸蚀试验的判别",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.6",
+      "kind": "other",
+      "quote": "7. 6.1 钢棒的横截面酸浸低倍试片上不允许有目视可见的缩孔、气泡、裂纹、夹杂、翻皮及白点。对切削加工用的钢棒允许有深度不大于公称尺寸公差之半的皮下夹杂等缺陷。 7. 6.2 酸浸低倍组织合格级别应符合表13的规定。当需方要求1组时，应在合同中注明。尺寸大于 200mm 钢棒，其低倍组织合格级别由供需双方协商确定。 7. 6.3 供方若能保证，允许采用超声波探伤法或其他无损探伤法代替低倍检验。 ",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.6.1",
+      "kind": "other",
+      "quote": "钢棒的横截面酸浸低倍试片上不允许有目视可见的缩孔、气泡、裂纹、夹杂、翻皮及白点。对切削加工用的钢棒允许有深度不大于公称尺寸公差之半的皮下夹杂等缺陷。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.6.2",
+      "kind": "technical_requirement",
+      "quote": "酸浸低倍组织合格级别应符合表13的规定。当需方要求1组时，应在合同中注明。尺寸大于 200mm 钢棒，其低倍组织合格级别由供需双方协商确定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.6.3",
+      "kind": "other",
+      "quote": "供方若能保证，允许采用超声波探伤法或其他无损探伤法代替低倍检验。",
+      "fields": {
+        "judgment": "表13 低倍组织合格级别 ## Table"
+      }
+    },
+    {
+      "clause_id": "7.7.1",
+      "kind": "other",
+      "quote": "热顶锻用钢（在合同中注明）应作热顶锻试验，试样顶锻至原高度的三分之一后，试样表面不允许有裂纹或裂口。",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.8",
+      "kind": "other",
+      "quote": "7. 8.1 压力加工用钢棒的表面不允许有裂纹、结疤、折叠及夹杂，如有上述缺陷必须清除。清除深度应符合表14的规定，清除宽度不小于深度的5倍，同一截面达到最大清除深度不得多于一处，允许有从实际尺寸算起不超过公称尺寸公差之半的个别细小划痕、压痕、麻点及深度不超过 0.20mm 的小裂纹存在。根据供需双方协议，压力加工用圆钢棒，表面可以车削或剥皮。 表14 压力加工用钢棒表面缺陷允许清除深度",
+      "fields": {}
+    },
+    {
+      "clause_id": "7.8.1",
+      "kind": "technical_requirement",
+      "quote": "表14 压力加工用钢棒表面缺陷允许清除深度 ## Table",
+      "fields": {}
+    },
+    {
+      "clause_id": "8",
+      "kind": "other",
+      "quote": "每批钢棒的检验项目及试验方法应符合表16的规定。 表16 钢棒检验项目、取样数量、取样部位及试验方法",
+      "fields": {}
+    },
+    {
+      "clause_id": "9.2",
+      "kind": "technical_requirement",
+      "quote": "钢棒应按批检查和验收。",
+      "fields": {}
+    },
+    {
+      "clause_id": "9.3",
+      "kind": "inspection",
+      "quote": "每批钢棒检验取样部位及取样数量应符合表16的规定。",
+      "fields": {
+        "requirement": "每批钢棒检验取样部位及取样数量应符合表16的规定。",
+        "sample_quantity": "每批钢棒检验取样部位及取样数量应符合表16的规定。"
+      }
+    },
+    {
+      "clause_id": "9.4.1",
+      "kind": "technical_requirement",
+      "quote": "复验和判定规则应按 GB/T 17505的有关规定。",
+      "fields": {
+        "requirement": "复验和判定规则应按 GB/T 17505的有关规定。",
+        "method_standard": "GB/T17505"
+      }
+    },
+    {
+      "clause_id": "10",
+      "kind": "packaging",
+      "quote": "钢棒的包装、标志和质量证明书应符合GB/T2101的规定。",
+      "fields": {}
+    }
+  ]
+}

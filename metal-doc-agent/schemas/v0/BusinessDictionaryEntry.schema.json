@@ -1,0 +1,93 @@
+{
+  "properties": {
+    "business_code": {
+      "title": "Business Code",
+      "type": "string"
+    },
+    "business_name": {
+      "title": "Business Name",
+      "type": "string"
+    },
+    "type": {
+      "default": "item",
+      "enum": [
+        "item",
+        "method"
+      ],
+      "title": "Type",
+      "type": "string"
+    },
+    "family": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Family"
+    },
+    "facets": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Facets",
+      "type": "object"
+    },
+    "aliases": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Aliases",
+      "type": "array"
+    },
+    "standard_no": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Standard No"
+    },
+    "status": {
+      "default": "active",
+      "enum": [
+        "active",
+        "inactive",
+        "pending"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Version"
+    }
+  },
+  "required": [
+    "business_code",
+    "business_name"
+  ],
+  "title": "BusinessDictionaryEntry",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

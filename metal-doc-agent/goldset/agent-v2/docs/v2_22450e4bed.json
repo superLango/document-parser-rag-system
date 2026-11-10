@@ -1,0 +1,344 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_22450e4bed",
+  "standard_no": null,
+  "title": "开式风扇 901 动叶项目用全尺动叶钛合金 叶柄采购检验规范",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 16,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\0684efec05a54ab8868faf6dfb3b05e71789376678753.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T3",
+      "page_no": 6,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-0c5aafdc74",
+          "grade": "最小",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Al": {
+              "raw": "5.50",
+              "value": 5.5,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "5.50"
+              }
+            },
+            "V": {
+              "raw": "3.50",
+              "value": 3.5,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "3.50"
+              }
+            },
+            "Ti": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 11,
+                "col": 1,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-0d18025b5f",
+          "grade": "最大",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Al": {
+              "raw": "6.75",
+              "value": 6.75,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "6.75"
+              }
+            },
+            "V": {
+              "raw": "4.50",
+              "value": 4.5,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "4.50"
+              }
+            },
+            "Fe": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "O": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "C": {
+              "raw": "0.08",
+              "value": 0.08,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.08"
+              }
+            },
+            "N": {
+              "raw": "0.05(500ppm)",
+              "value": 0.05,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.05(500ppm)"
+              }
+            },
+            "H": {
+              "raw": "0.0125(125ppm)",
+              "value": 0.0125,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.0125(125ppm)"
+              }
+            },
+            "Y": {
+              "raw": "0.005(50ppm)",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.005(50ppm)"
+              }
+            },
+            "Ti": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T3",
+                "row": 11,
+                "col": 2,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T4",
+      "page_no": 7,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-0739b20a7b",
+          "grade": null,
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "≥895",
+              "value": 895.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 7,
+                "table_id": "T4",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≥895"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥827",
+              "value": 827.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 7,
+                "table_id": "T4",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥827"
+              }
+            },
+            "Z": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 7,
+                "table_id": "T4",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "15"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt6892_2015",
+  "standard_no": "GB/T 6892-2015",
+  "title": "一般工业用铝及铝合金挤压型材",
+  "doc_type": "gb_t",
+  "material": "铝合金",
+  "product_form": "挤压型材",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "B-unassigned",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "B 独立标注模板：请仅依据源文填写，不得复制 A 份；完成后运行 gold verify。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T3",
+      "page_no": 5,
+      "caption": "表3 化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T4",
+      "page_no": 6,
+      "caption": "表4 力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T19",
+      "page_no": 22,
+      "caption": "表10 表面处理型材的膜层性能检验项目",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": []
+}

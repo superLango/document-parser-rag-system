@@ -1,0 +1,993 @@
+{
+  "doc_id": "gbt4437_1_2015",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 0.2258,
+    "cell_value_agreement": 0.7241,
+    "comparator_unit_agreement": 0.7241,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 31,
+    "record_keys_match": 7,
+    "cells_total": 87,
+    "cells_value_match": 63,
+    "cells_strict_match": 63,
+    "clause_fields_total": 5,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [
+    [
+      "T3",
+      "1035",
+      "O|所有|纵向"
+    ],
+    [
+      "T3",
+      "1050A",
+      "H111|O|所有|纵向"
+    ],
+    [
+      "T3",
+      "2014",
+      "O|所有|纵向"
+    ],
+    [
+      "T3",
+      "2017",
+      "T1|T42|所有|纵向"
+    ],
+    [
+      "T3",
+      "2017",
+      "T4|所有|纵向"
+    ]
+  ],
+  "record_keys_only_b": [
+    [
+      "T3",
+      "1035",
+      "O"
+    ],
+    [
+      "T3",
+      "1050A",
+      "F"
+    ],
+    [
+      "T3",
+      "1050A",
+      "H111|O"
+    ],
+    [
+      "T3",
+      "1050A",
+      "H112"
+    ],
+    [
+      "T3",
+      "1060",
+      "H112"
+    ],
+    [
+      "T3",
+      "1060",
+      "O"
+    ],
+    [
+      "T3",
+      "1070A",
+      "H112"
+    ],
+    [
+      "T3",
+      "1070A",
+      "O"
+    ],
+    [
+      "T3",
+      "11001200",
+      "F"
+    ],
+    [
+      "T3",
+      "11001200",
+      "H112"
+    ],
+    [
+      "T3",
+      "11001200",
+      "O"
+    ],
+    [
+      "T3",
+      "2014",
+      "O"
+    ],
+    [
+      "T3",
+      "2014",
+      "T1a|T42"
+    ],
+    [
+      "T3",
+      "2014",
+      "T1a|T62"
+    ],
+    [
+      "T3",
+      "2014",
+      "T4|T4510|T4511"
+    ],
+    [
+      "T3",
+      "2014",
+      "T6|T6510|T6511"
+    ],
+    [
+      "T3",
+      "2017",
+      "O"
+    ],
+    [
+      "T3",
+      "2017",
+      "T1|T42"
+    ],
+    [
+      "T3",
+      "2017",
+      "T4"
+    ]
+  ],
+  "value_diffs": [
+    {
+      "table_id": "T2",
+      "record_key": [
+        "5051A",
+        ""
+      ],
+      "record_id": "gbt4437-T2-5051A",
+      "field": "OtherImpuritySingle",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 3,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "5051A",
+        ""
+      ],
+      "record_id": "gbt4437-T2-5051A",
+      "field": "OtherImpurityTotal",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 3,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "5051A",
+        ""
+      ],
+      "record_id": "gbt4437-T2-5051A",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 3,
+          "col": 8,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6041",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6041",
+      "field": "Bi",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.30~0.9",
+        "value": null,
+        "lower": 0.3,
+        "upper": 0.9,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 4,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.30~0.9"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6041",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6041",
+      "field": "OtherImpuritySingle",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 4,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6041",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6041",
+      "field": "OtherImpurityTotal",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 4,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6041",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6041",
+      "field": "Sn",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.35~1.2",
+        "value": null,
+        "lower": 0.35,
+        "upper": 1.2,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 4,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.35~1.2"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6042",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6042",
+      "field": "Bi",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.20~0.8",
+        "value": null,
+        "lower": 0.2,
+        "upper": 0.8,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 5,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.20~0.8"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6042",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6042",
+      "field": "OtherImpuritySingle",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 5,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6042",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6042",
+      "field": "OtherImpurityTotal",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 5,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6042",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6042",
+      "field": "Pb",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.15~0.40",
+        "value": null,
+        "lower": 0.15,
+        "upper": 0.4,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 5,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.15~0.40"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6064",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6064",
+      "field": "Bi",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.50~0.7",
+        "value": null,
+        "lower": 0.5,
+        "upper": 0.7,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 7,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.50~0.7"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6064",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6064",
+      "field": "OtherImpuritySingle",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 7,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6064",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6064",
+      "field": "OtherImpurityTotal",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 7,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6064",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6064",
+      "field": "Pb",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.20~0.40",
+        "value": null,
+        "lower": 0.2,
+        "upper": 0.4,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 7,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.20~0.40"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6066",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6066",
+      "field": "OtherImpuritySingle",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 8,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6066",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6066",
+      "field": "OtherImpurityTotal",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 8,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6066",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6066",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 8,
+          "col": 8,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6162",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6162",
+      "field": "OtherImpuritySingle",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 6,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6162",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6162",
+      "field": "OtherImpurityTotal",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 6,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "6162",
+        ""
+      ],
+      "record_id": "gbt4437-T2-6162",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 6,
+          "col": 8,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "7178",
+        ""
+      ],
+      "record_id": "gbt4437-T2-7178",
+      "field": "OtherImpuritySingle",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 9,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "7178",
+        ""
+      ],
+      "record_id": "gbt4437-T2-7178",
+      "field": "OtherImpurityTotal",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 9,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T2",
+      "record_key": [
+        "7178",
+        ""
+      ],
+      "record_id": "gbt4437-T2-7178",
+      "field": "其他元素",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T2",
+          "row": 9,
+          "col": 8,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    }
+  ],
+  "clause_field_diffs": [
+    {
+      "clause_id": "3.2",
+      "field": "chemical_requirement",
+      "a": {
+        "raw": "5051A、6041、6042、6162、6064、6066、7178牌号的化学成分应符合表2的规定，其他牌号的化学成分应符合GB/T3190的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "5051A、6041、6042、6162、6064、6066、7178牌号的化学成分应符合表2的规定，其他牌号的化学成分应符合GB/T3190的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.2",
+          "quote": "5051A、6041、6042、6162、6064、6066、7178牌号的化学成分应符合表2的规定，其他牌号的化学成分应符合GB/T3190的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4",
+      "field": "direction",
+      "a": {
+        "raw": "纵向",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "纵向",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 6,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4",
+          "quote": "管材的纵向室温拉伸力学性能应符合表3的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4",
+      "field": "mechanical_requirement",
+      "a": {
+        "raw": "管材的纵向室温拉伸力学性能应符合表3的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "管材的纵向室温拉伸力学性能应符合表3的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 6,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4",
+          "quote": "管材的纵向室温拉伸力学性能应符合表3的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.6",
+      "field": "conductivity_requirement",
+      "a": {
+        "raw": "对于7075合金T73、T73510、T73511状态供货的管材有电导率要求时，应供需双方协商并在订货单（或合同）中注明，其电导率应符合表5规定；对其他合金的管材有电导率要求时，由供需双方协商确定，并在订货单（或合同）中注明。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "对于7075合金T73、T73510、T73511状态供货的管材有电导率要求时，应供需双方协商并在订货单（或合同）中注明，其电导率应符合表5规定；对其他合金的管材有电导率要求时，由供需双方协商确定，并在订货单（或合同）中注明。",
+        "unit": "MS/m",
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 12,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.6",
+          "quote": "对于7075合金T73、T73510、T73511状态供货的管材有电导率要求时，应供需双方协商并在订货单（或合同）中注明，其电导率应符合表5规定；对其他合金的管材有电导率要求时，由供需双方协商确定，并在订货单（或合同）中注明。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.4.1",
+      "field": "inspection_requirement",
+      "a": {
+        "raw": "每批管材出厂前均应进行化学成分、尺寸偏差、室温拉伸力学性能、低倍组织和外观质量的检验。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "每批管材出厂前均应进行化学成分、尺寸偏差、室温拉伸力学性能、低倍组织和外观质量的检验。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 16,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.4.1",
+          "quote": "每批管材出厂前均应进行化学成分、尺寸偏差、室温拉伸力学性能、低倍组织和外观质量的检验。"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

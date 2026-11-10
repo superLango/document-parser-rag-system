@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: metal-agent
+
+resources:
+  - namespace.yaml
+  - config.yaml
+  - engine.yaml
+  - platform.yaml
+  - ingress.yaml
+  - autoscale.yaml
+  - network-policy.yaml
+
+commonLabels:
+  app.kubernetes.io/part-of: metal-agent

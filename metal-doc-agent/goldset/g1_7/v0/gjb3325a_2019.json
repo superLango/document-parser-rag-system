@@ -1,0 +1,378 @@
+{
+  "doc_id": "gjb-3325a-2019-b68c8da1",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "facets": {},
+      "required": true,
+      "note": "化学成分"
+    },
+    {
+      "item_canonical": "外形",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "外形"
+    },
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "facets": {},
+      "required": true,
+      "note": "尺寸"
+    },
+    {
+      "item_canonical": "断裂韧性",
+      "item_family": "fracture_toughness",
+      "facets": {},
+      "required": true,
+      "note": "断裂韧性"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "required": true,
+      "note": "交货硬度"
+    },
+    {
+      "item_canonical": "室温夏比冲击",
+      "item_family": "impact",
+      "facets": {
+        "temperature": "室温",
+        "impact_type": "夏比"
+      },
+      "required": true,
+      "note": "室温冲击"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "低倍"
+    },
+    {
+      "item_canonical": "显微组织",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "显微组织"
+    },
+    {
+      "item_canonical": "晶粒度",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "晶粒度"
+    },
+    {
+      "item_canonical": "非金属夹杂物",
+      "item_family": "metallography",
+      "facets": {},
+      "required": true,
+      "note": "非金属夹杂物"
+    },
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "facets": {},
+      "required": true,
+      "note": "超声检测"
+    },
+    {
+      "item_canonical": "外观质量",
+      "item_family": "surface",
+      "facets": {},
+      "required": true,
+      "note": "外观质量"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "required": true,
+      "note": "室温拉伸"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T1": {
+      "clause_id": "3.2.1",
+      "quote": "3. 2.1 钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+    },
+    "T2": {
+      "clause_id": "3.2.2",
+      "quote": "3. 2.2 碳、铬、钼和钒元素的成品化学成分允许偏差应符合表2的规定，其余元素的成品化学成分允许偏差应符合GB/T222的规定。"
+    },
+    "T3": {
+      "clause_id": "3.3.1",
+      "quote": "3. 3.1 锻件的交货状态和交货硬度应符合表3的规定。 表3 锻件的交货状态和交货硬度"
+    },
+    "T4": {
+      "clause_id": "3.4.1",
+      "quote": "3. 4.1 在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定。"
+    },
+    "T5": {
+      "clause_id": "3.5.2",
+      "quote": "3. 5.2 30Si2MnCrMoVE和31Si2MnCrMoVE低倍缺陷应按GJB9443进行检验，合格级别应符合表5的规定。"
+    },
+    "T6": {
+      "clause_id": "3.5.3",
+      "quote": "3. 5.3 30Cr3SiNiMoVA酸浸试片低倍缺陷合格级别应符合表6规定。 表6 30Cr3SiNiMoVA低倍缺陷合格级别"
+    },
+    "T7": {
+      "clause_id": "3.6",
+      "quote": "锻件应进行非金属夹杂物检验，其结果符合表7规定。 表7 非金属央杂物合格级别"
+    },
+    "T8": {
+      "clause_id": "4.2.2",
+      "quote": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定。 表8 检验项目表"
+    },
+    "T10": {
+      "clause_id": "6.3",
+      "quote": "6. 3.1 本规范涉及的牌号与其代号（或简称）对照表见表9。"
+    },
+    "T11": {
+      "clause_id": "6.3",
+      "quote": "6. 3.2 锻件的推荐热处理制度见表10."
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T10",
+    "T11"
+  ],
+  "clauses": [
+    {
+      "clause_id": "2",
+      "kind": "other",
+      "quote": "GB/T222钢的成品化学成分允许偏差 GB/T223.5 钢铁酸溶硅和全硅含量的测定还原型硅钼酸盐分光光度法 GB/T223.11 钢铁及合金 铬含量的测定 可视滴定或电位滴定法 GB/T223.13 钢铁及合金化学分析方法 硫酸亚铁铵滴定法测定钒含量 GB/T223.19 钢铁及合金化学分析方法 新亚铜灵一三氯甲烷",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.1.1",
+      "kind": "other",
+      "quote": "30Si2MnCrMoVE和31Si2MnCrMoVE应采用真空感应加真空电弧重熔双联工艺冶炼。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.2.1",
+      "kind": "technical_requirement",
+      "quote": "3. 2.1 钢的牌号和化学成分（熔炼分析）应符合表1的规定。",
+      "fields": {
+        "requirement": "钢的牌号和化学成分（熔炼分析）应符合表1的规定。"
+      }
+    },
+    {
+      "clause_id": "3.2.2",
+      "kind": "technical_requirement",
+      "quote": "3. 2.2 碳、铬、钼和钒元素的成品化学成分允许偏差应符合表2的规定，其余元素的成品化学成分允许偏差应符合GB/T222的规定。",
+      "fields": {
+        "requirement": "碳、铬、钼和钒元素的成品化学成分允许偏差应符合表2的规定，其余元素的成品化学成分允许偏差应符合GB/T222的规定。",
+        "method_standard": "GB/T222"
+      }
+    },
+    {
+      "clause_id": "3.3.1",
+      "kind": "delivery",
+      "quote": "3. 3.1 锻件的交货状态和交货硬度应符合表3的规定。",
+      "fields": {
+        "requirement": "锻件的交货状态和交货硬度应符合表3的规定。"
+      }
+    },
+    {
+      "clause_id": "3.3.2",
+      "kind": "other",
+      "quote": "锻件可采用喷砂、粗加工等方式处理，也可采用其他供需双方协商一致的方式处理。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.4.1",
+      "kind": "technical_requirement",
+      "quote": "3. 4.1 在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定。",
+      "fields": {
+        "requirement": "在锻件本体或90方烙检样上取试样，经热处理后试样的拉伸性能应符合表4的规定。",
+        "sample_location": "锻件本体或90方烙检样"
+      }
+    },
+    {
+      "clause_id": "3.4.2",
+      "kind": "other",
+      "quote": "锻件的断裂韧度按表4规定执行。断裂韧度试样优先选取试样开口方向垂直流线方向，也可由供需双方协商确定，并在合同注明。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.1",
+      "kind": "other",
+      "quote": "在横截面酸浸低倍试片上不允许有目视可见的缩孔、气泡、裂纹、夹杂、翻皮、白点等缺陷存在。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.5.2",
+      "kind": "technical_requirement",
+      "quote": "3. 5.2 30Si2MnCrMoVE和31Si2MnCrMoVE低倍缺陷应按GJB9443进行检验，合格级别应符合表5的规定。",
+      "fields": {
+        "requirement": "30Si2MnCrMoVE和31Si2MnCrMoVE低倍缺陷应按GJB9443进行检验，合格级别应符合表5的规定。",
+        "method_standard": "GJB9443"
+      }
+    },
+    {
+      "clause_id": "3.5.3",
+      "kind": "technical_requirement",
+      "quote": "3. 5.3 30Cr3SiNiMoVA酸浸试片低倍缺陷合格级别应符合表6规定。",
+      "fields": {
+        "requirement": "30Cr3SiNiMoVA酸浸试片低倍缺陷合格级别应符合表6规定。"
+      }
+    },
+    {
+      "clause_id": "3.6",
+      "kind": "technical_requirement",
+      "quote": "锻件应进行非金属夹杂物检验，其结果符合表7规定。 表7 非金属央杂物合格级别",
+      "fields": {
+        "requirement": "锻件应进行非金属夹杂物检验，其结果符合表7规定。",
+        "judgment": "表7 非金属央杂物合格级别"
+      }
+    },
+    {
+      "clause_id": "3.8",
+      "kind": "other",
+      "quote": "显微组织中不允许有片状珠光体。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.9",
+      "kind": "technical_requirement",
+      "quote": "锻件应进行超声检测，检测结果应符合GJB1580A-2004中A级的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.10.1",
+      "kind": "technical_requirement",
+      "quote": "a) 自由锻件的加工余量及公差应符合GB/T21470的要求；",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.10.2",
+      "kind": "technical_requirement",
+      "quote": "锻件的外形应符合订货图纸的加工要求，锻件的两端切斜角应不大于 15circ ，不允许有飞边毛刺。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.11.1",
+      "kind": "other",
+      "quote": "锻件表面应进行清理，其表面状态应满足锻件图样的要求；锻件表面不允许有过烧裂纹和影响材质的其他缺陷存在。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.1",
+      "kind": "inspection",
+      "quote": "4. 1 检验分类 本规范规定的检验为质量一致性检验。",
+      "fields": {
+        "requirement": "本规范规定的检验为质量一致性检验。"
+      }
+    },
+    {
+      "clause_id": "4.2.2",
+      "kind": "inspection",
+      "quote": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定。 表8 检验项目表",
+      "fields": {
+        "requirement": "锻件质量一致性检验项目的取样部位、取样数量应符合表8的规定。",
+        "sample_quantity": "按表8规定"
+      }
+    },
+    {
+      "clause_id": "4.2.3.1",
+      "kind": "sampling",
+      "quote": "4. 2.3.1 当化学成分分析结果不合格时，允许重新取样对不合格元素进行分析，若重新分析结果仍不合格，则该炉判为不合格。",
+      "fields": {
+        "requirement": "当化学成分分析结果不合格时，允许重新取样对不合格元素进行分析，若重新分析结果仍不合格，则该炉判为不合格。",
+        "sample_location": "重新取样，对不合格元素进行分析"
+      }
+    },
+    {
+      "clause_id": "4.2.3.4",
+      "kind": "inspection",
+      "quote": "对超声检测、尺寸、外形及外观质量检验不合格的锻件，则单件判为不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.1",
+      "kind": "technical_requirement",
+      "quote": "化学成分分析取样按GB/T20066规定进行，化学成分分析方法按GB/T223.5、GB/T223.11、GB/T223.13、GB/T223.19、GB/T223.23、GB/T223.26、GB/T223.58、GB/T223.59、GB/T4336、GB/T20123的规定或通用的方法进行，但仲裁分析时应按GB/",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.2",
+      "kind": "other",
+      "quote": "布氏硬度试验按GB/T231.1的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.3",
+      "kind": "other",
+      "quote": "拉伸试验用试样的取样和试样制备按GB/T2975的规定，试验方法按GB/T228.1的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.4",
+      "kind": "other",
+      "quote": "冲击试验用试样的取样和试样制备按GB/T2975的规定执行，冲击试验方法按GB/T229的规定进行，采用 2mm 摆锤刀刃。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.5",
+      "kind": "other",
+      "quote": "断裂韧度试验按GB/T4161的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.6",
+      "kind": "other",
+      "quote": "低倍试样制备按GB/T226的规定进行，30Cr3SiNiMoVA的低倍组织缺陷按GB/T1979评定；",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.7",
+      "kind": "other",
+      "quote": "非金属夹杂物检验按GB/T10561-2005中A法进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.8",
+      "kind": "other",
+      "quote": "晶粒度的检验按GB/T6394的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.9",
+      "kind": "other",
+      "quote": "显微组织检验按GB/T13299的规定进行，在500倍显微镜下进行观察。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.10",
+      "kind": "other",
+      "quote": "超声检测按GJB1580A-2004的规定进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.1",
+      "kind": "packaging",
+      "quote": "锻件包装和标志应符合相应图纸或合同的规定。",
+      "fields": {}
+    }
+  ]
+}

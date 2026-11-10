@@ -1,0 +1,48 @@
+[
+  {
+    "task_id": "xstd-5d486078a7",
+    "doc_id": "7c05bfa69155",
+    "inspection_item": "基本要求",
+    "missing_fields": [
+      "测试项目"
+    ],
+    "requirement_standard": "Q/S 10-0537",
+    "requirement_edition": "2004",
+    "method_standard": null,
+    "clause_id": "1",
+    "page_no": 4,
+    "quote": "c) 用于解剖、性能测试的延伸机匣锻件，应先按 Q/S10-0537-2004 规定的测试项目检验合格，再按本文第 3 章进行补充测试；",
+    "optional": false,
+    "status": "resolved",
+    "resolution_basis": "dated",
+    "resolved_doc_id": "qs10_0537_2004",
+    "resolved_source_file": "markdown/1c4cf85c9255469184e338fda9af80f81768216448834.md",
+    "gap": null,
+    "file": "3cff6a484d7c443ea253c6ee5dc64e241785318454871.md",
+    "doc_type": "uncatalogued",
+    "doc_title": "TA15合金延伸机匣锻件冶金质量批准测试要求"
+  },
+  {
+    "task_id": "xstd-e0b1aea07e",
+    "doc_id": "89cc75e5c8ae",
+    "inspection_item": "基本要求",
+    "missing_fields": [
+      "测试项目"
+    ],
+    "requirement_standard": "Q/S 10-0533",
+    "requirement_edition": "2004",
+    "method_standard": null,
+    "clause_id": "1",
+    "page_no": 4,
+    "quote": "c) 用于解剖、性能测试的进气机匣壳体锻件，应先按 Q/S10-0533-2004 规定的测试项目 检验合格，再按本文第 3 章进行补充测试；",
+    "optional": false,
+    "status": "needs_source",
+    "resolution_basis": "dated",
+    "resolved_doc_id": null,
+    "resolved_source_file": null,
+    "gap": "Q/S 10-0533（版本已解析，但无本地正文；语料中 1 份文件引用该标准）",
+    "file": "db81e222e3cf49f9960f42d17b42cc481774522313087.md",
+    "doc_type": "uncatalogued",
+    "doc_title": "TC4 合金进气机匣壳体锻件冶金质量批准 测试要求"
+  }
+]

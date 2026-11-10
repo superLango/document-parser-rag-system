@@ -1,0 +1,96 @@
+{
+  "properties": {
+    "doc_id": {
+      "title": "Doc Id",
+      "type": "string"
+    },
+    "doc_type": {
+      "default": "other",
+      "enum": [
+        "gb_t",
+        "gjb",
+        "enterprise",
+        "agreement",
+        "classification",
+        "other"
+      ],
+      "title": "Doc Type",
+      "type": "string"
+    },
+    "material_family": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Material Family"
+    },
+    "product_form": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Product Form"
+    },
+    "has_toc": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Has Toc"
+    },
+    "table_count": {
+      "default": 0,
+      "title": "Table Count",
+      "type": "integer"
+    },
+    "table_profiles": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Table Profiles",
+      "type": "array"
+    },
+    "coverage_template": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Coverage Template"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "doc_id"
+  ],
+  "title": "DocumentProfile",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

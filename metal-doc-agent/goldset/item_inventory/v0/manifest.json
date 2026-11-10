@@ -1,0 +1,11 @@
+{
+  "version": "v0",
+  "runs": "runs/m1.5_qwen",
+  "docs": [
+    {"doc_id": "qdu302_2015", "file": "qdu302_2015.json", "run": "qdu302_2015"},
+    {"doc_id": "gbt40303_2021", "file": "gbt40303_2021.json", "run": "gbt40303_2021"},
+    {"doc_id": "gbt3880_1_2012", "file": "gbt3880_1_2012.json", "run": "gbt3880_1_2012"},
+    {"doc_id": "jx25_035", "file": "jx25_035.json", "run": "jx25_035"},
+    {"doc_id": "gjb2057a_2018", "file": "gjb2057a_2018.json", "run": "gjb2057a_2018"}
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.1.0",
+  "producer_version": "0.1.0",
+  "recipe_id": "candidate_mechanical_properties_66a957cb",
+  "version": 1,
+  "status": "candidate",
+  "profile": "mechanical_properties",
+  "signature": {
+    "profile": "mechanical_properties",
+    "orientation": "grade_rows",
+    "n_cols": 11,
+    "blocks": 1,
+    "tokens": [
+      "级别",
+      "公称直径mm",
+      "公称直径",
+      "mm",
+      "热处理制度",
+      "瞬时拉伸性能",
+      "抗拉强度rm/mpa",
+      "抗拉强度",
+      "rm",
+      "mpa",
+      "抗拉强度rm",
+      "规定塑性延伸强度rp0.2/mpa",
+      "规定塑性延伸强度",
+      "rp",
+      "规定塑性延伸强度rp0.2",
+      "断后伸长率a/%",
+      "断后伸长率",
+      "断后伸长率a",
+      "不小于",
+      "断面收缩率z/%",
+      "断面收缩率",
+      "断面收缩率z",
+      "硬度hrc",
+      "硬度",
+      "hrc",
+      "冲击吸收能量*kv2/j",
+      "冲击吸收能量",
+      "kv",
+      "kv2",
+      "纵向",
+      "横向",
+      "侧向膨胀值mm",
+      "侧向膨胀值"
+    ]
+  },
+  "bindings": {
+    "row_key": [
+      "级别"
+    ],
+    "conditions": [
+      "公称直径mm",
+      "热处理制度"
+    ],
+    "measures": {
+      "Rm": {
+        "unit": "MPa",
+        "family": "tensile"
+      },
+      "Rp0.2": {
+        "unit": "MPa",
+        "family": "tensile"
+      },
+      "A": {
+        "unit": "%",
+        "family": "tensile"
+      },
+      "Z": {
+        "unit": "%",
+        "family": "tensile"
+      },
+      "HRC": {
+        "unit": "HRC",
+        "family": "hardness"
+      },
+      "KV2": {
+        "unit": "mm",
+        "family": "impact"
+      },
+      "侧向膨胀值": {
+        "unit": "mm",
+        "family": "impact"
+      }
+    }
+  },
+  "rules": {
+    "candidate": true,
+    "source_table_id": "T14",
+    "source_page_no": 17,
+    "conflicts": 0,
+    "ambiguous": 0,
+    "unmapped": 0
+  },
+  "coverage_template": "product_full",
+  "business_dictionary": null
+}

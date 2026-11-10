@@ -1,0 +1,2980 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "ext_62f19be2cd",
+  "standard_no": null,
+  "title": "钛及钛合金棒材",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 10,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\78a0de4c51a24c958575b9909f6308ae.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T2",
+      "page_no": 4,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-94f317ccc4",
+          "grade": "TA1",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "240",
+              "value": 240.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "240"
+              }
+            },
+            "Rp0.2": {
+              "raw": "140",
+              "value": 140.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "140"
+              }
+            },
+            "A": {
+              "raw": "24",
+              "value": 24.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "24"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-d6c9253fe0",
+          "grade": "TA2",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "400",
+              "value": 400.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "400"
+              }
+            },
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "A": {
+              "raw": "20",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "20"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-fa39187d21",
+          "grade": "TA3",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "500",
+              "value": 500.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "500"
+              }
+            },
+            "Rp0.2": {
+              "raw": "380",
+              "value": 380.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "380"
+              }
+            },
+            "A": {
+              "raw": "18",
+              "value": 18.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "18"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-5977dc884d",
+          "grade": "TA4",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "580",
+              "value": 580.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "580"
+              }
+            },
+            "Rp0.2": {
+              "raw": "485",
+              "value": 485.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "485"
+              }
+            },
+            "A": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 3,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-6bf2d9b178",
+          "grade": "TA5",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "685",
+              "value": 685.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 1,
+                "clause_id": null,
+                "quote": "685"
+              }
+            },
+            "Rp0.2": {
+              "raw": "585",
+              "value": 585.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "585"
+              }
+            },
+            "A": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 3,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "Z": {
+              "raw": "40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "40"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-f2b91faafa",
+          "grade": "TA6",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "685",
+              "value": 685.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 1,
+                "clause_id": null,
+                "quote": "685"
+              }
+            },
+            "Rp0.2": {
+              "raw": "585",
+              "value": 585.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "585"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "27",
+              "value": 27.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 4,
+                "clause_id": null,
+                "quote": "27"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-060374858d",
+          "grade": "TA7",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "785",
+              "value": 785.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 1,
+                "clause_id": null,
+                "quote": "785"
+              }
+            },
+            "Rp0.2": {
+              "raw": "680",
+              "value": 680.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "680"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-fe0af6c8e4",
+          "grade": "TA9",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 9,
+                "col": 1,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "250",
+              "value": 250.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 9,
+                "col": 2,
+                "clause_id": null,
+                "quote": "250"
+              }
+            },
+            "A": {
+              "raw": "20",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 9,
+                "col": 3,
+                "clause_id": null,
+                "quote": "20"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 9,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-6e2db8260b",
+          "grade": "TA10",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "485",
+              "value": 485.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 10,
+                "col": 1,
+                "clause_id": null,
+                "quote": "485"
+              }
+            },
+            "Rp0.2": {
+              "raw": "345",
+              "value": 345.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 10,
+                "col": 2,
+                "clause_id": null,
+                "quote": "345"
+              }
+            },
+            "A": {
+              "raw": "18",
+              "value": 18.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 10,
+                "col": 3,
+                "clause_id": null,
+                "quote": "18"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 10,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-0bf132af7d",
+          "grade": "TA13",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "540",
+              "value": 540.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 11,
+                "col": 1,
+                "clause_id": null,
+                "quote": "540"
+              }
+            },
+            "Rp0.2": {
+              "raw": "400",
+              "value": 400.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 11,
+                "col": 2,
+                "clause_id": null,
+                "quote": "400"
+              }
+            },
+            "A": {
+              "raw": "16",
+              "value": 16.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 11,
+                "col": 3,
+                "clause_id": null,
+                "quote": "16"
+              }
+            },
+            "Z": {
+              "raw": "35",
+              "value": 35.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 11,
+                "col": 4,
+                "clause_id": null,
+                "quote": "35"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-dafad8207d",
+          "grade": "TA15",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "885",
+              "value": 885.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 12,
+                "col": 1,
+                "clause_id": null,
+                "quote": "885"
+              }
+            },
+            "Rp0.2": {
+              "raw": "825",
+              "value": 825.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 12,
+                "col": 2,
+                "clause_id": null,
+                "quote": "825"
+              }
+            },
+            "A": {
+              "raw": "8",
+              "value": 8.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 12,
+                "col": 3,
+                "clause_id": null,
+                "quote": "8"
+              }
+            },
+            "Z": {
+              "raw": "20",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 12,
+                "col": 4,
+                "clause_id": null,
+                "quote": "20"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-e86b2ad9b6",
+          "grade": "TA19",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "895",
+              "value": 895.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 13,
+                "col": 1,
+                "clause_id": null,
+                "quote": "895"
+              }
+            },
+            "Rp0.2": {
+              "raw": "825",
+              "value": 825.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 13,
+                "col": 2,
+                "clause_id": null,
+                "quote": "825"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 13,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 13,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-7f1b62ca94",
+          "grade": "TB2",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "1370",
+              "value": 1370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 15,
+                "col": 1,
+                "clause_id": null,
+                "quote": "1370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "1100",
+              "value": 1100.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 15,
+                "col": 2,
+                "clause_id": null,
+                "quote": "1100"
+              }
+            },
+            "A": {
+              "raw": "7",
+              "value": 7.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 15,
+                "col": 3,
+                "clause_id": null,
+                "quote": "7"
+              }
+            },
+            "Z": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 15,
+                "col": 4,
+                "clause_id": null,
+                "quote": "10"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-f07a17554b",
+          "grade": "TC1",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "585",
+              "value": 585.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 16,
+                "col": 1,
+                "clause_id": null,
+                "quote": "585"
+              }
+            },
+            "Rp0.2": {
+              "raw": "460",
+              "value": 460.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 16,
+                "col": 2,
+                "clause_id": null,
+                "quote": "460"
+              }
+            },
+            "A": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 16,
+                "col": 3,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 16,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-42de8567da",
+          "grade": "TC2",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "685",
+              "value": 685.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 17,
+                "col": 1,
+                "clause_id": null,
+                "quote": "685"
+              }
+            },
+            "Rp0.2": {
+              "raw": "560",
+              "value": 560.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 17,
+                "col": 2,
+                "clause_id": null,
+                "quote": "560"
+              }
+            },
+            "A": {
+              "raw": "12",
+              "value": 12.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 17,
+                "col": 3,
+                "clause_id": null,
+                "quote": "12"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 17,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-251057cb45",
+          "grade": "TC3",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "800",
+              "value": 800.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 18,
+                "col": 1,
+                "clause_id": null,
+                "quote": "800"
+              }
+            },
+            "Rp0.2": {
+              "raw": "700",
+              "value": 700.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 18,
+                "col": 2,
+                "clause_id": null,
+                "quote": "700"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 18,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 18,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-45c19b2fef",
+          "grade": "TC4",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "895",
+              "value": 895.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 19,
+                "col": 1,
+                "clause_id": null,
+                "quote": "895"
+              }
+            },
+            "Rp0.2": {
+              "raw": "825",
+              "value": 825.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 19,
+                "col": 2,
+                "clause_id": null,
+                "quote": "825"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 19,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 19,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-e20169cbe9",
+          "grade": "TC4ELI",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "830",
+              "value": 830.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 20,
+                "col": 1,
+                "clause_id": null,
+                "quote": "830"
+              }
+            },
+            "Rp0.2": {
+              "raw": "760",
+              "value": 760.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 20,
+                "col": 2,
+                "clause_id": null,
+                "quote": "760"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 20,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 20,
+                "col": 4,
+                "clause_id": null,
+                "quote": "15"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-741e7c6807",
+          "grade": "TC6a",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "980",
+              "value": 980.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 21,
+                "col": 1,
+                "clause_id": null,
+                "quote": "980"
+              }
+            },
+            "Rp0.2": {
+              "raw": "840",
+              "value": 840.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 21,
+                "col": 2,
+                "clause_id": null,
+                "quote": "840"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 21,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 21,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-3af41a489b",
+          "grade": "TC9",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "1060",
+              "value": 1060.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 22,
+                "col": 1,
+                "clause_id": null,
+                "quote": "1060"
+              }
+            },
+            "Rp0.2": {
+              "raw": "910",
+              "value": 910.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 22,
+                "col": 2,
+                "clause_id": null,
+                "quote": "910"
+              }
+            },
+            "A": {
+              "raw": "9",
+              "value": 9.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 22,
+                "col": 3,
+                "clause_id": null,
+                "quote": "9"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 22,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-d2537fa445",
+          "grade": "TC10",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "1030",
+              "value": 1030.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 23,
+                "col": 1,
+                "clause_id": null,
+                "quote": "1030"
+              }
+            },
+            "Rp0.2": {
+              "raw": "900",
+              "value": 900.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 23,
+                "col": 2,
+                "clause_id": null,
+                "quote": "900"
+              }
+            },
+            "A": {
+              "raw": "12",
+              "value": 12.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 23,
+                "col": 3,
+                "clause_id": null,
+                "quote": "12"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 23,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-bd8ed4049a",
+          "grade": "TC11",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "1030",
+              "value": 1030.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 24,
+                "col": 1,
+                "clause_id": null,
+                "quote": "1030"
+              }
+            },
+            "Rp0.2": {
+              "raw": "900",
+              "value": 900.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 24,
+                "col": 2,
+                "clause_id": null,
+                "quote": "900"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 24,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 24,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-761a54353b",
+          "grade": "TC12",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "1150",
+              "value": 1150.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 25,
+                "col": 1,
+                "clause_id": null,
+                "quote": "1150"
+              }
+            },
+            "Rp0.2": {
+              "raw": "1000",
+              "value": 1000.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 25,
+                "col": 2,
+                "clause_id": null,
+                "quote": "1000"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 25,
+                "col": 3,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 25,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T3",
+      "page_no": 5,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-b4bdb3e6ef",
+          "grade": "TA6",
+          "grade_level": null,
+          "condition": "350",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "420",
+              "value": 420.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "350",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "420"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-b4d1c6f5ea",
+          "grade": "TA7",
+          "grade_level": null,
+          "condition": "350",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "490",
+              "value": 490.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "350",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "490"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-0d3747e306",
+          "grade": "TA15",
+          "grade_level": null,
+          "condition": "500",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "570",
+              "value": 570.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "500",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "570"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-5e567d39be",
+          "grade": "TA19",
+          "grade_level": null,
+          "condition": "480",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "620",
+              "value": 620.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "480",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "620"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-59d4bdef2d",
+          "grade": "TC1",
+          "grade_level": null,
+          "condition": "350",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "345",
+              "value": 345.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "350",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "345"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-853e0754f1",
+          "grade": "TC2",
+          "grade_level": null,
+          "condition": "350",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "420",
+              "value": 420.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "350",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "420"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-8da97e5c9e",
+          "grade": "TC4",
+          "grade_level": null,
+          "condition": "400",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "620",
+              "value": 620.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "400",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 9,
+                "col": 2,
+                "clause_id": null,
+                "quote": "620"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-71613fc623",
+          "grade": "TC6",
+          "grade_level": null,
+          "condition": "400",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "735",
+              "value": 735.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "400",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 10,
+                "col": 2,
+                "clause_id": null,
+                "quote": "735"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-1773f3ba0d",
+          "grade": "TC9",
+          "grade_level": null,
+          "condition": "500",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "785",
+              "value": 785.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "500",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 11,
+                "col": 2,
+                "clause_id": null,
+                "quote": "785"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-644ba3cd89",
+          "grade": "TC10",
+          "grade_level": null,
+          "condition": "400",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "835",
+              "value": 835.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "400",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 12,
+                "col": 2,
+                "clause_id": null,
+                "quote": "835"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-5ac276f201",
+          "grade": "TC11a",
+          "grade_level": null,
+          "condition": "500",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "685",
+              "value": 685.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "500",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 13,
+                "col": 2,
+                "clause_id": null,
+                "quote": "685"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-b18aa21754",
+          "grade": "TC12",
+          "grade_level": null,
+          "condition": "500",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "700",
+              "value": 700.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "500",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 14,
+                "col": 2,
+                "clause_id": null,
+                "quote": "700"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T8",
+      "page_no": 10,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-a8aa07b13c",
+          "grade": "TA0",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Fe": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            },
+            "C": {
+              "raw": "0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.15"
+              }
+            },
+            "N": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "H": {
+              "raw": "0.03",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.03"
+              }
+            },
+            "O": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-3178f073f2",
+          "grade": "TA1",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Fe": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            },
+            "C": {
+              "raw": "0.25",
+              "value": 0.25,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.25"
+              }
+            },
+            "N": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "H": {
+              "raw": "0.03",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.03"
+              }
+            },
+            "O": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-c1bfb988aa",
+          "grade": "TA2",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Fe": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            },
+            "C": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "N": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "H": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "O": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-df23d67593",
+          "grade": "TA3",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Fe": {
+              "raw": "余量",
+              "value": null,
+              "text": "余量",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "余量"
+              }
+            },
+            "C": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "N": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 5,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "H": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "O": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T8",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T9",
+      "page_no": 10,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-dd0dd53ed5",
+          "grade": "TA0",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "280",
+              "value": 280.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "280"
+              }
+            },
+            "Rp0.2": {
+              "raw": "170",
+              "value": 170.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "170"
+              }
+            },
+            "A": {
+              "raw": "24",
+              "value": 24.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "24"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-79508b390c",
+          "grade": "TA1",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "370",
+              "value": 370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "370"
+              }
+            },
+            "Rp0.2": {
+              "raw": "250",
+              "value": 250.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "250"
+              }
+            },
+            "A": {
+              "raw": "20",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "20"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-6d266fd476",
+          "grade": "TA2",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "440",
+              "value": 440.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "440"
+              }
+            },
+            "Rp0.2": {
+              "raw": "320",
+              "value": 320.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "320"
+              }
+            },
+            "A": {
+              "raw": "18",
+              "value": 18.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "18"
+              }
+            },
+            "Z": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "30"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-d09fde2915",
+          "grade": "TA3",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "540",
+              "value": 540.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "540"
+              }
+            },
+            "Rp0.2": {
+              "raw": "410",
+              "value": 410.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "410"
+              }
+            },
+            "A": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 5,
+                "col": 3,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "Z": {
+              "raw": "25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T9",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "25"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

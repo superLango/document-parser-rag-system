@@ -1,0 +1,1148 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "ext_17aa8e4431",
+  "standard_no": null,
+  "title": "航天固体火箭发动机用超高强度钢锻件规范",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 9,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\0715f18cf44c469cb1c0510db73c9dea.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 3,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-3a541be1af",
+          "grade": "30Si2MnCrMoVE",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Mn": {
+              "raw": "0.27~0.32",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.27,
+              "upper": 0.32,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.27~0.32"
+              }
+            },
+            "Si": {
+              "raw": "0.70~1.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.7,
+              "upper": 1.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.70~1.00"
+              }
+            },
+            "S": {
+              "raw": "1.40~1.70",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.4,
+              "upper": 1.7,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "1.40~1.70"
+              }
+            },
+            "P": {
+              "raw": "≤0.008",
+              "value": 0.008,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.008"
+              }
+            },
+            "Ni": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "Cr": {
+              "raw": "0.25",
+              "value": 0.25,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.25"
+              }
+            },
+            "Mo": {
+              "raw": "1.00~1.30",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.0,
+              "upper": 1.3,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "1.00~1.30"
+              }
+            },
+            "V": {
+              "raw": "0.40~0.55",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.4,
+              "upper": 0.55,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.40~0.55"
+              }
+            },
+            "Cu": {
+              "raw": "0.08~0.15",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.08,
+              "upper": 0.15,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 2,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.08~0.15"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-d52a449056",
+          "grade": "31Si2MnCrMoVE",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Mn": {
+              "raw": "0.28~0.33",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.28,
+              "upper": 0.33,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.28~0.33"
+              }
+            },
+            "Si": {
+              "raw": "0.70~1.00",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.7,
+              "upper": 1.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.70~1.00"
+              }
+            },
+            "S": {
+              "raw": "1.40~1.70",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.4,
+              "upper": 1.7,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "1.40~1.70"
+              }
+            },
+            "P": {
+              "raw": "≤0.008",
+              "value": 0.008,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.008"
+              }
+            },
+            "Ni": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "Cr": {
+              "raw": "0.25",
+              "value": 0.25,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.25"
+              }
+            },
+            "Mo": {
+              "raw": "1.00~1.30",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 1.0,
+              "upper": 1.3,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "1.00~1.30"
+              }
+            },
+            "V": {
+              "raw": "0.40~0.55",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.4,
+              "upper": 0.55,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.40~0.55"
+              }
+            },
+            "Cu": {
+              "raw": "0.08~0.15",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.08,
+              "upper": 0.15,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 3,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.08~0.15"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-22c477ef67",
+          "grade": "30Cr3SiNiMoVA",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Mn": {
+              "raw": "0.28~0.34",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.28,
+              "upper": 0.34,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.28~0.34"
+              }
+            },
+            "Si": {
+              "raw": "0.50~0.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.50~0.80"
+              }
+            },
+            "S": {
+              "raw": "0.90~1.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.9,
+              "upper": 1.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.90~1.20"
+              }
+            },
+            "P": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "Ni": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "Cr": {
+              "raw": "0.80~1.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 1.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.80~1.20"
+              }
+            },
+            "Mo": {
+              "raw": "2.80~3.20",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 2.8,
+              "upper": 3.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "2.80~3.20"
+              }
+            },
+            "V": {
+              "raw": "0.60~0.80",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.6,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.60~0.80"
+              }
+            },
+            "Cu": {
+              "raw": "0.05~0.15",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.05,
+              "upper": 0.15,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T1",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.05~0.15"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T2",
+      "page_no": 3,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-ca8c26a342",
+          "grade": null,
+          "grade_level": null,
+          "condition": "化学成分",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "+0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T2",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "+0.010"
+              }
+            },
+            "Cr": {
+              "raw": "±0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T2",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "±0.05"
+              }
+            },
+            "Mo": {
+              "raw": "±0.02",
+              "value": 0.02,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T2",
+                "row": 1,
+                "col": 3,
+                "clause_id": null,
+                "quote": "±0.02"
+              }
+            },
+            "V": {
+              "raw": "±0.02",
+              "value": 0.02,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 3,
+                "table_id": "T2",
+                "row": 1,
+                "col": 4,
+                "clause_id": null,
+                "quote": "±0.02"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T4",
+      "page_no": 4,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-30ac74ef5c",
+          "grade": "30Si2MnCrMoVEa",
+          "grade_level": null,
+          "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "≥1620",
+              "value": 1620.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥1620"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥1320",
+              "value": 1320.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥1320"
+              }
+            },
+            "A": {
+              "raw": "≥9.0",
+              "value": 9.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥9.0"
+              }
+            },
+            "Z": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KV2": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KIC": {
+              "raw": "≥80",
+              "value": 80.0,
+              "text": null,
+              "unit": "MPa·m^1/2",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≥80"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-94120adf7d",
+          "grade": "31Si2MnCrMoVEa",
+          "grade_level": null,
+          "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "≥1620",
+              "value": 1620.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥1620"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥1320",
+              "value": 1320.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥1320"
+              }
+            },
+            "A": {
+              "raw": "≥9.0",
+              "value": 9.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥9.0"
+              }
+            },
+            "Z": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KV2": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KIC": {
+              "raw": "≥80",
+              "value": 80.0,
+              "text": null,
+              "unit": "MPa·m^1/2",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：910℃~930℃保温1h，空冷淬火：920℃~940℃保温1h，油冷回火：290℃~310℃保温3h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≥80"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-f09ac46e19",
+          "grade": "30Cr3SiNiMoVA",
+          "grade_level": null,
+          "condition": "正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "≥1715",
+              "value": 1715.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥1715"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥1370",
+              "value": 1370.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥1370"
+              }
+            },
+            "A": {
+              "raw": "≥9.0",
+              "value": 9.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥9.0"
+              }
+            },
+            "Z": {
+              "raw": "≥40",
+              "value": 40.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥40"
+              }
+            },
+            "KV2": {
+              "raw": "≥47",
+              "value": 47.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≥47"
+              }
+            },
+            "KIC": {
+              "raw": "≥93",
+              "value": 93.0,
+              "text": null,
+              "unit": "MPa·m^1/2",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "正火：890℃~910℃保温1h，空冷淬火：910℃~930℃保温1h，油冷回火：260℃~310℃保温3.5h，空冷",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≥93"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T7",
+      "page_no": 4,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-ffe0da2d4f",
+          "grade": "30Si2MnCrMoVE31Si2MnCrMoVE",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "B": {
+              "raw": "1.0",
+              "value": 1.0,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T7",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "1.0"
+              }
+            },
+            "C": {
+              "raw": "1.0",
+              "value": 1.0,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T7",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "1.0"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-ac59aa9fb9",
+          "grade": "30Cr3SiNiMoVA",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "B": {
+              "raw": "1.5",
+              "value": 1.5,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T7",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "1.5"
+              }
+            },
+            "C": {
+              "raw": "1.5",
+              "value": 1.5,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T7",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "1.5"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T10",
+      "page_no": 8,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-9cf4dd3c50",
+          "grade": "30Cr3SiNiMoVA",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "A": {
+              "raw": "30Cr3",
+              "value": 30.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T10",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "30Cr3"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

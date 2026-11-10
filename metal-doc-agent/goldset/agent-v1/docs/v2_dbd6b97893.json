@@ -1,0 +1,178 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_dbd6b97893",
+  "standard_no": null,
+  "title": "0 III",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 27,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\6e338243c89345d9b646f6dac108bcd41789973746327.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T23",
+      "page_no": 21,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-b00db9d253",
+          "grade": "30Cr13",
+          "grade_level": null,
+          "condition": "室温",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "≥735",
+              "value": 735.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 21,
+                "table_id": "T23",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≥735"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥540",
+              "value": 540.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 21,
+                "table_id": "T23",
+                "row": 1,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≥540"
+              }
+            },
+            "A": {
+              "raw": "≥14",
+              "value": 14.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 21,
+                "table_id": "T23",
+                "row": 1,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥14"
+              }
+            },
+            "HB": {
+              "raw": "219~276",
+              "value": null,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "range",
+              "lower": 219.0,
+              "upper": 276.0,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 21,
+                "table_id": "T23",
+                "row": 1,
+                "col": 5,
+                "clause_id": null,
+                "quote": "219~276"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-7f53436e7e",
+          "grade": "50Cr15MoV",
+          "grade_level": null,
+          "condition": "室温",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "≤850",
+              "value": 850.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 21,
+                "table_id": "T23",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤850"
+              }
+            },
+            "A": {
+              "raw": "≥12",
+              "value": 12.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 21,
+                "table_id": "T23",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥12"
+              }
+            },
+            "HB": {
+              "raw": "≤280",
+              "value": 280.0,
+              "text": null,
+              "unit": "HBW",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 21,
+                "table_id": "T23",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤280"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

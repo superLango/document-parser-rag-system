@@ -1,0 +1,133 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "ext_1b51e38df2",
+  "standard_no": null,
+  "title": "莱阳核电项目 5 、 6 号机组堆内构件",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 20,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\e4015c6600cb4e6eaea199713e5187461788157011518.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T6",
+      "page_no": 8,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-edf799f7b9",
+          "grade": null,
+          "grade_level": null,
+          "condition": "wt% / 化学成分",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "9.00~11.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 9.0,
+              "upper": 11.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "9.00~11.00"
+              }
+            },
+            "Mn": {
+              "raw": "18.50~20.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 18.5,
+              "upper": 20.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 5,
+                "col": 3,
+                "clause_id": null,
+                "quote": "18.50~20.00"
+              }
+            },
+            "Si": {
+              "raw": "≤0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.05"
+              }
+            },
+            "P": {
+              "raw": "≤0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.035"
+              }
+            },
+            "S": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T6",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

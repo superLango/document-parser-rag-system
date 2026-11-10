@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: metal-agent
+
+resources:
+  - ../..
+
+patches:
+  - path: canary-platform.yaml
+
+images:
+  - name: ghcr.io/hanson/hanson-platform-api
+    newTag: canary

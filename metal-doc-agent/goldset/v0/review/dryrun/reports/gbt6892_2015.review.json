@@ -1,0 +1,766 @@
+{
+  "doc_id": "gbt6892_2015",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 0.1154,
+    "cell_value_agreement": 0.8333,
+    "comparator_unit_agreement": 0.8333,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 52,
+    "record_keys_match": 6,
+    "cells_total": 72,
+    "cells_value_match": 60,
+    "cells_strict_match": 60,
+    "clause_fields_total": 6,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [
+    [
+      "T4",
+      "1050A",
+      "H112|壁厚-|纵向"
+    ],
+    [
+      "T4",
+      "1060",
+      "H112|壁厚-|纵向"
+    ],
+    [
+      "T4",
+      "1060",
+      "O|壁厚-|纵向"
+    ],
+    [
+      "T4",
+      "1100",
+      "H112|壁厚-|纵向"
+    ],
+    [
+      "T4",
+      "1100",
+      "O|壁厚-|纵向"
+    ],
+    [
+      "T4",
+      "1200",
+      "H112|壁厚-|纵向"
+    ],
+    [
+      "T4",
+      "1350",
+      "H112|壁厚-|纵向"
+    ],
+    [
+      "T4",
+      "2A11",
+      "O|壁厚-|纵向"
+    ],
+    [
+      "T4",
+      "2A11",
+      "T4|壁厚<=10.00|纵向"
+    ],
+    [
+      "T4",
+      "2A11",
+      "T4|壁厚>10.00~20.00|纵向"
+    ]
+  ],
+  "record_keys_only_b": [
+    [
+      "T4",
+      "1050A",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "1060",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "1060",
+      "O|纵向"
+    ],
+    [
+      "T4",
+      "1100",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "1100",
+      "O|纵向"
+    ],
+    [
+      "T4",
+      "1200",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "1350",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "20142014A",
+      "H111|O|纵向"
+    ],
+    [
+      "T4",
+      "20142014A",
+      "T4T4510T4511|纵向"
+    ],
+    [
+      "T4",
+      "20142014A",
+      "T6T6510T6511|纵向"
+    ],
+    [
+      "T4",
+      "2017",
+      "O|纵向"
+    ],
+    [
+      "T4",
+      "2017",
+      "T4|纵向"
+    ],
+    [
+      "T4",
+      "2017A",
+      "T4T4510T4511|纵向"
+    ],
+    [
+      "T4",
+      "2024",
+      "H111|O|纵向"
+    ],
+    [
+      "T4",
+      "2024",
+      "T3T3510T3511|纵向"
+    ],
+    [
+      "T4",
+      "2024",
+      "T8T8510T8511|纵向"
+    ],
+    [
+      "T4",
+      "2A11",
+      "O|纵向"
+    ],
+    [
+      "T4",
+      "2A11",
+      "T4|纵向"
+    ],
+    [
+      "T4",
+      "2A12",
+      "O|纵向"
+    ],
+    [
+      "T4",
+      "2A12",
+      "T4|纵向"
+    ],
+    [
+      "T4",
+      "3003",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "3103",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "3A21",
+      "H112|O|纵向"
+    ],
+    [
+      "T4",
+      "50055005A",
+      "H111|O|纵向"
+    ],
+    [
+      "T4",
+      "50055005A",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "5019",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "5051A",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "5052",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "5154A",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "5251",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "5454",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "5754",
+      "H112|纵向"
+    ],
+    [
+      "T4",
+      "5A02",
+      "H112|O|纵向"
+    ],
+    [
+      "T4",
+      "5A03",
+      "H112|O|纵向"
+    ],
+    [
+      "T4",
+      "5A05",
+      "H112|O|纵向"
+    ],
+    [
+      "T4",
+      "5A06",
+      "H112|O|纵向"
+    ]
+  ],
+  "value_diffs": [
+    {
+      "table_id": "T3",
+      "record_key": [
+        "5051A",
+        ""
+      ],
+      "record_id": "gbt6892-T3-5051A",
+      "field": "其他杂质-单个",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 3,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "5051A",
+        ""
+      ],
+      "record_id": "gbt6892-T3-5051A",
+      "field": "其他杂质-合计",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 3,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "6008",
+        ""
+      ],
+      "record_id": "gbt6892-T3-6008",
+      "field": "其他杂质-单个",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 4,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "6008",
+        ""
+      ],
+      "record_id": "gbt6892-T3-6008",
+      "field": "其他杂质-合计",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 4,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "6081",
+        ""
+      ],
+      "record_id": "gbt6892-T3-6081",
+      "field": "其他杂质-单个",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 7,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "6081",
+        ""
+      ],
+      "record_id": "gbt6892-T3-6081",
+      "field": "其他杂质-合计",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 7,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "6261",
+        ""
+      ],
+      "record_id": "gbt6892-T3-6261",
+      "field": "其他杂质-单个",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 6,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "6261",
+        ""
+      ],
+      "record_id": "gbt6892-T3-6261",
+      "field": "其他杂质-合计",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 6,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "6360",
+        ""
+      ],
+      "record_id": "gbt6892-T3-6360",
+      "field": "其他杂质-单个",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 5,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "6360",
+        ""
+      ],
+      "record_id": "gbt6892-T3-6360",
+      "field": "其他杂质-合计",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 5,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "7178",
+        ""
+      ],
+      "record_id": "gbt6892-T3-7178",
+      "field": "其他杂质-单个",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.05",
+        "value": 0.05,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 8,
+          "col": 10,
+          "clause_id": null,
+          "quote": "≤0.05"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T3",
+      "record_key": [
+        "7178",
+        ""
+      ],
+      "record_id": "gbt6892-T3-7178",
+      "field": "其他杂质-合计",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": "T3",
+          "row": 8,
+          "col": 11,
+          "clause_id": null,
+          "quote": "≤0.15"
+        }
+      },
+      "b": null
+    }
+  ],
+  "clause_field_diffs": [
+    {
+      "clause_id": "3.2",
+      "field": "chemical_composition_requirement",
+      "a": {
+        "raw": "5051A、6008、6360、6261、6081、7178牌号型材的化学成分应符合表3的规定，其他牌号型材的化学成分应符合GB/T3190的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "5051A、6008、6360、6261、6081、7178牌号型材的化学成分应符合表3的规定，其他牌号型材的化学成分应符合GB/T3190的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 5,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.2",
+          "quote": "5051A、6008、6360、6261、6081、7178牌号型材的化学成分应符合表3的规定"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4",
+      "field": "direction",
+      "a": {
+        "raw": "纵向",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "纵向",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 6,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4",
+          "quote": "型材的室温纵向拉伸力学性能应符合表4规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.4",
+      "field": "mechanical_requirement",
+      "a": {
+        "raw": "型材的室温纵向拉伸力学性能应符合表4规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "型材的室温纵向拉伸力学性能应符合表4规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 6,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.4",
+          "quote": "型材的室温纵向拉伸力学性能应符合表4规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.4.1",
+      "field": "routine_inspection_items",
+      "a": {
+        "raw": "化学成分、尺寸偏差、力学性能、低倍组织和外观质量",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "化学成分、尺寸偏差、力学性能、低倍组织和外观质量",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 22,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.4.1",
+          "quote": "每批型材出厂前均应进行化学成分、尺寸偏差、力学性能、低倍组织和外观质量的检验。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.4.7",
+      "field": "inspection_reference",
+      "a": {
+        "raw": "表面处理的型材膜层性能检验项目应符合表10的规定。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "表面处理的型材膜层性能检验项目应符合表10的规定。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 22,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.4.7",
+          "quote": "表面处理的型材膜层性能检验项目应符合表10的规定。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.4.7",
+      "field": "periodic_interval",
+      "a": {
+        "raw": "每3年至少检验一次",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "每3年至少检验一次",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 22,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.4.7",
+          "quote": "供方每3年至少检验一次"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

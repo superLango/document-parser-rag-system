@@ -1,0 +1,664 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_ff93167965",
+  "standard_no": null,
+  "title": "用锻件",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 35,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\05ecccc8ad8d40f7b76e52ac729030db1786753115680.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T3",
+      "page_no": 8,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-3e8f6ee3ca",
+          "grade": "熔炼分析",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "Mn": {
+              "raw": "1.15-1.60",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 1.15,
+              "upper": 1.6,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "1.15-1.60"
+              }
+            },
+            "P": {
+              "raw": "≤0.008",
+              "value": 0.008,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.008"
+              }
+            },
+            "S": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            },
+            "Si": {
+              "raw": "0.10-0.30",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.1,
+              "upper": 0.3,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.10-0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.50-0.80",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 6,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.50-0.80"
+              }
+            },
+            "Cr": {
+              "raw": "0.15-0.25",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.15,
+              "upper": 0.25,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 7,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.15-0.25"
+              }
+            },
+            "Mo": {
+              "raw": "0.45-0.55",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.45,
+              "upper": 0.55,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 8,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.45-0.55"
+              }
+            },
+            "V": {
+              "raw": "≤0.03",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 9,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.03"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.12",
+              "value": 0.12,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 10,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.12"
+              }
+            },
+            "Al": {
+              "raw": "≤0.04(目标值)",
+              "value": 0.04,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 11,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.04(目标值)"
+              }
+            },
+            "H": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 18,
+                "col": 1,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            },
+            "B": {
+              "raw": "≤0.0018",
+              "value": 0.0018,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 13,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.0018"
+              }
+            },
+            "Sn": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 14,
+                "col": 1,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            },
+            "As": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 15,
+                "col": 1,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            },
+            "N": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 16,
+                "col": 1,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            },
+            "Pb": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 17,
+                "col": 1,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-3036239dc1",
+          "grade": "成品分析",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.22",
+              "value": 0.22,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.22"
+              }
+            },
+            "Mn": {
+              "raw": "1.15-1.60",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 1.15,
+              "upper": 1.6,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "1.15-1.60"
+              }
+            },
+            "P": {
+              "raw": "≤0.008",
+              "value": 0.008,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.008"
+              }
+            },
+            "S": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            },
+            "Si": {
+              "raw": "0.10-0.30",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.1,
+              "upper": 0.3,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.10-0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.50-0.80",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 0.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.50-0.80"
+              }
+            },
+            "Cr": {
+              "raw": "0.15-0.25",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.15,
+              "upper": 0.25,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.15-0.25"
+              }
+            },
+            "Mo": {
+              "raw": "0.43-0.57",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.43,
+              "upper": 0.57,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.43-0.57"
+              }
+            },
+            "V": {
+              "raw": "≤0.03",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 9,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.03"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.12",
+              "value": 0.12,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 10,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.12"
+              }
+            },
+            "Al": {
+              "raw": "≤0.04",
+              "value": 0.04,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 11,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.04"
+              }
+            },
+            "H": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 18,
+                "col": 2,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            },
+            "B": {
+              "raw": "≤0.0018",
+              "value": 0.0018,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 13,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.0018"
+              }
+            },
+            "Sn": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 14,
+                "col": 2,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            },
+            "As": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 15,
+                "col": 2,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            },
+            "N": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 16,
+                "col": 2,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            },
+            "Pb": {
+              "raw": "提供数据",
+              "value": null,
+              "text": "提供数据",
+              "unit": null,
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T3",
+                "row": 17,
+                "col": 2,
+                "clause_id": null,
+                "quote": "提供数据"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

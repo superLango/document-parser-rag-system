@@ -1,0 +1,362 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "qdu302_2015",
+  "standard_no": "Q/Du 302-2015",
+  "title": "舱段用铝合金锥/筒形轧制锻件技术条件",
+  "doc_type": "enterprise",
+  "material": "2A14铝合金",
+  "product_form": "锥/筒形轧制锻件",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "draft",
+    "annotator": "agent-B-dryrun",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "AI dry-run B：由 runs/m1_qwen_s8 生成，仅覆盖 chemical/mechanical 记录；inspection/classification/clause 不在本次范围；不得作为 verified 依据。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 4,
+      "caption": "表1 轧制锻件的热处理状态",
+      "profile": "classification",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T2",
+      "page_no": 5,
+      "caption": "表2 轧制锻件室温力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "AI dry-run B",
+      "records": [
+        {
+          "record_id": "rec-d58205367d",
+          "grade": "2A14",
+          "grade_level": null,
+          "condition": "T6或T651或T652 / 切向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "430",
+              "value": 430.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 切向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "430"
+              }
+            },
+            "Rp0.2": {
+              "raw": "350",
+              "value": 350.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 切向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "350"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 切向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "HB": {
+              "raw": "120",
+              "value": 120.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 切向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "120"
+              }
+            },
+            "E": {
+              "raw": "提供实测数据",
+              "value": null,
+              "text": "提供实测数据",
+              "unit": "GPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 切向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "提供实测数据"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-06b5e344e9",
+          "grade": "2A14",
+          "grade_level": null,
+          "condition": "T6或T651或T652 / 径向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "400",
+              "value": 400.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 径向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "400"
+              }
+            },
+            "Rp0.2": {
+              "raw": "315",
+              "value": 315.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 径向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "315"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 径向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "120",
+              "value": 120.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 径向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "120"
+              }
+            },
+            "E": {
+              "raw": "提供实测数据",
+              "value": null,
+              "text": "提供实测数据",
+              "unit": "GPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 径向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "提供实测数据"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-7bb661c957",
+          "grade": "2A14",
+          "grade_level": null,
+          "condition": "T6或T651或T652 / 轴向",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "390",
+              "value": 390.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 轴向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "390"
+              }
+            },
+            "Rp0.2": {
+              "raw": "300",
+              "value": 300.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 轴向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "300"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 轴向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "120",
+              "value": 120.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 轴向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "120"
+              }
+            },
+            "E": {
+              "raw": "提供实测数据",
+              "value": null,
+              "text": "提供实测数据",
+              "unit": "GPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "T6或T651或T652 / 轴向",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "提供实测数据"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T3",
+      "page_no": 6,
+      "caption": "表3 质量一致性检验项目",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": [
+    "AI dry-run B"
+  ]
+}

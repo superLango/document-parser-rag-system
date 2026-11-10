@@ -1,0 +1,331 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "ext_1f5bd5d4ca",
+  "standard_no": null,
+  "title": "6061锻环加工质量技术协议",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 11,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\608333b8e2df495aa0fbd65da69d13dd1790658253799.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 5,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-43e8913348",
+          "grade": "6061",
+          "grade_level": null,
+          "condition": "T6 / 切向(纵向)",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "290",
+              "value": 290.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 切向(纵向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "290"
+              }
+            },
+            "Rp0.2": {
+              "raw": "265",
+              "value": 265.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 切向(纵向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "265"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 切向(纵向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "KV2": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "J/cm²",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 切向(纵向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "HB": {
+              "raw": "95",
+              "value": 95.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 切向(纵向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "95"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-da90f77316",
+          "grade": "6061",
+          "grade_level": null,
+          "condition": "T6 / 轴向(高向)",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "270",
+              "value": 270.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 轴向(高向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "270"
+              }
+            },
+            "Rp0.2": {
+              "raw": "250",
+              "value": 250.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 轴向(高向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "250"
+              }
+            },
+            "A": {
+              "raw": "8",
+              "value": 8.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 轴向(高向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "8"
+              }
+            },
+            "KV2": {
+              "raw": "8.4",
+              "value": 8.4,
+              "text": null,
+              "unit": "J/cm²",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 轴向(高向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "8.4"
+              }
+            },
+            "HB": {
+              "raw": "95",
+              "value": 95.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 轴向(高向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "95"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-64a574b8d5",
+          "grade": "6061",
+          "grade_level": null,
+          "condition": "T6 / 径向(横向)",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "270",
+              "value": 270.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 径向(横向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "270"
+              }
+            },
+            "Rp0.2": {
+              "raw": "250",
+              "value": 250.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 径向(横向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "250"
+              }
+            },
+            "A": {
+              "raw": "7",
+              "value": 7.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 径向(横向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "7"
+              }
+            },
+            "KV2": {
+              "raw": "6",
+              "value": 6.0,
+              "text": null,
+              "unit": "J/cm²",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 径向(横向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "6"
+              }
+            },
+            "HB": {
+              "raw": "95",
+              "value": 95.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "T6 / 径向(横向)",
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T1",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "95"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

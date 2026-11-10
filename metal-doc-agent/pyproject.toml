@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metal-doc-agent"
+version = "0.1.0"
+description = "Local-first, auditable extraction framework for metal material standards"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic==2.12.4",
+  "lxml==6.1.3",
+  "httpx==0.28.1",
+  "jsonschema==4.26.0",
+]
+
+[project.optional-dependencies]
+api = [
+  "fastapi==0.162.0",
+  "uvicorn==0.54.0",
+  "python-multipart==0.0.32",
+]
+dev = ["pytest>=8", "httpx==0.28.1", "pillow==13.0.0", "pymupdf==1.27.2.2"]
+yaml = ["PyYAML==6.0.3"]
+http = ["httpx==0.28.1"]
+models = ["httpx==0.28.1", "pillow==13.0.0", "pymupdf==1.27.2.2"]
+pdf = ["pypdf==6.21.2", "pymupdf==1.27.2.2"]
+
+[project.scripts]
+metal-doc = "metal_doc_agent.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["metal_doc_agent*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

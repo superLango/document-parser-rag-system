@@ -1,0 +1,2507 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt1591_2018",
+  "standard_no": "GB/T 1591-2018",
+  "title": "低合金高强度结构钢",
+  "doc_type": "gb_t",
+  "material": "低合金高强度钢",
+  "product_form": "型钢/板带",
+  "source_type": "digital_native",
+  "annotation": {
+    "status": "draft",
+    "annotator": "agent-B-dryrun",
+    "reviewers": [],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "AI dry-run B：由 runs/m1_qwen_s8 生成，仅覆盖 chemical/mechanical 记录；inspection/classification/clause 不在本次范围；不得作为 verified 依据。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 8,
+      "caption": "表1 热轧钢的牌号及化学成分",
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [
+        {
+          "record_id": "rec-e0e7030483",
+          "grade": "Q355B",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.24",
+              "value": 0.24,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.24"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.60",
+              "value": 1.6,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.60"
+              }
+            },
+            "P": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "S": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "Nb": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ti": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "N": {
+              "raw": "0.012",
+              "value": 0.012,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.012"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 5,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-459dbbf503",
+          "grade": "Q355C",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.60",
+              "value": 1.6,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.60"
+              }
+            },
+            "Nb": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ti": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "N": {
+              "raw": "0.012",
+              "value": 0.012,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.012"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 6,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-1f51dda90e",
+          "grade": "Q355D",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.60",
+              "value": 1.6,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.60"
+              }
+            },
+            "P": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "S": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "Nb": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 8,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "V": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 9,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Ti": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 10,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 14,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "N": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 15,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 7,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-ee8f3f4a5e",
+          "grade": "Q390B",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.70",
+              "value": 1.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.70"
+              }
+            },
+            "P": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "S": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.50",
+              "value": 0.5,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.50"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 8,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-2740a71534",
+          "grade": "Q390C",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.70",
+              "value": 1.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.70"
+              }
+            },
+            "P": {
+              "raw": "0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.030"
+              }
+            },
+            "S": {
+              "raw": "0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.030"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.50",
+              "value": 0.5,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.50"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 9,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-90b2c70740",
+          "grade": "Q390D",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.70",
+              "value": 1.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.70"
+              }
+            },
+            "P": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "S": {
+              "raw": "0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.025"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.50",
+              "value": 0.5,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.50"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 10,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-b8536ba612",
+          "grade": "Q420B",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.70",
+              "value": 1.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.70"
+              }
+            },
+            "P": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "S": {
+              "raw": "0.035",
+              "value": 0.035,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.035"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.80"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 11,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-735bee2c89",
+          "grade": "Q420C",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.70",
+              "value": 1.7,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.70"
+              }
+            },
+            "P": {
+              "raw": "0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.030"
+              }
+            },
+            "S": {
+              "raw": "0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.030"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.80"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            },
+            "B": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 12,
+                "col": 16,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-305db9df7b",
+          "grade": "Q460C",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "Si": {
+              "raw": "0.55",
+              "value": 0.55,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 4,
+                "clause_id": null,
+                "quote": "0.55"
+              }
+            },
+            "Mn": {
+              "raw": "1.80",
+              "value": 1.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 5,
+                "clause_id": null,
+                "quote": "1.80"
+              }
+            },
+            "P": {
+              "raw": "0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.030"
+              }
+            },
+            "S": {
+              "raw": "0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.030"
+              }
+            },
+            "Nb": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "V": {
+              "raw": "0.13",
+              "value": 0.13,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.13"
+              }
+            },
+            "Ti": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "Cr": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 11,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "Ni": {
+              "raw": "0.80",
+              "value": 0.8,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 12,
+                "clause_id": null,
+                "quote": "0.80"
+              }
+            },
+            "Cu": {
+              "raw": "0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 13,
+                "clause_id": null,
+                "quote": "0.40"
+              }
+            },
+            "Mo": {
+              "raw": "0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 14,
+                "clause_id": null,
+                "quote": "0.20"
+              }
+            },
+            "N": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 15,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            },
+            "B": {
+              "raw": "0.004",
+              "value": 0.004,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 8,
+                "table_id": "T1",
+                "row": 13,
+                "col": 16,
+                "clause_id": null,
+                "quote": "0.004"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T9",
+      "page_no": 14,
+      "caption": "表7 热轧钢材的拉伸性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [
+        {
+          "record_id": "rec-b3af5e1e62",
+          "grade": "Q355B、Q355C",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "450~600",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 450.0,
+              "upper": 600.0,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 4,
+                "col": 13,
+                "clause_id": null,
+                "quote": "450~600"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-53f2c1665a",
+          "grade": "Q355D",
+          "grade_level": null,
+          "condition": "265b",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "450~600",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 450.0,
+              "upper": 600.0,
+              "condition": "265b",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 5,
+                "col": 13,
+                "clause_id": null,
+                "quote": "450~600"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-fca1805096",
+          "grade": "Q390B、Q390C、Q390D",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 6,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-04dd4d06f7",
+          "grade": "Q420B、Q420C",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 7,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "rec-b481a36a7b",
+          "grade": "Q460C",
+          "grade_level": null,
+          "condition": "热轧",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": "热轧",
+              "evidence": {
+                "page_no": 14,
+                "table_id": "T9",
+                "row": 8,
+                "col": 13,
+                "clause_id": null,
+                "quote": "-"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T15",
+      "page_no": 20,
+      "caption": "表13 钢材检验项目、取样数量、取样方法和试验方法",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "AI dry-run B",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ],
+  "clauses": [],
+  "notes": [
+    "AI dry-run B"
+  ]
+}

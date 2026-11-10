@@ -1,0 +1,526 @@
+{
+  "doc_id": "gbt14992_2015",
+  "passed": false,
+  "annotation_status": [
+    "verified",
+    "draft"
+  ],
+  "metrics": {
+    "record_key_agreement": 0.4444,
+    "cell_value_agreement": 0.9333,
+    "comparator_unit_agreement": 0.9333,
+    "clause_field_agreement": 0.0
+  },
+  "thresholds": {
+    "record_key_agreement": 0.99,
+    "cell_value_agreement": 0.98,
+    "comparator_unit_agreement": 0.99,
+    "clause_field_agreement": 0.95
+  },
+  "counts": {
+    "record_keys_total": 18,
+    "record_keys_match": 8,
+    "cells_total": 150,
+    "cells_value_match": 140,
+    "cells_strict_match": 140,
+    "clause_fields_total": 6,
+    "clause_fields_match": 0
+  },
+  "record_keys_only_a": [],
+  "record_keys_only_b": [
+    [
+      "T1",
+      "GH1016a",
+      ""
+    ],
+    [
+      "T1",
+      "GH1035b",
+      ""
+    ],
+    [
+      "T1",
+      "GH1040",
+      ""
+    ],
+    [
+      "T1",
+      "GH1040c",
+      ""
+    ],
+    [
+      "T1",
+      "GH1131d",
+      ""
+    ],
+    [
+      "T1",
+      "GH1139",
+      ""
+    ],
+    [
+      "T1",
+      "GH1139e",
+      ""
+    ],
+    [
+      "T1",
+      "GH2035A",
+      ""
+    ],
+    [
+      "T1",
+      "GH2130",
+      ""
+    ],
+    [
+      "T14",
+      "FGH4095",
+      "",
+      "rec-9b56c54fff"
+    ]
+  ],
+  "value_diffs": [
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "B",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.006~0.015",
+        "value": null,
+        "lower": 0.006,
+        "upper": 0.015,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 5,
+          "clause_id": null,
+          "quote": "0.006~0.015"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "Ce",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 7,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "Hf",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 2,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "Mg",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "-",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "na",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 3,
+          "clause_id": null,
+          "quote": "-"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "Mn",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.15",
+        "value": 0.15,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 9,
+          "clause_id": null,
+          "quote": "0.15"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "P",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.015",
+        "value": 0.015,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 10,
+          "clause_id": null,
+          "quote": "0.015"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "S",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.015",
+        "value": 0.015,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 11,
+          "clause_id": null,
+          "quote": "0.015"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "Si",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.20",
+        "value": 0.2,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 8,
+          "clause_id": null,
+          "quote": "0.20"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "Ta",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "≤0.020",
+        "value": 0.02,
+        "lower": null,
+        "upper": null,
+        "text": null,
+        "unit": "%",
+        "comparator": "max",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 4,
+          "clause_id": null,
+          "quote": "≤0.020"
+        }
+      },
+      "b": null
+    },
+    {
+      "table_id": "T14",
+      "record_key": [
+        "FGH4095",
+        ""
+      ],
+      "record_id": "gbt14992_2015-T14-FGH4095",
+      "field": "Zr",
+      "value_ok": false,
+      "strict_ok": false,
+      "a": {
+        "raw": "0.030~0.070",
+        "value": null,
+        "lower": 0.03,
+        "upper": 0.07,
+        "text": null,
+        "unit": "%",
+        "comparator": "range",
+        "condition": null,
+        "evidence": {
+          "page_no": 23,
+          "table_id": "T14",
+          "row": 6,
+          "col": 6,
+          "clause_id": null,
+          "quote": "0.030~0.070"
+        }
+      },
+      "b": null
+    }
+  ],
+  "clause_field_diffs": [
+    {
+      "clause_id": "2.1",
+      "field": "alloy_categories",
+      "a": {
+        "raw": "变形高温合金、铸造高温合金（等轴晶铸造高温合金、定向凝固柱晶高温合金和单晶高温合金）、焊接用高温合金丝、粉末冶金高温合金和弥散强化高温合金",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "变形高温合金、铸造高温合金（等轴晶铸造高温合金、定向凝固柱晶高温合金和单晶高温合金）、焊接用高温合金丝、粉末冶金高温合金和弥散强化高温合金",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.1",
+          "quote": "根据合金的基本成形方式或特殊用途，将合金分为变形高温合金、铸造高温合金（等轴晶铸造高温合金、定向凝固柱晶高温合金和单晶高温合金）、焊接用高温合金丝、粉末冶金高温合金和弥散强化高温合金。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.1",
+      "field": "classification_basis",
+      "a": {
+        "raw": "根据合金的基本成形方式或特殊用途",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "根据合金的基本成形方式或特殊用途",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.1",
+          "quote": "根据合金的基本成形方式或特殊用途，将合金分为变形高温合金、铸造高温合金（等轴晶铸造高温合金、定向凝固柱晶高温合金和单晶高温合金）、焊接用高温合金丝、粉末冶金高温合金和弥散强化高温合金。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2",
+      "field": "classification_basis",
+      "a": {
+        "raw": "根据高温材料的基本组成元素",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "根据高温材料的基本组成元素",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2",
+          "quote": "根据高温材料的基本组成元素，将高温材料分为镍铝系金属间化合物高温材料和钛铝系金属间化合物高温材料。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "2.2",
+      "field": "material_categories",
+      "a": {
+        "raw": "镍铝系金属间化合物高温材料和钛铝系金属间化合物高温材料",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "镍铝系金属间化合物高温材料和钛铝系金属间化合物高温材料",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "2.2",
+          "quote": "根据高温材料的基本组成元素，将高温材料分为镍铝系金属间化合物高温材料和钛铝系金属间化合物高温材料。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "3.3",
+      "field": "old_grade_equivalence",
+      "a": {
+        "raw": "允许将新牌号与原牌号并列等效使用，在技术文件中可以同时列出新、原牌号。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "允许将新牌号与原牌号并列等效使用，在技术文件中可以同时列出新、原牌号。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 3,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "3.3",
+          "quote": "允许将新牌号与原牌号并列等效使用，在技术文件中可以同时列出新、原牌号。"
+        }
+      },
+      "b": null
+    },
+    {
+      "clause_id": "5.1",
+      "field": "composition_general",
+      "a": {
+        "raw": "本标准列出的合金或材料牌号的化学成分为一般的化学成分，允许在产品标准或合同、协议中规定较严格的化学成分范围、微量元素的添加值和有害元素的指标要求。",
+        "value": null,
+        "lower": null,
+        "upper": null,
+        "text": "本标准列出的合金或材料牌号的化学成分为一般的化学成分，允许在产品标准或合同、协议中规定较严格的化学成分范围、微量元素的添加值和有害元素的指标要求。",
+        "unit": null,
+        "comparator": "text",
+        "condition": null,
+        "evidence": {
+          "page_no": 4,
+          "table_id": null,
+          "row": null,
+          "col": null,
+          "clause_id": "5.1",
+          "quote": "本标准列出的合金或材料牌号的化学成分为一般的化学成分，允许在产品标准或合同、协议中规定较严格的化学成分范围、微量元素的添加值和有害元素的指标要求。"
+        }
+      },
+      "b": null
+    }
+  ],
+  "table_diffs": []
+}

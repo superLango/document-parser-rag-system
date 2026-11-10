@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: engine-config
+  namespace: metal-agent
+data:
+  METAL_DOC_HOME: /app/metal-doc-agent
+  METAL_DOC_DATA: /data/engine
+  METAL_DOC_OCR: glm
+  METAL_DOC_EXTRACTOR: qwen
+  METAL_DOC_EXTRACTOR_PROMPT: sft_m2
+  METAL_DOC_SFT_RULES_FIRST: "1"
+  METAL_DOC_SFT_ROW_LIMIT: "0"
+  METAL_DOC_RECIPE_ROUTING: "1"
+  METAL_DOC_ORCHESTRATE: "1"
+  GLM_OCR_BASE_URL: http://model-ocr.metal-agent.svc:9977/v1
+  LAYOUT_SERVICE_URL: http://model-layout.metal-agent.svc:9978
+  QWEN_BASE_URL: http://model-extract.metal-agent.svc:9991/v1
+  SFT_BASE_URL: http://model-extract.metal-agent.svc:9991/v1
+  QWEN_MODEL: Qwen3.5-9B
+  SFT_MODEL: adapter-v5
+  MODEL_TIMEOUT: "180"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: platform-config
+  namespace: metal-agent
+data:
+  HANSON_ENV: production
+  HANSON_PLATFORM_DATA: /data/platform
+  HANSON_DB_AUTO_CREATE: "false"
+  HANSON_ENGINE_ROOT: /app/metal-doc-agent
+  METAL_DOC_DATA: /data/engine
+  HANSON_INLINE_JOBS: "false"
+  HANSON_ACCESS_TOKEN_MINUTES: "480"
+  HANSON_SHARE_TOKEN_MINUTES: "15"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: platform-secrets
+  namespace: metal-agent
+  annotations:
+    kubernetes.io/description: replace with ExternalSecret/SealedSecret in real clusters
+type: Opaque
+stringData:
+  HANSON_SECRET_KEY: change-me-in-production
+  HANSON_DATABASE_URL: postgresql+psycopg://hanson:change-me@postgres:5432/hanson
+  POSTGRES_PASSWORD: change-me
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: engine-data
+  namespace: metal-agent
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: nfs-client
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: platform-data
+  namespace: metal-agent
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: nfs-client
+  resources:
+    requests:
+      storage: 10Gi

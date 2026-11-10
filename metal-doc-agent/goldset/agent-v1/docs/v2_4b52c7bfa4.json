@@ -1,0 +1,358 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_4b52c7bfa4",
+  "standard_no": null,
+  "title": "0c87affede6e4522824189505c2821091787136466679",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 10,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\0c87affede6e4522824189505c2821091787136466679.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 4,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-bfb9e6b11d",
+          "grade": "合金元素，% Al",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-5bc4c47762",
+          "grade": "合金元素，% Sn",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-1557b769e7",
+          "grade": "合金元素，% Zr",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-390c7473ca",
+          "grade": "合金元素，% Mo",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-a12affc440",
+          "grade": "合金元素，% Si",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-98aba01163",
+          "grade": "杂质元素，%，不大于 C",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-2391e1a5b5",
+          "grade": "杂质元素，%，不大于 Fe",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-b15617ecd2",
+          "grade": "杂质元素，%，不大于 O",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-59b7b05734",
+          "grade": "杂质元素，%，不大于 N",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-b59a9f2b8b",
+          "grade": "杂质元素，%，不大于 H",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-761ff1d080",
+          "grade": "杂质元素，%，不大于 其它* 单个",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 11,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-a897fcf70e",
+          "grade": "杂质元素，%，不大于 其它* 总和",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 4,
+                "col": 12,
+                "clause_id": null,
+                "quote": "*注：其他元素由供方保证，常规检验可不分析，需方要求并在合同中注明时应予检验，检验元素包括铜(Cu)、镍(Ni)、硼(B)、钇(Y)，其中钇(Y)应不大于0.005%。"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

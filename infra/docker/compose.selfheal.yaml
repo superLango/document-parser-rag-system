@@ -1,0 +1,89 @@
+name: metal-agent-selfheal
+
+# Standalone self-heal plane. It is deliberately NOT part of compose.yaml:
+# the existing stack keeps its images, commands and ports. Start explicitly:
+#
+#   docker compose -f infra/docker/compose.selfheal.yaml up -d
+#
+# Requirements on the host:
+#   - engine-data already populated by the production worker (read-only here)
+#   - a reachable Qwen3.6-35B-A3B endpoint for audit/repair planning
+#
+# Set SELFHEAL_ENABLED=0 (default) to keep the service inert.
+
+x-selfheal-env: &selfheal-env
+  METAL_DOC_HOME: /app/metal-doc-agent
+  METAL_DOC_DATA: /data/engine
+  SELFHEAL_ENABLED: ${SELFHEAL_ENABLED:-1}
+  SELFHEAL_ROOT: /data/selfheal
+  SELFHEAL_DB: /data/selfheal/selfheal.db
+  SELFHEAL_MODEL_URL: ${SELFHEAL_MODEL_URL:-http://192.168.188.75:9991/v1}
+  SELFHEAL_MODEL: ${SELFHEAL_MODEL:-Qwen3.6-35B-A3B-NVFP4}
+  SELFHEAL_MODEL_TIMEOUT: ${SELFHEAL_MODEL_TIMEOUT:-300}
+  SELFHEAL_CODE_AGENT: ${SELFHEAL_CODE_AGENT:-0}
+  SELFHEAL_AUTO_MERGE: ${SELFHEAL_AUTO_MERGE:-0}
+  SELFHEAL_MAX_ITERATIONS: ${SELFHEAL_MAX_ITERATIONS:-3}
+  SELFHEAL_MAX_AUDIT_TABLES: ${SELFHEAL_MAX_AUDIT_TABLES:-20}
+  SELFHEAL_MAX_AUDIT_RECORDS: ${SELFHEAL_MAX_AUDIT_RECORDS:-200}
+  # L1 re-parse uses the production OCR/layout/extractor plane.
+  GLM_OCR_BASE_URL: ${GLM_OCR_BASE_URL:-http://192.168.188.75:9977/v1}
+  LAYOUT_SERVICE_URL: ${LAYOUT_SERVICE_URL:-http://192.168.188.75:9979}
+  LAYOUT_SERVICE_FALLBACK_URL: ${LAYOUT_SERVICE_FALLBACK_URL:-http://192.168.188.75:9978}
+  QWEN_BASE_URL: ${QWEN_BASE_URL:-http://192.168.188.75:9991/v1}
+  QWEN_MODEL: ${QWEN_MODEL:-Qwen3.6-35B-A3B-NVFP4}
+  QWEN_STREAM: ${QWEN_STREAM:-1}
+  MODEL_TIMEOUT: ${MODEL_TIMEOUT:-300}
+  OCR_PAGE_CONCURRENCY: ${OCR_PAGE_CONCURRENCY:-1}
+  OCR_BLOCK_CONCURRENCY: ${OCR_BLOCK_CONCURRENCY:-2}
+  OCR_MAX_INFLIGHT: ${OCR_MAX_INFLIGHT:-2}
+  OCR_TABLE_INFLIGHT: ${OCR_TABLE_INFLIGHT:-2}
+
+services:
+  selfheal-api:
+    image: hanson-r1-selfheal:${HANSON_RELEASE_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.engine
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    command: ["uvicorn", "apps.selfheal.main:app", "--host", "0.0.0.0", "--port", "8100"]
+    environment: *selfheal-env
+    # Same reason as worker-prod: bridge/NAT stalls streamed model responses.
+    network_mode: host
+    volumes:
+      - selfheal-data:/data/selfheal
+      - engine-data:/data/engine:ro
+      - platform-data:/data/platform:ro
+      - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
+    depends_on:
+      - selfheal-worker
+    restart: unless-stopped
+
+  selfheal-worker:
+    image: hanson-r1-selfheal:${HANSON_RELEASE_TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.engine
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    command: ["python", "apps/selfheal/worker.py", "--interval", "15"]
+    environment: *selfheal-env
+    network_mode: host
+    volumes:
+      - selfheal-data:/data/selfheal
+      - engine-data:/data/engine:ro
+      - platform-data:/data/platform:ro
+      - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
+    restart: unless-stopped
+
+volumes:
+  selfheal-data:
+    name: metal-agent-selfheal-data
+  engine-data:
+    external: true
+    name: ${ENGINE_DATA_VOLUME:-hanson-r1_engine-data}
+  platform-data:
+    external: true
+    name: ${PLATFORM_DATA_VOLUME:-hanson-r1_platform-data}

@@ -1,0 +1,385 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_c0ead7e694",
+  "standard_no": null,
+  "title": "a5fbc645696b4c3a91e2c781d369c7101792487564255",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 9,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\a5fbc645696b4c3a91e2c781d369c7101792487564255.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T3",
+      "page_no": 5,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-f02c5e107b",
+          "grade": "主要元素，% Nb",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-0f955e2f6f",
+          "grade": "主要元素，% Ti",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-7692304787",
+          "grade": "微量元素，%，不大于 Zr",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-ea01e637cb",
+          "grade": "微量元素，%，不大于 Mo",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-a2d1ddcd6a",
+          "grade": "微量元素，%，不大于 Ni",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-c4487e2828",
+          "grade": "微量元素，%，不大于 Fe",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-52ade4408c",
+          "grade": "微量元素，%，不大于 Si",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-e52ea57433",
+          "grade": "微量元素，%，不大于 C",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-00ca9dbf68",
+          "grade": "微量元素，%，不大于 O",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-9c418f50a1",
+          "grade": "微量元素，%，不大于 N",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-1560ba2040",
+          "grade": "微量元素，%，不大于 H1",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 11,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-fcf125b8e6",
+          "grade": "微量元素，%，不大于 其他2 单一",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 12,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-c95e359c4f",
+          "grade": "微量元素，%，不大于 其他2 总和",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "H": {
+              "raw": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。",
+              "value": 1.0,
+              "text": null,
+              "unit": "mm",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T3",
+                "row": 4,
+                "col": 13,
+                "clause_id": null,
+                "quote": "注1：H含量在供应状态棒材距表面4mm~6mm处取样测定。注2：其它杂质元素在正常情况下可不作分析，需方要求并在合同中注明时应予以检验。首批试制应予以检验，检验元素包括Cu、B、Y。"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

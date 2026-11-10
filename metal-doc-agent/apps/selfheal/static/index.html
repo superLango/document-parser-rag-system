@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Self-Heal 问题反馈</title>
+  <style>
+    :root { color-scheme: light; --line: #d8dee9; --ink: #1f2933; --muted: #61707d; --accent: #1f6feb; --bg: #f7f9fc; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.6 "Segoe UI", "PingFang SC", sans-serif; color: var(--ink); background: var(--bg); }
+    header { padding: 18px 24px; border-bottom: 1px solid var(--line); background: #fff; display: flex; gap: 16px; align-items: baseline; }
+    header h1 { font-size: 18px; margin: 0; }
+    header span { color: var(--muted); font-size: 12px; }
+    main { display: grid; grid-template-columns: 360px 1fr; gap: 16px; padding: 16px 24px 40px; }
+    section { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+    h2 { font-size: 14px; margin: 0 0 12px; }
+    label { display: block; font-size: 12px; color: var(--muted); margin-top: 8px; }
+    input, select, textarea, button { font: inherit; width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+    textarea { min-height: 64px; resize: vertical; }
+    button { margin-top: 12px; background: var(--accent); color: #fff; border: 0; cursor: pointer; }
+    button.secondary { background: #eef2f7; color: var(--ink); }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    .row { display: flex; gap: 8px; }
+    .row > * { flex: 1; }
+    .list { margin: 0; padding: 0; list-style: none; }
+    .list li { padding: 9px 0; border-bottom: 1px dashed var(--line); cursor: pointer; }
+    .list li:hover { color: var(--accent); }
+    .tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 999px; background: #eef2f7; color: var(--muted); margin-left: 6px; }
+    .message { border-left: 3px solid var(--line); padding: 6px 10px; margin: 8px 0; white-space: pre-wrap; }
+    .message.system { border-color: var(--accent); background: #f3f7ff; }
+    pre { background: #0d1117; color: #d6deeb; padding: 12px; border-radius: 8px; overflow: auto; font-size: 12px; }
+    .muted { color: var(--muted); font-size: 12px; }
+    .metrics { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Self-Heal 问题反馈</h1>
+  <span>独立服务 · 默认关闭 · 只读现有产物</span>
+</header>
+<main>
+  <section>
+    <h2>提交反馈</h2>
+    <form id="feedback-form">
+      <label>doc_id<input name="doc_id" required /></label>
+      <label>job_id<input name="job_id" required /></label>
+      <label>问题类型
+        <select name="category">
+          <option value="wrong_value">取值错误</option>
+          <option value="missing_value">缺失字段</option>
+          <option value="extra_value">多余字段</option>
+          <option value="wrong_unit">单位错误</option>
+          <option value="wrong_requirement">比较符错误</option>
+          <option value="wrong_table">表结构错误</option>
+          <option value="duplicate">重复记录</option>
+          <option value="other">其他</option>
+        </select>
+      </label>
+      <div class="row">
+        <label>record_id<input name="record_id" /></label>
+        <label>table_id<input name="table_id" /></label>
+      </div>
+      <label>property<input name="property" /></label>
+      <label>期望值<input name="expected_value" /></label>
+      <label>原文引文<textarea name="source_quote"></textarea></label>
+      <label>描述<textarea name="description"></textarea></label>
+      <button type="submit">提交</button>
+      <p class="muted" id="form-status"></p>
+    </form>
+  </section>
+  <section>
+    <div class="row">
+      <div>
+        <h2>反馈列表</h2>
+        <ul class="list" id="feedback-list"><li class="muted">加载中…</li></ul>
+      </div>
+      <div>
+        <h2>指标</h2>
+        <div class="metrics" id="metrics"></div>
+        <h2 style="margin-top:16px">详情</h2>
+        <div id="detail" class="muted">选择左侧反馈查看详情</div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+const api = (path, options) => fetch(path, options).then(async (response) => {
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.detail || response.statusText);
+  return data;
+});
+
+async function loadList() {
+  const data = await api('/v1/selfheal/feedback');
+  const list = document.getElementById('feedback-list');
+  if (!data.items.length) { list.innerHTML = '<li class="muted">暂无反馈</li>'; return; }
+  list.innerHTML = data.items.map((item) => `
+    <li data-id="${item.feedback_id}">
+      ${item.doc_id} · ${item.category}
+      <span class="tag">${item.status}</span>
+    </li>`).join('');
+  list.querySelectorAll('li[data-id]').forEach((node) => {
+    node.onclick = () => loadDetail(node.dataset.id);
+  });
+}
+
+async function loadMetrics() {
+  const data = await api('/v1/selfheal/metrics');
+  document.getElementById('metrics').innerHTML =
+    `<div>反馈：${JSON.stringify(data.feedback)}</div>
+     <div>修复：${JSON.stringify(data.repairs_by_level)}</div>
+     <div>门禁：${JSON.stringify(data.gate_decisions)}</div>`;
+}
+
+async function loadDetail(id) {
+  const data = await api(`/v1/selfheal/feedback/${id}`);
+  const messages = data.messages.map((message) =>
+    `<div class="message ${message.role}">${escapeHtml(message.content)}</div>`).join('');
+  const findings = data.findings.map((finding) =>
+    `<div class="muted">${finding.rule_code || ''} · ${finding.verdict} · ${finding.status}</div>`).join('');
+  document.getElementById('detail').innerHTML = `
+    <div><strong>${data.feedback.feedback_id}</strong></div>
+    <div class="muted">${data.feedback.description || ''}</div>
+    ${messages || '<div class="muted">暂无消息</div>'}
+    <div style="margin-top:12px">${findings}</div>
+    <button id="process-btn">自动处理</button>
+    <div id="diff-box"></div>`;
+  document.getElementById('process-btn').onclick = async () => {
+    const button = document.getElementById('process-btn');
+    button.disabled = true;
+    try {
+      const outcome = await api(`/v1/selfheal/feedback/${id}/process`, { method: 'POST' });
+      await loadDetail(id);
+      await loadList();
+      await loadMetrics();
+      const diff = await api(`/v1/selfheal/jobs/${data.feedback.job_id}/diff`);
+      if (diff.diff) {
+        document.getElementById('diff-box').innerHTML =
+          `<pre>${escapeHtml(JSON.stringify(diff.diff, null, 2))}</pre>`;
+      }
+      document.getElementById('form-status').textContent = `处理结果：${outcome.status}`;
+    } finally {
+      button.disabled = false;
+    }
+  };
+}
+
+function escapeHtml(text) {
+  return String(text == null ? '' : text)
+    .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+}
+
+document.getElementById('feedback-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const form = new FormData(event.target);
+  const payload = {
+    doc_id: form.get('doc_id'),
+    job_id: form.get('job_id'),
+    category: form.get('category'),
+    target: {
+      record_id: form.get('record_id') || null,
+      table_id: form.get('table_id') || null,
+      property: form.get('property') || null,
+    },
+    expected_value: form.get('expected_value') || null,
+    source_quote: form.get('source_quote') || null,
+    description: form.get('description') || '',
+  };
+  const status = document.getElementById('form-status');
+  try {
+    const data = await api('/v1/selfheal/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    status.textContent = data.problems.length ? `需要补充：${data.problems.join('；')}` : '已提交';
+    await loadList();
+    await loadMetrics();
+  } catch (error) {
+    status.textContent = `提交失败：${error.message}`;
+  }
+});
+
+loadList().catch(() => {});
+loadMetrics().catch(() => {});
+</script>
+</body>
+</html>

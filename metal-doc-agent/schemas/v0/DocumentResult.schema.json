@@ -1,0 +1,1428 @@
+{
+  "$defs": {
+    "AuditReport": {
+      "properties": {
+        "schema_version": {
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "producer_version": {
+          "default": "0.1.0",
+          "title": "Producer Version",
+          "type": "string"
+        },
+        "doc_id": {
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "status": {
+          "default": "review",
+          "enum": [
+            "pass",
+            "review",
+            "fail"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/ValidationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "coverage": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoveragePlan"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "stats": {
+          "additionalProperties": true,
+          "title": "Stats",
+          "type": "object"
+        }
+      },
+      "required": [
+        "doc_id"
+      ],
+      "title": "AuditReport",
+      "type": "object"
+    },
+    "ClassificationItem": {
+      "properties": {
+        "grade": {
+          "title": "Grade",
+          "type": "string"
+        },
+        "old_grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Old Grade"
+        },
+        "state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "State"
+        },
+        "old_state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Old State"
+        },
+        "meaning": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Meaning"
+        },
+        "status": {
+          "default": "found",
+          "enum": [
+            "found",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Id"
+        }
+      },
+      "required": [
+        "grade"
+      ],
+      "title": "ClassificationItem",
+      "type": "object"
+    },
+    "ClauseRecord": {
+      "properties": {
+        "clause_id": {
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "page_no": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page No"
+        },
+        "kind": {
+          "default": "other",
+          "enum": [
+            "scope",
+            "normative_reference",
+            "terms",
+            "technical_requirement",
+            "inspection",
+            "sampling",
+            "test_method",
+            "delivery",
+            "packaging",
+            "other"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "fields": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ExtractedValue"
+          },
+          "title": "Fields",
+          "type": "object"
+        },
+        "applies_to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Applies To",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "status": {
+          "default": "found",
+          "enum": [
+            "found",
+            "missing",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clause_id"
+      ],
+      "title": "ClauseRecord",
+      "type": "object"
+    },
+    "CoverageItem": {
+      "properties": {
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "status": {
+          "default": "missing",
+          "enum": [
+            "found",
+            "missing",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "expected_locations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Locations",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "field"
+      ],
+      "title": "CoverageItem",
+      "type": "object"
+    },
+    "CoveragePlan": {
+      "properties": {
+        "schema_version": {
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "producer_version": {
+          "default": "0.1.0",
+          "title": "Producer Version",
+          "type": "string"
+        },
+        "standard_no": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Standard No"
+        },
+        "template": {
+          "default": "product_full",
+          "title": "Template",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/CoverageItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "title": "CoveragePlan",
+      "type": "object"
+    },
+    "DocumentMeta": {
+      "properties": {
+        "doc_id": {
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "source_path": {
+          "title": "Source Path",
+          "type": "string"
+        },
+        "file_name": {
+          "title": "File Name",
+          "type": "string"
+        },
+        "standard_no": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Standard No"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "page_count": {
+          "default": 0,
+          "title": "Page Count",
+          "type": "integer"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        }
+      },
+      "required": [
+        "doc_id",
+        "source_path",
+        "file_name"
+      ],
+      "title": "DocumentMeta",
+      "type": "object"
+    },
+    "DocumentProfile": {
+      "properties": {
+        "doc_id": {
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "doc_type": {
+          "default": "other",
+          "enum": [
+            "gb_t",
+            "gjb",
+            "enterprise",
+            "agreement",
+            "classification",
+            "other"
+          ],
+          "title": "Doc Type",
+          "type": "string"
+        },
+        "material_family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material Family"
+        },
+        "product_form": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Form"
+        },
+        "has_toc": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Has Toc"
+        },
+        "table_count": {
+          "default": 0,
+          "title": "Table Count",
+          "type": "integer"
+        },
+        "table_profiles": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Table Profiles",
+          "type": "array"
+        },
+        "coverage_template": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Coverage Template"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "doc_id"
+      ],
+      "title": "DocumentProfile",
+      "type": "object"
+    },
+    "ExtractedValue": {
+      "properties": {
+        "raw": {
+          "title": "Raw",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "comparator": {
+          "default": "eq",
+          "enum": [
+            "eq",
+            "min",
+            "max",
+            "range",
+            "text",
+            "na"
+          ],
+          "title": "Comparator",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lower"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upper"
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Condition"
+        },
+        "evidence_id": {
+          "default": "",
+          "title": "Evidence Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "raw"
+      ],
+      "title": "ExtractedValue",
+      "type": "object"
+    },
+    "InspectionItem": {
+      "properties": {
+        "item": {
+          "title": "Item",
+          "type": "string"
+        },
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category"
+        },
+        "quantities": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Quantities",
+          "type": "object"
+        },
+        "sample_location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sample Location"
+        },
+        "requirement_clause": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requirement Clause"
+        },
+        "method_clause": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method Clause"
+        },
+        "method_standard": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method Standard"
+        },
+        "status": {
+          "default": "found",
+          "enum": [
+            "found",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Id"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "item"
+      ],
+      "title": "InspectionItem",
+      "type": "object"
+    },
+    "Merge": {
+      "properties": {
+        "row": {
+          "title": "Row",
+          "type": "integer"
+        },
+        "col": {
+          "title": "Col",
+          "type": "integer"
+        },
+        "rowspan": {
+          "default": 1,
+          "title": "Rowspan",
+          "type": "integer"
+        },
+        "colspan": {
+          "default": 1,
+          "title": "Colspan",
+          "type": "integer"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        },
+        "is_header": {
+          "default": false,
+          "title": "Is Header",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "row",
+        "col"
+      ],
+      "title": "Merge",
+      "type": "object"
+    },
+    "Record": {
+      "properties": {
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "source_table_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Table Id"
+        },
+        "grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grade"
+        },
+        "grade_level": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grade Level"
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Condition"
+        },
+        "facets": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Facets",
+          "type": "object"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/ExtractedValue"
+          },
+          "title": "Properties"
+        }
+      },
+      "required": [
+        "record_id"
+      ],
+      "title": "Record",
+      "type": "object"
+    },
+    "ReferenceEdge": {
+      "properties": {
+        "raw": {
+          "title": "Raw",
+          "type": "string"
+        },
+        "standard_no": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Standard No"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edition"
+        },
+        "dated": {
+          "default": false,
+          "title": "Dated",
+          "type": "boolean"
+        },
+        "relation": {
+          "default": "normative",
+          "enum": [
+            "normative",
+            "informative",
+            "table_note",
+            "clause",
+            "other"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "clause_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clause Id"
+        },
+        "page_no": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page No"
+        },
+        "resolved": {
+          "default": false,
+          "title": "Resolved",
+          "type": "boolean"
+        },
+        "resolved_doc_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolved Doc Id"
+        },
+        "resolution_basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolution Basis"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "enum": [
+                "current",
+                "superseded",
+                "conflict",
+                "unknown"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Status"
+        },
+        "superseded_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Superseded By"
+        },
+        "relevance": {
+          "anyOf": [
+            {
+              "enum": [
+                "schema",
+                "method",
+                "informative",
+                "unknown"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Relevance"
+        },
+        "expand": {
+          "default": false,
+          "title": "Expand",
+          "type": "boolean"
+        },
+        "selection_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Selection Reason"
+        }
+      },
+      "required": [
+        "raw"
+      ],
+      "title": "ReferenceEdge",
+      "type": "object"
+    },
+    "ReferenceGraph": {
+      "properties": {
+        "schema_version": {
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "producer_version": {
+          "default": "0.1.0",
+          "title": "Producer Version",
+          "type": "string"
+        },
+        "doc_id": {
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "references": {
+          "items": {
+            "$ref": "#/$defs/ReferenceEdge"
+          },
+          "title": "References",
+          "type": "array"
+        },
+        "gaps": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "budget": {
+          "additionalProperties": true,
+          "title": "Budget",
+          "type": "object"
+        }
+      },
+      "required": [
+        "doc_id"
+      ],
+      "title": "ReferenceGraph",
+      "type": "object"
+    },
+    "TableBlock": {
+      "properties": {
+        "block_id": {
+          "title": "Block Id",
+          "type": "string"
+        },
+        "start_row": {
+          "title": "Start Row",
+          "type": "integer"
+        },
+        "header_rows": {
+          "title": "Header Rows",
+          "type": "integer"
+        },
+        "header_paths": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Header Paths",
+          "type": "array"
+        },
+        "rows": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Rows",
+          "type": "array"
+        }
+      },
+      "required": [
+        "block_id",
+        "start_row",
+        "header_rows"
+      ],
+      "title": "TableBlock",
+      "type": "object"
+    },
+    "TableGrid": {
+      "properties": {
+        "schema_version": {
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "producer_version": {
+          "default": "0.1.0",
+          "title": "Producer Version",
+          "type": "string"
+        },
+        "table_id": {
+          "title": "Table Id",
+          "type": "string"
+        },
+        "page_no": {
+          "title": "Page No",
+          "type": "integer"
+        },
+        "caption": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Caption"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context"
+        },
+        "n_rows": {
+          "default": 0,
+          "title": "N Rows",
+          "type": "integer"
+        },
+        "n_cols": {
+          "default": 0,
+          "title": "N Cols",
+          "type": "integer"
+        },
+        "header_rows": {
+          "default": 1,
+          "title": "Header Rows",
+          "type": "integer"
+        },
+        "rows": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Rows",
+          "type": "array"
+        },
+        "header_paths": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Header Paths",
+          "type": "array"
+        },
+        "merges": {
+          "items": {
+            "$ref": "#/$defs/Merge"
+          },
+          "title": "Merges",
+          "type": "array"
+        },
+        "units": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Units",
+          "type": "array"
+        },
+        "footnotes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Footnotes",
+          "type": "array"
+        },
+        "profile": {
+          "default": "unknown",
+          "title": "Profile",
+          "type": "string"
+        },
+        "orientation": {
+          "default": "grade_rows",
+          "title": "Orientation",
+          "type": "string"
+        },
+        "blocks": {
+          "items": {
+            "$ref": "#/$defs/TableBlock"
+          },
+          "title": "Blocks",
+          "type": "array"
+        },
+        "raw_html": {
+          "default": "",
+          "title": "Raw Html",
+          "type": "string"
+        },
+        "continuation_of": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Continuation Of"
+        },
+        "merged_pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Merged Pages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "table_id",
+        "page_no"
+      ],
+      "title": "TableGrid",
+      "type": "object"
+    },
+    "ValidationIssue": {
+      "properties": {
+        "level": {
+          "enum": [
+            "L0",
+            "L1",
+            "L2",
+            "L3",
+            "L3.5",
+            "L4",
+            "L5"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "record_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Record Id"
+        },
+        "field": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Field"
+        },
+        "evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Id"
+        },
+        "severity": {
+          "default": "warn",
+          "enum": [
+            "info",
+            "warn",
+            "error"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "level",
+        "code",
+        "message"
+      ],
+      "title": "ValidationIssue",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "producer_version": {
+      "default": "0.1.0",
+      "title": "Producer Version",
+      "type": "string"
+    },
+    "document": {
+      "$ref": "#/$defs/DocumentMeta"
+    },
+    "profile": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DocumentProfile"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tables": {
+      "items": {
+        "$ref": "#/$defs/TableGrid"
+      },
+      "title": "Tables",
+      "type": "array"
+    },
+    "records": {
+      "items": {
+        "$ref": "#/$defs/Record"
+      },
+      "title": "Records",
+      "type": "array"
+    },
+    "inspection_items": {
+      "items": {
+        "$ref": "#/$defs/InspectionItem"
+      },
+      "title": "Inspection Items",
+      "type": "array"
+    },
+    "classification_items": {
+      "items": {
+        "$ref": "#/$defs/ClassificationItem"
+      },
+      "title": "Classification Items",
+      "type": "array"
+    },
+    "clauses": {
+      "items": {
+        "$ref": "#/$defs/ClauseRecord"
+      },
+      "title": "Clauses",
+      "type": "array"
+    },
+    "references": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ReferenceGraph"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "coverage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CoveragePlan"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "quality": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AuditReport"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "artifacts": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Artifacts",
+      "type": "object"
+    }
+  },
+  "required": [
+    "document"
+  ],
+  "title": "DocumentResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

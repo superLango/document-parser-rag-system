@@ -1,0 +1,241 @@
+{
+  "$defs": {
+    "CanonicalMatch": {
+      "properties": {
+        "raw": {
+          "title": "Raw",
+          "type": "string"
+        },
+        "canonical_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Canonical Id"
+        },
+        "canonical_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Canonical Name"
+        },
+        "match_type": {
+          "default": "new",
+          "enum": [
+            "exact",
+            "alias",
+            "granularity",
+            "semantic",
+            "edit_distance",
+            "new",
+            "ambiguous"
+          ],
+          "title": "Match Type",
+          "type": "string"
+        },
+        "score": {
+          "default": 0.0,
+          "title": "Score",
+          "type": "number"
+        },
+        "dictionary_version": {
+          "default": "",
+          "title": "Dictionary Version",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "status": {
+          "default": "new",
+          "enum": [
+            "matched",
+            "new",
+            "ambiguous"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "raw"
+      ],
+      "title": "CanonicalMatch",
+      "type": "object"
+    },
+    "NewTerm": {
+      "properties": {
+        "type": {
+          "default": "item",
+          "enum": [
+            "item",
+            "method"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "raw": {
+          "title": "Raw",
+          "type": "string"
+        },
+        "family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Family"
+        },
+        "facets": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Facets",
+          "type": "object"
+        },
+        "suggested_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suggested Code"
+        },
+        "reason": {
+          "default": "",
+          "title": "Reason",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "frequency": {
+          "default": 1,
+          "title": "Frequency",
+          "type": "integer"
+        },
+        "status": {
+          "default": "pending",
+          "enum": [
+            "pending",
+            "active",
+            "rejected"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "dictionary_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dictionary Version"
+        }
+      },
+      "required": [
+        "raw"
+      ],
+      "title": "NewTerm",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "producer_version": {
+      "default": "0.1.0",
+      "title": "Producer Version",
+      "type": "string"
+    },
+    "doc_id": {
+      "title": "Doc Id",
+      "type": "string"
+    },
+    "dictionary_version": {
+      "title": "Dictionary Version",
+      "type": "string"
+    },
+    "item_matches": {
+      "items": {
+        "$ref": "#/$defs/CanonicalMatch"
+      },
+      "title": "Item Matches",
+      "type": "array"
+    },
+    "method_matches": {
+      "items": {
+        "$ref": "#/$defs/CanonicalMatch"
+      },
+      "title": "Method Matches",
+      "type": "array"
+    },
+    "new_terms": {
+      "items": {
+        "$ref": "#/$defs/NewTerm"
+      },
+      "title": "New Terms",
+      "type": "array"
+    },
+    "summary": {
+      "additionalProperties": true,
+      "title": "Summary",
+      "type": "object"
+    }
+  },
+  "required": [
+    "doc_id",
+    "dictionary_version"
+  ],
+  "title": "AlignmentResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

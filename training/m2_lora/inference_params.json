@@ -1,0 +1,14 @@
+{
+  "version": "lora-infer-v1",
+  "model": "Qwen3.5-9B",
+  "adapter": "adapter-v1",
+  "enable_thinking": false,
+  "do_sample": false,
+  "temperature": null,
+  "top_p": null,
+  "top_k": null,
+  "repetition_penalty": 1.0,
+  "max_new_tokens": 512,
+  "seed": 0,
+  "notes": "Greedy decoding; enable_thinking=false is mandatory (thinking mode never emits JSON). Keep these values in sync with eval_heldout.py / eval_two_stage.py defaults."
+}

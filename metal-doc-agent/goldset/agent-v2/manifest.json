@@ -1,0 +1,766 @@
+{
+  "schema_version": "agent-1.0.0",
+  "created_at": "2026-10-30",
+  "corpus_root": "runs\\corpus_all",
+  "documents": [
+    {
+      "doc_id": "ext_1f5bd5d4ca",
+      "standard_no": null,
+      "title": "6061锻环加工质量技术协议",
+      "doc_type": "agreement",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\608333b8e2df495aa0fbd65da69d13dd1790658253799.md",
+      "pages": 11,
+      "tables": 1,
+      "profiles": [
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_1f5bd5d4ca.json",
+      "notes": "technical_condition; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_152d783c22",
+      "standard_no": null,
+      "title": "3 订货要求",
+      "doc_type": "agreement",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\7ad79a9408c948b490137ac4c29fa4931704785550850.md",
+      "pages": 7,
+      "tables": 3,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_152d783c22.json",
+      "notes": "technical_condition; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_67c749bc76",
+      "standard_no": null,
+      "title": "728e72b0f2e64ff5bcec0974f6f4146c1787136380607",
+      "doc_type": "agreement",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\728e72b0f2e64ff5bcec0974f6f4146c1787136380607.md",
+      "pages": 15,
+      "tables": 4,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_67c749bc76.json",
+      "notes": "technical_condition; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_a0c8f419cf",
+      "standard_no": null,
+      "title": "74aec6bf74054d4782f5ed622a6166141788762643935",
+      "doc_type": "agreement",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\74aec6bf74054d4782f5ed622a6166141788762643935.md",
+      "pages": 16,
+      "tables": 4,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "dev",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_a0c8f419cf.json",
+      "notes": "technical_condition; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_9c436287b2",
+      "standard_no": null,
+      "title": "反应堆冷却剂泵RSR750 联轴器 锻件制造大纲",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\5ff360d5ced44f0084d78149dfc0d8481777422073356.md",
+      "pages": 31,
+      "tables": 3,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "heldout",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_9c436287b2.json",
+      "notes": "manufacturing_outline; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_1026e3dac3",
+      "standard_no": null,
+      "title": "海阳项目屏蔽主泵电机下密封环 用ASME SA-182M Gr.F304 不锈钢锻件 制造大纲",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\85fc45bd802142ee9ee4568b59b4045b1777941231756.md",
+      "pages": 17,
+      "tables": 1,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_1026e3dac3.json",
+      "notes": "manufacturing_outline; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_5dac6377b3",
+      "standard_no": null,
+      "title": "廉江项目屏蔽主泵电机下密封环 用ASME SA-182M Gr.F304 不锈钢锻件 制造大纲",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\c0989fecc80145638ef38f9e304f40771777940850065.md",
+      "pages": 17,
+      "tables": 1,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_5dac6377b3.json",
+      "notes": "manufacturing_outline; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_73166eb643",
+      "standard_no": null,
+      "title": "蒸汽发生器给水接管用18MND5 锻件制造大纲",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\ea8721ca4f494f95969056e0b4e5decc1788421393306.md",
+      "pages": 28,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_73166eb643.json",
+      "notes": "manufacturing_outline; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_aae054ccf1",
+      "standard_no": null,
+      "title": "霞浦核电1、2 号机组 反应堆冷却剂泵RSR750 挡圈用 锻件制造大纲",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\bb2621dac0174ff39091830f3cfef14d1791967756454.md",
+      "pages": 16,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "dev",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_aae054ccf1.json",
+      "notes": "manufacturing_outline; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_ee0596aacc",
+      "standard_no": null,
+      "title": "3 制造流程",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\7069f774d8d44a8bb2cce1f4191831e41792653520267.md",
+      "pages": 19,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "heldout",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_ee0596aacc.json",
+      "notes": "manufacturing_outline; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_ff93167965",
+      "standard_no": null,
+      "title": "用锻件",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\05ecccc8ad8d40f7b76e52ac729030db1786753115680.md",
+      "pages": 35,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_ff93167965.json",
+      "notes": "manufacturing_outline; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_2b910e7d8b",
+      "standard_no": null,
+      "title": "目 录",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\65c7cfb83be748febdb2dff1b1d8f6291779257620839.md",
+      "pages": 83,
+      "tables": 14,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_2b910e7d8b.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_429e810596",
+      "standard_no": null,
+      "title": "4417071b32c147858c7f681c4deea4331787725949473",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\4417071b32c147858c7f681c4deea4331787725949473.md",
+      "pages": 17,
+      "tables": 3,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_429e810596.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_5466088343",
+      "standard_no": null,
+      "title": "浙江金七门核电厂1、2号机组核级闸阀设备",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\564ae4f40b9a4787824477f821ab5ac81787031930715.md",
+      "pages": 27,
+      "tables": 3,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "dev",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_5466088343.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_c0ead7e694",
+      "standard_no": null,
+      "title": "a5fbc645696b4c3a91e2c781d369c7101792487564255",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\a5fbc645696b4c3a91e2c781d369c7101792487564255.md",
+      "pages": 9,
+      "tables": 3,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "heldout",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_c0ead7e694.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_4b52c7bfa4",
+      "standard_no": null,
+      "title": "0c87affede6e4522824189505c2821091787136466679",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\0c87affede6e4522824189505c2821091787136466679.md",
+      "pages": 10,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_4b52c7bfa4.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_6745b7175e",
+      "standard_no": null,
+      "title": "d124b18682ec421381850c9c7b2293f61788921846837",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\d124b18682ec421381850c9c7b2293f61788921846837.md",
+      "pages": 14,
+      "tables": 1,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_6745b7175e.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_7faddb994f",
+      "standard_no": null,
+      "title": "3. 标准规范和技术要求",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\de2adf26e9dd40d095d1924db4fade961788231324706.md",
+      "pages": 15,
+      "tables": 7,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_7faddb994f.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_1b51e38df2",
+      "standard_no": null,
+      "title": "莱阳核电项目 5 、 6 号机组堆内构件",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\e4015c6600cb4e6eaea199713e5187461788157011518.md",
+      "pages": 20,
+      "tables": 1,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "dev",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_1b51e38df2.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_94c651e0bd",
+      "standard_no": null,
+      "title": "be26fecfa3a0486d8b6566e0300937311675407000327",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\be26fecfa3a0486d8b6566e0300937311675407000327.md",
+      "pages": 12,
+      "tables": 3,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "heldout",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_94c651e0bd.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_21acb76d8c",
+      "standard_no": null,
+      "title": "CAP1000 山东海阳核电站三期工程项目",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\17d722e0e9d9445a9f3a443abcb572d31792472615612.md",
+      "pages": 26,
+      "tables": 3,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_21acb76d8c.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_2c4a17021b",
+      "standard_no": null,
+      "title": "5.2 铁素体含量和磁导率",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\7373a8d9a442443b9733ecc5fecd5cfe1787899964564.md",
+      "pages": 12,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_2c4a17021b.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_4b74e8c152",
+      "standard_no": null,
+      "title": "2ad6ce310e684a5cae57471d563a6f421792473701744",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\2ad6ce310e684a5cae57471d563a6f421792473701744.md",
+      "pages": 6,
+      "tables": 3,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_4b74e8c152.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_828e8ab960",
+      "standard_no": null,
+      "title": "7319bf3dde60412bb4b7e30209da8a401792809205362",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\7319bf3dde60412bb4b7e30209da8a401792809205362.md",
+      "pages": 22,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "dev",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_828e8ab960.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_02c80cd830",
+      "standard_no": null,
+      "title": "GH4169D环锻件质量控制要求",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\27c4e67d00ff41a1b79fef9ab787d2eb1667181019302.md",
+      "pages": 14,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "heldout",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_02c80cd830.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_62f19be2cd",
+      "standard_no": null,
+      "title": "钛及钛合金棒材",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\78a0de4c51a24c958575b9909f6308ae.md",
+      "pages": 10,
+      "tables": 4,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_62f19be2cd.json",
+      "notes": "national_or_industry_standard; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_f7827ed56d",
+      "standard_no": null,
+      "title": "高压锅炉用无缝钢管",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\5c7ee8be97c44d1faeb914342670b6a0.md",
+      "pages": 34,
+      "tables": 9,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_f7827ed56d.json",
+      "notes": "national_or_industry_standard; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_87293d0cb6",
+      "standard_no": null,
+      "title": "航空用高温合金环形件规范",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\da6e78317ae045d7aef37604fe257ff5.md",
+      "pages": 21,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_87293d0cb6.json",
+      "notes": "national_or_industry_standard; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_cb3333a17c",
+      "standard_no": null,
+      "title": "TA15 钛合金环形锻件",
+      "doc_type": "enterprise",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\1c4cf85c9255469184e338fda9af80f81768216448834.md",
+      "pages": 10,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "dev",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_cb3333a17c.json",
+      "notes": "enterprise_standard; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "ext_17aa8e4431",
+      "standard_no": null,
+      "title": "航天固体火箭发动机用超高强度钢锻件规范",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\0715f18cf44c469cb1c0510db73c9dea.md",
+      "pages": 9,
+      "tables": 5,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "heldout",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/ext_17aa8e4431.json",
+      "notes": "national_or_industry_standard; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_22450e4bed",
+      "standard_no": null,
+      "title": "开式风扇 901 动叶项目用全尺动叶钛合金 叶柄采购检验规范",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\0684efec05a54ab8868faf6dfb3b05e71789376678753.md",
+      "pages": 16,
+      "tables": 2,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_22450e4bed.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_677ae43c8d",
+      "standard_no": null,
+      "title": "208851e1280043d191423616d783e1a2",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\208851e1280043d191423616d783e1a2.md",
+      "pages": 15,
+      "tables": 4,
+      "profiles": [
+        "chemical_composition",
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_677ae43c8d.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_81b985d968",
+      "standard_no": null,
+      "title": "廉江项目屏蔽主泵电机",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\521854804389445498b69c559d95dbe01777940887289.md",
+      "pages": 18,
+      "tables": 1,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_81b985d968.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_876f007c85",
+      "standard_no": null,
+      "title": "Wuxi Paike New Materials Manufacturing Process Plan 无锡派克新材料科技股份有限公司 工艺规程",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\de83cbe42abd48d6816991f2e5785765.md",
+      "pages": 15,
+      "tables": 1,
+      "profiles": [
+        "mechanical_properties"
+      ],
+      "split": "dev",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_876f007c85.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_b849a3adea",
+      "standard_no": null,
+      "title": "海阳项目屏蔽主泵电机",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\10aef59a5c91456c92e5e5a8225f4acf1777941075774.md",
+      "pages": 16,
+      "tables": 1,
+      "profiles": [
+        "chemical_composition"
+      ],
+      "split": "heldout",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_b849a3adea.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    },
+    {
+      "doc_id": "v2_dbd6b97893",
+      "standard_no": null,
+      "title": "0 III",
+      "doc_type": "other",
+      "source_type": "hybrid",
+      "material": null,
+      "product_form": null,
+      "md_path": "F:\\hanson\\hanson_doc_parse\\markdown\\6e338243c89345d9b646f6dac108bcd41789973746327.md",
+      "pages": 27,
+      "tables": 1,
+      "profiles": [
+        "mechanical_properties"
+      ],
+      "split": "mini",
+      "priority": 1,
+      "annotation_status": "annotated",
+      "annotation_file": "docs/v2_dbd6b97893.json",
+      "notes": "uncatalogued; agent rules + evidence verification; not human double-blind"
+    }
+  ],
+  "summary": {
+    "documents": 36,
+    "records": 295,
+    "by_split": {
+      "mini": 22,
+      "dev": 7,
+      "heldout": 7
+    },
+    "by_doc_type": {
+      "agreement": 4,
+      "other": 31,
+      "enterprise": 1
+    },
+    "by_profile": {
+      "mechanical_properties": 34,
+      "chemical_composition": 72
+    }
+  },
+  "notes": [
+    "Agent-annotated goldset for training and heldout checking.",
+    "Values were verified against evidence quotes; not a human double-blind label."
+  ]
+}

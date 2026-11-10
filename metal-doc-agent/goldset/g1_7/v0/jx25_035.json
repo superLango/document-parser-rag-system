@@ -1,0 +1,263 @@
+{
+  "doc_id": "jx-25-035-027a8baf",
+  "items": [
+    {
+      "item_canonical": "化学成分",
+      "item_family": "chemical_composition",
+      "note": "检验项目表"
+    },
+    {
+      "item_canonical": "室温拉伸",
+      "item_family": "tensile",
+      "facets": {
+        "temperature": "室温"
+      },
+      "note": "室温纵向拉伸"
+    },
+    {
+      "item_canonical": "室温夏比冲击",
+      "item_family": "impact",
+      "facets": {
+        "temperature": "室温",
+        "impact_type": "夏比"
+      },
+      "note": "室温纵向冲击 KU5"
+    },
+    {
+      "item_canonical": "布氏硬度",
+      "item_family": "hardness",
+      "facets": {
+        "hardness_scale": "brinell"
+      },
+      "note": "HBW"
+    },
+    {
+      "item_canonical": "持久",
+      "item_family": "stress_rupture",
+      "facets": {
+        "temperature": "高温"
+      },
+      "note": "高温纵向持久"
+    },
+    {
+      "item_canonical": "低倍组织",
+      "item_family": "metallography",
+      "note": "低倍"
+    },
+    {
+      "item_canonical": "晶粒度",
+      "item_family": "metallography",
+      "note": "晶粒度"
+    },
+    {
+      "item_canonical": "超声检测",
+      "item_family": "ndt",
+      "note": "超声波检验"
+    },
+    {
+      "item_canonical": "外形",
+      "item_family": "dimension",
+      "note": "检验项目表"
+    },
+    {
+      "item_canonical": "尺寸",
+      "item_family": "dimension",
+      "note": "检验项目表"
+    },
+    {
+      "item_canonical": "外观质量",
+      "item_family": "surface",
+      "note": "检验项目表"
+    },
+    {
+      "item_canonical": "包装",
+      "item_family": "marking",
+      "note": "棒材的包装"
+    }
+  ],
+  "items_unknown_ok": [],
+  "links": {
+    "T1": {
+      "clause_id": "3.2.1",
+      "quote": "表1 GH4698 合金化学成分（wt%）"
+    },
+    "T2": {
+      "clause_id": "3.4",
+      "quote": "分别从棒材头或尾切取横向（弦向）试样经标准热处理后测试力学性能，应符合表2、表3的规定。"
+    },
+    "T3": {
+      "clause_id": "3.4",
+      "quote": "分别从棒材头或尾切取横向（弦向）试样经标准热处理后测试力学性能，应符合表2、表3的规定。"
+    },
+    "T5": {
+      "clause_id": "4.2.2",
+      "quote": "质量一致性检验项目、取样数量、取样部位以及相应要求和检验方法的章条号应符合表4的规定。"
+    },
+    "T6": {
+      "clause_id": "附录A",
+      "quote": "附录A 化学成分试验标准"
+    }
+  },
+  "link_scope": [
+    "T1",
+    "T2",
+    "T3",
+    "T5",
+    "T6"
+  ],
+  "clauses": [
+    {
+      "clause_id": "3.2.1",
+      "kind": "technical_requirement",
+      "quote": "表1 GH4698 合金化学成分（wt%）",
+      "fields": {
+        "requirement": "合金的化学成分应符合表1的规定。"
+      }
+    },
+    {
+      "clause_id": "3.2.2",
+      "kind": "technical_requirement",
+      "quote": "成品棒材化学成分允许偏差应符合GJB5307的规定。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.4",
+      "kind": "technical_requirement",
+      "quote": "分别从棒材头或尾切取横向（弦向）试样经标准热处理后测试力学性能，应符合表2、表3的规定。若横向（弦向）试样力学性能不满足要求，则再取纵向试样进行测试。注意供需方各1/2复验料，沿径向切分，供货时需方复验料随棒材一同交付。 表23H698-BД合金力学性能",
+      "fields": {
+        "requirement": "分别从棒材头或尾切取横向（弦向）试样经标准热处理后测试力学性能，应符合表2、表3的规定。"
+      }
+    },
+    {
+      "clause_id": "3.5",
+      "kind": "other",
+      "quote": "在棒材的头、尾横向酸浸低倍试片上，不允许有目视可见的缩孔痕迹、空洞，气泡、裂纹、分层及夹杂等缺陷，晶粒的尺寸不应超过 2mm。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.6",
+      "kind": "other",
+      "quote": "从棒材头、尾上切取纵向试样经标准热处理后，晶粒度应基本均匀，无明显粗晶带，不允许存在大于0.0级的晶粒。",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.7",
+      "kind": "inspection",
+      "quote": "棒材应逐支进行超声波检验， 100mm < Dleqslant 350mm 的棒材，按AMS-STD-2154检测，不超过 φ1.5mm 平底孔直径； 350mm < Dleqslant 400mm 棒材，探伤结果报实测值。",
+      "fields": {
+        "requirement": "棒材应逐支进行超声波检验， 100mm < Dleqslant 350mm 的棒材，按AMS-STD-2154检测，不超过 φ1.5mm 平底孔直径；",
+        "method_standard": "AMS-"
+      }
+    },
+    {
+      "clause_id": "3.8",
+      "kind": "technical_requirement",
+      "quote": "棒材的直径及其允许偏差、外形应符合GJB3165A的规定",
+      "fields": {}
+    },
+    {
+      "clause_id": "3.9",
+      "kind": "technical_requirement",
+      "quote": "棒材的外观质量应符合GJB3165A的规定 ## 4、质量保证规定",
+      "fields": {}
+    },
+    {
+      "clause_id": "4",
+      "kind": "other",
+      "quote": "试样表面不允许有磨伤、缺陷和腐蚀。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2.2",
+      "kind": "technical_requirement",
+      "quote": "质量一致性检验项目、取样数量、取样部位以及相应要求和检验方法的章条号应符合表4的规定。 若横向（弦向）出厂检测不合格，使用纵向性能，则需提供需方1/2块长 100mm的头部或尾部试料用于入厂检测。 表4检验项目、取样部位、试验方法",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2.3.1",
+      "kind": "sampling",
+      "quote": "4. 2.3.2力学性能某项检验结果不合格时，允许从原棒材上切取双倍数量的试样对不合格项目进行复验，复验结果即使只有一个试样不合格时，该批棒材判为不合格。",
+      "fields": {
+        "sample_location": "化学成分分析结果不合格时，允许重新取样对不合格元素进行复验，复验结果仍不合格，该炉批判为不合格"
+      }
+    },
+    {
+      "clause_id": "4.2.3.3",
+      "kind": "inspection",
+      "quote": "低倍组织、晶粒度检验不合格时，该批棒材判为不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2.3.4",
+      "kind": "inspection",
+      "quote": "超声波检验不合格时，该支棒材判为不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.2.3.5",
+      "kind": "inspection",
+      "quote": "尺寸、外形、外观质量检验不合格时，该支棒材判为不合格。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.1",
+      "kind": "other",
+      "quote": "化学成分分析按附录A所示方法进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.3",
+      "kind": "other",
+      "quote": "室温冲击试验按ASTME23进行（KU5），附录C规定了试验试样。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.4",
+      "kind": "other",
+      "quote": "高温持久试验按ASTME139进行，使用公称直径为 6.00pm 0.1 毫米的光滑 试样，附录D规定了试验试样。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.5",
+      "kind": "other",
+      "quote": "硬度试验布氏硬度试验按ASTME10进行。",
+      "fields": {}
+    },
+    {
+      "clause_id": "4.3.6",
+      "kind": "inspection",
+      "quote": "低倍组织检验 低倍组织检验按GB/T14999.2进行。",
+      "fields": {
+        "method_standard": "GB/T14999.2"
+      }
+    },
+    {
+      "clause_id": "4.3.7",
+      "kind": "inspection",
+      "quote": "晶粒度检验 晶粒度检验按GB/T6394进行。",
+      "fields": {
+        "method_standard": "GB/T6394"
+      }
+    },
+    {
+      "clause_id": "4.3.8",
+      "kind": "inspection",
+      "quote": "超声波检验 超声波检验按 AMS-STD-2154 进行。",
+      "fields": {
+        "method_standard": "AMS-"
+      }
+    },
+    {
+      "clause_id": "4.3.9.3",
+      "kind": "other",
+      "quote": "沿棒材长度方向，用一米直尺靠量，取直尺与棒材最大弯曲处之波高测量弯曲度。",
+      "fields": {}
+    },
+    {
+      "clause_id": "5.1",
+      "kind": "packaging",
+      "quote": "包装 棒材的包装按GB/T2101的规定进行。",
+      "fields": {}
+    }
+  ]
+}

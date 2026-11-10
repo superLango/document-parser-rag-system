@@ -1,0 +1,978 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "gbt3191_1998",
+  "standard_no": "GB/T 3191-1998",
+  "title": "铝及铝合金挤压棒材",
+  "doc_type": "gb_t",
+  "material": "铝合金",
+  "product_form": "挤压棒材",
+  "source_type": "digital_native",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft-s7",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "标注依据源文 Markdown 及 runs/m1s7/gbt3191_1998/tablegrid 的 T6/T8/T10；表格证据行列均为 0 基。",
+      "T6 表头为『不小于』，单值列按 min；60~95、95~130、175~245 为区间，按 range 标注。",
+      "T6 第18–19行（2A11、2A12 ≤22）OCR 多出空列导致性能列右移，本次未纳入标注；第6页『表6（完）』整表未标注。",
+      "T10 表9 共 5 个非空粗晶环深度单元格，全部标注；2A02 的高精级单元格源文为空，不标注。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T6",
+      "page_no": 5,
+      "caption": "表6 棒材室温纵向力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "scope=partial：仅标注 6 行（1060 O、1060 H112、3003 O、3003 H112、5052 O、2A12 >22~150）；其余 15 行及第6页表6（完）未标注。第18–19行（2A11、2A12 ≤22）OCR 多出空列、性能列右移，未纳入本次标注。",
+      "records": [
+        {
+          "record_id": "gbt3191-T6-1060-O",
+          "grade": "1060",
+          "grade_level": null,
+          "condition": "1060 / O / ≤150 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "挤压棒材",
+            "diameter": "≤150",
+            "heat_treatment": "O",
+            "specimen_state": "O",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "60~95",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 60.0,
+              "upper": 95.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "60~95"
+              }
+            },
+            "Rp0.2": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "A": {
+              "raw": "22",
+              "value": 22.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "22"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T6-1060-H112",
+          "grade": "1060",
+          "grade_level": null,
+          "condition": "1060 / H112 / ≤150 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "挤压棒材",
+            "diameter": "≤150",
+            "heat_treatment": "H112",
+            "specimen_state": "H112",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "60",
+              "value": 60.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "60"
+              }
+            },
+            "Rp0.2": {
+              "raw": "15",
+              "value": 15.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "15"
+              }
+            },
+            "A": {
+              "raw": "22",
+              "value": 22.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "22"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T6-3003-O",
+          "grade": "3003",
+          "grade_level": null,
+          "condition": "3003 / O / ≤150 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "挤压棒材",
+            "diameter": "≤150",
+            "heat_treatment": "O",
+            "specimen_state": "O",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "95~130",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 95.0,
+              "upper": 130.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 8,
+                "col": 4,
+                "clause_id": null,
+                "quote": "95~130"
+              }
+            },
+            "Rp0.2": {
+              "raw": "35",
+              "value": 35.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 8,
+                "col": 5,
+                "clause_id": null,
+                "quote": "35"
+              }
+            },
+            "A": {
+              "raw": "22",
+              "value": 22.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 8,
+                "col": 6,
+                "clause_id": null,
+                "quote": "22"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T6-3003-H112",
+          "grade": "3003",
+          "grade_level": null,
+          "condition": "3003 / H112 / ≤150 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "挤压棒材",
+            "diameter": "≤150",
+            "heat_treatment": "H112",
+            "specimen_state": "H112",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "90",
+              "value": 90.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 9,
+                "col": 4,
+                "clause_id": null,
+                "quote": "90"
+              }
+            },
+            "Rp0.2": {
+              "raw": "30",
+              "value": 30.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 9,
+                "col": 5,
+                "clause_id": null,
+                "quote": "30"
+              }
+            },
+            "A": {
+              "raw": "22",
+              "value": 22.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 9,
+                "col": 6,
+                "clause_id": null,
+                "quote": "22"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T6-5052-O",
+          "grade": "5052",
+          "grade_level": null,
+          "condition": "5052 / O / ≤150 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "挤压棒材",
+            "diameter": "≤150",
+            "heat_treatment": "O",
+            "specimen_state": "O",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "175~245",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 175.0,
+              "upper": 245.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 17,
+                "col": 4,
+                "clause_id": null,
+                "quote": "175~245"
+              }
+            },
+            "Rp0.2": {
+              "raw": "70",
+              "value": 70.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 17,
+                "col": 5,
+                "clause_id": null,
+                "quote": "70"
+              }
+            },
+            "A": {
+              "raw": "20",
+              "value": 20.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 17,
+                "col": 6,
+                "clause_id": null,
+                "quote": "20"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T6-2A12-H112T4-gt22",
+          "grade": "2A12",
+          "grade_level": null,
+          "condition": "2A12 / H112,T4 / >22~150 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "挤压棒材",
+            "diameter": ">22~150",
+            "heat_treatment": "H112,T4",
+            "specimen_state": "T42,T4",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "420",
+              "value": 420.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 20,
+                "col": 4,
+                "clause_id": null,
+                "quote": "420"
+              }
+            },
+            "Rp0.2": {
+              "raw": "275",
+              "value": 275.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 20,
+                "col": 5,
+                "clause_id": null,
+                "quote": "275"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T6",
+                "row": 20,
+                "col": 6,
+                "clause_id": null,
+                "quote": "10"
+              }
+            }
+          },
+          "note": "源文 OCR 将供应状态 H112,T4 连写为 H112T4；按原表状态 H112,T4 记录。"
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T8",
+      "page_no": 6,
+      "caption": "表7 高强度铝合金棒材室温纵向力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "partial",
+      "note": "scope=partial：仅标注 4 行（2A11、2A12、2A14、7A04/7A09 20~100）；6A02、2A50 及 7A04/7A09 >100~120 行未标注。",
+      "records": [
+        {
+          "record_id": "gbt3191-T8-2A11-H112T4",
+          "grade": "2A11",
+          "grade_level": null,
+          "condition": "2A11 / H112,T4 / 20~120 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "高强度挤压棒材",
+            "diameter": "20~120",
+            "heat_treatment": "H112,T4",
+            "specimen_state": "T42,T4",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "390",
+              "value": 390.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "390"
+              }
+            },
+            "Rp0.2": {
+              "raw": "245",
+              "value": 245.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "245"
+              }
+            },
+            "A": {
+              "raw": "8",
+              "value": 8.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "8"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T8-2A12-H112T4",
+          "grade": "2A12",
+          "grade_level": null,
+          "condition": "2A12 / H112,T4 / 20~120 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "高强度挤压棒材",
+            "diameter": "20~120",
+            "heat_treatment": "H112,T4",
+            "specimen_state": "T42,T4",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "440",
+              "value": 440.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "440"
+              }
+            },
+            "Rp0.2": {
+              "raw": "305",
+              "value": 305.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "305"
+              }
+            },
+            "A": {
+              "raw": "8",
+              "value": 8.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "8"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "gbt3191-T8-2A14-H112T6",
+          "grade": "2A14",
+          "grade_level": null,
+          "condition": "2A14 / H112,T6 / 20~120 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "高强度挤压棒材",
+            "diameter": "20~120",
+            "heat_treatment": "H112,T6",
+            "specimen_state": "T62,T6",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "460",
+              "value": 460.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "460"
+              }
+            },
+            "Rp0.2": {
+              "raw": "-",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "na",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 6,
+                "col": 5,
+                "clause_id": null,
+                "quote": "-"
+              }
+            },
+            "A": {
+              "raw": "8",
+              "value": 8.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 6,
+                "col": 6,
+                "clause_id": null,
+                "quote": "8"
+              }
+            }
+          },
+          "note": "源文规定非比例伸长应力为『-』，按 na 标注。"
+        },
+        {
+          "record_id": "gbt3191-T8-7A04-7A09-H112T6-20-100",
+          "grade": "7A04,7A09",
+          "grade_level": null,
+          "condition": "7A04,7A09 / H112,T6 / 20~100 mm / 纵向（室温）",
+          "facets": {
+            "product_form": "高强度挤压棒材",
+            "diameter": "20~100",
+            "heat_treatment": "H112,T6",
+            "specimen_state": "T62,T6",
+            "direction": "纵向",
+            "test_temperature": "室温"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "550",
+              "value": 550.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 7,
+                "col": 4,
+                "clause_id": null,
+                "quote": "550"
+              }
+            },
+            "Rp0.2": {
+              "raw": "450",
+              "value": 450.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 7,
+                "col": 5,
+                "clause_id": null,
+                "quote": "450"
+              }
+            },
+            "A": {
+              "raw": "6",
+              "value": 6.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 6,
+                "table_id": "T8",
+                "row": 7,
+                "col": 6,
+                "clause_id": null,
+                "quote": "6"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T10",
+      "page_no": 7,
+      "caption": "表9 棒材粗晶环最大允许深度",
+      "profile": "classification",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": "scope=full：标注表9 全部 5 个非空粗晶环深度项；2A02 的高精级单元格源文为空，不标注。深度单位 mm。",
+      "records": [],
+      "inspection_items": [],
+      "classification_items": [
+        {
+          "grade": "2A02",
+          "old_grade": null,
+          "state": "普通级",
+          "old_state": null,
+          "meaning": "粗晶环最大允许深度≤5mm",
+          "status": "found",
+          "evidence": {
+            "page_no": 7,
+            "table_id": "T10",
+            "row": 2,
+            "col": 1,
+            "clause_id": null,
+            "quote": "≤5"
+          },
+          "note": null
+        },
+        {
+          "grade": "2A12,2A11,7A04,7A09",
+          "old_grade": null,
+          "state": "普通级",
+          "old_state": null,
+          "meaning": "粗晶环最大允许深度≤8mm",
+          "status": "found",
+          "evidence": {
+            "page_no": 7,
+            "table_id": "T10",
+            "row": 3,
+            "col": 1,
+            "clause_id": null,
+            "quote": "≤8"
+          },
+          "note": null
+        },
+        {
+          "grade": "2A12,2A11,7A04,7A09",
+          "old_grade": null,
+          "state": "高精级",
+          "old_state": null,
+          "meaning": "粗晶环最大允许深度≤3mm",
+          "status": "found",
+          "evidence": {
+            "page_no": 7,
+            "table_id": "T10",
+            "row": 3,
+            "col": 2,
+            "clause_id": null,
+            "quote": "≤3"
+          },
+          "note": "表注：高精级只限于直径20~120mm的圆棒和内切圆直径20~100mm的方棒和六角棒。"
+        },
+        {
+          "grade": "6A02,2A50,2A14",
+          "old_grade": null,
+          "state": "普通级",
+          "old_state": null,
+          "meaning": "粗晶环最大允许深度≤8mm",
+          "status": "found",
+          "evidence": {
+            "page_no": 7,
+            "table_id": "T10",
+            "row": 4,
+            "col": 1,
+            "clause_id": null,
+            "quote": "≤8"
+          },
+          "note": null
+        },
+        {
+          "grade": "6A02,2A50,2A14",
+          "old_grade": null,
+          "state": "高精级",
+          "old_state": null,
+          "meaning": "粗晶环最大允许深度≤5mm",
+          "status": "found",
+          "evidence": {
+            "page_no": 7,
+            "table_id": "T10",
+            "row": 4,
+            "col": 2,
+            "clause_id": null,
+            "quote": "≤5"
+          },
+          "note": "表注：高精级只限于直径20~120mm的圆棒和内切圆直径20~100mm的方棒和六角棒。"
+        }
+      ]
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "4.4.1",
+      "title": "棒材室温纵向力学性能",
+      "page_no": 5,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "棒材的室温纵向力学性能应符合表6的规定。",
+          "value": null,
+          "text": "棒材的室温纵向力学性能应符合表6的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 5,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.4.1",
+            "quote": "棒材的室温纵向力学性能应符合表6的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 5,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.4.1",
+        "quote": "棒材的室温纵向力学性能应符合表6的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "4.4.2",
+      "title": "高强度铝合金棒材室温纵向力学性能",
+      "page_no": 6,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "高强度铝合金棒材室温纵向力学性能应符合表7的规定。",
+          "value": null,
+          "text": "高强度铝合金棒材室温纵向力学性能应符合表7的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 6,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.4.2",
+            "quote": "高强度铝合金棒材室温纵向力学性能应符合表7的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 6,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.4.2",
+        "quote": "高强度铝合金棒材室温纵向力学性能应符合表7的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "4.5.5",
+      "title": "粗晶环要求",
+      "page_no": 7,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "当对粗晶环有要求，并在合同中注明时，其低倍试片上的粗晶环深度应符合表9的规定。",
+          "value": null,
+          "text": "当对粗晶环有要求，并在合同中注明时，其低倍试片上的粗晶环深度应符合表9的规定。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 7,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.5.5",
+            "quote": "当对粗晶环有要求，并在合同中注明时，其低倍试片上的粗晶环深度应符合表9的规定。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 7,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.5.5",
+        "quote": "当对粗晶环有要求，并在合同中注明时，其低倍试片上的粗晶环深度应符合表9的规定。"
+      },
+      "note": null
+    }
+  ],
+  "notes": [
+    "本文件仅标注 T6、T8、T10 及 3 条条款；T1/T2/T3/T4/T5/T7/T9/T11 及附录表未标注。"
+  ]
+}

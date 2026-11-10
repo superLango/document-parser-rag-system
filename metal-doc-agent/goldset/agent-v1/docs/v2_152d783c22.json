@@ -1,0 +1,619 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_152d783c22",
+  "standard_no": null,
+  "title": "3 订货要求",
+  "doc_type": "agreement",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 7,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\7ad79a9408c948b490137ac4c29fa4931704785550850.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T4",
+      "page_no": 4,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-05102d2e20",
+          "grade": "18MnCrNiMo",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "Mn": {
+              "raw": "≤1.80",
+              "value": 1.8,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤1.80"
+              }
+            },
+            "Si": {
+              "raw": "≤0.37",
+              "value": 0.37,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.37"
+              }
+            },
+            "P": {
+              "raw": "≤0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.015"
+              }
+            },
+            "S": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            },
+            "Cr": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "Ni": {
+              "raw": "0.80~2.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.8,
+              "upper": 2.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.80~2.00"
+              }
+            },
+            "Mo": {
+              "raw": "0.20~0.50",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.2,
+              "upper": 0.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.20~0.50"
+              }
+            },
+            "V": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 9,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 1,
+                "col": 10,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-ce3fd1a33c",
+          "grade": "18MnCrNiMo(W)*",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "Mn": {
+              "raw": "≤1.80",
+              "value": 1.8,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤1.80"
+              }
+            },
+            "Si": {
+              "raw": "≤0.37",
+              "value": 0.37,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.37"
+              }
+            },
+            "P": {
+              "raw": "≤0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.015"
+              }
+            },
+            "S": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            },
+            "Cr": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "Ni": {
+              "raw": "0.90~2.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.9,
+              "upper": 2.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.90~2.00"
+              }
+            },
+            "Mo": {
+              "raw": "0.20~0.50",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.2,
+              "upper": 0.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.20~0.50"
+              }
+            },
+            "V": {
+              "raw": "≤0.07",
+              "value": 0.07,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 9,
+                "clause_id": null,
+                "quote": "≤0.07"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 10,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            },
+            "Ce": {
+              "raw": "≤0.65",
+              "value": 0.65,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 2,
+                "col": 11,
+                "clause_id": null,
+                "quote": "≤0.65"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-03e65f137d",
+          "grade": "30MnCrNiMo",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "≤0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.30"
+              }
+            },
+            "Mn": {
+              "raw": "≤1.80",
+              "value": 1.8,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤1.80"
+              }
+            },
+            "Si": {
+              "raw": "≤0.37",
+              "value": 0.37,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "≤0.37"
+              }
+            },
+            "P": {
+              "raw": "≤0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≤0.015"
+              }
+            },
+            "S": {
+              "raw": "≤0.005",
+              "value": 0.005,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≤0.005"
+              }
+            },
+            "Cr": {
+              "raw": "≤2.45",
+              "value": 2.45,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≤2.45"
+              }
+            },
+            "Ni": {
+              "raw": "1.80~3.00",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 1.8,
+              "upper": 3.0,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "1.80~3.00"
+              }
+            },
+            "Mo": {
+              "raw": "0.30~0.82",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.3,
+              "upper": 0.82,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.30~0.82"
+              }
+            },
+            "V": {
+              "raw": "≤0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 9,
+                "clause_id": null,
+                "quote": "≤0.10"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.20",
+              "value": 0.2,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T4",
+                "row": 3,
+                "col": 10,
+                "clause_id": null,
+                "quote": "≤0.20"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

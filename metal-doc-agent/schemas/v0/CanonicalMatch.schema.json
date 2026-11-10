@@ -1,0 +1,93 @@
+{
+  "properties": {
+    "raw": {
+      "title": "Raw",
+      "type": "string"
+    },
+    "canonical_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Canonical Id"
+    },
+    "canonical_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Canonical Name"
+    },
+    "match_type": {
+      "default": "new",
+      "enum": [
+        "exact",
+        "alias",
+        "granularity",
+        "semantic",
+        "edit_distance",
+        "new",
+        "ambiguous"
+      ],
+      "title": "Match Type",
+      "type": "string"
+    },
+    "score": {
+      "default": 0.0,
+      "title": "Score",
+      "type": "number"
+    },
+    "dictionary_version": {
+      "default": "",
+      "title": "Dictionary Version",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "status": {
+      "default": "new",
+      "enum": [
+        "matched",
+        "new",
+        "ambiguous"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    }
+  },
+  "required": [
+    "raw"
+  ],
+  "title": "CanonicalMatch",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

@@ -1,0 +1,95 @@
+{
+  "properties": {
+    "type": {
+      "default": "item",
+      "enum": [
+        "item",
+        "method"
+      ],
+      "title": "Type",
+      "type": "string"
+    },
+    "raw": {
+      "title": "Raw",
+      "type": "string"
+    },
+    "family": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Family"
+    },
+    "facets": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Facets",
+      "type": "object"
+    },
+    "suggested_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Suggested Code"
+    },
+    "reason": {
+      "default": "",
+      "title": "Reason",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "frequency": {
+      "default": 1,
+      "title": "Frequency",
+      "type": "integer"
+    },
+    "status": {
+      "default": "pending",
+      "enum": [
+        "pending",
+        "active",
+        "rejected"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "dictionary_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dictionary Version"
+    }
+  },
+  "required": [
+    "raw"
+  ],
+  "title": "NewTerm",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

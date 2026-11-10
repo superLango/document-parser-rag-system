@@ -1,0 +1,52 @@
+{
+  "properties": {
+    "group_id": {
+      "title": "Group Id",
+      "type": "string"
+    },
+    "item_family": {
+      "title": "Item Family",
+      "type": "string"
+    },
+    "item_raw": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Item Raw"
+    },
+    "columns": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Columns",
+      "type": "array"
+    },
+    "facets": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Facets",
+      "type": "object"
+    },
+    "status": {
+      "default": "bound",
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "group_id",
+    "item_family"
+  ],
+  "title": "ItemGroup",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

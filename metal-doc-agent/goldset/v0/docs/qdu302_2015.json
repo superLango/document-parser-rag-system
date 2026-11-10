@@ -1,0 +1,834 @@
+{
+  "schema_version": "0.1.0",
+  "doc_id": "qdu302_2015",
+  "standard_no": "Q/Du 302-2015",
+  "title": "舱段用铝合金锥/筒形轧制锻件技术条件",
+  "doc_type": "enterprise",
+  "material": "2A14铝合金",
+  "product_form": "锥/筒形轧制锻件",
+  "source_type": "scanned",
+  "annotation": {
+    "status": "verified",
+    "annotator": "agent-draft",
+    "reviewers": [
+      "agent-consistency-audit",
+      "owner-override"
+    ],
+    "updated_at": "2026-10-26",
+    "notes": [
+      "标注依据 OCR Markdown；PDF 为扫描件，未做页图目视复核。",
+      "表2 的比较符为『不小于』，值按 min 标注。",
+      "2026-10-26 状态升级：gold verify 1595 条证据全部通过；按项目所有者要求执行自动化一致性复核，状态由 draft 升级为 verified。人工 A/B 双盲复核尚未执行；如后续补做，应在 reviewers 与 notes 中记录仲裁结果。"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 4,
+      "caption": "表1 轧制锻件的热处理状态",
+      "profile": "classification",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [],
+      "inspection_items": [],
+      "classification_items": [
+        {
+          "grade": "2A14",
+          "old_grade": "LD10",
+          "state": "T6",
+          "old_state": "CS",
+          "meaning": "固溶处理加工时效",
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 2,
+            "col": 2,
+            "clause_id": null,
+            "quote": "T6"
+          },
+          "note": null
+        },
+        {
+          "grade": "2A14",
+          "old_grade": "LD10",
+          "state": "T651",
+          "old_state": "CYS",
+          "meaning": "固溶处理加冷变形加工时效",
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 3,
+            "col": 2,
+            "clause_id": null,
+            "quote": "T651"
+          },
+          "note": null
+        },
+        {
+          "grade": "2A14",
+          "old_grade": "LD10",
+          "state": "T652",
+          "old_state": "CYS",
+          "meaning": "固溶处理加冷变形加工时效",
+          "status": "found",
+          "evidence": {
+            "page_no": 4,
+            "table_id": "T1",
+            "row": 4,
+            "col": 2,
+            "clause_id": null,
+            "quote": "T652"
+          },
+          "note": null
+        }
+      ]
+    },
+    {
+      "table_id": "T2",
+      "page_no": 5,
+      "caption": "表2 轧制锻件室温力学性能",
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "qdu302-T2-2A14-切向",
+          "grade": "2A14",
+          "grade_level": null,
+          "condition": "T6或T651或T652 / 切向",
+          "facets": {
+            "heat_treatment": "T6或T651或T652",
+            "direction": "切向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "430",
+              "value": 430.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 3,
+                "clause_id": null,
+                "quote": "430"
+              }
+            },
+            "Rp0.2": {
+              "raw": "350",
+              "value": 350.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "350"
+              }
+            },
+            "A": {
+              "raw": "10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "10"
+              }
+            },
+            "HB": {
+              "raw": "120",
+              "value": 120.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "120"
+              }
+            },
+            "E": {
+              "raw": "提供实测数据",
+              "value": null,
+              "text": "提供实测数据",
+              "unit": "GPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "提供实测数据"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "qdu302-T2-2A14-径向",
+          "grade": "2A14",
+          "grade_level": null,
+          "condition": "T6或T651或T652 / 径向",
+          "facets": {
+            "heat_treatment": "T6或T651或T652",
+            "direction": "径向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "400",
+              "value": 400.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "400"
+              }
+            },
+            "Rp0.2": {
+              "raw": "315",
+              "value": 315.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "315"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "120",
+              "value": 120.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "120"
+              }
+            },
+            "E": {
+              "raw": "提供实测数据",
+              "value": null,
+              "text": "提供实测数据",
+              "unit": "GPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "提供实测数据"
+              }
+            }
+          },
+          "note": null
+        },
+        {
+          "record_id": "qdu302-T2-2A14-轴向",
+          "grade": "2A14",
+          "grade_level": null,
+          "condition": "T6或T651或T652 / 轴向",
+          "facets": {
+            "heat_treatment": "T6或T651或T652",
+            "direction": "轴向"
+          },
+          "properties": {
+            "Rm": {
+              "raw": "390",
+              "value": 390.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "390"
+              }
+            },
+            "Rp0.2": {
+              "raw": "300",
+              "value": 300.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "300"
+              }
+            },
+            "A": {
+              "raw": "4",
+              "value": 4.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "4"
+              }
+            },
+            "HB": {
+              "raw": "120",
+              "value": 120.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "120"
+              }
+            },
+            "E": {
+              "raw": "提供实测数据",
+              "value": null,
+              "text": "提供实测数据",
+              "unit": "GPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "提供实测数据"
+              }
+            }
+          },
+          "note": null
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T3",
+      "page_no": 6,
+      "caption": "表3 质量一致性检验项目",
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [],
+      "inspection_items": [
+        {
+          "item": "硬度",
+          "category": null,
+          "quantities": {
+            "Ⅰ类": "逐件",
+            "Ⅱ类": "逐件",
+            "Ⅲ类": "逐件"
+          },
+          "sample_location": "轧制锻件本体",
+          "requirement_clause": "4.5",
+          "method_clause": "5.2.6.1",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 6,
+            "table_id": "T3",
+            "row": 2,
+            "col": 0,
+            "clause_id": null,
+            "quote": "硬度"
+          },
+          "note": null
+        },
+        {
+          "item": "力学性能",
+          "category": null,
+          "quantities": {
+            "Ⅰ类": "逐件",
+            "Ⅱ类": "每批抽2件",
+            "Ⅲ类": "-"
+          },
+          "sample_location": "轧制锻件本体",
+          "requirement_clause": "4.5",
+          "method_clause": "5.2.6.2",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 6,
+            "table_id": "T3",
+            "row": 3,
+            "col": 0,
+            "clause_id": null,
+            "quote": "力学性能"
+          },
+          "note": null
+        },
+        {
+          "item": "显微组织",
+          "category": null,
+          "quantities": {
+            "Ⅰ类": "每热处理炉批抽1件",
+            "Ⅱ类": "每热处理炉批抽1件",
+            "Ⅲ类": "每热处理炉批抽1件"
+          },
+          "sample_location": "轧制锻件本体",
+          "requirement_clause": "4.6",
+          "method_clause": "5.2.6.3",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 6,
+            "table_id": "T3",
+            "row": 4,
+            "col": 0,
+            "clause_id": null,
+            "quote": "显微组织"
+          },
+          "note": null
+        },
+        {
+          "item": "低倍组织",
+          "category": null,
+          "quantities": {
+            "Ⅰ类": "每批抽1件",
+            "Ⅱ类": "每批抽1件",
+            "Ⅲ类": "-"
+          },
+          "sample_location": "轧制锻件本体",
+          "requirement_clause": "4.7",
+          "method_clause": "5.2.6.4",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 6,
+            "table_id": "T3",
+            "row": 5,
+            "col": 0,
+            "clause_id": null,
+            "quote": "低倍组织"
+          },
+          "note": null
+        },
+        {
+          "item": "超声波检测",
+          "category": null,
+          "quantities": {
+            "Ⅰ类": "逐件",
+            "Ⅱ类": "逐件",
+            "Ⅲ类": "逐件"
+          },
+          "sample_location": "轧制锻件本体",
+          "requirement_clause": "4.8",
+          "method_clause": "5.2.6.5",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 6,
+            "table_id": "T3",
+            "row": 6,
+            "col": 0,
+            "clause_id": null,
+            "quote": "超声波检测"
+          },
+          "note": null
+        },
+        {
+          "item": "形状和尺寸",
+          "category": null,
+          "quantities": {
+            "Ⅰ类": "逐件",
+            "Ⅱ类": "逐件",
+            "Ⅲ类": "逐件"
+          },
+          "sample_location": "轧制锻件本体",
+          "requirement_clause": "4.4.2",
+          "method_clause": "5.2.6.6",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 6,
+            "table_id": "T3",
+            "row": 7,
+            "col": 0,
+            "clause_id": null,
+            "quote": "形状和尺寸"
+          },
+          "note": null
+        },
+        {
+          "item": "表面质量",
+          "category": null,
+          "quantities": {
+            "Ⅰ类": "逐件",
+            "Ⅱ类": "逐件",
+            "Ⅲ类": "逐件"
+          },
+          "sample_location": "轧制锻件本体",
+          "requirement_clause": "4.9",
+          "method_clause": "5.2.6.7",
+          "method_standard": null,
+          "status": "found",
+          "evidence": {
+            "page_no": 6,
+            "table_id": "T3",
+            "row": 8,
+            "col": 0,
+            "clause_id": null,
+            "quote": "表面质量"
+          },
+          "note": null
+        }
+      ],
+      "classification_items": []
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "4.2.2",
+      "title": "毛坯材料氢含量",
+      "page_no": 4,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "hydrogen_content": {
+          "raw": "不大于 0.18ml/100g",
+          "value": 0.18,
+          "text": null,
+          "unit": "ml/100g",
+          "comparator": "max",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 4,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.2.2",
+            "quote": "氢含量应不大于 0.18ml / 100g"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 4,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.2.2",
+        "quote": "氢含量应不大于 0.18ml / 100g"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "4.4.1",
+      "title": "热处理状态",
+      "page_no": 4,
+      "kind": "delivery",
+      "status": "found",
+      "fields": {
+        "requirement": {
+          "raw": "轧制锻件的热处理状态应符合表1的规定。当需以其他热处理状态供应时，由订货方与承制方双方商定，并在专用文件中注明。",
+          "value": null,
+          "text": "轧制锻件的热处理状态应符合表1的规定。当需以其他热处理状态供应时，由订货方与承制方双方商定，并在专用文件中注明。",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 4,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.4.1",
+            "quote": "轧制锻件的热处理状态应符合表1的规定。"
+          }
+        }
+      },
+      "applies_to": [
+        "2A14"
+      ],
+      "evidence": {
+        "page_no": 4,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.4.1",
+        "quote": "轧制锻件的热处理状态应符合表1的规定。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "4.8.3",
+      "title": "超声波检测级别",
+      "page_no": 5,
+      "kind": "technical_requirement",
+      "status": "found",
+      "fields": {
+        "acceptance_level": {
+          "raw": "GB/T6519 中规定的A级标准",
+          "value": null,
+          "text": "GB/T6519 中规定的A级标准",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 5,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "4.8.3",
+            "quote": "轧制锻件超声波检测应符合GB/T6519中规定的A级标准。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 5,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "4.8.3",
+        "quote": "轧制锻件超声波检测应符合GB/T6519中规定的A级标准。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "5.2.3.2.1",
+      "title": "力学性能取样数量",
+      "page_no": 6,
+      "kind": "sampling",
+      "status": "found",
+      "fields": {
+        "sample_quantity_I": {
+          "raw": "每批逐件取样；上端面圆周3个位置分别取切向、径向、轴向试样，共9个；复验9个；归档9个",
+          "value": null,
+          "text": "每批逐件取样；上端面圆周3个位置分别取切向、径向、轴向试样，共9个；复验9个；归档9个",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 6,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.2.3.2.1",
+            "quote": "在上端面圆周上均匀分布的3"
+          }
+        },
+        "sample_quantity_II": {
+          "raw": "每批随机抽两件，取样方式和数量同I类件",
+          "value": null,
+          "text": "每批随机抽两件，取样方式和数量同I类件",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 7,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.2.3.2.1",
+            "quote": "II类件应每批随机抽两件检查力学性能，取样方式和数量同I类件。"
+          }
+        },
+        "sample_quantity_III": {
+          "raw": "不做力学性能检查",
+          "value": null,
+          "text": "不做力学性能检查",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 7,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.2.3.2.1",
+            "quote": "Ⅲ类件不做力学性能检查。"
+          }
+        }
+      },
+      "applies_to": [
+        "2A14"
+      ],
+      "evidence": {
+        "page_no": 7,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "5.2.3.2.1",
+        "quote": "II类件应每批随机抽两件检查力学性能，取样方式和数量同I类件。"
+      },
+      "note": null
+    },
+    {
+      "clause_id": "5.2.3.4.1",
+      "title": "低倍组织取样",
+      "page_no": 7,
+      "kind": "sampling",
+      "status": "found",
+      "fields": {
+        "sample_location": {
+          "raw": "轧制锻件本体的上端面圆周上",
+          "value": null,
+          "text": "轧制锻件本体的上端面圆周上",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 7,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.2.3.4.1",
+            "quote": "在轧制锻件本体的上端面圆周上切取1个试样。"
+          }
+        },
+        "sample_quantity": {
+          "raw": "1个",
+          "value": null,
+          "text": "1个",
+          "unit": null,
+          "comparator": "text",
+          "lower": null,
+          "upper": null,
+          "condition": null,
+          "evidence": {
+            "page_no": 7,
+            "table_id": null,
+            "row": null,
+            "col": null,
+            "clause_id": "5.2.3.4.1",
+            "quote": "在轧制锻件本体的上端面圆周上切取1个试样。"
+          }
+        }
+      },
+      "applies_to": [],
+      "evidence": {
+        "page_no": 7,
+        "table_id": null,
+        "row": null,
+        "col": null,
+        "clause_id": "5.2.3.4.1",
+        "quote": "在轧制锻件本体的上端面圆周上切取1个试样。"
+      },
+      "note": null
+    }
+  ],
+  "notes": [
+    "T4/T5 未标注：T4 为试样编号表，T5 为工艺偏差记录表。"
+  ]
+}

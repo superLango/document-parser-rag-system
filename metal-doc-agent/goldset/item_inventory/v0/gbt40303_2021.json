@@ -1,0 +1,24 @@
+{
+  "doc_id": "gbt40303_2021",
+  "items": [
+    {"item_canonical": "化学成分", "item_family": "chemical_composition", "note": "T9 第1项"},
+    {"item_canonical": "室温拉伸", "item_family": "tensile", "facets": {"temperature": "室温"}, "note": "T9 第2项"},
+    {"item_canonical": "高温拉伸", "item_family": "tensile", "facets": {"temperature": "高温"}, "note": "T9 第3项"},
+    {"item_canonical": "低温拉伸", "item_family": "tensile", "facets": {"temperature": "低温"}, "note": "T9 第4项"},
+    {"item_canonical": "室温夏比冲击", "item_family": "impact", "facets": {"temperature": "室温", "impact_type": "夏比"}, "note": "T9 第5项"},
+    {"item_canonical": "蠕变", "item_family": "creep", "note": "T9 第6项"},
+    {"item_canonical": "剪切", "item_family": "shear", "note": "T9 第7项"},
+    {"item_canonical": "洛氏硬度", "item_family": "hardness", "facets": {"hardness_scale": "rockwell"}, "note": "T9 第8项；表中同时引用布氏方法，但仅给出 HRC"},
+    {"item_canonical": "低倍组织", "item_family": "metallography", "note": "T9 第9项"},
+    {"item_canonical": "显微组织", "item_family": "metallography", "note": "T9 第10项"},
+    {"item_canonical": "晶粒度", "item_family": "metallography", "note": "T9 第11项"},
+    {"item_canonical": "超声检测", "item_family": "ndt", "note": "T9 第12项"},
+    {"item_canonical": "渗透检测", "item_family": "ndt", "note": "T9 第13项"},
+    {"item_canonical": "尺寸", "item_family": "dimension", "note": "T9 第14项 尺寸、外形"},
+    {"item_canonical": "外形", "item_family": "dimension", "note": "T9 第14项 尺寸、外形"},
+    {"item_canonical": "表面质量", "item_family": "surface", "note": "T9 第15项"},
+    {"item_canonical": "产品标识", "item_family": "marking", "note": "T9 第16项"},
+    {"item_canonical": "切斜度", "item_family": "dimension", "note": "B.1.2.3"}
+  ],
+  "unknown_ok": []
+}

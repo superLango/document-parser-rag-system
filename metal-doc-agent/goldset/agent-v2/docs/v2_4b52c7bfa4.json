@@ -1,0 +1,920 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "v2_4b52c7bfa4",
+  "standard_no": null,
+  "title": "0c87affede6e4522824189505c2821091787136466679",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 10,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\0c87affede6e4522824189505c2821091787136466679.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "page_no": 4,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-077ed14fa7",
+          "grade": null,
+          "grade_level": null,
+          "condition": "化学成分",
+          "facets": {},
+          "properties": {
+            "Ti": {
+              "raw": "基",
+              "value": null,
+              "text": "基",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 0,
+                "clause_id": null,
+                "quote": "基"
+              }
+            },
+            "Al": {
+              "raw": "5.8~6.8",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 5.8,
+              "upper": 6.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "5.8~6.8"
+              }
+            },
+            "Sn": {
+              "raw": "0.4~1.5",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.4,
+              "upper": 1.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.4~1.5"
+              }
+            },
+            "Zr": {
+              "raw": "0.5~1.5",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.5,
+              "upper": 1.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 3,
+                "clause_id": null,
+                "quote": "0.5~1.5"
+              }
+            },
+            "Mo": {
+              "raw": "2.8~3.8",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 2.8,
+              "upper": 3.8,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "2.8~3.8"
+              }
+            },
+            "Si": {
+              "raw": "0.10~0.30",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 0.1,
+              "upper": 0.3,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "0.10~0.30"
+              }
+            },
+            "C": {
+              "raw": "0.10",
+              "value": 0.1,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "0.10"
+              }
+            },
+            "Fe": {
+              "raw": "0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 7,
+                "clause_id": null,
+                "quote": "0.30"
+              }
+            },
+            "O": {
+              "raw": "0.15",
+              "value": 0.15,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 8,
+                "clause_id": null,
+                "quote": "0.15"
+              }
+            },
+            "N": {
+              "raw": "0.05",
+              "value": 0.05,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 9,
+                "clause_id": null,
+                "quote": "0.05"
+              }
+            },
+            "H": {
+              "raw": "0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T1",
+                "row": 3,
+                "col": 10,
+                "clause_id": null,
+                "quote": "0.015"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    },
+    {
+      "table_id": "T2",
+      "page_no": 4,
+      "caption": null,
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-92983883ca",
+          "grade": null,
+          "grade_level": null,
+          "condition": "室温",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "980~1180",
+              "value": null,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "range",
+              "lower": 980.0,
+              "upper": 1180.0,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "980~1180"
+              }
+            },
+            "Rp0.2": {
+              "raw": "≥875",
+              "value": 875.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 4,
+                "clause_id": null,
+                "quote": "≥875"
+              }
+            },
+            "A": {
+              "raw": "≥10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥10"
+              }
+            },
+            "Z": {
+              "raw": "≥25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≥25"
+              }
+            },
+            "KV2": {
+              "raw": "≥24",
+              "value": 24.0,
+              "text": null,
+              "unit": "J",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 7,
+                "clause_id": null,
+                "quote": "≥24"
+              }
+            },
+            "HB": {
+              "raw": "3.2~3.7",
+              "value": null,
+              "text": null,
+              "unit": "HB",
+              "comparator": "range",
+              "lower": 3.2,
+              "upper": 3.7,
+              "condition": "室温",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 2,
+                "col": 9,
+                "clause_id": null,
+                "quote": "3.2~3.7"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-8ce79a49c3",
+          "grade": null,
+          "grade_level": null,
+          "condition": "250",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "实测(≥750)",
+              "value": null,
+              "text": "提供实测数据",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "250",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "实测(≥750)"
+              }
+            },
+            "Rp0.2": {
+              "raw": "实测(≥638)",
+              "value": null,
+              "text": "提供实测数据",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "250",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 4,
+                "clause_id": null,
+                "quote": "实测(≥638)"
+              }
+            },
+            "A": {
+              "raw": "≥10",
+              "value": 10.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "250",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 5,
+                "clause_id": null,
+                "quote": "≥10"
+              }
+            },
+            "Z": {
+              "raw": "≥25",
+              "value": 25.0,
+              "text": null,
+              "unit": "%",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "250",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 3,
+                "col": 6,
+                "clause_id": null,
+                "quote": "≥25"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-9b2ad5fb8a",
+          "grade": null,
+          "grade_level": null,
+          "condition": "500",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "100",
+              "value": 100.0,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "500",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 2,
+                "clause_id": null,
+                "quote": "100"
+              }
+            },
+            "Rp0.2": {
+              "raw": "空冷",
+              "value": null,
+              "text": "空冷",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "500",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 4,
+                "clause_id": null,
+                "quote": "空冷"
+              }
+            },
+            "A": {
+              "raw": "空冷",
+              "value": null,
+              "text": "空冷",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "500",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 5,
+                "clause_id": null,
+                "quote": "空冷"
+              }
+            },
+            "Z": {
+              "raw": "980~1180",
+              "value": null,
+              "text": null,
+              "unit": "%",
+              "comparator": "range",
+              "lower": 980.0,
+              "upper": 1180.0,
+              "condition": "500",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 6,
+                "clause_id": null,
+                "quote": "980~1180"
+              }
+            },
+            "KV2": {
+              "raw": "980~1180",
+              "value": null,
+              "text": null,
+              "unit": "J",
+              "comparator": "range",
+              "lower": 980.0,
+              "upper": 1180.0,
+              "condition": "500",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 7,
+                "clause_id": null,
+                "quote": "980~1180"
+              }
+            },
+            "HB": {
+              "raw": "≥875",
+              "value": 875.0,
+              "text": null,
+              "unit": "HB",
+              "comparator": "min",
+              "lower": null,
+              "upper": null,
+              "condition": "500",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 8,
+                "col": 9,
+                "clause_id": null,
+                "quote": "≥875"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-d98150d47c",
+          "grade": null,
+          "grade_level": null,
+          "condition": "热稳定性能",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "热稳定性能",
+              "value": null,
+              "text": "热稳定性能",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热稳定性能",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "热稳定性能"
+              }
+            },
+            "Rp0.2": {
+              "raw": "热稳定性能",
+              "value": null,
+              "text": "热稳定性能",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热稳定性能",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 4,
+                "clause_id": null,
+                "quote": "热稳定性能"
+              }
+            },
+            "A": {
+              "raw": "热稳定性能",
+              "value": null,
+              "text": "热稳定性能",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热稳定性能",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 5,
+                "clause_id": null,
+                "quote": "热稳定性能"
+              }
+            },
+            "Z": {
+              "raw": "室温拉伸性能",
+              "value": null,
+              "text": "室温拉伸性能",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热稳定性能",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 6,
+                "clause_id": null,
+                "quote": "室温拉伸性能"
+              }
+            },
+            "KV2": {
+              "raw": "室温拉伸性能",
+              "value": null,
+              "text": "室温拉伸性能",
+              "unit": "J",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热稳定性能",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 7,
+                "clause_id": null,
+                "quote": "室温拉伸性能"
+              }
+            },
+            "HB": {
+              "raw": "室温拉伸性能",
+              "value": null,
+              "text": "室温拉伸性能",
+              "unit": "HB",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热稳定性能",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 5,
+                "col": 9,
+                "clause_id": null,
+                "quote": "室温拉伸性能"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-ecb2e89e9b",
+          "grade": null,
+          "grade_level": null,
+          "condition": "热暴露条件",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "热暴露条件",
+              "value": null,
+              "text": "热暴露条件",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热暴露条件",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 2,
+                "clause_id": null,
+                "quote": "热暴露条件"
+              }
+            },
+            "Rp0.2": {
+              "raw": "室温拉伸性能",
+              "value": null,
+              "text": "室温拉伸性能",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热暴露条件",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 4,
+                "clause_id": null,
+                "quote": "室温拉伸性能"
+              }
+            },
+            "A": {
+              "raw": "室温拉伸性能",
+              "value": null,
+              "text": "室温拉伸性能",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热暴露条件",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 5,
+                "clause_id": null,
+                "quote": "室温拉伸性能"
+              }
+            },
+            "Z": {
+              "raw": "室温拉伸性能",
+              "value": null,
+              "text": "室温拉伸性能",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热暴露条件",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 6,
+                "clause_id": null,
+                "quote": "室温拉伸性能"
+              }
+            },
+            "KV2": {
+              "raw": "室温拉伸性能",
+              "value": null,
+              "text": "室温拉伸性能",
+              "unit": "J",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热暴露条件",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 7,
+                "clause_id": null,
+                "quote": "室温拉伸性能"
+              }
+            },
+            "HB": {
+              "raw": "室温拉伸性能",
+              "value": null,
+              "text": "室温拉伸性能",
+              "unit": "HB",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "热暴露条件",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 6,
+                "col": 9,
+                "clause_id": null,
+                "quote": "室温拉伸性能"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-511ac7e433",
+          "grade": null,
+          "grade_level": null,
+          "condition": "温度℃",
+          "facets": {},
+          "properties": {
+            "Rm": {
+              "raw": "时间h",
+              "value": null,
+              "text": "时间h",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "温度℃",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 2,
+                "clause_id": null,
+                "quote": "时间h"
+              }
+            },
+            "Rp0.2": {
+              "raw": "冷却方式",
+              "value": null,
+              "text": "冷却方式",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "温度℃",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 4,
+                "clause_id": null,
+                "quote": "冷却方式"
+              }
+            },
+            "A": {
+              "raw": "冷却方式",
+              "value": null,
+              "text": "冷却方式",
+              "unit": "%",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "温度℃",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 5,
+                "clause_id": null,
+                "quote": "冷却方式"
+              }
+            },
+            "Z": {
+              "raw": "RmMPa",
+              "value": null,
+              "text": "RmMPa",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "温度℃",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 6,
+                "clause_id": null,
+                "quote": "RmMPa"
+              }
+            },
+            "KV2": {
+              "raw": "RmMPa",
+              "value": null,
+              "text": "RmMPa",
+              "unit": "MPa",
+              "comparator": "text",
+              "lower": null,
+              "upper": null,
+              "condition": "温度℃",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 7,
+                "clause_id": null,
+                "quote": "RmMPa"
+              }
+            },
+            "HB": {
+              "raw": "Rp0.2MPa",
+              "value": 0.2,
+              "text": null,
+              "unit": "MPa",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": "温度℃",
+              "evidence": {
+                "page_no": 4,
+                "table_id": "T2",
+                "row": 7,
+                "col": 9,
+                "clause_id": null,
+                "quote": "Rp0.2MPa"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

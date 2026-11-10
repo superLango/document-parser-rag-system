@@ -1,0 +1,118 @@
+{
+  "properties": {
+    "column": {
+      "title": "Column",
+      "type": "integer"
+    },
+    "header_path": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Header Path",
+      "type": "array"
+    },
+    "item_family": {
+      "default": "unknown",
+      "title": "Item Family",
+      "type": "string"
+    },
+    "item_raw": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Item Raw"
+    },
+    "property": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Property"
+    },
+    "role": {
+      "default": "unknown",
+      "enum": [
+        "row_key",
+        "row_index",
+        "condition",
+        "measure",
+        "method",
+        "remark",
+        "unknown"
+      ],
+      "title": "Role",
+      "type": "string"
+    },
+    "unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unit"
+    },
+    "facets": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Facets",
+      "type": "object"
+    },
+    "confidence": {
+      "default": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "status": {
+      "default": "unmapped",
+      "enum": [
+        "bound",
+        "conflict",
+        "ambiguous",
+        "unmapped"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    },
+    "evidence": {
+      "additionalProperties": true,
+      "title": "Evidence",
+      "type": "object"
+    }
+  },
+  "required": [
+    "column"
+  ],
+  "title": "ColumnBinding",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

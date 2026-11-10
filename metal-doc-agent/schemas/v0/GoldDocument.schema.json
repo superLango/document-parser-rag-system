@@ -1,0 +1,793 @@
+{
+  "$defs": {
+    "AnnotationMeta": {
+      "properties": {
+        "status": {
+          "default": "draft",
+          "enum": [
+            "draft",
+            "reviewed",
+            "verified"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "annotator": {
+          "default": "unassigned",
+          "title": "Annotator",
+          "type": "string"
+        },
+        "reviewers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reviewers",
+          "type": "array"
+        },
+        "updated_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Updated At"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        }
+      },
+      "title": "AnnotationMeta",
+      "type": "object"
+    },
+    "GoldClassificationItem": {
+      "properties": {
+        "grade": {
+          "title": "Grade",
+          "type": "string"
+        },
+        "old_grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Old Grade"
+        },
+        "state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "State"
+        },
+        "old_state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Old State"
+        },
+        "meaning": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Meaning"
+        },
+        "status": {
+          "default": "found",
+          "enum": [
+            "found",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/GoldEvidence"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "grade",
+        "evidence"
+      ],
+      "title": "GoldClassificationItem",
+      "type": "object"
+    },
+    "GoldClause": {
+      "properties": {
+        "clause_id": {
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "page_no": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page No"
+        },
+        "kind": {
+          "default": "other",
+          "enum": [
+            "scope",
+            "normative_reference",
+            "terms",
+            "technical_requirement",
+            "inspection",
+            "sampling",
+            "test_method",
+            "delivery",
+            "packaging",
+            "other"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "status": {
+          "default": "found",
+          "enum": [
+            "found",
+            "missing",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "fields": {
+          "additionalProperties": {
+            "$ref": "#/$defs/GoldValue"
+          },
+          "title": "Fields",
+          "type": "object"
+        },
+        "applies_to": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Applies To",
+          "type": "array"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GoldEvidence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "clause_id"
+      ],
+      "title": "GoldClause",
+      "type": "object"
+    },
+    "GoldEvidence": {
+      "properties": {
+        "page_no": {
+          "title": "Page No",
+          "type": "integer"
+        },
+        "table_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Table Id"
+        },
+        "row": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Row"
+        },
+        "col": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Col"
+        },
+        "clause_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clause Id"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page_no",
+        "quote"
+      ],
+      "title": "GoldEvidence",
+      "type": "object"
+    },
+    "GoldInspectionItem": {
+      "properties": {
+        "item": {
+          "title": "Item",
+          "type": "string"
+        },
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category"
+        },
+        "quantities": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Quantities",
+          "type": "object"
+        },
+        "sample_location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sample Location"
+        },
+        "requirement_clause": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requirement Clause"
+        },
+        "method_clause": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method Clause"
+        },
+        "method_standard": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method Standard"
+        },
+        "status": {
+          "default": "found",
+          "enum": [
+            "found",
+            "ambiguous",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence": {
+          "$ref": "#/$defs/GoldEvidence"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "item",
+        "evidence"
+      ],
+      "title": "GoldInspectionItem",
+      "type": "object"
+    },
+    "GoldRecord": {
+      "properties": {
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "grade": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grade"
+        },
+        "grade_level": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grade Level"
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Condition"
+        },
+        "facets": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Facets",
+          "type": "object"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/GoldValue"
+          },
+          "title": "Properties"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "record_id"
+      ],
+      "title": "GoldRecord",
+      "type": "object"
+    },
+    "GoldTable": {
+      "properties": {
+        "table_id": {
+          "title": "Table Id",
+          "type": "string"
+        },
+        "page_no": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page No"
+        },
+        "caption": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Caption"
+        },
+        "profile": {
+          "title": "Profile",
+          "type": "string"
+        },
+        "orientation": {
+          "default": "grade_rows",
+          "title": "Orientation",
+          "type": "string"
+        },
+        "scope": {
+          "default": "full",
+          "enum": [
+            "full",
+            "partial"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "records": {
+          "items": {
+            "$ref": "#/$defs/GoldRecord"
+          },
+          "title": "Records",
+          "type": "array"
+        },
+        "inspection_items": {
+          "items": {
+            "$ref": "#/$defs/GoldInspectionItem"
+          },
+          "title": "Inspection Items",
+          "type": "array"
+        },
+        "classification_items": {
+          "items": {
+            "$ref": "#/$defs/GoldClassificationItem"
+          },
+          "title": "Classification Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "table_id",
+        "profile"
+      ],
+      "title": "GoldTable",
+      "type": "object"
+    },
+    "GoldValue": {
+      "properties": {
+        "raw": {
+          "title": "Raw",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "comparator": {
+          "default": "eq",
+          "enum": [
+            "eq",
+            "min",
+            "max",
+            "range",
+            "text",
+            "na"
+          ],
+          "title": "Comparator",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lower"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upper"
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Condition"
+        },
+        "evidence": {
+          "$ref": "#/$defs/GoldEvidence"
+        }
+      },
+      "required": [
+        "raw",
+        "evidence"
+      ],
+      "title": "GoldValue",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "doc_id": {
+      "title": "Doc Id",
+      "type": "string"
+    },
+    "standard_no": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Standard No"
+    },
+    "title": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Title"
+    },
+    "doc_type": {
+      "default": "other",
+      "enum": [
+        "gb_t",
+        "gjb",
+        "enterprise",
+        "agreement",
+        "classification",
+        "other"
+      ],
+      "title": "Doc Type",
+      "type": "string"
+    },
+    "material": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Material"
+    },
+    "product_form": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Product Form"
+    },
+    "source_type": {
+      "default": "unknown",
+      "enum": [
+        "digital_native",
+        "scanned",
+        "hybrid",
+        "unknown"
+      ],
+      "title": "Source Type",
+      "type": "string"
+    },
+    "annotation": {
+      "$ref": "#/$defs/AnnotationMeta"
+    },
+    "tables": {
+      "items": {
+        "$ref": "#/$defs/GoldTable"
+      },
+      "title": "Tables",
+      "type": "array"
+    },
+    "clauses": {
+      "items": {
+        "$ref": "#/$defs/GoldClause"
+      },
+      "title": "Clauses",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "doc_id"
+  ],
+  "title": "GoldDocument",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

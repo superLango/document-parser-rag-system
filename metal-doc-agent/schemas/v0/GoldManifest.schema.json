@@ -1,0 +1,229 @@
+{
+  "$defs": {
+    "GoldDocEntry": {
+      "properties": {
+        "doc_id": {
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "standard_no": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Standard No"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "doc_type": {
+          "default": "other",
+          "enum": [
+            "gb_t",
+            "gjb",
+            "enterprise",
+            "agreement",
+            "classification",
+            "other"
+          ],
+          "title": "Doc Type",
+          "type": "string"
+        },
+        "source_type": {
+          "default": "unknown",
+          "enum": [
+            "digital_native",
+            "scanned",
+            "hybrid",
+            "unknown"
+          ],
+          "title": "Source Type",
+          "type": "string"
+        },
+        "material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material"
+        },
+        "product_form": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Form"
+        },
+        "md_path": {
+          "title": "Md Path",
+          "type": "string"
+        },
+        "pdf_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdf Path"
+        },
+        "pages": {
+          "default": 0,
+          "title": "Pages",
+          "type": "integer"
+        },
+        "tables": {
+          "default": 0,
+          "title": "Tables",
+          "type": "integer"
+        },
+        "profiles": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Profiles",
+          "type": "array"
+        },
+        "split": {
+          "default": "dev",
+          "enum": [
+            "mini",
+            "dev",
+            "heldout"
+          ],
+          "title": "Split",
+          "type": "string"
+        },
+        "priority": {
+          "default": 2,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "annotation_status": {
+          "default": "selected",
+          "enum": [
+            "selected",
+            "annotated"
+          ],
+          "title": "Annotation Status",
+          "type": "string"
+        },
+        "annotation_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Annotation File"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "doc_id",
+        "md_path"
+      ],
+      "title": "GoldDocEntry",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "goldset_version": {
+      "default": "v0",
+      "title": "Goldset Version",
+      "type": "string"
+    },
+    "created_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Created At"
+    },
+    "corpus_root": {
+      "default": "../标准文件",
+      "title": "Corpus Root",
+      "type": "string"
+    },
+    "requirements": {
+      "additionalProperties": true,
+      "title": "Requirements",
+      "type": "object"
+    },
+    "documents": {
+      "items": {
+        "$ref": "#/$defs/GoldDocEntry"
+      },
+      "title": "Documents",
+      "type": "array"
+    },
+    "summary": {
+      "additionalProperties": true,
+      "title": "Summary",
+      "type": "object"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    }
+  },
+  "title": "GoldManifest",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

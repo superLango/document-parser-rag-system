@@ -1,0 +1,556 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "ext_828e8ab960",
+  "standard_no": null,
+  "title": "7319bf3dde60412bb4b7e30209da8a401792809205362",
+  "doc_type": "other",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 22,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\7319bf3dde60412bb4b7e30209da8a401792809205362.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T7",
+      "page_no": 10,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-be9c424021",
+          "grade": "熔炼分析",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.08~0.20",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.08,
+              "upper": 0.2,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 1,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.08~0.20"
+              }
+            },
+            "Si": {
+              "raw": "≤0.40",
+              "value": 0.4,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 2,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.40"
+              }
+            },
+            "Mn": {
+              "raw": "0.90~1.50",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.9,
+              "upper": 1.5,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 3,
+                "col": 1,
+                "clause_id": null,
+                "quote": "0.90~1.50"
+              }
+            },
+            "P": {
+              "raw": "≤0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.025"
+              }
+            },
+            "S": {
+              "raw": "≤0.010",
+              "value": 0.01,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 5,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.010"
+              }
+            },
+            "Cr": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 15,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.33%",
+              "value": 0.33,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 16,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.33%"
+              }
+            },
+            "Mo": {
+              "raw": "≤0.08",
+              "value": 0.08,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 9,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.08"
+              }
+            },
+            "Nb": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 10,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "Ni": {
+              "raw": "≤0.30",
+              "value": 0.3,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 11,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.30"
+              }
+            },
+            "Ti": {
+              "raw": "≤0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 12,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.030"
+              }
+            },
+            "V": {
+              "raw": "≤0.020",
+              "value": 0.02,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 13,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.020"
+              }
+            },
+            "N": {
+              "raw": "≤0.012",
+              "value": 0.012,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 14,
+                "col": 1,
+                "clause_id": null,
+                "quote": "≤0.012"
+              }
+            },
+            "Al": {
+              "raw": "注： a、总铝和氮元素含量的比值应满足Al:N≥2。",
+              "value": 2.0,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 17,
+                "col": 1,
+                "clause_id": null,
+                "quote": "注： a、总铝和氮元素含量的比值应满足Al:N≥2。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-ee8f9029bf",
+          "grade": "成品分析",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "C": {
+              "raw": "0.06~0.22",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.06,
+              "upper": 0.22,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 1,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.06~0.22"
+              }
+            },
+            "Si": {
+              "raw": "≤0.45",
+              "value": 0.45,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 2,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.45"
+              }
+            },
+            "Mn": {
+              "raw": "0.84~1.56",
+              "value": null,
+              "text": null,
+              "unit": null,
+              "comparator": "range",
+              "lower": 0.84,
+              "upper": 1.56,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 3,
+                "col": 2,
+                "clause_id": null,
+                "quote": "0.84~1.56"
+              }
+            },
+            "P": {
+              "raw": "≤0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.030"
+              }
+            },
+            "S": {
+              "raw": "≤0.015",
+              "value": 0.015,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 5,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.015"
+              }
+            },
+            "Cr": {
+              "raw": "≤0.70",
+              "value": 0.7,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 15,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.70"
+              }
+            },
+            "Cu": {
+              "raw": "≤0.33%",
+              "value": 0.33,
+              "text": null,
+              "unit": "%",
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 16,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.33%"
+              }
+            },
+            "Mo": {
+              "raw": "≤0.11",
+              "value": 0.11,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 9,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.11"
+              }
+            },
+            "Nb": {
+              "raw": "≤0.025",
+              "value": 0.025,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 10,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.025"
+              }
+            },
+            "Ni": {
+              "raw": "≤0.35",
+              "value": 0.35,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 11,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.35"
+              }
+            },
+            "Ti": {
+              "raw": "≤0.040",
+              "value": 0.04,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 12,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.040"
+              }
+            },
+            "V": {
+              "raw": "≤0.030",
+              "value": 0.03,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 13,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.030"
+              }
+            },
+            "N": {
+              "raw": "≤0.017",
+              "value": 0.017,
+              "text": null,
+              "unit": null,
+              "comparator": "max",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 14,
+                "col": 2,
+                "clause_id": null,
+                "quote": "≤0.017"
+              }
+            },
+            "Al": {
+              "raw": "注： a、总铝和氮元素含量的比值应满足Al:N≥2。",
+              "value": 2.0,
+              "text": null,
+              "unit": null,
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 10,
+                "table_id": "T7",
+                "row": 17,
+                "col": 2,
+                "clause_id": null,
+                "quote": "注： a、总铝和氮元素含量的比值应满足Al:N≥2。"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

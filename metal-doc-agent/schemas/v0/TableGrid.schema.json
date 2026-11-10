@@ -1,0 +1,235 @@
+{
+  "$defs": {
+    "Merge": {
+      "properties": {
+        "row": {
+          "title": "Row",
+          "type": "integer"
+        },
+        "col": {
+          "title": "Col",
+          "type": "integer"
+        },
+        "rowspan": {
+          "default": 1,
+          "title": "Rowspan",
+          "type": "integer"
+        },
+        "colspan": {
+          "default": 1,
+          "title": "Colspan",
+          "type": "integer"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        },
+        "is_header": {
+          "default": false,
+          "title": "Is Header",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "row",
+        "col"
+      ],
+      "title": "Merge",
+      "type": "object"
+    },
+    "TableBlock": {
+      "properties": {
+        "block_id": {
+          "title": "Block Id",
+          "type": "string"
+        },
+        "start_row": {
+          "title": "Start Row",
+          "type": "integer"
+        },
+        "header_rows": {
+          "title": "Header Rows",
+          "type": "integer"
+        },
+        "header_paths": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Header Paths",
+          "type": "array"
+        },
+        "rows": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Rows",
+          "type": "array"
+        }
+      },
+      "required": [
+        "block_id",
+        "start_row",
+        "header_rows"
+      ],
+      "title": "TableBlock",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "producer_version": {
+      "default": "0.1.0",
+      "title": "Producer Version",
+      "type": "string"
+    },
+    "table_id": {
+      "title": "Table Id",
+      "type": "string"
+    },
+    "page_no": {
+      "title": "Page No",
+      "type": "integer"
+    },
+    "caption": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Caption"
+    },
+    "context": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Context"
+    },
+    "n_rows": {
+      "default": 0,
+      "title": "N Rows",
+      "type": "integer"
+    },
+    "n_cols": {
+      "default": 0,
+      "title": "N Cols",
+      "type": "integer"
+    },
+    "header_rows": {
+      "default": 1,
+      "title": "Header Rows",
+      "type": "integer"
+    },
+    "rows": {
+      "items": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Rows",
+      "type": "array"
+    },
+    "header_paths": {
+      "items": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Header Paths",
+      "type": "array"
+    },
+    "merges": {
+      "items": {
+        "$ref": "#/$defs/Merge"
+      },
+      "title": "Merges",
+      "type": "array"
+    },
+    "units": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Units",
+      "type": "array"
+    },
+    "footnotes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Footnotes",
+      "type": "array"
+    },
+    "profile": {
+      "default": "unknown",
+      "title": "Profile",
+      "type": "string"
+    },
+    "orientation": {
+      "default": "grade_rows",
+      "title": "Orientation",
+      "type": "string"
+    },
+    "blocks": {
+      "items": {
+        "$ref": "#/$defs/TableBlock"
+      },
+      "title": "Blocks",
+      "type": "array"
+    },
+    "raw_html": {
+      "default": "",
+      "title": "Raw Html",
+      "type": "string"
+    },
+    "continuation_of": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Continuation Of"
+    },
+    "merged_pages": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Merged Pages",
+      "type": "array"
+    }
+  },
+  "required": [
+    "table_id",
+    "page_no"
+  ],
+  "title": "TableGrid",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

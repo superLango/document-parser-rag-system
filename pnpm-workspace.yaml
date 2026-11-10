@@ -1,0 +1,10 @@
+packages:
+  - "apps/web"
+  - "packages/*"
+
+allowBuilds:
+  esbuild: true
+
+# Force the patched ansi-regex (GHSA-93q8-gq69-wqwm, transitive dev dependency).
+overrides:
+  ansi-regex: "5.0.1"

@@ -1,0 +1,358 @@
+{
+  "schema_version": "agent-1.0.0",
+  "doc_id": "ext_cb3333a17c",
+  "standard_no": null,
+  "title": "TA15 钛合金环形锻件",
+  "doc_type": "enterprise",
+  "material": null,
+  "product_form": null,
+  "source_type": "hybrid",
+  "pages": 10,
+  "source_path": "F:\\hanson\\hanson_doc_parse\\markdown\\1c4cf85c9255469184e338fda9af80f81768216448834.md",
+  "annotation": {
+    "status": "reviewed",
+    "annotator": "engine-rules+evidence-audit",
+    "notes": [
+      "values verified against evidence quotes; not human double-blind"
+    ]
+  },
+  "tables": [
+    {
+      "table_id": "T2",
+      "page_no": 5,
+      "caption": null,
+      "profile": "chemical_composition",
+      "orientation": "element_rows",
+      "scope": "full",
+      "note": null,
+      "records": [
+        {
+          "record_id": "rec-31b90d84d9",
+          "grade": "主要元素，% Al",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 1,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-2d0d95809d",
+          "grade": "主要元素，% Mo",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 2,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-2422d2b616",
+          "grade": "主要元素，% V",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 3,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-a1eeac7b7a",
+          "grade": "主要元素，% Zr",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 4,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-0802951e02",
+          "grade": "杂质元素，%，不大于 C",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 5,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-2211d85c4d",
+          "grade": "杂质元素，%，不大于 Fe",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 6,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-7b590fead0",
+          "grade": "杂质元素，%，不大于 Si",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 7,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-a62c589f6a",
+          "grade": "杂质元素，%，不大于 O",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 8,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-fc9a75c8d7",
+          "grade": "杂质元素，%，不大于 N",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 9,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-cedcb65ac3",
+          "grade": "杂质元素，%，不大于 H",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 10,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-42c48bd6d7",
+          "grade": "其他元素 单一",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 11,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        },
+        {
+          "record_id": "rec-35fed1c84b",
+          "grade": "其他元素 总量",
+          "grade_level": null,
+          "condition": null,
+          "facets": {},
+          "properties": {
+            "Cu": {
+              "raw": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。",
+              "value": 0.005,
+              "text": null,
+              "unit": "%",
+              "comparator": "eq",
+              "lower": null,
+              "upper": null,
+              "condition": null,
+              "evidence": {
+                "page_no": 5,
+                "table_id": "T2",
+                "row": 4,
+                "col": 12,
+                "clause_id": null,
+                "quote": "注：表中其他元素，在正常情况下可不检验，但供方应保证。需方要求并在合同中注明时应予检验，检验元素包括：Cu、Ni、Cr、Mn、Sn、Y，Y应不大于0.005%。氢含量在供应状态锻件上测定。"
+              }
+            }
+          }
+        }
+      ],
+      "inspection_items": [],
+      "classification_items": []
+    }
+  ]
+}

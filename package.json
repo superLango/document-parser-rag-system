@@ -1,0 +1,12 @@
+{
+  "name": "hanson-doc-parse",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.7.0",
+  "scripts": {
+    "web:dev": "pnpm --filter @hanson/web dev",
+    "web:typecheck": "pnpm --filter @hanson/web typecheck",
+    "web:build": "pnpm --filter @hanson/web build",
+    "e2e": "powershell -NoProfile -ExecutionPolicy Bypass -File e2e/run_main_flow.ps1"
+  }
+}

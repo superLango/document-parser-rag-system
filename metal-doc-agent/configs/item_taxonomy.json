@@ -1,0 +1,19 @@
+{
+  "identity_dims": ["temperature", "impact_type", "hardness_scale"],
+  "facet_values": {
+    "temperature": ["室温", "高温", "低温"],
+    "impact_type": ["夏比", "仪器化"],
+    "hardness_scale": ["brinell", "rockwell", "vickers"]
+  },
+  "conflicts": [
+    ["室温", "高温"],
+    ["室温", "低温"],
+    ["高温", "低温"],
+    ["夏比", "仪器化"],
+    ["brinell", "rockwell"],
+    ["brinell", "vickers"],
+    ["rockwell", "vickers"]
+  ],
+  "edit_distance_threshold": 0.85,
+  "semantic_threshold": 0.9
+}

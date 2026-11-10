@@ -1,0 +1,80 @@
+groups:
+  - name: metal-agent.slo
+    rules:
+      - record: engine_job_failure_ratio
+        expr: |
+          sum(engine_jobs{status="failed"})
+          / clamp_min(sum(engine_jobs), 1)
+      - record: engine_queue_backlog
+        expr: sum(engine_queue_items)
+      - alert: EngineApiDown
+        expr: up{job="engine-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Engine API is down
+          description: Prometheus cannot scrape engine-api for 2 minutes.
+      - alert: PlatformApiDown
+        expr: up{job="platform-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Platform API is down
+      - alert: EngineJobBacklog
+        expr: sum(engine_jobs{status="queued"}) > 20
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: More than 20 jobs queued for 10 minutes
+      - alert: EngineJobFailureRate
+        expr: engine_job_failure_ratio > 0.05
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: Engine job failure ratio above 5%
+      - alert: ExploreBacklog
+        expr: engine_queue_items{lane="explore"} > 50
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Explore queue backlog above 50 documents
+      - alert: ModelExtractDown
+        expr: up{job="model-extract"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Qwen extraction endpoint unreachable
+      - alert: ModelOcrDown
+        expr: up{job="model-ocr"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: GLM-OCR endpoint unreachable
+      - alert: ModelLayoutDown
+        expr: up{job="model-layout"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: PP-DocLayoutV3 layout endpoint unreachable
+      - alert: P95LatencyBudget
+        expr: histogram_quantile(0.95, sum(rate(engine_pipeline_seconds_bucket[15m])) by (le)) > 300
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: p95 pipeline latency above 300s (SLO 5 minutes)
+      - alert: BackupJobFailed
+        expr: increase(backup_last_success_timestamp_seconds[24h]) == 0
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: No successful backup in the last 24h

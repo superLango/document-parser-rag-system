@@ -1,0 +1,24 @@
+{
+  "recipe_id": "dimension_v1",
+  "version": 1,
+  "status": "active",
+  "profile": "dimension",
+  "signature": {
+    "profile": "dimension",
+    "orientation": "grade_rows",
+    "n_cols": 4,
+    "blocks": 0,
+    "tokens": ["尺寸", "直径", "厚度", "偏差"]
+  },
+  "bindings": {
+    "row_key": ["牌号", "规格"],
+    "conditions": ["厚度", "直径"],
+    "measures": {
+      "尺寸偏差": {"unit": "mm", "family": "dimension"}
+    }
+  },
+  "rules": {
+    "inherit_group_units": true
+  },
+  "coverage_template": "product_full"
+}

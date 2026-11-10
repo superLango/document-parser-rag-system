@@ -1,0 +1,36 @@
+{
+  "properties": {
+    "profile": {
+      "default": "unknown",
+      "title": "Profile",
+      "type": "string"
+    },
+    "orientation": {
+      "default": "grade_rows",
+      "title": "Orientation",
+      "type": "string"
+    },
+    "n_cols": {
+      "default": 0,
+      "title": "N Cols",
+      "type": "integer"
+    },
+    "blocks": {
+      "default": 0,
+      "title": "Blocks",
+      "type": "integer"
+    },
+    "tokens": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tokens",
+      "type": "array"
+    }
+  },
+  "title": "RecipeSignature",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}

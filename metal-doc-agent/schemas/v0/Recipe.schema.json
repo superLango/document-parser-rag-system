@@ -1,0 +1,118 @@
+{
+  "$defs": {
+    "RecipeSignature": {
+      "properties": {
+        "profile": {
+          "default": "unknown",
+          "title": "Profile",
+          "type": "string"
+        },
+        "orientation": {
+          "default": "grade_rows",
+          "title": "Orientation",
+          "type": "string"
+        },
+        "n_cols": {
+          "default": 0,
+          "title": "N Cols",
+          "type": "integer"
+        },
+        "blocks": {
+          "default": 0,
+          "title": "Blocks",
+          "type": "integer"
+        },
+        "tokens": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tokens",
+          "type": "array"
+        }
+      },
+      "title": "RecipeSignature",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "0.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "producer_version": {
+      "default": "0.1.0",
+      "title": "Producer Version",
+      "type": "string"
+    },
+    "recipe_id": {
+      "title": "Recipe Id",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "status": {
+      "default": "active",
+      "enum": [
+        "active",
+        "candidate",
+        "retired"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "profile": {
+      "default": "unknown",
+      "title": "Profile",
+      "type": "string"
+    },
+    "signature": {
+      "$ref": "#/$defs/RecipeSignature"
+    },
+    "bindings": {
+      "additionalProperties": true,
+      "title": "Bindings",
+      "type": "object"
+    },
+    "rules": {
+      "additionalProperties": true,
+      "title": "Rules",
+      "type": "object"
+    },
+    "coverage_template": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Coverage Template"
+    },
+    "business_dictionary": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Business Dictionary"
+    }
+  },
+  "required": [
+    "recipe_id"
+  ],
+  "title": "Recipe",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-schema-version": "0.1.0",
+  "x-producer-version": "0.1.0"
+}
