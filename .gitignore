@@ -35,6 +35,8 @@ legacy/**/node_modules/
 legacy/**/dist/
 legacy/**/__pycache__/
 legacy/**/.venv/
+legacy/metal-doc-agent/eval/
+legacy/docs/architecture-refactor-plan.md
 
 # Caches and generated artifacts
 .pnpm-store/
