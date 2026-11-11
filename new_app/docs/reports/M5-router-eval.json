@@ -1,0 +1,205 @@
+{
+  "model": "Qwen3.6-35B-A3B-NVFP4",
+  "tables": 5,
+  "agreement": 0.6,
+  "agent_accuracy": 1.0,
+  "deterministic_accuracy": 0.6,
+  "results": [
+    {
+      "table_id": "chemical-elements-T1",
+      "profile": "chemical_composition",
+      "gold_recipe": "chemical_composition_v1",
+      "deterministic": {
+        "table_id": "chemical-elements-T1",
+        "recipe_id": "chemical_composition_v1",
+        "version": "1.0.0",
+        "confidence": 0.8433,
+        "status": "candidate",
+        "reasons": [
+          "candidate"
+        ]
+      },
+      "agent": {
+        "table_id": "chemical-elements-T1",
+        "recipe_id": "chemical_composition_v1",
+        "version": "1.0.0",
+        "confidence": 0.95,
+        "reasons": [
+          "Exact profile match: chemical_composition",
+          "Exact orientation match: grade_rows",
+          "Exact column count match: 8 columns",
+          "Header tokens match: ['牌号', 'C', 'Si', 'Mn', 'P', 'S', 'Cr', 'Ni'] align perfectly with recipe signature tokens",
+          "Sample data contains chemical element values consistent with chemical composition tables"
+        ]
+      },
+      "matched_deterministic": true,
+      "agent_matched_gold": true,
+      "deterministic_matched_gold": true,
+      "degraded": false,
+      "latency_ms": 3061,
+      "usage": {
+        "prompt_tokens": 1562,
+        "completion_tokens": 182,
+        "total_tokens": 1744,
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    },
+    {
+      "table_id": "inspection-items-T1",
+      "profile": "inspection",
+      "gold_recipe": "inspection_rules_v1",
+      "deterministic": {
+        "table_id": "inspection-items-T1",
+        "recipe_id": "inspection_rules_v1",
+        "version": "1.0.0",
+        "confidence": 0.9467,
+        "status": "exact",
+        "reasons": [
+          "exact"
+        ]
+      },
+      "agent": {
+        "table_id": "inspection-items-T1",
+        "recipe_id": "inspection_rules_v1",
+        "version": "1.0.0",
+        "confidence": 0.95,
+        "reasons": [
+          "exact profile match (inspection)",
+          "exact header token overlap (检验项目, 取样数量, 取样部位, 试验方法)",
+          "deterministic matcher confirmed exact match",
+          "column count matches (5 cols)"
+        ]
+      },
+      "matched_deterministic": true,
+      "agent_matched_gold": true,
+      "deterministic_matched_gold": true,
+      "degraded": false,
+      "latency_ms": 2517,
+      "usage": {
+        "prompt_tokens": 1474,
+        "completion_tokens": 147,
+        "total_tokens": 1621,
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    },
+    {
+      "table_id": "mechanical-basic-T1",
+      "profile": "mechanical_properties",
+      "gold_recipe": "mechanical_properties_v1",
+      "deterministic": {
+        "table_id": "mechanical-basic-T1",
+        "recipe_id": "hardness_v1",
+        "version": "1.0.0",
+        "confidence": 0.8,
+        "status": "candidate",
+        "reasons": [
+          "candidate"
+        ]
+      },
+      "agent": {
+        "table_id": "mechanical-basic-T1",
+        "recipe_id": "mechanical_properties_v1",
+        "version": "1.0.0",
+        "confidence": 0.95,
+        "reasons": [
+          "Profile match: mechanical_properties",
+          "Header tokens overlap: '牌号', '抗拉强度 Rm' (matches 'rm', '力学性能'), '断后伸长率' (matches '断后伸长率')",
+          "Sample rows contain typical mechanical property values (e.g., Q355B, 470 MPa, 22% elongation)",
+          "Recipe 'mechanical_properties_v1' covers tensile strength and elongation, whereas 'hardness_v1' only covers hardness units which are not present in the headers or sample data."
+        ]
+      },
+      "matched_deterministic": false,
+      "agent_matched_gold": true,
+      "deterministic_matched_gold": false,
+      "degraded": false,
+      "latency_ms": 3622,
+      "usage": {
+        "prompt_tokens": 1460,
+        "completion_tokens": 221,
+        "total_tokens": 1681,
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    },
+    {
+      "table_id": "merged-header-T1",
+      "profile": "mechanical_properties",
+      "gold_recipe": "mechanical_properties_v1",
+      "deterministic": {
+        "table_id": "merged-header-T1",
+        "recipe_id": "hardness_v1",
+        "version": "1.0.0",
+        "confidence": 0.8,
+        "status": "candidate",
+        "reasons": [
+          "candidate"
+        ]
+      },
+      "agent": {
+        "table_id": "merged-header-T1",
+        "recipe_id": "mechanical_properties_v1",
+        "version": "1.0.0",
+        "confidence": 0.95,
+        "reasons": [
+          "Profile match: Table profile is 'mechanical_properties'.",
+          "Header tokens overlap: Table headers include 'Rm/MPa' (tensile strength) and 'A/%' (elongation), which are key tokens in the mechanical_properties_v1 signature (rm, 断后伸长率).",
+          "Sample row data: Values '470' and '22' are typical for tensile strength (MPa) and elongation (%) respectively, fitting the mechanical properties context better than just hardness.",
+          "n_cols match: Table has 3 columns (Grade, Rm, A), which fits within the 9 columns of the mechanical_properties_v1 recipe (it can parse a subset or the table might be a simplified view). The hardness_v1 recipe also has 3 cols, but the specific headers 'Rm' and 'A' are explicitly listed in mechanical_properties_v1 tokens, whereas hardness_v1 focuses on HB/HRC/HV."
+        ]
+      },
+      "matched_deterministic": false,
+      "agent_matched_gold": true,
+      "deterministic_matched_gold": false,
+      "degraded": false,
+      "latency_ms": 4794,
+      "usage": {
+        "prompt_tokens": 1443,
+        "completion_tokens": 301,
+        "total_tokens": 1744,
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    },
+    {
+      "table_id": "qdu-p5-mechanical-T1",
+      "profile": "mechanical_properties",
+      "gold_recipe": "mechanical_properties_v1",
+      "deterministic": {
+        "table_id": "qdu-p5-mechanical-T1",
+        "recipe_id": "mechanical_properties_v1",
+        "version": "1.0.0",
+        "confidence": 0.8211,
+        "status": "candidate",
+        "reasons": [
+          "candidate"
+        ]
+      },
+      "agent": {
+        "table_id": "qdu-p5-mechanical-T1",
+        "recipe_id": "mechanical_properties_v1",
+        "version": "1.0.0",
+        "confidence": 0.95,
+        "reasons": [
+          "Exact profile match: 'mechanical_properties'",
+          "Header tokens overlap: '牌号', '室温力学性能', 'σb', 'σ0.2', '布氏硬度'",
+          "Deterministic matcher candidate with high confidence",
+          "Orientation matches: 'grade_rows'"
+        ]
+      },
+      "matched_deterministic": true,
+      "agent_matched_gold": true,
+      "deterministic_matched_gold": true,
+      "degraded": false,
+      "latency_ms": 3000,
+      "usage": {
+        "prompt_tokens": 1644,
+        "completion_tokens": 163,
+        "total_tokens": 1807,
+        "model_calls": 1,
+        "tool_calls": 0
+      }
+    }
+  ]
+}

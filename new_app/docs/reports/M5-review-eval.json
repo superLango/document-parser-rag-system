@@ -1,0 +1,209 @@
+{
+  "cases": 9,
+  "expected_rules": 8,
+  "detected_rules": 8,
+  "recall": 1.0,
+  "findings": 12,
+  "clean_record_findings": 0,
+  "false_positive_rate": 0.0,
+  "missing_rules": [],
+  "rule_ids": [
+    "M5-DUP-001",
+    "M5-EVID-001",
+    "M5-EVID-002",
+    "M5-GRADE-001",
+    "M5-ID-002",
+    "M5-PROP-001",
+    "M5-TABLE-001",
+    "M5-UNIT-001",
+    "M5-VALUE-001"
+  ],
+  "details": [
+    {
+      "category": "completeness",
+      "severity": "error",
+      "target": {
+        "record_id": "NO_GRADE",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": null,
+      "expected": "non-empty grade",
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-GRADE-001"
+    },
+    {
+      "category": "evidence",
+      "severity": "error",
+      "target": {
+        "record_id": "NO_EVIDENCE",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": null,
+      "expected": null,
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-EVID-001"
+    },
+    {
+      "category": "evidence",
+      "severity": "error",
+      "target": {
+        "record_id": "UNKNOWN_EVIDENCE",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": "E404",
+      "expected": "existing evidence_id",
+      "evidence_refs": [
+        "E404"
+      ],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-EVID-002"
+    },
+    {
+      "category": "consistency",
+      "severity": "warning",
+      "target": {
+        "record_id": "UNKNOWN_EVIDENCE",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": "UNKNOWN_EVIDENCE",
+      "expected": "NO_EVIDENCE",
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-DUP-001"
+    },
+    {
+      "category": "semantic",
+      "severity": "error",
+      "target": {
+        "record_id": "NEGATIVE",
+        "table_id": "T1",
+        "page_no": null,
+        "property": "Rm"
+      },
+      "observed": "-1",
+      "expected": ">= 0",
+      "evidence_refs": [
+        "E1"
+      ],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-VALUE-001"
+    },
+    {
+      "category": "consistency",
+      "severity": "warning",
+      "target": {
+        "record_id": "NEGATIVE",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": "NEGATIVE",
+      "expected": "UNKNOWN_EVIDENCE",
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-DUP-001"
+    },
+    {
+      "category": "unit",
+      "severity": "warning",
+      "target": {
+        "record_id": "NO_UNIT",
+        "table_id": "T1",
+        "page_no": null,
+        "property": "Rm"
+      },
+      "observed": "400",
+      "expected": "unit",
+      "evidence_refs": [
+        "E1"
+      ],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-UNIT-001"
+    },
+    {
+      "category": "consistency",
+      "severity": "warning",
+      "target": {
+        "record_id": "NO_UNIT",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": "NO_UNIT",
+      "expected": "NEGATIVE",
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-DUP-001"
+    },
+    {
+      "category": "completeness",
+      "severity": "warning",
+      "target": {
+        "record_id": "EMPTY_PROPS",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": null,
+      "expected": null,
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-PROP-001"
+    },
+    {
+      "category": "consistency",
+      "severity": "warning",
+      "target": {
+        "record_id": "EMPTY_PROPS",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": "EMPTY_PROPS",
+      "expected": "NO_UNIT",
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-DUP-001"
+    },
+    {
+      "category": "consistency",
+      "severity": "error",
+      "target": {
+        "record_id": "CLEAN",
+        "table_id": "T1",
+        "page_no": null
+      },
+      "observed": "CLEAN",
+      "expected": "unique record_id",
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-ID-002"
+    },
+    {
+      "category": "consistency",
+      "severity": "warning",
+      "target": {
+        "table_id": "T1"
+      },
+      "observed": "9",
+      "expected": "1",
+      "evidence_refs": [],
+      "confidence": 0.99,
+      "source": "deterministic",
+      "rule_id": "M5-TABLE-001"
+    }
+  ]
+}

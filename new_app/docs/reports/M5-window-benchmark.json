@@ -1,0 +1,43 @@
+{
+  "model": "Qwen3.6-35B-A3B-NVFP4",
+  "base_url": "http://192.168.1.35:9988/v1",
+  "generated_at": "2026-11-11T15:25:55Z",
+  "results": [
+    {
+      "status_code": 200,
+      "latency_ms": 11518,
+      "prompt_tokens": 31995,
+      "completion_tokens": 6,
+      "total_tokens": 32001,
+      "content_chars": 12,
+      "target_tokens": 32000,
+      "built_tokens": 31960,
+      "memory_before_mb": 32695,
+      "memory_after_mb": 29146
+    },
+    {
+      "status_code": 200,
+      "latency_ms": 10054,
+      "prompt_tokens": 63955,
+      "completion_tokens": 6,
+      "total_tokens": 63961,
+      "content_chars": 12,
+      "target_tokens": 64000,
+      "built_tokens": 63920,
+      "memory_before_mb": 29132,
+      "memory_after_mb": 29142
+    },
+    {
+      "status_code": 200,
+      "latency_ms": 26405,
+      "prompt_tokens": 119970,
+      "completion_tokens": 6,
+      "total_tokens": 119976,
+      "content_chars": 12,
+      "target_tokens": 120000,
+      "built_tokens": 119935,
+      "memory_before_mb": 29133,
+      "memory_after_mb": 20660
+    }
+  ]
+}

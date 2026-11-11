@@ -38,6 +38,10 @@ class Settings(BaseSettings):
     sandbox_engine_version: str = "sandbox-engine/1"
     # 回滚开关：置 true 时沙箱阶段回到 M1 的 fake 实现。
     sandbox_use_fake: bool = False
+    review_url: str = "http://localhost:18006"
+    review_timeout_seconds: float = 300.0
+    # 回滚开关：置 true 时 review 阶段回到 M1 的 fake 实现。
+    review_use_fake: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

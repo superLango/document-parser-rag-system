@@ -40,10 +40,15 @@ data:
   SANDBOX_TEMPLATE_ID: product_full
   SANDBOX_TEMPLATE_VERSION: 1.0.0
   SANDBOX_KUBERNETES_NAMESPACE: hanson-standard
-  AGENT_MODEL: Qwen-35B
+  AGENT_MODEL: Qwen3.6-35B-A3B-NVFP4
   AGENT_CONTEXT_WINDOW: "65536"
   AGENT_FAILOVER_SECONDS: "10"
-  AGENT_BASE_URL_TERTIARY: http://192.168.1.35
+  AGENT_BASE_URL_TERTIARY: http://192.168.1.35:9988
+  AGENT_TOKENIZER_MODE: remote
+  AGENT_SESSION_DB: /tmp/hanson-agent/sessions.db
+  REVIEW_URL: http://review:8006
+  REVIEW_AGENT_URL: http://agent:8003
+  REVIEW_USE_AGENT: "true"
 ---
 apiVersion: apps/v1
 kind: Deployment

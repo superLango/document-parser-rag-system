@@ -14,6 +14,8 @@ from hanson_contracts import (
     ObjectInput,
     RecipeRef,
     ResourceLimits,
+    ReviewReport,
+    ReviewRequest,
     TableAssignment,
     TemplateRef,
 )
@@ -23,7 +25,8 @@ from services.shared.storage import ObjectStore
 
 from .config import settings
 from .db import SessionLocal
-from .models import Artifact, Document, Run, RunEvent, RunStage
+from .models import Artifact, Document, Finding, Run, RunEvent, RunStage
+from .models import ReviewReport as ReviewReportRow
 from .state import TERMINAL_STATES, RunState, ensure_transition, is_terminal
 
 logger = logging.getLogger(__name__)
@@ -535,6 +538,101 @@ async def _fake_sandbox(_: Run) -> dict:
     }
 
 
+async def _latest_artifact(session, run_id: str, role: str) -> Artifact | None:
+    result = await session.execute(
+        select(Artifact)
+        .where(Artifact.run_id == run_id, Artifact.role == role)
+        .order_by(Artifact.created_at.desc())
+    )
+    return result.scalars().first()
+
+
+async def _review_stage(run: Run) -> dict:
+    async with SessionLocal() as session:
+        records_artifact = await _latest_artifact(session, run.id, "records")
+        evidence_artifact = await _latest_artifact(session, run.id, "evidence")
+        result_artifact = await _latest_artifact(session, run.id, "result")
+    if records_artifact is None:
+        raise RuntimeError(f"records artifact missing for run {run.id}")
+    if evidence_artifact is None:
+        raise RuntimeError(f"evidence artifact missing for run {run.id}")
+    records_payload = json.loads(await get_store().get_bytes(records_artifact.storage_key))
+    records = records_payload.get("records") or []
+    evidence_lines = (
+        (await get_store().get_bytes(evidence_artifact.storage_key))
+        .decode("utf-8")
+        .splitlines()
+    )
+    evidence = [json.loads(line) for line in evidence_lines if line.strip()]
+    result = (
+        json.loads(await get_store().get_bytes(result_artifact.storage_key))
+        if result_artifact is not None
+        else {}
+    )
+    request = ReviewRequest(
+        run_id=run.id,
+        trace_id=run.trace_id,
+        records=records,
+        evidence=evidence,
+        tables=result.get("tables") or [],
+        template=result.get("template") or {},
+    )
+    report = await _call_review(request)
+    await _persist_review(run, report)
+    return report.model_dump(mode="json")
+
+
+async def _call_review(request: ReviewRequest) -> ReviewReport:
+    url = f"{settings.review_url.rstrip('/')}/internal/review"
+    try:
+        async with httpx.AsyncClient(timeout=settings.review_timeout_seconds) as client:
+            response = await client.post(url, json=request.model_dump(mode="json"))
+    except httpx.HTTPError as exc:
+        raise RuntimeError(f"review service unavailable: {exc}") from exc
+    if response.status_code != 200:
+        raise RuntimeError(f"review service error {response.status_code}: {response.text[:500]}")
+    return ReviewReport.model_validate(response.json())
+
+
+async def _persist_review(run: Run, report: ReviewReport) -> None:
+    try:
+        async with SessionLocal() as session:
+            existing = await session.execute(
+                select(ReviewReportRow).where(ReviewReportRow.run_id == run.id)
+            )
+            for row in existing.scalars():
+                await session.delete(row)
+            await session.flush()
+            report_row = ReviewReportRow(
+                run_id=run.id,
+                status=report.status,
+                ruleset_version=report.ruleset_version,
+                stats=report.stats,
+                degraded=report.degraded,
+            )
+            session.add(report_row)
+            await session.flush()
+            for finding in report.findings:
+                session.add(
+                    Finding(
+                        run_id=run.id,
+                        report_id=report_row.id,
+                        source=finding.source,
+                        category=finding.category,
+                        severity=finding.severity,
+                        target=finding.target,
+                        observed=finding.observed,
+                        expected=finding.expected,
+                        evidence_refs=finding.evidence_refs,
+                        confidence=finding.confidence,
+                        status="open",
+                    )
+                )
+            await session.commit()
+    except Exception:
+        logger.exception("failed to persist review report for run %s", run.id)
+
+
 async def _fake_review(_: Run) -> dict:
     return {
         "status": "pass",
@@ -650,7 +748,7 @@ async def run_workflow(run_id: str) -> None:
             RunState.REVIEWING,
             RunState.REVIEW_PASSED,
             "review",
-            _fake_review,
+            _fake_review if settings.review_use_fake else _review_stage,
         )
         await _finalize(run_id)
     except asyncio.CancelledError:

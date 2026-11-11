@@ -7,7 +7,7 @@
 > 协作角色：外部模型服务器管理员（按需）、业务/领域专家（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
 > 前置里程碑：[M0](M0-project-scaffold.md)、[M1](M1-core-domain-orchestration.md)、[M3](M3-recipe-registry.md)  
-> 当前状态：计划中（未开工）
+> 当前状态：已完成（M5 核心验收通过，2026-11-11；并发 4 组合压测留待 M8）
 
 ---
 
@@ -288,3 +288,92 @@ POST /internal/agent:resume
 |---|---|---|---|
 | v1.0 | 2026-11-11 | 初版 | 项目负责人 |
 | v1.1 | 2026-11-11 | 补充 Q1 模型三地址/Qwen 35B、Q2 窗口基准/看门狗、Q8 单人角色 | 项目负责人 |
+| v1.2 | 2026-11-11 | 完成 M5 实现与验证，回填执行记录、指标与偏差 | 项目负责人 |
+
+---
+
+## 14. 执行记录（2026-11-11）
+
+### 14.1 交付物
+
+| # | 交付物 | 状态 | 位置 |
+|---|---|---|---|
+| D5.1 | agent-service | 完成 | `services/agent/` |
+| D5.2 | Harness/Session | 完成 | `harness.py`、`session.py` |
+| D5.3 | Context Manager | 完成 | `services/agent/context/` |
+| D5.4 | 分段器 | 完成 | `services/agent/segmentation.py` |
+| D5.5 | 工具注册 | 完成 | `services/agent/tools/` |
+| D5.6 | Prompt | 完成 | `services/agent/prompts/` |
+| D5.7 | Model Gateway | 完成 | `services/agent/model_gateway.py` |
+| D5.8 | RouterAgent | 完成 | `services/agent/agents/router.py` |
+| D5.9 | ReviewAgent | 完成 | `services/agent/agents/review.py` |
+| D5.10 | review-service | 完成 | `services/review/` |
+| D5.11 | 评测报告 | 完成 | `docs/reports/M5-agent-eval.md` |
+| D5.12 | 窗口基准报告 | 完成 | `docs/reports/M5-window-benchmark.md` |
+| D5.13 | 模型三地址切换报告 | 完成 | `docs/reports/M5-model-failover.md` |
+| D5.14 | 看门狗测试报告 | 完成 | `docs/reports/M5-watchdog.md` |
+
+### 14.2 实现摘要
+
+- 模型：`Qwen3.6-35B-A3B-NVFP4` @ `192.168.1.35:9988`，`max-model-len=131072`、`max-num-seqs=4`、NVFP4、`gpu-memory-utilization=0.40`。
+- Agent API：`POST /internal/agent:run`、`POST /internal/agent:resume`、`GET /internal/agent/health`。
+- Harness：工具白名单、max_steps/max_tool_calls/wall_time、循环检测、JSON/schema 校验、SQLite 检查点与恢复。
+- Context：vLLM `/tokenize` 真实 tokenizer；L1–L3 压缩；证据/表头/单位/schema/objective/decisions 不变量；超限抛 `ContextOverflow`。
+- 分段：table/page/schema/token 分段；确定性合并；冲突显式返回。
+- Model Gateway：三地址、10 秒防抖切换、30 秒冷却回切、4xx 不切换、JSON 修复一次、usage 累计。
+- RouterAgent：catalog 约束、确定性 guard、模型不可用降级。
+- ReviewAgent + review-service：规则链（12 条规则）+ 可选模型 Finding；模型不可用仅规则审核并标记 `degraded`。
+- 编排：review 阶段从 fake 切换为真实 review-service；持久化 `review_reports`/`findings`；`REVIEW_USE_FAKE` 可回滚。
+- 看门狗：加载期 floor 8192 MiB、测试期 floor 4096 MiB；加载守护就绪自动退出。
+
+### 14.3 验证记录
+
+| 验证 | 命令/报告 | 结果 |
+|---|---|---|
+| Agent/Review 单元测试 | `pytest tests/integration/agent -q` | 26 passed |
+| Compose E2E（真实模型审核） | `scripts/dev/e2e-check.sh <doc>` | STRUCTURED_READY；1 表 2 记录；review 1.7 s；`review.v1`；`degraded=false` |
+| K8s E2E（真实模型审核） | `scripts/dev/k8s-e2e.sh tests/fixtures/mechanical.md` | STRUCTURED_READY；沙箱 Job 5.4 s；review 1.1 s；`review.v1`；`review_reports` 落库 1 条 |
+| 路由评测 | `scripts/benchmark/router_eval.py` | Agent 1.0（5/5） vs 确定性 0.6（3/5） |
+| 审核评测 | `scripts/benchmark/review_eval.py` | 召回 1.0，误报 0.0 |
+| 窗口基准 | `scripts/benchmark/window_benchmark.py` | 32K 11.5 s / 64K 10.1 s / 128K 26.4 s；看门狗未触发 |
+| 三地址切换 | `test_model_gateway.py` | 10 s 切换、短抖动不回切、冷却回切、全故障降级 |
+| 看门狗 | `test_watchdog.py`、加载/基准日志 | 4 passed；加载 floor 8192、测试 floor 4096 |
+| 上下文/分段 | `test_context.py`、`test_segmentation.py` | 截断 0、关键事实丢失 0、合并确定性 |
+| 检查点恢复 | `test_harness.py` | 100% |
+
+### 14.4 与计划的偏差
+
+1. **primary/secondary 未配置**：当前仅 tertiary `192.168.1.35:9988`；三地址切换由 MockTransport 单元测试覆盖，生产需补两个地址。
+2. **确定性 matcher 与新金标集口径不一致**：`hardness_v1` 与 `mechanical_properties_v1` 共享 `mechanical_properties` profile，确定性 matcher 在 2 张机械表上误选 hardness；RouterAgent 已纠正。建议 M6 配方评审拆分 profile 或调整 matcher 权重。
+3. **窗口基准为单请求**：32K/64K/128K 三组均有数据，但“并发 4 × 三窗口 × 共跑模型”组合压测留待 M8；D-005 已标注。
+4. **128K 实际 119,970 tokens**：为输出预留空间，服务器上限 131,072。
+5. **ReviewAgent 在合法样本上返回 0 条 Finding**：符合预期；模型语义召回需注入矛盾样本，M5 以规则召回 1.0 作为验收依据。
+6. **Router/Review 单次结构化调用**：多轮工具修复留给 M6 Repair/Triage；通用 Harness 已具备工具循环。
+
+### 14.5 验收结论
+
+- [x] Agent 可运行 RouterAgent 并返回结构化决策。
+- [x] Agent 可运行 ReviewAgent 并返回 Finding（规则链 + 可选模型）。
+- [x] 会话可检查点/恢复。
+- [x] 上下文压缩后关键事实不丢失。
+- [x] 长文档自动分段并可合并。
+- [x] 模型不可用时降级确定性路由/规则审核。
+- [x] 非法 JSON 可修复一次，仍失败则结构化报错。
+- [x] 主地址 10 秒切换、备/第三地址轮询、短抖动不回切、恢复回切（单元测试）。
+- [x] 32K/64K/128K 三组窗口均有基准数据（单请求；并发 4 待 M8）。
+- [x] 看门狗低于阈值终止测试进程，模型服务器保持可用。
+- [x] 路由准确率 1.0 ≥ 确定性基线 0.6。
+- [x] 审核召回 1.0 ≥ 0.95；误报 0.0 ≤ 0.05。
+- [x] 上下文截断率 0；关键事实丢失 0；断点恢复 100%；JSON 非法率 0（修复后）。
+- [x] Agent README、Prompt 版本、工具权限矩阵、评测报告、上下文/分段说明。
+
+### 14.6 后续事项
+
+| 事项 | 里程碑/责任 |
+|---|---|
+| 修复 hardness/mechanical profile 冲突或提高 matcher 表头权重 | M6 配方评审 |
+| 补齐 primary/secondary 模型地址并做真实三地址切换 | 部署阶段 |
+| 并发 4 × 32K/64K/128K 组合压测 | M8 负载测试 |
+| Agent 会话库迁移到共享存储（多副本） | 生产部署 |
+| 注入语义矛盾样本，评估模型审核召回 | M6 评测 |
+| 将看门狗事件接入监控/告警 | M8 |
