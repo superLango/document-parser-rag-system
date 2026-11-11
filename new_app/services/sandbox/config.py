@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     workspace_root: Path = Path("/tmp/hanson-sandbox")
     recipe_data_dir: Path = REGISTRY_DATA / "recipes"
     template_data_dir: Path = REGISTRY_DATA / "templates"
+    recipe_registry_url: str = Field(
+        default="", validation_alias="RECIPE_REGISTRY_URL"
+    )
     max_input_bytes: int = 64 * 1024 * 1024
     max_output_bytes: int = 16 * 1024 * 1024
     max_output_files: int = 16

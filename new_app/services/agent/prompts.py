@@ -11,8 +11,8 @@ PROMPT_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_.-]*$")
 DEFAULT_PROMPTS = {
     "router": "router.v1",
     "review": "review.v1",
-    "repair": "harness.v1",
-    "triage": "harness.v1",
+    "triage": "triage.v1",
+    "repair": "repair.v1",
     "generic": "harness.v1",
 }
 

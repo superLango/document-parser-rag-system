@@ -395,7 +395,12 @@ class SandboxStageError(RuntimeError):
         self.error_code = error_code
 
 
-async def _sandbox_stage(run: Run) -> dict:
+async def build_sandbox_request(
+    run: Run,
+    *,
+    recipe_override: RecipeRef | None = None,
+    table_id: str | None = None,
+) -> ExecutionRequest:
     async with SessionLocal() as session:
         document = await session.get(Document, run.document_id)
         if document is None:
@@ -428,6 +433,8 @@ async def _sandbox_stage(run: Run) -> dict:
         for item in routing.get("assignments") or []
         if item.get("table_id") and item.get("recipe_id") and item.get("version")
     ]
+    if recipe_override is not None:
+        assignments = _override_assignments(assignments, recipe_override, table_id)
     primary = (
         assignments[0]
         if assignments
@@ -435,7 +442,7 @@ async def _sandbox_stage(run: Run) -> dict:
             table_id="", recipe_id="mechanical_properties_v1", version="1.0.0"
         )
     )
-    request = ExecutionRequest(
+    return ExecutionRequest(
         trace_id=run.trace_id or run.id,
         run_id=run.id,
         document=DocumentRef(
@@ -468,6 +475,47 @@ async def _sandbox_stage(run: Run) -> dict:
             timeout_seconds=settings.sandbox_run_timeout_seconds,
         ),
     )
+
+
+def _override_assignments(
+    assignments: list[TableAssignment],
+    override: RecipeRef,
+    table_id: str | None,
+) -> list[TableAssignment]:
+    updated: list[TableAssignment] = []
+    replaced = False
+    for item in assignments:
+        match = (
+            item.table_id == table_id
+            if table_id
+            else item.recipe_id == override.recipe_id
+        )
+        if match:
+            updated.append(
+                TableAssignment(
+                    table_id=item.table_id,
+                    recipe_id=override.recipe_id,
+                    version=override.version,
+                    digest=override.digest,
+                )
+            )
+            replaced = True
+        else:
+            updated.append(item)
+    if not replaced:
+        updated.append(
+            TableAssignment(
+                table_id=table_id or "",
+                recipe_id=override.recipe_id,
+                version=override.version,
+                digest=override.digest,
+            )
+        )
+    return updated
+
+
+async def _sandbox_stage(run: Run) -> dict:
+    request = await build_sandbox_request(run)
     result = await _call_sandbox(request)
     if result.status != "succeeded":
         raise SandboxStageError(

@@ -1,0 +1,132 @@
+{
+  "steps": [
+    {
+      "step": "before_run",
+      "run_id": "d8314bf7-4400-458e-81d9-cbf0bc614517",
+      "status": "STRUCTURED_READY",
+      "recipe_version": "1.0.0"
+    },
+    {
+      "step": "feedback_created",
+      "feedback_id": "be88cdf6-478e-4e63-9acf-d827420df4a0",
+      "status": "open"
+    },
+    {
+      "step": "processed",
+      "status": "verified",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.95,
+        "evidence": [
+          "Feedback target measure 'Z' (断面收缩率) is not present in the recipe's bindings.measures dictionary.",
+          "The recipe schema tokens include '断面收缩率', indicating the table structure supports this data, but the recipe binding is missing.",
+          "Other measures like 'A' and 'KU2' are bound but show warnings for missing columns, suggesting the recipe bindings are incomplete relative to the table content."
+        ],
+        "summary": "Add the binding for measure 'Z' (断面收缩率) to the recipe's bindings.measures configuration.",
+        "needs_human": false
+      },
+      "candidate": {
+        "recipe_id": "mechanical_properties_v1",
+        "base_version": "1.0.0",
+        "candidate_version": "1.0.1",
+        "digest": "120fcc777501f05098de1959319efe182845ae2d029fbb7becb0a5717ca3d274",
+        "patch": {
+          "ops": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/Z",
+              "value": {
+                "unit": "%",
+                "family": "tensile"
+              }
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "value": "断面收缩率"
+            }
+          ]
+        }
+      },
+      "verification": {
+        "proposal_id": "be88cdf6-478e-4e63-9acf-d827420df4a0",
+        "before_run": "d8314bf7-4400-458e-81d9-cbf0bc614517",
+        "after_run": "d8314bf7-4400-458e-81d9-cbf0bc614517:candidate:1.0.1",
+        "diff": {
+          "added": [
+            {
+              "record_id": "T1-R1",
+              "measure": "Z",
+              "after": {
+                "column": "断面收缩率 Z/%",
+                "operator": null,
+                "raw": "22",
+                "unit": "%",
+                "value": 22.0
+              }
+            },
+            {
+              "record_id": "T1-R2",
+              "measure": "Z",
+              "after": {
+                "column": "断面收缩率 Z/%",
+                "operator": null,
+                "raw": "25",
+                "unit": "%",
+                "value": 25.0
+              }
+            }
+          ],
+          "removed": [],
+          "changed": []
+        },
+        "regression": {
+          "documents": 1,
+          "field_f1_delta": 1.0,
+          "new_errors": 0
+        },
+        "affected_targets": [
+          {
+            "recipe_id": "mechanical_properties_v1",
+            "measure": "Z",
+            "table_id": "T1"
+          }
+        ],
+        "user_summary": "Target Z: fixed; new errors=0.",
+        "artifacts": [
+          "runs/d8314bf7-4400-458e-81d9-cbf0bc614517/sandbox/1eff335c44b743cb825b95c1bc05434d/result.json",
+          "runs/d8314bf7-4400-458e-81d9-cbf0bc614517/sandbox/1eff335c44b743cb825b95c1bc05434d/records.json",
+          "runs/d8314bf7-4400-458e-81d9-cbf0bc614517/sandbox/1eff335c44b743cb825b95c1bc05434d/evidence.jsonl",
+          "runs/d8314bf7-4400-458e-81d9-cbf0bc614517/sandbox/1eff335c44b743cb825b95c1bc05434d/diagnostics.json",
+          "runs/d8314bf7-4400-458e-81d9-cbf0bc614517/sandbox/1eff335c44b743cb825b95c1bc05434d/metrics.json",
+          "runs/d8314bf7-4400-458e-81d9-cbf0bc614517/sandbox/1eff335c44b743cb825b95c1bc05434d/manifest.json"
+        ],
+        "passed": true
+      }
+    },
+    {
+      "step": "approved",
+      "status": "promoted"
+    },
+    {
+      "step": "after_run",
+      "run_id": "40ee2faa-4d22-4b4d-a8da-455df6ec7d9d",
+      "status": "STRUCTURED_READY",
+      "recipe_version": "1.0.1"
+    },
+    {
+      "step": "reject_processed",
+      "status": "verified"
+    },
+    {
+      "step": "rejected",
+      "status": "discarded"
+    },
+    {
+      "step": "stable_after_discard",
+      "version": "1.0.1"
+    }
+  ],
+  "status": "passed"
+}

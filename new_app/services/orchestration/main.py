@@ -9,6 +9,7 @@ from services.shared.storage import build_store
 from .api import router
 from .config import settings
 from .db import init_db
+from .feedback.api import router as feedback_router
 from .workflow import resume_incomplete_runs, set_store
 
 
@@ -24,3 +25,4 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 app = create_app("orchestration", lifespan=lifespan)
 app.include_router(router)
+app.include_router(feedback_router)

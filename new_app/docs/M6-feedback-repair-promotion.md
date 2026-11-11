@@ -7,7 +7,7 @@
 > 协作角色：外部业务/领域专家（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
 > 前置里程碑：[M4 沙箱](M4-sandbox-runtime.md)、[M5 Agent Runtime](M5-agent-runtime.md)  
-> 当前状态：进行中（前置修复完成，2026-11-11；Feedback/Triage/Repair 主体未开始）
+> 当前状态：已完成（主体 + Compose/K8s E2E 通过，2026-11-11）
 
 ---
 
@@ -89,11 +89,11 @@
 | D6.1 | Feedback 服务/API | `services/orchestration/feedback/` | 代码 | 架构/QA |
 | D6.2 | TriageAgent | `services/agent/agents/triage.py` | 代码 | 算法 |
 | D6.3 | RepairAgent | `services/agent/agents/repair.py` | 代码 | 算法 |
-| D6.4 | 候选版本构建 | `services/recipe_registry/candidate/` | 代码 | 架构 |
-| D6.5 | VerificationPackage | `services/orchestration/verification/` | 代码 | QA |
-| D6.6 | Promotion/Discard | `services/orchestration/promotion/` | 代码 | 架构 |
+| D6.4 | 候选版本构建 | `services/recipe_registry/candidate.py` | 代码 | 架构 |
+| D6.5 | VerificationPackage | `services/orchestration/feedback/service.py` | 代码 | QA |
+| D6.6 | Promotion/Discard | `services/orchestration/feedback/service.py` | 代码 | 架构 |
 | D6.7 | 审计事件 | `run_events`/`promotions` | 数据 | QA |
-| D6.8 | E2E 测试 | `new_app/tests/e2e/feedback_loop/` | 测试 | QA |
+| D6.8 | E2E 测试 | `scripts/dev/m6-feedback-e2e.py` | 脚本/报告 | QA |
 | D6.9 | 运维手册 | `new_app/docs/runbooks/feedback-repair.md` | 文档 | DevOps |
 
 ## 5. 工作分解（WBS）
@@ -198,13 +198,13 @@ POST /v1/feedback/{id}/verify {decision: reject, reason}
 
 ### 8.1 功能
 
-- [ ] 反馈可创建、去重、查询、处理。
-- [ ] Triage 输出根因 + 修复范围 + 证据。
-- [ ] Repair 生成候选包/补丁 + 测试计划。
-- [ ] 沙箱可定向重解析并生成 VerificationPackage。
-- [ ] 用户 approve 后 stable 原子切换。
-- [ ] 用户 reject 后 candidate 丢弃，stable 不变。
-- [ ] 所有步骤有 run_events 审计。
+- [x] 反馈可创建、去重、查询、处理。
+- [x] Triage 输出根因 + 修复范围 + 证据。
+- [x] Repair 生成候选包/补丁 + 测试计划。
+- [x] 沙箱可定向重解析并生成 VerificationPackage。
+- [x] 用户 approve 后 stable 原子切换。
+- [x] 用户 reject 后 candidate 丢弃，stable 不变。
+- [x] 所有步骤有 run_events 审计。
 
 ### 8.2 质量
 
@@ -262,17 +262,60 @@ POST /v1/feedback/{id}/verify {decision: reject, reason}
 - 关闭反馈入口：不影响已有解析。
 - 候选丢弃不影响 stable。
 
-## 12. 关联文档
+## 12. 实施记录（2026-11-11）
+
+### 12.1 代码落点
+
+| 模块 | 路径 |
+|---|---|
+| 反馈契约 | `packages/contracts/src/hanson_contracts/feedback.py` |
+| 数据模型/迁移 | `services/orchestration/models.py`、`migrations/versions/0002_feedback_m6.py` |
+| 反馈服务/API | `services/orchestration/feedback/service.py`、`feedback/api.py` |
+| Triage/Repair Agent | `services/agent/agents/triage.py`、`agents/repair.py`、`prompts/*.v1.txt` |
+| 候选构建 | `services/recipe_registry/candidate.py`、`registry.py`（discard） |
+| 沙箱候选获取 | `services/sandbox/workspace.py`（通过 `RECIPE_REGISTRY_URL` 拉取候选 manifest） |
+| 网关路由 | `services/api_gateway/main.py`（`/v1/feedback`） |
+| E2E | `scripts/dev/m6-feedback-e2e.py` |
+
+### 12.2 验证逻辑
+
+- `process`：调用 agent `/internal/agent:run`（role=triage/repair），Repair 补丁只允许 `/bindings`、`/signature`、`/rules`、`/templates`、`/compatibility`；候选版本 patch 递增并重算 checksum。
+- 沙箱验证：复用原 run 的 OCR 产物，`recipe_override` 指向候选版本；比较 before/after 记录的目标 measure。
+- 通过条件：目标字段新增或变化、无删除、候选运行 `new_errors=0`。
+- 晋升：校验 `verification.passed` 后写 `promotions`、`run_events`，再切换 stable；丢弃：清除 candidate 指针并写审计。
+
+### 12.3 E2E 结果
+
+- 报告：[M6-feedback-e2e.md](reports/M6-feedback-e2e.md)、[M6-feedback-e2e.json](reports/M6-feedback-e2e.json)、[M6-feedback-e2e-k8s.json](reports/M6-feedback-e2e-k8s.json)。
+- 通过路径：`1.0.0 → 1.0.1`，Z 增加 22/25（unit `%`），approve 后新运行使用 `1.0.1`。
+- 拒绝路径：Re 候选 `verified` 后 reject → `discarded`，stable 保持 `1.0.1`。
+- Compose 与 K8s（kind，Kubernetes Job 沙箱）均通过。
+- 单元/契约/集成测试：contract+algorithm+agent 60 passed；sandbox 16 passed。
+
+### 12.4 过程中修复
+
+- E2E fixture 改为 HTML 表格（Markdown 管道表格不在 text OCR 的表格识别范围）。
+- 沙箱引擎单位提取改为“表头优先”；全表仅一个单位时才回退共享 unit 列表，修复 Z 被标为 `HBW` 的问题。
+- RepairAgent 增加 `Re` 默认单位/标签。
+
+### 12.5 已知限制
+
+- registry 候选/通道数据位于容器本地文件系统，重建容器会重置；生产必须挂载持久卷或对象存储。
+- 回归仅覆盖触发反馈的文档（`regression.documents=1`），跨文档回归未纳入本期。
+- 并发晋升未做压力测试；“原子”依赖单实例 registry + 文件锁，多副本部署前需改为数据库/事务存储。
+
+## 13. 关联文档
 
 - [架构重构方案](architecture-refactor-plan.md)
 - [整体开发计划](development-plan.md)
 - 上一里程碑：[M5](M5-agent-runtime.md)
 - 下一里程碑：[M7 前端核心页面](M7-frontend-core-pages.md)
 
-## 13. 变更记录
+## 14. 变更记录
 
 | 版本 | 日期 | 变更 | 变更人 |
 |---|---|---|---|
 | v1.0 | 2026-11-11 | 初版 | 项目负责人 |
 | v1.1 | 2026-11-11 | 补充 Q8 单人角色；引用 Q1/Q2 决策 | 项目负责人 |
 | v1.2 | 2026-11-11 | 状态改为进行中；补前置修复（三地址/低覆盖惩罚）与验证 | 项目负责人 |
+| v1.3 | 2026-11-11 | 主体完成：Feedback/Triage/Repair/候选/验证/晋升与丢弃；补实施记录与 E2E | 项目负责人 |

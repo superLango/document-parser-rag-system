@@ -102,13 +102,11 @@ def _find_column(headers: list[str], aliases: list[str], used: set[int]) -> int 
 
 
 def _extract_unit(header: str, explicit: str | None) -> str:
-    if explicit:
-        return explicit.strip()
     if "/" in header:
         tail = header.rsplit("/", 1)[-1].strip()
         if tail and len(tail) <= 12 and UNIT_RE.match(tail):
             return tail
-    return ""
+    return explicit.strip() if explicit else ""
 
 
 def _parse_value(cell: str, strip_marks: bool) -> dict[str, Any] | None:
@@ -231,7 +229,7 @@ def parse_table(
                 parsed = _parse_value(cell, strip_marks)
                 if parsed is None:
                     continue
-                explicit_unit = units[col] if col < len(units) else None
+                explicit_unit = units[0] if len(units) == 1 else None
                 parsed["unit"] = _extract_unit(headers[col], explicit_unit)
                 parsed["column"] = headers[col]
                 properties[measure] = parsed

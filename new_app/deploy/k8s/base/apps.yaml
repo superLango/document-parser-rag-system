@@ -51,6 +51,8 @@ data:
   REVIEW_URL: http://review:8006
   REVIEW_AGENT_URL: http://agent:8003
   REVIEW_USE_AGENT: "true"
+  AGENT_URL: http://agent:8003
+  FEEDBACK_TIMEOUT_SECONDS: "300"
 ---
 apiVersion: apps/v1
 kind: Deployment

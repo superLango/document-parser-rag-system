@@ -6,6 +6,8 @@ import hashlib
 import json
 import shutil
 import tempfile
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -89,6 +91,32 @@ def _recipe_files(root: Path) -> dict[str, bytes]:
     return files
 
 
+def _fetch_remote_recipe(
+    ref: RecipeRef, settings: Settings
+) -> RecipeManifest | None:
+    """Candidate recipes live in the registry container; fetch by version."""
+    if not settings.recipe_registry_url:
+        return None
+    url = (
+        f"{settings.recipe_registry_url.rstrip('/')}/internal/recipes/"
+        f"{ref.recipe_id}/versions/{ref.version}"
+    )
+    try:
+        with urllib.request.urlopen(url, timeout=5) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+        return None
+    try:
+        manifest = build_package(payload)
+    except RecipePackageError:
+        return None
+    if manifest.entrypoint:
+        # The registry API returns the manifest only; entrypoint files still
+        # come from the local image.
+        return None
+    return manifest
+
+
 def _resolve_recipe(ref: RecipeRef, settings: Settings) -> RecipeBundle:
     try:
         if ref.manifest is not None:
@@ -99,14 +127,19 @@ def _resolve_recipe(ref: RecipeRef, settings: Settings) -> RecipeBundle:
             for path in files:
                 safe_join(Path("/"), path)
         else:
-            root = settings.recipe_data_dir / ref.recipe_id / ref.version
-            if not (root / "manifest.json").exists():
-                raise WorkspaceError(
-                    "SANDBOX_RECIPE_NOT_FOUND",
-                    f"recipe package not found: {ref.recipe_id}@{ref.version}",
-                )
-            manifest = load_package(root)
-            files = _recipe_files(root)
+            remote = _fetch_remote_recipe(ref, settings)
+            if remote is not None:
+                manifest = remote
+                files = {}
+            else:
+                root = settings.recipe_data_dir / ref.recipe_id / ref.version
+                if not (root / "manifest.json").exists():
+                    raise WorkspaceError(
+                        "SANDBOX_RECIPE_NOT_FOUND",
+                        f"recipe package not found: {ref.recipe_id}@{ref.version}",
+                    )
+                manifest = load_package(root)
+                files = _recipe_files(root)
     except RecipePackageError as exc:
         raise WorkspaceError(exc.code, str(exc)) from exc
 

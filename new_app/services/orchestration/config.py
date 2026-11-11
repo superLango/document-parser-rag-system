@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     review_timeout_seconds: float = 300.0
     # 回滚开关：置 true 时 review 阶段回到 M1 的 fake 实现。
     review_use_fake: bool = False
+    agent_url: str = "http://localhost:18003"
+    feedback_timeout_seconds: float = 300.0
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

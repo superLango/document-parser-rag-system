@@ -20,9 +20,9 @@ class CreateRunRequest(BaseModel):
 router = APIRouter(prefix="/v1")
 
 
-async def _request(method: str, path: str, **kwargs) -> Response:
+async def _request(method: str, path: str, timeout: float = 30, **kwargs) -> Response:
     try:
-        async with httpx.AsyncClient(timeout=30) as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.request(method, f"{ORCHESTRATION_URL}{path}", **kwargs)
     except httpx.HTTPError as exc:
         raise HTTPException(status_code=502, detail=f"orchestration unavailable: {exc}") from exc
@@ -115,6 +115,53 @@ async def get_timeline(run_id: str) -> Response:
 @router.get("/runs/{run_id}/artifacts")
 async def get_artifacts(run_id: str) -> Response:
     return await _request("GET", f"/internal/runs/{run_id}/artifacts")
+
+
+@router.post("/feedback", status_code=201)
+async def create_feedback(payload: dict = Body(...)) -> Response:
+    return await _request("POST", "/internal/feedback", json=payload)
+
+
+@router.get("/feedback")
+async def list_feedback(
+    status: str = Query(default=""),
+    document_id: str = Query(default=""),
+    run_id: str = Query(default=""),
+) -> Response:
+    return await _request(
+        "GET",
+        "/internal/feedback",
+        params={"status": status, "document_id": document_id, "run_id": run_id},
+    )
+
+
+@router.get("/feedback/{feedback_id}")
+async def get_feedback(feedback_id: str) -> Response:
+    return await _request("GET", f"/internal/feedback/{feedback_id}")
+
+
+@router.post("/feedback/{feedback_id}/process")
+async def process_feedback(feedback_id: str) -> Response:
+    return await _request(
+        "POST", f"/internal/feedback/{feedback_id}/process", timeout=300
+    )
+
+
+@router.get("/feedback/{feedback_id}/verification")
+async def get_feedback_verification(feedback_id: str) -> Response:
+    return await _request(
+        "GET", f"/internal/feedback/{feedback_id}/verification"
+    )
+
+
+@router.post("/feedback/{feedback_id}/verify")
+async def verify_feedback(feedback_id: str, payload: dict = Body(...)) -> Response:
+    return await _request(
+        "POST",
+        f"/internal/feedback/{feedback_id}/verify",
+        json=payload,
+        timeout=120,
+    )
 
 
 @router.get("/runs/{run_id}/events")

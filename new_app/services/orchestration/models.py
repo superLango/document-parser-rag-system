@@ -154,6 +154,9 @@ class Feedback(Base):
         ForeignKey("documents.id", ondelete="CASCADE"), index=True
     )
     run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    dedupe_key: Mapped[str | None] = mapped_column(
+        String(64), nullable=True, unique=True, index=True
+    )
     category: Mapped[str] = mapped_column(String(64))
     target: Mapped[dict] = mapped_column(JSON, default=dict)
     description: Mapped[str] = mapped_column(Text)
@@ -161,5 +164,30 @@ class Feedback(Base):
     source_quote: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(32), default="open")
     root_cause: Mapped[dict] = mapped_column(JSON, default=dict)
+    messages: Mapped[list] = mapped_column(JSON, default=list)
+    triage: Mapped[dict] = mapped_column(JSON, default=dict)
+    proposal: Mapped[dict] = mapped_column(JSON, default=dict)
+    verification: Mapped[dict] = mapped_column(JSON, default=dict)
+    candidate: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow
+    )
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class Promotion(Base):
+    __tablename__ = "promotions"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
+    feedback_id: Mapped[str] = mapped_column(
+        ForeignKey("feedback.id", ondelete="CASCADE"), index=True
+    )
+    recipe_id: Mapped[str] = mapped_column(String(128))
+    from_version: Mapped[str] = mapped_column(String(32), default="")
+    to_version: Mapped[str] = mapped_column(String(32), default="")
+    channel: Mapped[str] = mapped_column(String(32), default="stable")
+    action: Mapped[str] = mapped_column(String(32), default="promote")
+    actor: Mapped[str] = mapped_column(String(128), default="operator")
+    note: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

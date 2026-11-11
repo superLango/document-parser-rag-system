@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from services.ocr.contracts import TableGrid
 
+from .candidate import CandidateError, build_candidate
 from .matcher import MatchResult, match_table
 from .package import RecipeManifest, RecipePackageError, RecipeRef, build_package
 from .registry import RecipeRegistry, RegistryError
@@ -46,6 +47,18 @@ class DeprecateIn(BaseModel):
     reason: str = ""
 
 
+class CandidateIn(BaseModel):
+    candidate_version: str
+    patch: dict = {}
+    actor: str
+    note: str = ""
+
+
+class DiscardIn(BaseModel):
+    actor: str
+    reason: str = ""
+
+
 class ResolveIn(BaseModel):
     recipe_id: str
     channel: str = "stable"
@@ -70,7 +83,11 @@ class RecipeDetail(BaseModel):
 def _http_error(exc: ValueError, code: str) -> HTTPException:
     if code in {"RECIPE_NOT_FOUND", "RECIPE_NOT_RESOLVED"}:
         status = 404
-    elif code in {"RECIPE_VERSION_IMMUTABLE", "RECIPE_ALREADY_PROMOTED"}:
+    elif code in {
+        "RECIPE_VERSION_IMMUTABLE",
+        "RECIPE_ALREADY_PROMOTED",
+        "CANDIDATE_VERSION_INVALID",
+    }:
         status = 409
     else:
         status = 400
@@ -140,6 +157,52 @@ def get_recipe(recipe_id: str) -> RecipeDetail:
 def get_version(recipe_id: str, version: str) -> RecipeManifest:
     try:
         return get_registry().get(recipe_id, version)
+    except RegistryError as exc:
+        raise _http_error(exc, exc.code) from exc
+
+
+@router.post(
+    "/recipes/{recipe_id}/versions/{base_version}/candidate",
+    response_model=RecipeRef,
+    status_code=201,
+)
+def build_candidate_version(
+    recipe_id: str,
+    base_version: str,
+    payload: CandidateIn,
+) -> RecipeRef:
+    try:
+        return build_candidate(
+            get_registry(),
+            recipe_id,
+            base_version,
+            payload.candidate_version,
+            list((payload.patch or {}).get("ops") or []),
+            actor=payload.actor,
+            note=payload.note,
+        )
+    except CandidateError as exc:
+        raise _http_error(exc, exc.code) from exc
+    except RegistryError as exc:
+        raise _http_error(exc, exc.code) from exc
+
+
+@router.post(
+    "/recipes/{recipe_id}/versions/{version}/discard",
+    response_model=RecipeRef,
+)
+def discard_candidate(
+    recipe_id: str,
+    version: str,
+    payload: DiscardIn,
+) -> RecipeRef:
+    try:
+        return get_registry().discard(
+            recipe_id,
+            version,
+            actor=payload.actor,
+            reason=payload.reason,
+        )
     except RegistryError as exc:
         raise _http_error(exc, exc.code) from exc
 

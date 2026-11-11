@@ -9,7 +9,7 @@ from typing import Any
 
 from hanson_contracts import AgentResult, AgentResumeRequest, AgentTask
 
-from .agents import ReviewAgent, RouterAgent
+from .agents import RepairAgent, ReviewAgent, RouterAgent, TriageAgent
 from .config import Settings
 from .context import ContextManager, build_tokenizer
 from .harness import AgentHarness
@@ -62,6 +62,12 @@ class AgentRuntime:
         self.review = ReviewAgent(
             self.gateway, self.context_manager, self.sessions, self.prompts
         )
+        self.triage = TriageAgent(
+            self.gateway, self.context_manager, self.sessions, self.prompts
+        )
+        self.repair = RepairAgent(
+            self.gateway, self.context_manager, self.sessions, self.prompts
+        )
         self._probe_task: asyncio.Task[None] | None = None
 
     async def start(self) -> None:
@@ -95,6 +101,10 @@ class AgentRuntime:
             return await self.router.run(task)
         if task.role == "review":
             return await self.review.run(task)
+        if task.role == "triage":
+            return await self.triage.run(task)
+        if task.role == "repair":
+            return await self.repair.run(task)
         return await self.harness.run(task)
 
     async def resume(self, request: AgentResumeRequest) -> AgentResult:

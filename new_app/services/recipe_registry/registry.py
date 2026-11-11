@@ -278,6 +278,46 @@ class RecipeRegistry:
             channel=channel,
         )
 
+    def discard(
+        self,
+        recipe_id: str,
+        version: str,
+        *,
+        actor: str,
+        reason: str = "",
+    ) -> RecipeRef:
+        if not actor.strip():
+            raise RegistryError("RECIPE_ACTOR_REQUIRED", "actor is required")
+        manifest = self.get(recipe_id, version)
+        with self._lock:
+            current = self.state["channels"]["candidate"].get(recipe_id)
+            if current != version:
+                raise RegistryError(
+                    "RECIPE_NOT_RESOLVED",
+                    f"{recipe_id}@{version} is not the candidate",
+                )
+            del self.state["channels"]["candidate"][recipe_id]
+            self.state["history"].append(
+                {
+                    "kind": "discard",
+                    "recipe_id": recipe_id,
+                    "channel": "candidate",
+                    "from_version": version,
+                    "to_version": "",
+                    "digest": manifest.checksum,
+                    "actor": actor,
+                    "note": reason,
+                    "at": _now(),
+                }
+            )
+            self._save()
+        return RecipeRef(
+            recipe_id=recipe_id,
+            version=version,
+            digest=manifest.checksum,
+            channel=None,
+        )
+
     def deprecate(
         self,
         recipe_id: str,
