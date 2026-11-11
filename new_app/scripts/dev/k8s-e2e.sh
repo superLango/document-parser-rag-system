@@ -6,6 +6,7 @@ CLUSTER_NAME="${CLUSTER_NAME:-hanson}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+FIXTURE="${1:-${REPO_ROOT}/README.md}"
 
 export PATH="$PATH:$HOME/.local/bin"
 
@@ -16,7 +17,7 @@ echo "gateway: $GATEWAY"
 
 echo "[1/4] 上传文档"
 doc_json="$(curl -fsS -X POST "$GATEWAY/v1/documents" \
-  -F "file=@${REPO_ROOT}/README.md;type=text/markdown")"
+  -F "file=@${FIXTURE};type=text/markdown")"
 doc_id="$(printf '%s' "$doc_json" | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')"
 echo "  document_id=$doc_id"
 

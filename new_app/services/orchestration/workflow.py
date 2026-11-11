@@ -316,6 +316,55 @@ async def _fake_route(_: Run) -> dict:
     }
 
 
+async def _route_stage(run: Run) -> dict:
+    async with SessionLocal() as session:
+        result = await session.execute(
+            select(Artifact)
+            .where(Artifact.run_id == run.id, Artifact.role == "ocr")
+            .order_by(Artifact.created_at.desc())
+        )
+        artifact = result.scalars().first()
+    if artifact is None:
+        raise RuntimeError(f"ocr artifact missing for run {run.id}")
+
+    data = json.loads(await get_store().get_bytes(artifact.storage_key))
+    tables = data.get("tables") or []
+    assignments = []
+    for table in tables:
+        match = await _match_table(table)
+        assignments.append(
+            {
+                "table_id": table.get("table_id"),
+                "page_no": table.get("page_no"),
+                "recipe_id": match.get("recipe_id"),
+                "version": match.get("version"),
+                "status": match.get("status"),
+                "score": match.get("score"),
+                "confidence": match.get("score"),
+            }
+        )
+    confidence = max((item.get("score") or 0.0 for item in assignments), default=0.0)
+    return {
+        "assignments": assignments,
+        "fallback": "generic",
+        "confidence": round(confidence, 4),
+    }
+
+
+async def _match_table(table: dict) -> dict:
+    url = f"{settings.recipe_registry_url.rstrip('/')}/internal/recipes/match"
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.post(url, json={"table": table})
+    except httpx.HTTPError as exc:
+        raise RuntimeError(f"recipe registry unavailable: {exc}") from exc
+    if response.status_code != 200:
+        raise RuntimeError(
+            f"recipe registry error {response.status_code}: {response.text[:300]}"
+        )
+    return response.json()["result"]
+
+
 async def _fake_sandbox(_: Run) -> dict:
     return {
         "records": [
@@ -427,7 +476,7 @@ async def run_workflow(run_id: str) -> None:
             RunState.ROUTING,
             RunState.ROUTED,
             "routing",
-            _fake_route,
+            _fake_route if settings.route_use_fake else _route_stage,
         )
         await _execute_stage(
             run_id,

@@ -1,0 +1,52 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "classification_v1",
+  "version": "1.0.0",
+  "engine_api": "recipe-engine/1",
+  "profile": "classification",
+  "signature": {
+    "profile": "classification",
+    "orientation": "grade_rows",
+    "n_cols": 6,
+    "blocks": 0,
+    "tokens": [
+      "牌号",
+      "类别",
+      "状态",
+      "级别",
+      "新牌号",
+      "旧牌号",
+      "统一数字代号",
+      "说明",
+      "序号"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "类别"
+    ],
+    "conditions": [
+      "状态",
+      "级别"
+    ],
+    "measures": {}
+  },
+  "rules": {
+    "extract_mode": "nonrecord",
+    "item_type": "classification"
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": "material_master_v1"
+  },
+  "checksum": "fab9e20dc671d1ce03f123795cb675f7b4562d12e92d55094910a975a08d930a",
+  "created_at": "2026-11-11T13:47:54+00:00"
+}

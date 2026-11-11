@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "chemical_element_rows_v1",
+  "version": "1.0.0",
+  "engine_api": "recipe-engine/1",
+  "profile": "chemical_composition",
+  "signature": {
+    "profile": "chemical_composition",
+    "orientation": "element_rows",
+    "n_cols": 5,
+    "blocks": 1,
+    "tokens": [
+      "元素",
+      "牌号",
+      "化学成分"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "元素"
+    ],
+    "conditions": [
+      "牌号",
+      "级别"
+    ],
+    "measures": {
+      "C": {
+        "unit": "%",
+        "family": "chemical_composition"
+      }
+    }
+  },
+  "rules": {
+    "transposed": true,
+    "strip_footnote_marks": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": null
+  },
+  "checksum": "52f6569be075728a86a7517d79a01d3a17c0e78b1d2c2e3c0662c94b9a245b67",
+  "created_at": "2026-11-11T13:47:54+00:00"
+}

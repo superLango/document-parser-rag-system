@@ -1,0 +1,95 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "mechanical_properties_v1",
+  "version": "1.0.0",
+  "engine_api": "recipe-engine/1",
+  "profile": "mechanical_properties",
+  "signature": {
+    "profile": "mechanical_properties",
+    "orientation": "grade_rows",
+    "n_cols": 9,
+    "blocks": 0,
+    "tokens": [
+      "牌号",
+      "级别",
+      "规格",
+      "公称直径",
+      "热处理制度",
+      "热处理状态",
+      "取样方向",
+      "力学性能",
+      "室温力学性能",
+      "室温拉伸",
+      "瞬时拉伸性能",
+      "rm",
+      "rp0.2",
+      "σb",
+      "σ0.2",
+      "δs",
+      "断后伸长率",
+      "断面收缩率",
+      "冲击",
+      "冲击吸收能量",
+      "ku2",
+      "kv2",
+      "ku5",
+      "硬度",
+      "布氏硬度",
+      "hb",
+      "持久",
+      "时间",
+      "e",
+      "gpa"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号"
+    ],
+    "conditions": [
+      "规格",
+      "方向",
+      "试验温度",
+      "状态"
+    ],
+    "measures": {
+      "Rm": {
+        "unit": "MPa",
+        "family": "tensile"
+      },
+      "Rp0.2": {
+        "unit": "MPa",
+        "family": "tensile"
+      },
+      "A": {
+        "unit": "%",
+        "family": "tensile"
+      },
+      "KU2": {
+        "unit": "J",
+        "family": "impact"
+      },
+      "持久时间": {
+        "unit": "h",
+        "family": "stress_rupture"
+      }
+    }
+  },
+  "rules": {
+    "inherit_group_units": true,
+    "strip_footnote_marks": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": "material_master_v1"
+  },
+  "checksum": "43e3466ec58d9387f2bbabe7358d16d0afc0231b732e23d47dfaa4072c1bdc9b",
+  "created_at": "2026-11-11T13:47:54+00:00"
+}

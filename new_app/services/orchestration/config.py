@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     ocr_timeout_seconds: float = 300.0
     # 回滚开关：置 true 时 OCR 阶段回到 M1 的 fake 实现。
     ocr_use_fake: bool = False
+    recipe_registry_url: str = "http://localhost:18005"
+    # 回滚开关：置 true 时路由阶段回到 M1 的 fake 实现。
+    route_use_fake: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

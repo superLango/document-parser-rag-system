@@ -34,6 +34,8 @@ x-app: &app
     GLM_OCR_TIMEOUT_SECONDS: ${GLM_OCR_TIMEOUT_SECONDS:-180}
     LAYOUT_BASE_URL: ${LAYOUT_BASE_URL:-http://192.168.1.35:9978}
     LAYOUT_TIMEOUT_SECONDS: ${LAYOUT_TIMEOUT_SECONDS:-60}
+    RECIPE_REGISTRY_URL: ${RECIPE_REGISTRY_URL:-http://recipe-registry:8005}
+    ROUTE_USE_FAKE: ${ROUTE_USE_FAKE:-false}
   depends_on:
     postgres:
       condition: service_healthy

@@ -22,6 +22,12 @@ extracted_json.zip
 汉唐标准/
 标准文件/
 
+# Service data that ships with the code
+!new_app/services/ocr/data/
+!new_app/services/ocr/data/**
+!new_app/services/recipe_registry/data/
+!new_app/services/recipe_registry/data/**
+
 # New app local state
 new_app/.venv/
 new_app/**/__pycache__/

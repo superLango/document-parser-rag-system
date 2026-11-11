@@ -1,13 +1,13 @@
 # M3 里程碑详细执行计划：配方/模板注册中心
 
-> 文档版本：v1.0  
+> 文档版本：v1.2  
 > 编制日期：2026-11-11  
 > 计划周期：2026-12-17 ~ 2026-12-30  
 > 主责角色：项目负责人（兼后端/配方）  
 > 协作角色：外部业务/领域专家（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
 > 前置里程碑：[M0](M0-project-scaffold.md)、[M1](M1-core-domain-orchestration.md)  
-> 当前状态：计划中（未开工）
+> 当前状态：已完成（2026-11-11；7 配方 + 1 模板迁移，路由一致率 100%）
 
 ---
 
@@ -237,3 +237,56 @@ class RecipeRegistryPort(Protocol):
 |---|---|---|---|
 | v1.0 | 2026-11-11 | 初版 | 项目负责人 |
 | v1.1 | 2026-11-11 | 补充 Q4 词典/数据策略引用、Q8 单人角色 | 项目负责人 |
+| v1.2 | 2026-11-11 | M3 完成：配方包、注册中心、matcher、旧数据迁移、编排集成与路由一致率报告 | 项目负责人 |
+
+---
+
+## 14. 执行记录（2026-11-11）
+
+### 14.1 已完成
+
+| 项 | 结果 |
+|---|---|
+| 包模型 | `package.py`：manifest 校验（recipe_id/version/engine_api/profile）、digest（sha256）、同版本不可变 |
+| 注册中心 | `registry.py`：publish/get/resolve/promote/rollback/deprecate/list，通道指针 + history，tmp+replace 原子写 |
+| 匹配器 | `matcher.py`：复刻旧 `signature_score` 与 0.9/0.6 阈值 |
+| 数据迁移 | 7 个旧配方 → `data/recipes/<id>/1.0.0/`；1 个模板 → `data/templates/product_full/1.0.0/` |
+| API | `api.py`：发布、列表、详情、resolve、promote、rollback、deprecate、match |
+| 编排集成 | routing 阶段读取 OCR 产物表格并调用 `/internal/recipes/match`；`ROUTE_USE_FAKE` 可回退 |
+| 契约测试 | `tests/contract/recipes/`：包校验、注册中心、matcher，共 18 个用例 |
+| 对比脚本 | `scripts/benchmark/route_parity.py`；报告见 [M3-route-parity](reports/M3-route-parity.md) |
+| 文档 | `services/recipe_registry/README.md`、`PROVENANCE.md` 已更新 |
+
+### 14.2 验证证据
+
+| 验证 | 结果 |
+|---|---|
+| Compose API | `GET /internal/recipes` 返回 7 个配方，全部 `stable@1.0.0` |
+| resolve | `mechanical_properties_v1` → `1.0.0` + digest `43e3466e…` |
+| matcher | 3×3 力学表 → `hardness_v1` `candidate` `0.8` |
+| K8s 端到端 | fixture 上传 → `STRUCTURED_READY`；routing artifact `assignments` 1/1，`hardness_v1@1.0.0` `0.75` |
+| 路由一致率 | 5 个金标表：配方 1.0000、状态 1.0000、分数逐例相同 |
+| 契约测试 | 18 passed |
+| Ruff | 通过 |
+
+### 14.3 验收对照
+
+| 验收项 | 结果 |
+|---|---|
+| 包 publish/get/list | 通过 |
+| stable/candidate/shadow/deprecated 通道 | 通过 |
+| resolve 返回 version + digest | 通过 |
+| promote 原子切换、rollback 可回退 | 通过（单测） |
+| 旧配方迁移 100% | 7/7 |
+| 模板迁移 100% | 1/1 |
+| 编排路由使用新 matcher | 通过（K8s artifact 证据） |
+| 路由一致率 ≥ 99% | 100% |
+| 不兼容组合被拒绝 | 通过（engine_api / checksum / id / version） |
+| 版本不可变 | 通过（同版本不同内容返回 409） |
+| 契约测试 100% | 18 passed |
+
+### 14.4 说明
+
+- 旧生命周期 L0–L5 由 `stable/candidate/shadow/deprecated` 通道模型替代；旧 `registry.json` 为空，无状态需要保留。
+- 匹配结果多为 `candidate`，因为金标表列数与 token 少于正式标准表；与旧算法逐位一致，未新增偏差。
+- RouterAgent 的歧义消解与 LLM 兜底留给 M5。
