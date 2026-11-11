@@ -97,7 +97,8 @@ new_app/docs/
 
 > 时间节点为计划基线，节假日、资源变化、评审结论可能导致顺延；任何调整必须走“变更记录”。  
 > **人力约束**：当前项目仅 1 人，原多角色并行假设不成立。实际执行按 M0→M1→M2→M3→M4→M5→M6→M7→M8 串行推进；M0 启动时必须重新基线时间表并发布 v1.2。上表日期在此之前仅作为目标参考。  
-> **M0 进展（2026-11-11）**：`new_app` 脚手架已落地，旧代码已归档到 `legacy/`；WSL Docker Compose 七服务与 MinIO/Postgres/Redis 已实测通过；待 WSL K8s 与远端 CI 验证后验收。详见 [M0 执行记录](M0-project-scaffold.md#13-执行记录2026-11-11)。
+> **M0 进展（2026-11-11）**：`new_app` 脚手架已落地，旧代码已归档到 `legacy/`；WSL Docker Compose 七服务与 MinIO/Postgres/Redis 已实测通过；待 WSL K8s 与远端 CI 验证后验收。详见 [M0 执行记录](M0-project-scaffold.md#13-执行记录2026-11-11)。  
+> **M1 进展（2026-11-11）**：核心领域模型、状态机、fake OCR/路由/沙箱/审核、文档/运行/结果/时间线/SSE 已跑通；已验证断点恢复与取消；待补 Alembic 基线后收口。详见 [M1 执行记录](M1-core-domain-orchestration.md#13-执行记录2026-11-11)。
 
 ### 3.2 里程碑状态定义
 

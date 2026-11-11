@@ -1,13 +1,13 @@
 # M1 里程碑详细执行计划：核心领域与编排骨架
 
-> 文档版本：v1.0  
+> 文档版本：v1.2  
 > 编制日期：2026-11-11  
 > 计划周期：2026-11-19 ~ 2026-12-02  
 > 主责角色：项目负责人（兼后端/架构/测试）  
 > 协作角色：外部无（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
 > 前置里程碑：[M0 项目启动与脚手架](M0-project-scaffold.md)  
-> 当前状态：计划中（未开工）
+> 当前状态：进行中（主链路已跑通，待收口）
 
 ---
 
@@ -211,3 +211,46 @@ artifact.created
 |---|---|---|---|
 | v1.0 | 2026-11-11 | 初版 | 项目负责人 |
 | v1.1 | 2026-11-11 | 补充 Q7 `/v1`、Q8 单人角色 | 项目负责人 |
+| v1.2 | 2026-11-11 | 记录 M1 主链路执行结果与待收口项 | 项目负责人 |
+
+---
+
+## 13. 执行记录（2026-11-11）
+
+### 13.1 已完成
+
+| 项 | 结果 |
+|---|---|
+| 领域模型 | `documents/document_versions/runs/run_stages/run_events/artifacts/review_reports/findings/feedback` 已建表 |
+| 编排状态机 | `RECEIVED → OCR_RUNNING → OCR_DONE → ROUTING → ROUTED → SANDBOX_RUNNING → PARSED → REVIEWING → REVIEW_PASSED → STRUCTURED_READY` |
+| Fake 适配 | fake OCR、fake routing、fake sandbox、fake review |
+| 检查点/恢复 | 阶段记录 + 事件；服务重启后 `resume_incomplete_runs` 跳过已完成阶段继续执行 |
+| 取消 | `POST /v1/runs/{id}/cancel` 可终止运行 |
+| 网关 | 文档上传/列表/详情/删除、run 创建/查询/取消、结果、时间线、事件、SSE |
+| 对象存储 | MinIO S3 接口 + 本地文件降级 |
+| 测试 | 9 passed（健康检查、状态机、存储、安全路径） |
+
+### 13.2 实测证据
+
+| 验证 | 结果 |
+|---|---|
+| 上传文档 | `README.md` 上传成功，返回 document_id 与 sha256 |
+| 上传幂等 | 重复上传返回同一 document_id |
+| 创建 run | 成功进入 `RECEIVED` |
+| 主链路 | 自动流转到 `STRUCTURED_READY` |
+| 结果 | `result.json` 返回 1 条记录 `Q355B / Rm=470 MPa` |
+| 时间线 | `ocr/routing/sandbox/review` 四个阶段均 `completed` |
+| 事件 | 9 条事件（8 条阶段事件 + `run.completed`） |
+| SSE | 实时收到阶段事件与 `event: done` |
+| 断点恢复 | 运行中重启编排，重启后继续并完成；修复了 `RUNNING → RUNNING` 重入问题 |
+| 取消 | 运行中取消，状态变为 `CANCELLED` |
+
+### 13.3 待收口（M1 验收前）
+
+- [ ] 数据库迁移：当前用 `create_all` 做开发期建表，需补 Alembic 基线并在 Compose/生产使用 `alembic upgrade head`。
+- [ ] M1 前端联调：当前仅 API 可用，前端页面在 M7 重建。
+- [ ] 真实 OCR/沙箱/审核：M2/M4/M5 接入，M1 使用 fake。
+- [ ] 运行失败后的重试策略：当前标记 `FAILED`，未实现自动重试。
+- [ ] 文档删除与 run 外键的级联策略：当前有 run 的文档禁止删除。
+
+> 实测使用 WSL Docker Compose；服务端口 `18000–18006`，Postgres `15432`，MinIO `19000/19001`，Redis `16379`。
