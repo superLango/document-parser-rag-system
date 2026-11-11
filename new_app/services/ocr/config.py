@@ -11,6 +11,8 @@ class OcrSettings(BaseSettings):
     glm_ocr_base_url: str = ""
     glm_ocr_model: str = ""
     glm_ocr_timeout_seconds: float = 180.0
+    layout_base_url: str = ""
+    layout_timeout_seconds: float = 60.0
     table_repairs_path: str = ""
 
     object_storage_endpoint: str = "http://localhost:19000"

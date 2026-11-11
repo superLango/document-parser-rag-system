@@ -43,7 +43,25 @@ nohup venv/bin/vllm serve models/glm-ocr/GLM-OCR \
   > ../hansonDoc_RAG/logs/vllm_glm_ocr_9977.log 2>&1 &
 ```
 
-## 3. 停止
+## 3. 版面服务（9978）
+
+| 项 | 值 |
+|---|---|
+| 代码 | `/home/grainuser/metal-doc-agent-runtime/layout_api.py` |
+| 启动脚本 | `/home/grainuser/metal-doc-agent-runtime/start_layout_api.sh` |
+| 权重 | `/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3`（PP-DocLayoutV3） |
+| 端口 | `9978` |
+
+```bash
+cd /home/grainuser/metal-doc-agent-runtime
+bash start_layout_api.sh --detach
+bash start_layout_api.sh --check
+curl -s http://127.0.0.1:9978/health
+```
+
+`/health` 返回 `model_loaded=true` 即就绪。新架构通过 `LAYOUT_BASE_URL=http://192.168.1.35:9978` 调用 `/v1/layout`，请求体为 `page_index/width/height/dpi/image_base64`。
+
+## 4. 停止
 
 ```bash
 kill $(cat /home/grainuser/hansonDoc_RAG/logs/glm_ocr_9977.pid)

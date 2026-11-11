@@ -41,6 +41,14 @@
 配置项：`OCR_BACKEND`、`OCR_DPI`、`GLM_OCR_BASE_URL`、`GLM_OCR_MODEL`、`GLM_OCR_TIMEOUT_SECONDS`。
 GLM 未配置时 `auto` 不会选它；显式指定 `glm` 而未配置会返回 `OCR_BACKEND_UNAVAILABLE`。
 
+## 版面
+
+配置 `LAYOUT_BASE_URL`（默认 `http://192.168.1.35:9978`）后，每页页图会送 PP-DocLayoutV3 `/v1/layout`：
+
+- 返回块写入 `OcrResult.layout`（含 `page_no`、`type`、归一化 `bbox`）与 `layout/{n}.json`。
+- 版面服务不可达或返回异常时只追加 warning，不影响 OCR 与表格解析。
+- 仅对产生页图的 backend（`pdf`/`glm`）生效；`text` 无页图，跳过版面。
+
 ## 错误码
 
 | code | 场景 |
@@ -50,6 +58,8 @@ GLM 未配置时 `auto` 不会选它；显式指定 `glm` 而未配置会返回 
 | `OCR_PDF_INVALID` | PDF 无法打开 |
 | `OCR_EMPTY_DOCUMENT` | PDF 无页面 |
 | `OCR_UNKNOWN_BACKEND` | 未知 backend |
+| `OCR_LAYOUT_UNAVAILABLE` | 版面服务不可达 |
+| `OCR_LAYOUT_ERROR` | 版面服务返回异常 |
 
 ## 产物
 
@@ -59,6 +69,8 @@ GLM 未配置时 `auto` 不会选它；显式指定 `glm` 而未配置会返回 
 | `ocr/{doc}/markdown.md` | 合并后的 markdown |
 | `ocr/{doc}/pages.json` | 页元数据 |
 | `ocr/{doc}/tables.json` | `TableGrid` 列表 |
+| `ocr/{doc}/layout/{n}.json` | 单页版面块（PP-DocLayoutV3 原始响应） |
+| `ocr/{doc}/layout.json` | 全部页面合并的版面块 |
 | `ocr/{doc}/ocr.json` | 完整 `OcrResult` |
 
 所有产物记录 sha256 与字节数。
@@ -94,10 +106,12 @@ GLM 未配置时 `auto` 不会选它；显式指定 `glm` 而未配置会返回 
 cd new_app
 python -m pytest tests/algorithm -q
 python scripts/benchmark/table_benchmark.py
+python scripts/benchmark/table_gold_eval.py
 ```
 
 ## 已知限制
 
 - GLM-OCR 已在 `192.168.1.35:9977` 启动并联调通过；启动、停止与排障见 `docs/model-server-glm-ocr.md`。
+- 版面依赖同一台机器的 9978 服务；不可用时仅告警，网格与表型仍可产出。
 - PDF 原生路径依赖 PyMuPDF 的表格识别，复杂合并表以 OCR 返回的 HTML 为主。
 - 跨页合并与表型规则直接沿用旧启发式，需要金标语料继续回归。

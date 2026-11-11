@@ -1,0 +1,23 @@
+{
+  "case": "inspection-items",
+  "source": "inspection-items.md",
+  "expect": [
+    {
+      "profile": "inspection",
+      "orientation": "grade_rows",
+      "n_cols": 5,
+      "header_rows": 1,
+      "header_paths": [
+        ["序号"],
+        ["检验项目"],
+        ["取样数量"],
+        ["取样部位"],
+        ["试验方法"]
+      ],
+      "data_rows": [
+        ["1", "化学成分", "每批1份", "成品", "GB/T 223"],
+        ["2", "拉伸试验", "每批1件", "成品", "GB/T 228.1"]
+      ]
+    }
+  ]
+}

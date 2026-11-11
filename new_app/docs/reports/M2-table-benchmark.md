@@ -1,70 +1,85 @@
 # M2 表格算法基准报告
 
-> 版本：v1.0  
+> 版本：v1.1  
 > 日期：2026-11-11  
-> 状态：初版（本地 fixture；金标语料与旧基线对比待补）
+> 状态：已完成（5 个金标样本，新算法与旧算法持平）
 
 ## 1. 范围
 
-覆盖 `services/ocr/algorithms/` 的表格结构链路：
+覆盖 `services/ocr/algorithms/` 的表格结构与表型链路：
 
 ```text
 markdown/HTML -> extract_tables -> parse_table -> TableGrid -> profile -> repairs
 ```
 
-不含矩阵抽取、条款抽取与 Schema 投影（M3/M5）。
+不含记录绑定、矩阵/条款抽取与 Schema 投影（M3/M5）。
 
 ## 2. 环境
 
 | 项 | 值 |
 |---|---|
-| OS | Windows 11 + WSL2（算法在 Windows Python 运行） |
+| OS | Windows 11（算法基准） |
 | Python | 3.13 |
 | lxml | 6.1.3 |
-| 运行方式 | `python scripts/benchmark/table_benchmark.py` |
+| 旧算法 | `legacy/metal-doc-agent`，隔离 `sys.path` 导入，不进入产品代码 |
+| 命令 | `python scripts/benchmark/table_gold_eval.py` |
 
-## 3. 语料
+## 3. 金标语料
 
-| fixture | 表格数 | 说明 |
-|---|---|---|
-| `tests/fixtures/ocr/mechanical.md` | 1 | 3 列力学性能表（牌号 / Rm / A） |
+`new_app/tests/golden/table/`：
 
-> 当前仅有本地构造样本；真实国标 PDF 金标语料尚未纳入。
-
-## 4. 结果
-
-`repeats = 50`：
-
-| 指标 | 值 | 门槛 | 结论 |
+| case | 来源 | 表格 | 覆盖点 |
 |---|---|---|---|
-| 平均解析延迟 | 1.45 ms | ≤ 旧基线 1.2× | 旧基线未测，待补 |
-| p95 延迟 | 1.91 ms | — | 记录 |
-| 确定性 | True（50 次输出哈希一致） | 必须一致 | 通过 |
-| 表格识别 | 1/1 | 全部识别 | 通过 |
+| `mechanical-basic` | 构造 | 3×3 力学性能 | 基础表头、单位 |
+| `chemical-elements` | 构造 | 3×8 化学成分 | 元素列识别、化学表型 |
+| `merged-header` | 构造 | 2 行表头 | rowspan + colspan |
+| `inspection-items` | 构造 | 3×5 检验项目 | 检验表型、序号列 |
+| `qdu-p5-mechanical` | 真实扫描件 + GLM-OCR | 8 列、2 行表头、3 条性能数据 | 真实 OCR 输出、rowspan 数据格、尾部 colspan 正文噪声 |
 
-输出结构：
+金标只声明结构字段（profile / orientation / n_cols / header_rows / header_paths / data_rows），避免与值抽取语义耦合。
 
-| fixture | table | profile | rows | cols | header_rows |
-|---|---|---|---|---|---|
-| mechanical.md | T1 | mechanical_properties | 3 | 3 | 1 |
+## 4. 指标定义
 
-## 5. 旧基线对比
+| 指标 | 定义 |
+|---|---|
+| profile | 第一张表的表型与金标一致 |
+| orientation | 方向（grade_rows / element_rows）一致 |
+| cols | 列数一致 |
+| header_rows | 表头行数一致 |
+| header_path | 逐列表头路径完全匹配的比例 |
+| cell | 金标 data_rows 范围内逐单元格文本匹配率 |
 
-旧管线（`legacy/metal-doc-agent`）依赖 `pipeline`、`settings` 与外部 OCR 模型，当前开发网络无法直接运行，因此尚未产出旧基线指标。
+## 5. 结果（5 个样本，宏平均）
 
-回退条件（Field/Record F1 下降、延迟超过 1.2× 等）暂不触发；待模型服务器与环境恢复后补测，再决定是否回退到纯复制重构版本。
+| 指标 | 新算法 | 旧算法 | 门槛 | 结论 |
+|---|---|---|---|---|
+| profile | 1.0000 | 1.0000 | ≥ 旧基线 | 通过 |
+| orientation | 1.0000 | 1.0000 | ≥ 旧基线 | 通过 |
+| cols | 1.0000 | 1.0000 | ≥ 旧基线 | 通过 |
+| header_rows | 1.0000 | 1.0000 | ≥ 旧基线 | 通过 |
+| header_path | 1.0000 | 1.0000 | ≥ 旧基线 | 通过 |
+| cell | 1.0000 | 1.0000 | ≥ 旧基线 | 通过 |
+| 平均延迟 | 4.11 ms | 4.43 ms | ≤ 旧基线 1.2× | 通过 |
 
-## 6. 失败样本
+逐样本结果见脚本输出；5 个样本新旧算法指标完全一致。
 
-暂无。
+## 6. 关于旧抽取层指标
 
-已知风险：
+legacy 文档记录的 20 份金标抽取值：
 
-- PDF 原生路径依赖 PyMuPDF 表格识别，复杂合并表可能漏列；真实 PDF 需以 GLM 返回的 HTML 为主。
-- 跨页续表的编号/表头相似度阈值沿用旧启发式，未在新语料上重新校准。
+- Record F1 `0.8771`、Field F1 `0.8156`、Value `0.9134`、Evidence `1.0`、Coverage `0.9625`
+- 来源：`legacy/docs/extraction-accuracy-latency-2026-10-30.md`
 
-## 7. 结论与后续
+这些是 **OCR + 表格结构 + 记录绑定 + Qwen 抽取** 的端到端指标，包含本阶段不实现的记录绑定与模型抽取，因此不能与 M2 的结构指标直接比较，也不作为 M2 门槛。M3/M5 完成记录绑定后，再按同一口径复测。
 
-1. 表格结构、表型识别与数据驱动修复链路可用，确定性满足要求。
-2. 需补充真实金标表格（目标 ≥20 张，覆盖化学/力学/检验/尺寸/admin）与旧基线指标。
-3. 需在模型服务器恢复后完成 GLM 适配器联调与真实 PDF 抽样对比。
+## 7. 结论
+
+1. 表格结构、表型识别与修复链路在 5 个金标样本上与旧算法完全持平，延迟略优。
+2. 真实扫描件（Q-Du 第 5 页）经 GLM-OCR 后，新算法正确还原 8 列、2 行表头与 3 条性能记录。
+3. M2 回退条件（Field/Record 下降 >0.01、延迟 >1.2×）未触发，不需要回退到纯复制版本。
+
+## 8. 后续
+
+- 扩充金标语料至 20+ 表，覆盖分类表、尺寸偏差表、跨页续表。
+- M3/M5 完成后按抽取层口径复测 Record/Field F1。
+- 对 GLM 输出中的尾部 `colspan` 正文噪声，M3 在表格边界识别中处理。

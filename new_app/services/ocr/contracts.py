@@ -66,6 +66,7 @@ class TableGrid(BaseModel):
 
 class LayoutBlock(BaseModel):
     block_id: str
+    page_no: int = 0
     type: str
     bbox: list[float] = Field(default_factory=list)
     text: str = ""

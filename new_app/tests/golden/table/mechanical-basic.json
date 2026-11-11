@@ -1,0 +1,21 @@
+{
+  "case": "mechanical-basic",
+  "source": "mechanical-basic.md",
+  "expect": [
+    {
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "n_cols": 3,
+      "header_rows": 1,
+      "header_paths": [
+        ["牌号"],
+        ["抗拉强度 Rm/MPa"],
+        ["断后伸长率 A/%"]
+      ],
+      "data_rows": [
+        ["Q355B", "470", "22"],
+        ["Q235B", "400", "26"]
+      ]
+    }
+  ]
+}

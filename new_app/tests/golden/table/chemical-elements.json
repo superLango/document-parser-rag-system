@@ -1,0 +1,26 @@
+{
+  "case": "chemical-elements",
+  "source": "chemical-elements.md",
+  "expect": [
+    {
+      "profile": "chemical_composition",
+      "orientation": "grade_rows",
+      "n_cols": 8,
+      "header_rows": 1,
+      "header_paths": [
+        ["牌号"],
+        ["C"],
+        ["Si"],
+        ["Mn"],
+        ["P"],
+        ["S"],
+        ["Cr"],
+        ["Ni"]
+      ],
+      "data_rows": [
+        ["06Cr19Ni10", "0.08", "1.00", "2.00", "0.045", "0.030", "18.0~20.0", "8.0~10.5"],
+        ["022Cr19Ni10", "0.030", "1.00", "2.00", "0.045", "0.030", "18.0~20.0", "8.0~12.0"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "case": "merged-header",
+  "source": "merged-header.md",
+  "expect": [
+    {
+      "profile": "mechanical_properties",
+      "orientation": "grade_rows",
+      "n_cols": 3,
+      "header_rows": 2,
+      "header_paths": [
+        ["牌号"],
+        ["力学性能", "Rm/MPa"],
+        ["力学性能", "A/%"]
+      ],
+      "data_rows": [
+        ["Q355B", "470", "22"]
+      ]
+    }
+  ]
+}

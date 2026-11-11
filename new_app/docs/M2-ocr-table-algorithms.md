@@ -7,7 +7,7 @@
 > 协作角色：外部模型服务器管理员（按需）、业务/领域专家（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
 > 前置里程碑：[M0](M0-project-scaffold.md)、[M1](M1-core-domain-orchestration.md)  
-> 当前状态：进行中（核心链路已落地；金标语料与 GLM 联调待补）
+> 当前状态：已完成（2026-11-11；核心链路、Layout、金标与基线全部收口）
 
 ---
 
@@ -251,6 +251,7 @@ class TableGrid(BaseModel):
 | v1.0 | 2026-11-11 | 初版 | 项目负责人 |
 | v1.1 | 2026-11-11 | 补充 Q1 模型服务器/版本、Q8 单人角色 | 项目负责人 |
 | v1.2 | 2026-11-11 | 记录 M2 执行结果：OCR 适配器、TableGrid 算法、表型与修复规则、编排集成 | 项目负责人 |
+| v1.3 | 2026-11-11 | M2 收尾：Layout blocks、5 个金标样本、新旧基线对比；阶段状态改为已完成 | 项目负责人 |
 
 ---
 
@@ -269,6 +270,9 @@ class TableGrid(BaseModel):
 | 错误码 | `OCR_BACKEND_UNAVAILABLE`/`OCR_BACKEND_ERROR`/`OCR_PDF_INVALID`/`OCR_EMPTY_DOCUMENT`/`OCR_UNKNOWN_BACKEND` |
 | 编排集成 | OCR 阶段调用真实服务；`OCR_USE_FAKE=true` 可回退 M1 fake |
 | 共享存储 | `services/shared/storage.py` 供 orchestration 与 ocr 共用 |
+| 版面适配 | `adapters/layout.py` 调用 PP-DocLayoutV3（9978），产物 `ocr/{doc}/layout/{n}.json`；失败降级为 warning |
+| 金标语料 | `tests/golden/table/` 5 个样本（含真实扫描件 GLM 输出）与结构金标 |
+| 基线评测 | `scripts/benchmark/table_gold_eval.py`：新旧算法同口径对比 |
 | 测试 | `tests/algorithm/table/test_table_grid.py` 5 个用例 |
 | 基准 | `scripts/benchmark/table_benchmark.py`；报告见 [M2-table-benchmark](reports/M2-table-benchmark.md) |
 | 文档 | `services/ocr/README.md`、`PROVENANCE.md` 已记录算法来源 |
@@ -283,13 +287,33 @@ class TableGrid(BaseModel):
 | Compose | 全部容器 Healthy；`18002/internal/ocr/parse-file` 返回完整 `OcrResult` |
 | 算法单测 | 5 passed |
 | GLM 真实识别 | `192.168.1.35:9977` 启动后，Compose 与 K8s 内均识别出 `mechanical_properties` 3×3 表格，`backend=glm` |
+| Layout | K8s 集群内 GLM 解析返回 `layout_blocks=1`、`types=['table']`；端到端 artifacts 含 `layout.json` |
+| 金标评测 | 5 个样本 macro：profile/orientation/cols/header_rows/header_path/cell 均为 `1.0000`；延迟 4.11 ms vs 旧 4.43 ms |
 | 基准 | 平均 1.45 ms、p95 1.91 ms、50 次输出哈希一致 |
 | Ruff | 通过 |
 
-### 14.3 未完成与限制
+### 14.3 收尾结果
 
-- [x] GLM 适配器已联调：2026-11-11 在 `192.168.1.35` 启动 9977，Compose 与 K8s 均完成真实 PDF 表格识别；步骤见 [模型服务器 GLM-OCR 启动手册](model-server-glm-ocr.md)。
-- [ ] 版面（layout blocks）未实现：PDF 原生只输出页与文本；GLM 恢复后再补 layout 适配。
-- [ ] 金标语料与旧基线指标未建立：基准报告仅覆盖本地 fixture。
-- [ ] 矩阵/条款抽取、Schema 投影按计划留给 M3/M5。
+- [x] 版面 blocks：接入 PP-DocLayoutV3 9978，页图送检并落 `layout/{n}.json`；服务不可用时只记 warning，不阻断 OCR。
+- [x] 金标语料：5 个样本（构造 4 + 真实扫描件 1），覆盖力学、化学、合并表头、检验项目与真实 OCR 噪声。
+- [x] 旧基线：在隔离 `sys.path` 中运行 legacy 算法，同口径对比结构指标与延迟，未触发回退条件。
+- [x] GLM 联调：`192.168.1.35:9977` 启动并完成 Compose/K8s 真实识别。
+- [x] 矩阵/条款抽取、Schema 投影按计划留给 M3/M5（非 M2 范围）。
+
+### 14.4 M2 验收对照
+
+| 验收项 | 结果 |
+|---|---|
+| OCR 处理 `.pdf` 与 `.md` | 通过（pdf/text 适配器 + GLM） |
+| 页图、版面、表格产物完整 | 通过（页图 PNG、`layout/*.json`、`tables.json`） |
+| TableGrid 契约校验 | 通过（pydantic 模型） |
+| 修复规则命中样本 | 通过（单测 patch/rebuild） |
+| 表型识别输出 profile | 通过（5 样本全对） |
+| OCR 失败稳定错误码 | 通过（5 个错误码） |
+| 模型地址/版本来自配置 | 通过（Compose/K8s 环境变量） |
+| 结构指标不低于旧基线 | 通过（6 项指标 1.0000 = 1.0000） |
+| 确定性 | 通过（50 次输出哈希一致） |
+| 延迟 ≤ 旧基线 1.2× | 通过（4.11 / 4.43 ≈ 0.93×） |
+| 单测、基准、无旧包 import、sha256、日志字段 | 通过 |
+| 文档（README、约定、规则格式、基准、PROVENANCE） | 通过 |
 

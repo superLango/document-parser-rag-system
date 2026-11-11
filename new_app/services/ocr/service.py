@@ -4,7 +4,9 @@ import logging
 
 from services.shared.storage import ObjectStore
 
+from .adapters.base import OcrBackendError
 from .adapters.factory import build_adapter
+from .adapters.layout import LayoutClient
 from .algorithms.repairs import apply_repairs, load_rules
 from .algorithms.table_grid import extract_tables
 from .config import settings
@@ -35,6 +37,7 @@ async def parse_document(
     output = await adapter.parse(data, request)
     result = output.result
 
+    await _run_layout(result, output.assets)
     result.artifacts.extend(await _persist_assets(store, output.assets))
 
     tables = extract_tables(result.pages)
@@ -66,15 +69,65 @@ async def parse_document(
     return result
 
 
+async def _run_layout(result: OcrResult, assets: dict[str, bytes]) -> None:
+    """Attach PP-DocLayoutV3 blocks; failures degrade to warnings."""
+    if not settings.layout_base_url:
+        return
+    client = LayoutClient(settings.layout_base_url, settings.layout_timeout_seconds)
+    for page in result.pages:
+        image = assets.get(page.image_key or "")
+        if image is None:
+            continue
+        try:
+            blocks, failures, raw = await client.analyze(
+                page_no=page.page_no,
+                width=page.width,
+                height=page.height,
+                dpi=page.dpi,
+                image=image,
+            )
+        except OcrBackendError as exc:
+            result.warnings.append(f"layout page {page.page_no}: {exc.code}")
+            logger.warning(
+                "layout failed document=%s page=%s code=%s",
+                result.document_id,
+                page.page_no,
+                exc.code,
+            )
+            continue
+        if failures:
+            result.warnings.append(
+                f"layout page {page.page_no}: {len(failures)} block failures"
+            )
+        result.layout.extend(blocks)
+        key = f"ocr/{result.document_id}/layout/{page.page_no}.json"
+        page.layout_key = key
+        assets[key] = json.dumps(raw, ensure_ascii=False, indent=2).encode("utf-8")
+        logger.info(
+            "layout document=%s page=%s blocks=%s",
+            result.document_id,
+            page.page_no,
+            len(blocks),
+        )
+
+
 async def _persist_assets(
     store: ObjectStore, assets: dict[str, bytes]
 ) -> list[ArtifactRef]:
     refs: list[ArtifactRef] = []
     for key, payload in assets.items():
-        content_type = "image/png" if key.endswith(".png") else "application/octet-stream"
+        content_type = _content_type(key)
         await store.put_bytes(key, payload, content_type)
         refs.append(_artifact_ref(key, payload, content_type))
     return refs
+
+
+def _content_type(key: str) -> str:
+    if key.endswith(".png"):
+        return "image/png"
+    if key.endswith(".json"):
+        return "application/json"
+    return "application/octet-stream"
 
 
 async def _persist_result(
@@ -90,6 +143,11 @@ async def _persist_result(
         (
             "tables.json",
             _dump([table.model_dump() for table in result.tables]),
+            "application/json",
+        ),
+        (
+            "layout.json",
+            _dump([block.model_dump() for block in result.layout]),
             "application/json",
         ),
     )

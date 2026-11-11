@@ -144,6 +144,7 @@ async def run():
 
 result = asyncio.run(run())
 print("  backend =", result.backend, "pages =", len(result.pages), "quality =", result.quality)
+print("  layout_blocks =", len(result.layout), "types =", sorted({b.type for b in result.layout}))
 for table in result.tables:
     print(
         "  table", table.table_id,

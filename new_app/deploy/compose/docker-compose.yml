@@ -32,6 +32,8 @@ x-app: &app
     GLM_OCR_BASE_URL: ${GLM_OCR_BASE_URL:-http://192.168.1.35:9977/v1}
     GLM_OCR_MODEL: ${GLM_OCR_MODEL:-GLM-OCR}
     GLM_OCR_TIMEOUT_SECONDS: ${GLM_OCR_TIMEOUT_SECONDS:-180}
+    LAYOUT_BASE_URL: ${LAYOUT_BASE_URL:-http://192.168.1.35:9978}
+    LAYOUT_TIMEOUT_SECONDS: ${LAYOUT_TIMEOUT_SECONDS:-60}
   depends_on:
     postgres:
       condition: service_healthy
