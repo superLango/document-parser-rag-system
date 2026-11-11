@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -16,7 +17,7 @@ class DocumentOut(BaseModel):
 
 
 class CreateRunIn(BaseModel):
-    recipe_channel: str = "stable"
+    recipe_channel: Literal["stable", "candidate", "shadow"] = "stable"
     parse_profile: str = "standard"
 
 

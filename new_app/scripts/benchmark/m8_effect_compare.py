@@ -26,7 +26,7 @@ DEFAULT_OLD_RUNS = REPO_ROOT / "data" / "validation-2026-11-06" / "runs" / "full
 DEFAULT_OUT_JSON = REPO_ROOT / "new_app" / "docs" / "reports" / "M8-effect-comparison.json"
 DEFAULT_OUT_MD = REPO_ROOT / "new_app" / "docs" / "reports" / "M8-effect-comparison.md"
 DEFAULT_API = os.getenv("API_BASE", "http://localhost:18000")
-TERMINAL = {"STRUCTURED_READY", "FAILED", "CANCELLED"}
+TERMINAL = {"STRUCTURED_READY", "REVIEW_FAILED", "FAILED", "CANCELLED"}
 
 ELEMENTS = {
     "C", "Si", "Mn", "P", "S", "Ni", "Cr", "Mo", "Cu", "Al", "Ti", "V", "Nb",
@@ -89,6 +89,11 @@ def fields_of(records: list[dict[str, Any]], *, new: bool) -> dict[tuple[str, st
         if not isinstance(record, dict):
             continue
         grade = normalize_grade(record.get("grade"))
+        condition = condition_of(record, new=new)
+        if grade in ("", "~") and condition:
+            # Legacy rows without a grade often carry the facet in
+            # ``condition``; the new pipeline stores it in ``conditions``.
+            grade = normalize_text(condition)
         properties = record.get("properties") or {}
         if not isinstance(properties, dict):
             continue
@@ -107,6 +112,17 @@ def fields_of(records: list[dict[str, Any]], *, new: bool) -> dict[tuple[str, st
                 "record_id": str(record.get("record_id") or ""),
             }
     return fields
+
+
+def condition_of(record: dict[str, Any], *, new: bool) -> str:
+    if new:
+        conditions = record.get("conditions") or {}
+        if not isinstance(conditions, dict):
+            return ""
+        return "/".join(
+            sorted(normalize_text(value) for value in conditions.values() if value)
+        )
+    return normalize_text(record.get("condition") or "")
 
 
 def same_value(left: dict[str, Any], right: dict[str, Any]) -> bool:
@@ -434,34 +450,66 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--old-runs", type=Path, default=DEFAULT_OLD_RUNS)
     parser.add_argument("--limit", type=int, default=12)
+    parser.add_argument("--concurrency", type=int, default=1)
     parser.add_argument("--api", default=DEFAULT_API)
     parser.add_argument("--out-json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-md", type=Path, default=DEFAULT_OUT_MD)
     args = parser.parse_args()
+    api = args.api.rstrip("/")
 
     candidates = load_candidates(args.old_runs, args.limit)
     if not candidates:
         print("no comparable documents found")
         return 1
 
+    def process(item: dict[str, Any]) -> dict[str, Any]:
+        markdown = render_markdown(item["result"])
+        name = f"m8-compare-{item['doc_id'][:12]}.md"
+        try:
+            with httpx.Client(timeout=180) as client:
+                new = new_parse(client, api, markdown, name)
+        except Exception as exc:  # noqa: BLE001 - recorded in the report
+            new = {
+                "run_id": "",
+                "status": "ERROR",
+                "error_code": str(exc)[:200],
+                "elapsed_seconds": 0.0,
+                "records": [],
+                "result": {},
+            }
+        return compare_doc(item, new)
+
     docs: list[dict[str, Any]] = []
-    with httpx.Client(timeout=180) as client:
+    if args.concurrency <= 1:
         for index, item in enumerate(candidates, start=1):
-            markdown = render_markdown(item["result"])
-            name = f"m8-compare-{item['doc_id'][:12]}.md"
             print(f"[{index}/{len(candidates)}] {item['doc_id'][:12]} fields={item['field_count']}")
-            try:
-                new = new_parse(client, args.api.rstrip("/"), markdown, name)
-            except Exception as exc:  # noqa: BLE001 - recorded in the report
-                new = {
-                    "run_id": "",
-                    "status": "ERROR",
-                    "error_code": str(exc)[:200],
-                    "elapsed_seconds": 0.0,
-                    "records": [],
-                    "result": {},
-                }
-            docs.append(compare_doc(item, new))
+            docs.append(process(item))
+    else:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        with ThreadPoolExecutor(max_workers=args.concurrency) as pool:
+            futures = {
+                pool.submit(process, item): item for item in candidates
+            }
+            for index, future in enumerate(as_completed(futures), start=1):
+                item = futures[future]
+                try:
+                    result = future.result()
+                except Exception as exc:  # noqa: BLE001 - keep the batch running
+                    result = compare_doc(
+                        item,
+                        {
+                            "run_id": "",
+                            "status": "ERROR",
+                            "error_code": str(exc)[:200],
+                            "elapsed_seconds": 0.0,
+                            "records": [],
+                            "result": {},
+                        },
+                    )
+                print(f"[{index}/{len(candidates)}] {item['doc_id'][:12]} done")
+                docs.append(result)
+        docs.sort(key=lambda row: row["doc_id"])
 
     payload = {
         "generated_at": now_iso(),

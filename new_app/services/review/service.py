@@ -68,9 +68,19 @@ class ReviewService:
                 logger.warning("review agent unavailable: %s", exc)
                 degraded = True
         findings = merge_findings(deterministic, model_findings)
-        errors = sum(1 for item in findings if item.severity == "error")
+        # Deterministic rule errors block the run; model findings are advisory
+        # (and may be false positives), so they only downgrade to "warn".
+        deterministic_errors = sum(
+            1 for item in deterministic if item.severity == "error"
+        )
+        model_errors = sum(1 for item in model_findings if item.severity == "error")
+        errors = deterministic_errors + model_errors
         warnings = sum(1 for item in findings if item.severity == "warning")
-        status = "fail" if errors else ("warn" if warnings else "pass")
+        status = (
+            "fail"
+            if deterministic_errors
+            else ("warn" if warnings or model_errors else "pass")
+        )
         return ReviewReport(
             status=status,  # type: ignore[arg-type]
             findings=findings,
@@ -78,6 +88,8 @@ class ReviewService:
                 "records": len(request.records),
                 "findings": len(findings),
                 "errors": errors,
+                "deterministic_errors": deterministic_errors,
+                "model_errors": model_errors,
                 "warnings": warnings,
                 "info": len(findings) - errors - warnings,
                 "deterministic": len(deterministic),

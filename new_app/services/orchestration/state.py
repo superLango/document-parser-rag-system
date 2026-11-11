@@ -11,12 +11,18 @@ class RunState(StrEnum):
     PARSED = "PARSED"
     REVIEWING = "REVIEWING"
     REVIEW_PASSED = "REVIEW_PASSED"
+    REVIEW_FAILED = "REVIEW_FAILED"
     STRUCTURED_READY = "STRUCTURED_READY"
     FAILED = "FAILED"
     CANCELLED = "CANCELLED"
 
 
-TERMINAL_STATES = {RunState.STRUCTURED_READY, RunState.FAILED, RunState.CANCELLED}
+TERMINAL_STATES = {
+    RunState.STRUCTURED_READY,
+    RunState.REVIEW_FAILED,
+    RunState.FAILED,
+    RunState.CANCELLED,
+}
 
 ALLOWED_TRANSITIONS: dict[RunState, set[RunState]] = {
     RunState.RECEIVED: {RunState.OCR_RUNNING, RunState.FAILED, RunState.CANCELLED},
@@ -26,9 +32,15 @@ ALLOWED_TRANSITIONS: dict[RunState, set[RunState]] = {
     RunState.ROUTED: {RunState.SANDBOX_RUNNING, RunState.FAILED, RunState.CANCELLED},
     RunState.SANDBOX_RUNNING: {RunState.PARSED, RunState.FAILED, RunState.CANCELLED},
     RunState.PARSED: {RunState.REVIEWING, RunState.FAILED, RunState.CANCELLED},
-    RunState.REVIEWING: {RunState.REVIEW_PASSED, RunState.FAILED, RunState.CANCELLED},
+    RunState.REVIEWING: {
+        RunState.REVIEW_PASSED,
+        RunState.REVIEW_FAILED,
+        RunState.FAILED,
+        RunState.CANCELLED,
+    },
     RunState.REVIEW_PASSED: {RunState.STRUCTURED_READY, RunState.FAILED, RunState.CANCELLED},
     RunState.STRUCTURED_READY: set(),
+    RunState.REVIEW_FAILED: set(),
     RunState.FAILED: set(),
     RunState.CANCELLED: set(),
 }

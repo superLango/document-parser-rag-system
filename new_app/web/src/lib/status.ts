@@ -1,6 +1,11 @@
 export type Tone = "success" | "warning" | "danger" | "info" | "neutral";
 
-export const RUN_TERMINAL = new Set(["STRUCTURED_READY", "FAILED", "CANCELLED"]);
+export const RUN_TERMINAL = new Set([
+  "STRUCTURED_READY",
+  "REVIEW_FAILED",
+  "FAILED",
+  "CANCELLED"
+]);
 
 const RUN_STATUS: Record<string, { label: string; tone: Tone }> = {
   RECEIVED: { label: "已接收", tone: "neutral" },
@@ -12,6 +17,7 @@ const RUN_STATUS: Record<string, { label: string; tone: Tone }> = {
   PARSED: { label: "解析完成", tone: "info" },
   REVIEWING: { label: "审核中", tone: "info" },
   REVIEW_PASSED: { label: "审核通过", tone: "info" },
+  REVIEW_FAILED: { label: "审核未通过", tone: "danger" },
   STRUCTURED_READY: { label: "结构化就绪", tone: "success" },
   FAILED: { label: "失败", tone: "danger" },
   CANCELLED: { label: "已取消", tone: "neutral" }

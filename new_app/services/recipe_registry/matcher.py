@@ -26,6 +26,17 @@ _NUMERIC_RE = re.compile(r"^[\d.~～≤≥<>\-+/%℃]+$")
 _PAREN_RE = re.compile(r"[（(][^）)]*[）)]")
 _SUB_TOKEN_RE = re.compile(r"[a-z]+|\d+(?:\.\d+)?|[\u4e00-\u9fff]+")
 _CJK_RE = re.compile(r"[\u4e00-\u9fff]")
+# Headers usually append a unit to the symbol (``σb N/mm²``, ``δ5 %``).
+_UNIT_SPLIT_RE = re.compile(r"(?:n/mm2|n/mm²|mpa|j/cm2|j/cm²|%|℃)")
+_SYMBOL_ALIASES = {
+    "σb": "rm",
+    "σ0.2": "rp0.2",
+    "σ1.0": "rp1.0",
+    "δ5": "δs",
+    "δs": "δs",
+    "aku": "ku2",
+    "psi": "ψ",
+}
 
 
 class MatchResult(BaseModel):
@@ -65,6 +76,10 @@ def signature_tokens(table: TableGrid, limit: int = 40) -> list[str]:
         for part in path:
             token = normalize_token(part)
             add(token)
+            for piece in _UNIT_SPLIT_RE.split(token):
+                if not piece or piece == token:
+                    continue
+                add(_SYMBOL_ALIASES.get(piece, piece))
             if _CJK_RE.search(token) and re.search(r"[a-z0-9]", token):
                 for sub in _SUB_TOKEN_RE.findall(token):
                     add(sub)
@@ -129,14 +144,19 @@ def signature_score(table: TableGrid, signature: RecipeSignature) -> float:
 
 
 def match_table(table: TableGrid, recipes: list[RecipeManifest]) -> MatchResult:
-    best: tuple[RecipeManifest, float] | None = None
+    best: tuple[RecipeManifest, float, int] | None = None
     for manifest in recipes:
         score = signature_score(table, manifest.signature)
-        if best is None or score > best[1]:
-            best = (manifest, score)
+        specificity = len((manifest.bindings or {}).get("measures") or {})
+        if (
+            best is None
+            or score > best[1]
+            or (score == best[1] and specificity > best[2])
+        ):
+            best = (manifest, score, specificity)
     if best is None:
         return MatchResult()
-    manifest, score = best
+    manifest, score, _ = best
     if score >= EXACT_THRESHOLD:
         return _result(manifest, "exact", score)
     if score >= CANDIDATE_THRESHOLD:

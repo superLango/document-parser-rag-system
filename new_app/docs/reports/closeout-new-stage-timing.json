@@ -1,0 +1,691 @@
+{
+  "documents": 60,
+  "new_total_ms": {
+    "p50": 39991,
+    "p95": 119076
+  },
+  "stages": {
+    "ocr": {
+      "p50": 477,
+      "p95": 1125,
+      "total": 33007
+    },
+    "routing": {
+      "p50": 338,
+      "p95": 698,
+      "total": 22599
+    },
+    "sandbox": {
+      "p50": 1062,
+      "p95": 2046,
+      "total": 62216
+    },
+    "review": {
+      "p50": 38268,
+      "p95": 117381,
+      "total": 3075870
+    }
+  },
+  "documents_detail": [
+    {
+      "doc_id": "05ecccc8ad8d40f7b76e52ac729030db1786753115680",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 588,
+        "routing": 392,
+        "sandbox": 1241,
+        "review": 118619
+      },
+      "total_ms": 120840
+    },
+    {
+      "doc_id": "0684efec05a54ab8868faf6dfb3b05e71789376678753",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 769,
+        "routing": 766,
+        "sandbox": 1083,
+        "review": 67596
+      },
+      "total_ms": 70214
+    },
+    {
+      "doc_id": "0715f18cf44c469cb1c0510db73c9dea",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 378,
+        "routing": 329,
+        "sandbox": 869,
+        "review": 105449
+      },
+      "total_ms": 107025
+    },
+    {
+      "doc_id": "075993d8bda54c54b9dd8e1ca88724c31667182921102",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 477,
+        "routing": 301,
+        "sandbox": 1062,
+        "review": 57438
+      },
+      "total_ms": 59278
+    },
+    {
+      "doc_id": "0c87affede6e4522824189505c2821091787136466679",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 506,
+        "routing": 289,
+        "sandbox": 1200,
+        "review": 11966
+      },
+      "total_ms": 13961
+    },
+    {
+      "doc_id": "100e43ba7722423cb8dd02adbd8727081788829847412",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 457,
+        "routing": 330,
+        "sandbox": 1069,
+        "review": 46277
+      },
+      "total_ms": 48133
+    },
+    {
+      "doc_id": "10aef59a5c91456c92e5e5a8225f4acf1777941075774",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 364,
+        "routing": 338,
+        "sandbox": 933,
+        "review": 15586
+      },
+      "total_ms": 17221
+    },
+    {
+      "doc_id": "1738d3d4f8f74c7a8879da74e1c195f31788155976488",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 1325,
+        "routing": 698,
+        "sandbox": 2320,
+        "review": 35641
+      },
+      "total_ms": 39984
+    },
+    {
+      "doc_id": "1741e4503e464eefa4979511533a70131789604448717",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 475,
+        "routing": 304,
+        "sandbox": 1201,
+        "review": 111550
+      },
+      "total_ms": 113530
+    },
+    {
+      "doc_id": "1741e4503e464eefa4979511533a70131789604448717__446f7d20",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 480,
+        "routing": 324,
+        "sandbox": 1063,
+        "review": 29879
+      },
+      "total_ms": 31746
+    },
+    {
+      "doc_id": "17d722e0e9d9445a9f3a443abcb572d31792472615612",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 541,
+        "routing": 389,
+        "sandbox": 1204,
+        "review": 35525
+      },
+      "total_ms": 37659
+    },
+    {
+      "doc_id": "187d5d3857cc4017a0a50413740996221777508416099",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 485,
+        "routing": 387,
+        "sandbox": 0,
+        "review": 45738
+      },
+      "total_ms": 46610
+    },
+    {
+      "doc_id": "1c4cf85c9255469184e338fda9af80f81768216448834",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 459,
+        "routing": 306,
+        "sandbox": 1177,
+        "review": 15318
+      },
+      "total_ms": 17260
+    },
+    {
+      "doc_id": "208851e1280043d191423616d783e1a2",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 594,
+        "routing": 376,
+        "sandbox": 965,
+        "review": 24453
+      },
+      "total_ms": 26388
+    },
+    {
+      "doc_id": "22b1476b150e43fea6dda44f8db9d0041790235357026",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 600,
+        "routing": 380,
+        "sandbox": 2064,
+        "review": 2313
+      },
+      "total_ms": 5357
+    },
+    {
+      "doc_id": "27c4e67d00ff41a1b79fef9ab787d2eb1667181019302",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 395,
+        "routing": 300,
+        "sandbox": 857,
+        "review": 72268
+      },
+      "total_ms": 73820
+    },
+    {
+      "doc_id": "2ad6ce310e684a5cae57471d563a6f421792473701744",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 465,
+        "routing": 306,
+        "sandbox": 952,
+        "review": 38268
+      },
+      "total_ms": 39991
+    },
+    {
+      "doc_id": "2af08cbfcabe4ffcbe56039cec9436791788486535272",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 440,
+        "routing": 266,
+        "sandbox": 1178,
+        "review": 97179
+      },
+      "total_ms": 99063
+    },
+    {
+      "doc_id": "3081c0f9b98d4d33b83f685c8f4235e41789712654410",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 327,
+        "routing": 295,
+        "sandbox": 893,
+        "review": 116178
+      },
+      "total_ms": 117693
+    },
+    {
+      "doc_id": "4417071b32c147858c7f681c4deea4331787725949473",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 759,
+        "routing": 424,
+        "sandbox": 937,
+        "review": 29138
+      },
+      "total_ms": 31258
+    },
+    {
+      "doc_id": "521854804389445498b69c559d95dbe01777940887289",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 520,
+        "routing": 385,
+        "sandbox": 1196,
+        "review": 12414
+      },
+      "total_ms": 14515
+    },
+    {
+      "doc_id": "564ae4f40b9a4787824477f821ab5ac81787031930715",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 805,
+        "routing": 621,
+        "sandbox": 996,
+        "review": 116117
+      },
+      "total_ms": 118539
+    },
+    {
+      "doc_id": "59bebdcf7e10498984d48d1848577abe1789885503015",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 471,
+        "routing": 444,
+        "sandbox": 883,
+        "review": 135280
+      },
+      "total_ms": 137078
+    },
+    {
+      "doc_id": "5c7ee8be97c44d1faeb914342670b6a0",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 852,
+        "routing": 682,
+        "sandbox": 1060,
+        "review": 2301
+      },
+      "total_ms": 4895
+    },
+    {
+      "doc_id": "65c7cfb83be748febdb2dff1b1d8f6291779257620839",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 1175,
+        "routing": 891,
+        "sandbox": 1174,
+        "review": 1683
+      },
+      "total_ms": 4923
+    },
+    {
+      "doc_id": "672c06b172704faba3cb299315779fbe1777508376270",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 666,
+        "routing": 368,
+        "sandbox": 1841,
+        "review": 84793
+      },
+      "total_ms": 87668
+    },
+    {
+      "doc_id": "67a742b20c66475890fe1f259ccd4fee1790389928507",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 451,
+        "routing": 296,
+        "sandbox": 1036,
+        "review": 93188
+      },
+      "total_ms": 94971
+    },
+    {
+      "doc_id": "6db6bab718424f6dac55b919f13bc99b1787136455509",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 754,
+        "routing": 429,
+        "sandbox": 2046,
+        "review": 42615
+      },
+      "total_ms": 45844
+    },
+    {
+      "doc_id": "7069f774d8d44a8bb2cce1f4191831e41792653520267",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 529,
+        "routing": 387,
+        "sandbox": 987,
+        "review": 45710
+      },
+      "total_ms": 47613
+    },
+    {
+      "doc_id": "728e72b0f2e64ff5bcec0974f6f4146c1787136380607",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 561,
+        "routing": 364,
+        "sandbox": 1147,
+        "review": 36908
+      },
+      "total_ms": 38980
+    },
+    {
+      "doc_id": "7319bf3dde60412bb4b7e30209da8a401792809205362",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 398,
+        "routing": 378,
+        "sandbox": 930,
+        "review": 72717
+      },
+      "total_ms": 74423
+    },
+    {
+      "doc_id": "7373a8d9a442443b9733ecc5fecd5cfe1787899964564",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 448,
+        "routing": 314,
+        "sandbox": 0,
+        "review": 61242
+      },
+      "total_ms": 62004
+    },
+    {
+      "doc_id": "74aec6bf74054d4782f5ed622a6166141788762643935",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 465,
+        "routing": 363,
+        "sandbox": 881,
+        "review": 114478
+      },
+      "total_ms": 116187
+    },
+    {
+      "doc_id": "754a537ea3f945528159e82a88fc96b31789604489041",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 555,
+        "routing": 335,
+        "sandbox": 996,
+        "review": 73258
+      },
+      "total_ms": 75144
+    },
+    {
+      "doc_id": "775043b538734e7b8cd7236e4d7c917e1792809007377",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 544,
+        "routing": 385,
+        "sandbox": 853,
+        "review": 12592
+      },
+      "total_ms": 14374
+    },
+    {
+      "doc_id": "78a0de4c51a24c958575b9909f6308ae",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 0,
+        "routing": 325,
+        "sandbox": 881,
+        "review": 115464
+      },
+      "total_ms": 116670
+    },
+    {
+      "doc_id": "7ad79a9408c948b490137ac4c29fa4931704785550850",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 460,
+        "routing": 297,
+        "sandbox": 1139,
+        "review": 9620
+      },
+      "total_ms": 11516
+    },
+    {
+      "doc_id": "92e35be4e585478abd81090c750ccb301788569067714",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 555,
+        "routing": 386,
+        "sandbox": 1175,
+        "review": 110004
+      },
+      "total_ms": 112120
+    },
+    {
+      "doc_id": "9d1ae7d941e042c491a9c3601755953c",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 472,
+        "routing": 361,
+        "sandbox": 1268,
+        "review": 8857
+      },
+      "total_ms": 10958
+    },
+    {
+      "doc_id": "a5fbc645696b4c3a91e2c781d369c7101792487564255",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 432,
+        "routing": 320,
+        "sandbox": 0,
+        "review": 24712
+      },
+      "total_ms": 25464
+    },
+    {
+      "doc_id": "a671647676ee4290b1a914b9766f3672",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 694,
+        "routing": 424,
+        "sandbox": 1108,
+        "review": 13089
+      },
+      "total_ms": 15315
+    },
+    {
+      "doc_id": "ae7a1887a2e0498abdf880f22f81bb361784857452729",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 487,
+        "routing": 311,
+        "sandbox": 0,
+        "review": 116352
+      },
+      "total_ms": 117150
+    },
+    {
+      "doc_id": "b50805e0ab634fafb3658d1f5b1866bb1788487110394",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 335,
+        "routing": 308,
+        "sandbox": 899,
+        "review": 28854
+      },
+      "total_ms": 30396
+    },
+    {
+      "doc_id": "b8c365836b9c4ff4a63c862899abb0441788486522717",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 484,
+        "routing": 260,
+        "sandbox": 907,
+        "review": 16088
+      },
+      "total_ms": 17739
+    },
+    {
+      "doc_id": "bc0fd7f758e54583936ad2f08a9e42471790389887355",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 419,
+        "routing": 268,
+        "sandbox": 1186,
+        "review": 51325
+      },
+      "total_ms": 53198
+    },
+    {
+      "doc_id": "bc6e766f5cb74c04ba8dd4136c2046a51788498985583",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 470,
+        "routing": 362,
+        "sandbox": 863,
+        "review": 117381
+      },
+      "total_ms": 119076
+    },
+    {
+      "doc_id": "be26fecfa3a0486d8b6566e0300937311675407000327",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 330,
+        "routing": 297,
+        "sandbox": 0,
+        "review": 114591
+      },
+      "total_ms": 115218
+    },
+    {
+      "doc_id": "bf295b3df1a74b0b99bd76ef192a790d1783759265808",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 436,
+        "routing": 294,
+        "sandbox": 1197,
+        "review": 10580
+      },
+      "total_ms": 12507
+    },
+    {
+      "doc_id": "cdbfe0b1485a4e86ad5d0f92ed320c5c1787044347511",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 325,
+        "routing": 246,
+        "sandbox": 932,
+        "review": 16172
+      },
+      "total_ms": 17675
+    },
+    {
+      "doc_id": "d26323581f4047d08fb304ef395ef7361790210741923",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 448,
+        "routing": 326,
+        "sandbox": 876,
+        "review": 46646
+      },
+      "total_ms": 48296
+    },
+    {
+      "doc_id": "da33e865754147ac918bb58e10addfeb1723528545218",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 436,
+        "routing": 301,
+        "sandbox": 901,
+        "review": 17617
+      },
+      "total_ms": 19255
+    },
+    {
+      "doc_id": "da6e78317ae045d7aef37604fe257ff5",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 1093,
+        "routing": 500,
+        "sandbox": 1160,
+        "review": 1775
+      },
+      "total_ms": 4528
+    },
+    {
+      "doc_id": "de2adf26e9dd40d095d1924db4fade961788231324706",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 535,
+        "routing": 335,
+        "sandbox": 1268,
+        "review": 37841
+      },
+      "total_ms": 39979
+    },
+    {
+      "doc_id": "de301f981df74a44900286b1db33bde81792373139709",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 460,
+        "routing": 365,
+        "sandbox": 1185,
+        "review": 95593
+      },
+      "total_ms": 97603
+    },
+    {
+      "doc_id": "e0ac84b49ef64068a61ee6e775c108af1791426984160",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 1034,
+        "routing": 473,
+        "sandbox": 1755,
+        "review": 59417
+      },
+      "total_ms": 62679
+    },
+    {
+      "doc_id": "ec684db9f60946cf905b8f327c8af26e1792563440027",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 468,
+        "routing": 298,
+        "sandbox": 1069,
+        "review": 21852
+      },
+      "total_ms": 23687
+    },
+    {
+      "doc_id": "fc367075184b463daf6b6a5756545d7a1791857096031",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 430,
+        "routing": 243,
+        "sandbox": 1021,
+        "review": 24620
+      },
+      "total_ms": 26314
+    },
+    {
+      "doc_id": "pdf__GBT33084-2016",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 1125,
+        "routing": 479,
+        "sandbox": 1099,
+        "review": 1777
+      },
+      "total_ms": 4480
+    },
+    {
+      "doc_id": "pdf__JX-25-035_GH4698高温合金棒材采购技术协议",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 451,
+        "routing": 292,
+        "sandbox": 1074,
+        "review": 18956
+      },
+      "total_ms": 20773
+    },
+    {
+      "doc_id": "pdf__gbt1591_2018",
+      "status": "STRUCTURED_READY",
+      "stages": {
+        "ocr": 550,
+        "routing": 386,
+        "sandbox": 959,
+        "review": 15012
+      },
+      "total_ms": 16907
+    }
+  ]
+}

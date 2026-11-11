@@ -108,6 +108,7 @@ export default function RunsPage() {
             "SANDBOX_RUNNING",
             "REVIEWING",
             "STRUCTURED_READY",
+            "REVIEW_FAILED",
             "FAILED",
             "CANCELLED"
           ].map((value) => (

@@ -66,6 +66,7 @@ class ResolveIn(BaseModel):
 
 class MatchIn(BaseModel):
     table: TableGrid
+    channel: str = "stable"
 
 
 class MatchOut(BaseModel):
@@ -120,12 +121,16 @@ def resolve(payload: ResolveIn) -> RecipeRef:
 
 @router.post("/recipes/match", response_model=MatchOut)
 def match(payload: MatchIn) -> MatchOut:
-    manifests = get_registry().active_manifests("stable")
+    try:
+        manifests = get_registry().active_manifests(payload.channel)
+    except RegistryError as exc:
+        raise _http_error(exc, exc.code) from exc
     result = match_table(payload.table, manifests)
     logger.info(
-        "recipe match table=%s page=%s recipe=%s status=%s score=%s",
+        "recipe match table=%s page=%s channel=%s recipe=%s status=%s score=%s",
         payload.table.table_id,
         payload.table.page_no,
+        payload.channel,
         result.recipe_id,
         result.status,
         result.score,

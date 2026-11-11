@@ -13,6 +13,7 @@ from .normalize import canonical_element, clean_text
 MECHANICAL_MARKERS = (
     "力学性能", "抗拉", "屈服", "伸长", "收缩", "冲击", "硬度",
     "比例极限", "rm", "rel", "rp0.2", "kv2", "hb", "hrc", "hv",
+    "σb", "σ0.2", "δ5", "ψ", "aku",
     "持久", "蠕变", "延伸率", "断面收缩", "抗剪",
     "疲劳", "应力比", "最大应力", "室温", "高温", "规定值",
     "mechanical propert", "tensile strength", "yield strength",
@@ -22,6 +23,7 @@ MECHANICAL_MARKERS = (
 CHEMICAL_MARKERS = (
     "碳当量", "裂纹敏感性", "cev", "pcm",
     "组分", "元素含量", "其他元素含量", "含量(摩尔分数)",
+    "主要成分", "主要元素", "杂质元素", "成分%", "化学成分",
     "氯化物", "可浸出",
     "composition", "alloying element", "heat analysis",
     "chemical analysis", "chemical composition",
@@ -108,19 +110,18 @@ def _is_element_header(text: str) -> bool:
 
 def _has_element_columns(table: TableGrid) -> bool:
     hits = 0
+    seen: set[str] = set()
     for path in table.header_paths:
-        text = clean_text(" ".join(part for part in path if clean_text(part)))
-        if (
-            not text
-            or len(text) > 40
-            or NON_ELEMENT_HEADER_RE.search(text)
-            or re.search(r"[\u4e00-\u9fff]", text)
-        ):
-            continue
-        if _is_element_header(text) or (
-            re.fullmatch(r"[A-Za-z]{3,}", text) and canonical_element(text)
-        ):
-            hits += 1
+        for part in path:
+            text = clean_text(part)
+            if not text or len(text) > 8 or NON_ELEMENT_HEADER_RE.search(text):
+                continue
+            if _is_element_header(text):
+                symbol = canonical_element(text)
+                if symbol and symbol not in seen:
+                    seen.add(symbol)
+                    hits += 1
+                break
     return hits >= 3
 
 
@@ -135,6 +136,11 @@ MECHANICAL_CONCRETE = tuple(
 
 
 def _strong_header_profile(table: TableGrid, text: str) -> str:
+    if any(
+        marker in text
+        for marker in ("允许偏差", "成品分析偏差", "permissible variation", "product analysis")
+    ):
+        return "admin"
     if any(marker in text for marker in INCLUSION_MARKERS):
         return "inspection"
     if (

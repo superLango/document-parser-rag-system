@@ -75,7 +75,7 @@ def test_migrated_registry_matches_golden_table() -> None:
     result = match_table(_table(), manifests)
     assert result.status != "unknown"
     assert result.recipe_id
-    assert result.version == "1.0.0"
+    assert result.version == registry.channels_for(result.recipe_id)["stable"]
     assert result.digest
 
 
@@ -83,6 +83,18 @@ def test_mechanical_table_beats_hardness_recipe() -> None:
     registry = RecipeRegistry()
     manifests = registry.active_manifests("stable")
     result = match_table(_table(), manifests)
+    assert result.recipe_id == "mechanical_properties_v1"
+
+
+def test_symbols_with_units_route_to_mechanical() -> None:
+    registry = RecipeRegistry()
+    manifests = registry.active_manifests("stable")
+    table = _table(
+        n_cols=5,
+        header_paths=[["σb N/mm²"], ["σ0.2 N/mm²"], ["δ5 %"], ["ψ %"], ["aku J/cm²"]],
+        rows=[["470", "345", "22", "40", "34"]],
+    )
+    result = match_table(table, manifests)
     assert result.recipe_id == "mechanical_properties_v1"
 
 

@@ -4,13 +4,13 @@
     "deprecated": {},
     "shadow": {},
     "stable": {
-      "chemical_composition_v1": "1.0.0",
-      "chemical_element_rows_v1": "1.0.0",
+      "chemical_composition_v1": "1.1.0",
+      "chemical_element_rows_v1": "1.1.0",
       "classification_v1": "1.0.0",
       "dimension_v1": "1.0.0",
-      "hardness_v1": "1.0.0",
+      "hardness_v1": "1.1.0",
       "inspection_rules_v1": "1.0.0",
-      "mechanical_properties_v1": "1.0.0"
+      "mechanical_properties_v1": "1.1.0"
     }
   },
   "history": [
@@ -90,8 +90,52 @@
       "note": "imported from mechanical_properties_v1.json",
       "recipe_id": "mechanical_properties_v1",
       "to_version": "1.0.0"
+    },
+    {
+      "actor": "closeout",
+      "at": "2026-11-11T18:17:53+00:00",
+      "channel": "stable",
+      "digest": "071f7c871392bae3b66006f49c98a05f35ddd462416080fbc6d6cd38cdc5be22",
+      "from_version": "1.0.0",
+      "kind": "promote",
+      "note": "closeout: expand bindings and element layouts",
+      "recipe_id": "chemical_composition_v1",
+      "to_version": "1.1.0"
+    },
+    {
+      "actor": "closeout",
+      "at": "2026-11-11T18:17:53+00:00",
+      "channel": "stable",
+      "digest": "a692b3022dc9b22d91bd0a16ad6e4ce924c0224777b807ceb6a7c078ecef59cb",
+      "from_version": "1.0.0",
+      "kind": "promote",
+      "note": "closeout: expand bindings and element layouts",
+      "recipe_id": "mechanical_properties_v1",
+      "to_version": "1.1.0"
+    },
+    {
+      "actor": "closeout",
+      "at": "2026-11-11T18:17:53+00:00",
+      "channel": "stable",
+      "digest": "42145696a2cb8f1844ce70ca8de4eff9274368407d54c884d3db2f04459c5699",
+      "from_version": "1.0.0",
+      "kind": "promote",
+      "note": "closeout: expand bindings and element layouts",
+      "recipe_id": "hardness_v1",
+      "to_version": "1.1.0"
+    },
+    {
+      "actor": "closeout",
+      "at": "2026-11-11T18:17:53+00:00",
+      "channel": "stable",
+      "digest": "e256da2bd9a9fc154d20dc48fdbd670c254d31dc447e9ba765b874cf81573f95",
+      "from_version": "1.0.0",
+      "kind": "promote",
+      "note": "closeout: expand bindings and element layouts",
+      "recipe_id": "chemical_element_rows_v1",
+      "to_version": "1.1.0"
     }
   ],
   "schema_version": "2.0",
-  "updated_at": "2026-11-11T13:47:54+00:00"
+  "updated_at": "2026-11-11T18:17:53+00:00"
 }

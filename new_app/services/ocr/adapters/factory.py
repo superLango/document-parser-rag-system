@@ -3,6 +3,7 @@ from pathlib import Path
 from ..config import settings
 from .base import OcrBackendError, OcrPort
 from .glm import GlmOcrAdapter
+from .hybrid import HybridOcrAdapter
 from .mock import MockOcrAdapter
 from .pdf import PdfOcrAdapter
 from .text import TextOcrAdapter
@@ -17,7 +18,7 @@ def build_adapter(backend: str | None, filename: str) -> OcrPort:
         if suffix in TEXT_SUFFIXES:
             return TextOcrAdapter()
         if settings.glm_ocr_base_url and settings.glm_ocr_model:
-            return GlmOcrAdapter()
+            return HybridOcrAdapter()
         return PdfOcrAdapter()
     if name == "mock":
         return MockOcrAdapter()

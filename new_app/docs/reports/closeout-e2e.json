@@ -1,0 +1,973 @@
+{
+  "generated_at": "2026-11-11T19:43:52+00:00",
+  "api": "http://localhost:18000",
+  "environment": "compose（生产镜像）",
+  "suites": {
+    "pdf": {
+      "documents": 40,
+      "structured_ready": 30,
+      "failed": 10,
+      "status_counts": {
+        "FAILED": 9,
+        "REVIEW_FAILED": 1,
+        "STRUCTURED_READY": 30
+      },
+      "records": 1143,
+      "fields": 1608,
+      "tables": 204,
+      "review_findings": 2406,
+      "p50_seconds": 100.66,
+      "p95_seconds": 278.14,
+      "max_seconds": 287.89,
+      "stages": {
+        "ocr": {
+          "samples": 40,
+          "p50_seconds": 49.35,
+          "p95_seconds": 277.75
+        },
+        "routing": {
+          "samples": 31,
+          "p50_seconds": 0.28,
+          "p95_seconds": 0.42
+        },
+        "sandbox": {
+          "samples": 30,
+          "p50_seconds": 0.92,
+          "p95_seconds": 1.22
+        },
+        "review": {
+          "samples": 29,
+          "p50_seconds": 38.7,
+          "p95_seconds": 137.14
+        }
+      }
+    }
+  },
+  "documents": {
+    "pdf": [
+      {
+        "name": "0a01e5deee2049768116740ba489608c-sample-r7.pdf",
+        "document_id": "85ac643d-60e5-4811-8414-d6daaa75baa4",
+        "run_id": "0ef3794f-68d2-47fc-8da3-5fdc5b2f3f92",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 81.08,
+        "records": 8,
+        "fields": 0,
+        "tables": 2,
+        "review_status": "warn",
+        "findings": 18,
+        "artifacts": 26,
+        "stage_ms": {
+          "ocr": 49353,
+          "routing": 267,
+          "sandbox": 1215,
+          "review": 27669
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "0ca26f51bdc748b6a3e65bdd0fd8a9c1-GB-T1220-2007 不锈钢棒.pdf",
+        "document_id": "1af5feb2-a198-4698-8233-530531b3a20c",
+        "run_id": "3d79765f-89ae-42d1-bf0a-39ea4c414c52",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 250.96,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 248644
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "1083bfd3f2a14009a239857f166afb8d-23_MAS7097 B 压气机叶片用GH4169D合金棒材.pdf",
+        "document_id": "a3717b37-28eb-4fa1-803f-658a9d8dd1ab",
+        "run_id": "a3db0e5a-dc25-42bf-b234-28e15de105ff",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 271.15,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 269760
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "13f7cdcc4d29446abf8f8aa960e18497-29_70_410JX(通用）-D-S15-2414 GH3128合金环形锻件规范.pdf",
+        "document_id": "b280b9b6-e6df-48d4-b0c8-40e51c6f91bf",
+        "run_id": "ce3d3240-68b5-4cdd-a778-e91ac56661e3",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 187.97,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 188062
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "1a83a40edef0432a86b11230e1239378-jx25_035.pdf",
+        "document_id": "7b20ea6b-7d47-4492-9c99-e1439623bd78",
+        "run_id": "8ec7089f-4b58-4fc5-8977-9a2e0b8ce6b4",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 16.17,
+        "records": 15,
+        "fields": 31,
+        "tables": 5,
+        "review_status": "warn",
+        "findings": 48,
+        "artifacts": 32,
+        "stage_ms": {
+          "ocr": 5159,
+          "routing": 268,
+          "sandbox": 836,
+          "review": 9830
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "211798bb89bc4eae9edb94f33f30d545-38_105.YJ(R)-186-2016 0Cr17Ni4Cu4Nb不锈钢锻件技术条件.pdf",
+        "document_id": "a3bf77e3-ae4d-4477-aab4-71faf581af2d",
+        "run_id": "1d5e7103-a7a4-4c12-8288-b782129a481d",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 155.0,
+        "records": 40,
+        "fields": 7,
+        "tables": 9,
+        "review_status": "warn",
+        "findings": 56,
+        "artifacts": 32,
+        "stage_ms": {
+          "ocr": 70522,
+          "routing": 332,
+          "sandbox": 0,
+          "review": 84610
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "25e827d2e3dd477a89e60f1b3d15b17d-qdu_p5.pdf",
+        "document_id": "ffd8da7c-a6ea-4308-b8c9-0443cdfc6c59",
+        "run_id": "714b3708-02b5-4e90-a871-7f105d31267e",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 26.27,
+        "records": 3,
+        "fields": 12,
+        "tables": 1,
+        "review_status": "warn",
+        "findings": 5,
+        "artifacts": 16,
+        "stage_ms": {
+          "ocr": 7735,
+          "routing": 232,
+          "sandbox": 926,
+          "review": 16371
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "27cfc37bc5834181a5c5531985a1b1bd-mas7079.pdf",
+        "document_id": "372a8013-1413-4369-9027-4fe4ee884a0d",
+        "run_id": "4d88f763-64b4-4708-9d98-e46e079f7e87",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 36.32,
+        "records": 25,
+        "fields": 0,
+        "tables": 5,
+        "review_status": "warn",
+        "findings": 35,
+        "artifacts": 38,
+        "stage_ms": {
+          "ocr": 5442,
+          "routing": 268,
+          "sandbox": 934,
+          "review": 29076
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "2ad48220270e4e48921dde253d03ee2d-26_04Cr13Ni5Mo不锈钢锭采购技术协议JX-26-031（签字版）+.pdf",
+        "document_id": "b4021379-f420-48bd-bffb-7b7e4672fb8b",
+        "run_id": "b5c7ea5c-042f-4a4f-8db7-4566cfb0b0ad",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 24.22,
+        "records": 2,
+        "fields": 0,
+        "tables": 2,
+        "review_status": "warn",
+        "findings": 3,
+        "artifacts": 18,
+        "stage_ms": {
+          "ocr": 15107,
+          "routing": 251,
+          "sandbox": 1178,
+          "review": 6082
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "4df6cc52bac2456fb761fdc642a9202d-GBT 6892-2015 一般工业用铝及铝合金挤压型材.pdf",
+        "document_id": "f19083e2-f4b3-4cd0-9a6e-03fa11eaca84",
+        "run_id": "89b5311c-1f00-49f9-b3bb-b31c3b73ace4",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 277.68,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 277734
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "55f0c10618c14b1e9b5cc85e92548486-gbt1591_2018.pdf",
+        "document_id": "bab851ba-9ae3-44ba-ba38-d411e101c682",
+        "run_id": "4dca38a6-a216-422d-82a3-e5b9c7225117",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 70.51,
+        "records": 94,
+        "fields": 22,
+        "tables": 16,
+        "review_status": "warn",
+        "findings": 98,
+        "artifacts": 58,
+        "stage_ms": {
+          "ocr": 11503,
+          "routing": 400,
+          "sandbox": 960,
+          "review": 57910
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "5baa524122a7478a89ef34ac16f38825-gbt3191.pdf",
+        "document_id": "3fd45601-f2d1-4807-a197-fd526ffa96e3",
+        "run_id": "f4ffa534-f9f7-43f6-a4e8-77c565cd86ba",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 12.18,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "pass",
+        "findings": 0,
+        "artifacts": 36,
+        "stage_ms": {
+          "ocr": 6371,
+          "routing": 221,
+          "sandbox": 925,
+          "review": 2412
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "6ebf8a83fffb4384b55bc6bc2959d670-27_2409285_2409287_2409288技术协议3份.pdf",
+        "document_id": "49138f30-3688-4ed0-b73a-a38528e59578",
+        "run_id": "21041781-187e-4b2e-99f8-9b4f3468e9a0",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 187.27,
+        "records": 10,
+        "fields": 0,
+        "tables": 8,
+        "review_status": "warn",
+        "findings": 20,
+        "artifacts": 30,
+        "stage_ms": {
+          "ocr": 149739,
+          "routing": 320,
+          "sandbox": 870,
+          "review": 35096
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "73bb36f665344df2b8446206b0eeffc8-gjb5301_2004.pdf",
+        "document_id": "a417dba7-9ae5-43ab-9d87-4784dbd091c9",
+        "run_id": "75464853-8cc8-48ad-9a74-252d70be9c9f",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 247.89,
+        "records": 138,
+        "fields": 375,
+        "tables": 20,
+        "review_status": "warn",
+        "findings": 302,
+        "artifacts": 56,
+        "stage_ms": {
+          "ocr": 243380,
+          "routing": 425,
+          "sandbox": 919,
+          "review": 0
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "808e2c05fa83447587ded2580f4cd04f-gbt40303_2021.pdf",
+        "document_id": "1288c99a-f53f-4bc4-96e4-5212f490bd5f",
+        "run_id": "9fb19d57-d4b0-4508-a295-255d245578e6",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 278.14,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 277751
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "857d97ee51a241869bcd3c5e5c63d769-7、Q／S10-0351-2004   TA15钛合金锻制棒材.pdf",
+        "document_id": "02873feb-3abe-4eef-8c00-fa87465ed68f",
+        "run_id": "9b8f5cb3-0399-4f1e-9f48-fe524cb45d39",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 58.48,
+        "records": 23,
+        "fields": 11,
+        "tables": 5,
+        "review_status": "warn",
+        "findings": 37,
+        "artifacts": 38,
+        "stage_ms": {
+          "ocr": 7902,
+          "routing": 282,
+          "sandbox": 875,
+          "review": 48380
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "8c4bfd4705ba4dc8a864b3c630dc8d1f-39_TG.JT.00.031.pdf",
+        "document_id": "b3444c9f-5974-42d4-8753-a76eb1d6ff59",
+        "run_id": "fc9df32b-14ec-4976-aee9-8a9235e987d8",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 72.55,
+        "records": 15,
+        "fields": 6,
+        "tables": 5,
+        "review_status": "warn",
+        "findings": 34,
+        "artifacts": 32,
+        "stage_ms": {
+          "ocr": 5423,
+          "routing": 268,
+          "sandbox": 854,
+          "review": 66583
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "90cab5276786441e8d980164a0cd0bd2-13_DFHM-QCD-0706-000893采购规范模板+B.pdf",
+        "document_id": "a349f147-fc06-4aec-a3c2-f814e74ab0f5",
+        "run_id": "78a4d4f2-84ac-4bb7-9e14-95c12c932474",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 48.35,
+        "records": 30,
+        "fields": 2,
+        "tables": 8,
+        "review_status": "warn",
+        "findings": 40,
+        "artifacts": 32,
+        "stage_ms": {
+          "ocr": 5088,
+          "routing": 296,
+          "sandbox": 920,
+          "review": 43172
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "9500fa12e3304a629080ba0463de8cb5-gbt33084_2016.pdf",
+        "document_id": "9c681a24-1a3c-4f9d-9778-7d97641e4e27",
+        "run_id": "26c860dc-213f-439d-b6f9-06a0b200de91",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 12.17,
+        "records": 132,
+        "fields": 568,
+        "tables": 8,
+        "review_status": "warn",
+        "findings": 546,
+        "artifacts": 50,
+        "stage_ms": {
+          "ocr": 8107,
+          "routing": 314,
+          "sandbox": 877,
+          "review": 0
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "AMS-QQ-A250-4B.pdf",
+        "document_id": "d8097e2d-d8df-432e-9663-b800fc883c48",
+        "run_id": "36a6bf29-376b-4253-babf-cc05b27a23eb",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 94.61,
+        "records": 16,
+        "fields": 0,
+        "tables": 6,
+        "review_status": "warn",
+        "findings": 36,
+        "artifacts": 28,
+        "stage_ms": {
+          "ocr": 3460,
+          "routing": 279,
+          "sandbox": 870,
+          "review": 88996
+        },
+        "category": "美国标准"
+      },
+      {
+        "name": "AMS4945J.pdf",
+        "document_id": "4f4dced8-57a9-4e95-a11f-9f1b64be25f5",
+        "run_id": "ce43093c-eaff-46c2-9279-446d35027ed5",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 16.19,
+        "records": 1,
+        "fields": 0,
+        "tables": 1,
+        "review_status": "warn",
+        "findings": 2,
+        "artifacts": 34,
+        "stage_ms": {
+          "ocr": 3479,
+          "routing": 229,
+          "sandbox": 907,
+          "review": 8806
+        },
+        "category": "美国标准"
+      },
+      {
+        "name": "ASME SB338-2021-过期.pdf",
+        "document_id": "cc384c99-f407-4b0f-9c32-32c77d2a0fc4",
+        "run_id": "60571c80-5b91-4ad7-81ea-a920bfd5b035",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 8.13,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "pass",
+        "findings": 0,
+        "artifacts": 34,
+        "stage_ms": {
+          "ocr": 5031,
+          "routing": 239,
+          "sandbox": 1108,
+          "review": 1429
+        },
+        "category": "美国标准"
+      },
+      {
+        "name": "ASTM B381-21-过期.pdf",
+        "document_id": "ba5e2379-4832-4b99-9388-772a526f44c8",
+        "run_id": "f7f98d88-c239-47ce-8de6-83a99fdb2843",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 8.11,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "pass",
+        "findings": 0,
+        "artifacts": 30,
+        "stage_ms": {
+          "ocr": 4078,
+          "routing": 222,
+          "sandbox": 833,
+          "review": 1484
+        },
+        "category": "美国标准"
+      },
+      {
+        "name": "GB 24627-2009过期.pdf",
+        "document_id": "a4014bcc-9870-46bc-929c-369239bc9f64",
+        "run_id": "781041e0-8ff1-4b3d-afca-a6797a1cdea4",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 118.73,
+        "records": 1,
+        "fields": 1,
+        "tables": 9,
+        "review_status": "warn",
+        "findings": 2,
+        "artifacts": 32,
+        "stage_ms": {
+          "ocr": 111108,
+          "routing": 324,
+          "sandbox": 1087,
+          "review": 5300
+        },
+        "category": "国家标准"
+      },
+      {
+        "name": "GBT 24627-2023.pdf",
+        "document_id": "f307c88c-1a19-41c9-94ad-59a2bd9774d2",
+        "run_id": "4c8f90e7-ad44-42e6-8af2-1cf56d1b45e3",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 22.24,
+        "records": 5,
+        "fields": 0,
+        "tables": 4,
+        "review_status": "warn",
+        "findings": 10,
+        "artifacts": 44,
+        "stage_ms": {
+          "ocr": 5996,
+          "routing": 273,
+          "sandbox": 1021,
+          "review": 14034
+        },
+        "category": "国家标准"
+      },
+      {
+        "name": "GBT 3462-2017.pdf",
+        "document_id": "6aa4026c-9c8e-44f8-b37c-73e1c8889b20",
+        "run_id": "d330d914-4799-48fb-ad35-82845794491e",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 18.21,
+        "records": 4,
+        "fields": 0,
+        "tables": 3,
+        "review_status": "warn",
+        "findings": 8,
+        "artifacts": 26,
+        "stage_ms": {
+          "ocr": 2558,
+          "routing": 249,
+          "sandbox": 847,
+          "review": 11567
+        },
+        "category": "国家标准"
+      },
+      {
+        "name": "GBT 3880.1-2012过期.pdf",
+        "document_id": "35609b83-22c4-4d2b-b2b9-ef7a49553dc6",
+        "run_id": "ce1f09d0-fdbb-49f0-a573-e9edf1052827",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 278.01,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 277748
+        },
+        "category": "国家标准"
+      },
+      {
+        "name": "GGX-FJLA-1-22.pdf",
+        "document_id": "671d20fb-f351-406a-bbe4-07a7332efee2",
+        "run_id": "6681b11b-71c7-4ed5-9b5a-8f5e9b62a0c4",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 287.89,
+        "records": 52,
+        "fields": 56,
+        "tables": 17,
+        "review_status": "warn",
+        "findings": 66,
+        "artifacts": 52,
+        "stage_ms": {
+          "ocr": 146386,
+          "routing": 379,
+          "sandbox": 879,
+          "review": 137253
+        },
+        "category": "企业标准"
+      },
+      {
+        "name": "GJB 1538A-2008过期.pdf",
+        "document_id": "fb9a0d87-cd53-46bb-9453-caddc9dd9c77",
+        "run_id": "ec7bd123-84d2-4211-b9e8-7d21b5dc86d7",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 278.09,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 277774
+        },
+        "category": "国军标"
+      },
+      {
+        "name": "GJB 2294A-2014航空用不锈钢及耐热钢棒规范.pdf",
+        "document_id": "2173ade8-6906-4b4c-8d74-f989c0b89377",
+        "run_id": "8bf31842-c901-443f-a7f1-0e849ff8e834",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 245.59,
+        "records": 179,
+        "fields": 385,
+        "tables": 20,
+        "review_status": "warn",
+        "findings": 396,
+        "artifacts": 52,
+        "stage_ms": {
+          "ocr": 241363,
+          "routing": 439,
+          "sandbox": 941,
+          "review": 2450
+        },
+        "category": "国军标"
+      },
+      {
+        "name": "GJB 3423A-2015.pdf",
+        "document_id": "88880a0e-297b-4f66-87a1-4aec460e6433",
+        "run_id": "6a332385-6cf6-496a-a39c-f93065f2ec8f",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 217.45,
+        "records": 77,
+        "fields": 12,
+        "tables": 10,
+        "review_status": "warn",
+        "findings": 150,
+        "artifacts": 34,
+        "stage_ms": {
+          "ocr": 163700,
+          "routing": 334,
+          "sandbox": 1002,
+          "review": 51727
+        },
+        "category": "国军标"
+      },
+      {
+        "name": "HB 20079-2012 航空用高强度沉淀硬化不锈钢锻件规范.pdf",
+        "document_id": "a5516817-f9f8-40ec-a310-94ed09090adb",
+        "run_id": "4045c4a2-358d-497c-a7c1-0750e7fa5442",
+        "status": "REVIEW_FAILED",
+        "error_code": "REVIEW_FAILED",
+        "elapsed_seconds": 58.44,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 4902,
+          "routing": 339,
+          "sandbox": 1285,
+          "review": 51212
+        },
+        "category": "行业标准"
+      },
+      {
+        "name": "ISO 5832-2-2018-过期.pdf",
+        "document_id": "fa475196-ddff-4ebb-8baa-b03c3926d470",
+        "run_id": "501404c4-91fb-4f03-8508-abb1b282e532",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 100.66,
+        "records": 13,
+        "fields": 15,
+        "tables": 3,
+        "review_status": "warn",
+        "findings": 47,
+        "artifacts": 34,
+        "stage_ms": {
+          "ocr": 7027,
+          "routing": 262,
+          "sandbox": 896,
+          "review": 92187
+        },
+        "category": "国际标准"
+      },
+      {
+        "name": "YST 255-2009.pdf",
+        "document_id": "f40603a7-d148-465f-825a-71636d973600",
+        "run_id": "2c813697-a8b2-4266-add3-0cc7c6706c7f",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 167.08,
+        "records": 35,
+        "fields": 0,
+        "tables": 5,
+        "review_status": "warn",
+        "findings": 54,
+        "artifacts": 26,
+        "stage_ms": {
+          "ocr": 94768,
+          "routing": 269,
+          "sandbox": 841,
+          "review": 68331
+        },
+        "category": "行业标准"
+      },
+      {
+        "name": "b3c725e08212403bb51a5febf2e30baa-20_411_ZWB-TSD-PS-003ZWB项目用304NG饼形锻件采购技术规格书.pdf",
+        "document_id": "d0b96789-4f6c-4b92-8ce8-2b557babc5f8",
+        "run_id": "6bef3d17-d603-432c-86bf-0c0f5199ecc0",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 221.42,
+        "records": 35,
+        "fields": 0,
+        "tables": 5,
+        "review_status": "warn",
+        "findings": 71,
+        "artifacts": 36,
+        "stage_ms": {
+          "ocr": 88060,
+          "routing": 285,
+          "sandbox": 1031,
+          "review": 129183
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "b8a241429d7c4e56bd3cde8aeb451e99-48_GJB 2294A-2014.pdf",
+        "document_id": "a7c63dd9-32e1-4208-b7ad-ba08fef72e2a",
+        "run_id": "512e7319-d3dd-4bb7-a5ea-0f405f9bafd5",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 277.75,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 277728
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "ba99e438f3f9400cae4391cfed95466e-50_2408274--技术（JS-CEABA-000127_Z）.pdf",
+        "document_id": "386c51e4-9756-4a72-8f6b-dcdfa3916a26",
+        "run_id": "822169e0-af3e-4861-a863-97ab01f212bb",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 233.67,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 230771
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "c16f405fd6224083a044339a732e1d2e-49__内部_CBQB903-002B TC4-DT钛合金棒材和锻坯规范.pdf",
+        "document_id": "da7d6ce1-7c55-48d6-9d7e-f750f197fc82",
+        "run_id": "0d8cca39-2b3c-4e09-979b-74bcba5b09b9",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 52.57,
+        "records": 23,
+        "fields": 0,
+        "tables": 9,
+        "review_status": "warn",
+        "findings": 33,
+        "artifacts": 60,
+        "stage_ms": {
+          "ocr": 12201,
+          "routing": 314,
+          "sandbox": 842,
+          "review": 38701
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "cbe5ea86b0f04611af0ced51f644e842-33_QJ502B-2014.pdf",
+        "document_id": "30ebc704-2a2b-4b69-acf5-aae9f6f0b97b",
+        "run_id": "087c94fb-dc02-408b-a84d-c3134f45dbbc",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 283.76,
+        "records": 109,
+        "fields": 105,
+        "tables": 11,
+        "review_status": "warn",
+        "findings": 206,
+        "artifacts": 36,
+        "stage_ms": {
+          "ocr": 143076,
+          "routing": 349,
+          "sandbox": 1105,
+          "review": 137137
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "e417ae6063fd4892a95a8461e0d8d0d8-32_55_Q_12X 239-2019 GH4698高温合金热轧和锻制棒材规范.pdf",
+        "document_id": "e7ba06e2-17d8-4d6d-b4df-4d13fa375a56",
+        "run_id": "c3fa3f64-82b4-49f1-8c5c-f848e0e53e15",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 213.44,
+        "records": 58,
+        "fields": 0,
+        "tables": 7,
+        "review_status": "warn",
+        "findings": 83,
+        "artifacts": 32,
+        "stage_ms": {
+          "ocr": 132697,
+          "routing": 286,
+          "sandbox": 1025,
+          "review": 79068
+        },
+        "category": "采购规范/技术协议"
+      }
+    ]
+  },
+  "branches": [
+    {
+      "branch": "health_gateway",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "branch": "upload_empty_file",
+      "ok": true,
+      "detail": "400"
+    },
+    {
+      "branch": "upload_dedupe",
+      "ok": true,
+      "detail": "237d684f-eb59-4b40-927a-93b0a91878ec"
+    },
+    {
+      "branch": "create_run_invalid_channel",
+      "ok": true,
+      "detail": "422"
+    },
+    {
+      "branch": "unknown_document_run",
+      "ok": true,
+      "detail": "404"
+    },
+    {
+      "branch": "unknown_run_get",
+      "ok": true,
+      "detail": "404"
+    },
+    {
+      "branch": "unknown_recipe",
+      "ok": true,
+      "detail": "404"
+    },
+    {
+      "branch": "dictionary_query",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "branch": "cancel_run",
+      "ok": true,
+      "detail": "{\"id\":\"7024ea69-a878-420e-b21a-f8732dd5f380\",\"document_id\":\"237d684f-eb59-4b40-927a-93b0a91878ec\",\"document_version\":1,\""
+    },
+    {
+      "branch": "result_after_cancel",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "branch": "records_after_cancel",
+      "ok": true,
+      "detail": "404"
+    },
+    {
+      "branch": "happy_path",
+      "ok": true,
+      "detail": "STRUCTURED_READY"
+    },
+    {
+      "branch": "timeline_stage_order",
+      "ok": true,
+      "detail": [
+        "ocr",
+        "routing",
+        "sandbox",
+        "review"
+      ]
+    },
+    {
+      "branch": "artifacts_present",
+      "ok": true,
+      "detail": 14
+    },
+    {
+      "branch": "missing_page_image",
+      "ok": true,
+      "detail": "404"
+    },
+    {
+      "branch": "review_gate_blocks_deterministic_error",
+      "ok": true,
+      "detail": {
+        "status": "REVIEW_FAILED",
+        "error_code": "REVIEW_FAILED",
+        "review": "fail"
+      }
+    },
+    {
+      "branch": "sse_event_stream",
+      "ok": true,
+      "detail": [
+        "done",
+        "run.completed",
+        "run.stage.completed",
+        "run.stage.started"
+      ]
+    },
+    {
+      "branch": "delete_document_with_active_run",
+      "ok": true,
+      "detail": {
+        "delete": 204,
+        "document": 404,
+        "run": "deleted"
+      }
+    }
+  ]
+}

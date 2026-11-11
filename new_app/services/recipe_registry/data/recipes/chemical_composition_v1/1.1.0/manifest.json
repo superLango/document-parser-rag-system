@@ -1,0 +1,217 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "chemical_composition_v1",
+  "version": "1.1.0",
+  "engine_api": "recipe-engine/1",
+  "profile": "chemical_composition",
+  "signature": {
+    "profile": "chemical_composition",
+    "orientation": "grade_rows",
+    "n_cols": 8,
+    "blocks": 1,
+    "tokens": [
+      "牌号",
+      "化学成分",
+      "c",
+      "si",
+      "mn",
+      "p",
+      "s"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "钢号",
+      "grade",
+      "材料牌号"
+    ],
+    "conditions": [
+      "规格",
+      "状态",
+      "厚度",
+      "尺寸",
+      "试样",
+      "分析"
+    ],
+    "measures": {
+      "C": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Si": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Mn": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "P": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "S": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ni": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Cr": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Mo": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Cu": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Al": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ti": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "V": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Nb": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "N": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "O": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "H": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "B": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "W": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Co": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Zr": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ta": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Re": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Fe": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Sn": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "As": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Pb": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Sb": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Bi": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ca": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Mg": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Zn": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ce": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "La": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Y": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Nd": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Se": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Te": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ag": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "CEV": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Pcm": {
+        "unit": "%",
+        "family": "chemical_composition"
+      }
+    }
+  },
+  "rules": {
+    "inherit_max_block": true,
+    "strip_footnote_marks": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": "material_master_v1"
+  },
+  "checksum": "071f7c871392bae3b66006f49c98a05f35ddd462416080fbc6d6cd38cdc5be22",
+  "created_at": "2026-11-12T00:00:00+00:00"
+}

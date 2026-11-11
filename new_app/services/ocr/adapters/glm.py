@@ -26,10 +26,28 @@ class GlmOcrAdapter:
             )
 
         pages, assets = await asyncio.to_thread(_render_pages, data, request)
-        async with httpx.AsyncClient(timeout=settings.glm_ocr_timeout_seconds) as client:
-            for page in pages:
-                image_key = page.image_key or ""
-                page.markdown = await self._ocr_image(client, assets[image_key])
+        budget = min(
+            settings.glm_ocr_max_document_timeout_seconds,
+            max(
+                settings.glm_ocr_document_timeout_seconds,
+                len(pages) * settings.glm_ocr_page_budget_seconds,
+            ),
+        )
+        try:
+            async with asyncio.timeout(budget):
+                async with httpx.AsyncClient(
+                    timeout=settings.glm_ocr_timeout_seconds
+                ) as client:
+                    for page in pages:
+                        image_key = page.image_key or ""
+                        page.markdown = await self._ocr_image(
+                            client, assets[image_key]
+                        )
+        except TimeoutError as exc:
+            raise OcrBackendError(
+                "OCR_BACKEND_TIMEOUT",
+                "glm ocr exceeded the document time budget",
+            ) from exc
 
         markdown = "\n\n".join(page.markdown for page in pages if page.markdown)
         return AdapterOutput(

@@ -17,7 +17,7 @@ FIXTURE = NEW_APP / "tests" / "fixtures" / "mechanical-z.md"
 OUT = Path(
     os.getenv("E2E_OUT", str(NEW_APP / "docs" / "reports" / "M6-feedback-e2e.json"))
 )
-TERMINAL = {"STRUCTURED_READY", "FAILED", "CANCELLED"}
+TERMINAL = {"STRUCTURED_READY", "REVIEW_FAILED", "FAILED", "CANCELLED"}
 
 
 def wait_run(client: httpx.Client, run_id: str, timeout: float = 120) -> dict:

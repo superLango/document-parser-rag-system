@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 
-from hanson_contracts import ReviewRequest
+from hanson_contracts import AgentResult, ReviewRequest
 
 from services.review.config import Settings
 from services.review.rules import run_rules
@@ -93,3 +93,49 @@ def test_review_service_rule_only_mode() -> None:
         assert report.ruleset_version == "m5"
 
     asyncio.run(scenario())
+
+
+def test_model_errors_are_advisory(monkeypatch) -> None:
+    async def fake_call(self, request, deterministic):  # noqa: ANN001 - test stub
+        return AgentResult(
+            task_id="review-run-2",
+            session_id="review-run-2",
+            status="completed",
+            output={
+                "findings": [
+                    {
+                        "category": "completeness",
+                        "severity": "error",
+                        "target": {"record_id": "R1"},
+                        "observed": "null",
+                        "expected": "value",
+                        "evidence_refs": ["E1"],
+                        "confidence": 0.8,
+                    }
+                ]
+            },
+        )
+
+    monkeypatch.setattr(ReviewService, "_call_agent", fake_call)
+    service = ReviewService(Settings(use_agent=True, ruleset_version="m5"))
+    report = asyncio.run(
+        service.review(
+            ReviewRequest(
+                run_id="run-2",
+                records=[
+                    {
+                        "record_id": "R1",
+                        "table_id": "T1",
+                        "grade": "Q355B",
+                        "properties": {"Rm": {"value": 470, "unit": "MPa"}},
+                        "evidence_refs": ["E1"],
+                    }
+                ],
+                evidence=_evidence(),
+                tables=[{"table_id": "T1", "records": 1}],
+            )
+        )
+    )
+    assert report.status == "warn"
+    assert report.stats["deterministic_errors"] == 0
+    assert report.stats["model_errors"] == 1

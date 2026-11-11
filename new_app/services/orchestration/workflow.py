@@ -201,7 +201,7 @@ async def _record_stage_failure(
         stage_row = result.scalars().first()
         if stage_row is not None:
             stage_row.status = "failed"
-            stage_row.error_code = "INTERNAL"
+            stage_row.error_code = getattr(exc, "error_code", "INTERNAL")
             if stage_row.started_at is not None:
                 stage_row.finished_at = max(now(), stage_row.started_at)
                 stage_row.duration_ms = int(
@@ -250,7 +250,11 @@ async def _execute_stage(
         except asyncio.CancelledError:
             raise
         except Exception as exc:
-            final = attempt >= attempts
+            # Deterministic review rejections and OCR backend outages are not
+            # transient; retrying only extends the outage.
+            final = attempt >= attempts or isinstance(
+                exc, (ReviewGateError, OcrStageError)
+            )
             await _record_stage_failure(run_id, stage, attempt, final, exc)
             if final:
                 raise
@@ -298,10 +302,24 @@ async def _call_ocr(payload: dict) -> dict:
         async with httpx.AsyncClient(timeout=settings.ocr_timeout_seconds) as client:
             response = await client.post(url, json=payload)
     except httpx.HTTPError as exc:
-        raise RuntimeError(f"ocr service unavailable: {exc}") from exc
+        raise OcrStageError(
+            "OCR_BACKEND_UNAVAILABLE", f"ocr service unavailable: {exc}"
+        ) from exc
     if response.status_code != 200:
-        raise RuntimeError(f"ocr service error {response.status_code}: {response.text[:500]}")
-    return response.json()
+        code = "OCR_SERVICE_ERROR"
+        try:
+            detail = response.json().get("detail")
+            if isinstance(detail, dict) and detail.get("code"):
+                code = str(detail["code"])
+        except ValueError:
+            pass
+        raise OcrStageError(
+            code, f"ocr service error {response.status_code}: {response.text[:500]}"
+        )
+    try:
+        return response.json()
+    except ValueError as exc:
+        raise OcrStageError("OCR_SERVICE_ERROR", "ocr response is not JSON") from exc
 
 
 async def _record_ocr_artifacts(run: Run, artifacts: list[dict]) -> None:
@@ -355,7 +373,7 @@ async def _route_stage(run: Run) -> dict:
     tables = data.get("tables") or []
     assignments = []
     for table in tables:
-        match = await _match_table(table)
+        match = await _match_table(table, run.recipe_channel)
         assignments.append(
             {
                 "table_id": table.get("table_id"),
@@ -375,11 +393,13 @@ async def _route_stage(run: Run) -> dict:
     }
 
 
-async def _match_table(table: dict) -> dict:
+async def _match_table(table: dict, channel: str = "stable") -> dict:
     url = f"{settings.recipe_registry_url.rstrip('/')}/internal/recipes/match"
     try:
         async with httpx.AsyncClient(timeout=30) as client:
-            response = await client.post(url, json={"table": table})
+            response = await client.post(
+                url, json={"table": table, "channel": channel}
+            )
     except httpx.HTTPError as exc:
         raise RuntimeError(f"recipe registry unavailable: {exc}") from exc
     if response.status_code != 200:
@@ -390,6 +410,23 @@ async def _match_table(table: dict) -> dict:
 
 
 class SandboxStageError(RuntimeError):
+    def __init__(self, error_code: str, message: str) -> None:
+        super().__init__(message)
+        self.error_code = error_code
+
+
+class ReviewGateError(RuntimeError):
+    """Deterministic review rules rejected the run."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.error_code = "REVIEW_FAILED"
+        self.run_state = RunState.REVIEW_FAILED
+
+
+class OcrStageError(RuntimeError):
+    """OCR failure with a stable code; backend outages are not retried."""
+
     def __init__(self, error_code: str, message: str) -> None:
         super().__init__(message)
         self.error_code = error_code
@@ -627,6 +664,11 @@ async def _review_stage(run: Run) -> dict:
     )
     report = await _call_review(request)
     await _persist_review(run, report)
+    if report.status == "fail":
+        errors = int((report.stats or {}).get("deterministic_errors") or 0)
+        raise ReviewGateError(
+            f"review gate failed with {errors} deterministic error(s)"
+        )
     return report.model_dump(mode="json")
 
 
@@ -744,20 +786,22 @@ async def cancel(run_id: str) -> None:
         await session.commit()
 
 
-async def _mark_failed(run_id: str, error_code: str, detail: str) -> None:
+async def _mark_terminal(
+    run_id: str, state: RunState, error_code: str, detail: str
+) -> None:
     async with SessionLocal() as session:
         run = await session.get(Run, run_id)
         if run is None or is_terminal(run.status):
             return
-        run.status = RunState.FAILED.value
-        run.stage = RunState.FAILED.value
+        run.status = state.value
+        run.stage = state.value
         run.error_code = error_code
         run.finished_at = now()
         await _append_event(
             session,
             run,
             "run.failed",
-            RunState.FAILED.value,
+            state.value,
             "failed",
             {"error_code": error_code, "detail": detail[:1000]},
         )
@@ -802,7 +846,10 @@ async def run_workflow(run_id: str) -> None:
     except asyncio.CancelledError:
         raise
     except Exception as exc:
-        await _mark_failed(run_id, getattr(exc, "error_code", "INTERNAL"), str(exc))
+        state = getattr(exc, "run_state", RunState.FAILED)
+        await _mark_terminal(
+            run_id, state, getattr(exc, "error_code", "INTERNAL"), str(exc)
+        )
 
 
 def schedule(run_id: str) -> None:

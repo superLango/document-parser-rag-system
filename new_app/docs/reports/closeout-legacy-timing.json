@@ -1,0 +1,410 @@
+{
+  "documents": 60,
+  "legacy_total_ms": {
+    "p50": 379.0,
+    "p95": 934.8
+  },
+  "legacy_excl_ocr_ms": {
+    "p50": 378.5,
+    "p95": 933.8
+  },
+  "steps": {
+    "alignment": {
+      "count": 60,
+      "p50": 21.1,
+      "p95": 30.7
+    },
+    "bindings": {
+      "count": 60,
+      "p50": 128.9,
+      "p95": 363.8
+    },
+    "clauses": {
+      "count": 60,
+      "p50": 7.0,
+      "p95": 22.0
+    },
+    "coverage": {
+      "count": 60,
+      "p50": 0.9,
+      "p95": 1.5
+    },
+    "cross_standard": {
+      "count": 60,
+      "p50": 65.4,
+      "p95": 83.0
+    },
+    "evidence_bbox": {
+      "count": 60,
+      "p50": 0.2,
+      "p95": 1.4
+    },
+    "extract": {
+      "count": 60,
+      "p50": 5.4,
+      "p95": 75.0
+    },
+    "ingest": {
+      "count": 60,
+      "p50": 1.6,
+      "p95": 2.9
+    },
+    "inventory": {
+      "count": 60,
+      "p50": 36.3,
+      "p95": 88.6
+    },
+    "item_coverage": {
+      "count": 60,
+      "p50": 18.6,
+      "p95": 39.2
+    },
+    "item_methods": {
+      "count": 60,
+      "p50": 0.1,
+      "p95": 0.7
+    },
+    "links": {
+      "count": 60,
+      "p50": 9.4,
+      "p95": 32.7
+    },
+    "matrix_extract": {
+      "count": 60,
+      "p50": 0.0,
+      "p95": 12.8
+    },
+    "nonrecord": {
+      "count": 60,
+      "p50": 7.3,
+      "p95": 38.8
+    },
+    "ocr": {
+      "count": 60,
+      "p50": 0.7,
+      "p95": 1.4
+    },
+    "outline": {
+      "count": 60,
+      "p50": 1.9,
+      "p95": 3.6
+    },
+    "references": {
+      "count": 60,
+      "p50": 5.2,
+      "p95": 9.9
+    },
+    "tablegrid": {
+      "count": 60,
+      "p50": 60.8,
+      "p95": 277.0
+    },
+    "validate": {
+      "count": 60,
+      "p50": 0.8,
+      "p95": 7.2
+    }
+  },
+  "documents_detail": [
+    {
+      "doc_id": "pdf__GBT33084-2016",
+      "total_ms": 765.1,
+      "excl_ocr_ms": 763.9
+    },
+    {
+      "doc_id": "da6e78317ae045d7aef37604fe257ff5",
+      "total_ms": 737.5,
+      "excl_ocr_ms": 736.9
+    },
+    {
+      "doc_id": "5c7ee8be97c44d1faeb914342670b6a0",
+      "total_ms": 1252.8,
+      "excl_ocr_ms": 1250.9
+    },
+    {
+      "doc_id": "65c7cfb83be748febdb2dff1b1d8f6291779257620839",
+      "total_ms": 1518.5,
+      "excl_ocr_ms": 1514.3
+    },
+    {
+      "doc_id": "4417071b32c147858c7f681c4deea4331787725949473",
+      "total_ms": 371.3,
+      "excl_ocr_ms": 370.7
+    },
+    {
+      "doc_id": "564ae4f40b9a4787824477f821ab5ac81787031930715",
+      "total_ms": 576.4,
+      "excl_ocr_ms": 575.4
+    },
+    {
+      "doc_id": "0715f18cf44c469cb1c0510db73c9dea",
+      "total_ms": 334.0,
+      "excl_ocr_ms": 333.3
+    },
+    {
+      "doc_id": "de2adf26e9dd40d095d1924db4fade961788231324706",
+      "total_ms": 388.8,
+      "excl_ocr_ms": 388.1
+    },
+    {
+      "doc_id": "7ad79a9408c948b490137ac4c29fa4931704785550850",
+      "total_ms": 297.6,
+      "excl_ocr_ms": 297.1
+    },
+    {
+      "doc_id": "05ecccc8ad8d40f7b76e52ac729030db1786753115680",
+      "total_ms": 564.1,
+      "excl_ocr_ms": 563.3
+    },
+    {
+      "doc_id": "27c4e67d00ff41a1b79fef9ab787d2eb1667181019302",
+      "total_ms": 447.0,
+      "excl_ocr_ms": 446.4
+    },
+    {
+      "doc_id": "7319bf3dde60412bb4b7e30209da8a401792809205362",
+      "total_ms": 419.6,
+      "excl_ocr_ms": 418.6
+    },
+    {
+      "doc_id": "9d1ae7d941e042c491a9c3601755953c",
+      "total_ms": 409.6,
+      "excl_ocr_ms": 408.9
+    },
+    {
+      "doc_id": "7373a8d9a442443b9733ecc5fecd5cfe1787899964564",
+      "total_ms": 270.3,
+      "excl_ocr_ms": 269.6
+    },
+    {
+      "doc_id": "pdf__JX-25-035_GH4698高温合金棒材采购技术协议",
+      "total_ms": 252.1,
+      "excl_ocr_ms": 251.4
+    },
+    {
+      "doc_id": "7069f774d8d44a8bb2cce1f4191831e41792653520267",
+      "total_ms": 357.9,
+      "excl_ocr_ms": 357.0
+    },
+    {
+      "doc_id": "fc367075184b463daf6b6a5756545d7a1791857096031",
+      "total_ms": 109.2,
+      "excl_ocr_ms": 108.9
+    },
+    {
+      "doc_id": "775043b538734e7b8cd7236e4d7c917e1792809007377",
+      "total_ms": 596.2,
+      "excl_ocr_ms": 595.4
+    },
+    {
+      "doc_id": "ae7a1887a2e0498abdf880f22f81bb361784857452729",
+      "total_ms": 282.2,
+      "excl_ocr_ms": 281.5
+    },
+    {
+      "doc_id": "b8c365836b9c4ff4a63c862899abb0441788486522717",
+      "total_ms": 270.6,
+      "excl_ocr_ms": 270.2
+    },
+    {
+      "doc_id": "78a0de4c51a24c958575b9909f6308ae",
+      "total_ms": 379.0,
+      "excl_ocr_ms": 378.5
+    },
+    {
+      "doc_id": "d26323581f4047d08fb304ef395ef7361790210741923",
+      "total_ms": 641.0,
+      "excl_ocr_ms": 640.1
+    },
+    {
+      "doc_id": "754a537ea3f945528159e82a88fc96b31789604489041",
+      "total_ms": 560.6,
+      "excl_ocr_ms": 559.9
+    },
+    {
+      "doc_id": "1741e4503e464eefa4979511533a70131789604448717",
+      "total_ms": 316.9,
+      "excl_ocr_ms": 316.5
+    },
+    {
+      "doc_id": "1741e4503e464eefa4979511533a70131789604448717__446f7d20",
+      "total_ms": 371.3,
+      "excl_ocr_ms": 370.9
+    },
+    {
+      "doc_id": "pdf__gbt1591_2018",
+      "total_ms": 734.5,
+      "excl_ocr_ms": 733.7
+    },
+    {
+      "doc_id": "a671647676ee4290b1a914b9766f3672",
+      "total_ms": 908.4,
+      "excl_ocr_ms": 907.6
+    },
+    {
+      "doc_id": "17d722e0e9d9445a9f3a443abcb572d31792472615612",
+      "total_ms": 412.5,
+      "excl_ocr_ms": 411.7
+    },
+    {
+      "doc_id": "59bebdcf7e10498984d48d1848577abe1789885503015",
+      "total_ms": 721.9,
+      "excl_ocr_ms": 720.5
+    },
+    {
+      "doc_id": "b50805e0ab634fafb3658d1f5b1866bb1788487110394",
+      "total_ms": 317.3,
+      "excl_ocr_ms": 316.7
+    },
+    {
+      "doc_id": "bc6e766f5cb74c04ba8dd4136c2046a51788498985583",
+      "total_ms": 424.9,
+      "excl_ocr_ms": 424.4
+    },
+    {
+      "doc_id": "be26fecfa3a0486d8b6566e0300937311675407000327",
+      "total_ms": 436.3,
+      "excl_ocr_ms": 435.6
+    },
+    {
+      "doc_id": "0c87affede6e4522824189505c2821091787136466679",
+      "total_ms": 320.4,
+      "excl_ocr_ms": 319.7
+    },
+    {
+      "doc_id": "100e43ba7722423cb8dd02adbd8727081788829847412",
+      "total_ms": 252.6,
+      "excl_ocr_ms": 252.2
+    },
+    {
+      "doc_id": "2af08cbfcabe4ffcbe56039cec9436791788486535272",
+      "total_ms": 182.8,
+      "excl_ocr_ms": 182.4
+    },
+    {
+      "doc_id": "bf295b3df1a74b0b99bd76ef192a790d1783759265808",
+      "total_ms": 199.5,
+      "excl_ocr_ms": 199.1
+    },
+    {
+      "doc_id": "ec684db9f60946cf905b8f327c8af26e1792563440027",
+      "total_ms": 298.3,
+      "excl_ocr_ms": 297.7
+    },
+    {
+      "doc_id": "10aef59a5c91456c92e5e5a8225f4acf1777941075774",
+      "total_ms": 298.2,
+      "excl_ocr_ms": 297.7
+    },
+    {
+      "doc_id": "1c4cf85c9255469184e338fda9af80f81768216448834",
+      "total_ms": 318.4,
+      "excl_ocr_ms": 317.7
+    },
+    {
+      "doc_id": "208851e1280043d191423616d783e1a2",
+      "total_ms": 444.1,
+      "excl_ocr_ms": 443.3
+    },
+    {
+      "doc_id": "2ad6ce310e684a5cae57471d563a6f421792473701744",
+      "total_ms": 214.7,
+      "excl_ocr_ms": 214.1
+    },
+    {
+      "doc_id": "521854804389445498b69c559d95dbe01777940887289",
+      "total_ms": 421.2,
+      "excl_ocr_ms": 420.4
+    },
+    {
+      "doc_id": "728e72b0f2e64ff5bcec0974f6f4146c1787136380607",
+      "total_ms": 448.7,
+      "excl_ocr_ms": 447.8
+    },
+    {
+      "doc_id": "74aec6bf74054d4782f5ed622a6166141788762643935",
+      "total_ms": 447.3,
+      "excl_ocr_ms": 446.7
+    },
+    {
+      "doc_id": "92e35be4e585478abd81090c750ccb301788569067714",
+      "total_ms": 454.8,
+      "excl_ocr_ms": 454.0
+    },
+    {
+      "doc_id": "a5fbc645696b4c3a91e2c781d369c7101792487564255",
+      "total_ms": 396.7,
+      "excl_ocr_ms": 396.0
+    },
+    {
+      "doc_id": "cdbfe0b1485a4e86ad5d0f92ed320c5c1787044347511",
+      "total_ms": 150.4,
+      "excl_ocr_ms": 149.9
+    },
+    {
+      "doc_id": "da33e865754147ac918bb58e10addfeb1723528545218",
+      "total_ms": 240.1,
+      "excl_ocr_ms": 239.5
+    },
+    {
+      "doc_id": "e0ac84b49ef64068a61ee6e775c108af1791426984160",
+      "total_ms": 494.2,
+      "excl_ocr_ms": 493.4
+    },
+    {
+      "doc_id": "0684efec05a54ab8868faf6dfb3b05e71789376678753",
+      "total_ms": 271.7,
+      "excl_ocr_ms": 271.1
+    },
+    {
+      "doc_id": "075993d8bda54c54b9dd8e1ca88724c31667182921102",
+      "total_ms": 293.2,
+      "excl_ocr_ms": 292.6
+    },
+    {
+      "doc_id": "6db6bab718424f6dac55b919f13bc99b1787136455509",
+      "total_ms": 324.5,
+      "excl_ocr_ms": 323.9
+    },
+    {
+      "doc_id": "1738d3d4f8f74c7a8879da74e1c195f31788155976488",
+      "total_ms": 402.3,
+      "excl_ocr_ms": 401.8
+    },
+    {
+      "doc_id": "22b1476b150e43fea6dda44f8db9d0041790235357026",
+      "total_ms": 934.8,
+      "excl_ocr_ms": 933.8
+    },
+    {
+      "doc_id": "7d54c17172fe4febaeadd324e5be46e51775611624602",
+      "total_ms": 845.7,
+      "excl_ocr_ms": 844.4
+    },
+    {
+      "doc_id": "de301f981df74a44900286b1db33bde81792373139709",
+      "total_ms": 373.6,
+      "excl_ocr_ms": 373.2
+    },
+    {
+      "doc_id": "pdf__7_Q_S10-0351-2004_TA15钛合金锻制棒材",
+      "total_ms": 294.7,
+      "excl_ocr_ms": 294.0
+    },
+    {
+      "doc_id": "03305b1a78924984bf5160f81f5a795f1791246434278",
+      "total_ms": 171.8,
+      "excl_ocr_ms": 171.1
+    },
+    {
+      "doc_id": "085d10b1401c415e86168dfca616d9761789604740812",
+      "total_ms": 192.9,
+      "excl_ocr_ms": 192.3
+    },
+    {
+      "doc_id": "3081c0f9b98d4d33b83f685c8f4235e41789712654410",
+      "total_ms": 244.1,
+      "excl_ocr_ms": 243.5
+    }
+  ]
+}

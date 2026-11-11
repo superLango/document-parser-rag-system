@@ -1,0 +1,152 @@
+{
+  "generated_at": "2026-11-11T20:31:29+00:00",
+  "api": "http://localhost:18000",
+  "environment": "compose（生产镜像）",
+  "suites": {
+    "pdf": {
+      "documents": 5,
+      "structured_ready": 4,
+      "failed": 1,
+      "status_counts": {
+        "FAILED": 1,
+        "STRUCTURED_READY": 4
+      },
+      "records": 236,
+      "fields": 628,
+      "tables": 55,
+      "review_findings": 739,
+      "p50_seconds": 193.31,
+      "p95_seconds": 251.64,
+      "max_seconds": 251.64,
+      "stages": {
+        "ocr": {
+          "samples": 5,
+          "p50_seconds": 191.48,
+          "p95_seconds": 243.73
+        },
+        "routing": {
+          "samples": 4,
+          "p50_seconds": 0.34,
+          "p95_seconds": 0.46
+        },
+        "sandbox": {
+          "samples": 4,
+          "p50_seconds": 0.9,
+          "p95_seconds": 0.93
+        },
+        "review": {
+          "samples": 4,
+          "p50_seconds": 41.3,
+          "p95_seconds": 134.72
+        }
+      }
+    }
+  },
+  "documents": {
+    "pdf": [
+      {
+        "name": "1083bfd3f2a14009a239857f166afb8d-23_MAS7097 B 压气机叶片用GH4169D合金棒材.pdf",
+        "document_id": "a3717b37-28eb-4fa1-803f-658a9d8dd1ab",
+        "run_id": "d677e402-e38c-4e58-8355-e83a10286ac5",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 249.55,
+        "records": 22,
+        "fields": 44,
+        "tables": 20,
+        "review_status": "warn",
+        "findings": 76,
+        "artifacts": 56,
+        "stage_ms": {
+          "ocr": 191484,
+          "routing": 429,
+          "sandbox": 932,
+          "review": 55743
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "13f7cdcc4d29446abf8f8aa960e18497-29_70_410JX(通用）-D-S15-2414 GH3128合金环形锻件规范.pdf",
+        "document_id": "b280b9b6-e6df-48d4-b0c8-40e51c6f91bf",
+        "run_id": "a941dc08-4aef-455f-9f77-13d7375e4fb8",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 169.13,
+        "records": 12,
+        "fields": 67,
+        "tables": 5,
+        "review_status": "warn",
+        "findings": 107,
+        "artifacts": 28,
+        "stage_ms": {
+          "ocr": 34658,
+          "routing": 270,
+          "sandbox": 901,
+          "review": 134722
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "HB 20079-2012 航空用高强度沉淀硬化不锈钢锻件规范.pdf",
+        "document_id": "a5516817-f9f8-40ec-a310-94ed09090adb",
+        "run_id": "bc71736f-3c0f-43f1-818c-f7c87fc63ee4",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 48.39,
+        "records": 31,
+        "fields": 62,
+        "tables": 9,
+        "review_status": "warn",
+        "findings": 97,
+        "artifacts": 42,
+        "stage_ms": {
+          "ocr": 7255,
+          "routing": 339,
+          "sandbox": 849,
+          "review": 41303
+        },
+        "category": "行业标准"
+      },
+      {
+        "name": "b8a241429d7c4e56bd3cde8aeb451e99-48_GJB 2294A-2014.pdf",
+        "document_id": "a7c63dd9-32e1-4208-b7ad-ba08fef72e2a",
+        "run_id": "fe869ea0-eea9-4c11-88d9-b24e3d202ed3",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 251.64,
+        "records": 171,
+        "fields": 455,
+        "tables": 21,
+        "review_status": "warn",
+        "findings": 459,
+        "artifacts": 52,
+        "stage_ms": {
+          "ocr": 243729,
+          "routing": 457,
+          "sandbox": 914,
+          "review": 3519
+        },
+        "category": "采购规范/技术协议"
+      },
+      {
+        "name": "ba99e438f3f9400cae4391cfed95466e-50_2408274--技术（JS-CEABA-000127_Z）.pdf",
+        "document_id": "386c51e4-9756-4a72-8f6b-dcdfa3916a26",
+        "run_id": "12347aac-1e0e-4f62-a4aa-054660c5fb82",
+        "status": "FAILED",
+        "error_code": "OCR_BACKEND_UNAVAILABLE",
+        "elapsed_seconds": 193.31,
+        "records": 0,
+        "fields": 0,
+        "tables": 0,
+        "review_status": "",
+        "findings": 0,
+        "artifacts": 0,
+        "stage_ms": {
+          "ocr": 192387
+        },
+        "category": "采购规范/技术协议"
+      }
+    ]
+  },
+  "branches": []
+}

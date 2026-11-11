@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     mock_fail_times: int = 0
     ocr_url: str = "http://localhost:18002"
     ocr_backend: str = "auto"
-    ocr_timeout_seconds: float = 300.0
+    ocr_timeout_seconds: float = 900.0
     # 回滚开关：置 true 时 OCR 阶段回到 M1 的 fake 实现。
     ocr_use_fake: bool = False
     recipe_registry_url: str = "http://localhost:18005"

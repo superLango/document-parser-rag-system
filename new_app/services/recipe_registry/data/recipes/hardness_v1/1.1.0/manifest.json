@@ -1,0 +1,76 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "hardness_v1",
+  "version": "1.1.0",
+  "engine_api": "recipe-engine/1",
+  "profile": "mechanical_properties",
+  "signature": {
+    "profile": "mechanical_properties",
+    "orientation": "grade_rows",
+    "n_cols": 3,
+    "blocks": 0,
+    "tokens": [
+      "硬度",
+      "布氏硬度",
+      "洛氏硬度",
+      "维氏硬度",
+      "hrc",
+      "hrb",
+      "hv",
+      "hbw",
+      "hb"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "钢号",
+      "grade",
+      "材料牌号"
+    ],
+    "conditions": [
+      "规格",
+      "状态",
+      "厚度",
+      "试验温度"
+    ],
+    "measures": {
+      "HB": {
+        "unit": "HB",
+        "family": "hardness"
+      },
+      "HBW": {
+        "unit": "HBW",
+        "family": "hardness"
+      },
+      "HRC": {
+        "unit": "HRC",
+        "family": "hardness"
+      },
+      "HRB": {
+        "unit": "HRB",
+        "family": "hardness"
+      },
+      "HV": {
+        "unit": "HV",
+        "family": "hardness"
+      }
+    }
+  },
+  "rules": {
+    "hardness_scale_required": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": null
+  },
+  "checksum": "42145696a2cb8f1844ce70ca8de4eff9274368407d54c884d3db2f04459c5699",
+  "created_at": "2026-11-12T00:00:00+00:00"
+}

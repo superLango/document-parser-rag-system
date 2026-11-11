@@ -27,7 +27,7 @@ DEFAULT_AGENT = os.getenv("AGENT_INTERNAL", "http://localhost:18003")
 DEFAULT_OUT_JSON = REPO_ROOT / "new_app" / "docs" / "reports" / "M8-loadtest.json"
 DEFAULT_OUT_MD = REPO_ROOT / "new_app" / "docs" / "reports" / "M8-loadtest.md"
 FIXTURE = REPO_ROOT / "new_app" / "tests" / "fixtures" / "mechanical-z.md"
-TERMINAL = {"STRUCTURED_READY", "FAILED", "CANCELLED"}
+TERMINAL = {"STRUCTURED_READY", "REVIEW_FAILED", "FAILED", "CANCELLED"}
 
 
 def now_iso() -> str:
