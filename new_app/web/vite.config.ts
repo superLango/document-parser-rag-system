@@ -6,8 +6,8 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      "/v1": "http://localhost:8000",
-      "/internal": "http://localhost:8001"
+      "/v1": "http://localhost:18000",
+      "/internal": "http://localhost:18001"
     }
   }
 });

@@ -15,6 +15,8 @@ Hanson 标准拆分平台重构代码目录。当前为 M0 脚手架，只包含
 | review | 8006 | `uvicorn services.review.main:app --port 8006` |
 | web | 5173 | `npm run dev` |
 
+> Compose 主机端口：服务 `18000–18006`；Postgres `15432`；MinIO `19000/19001`；Redis `16379`。容器内部仍使用 `8000–8006`。
+
 统一健康检查：`GET /healthz` 返回：
 
 ```json
