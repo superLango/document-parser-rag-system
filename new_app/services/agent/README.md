@@ -97,7 +97,9 @@ ReviewAgent 护栏：
 
 ## 4. Model Gateway
 
-- 端点：primary / secondary / tertiary，跳过空地址；默认 tertiary `http://192.168.1.35:9988`。
+- 端点：primary / secondary / tertiary，跳过空地址；默认 primary `http://39.107.239.208:35035`、secondary `http://192.168.188.75:9991`、tertiary `http://192.168.1.35:9988`。
+- 启动探测：每个端点 GET `/v1/models`（2 秒超时），模型名必须等于 `AGENT_MODEL`；不可达/模型不匹配标记 down，active 落到第一个健康端点。
+- 周期探测：每 60 秒复查；旧地址恢复且提供同一模型后自动启用/回切。
 - 连接失败/429/5xx 视为可切换错误。
 - **10 秒防抖**：首次失败只记录时间，不切换 active；连续失败满 10 秒才提交切换。
 - 请求可在备地址立即完成，但 active 保持在主地址，短时抖动不回切。
@@ -157,7 +159,7 @@ ReviewAgent 护栏：
 | 变量 | 默认 | 说明 |
 |---|---|---|
 | `AGENT_MODEL` | `Qwen3.6-35B-A3B-NVFP4` | 模型名 |
-| `AGENT_BASE_URL_PRIMARY/SECONDARY/TERTIARY` | 空/空/`http://192.168.1.35:9988` | 三地址 |
+| `AGENT_BASE_URL_PRIMARY/SECONDARY/TERTIARY` | `http://39.107.239.208:35035` / `http://192.168.188.75:9991` / `http://192.168.1.35:9988` | 三地址；启动探测自动跳过不可用/模型不匹配端点 |
 | `AGENT_FAILOVER_SECONDS` | 10 | 连续失败切换窗口 |
 | `AGENT_FAILOVER_COOLDOWN` | 30 | 回切探测冷却 |
 | `AGENT_CONTEXT_WINDOW` | 65536 | 上下文预算 |
@@ -217,5 +219,5 @@ python scripts/dev/guarded-model-test.py --floor-mb 4096 -- \
 1. RouterAgent/ReviewAgent 采用单次结构化调用；复杂多轮推理留给 M6 的 Repair/Triage。
 2. ReviewAgent 只补充语义 Finding；业务规则仍以 review-service 为准。
 3. 会话库为本地 SQLite，单副本；多副本需迁移到共享数据库。
-4. `AGENT_BASE_URL_PRIMARY/SECONDARY` 当前为空，实际只配置 tertiary；三地址切换由单元测试覆盖。
+4. `AGENT_BASE_URL_PRIMARY/SECONDARY` 已配置旧地址，但当前不可达/模型不匹配；启动/周期探测会标记 down 并自动使用 tertiary。真实三地址切换需旧地址服务同一模型。
 5. Tokenizer 优先真实 `/tokenize`；模型服务不提供该接口时降级估算并标记 `degraded`。

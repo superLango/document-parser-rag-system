@@ -140,7 +140,7 @@ K8s 测试/生产环境的可用性、版本与资源配置尚未完全确定，
   - 切换后设置冷却窗口，避免抖动。
   - 主地址恢复后，按配置决定是否回切（默认回切，需防抖）。
 - 记录 `model.failover` 事件：时间、来源、目标、原因、耗时、连续失败次数。
-- M5 实现：`services/agent/model_gateway.py`；接口支持 primary/secondary/tertiary，3 地址按序切换；10 秒防抖；冷却 30 秒后回切；4xx 非 429 不切换。当前部署仅配置 tertiary，三地址切换由单元测试覆盖。
+- M5 实现：`services/agent/model_gateway.py`；接口支持 primary/secondary/tertiary，3 地址按序切换；10 秒防抖；冷却 30 秒后回切；4xx 非 429 不切换。M6 已补齐 primary/secondary 配置（旧公网/旧局域网地址）；agent 启动与每 60 秒探测 `/v1/models`，模型名不匹配或不可达的端点标记 down，当前自动使用 tertiary。
 
 **备选方案**
 
@@ -165,7 +165,8 @@ K8s 测试/生产环境的可用性、版本与资源配置尚未完全确定，
 - [x] 模拟短时抖动（<10 秒），不切换 active。
 - [x] 主地址恢复后按配置回切。
 - [x] 三地址全故障返回 `ModelUnavailable`。
-- [x] 真实 tertiary 健康与 smoke 通过；primary/secondary 待补配置。
+- [x] 真实 tertiary 健康与 smoke 通过；primary/secondary 已配置旧地址，当前不可达/模型不匹配，探测标记 down。
+- [x] 启动/周期探测：`test_probe_marks_model_mismatch_and_unreachable` 覆盖不可达与模型不匹配。
 - 报告：[M5 模型切换](reports/M5-model-failover.md)。
 
 ---

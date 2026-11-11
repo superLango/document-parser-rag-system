@@ -77,3 +77,22 @@ def test_migrated_registry_matches_golden_table() -> None:
     assert result.recipe_id
     assert result.version == "1.0.0"
     assert result.digest
+
+
+def test_mechanical_table_beats_hardness_recipe() -> None:
+    registry = RecipeRegistry()
+    manifests = registry.active_manifests("stable")
+    result = match_table(_table(), manifests)
+    assert result.recipe_id == "mechanical_properties_v1"
+
+
+def test_hardness_table_still_routes_to_hardness() -> None:
+    registry = RecipeRegistry()
+    manifests = registry.active_manifests("stable")
+    table = _table(
+        n_cols=2,
+        header_paths=[["牌号"], ["硬度 HBW"]],
+        rows=[["牌号", "硬度 HBW"], ["Q355B", "220"]],
+    )
+    result = match_table(table, manifests)
+    assert result.recipe_id == "hardness_v1"

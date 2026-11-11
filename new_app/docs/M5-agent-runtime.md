@@ -343,8 +343,8 @@ POST /internal/agent:resume
 
 ### 14.4 与计划的偏差
 
-1. **primary/secondary 未配置**：当前仅 tertiary `192.168.1.35:9988`；三地址切换由 MockTransport 单元测试覆盖，生产需补两个地址。
-2. **确定性 matcher 与新金标集口径不一致**：`hardness_v1` 与 `mechanical_properties_v1` 共享 `mechanical_properties` profile，确定性 matcher 在 2 张机械表上误选 hardness；RouterAgent 已纠正。建议 M6 配方评审拆分 profile 或调整 matcher 权重。
+1. **primary/secondary 已配置但当前不可用**：M6 补齐旧代码地址（`39.107.239.208:35035` / `192.168.188.75:9991`）；启动/周期探测会把不可达或模型不匹配的端点标记为 down，agent 自动使用 tertiary `192.168.1.35:9988`。真实三地址切换需旧地址服务同一模型。
+2. **确定性 matcher 与新金标集口径不一致**：`hardness_v1` 与 `mechanical_properties_v1` 共享 `mechanical_properties` profile，确定性 matcher 在 2 张机械表上误选 hardness；RouterAgent 已纠正。**M6 已修复**：`matcher.py` 增加低覆盖惩罚，确定性 matcher 达到 5/5；M3 route parity 报告更新为 recipe 3/5、status 5/5（2 例有意纠正）。
 3. **窗口基准为单请求**：32K/64K/128K 三组均有数据，但“并发 4 × 三窗口 × 共跑模型”组合压测留待 M8；D-005 已标注。
 4. **128K 实际 119,970 tokens**：为输出预留空间，服务器上限 131,072。
 5. **ReviewAgent 在合法样本上返回 0 条 Finding**：符合预期；模型语义召回需注入矛盾样本，M5 以规则召回 1.0 作为验收依据。

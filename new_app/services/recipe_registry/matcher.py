@@ -15,6 +15,11 @@ from .package import RecipeManifest, RecipeSignature
 
 EXACT_THRESHOLD = 0.9
 CANDIDATE_THRESHOLD = 0.6
+# A recipe that shares no header tokens with the table must not win on
+# profile/orientation/column-count alone (hardness_v1 vs
+# mechanical_properties_v1 share the same profile).
+LOW_COVERAGE_THRESHOLD = 0.15
+LOW_COVERAGE_PENALTY = 0.1
 
 _SPACE_RE = re.compile(r"\s+")
 _NUMERIC_RE = re.compile(r"^[\d.~～≤≥<>\-+/%℃]+$")
@@ -93,6 +98,14 @@ def token_overlap(left: list[str], right: list[str]) -> float:
     return len(left_set & right_set) / smaller
 
 
+def token_coverage(table_tokens: list[str], signature_tokens: list[str]) -> float:
+    """Fraction of table header tokens explained by a recipe signature."""
+    if not table_tokens or not signature_tokens:
+        return 0.0
+    table_set = set(table_tokens)
+    return len(table_set & set(signature_tokens)) / len(table_set)
+
+
 def signature_score(table: TableGrid, signature: RecipeSignature) -> float:
     if table.profile != signature.profile:
         return 0.0
@@ -110,7 +123,9 @@ def signature_score(table: TableGrid, signature: RecipeSignature) -> float:
         table_tokens, signature.tokens
     )
     score += 0.2 * similarity
-    return round(min(score, 1.0), 4)
+    if table_tokens and token_coverage(table_tokens, signature.tokens) < LOW_COVERAGE_THRESHOLD:
+        score -= LOW_COVERAGE_PENALTY
+    return round(max(0.0, min(score, 1.0)), 4)
 
 
 def match_table(table: TableGrid, recipes: list[RecipeManifest]) -> MatchResult:

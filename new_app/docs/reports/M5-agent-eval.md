@@ -12,7 +12,7 @@
 
 | 指标 | 门槛 | 实测 | 结论 |
 |---|---|---|---|
-| 路由准确率 | ≥ 确定性基线 | **1.0**（5/5） vs 基线 0.6（3/5） | 通过 |
+| 路由准确率 | ≥ 确定性基线 | **1.0**（5/5） vs 基线 **1.0**（5/5，M6 修复后；M5 时为 0.6） | 通过 |
 | 审核召回（注入错误） | ≥ 0.95 | **1.0**（8/8 规则类型） | 通过 |
 | 审核误报 | ≤ 0.05 | **0.0** | 通过 |
 | 上下文截断率 | 0 | **0** | 通过 |
@@ -42,9 +42,9 @@
 - Agent 每表延迟 2.5–4.8 s；prompt 1,443–1,644 tokens；completion 147–301 tokens。
 - Agent 理由包含 profile/header token/样例数据/列数，可审计。
 
-**发现**：迁移后的 `hardness_v1` 与 `mechanical_properties_v1` 共享 `mechanical_properties` profile，确定性 matcher 在缺少完整表头时会误选 hardness；RouterAgent 通过表头 token（Rm/断后伸长率）纠正。这解释了 M3 route parity 与新金标集的口径差异。建议 M6 配方评审时拆分 hardness profile 或增加 matcher 的 header-token 权重（不阻塞 M5）。
+**发现**：迁移后的 `hardness_v1` 与 `mechanical_properties_v1` 共享 `mechanical_properties` profile，确定性 matcher 在缺少完整表头时会误选 hardness；RouterAgent 通过表头 token（Rm/断后伸长率）纠正。**M6 已修复**：`matcher.py` 增加 `token_coverage` 低覆盖惩罚（coverage<0.15 扣 0.1），确定性 matcher 也达到 5/5；M3 route parity 报告更新为 recipe 3/5、status 5/5，2 例为有意纠正。新数据见 [M6-router-eval.json](M6-router-eval.json)。
 
-产物：[M5-router-eval.json](M5-router-eval.json)。
+产物：[M5-router-eval.json](M5-router-eval.json)（M5 历史）、[M6-router-eval.json](M6-router-eval.json)（修复后）。
 
 ---
 
@@ -156,9 +156,9 @@ tests/integration/agent
 
 | 项 | 说明 |
 |---|---|
-| 确定性 matcher 误选 hardness | 迁移配方 profile 冲突；Agent 已纠正；建议 M6 修复 |
+| 确定性 matcher 误选 hardness | **M6 已修复**（低覆盖惩罚）；确定性 5/5，Agent 5/5 |
 | 真实 E2E 模型 Finding 为 0 | 合法样本无矛盾；需注入语义矛盾样本才能测模型召回 |
-| 主/备地址为空 | 只配置 tertiary；三地址切换由 FakeTransport 单元测试覆盖 |
+| 主/备地址 | M6 已配置旧地址；当前不可达/模型不匹配，探测标记 down；真实三地址切换待旧地址服务同一模型 |
 | Router/Review 单次调用 | 工具循环留给 M6 的 Repair/Triage |
 | 128K 实际 119,970 tokens | 为输出预留空间；服务器上限 131,072 |
 

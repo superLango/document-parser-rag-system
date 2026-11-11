@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
+import logging
 from typing import Any
 
 from hanson_contracts import AgentResult, AgentResumeRequest, AgentTask
@@ -14,6 +17,8 @@ from .model_gateway import ModelGateway, ModelGatewayConfig
 from .prompts import PromptLibrary
 from .session import SessionStore
 from .tools import build_default_registry
+
+logger = logging.getLogger(__name__)
 
 
 class AgentRuntime:
@@ -57,8 +62,22 @@ class AgentRuntime:
         self.review = ReviewAgent(
             self.gateway, self.context_manager, self.sessions, self.prompts
         )
+        self._probe_task: asyncio.Task[None] | None = None
+
+    async def start(self) -> None:
+        try:
+            await self.gateway.probe()
+        except Exception:  # noqa: BLE001 - startup must not fail on a dead endpoint
+            logger.exception("initial model endpoint probe failed")
+        if self._probe_task is None:
+            self._probe_task = asyncio.create_task(self.gateway.probe_loop())
 
     async def close(self) -> None:
+        if self._probe_task is not None:
+            self._probe_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await self._probe_task
+            self._probe_task = None
         await self.gateway.close()
         await self.tokenizer.close()
         self.sessions.close()

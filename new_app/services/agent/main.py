@@ -13,6 +13,7 @@ from .runtime import AgentRuntime
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     runtime = AgentRuntime(settings)
+    await runtime.start()
     set_runtime(runtime)
     try:
         yield

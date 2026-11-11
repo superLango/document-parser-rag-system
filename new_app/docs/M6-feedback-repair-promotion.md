@@ -7,7 +7,26 @@
 > 协作角色：外部业务/领域专家（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
 > 前置里程碑：[M4 沙箱](M4-sandbox-runtime.md)、[M5 Agent Runtime](M5-agent-runtime.md)  
-> 当前状态：计划中（未开工；含春节假期，节点可按排班顺延）
+> 当前状态：进行中（前置修复完成，2026-11-11；Feedback/Triage/Repair 主体未开始）
+
+---
+
+## 0. M6 前置修复（2026-11-11，已完成）
+
+### 0.1 primary/secondary 模型地址
+
+- 配置：primary `http://39.107.239.208:35035`（旧公网）、secondary `http://192.168.188.75:9991`（旧局域网）、tertiary `http://192.168.1.35:9988`（当前 NVFP4）。
+- agent-service 启动探测 `/v1/models`（2 秒超时）并校验 `AGENT_MODEL`；不可达/模型不匹配标记 down，active 落到第一个健康端点；每 60 秒复查，恢复后自动回切。
+- 实测：primary `Server disconnected`、secondary 返回空模型列表 → 均标记 down；tertiary active。Compose/K8s E2E 正常。
+- 代码：`services/agent/model_gateway.py`、`services/agent/runtime.py`；测试：`test_probe_marks_model_mismatch_and_unreachable`。
+
+### 0.2 hardness/mechanical profile 冲突
+
+- 根因：`hardness_v1` 与 `mechanical_properties_v1` 共享 `mechanical_properties` profile；机械表与 hardness 表头 token 交集为 0，但 hardness 因列数加分仍胜出（旧 matcher 同样误判）。
+- 修复：`services/recipe_registry/matcher.py` 增加 `token_coverage`；表头覆盖率 <0.15 时扣 0.1。
+- 结果：确定性 matcher 路由金标 5/5（修复前 3/5）；纯硬度表仍路由 `hardness_v1`；M3 route parity 更新为 recipe 3/5、status 5/5（2 例有意纠正）。
+- 测试：`test_mechanical_table_beats_hardness_recipe`、`test_hardness_table_still_routes_to_hardness`；数据：[M6-router-eval.json](reports/M6-router-eval.json)。
+- 代码：`services/recipe_registry/matcher.py`；报告：[M3-route-parity.md](reports/M3-route-parity.md) v1.1。
 
 ---
 
@@ -256,3 +275,4 @@ POST /v1/feedback/{id}/verify {decision: reject, reason}
 |---|---|---|---|
 | v1.0 | 2026-11-11 | 初版 | 项目负责人 |
 | v1.1 | 2026-11-11 | 补充 Q8 单人角色；引用 Q1/Q2 决策 | 项目负责人 |
+| v1.2 | 2026-11-11 | 状态改为进行中；补前置修复（三地址/低覆盖惩罚）与验证 | 项目负责人 |

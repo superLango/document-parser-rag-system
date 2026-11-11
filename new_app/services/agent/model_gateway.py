@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
+import logging
 import time
 from dataclasses import dataclass
 from typing import Any
 
 import httpx
 from hanson_contracts import ModelMessage, ModelResponse
+
+logger = logging.getLogger(__name__)
 
 FAILOVER_STATUS = {408, 425, 429, 500, 502, 503, 504}
 JSON_REPAIR_PROMPT = (
@@ -229,6 +233,90 @@ class ModelGateway:
             )
             for endpoint in self.config.endpoints
         ]
+
+    async def probe(
+        self,
+        *,
+        timeout_seconds: float = 2.0,
+        down_seconds: float | None = None,
+    ) -> list[dict[str, Any]]:
+        """Check /models and the configured model name; update endpoint health."""
+        now = self._clock()
+        down_for = self.config.cooldown_seconds if down_seconds is None else down_seconds
+        healthy: list[ModelEndpoint] = []
+        entries: list[dict[str, Any]] = []
+        headers = (
+            {"Authorization": f"Bearer {self.config.api_key}"}
+            if self.config.api_key
+            else {}
+        )
+        for endpoint in self.config.endpoints:
+            state = self._states[endpoint.name]
+            models: list[str] = []
+            error = ""
+            try:
+                response = await self._client.get(
+                    f"{endpoint.api_url}/models",
+                    headers=headers,
+                    timeout=timeout_seconds,
+                )
+                if response.status_code == 200:
+                    try:
+                        payload = response.json()
+                        models = [
+                            str(item.get("id"))
+                            for item in payload.get("data", [])
+                            if isinstance(item, dict)
+                        ]
+                    except ValueError:
+                        error = "invalid models payload"
+                else:
+                    error = f"HTTP {response.status_code}"
+            except httpx.HTTPError as exc:
+                error = str(exc)[:500]
+            if not error and self.config.model not in models:
+                error = f"model {self.config.model!r} not in {models}"
+            if error:
+                state.down_until = now + down_for
+                if state.failure_started is None:
+                    state.failure_started = now
+                state.last_error = error
+                entries.append(
+                    {
+                        "name": endpoint.name,
+                        "url": endpoint.api_url,
+                        "ok": False,
+                        "models": models,
+                        "error": error,
+                    }
+                )
+                continue
+            state.failures = 0
+            state.failure_started = None
+            state.down_until = 0.0
+            state.last_error = ""
+            healthy.append(endpoint)
+            entries.append(
+                {
+                    "name": endpoint.name,
+                    "url": endpoint.api_url,
+                    "ok": True,
+                    "models": models,
+                    "error": "",
+                }
+            )
+        if healthy:
+            self._active = healthy[0].name
+            self._active_since = now
+        return entries
+
+    async def probe_loop(self, interval_seconds: float = 60.0) -> None:
+        while True:
+            try:
+                await self.probe(down_seconds=interval_seconds + 10)
+            except Exception:  # noqa: BLE001 - background probe must not die
+                logger.exception("model endpoint probe failed")
+            await asyncio.sleep(interval_seconds)
 
     # -- requests ---------------------------------------------------------
     async def chat(

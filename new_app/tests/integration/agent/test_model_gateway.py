@@ -153,6 +153,38 @@ def test_json_repair_calls_model_twice() -> None:
     asyncio.run(scenario())
 
 
+def test_probe_marks_model_mismatch_and_unreachable() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        host = request.url.host
+        if host == "primary":
+            return httpx.Response(200, json={"data": [{"id": "Qwen3.5-9B"}]})
+        if host == "secondary":
+            raise httpx.ConnectError("down", request=request)
+        return httpx.Response(200, json={"data": [{"id": "Qwen-35B"}]})
+
+    async def scenario() -> None:
+        gateway = ModelGateway(
+            _config(),
+            transport=httpx.MockTransport(handler),
+            clock=lambda: 100.0,
+        )
+        try:
+            entries = await gateway.probe()
+            assert entries[0]["ok"] is False
+            assert "not in" in entries[0]["error"]
+            assert entries[1]["ok"] is False
+            assert entries[2]["ok"] is True
+            assert gateway.active_endpoint.name == "tertiary"
+            statuses = {item.name: item for item in gateway.status()}
+            assert statuses["primary"].available is False
+            assert statuses["secondary"].available is False
+            assert statuses["tertiary"].active is True
+        finally:
+            await gateway.close()
+
+    asyncio.run(scenario())
+
+
 def test_all_endpoints_down_raises() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         raise httpx.ConnectError("down", request=request)
