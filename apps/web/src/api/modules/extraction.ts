@@ -199,6 +199,12 @@ export const feedbackApi = {
     document_rule_saved?: boolean
     template_signature?: string
     template_status?: string
+    rule_learning?: {
+      status?: string
+      level?: string
+      reason?: string
+      alias?: { detail?: string } | null
+    }
   }> {
     return http.post(
       `/documents/${docId}/feedback/${feedbackId}/apply`,

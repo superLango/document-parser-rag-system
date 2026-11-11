@@ -864,8 +864,16 @@ def _load_business_dictionary(settings: Settings):
             override_path = settings.project_root / override_path
     try:
         if path.is_dir():
-            return load_dictionary_path(path)
-        return JsonDictionaryAdapter(path, override_path).load()
+            dictionary = load_dictionary_path(path)
+        else:
+            dictionary = JsonDictionaryAdapter(path, override_path).load()
+        try:
+            from .selfheal.lexicon import apply_learned_lexicon
+
+            dictionary = apply_learned_lexicon(dictionary, settings.project_root)
+        except Exception:  # noqa: BLE001 - learned overlay is optional
+            pass
+        return dictionary
     except Exception:  # noqa: BLE001 - keep extraction independent of dictionary state
         logger.warning("business dictionary load failed: %s", path, exc_info=True)
         return None

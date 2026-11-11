@@ -61,6 +61,8 @@ class Settings:
     dictionary_category_mode: str = "advisory"
     recipe_routing: bool = False
     orchestrate: bool = False
+    sandbox: bool = True
+    sandbox_timeout: float = 0.0
     tool_timeout_seconds: float = 900.0
 
     @classmethod
@@ -143,6 +145,10 @@ class Settings:
             .lower(),
             recipe_routing=_env_bool("METAL_DOC_RECIPE_ROUTING", False),
             orchestrate=_env_bool("METAL_DOC_ORCHESTRATE", False),
+            # Each job runs in a fresh interpreter so patched rule code is used
+            # without restarting the worker; set 0 to run in-process.
+            sandbox=_env_bool("METAL_DOC_SANDBOX", True),
+            sandbox_timeout=float(os.environ.get("METAL_DOC_SANDBOX_TIMEOUT", "0")),
             tool_timeout_seconds=float(
                 os.environ.get("METAL_DOC_TOOL_TIMEOUT", "900")
             ),

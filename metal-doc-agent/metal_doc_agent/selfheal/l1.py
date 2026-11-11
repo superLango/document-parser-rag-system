@@ -11,6 +11,7 @@ from typing import Any
 
 from ..contracts import DocumentResult, Record
 from ..pipeline import run_pipeline
+from ..sandbox_exec import run_pipeline_sandbox
 from ..settings import Settings
 from .config import SelfHealSettings, normalize_ocr_backend
 from .contracts import Finding, FindingVerdict, RepairLevel, RepairProposal, ProposalStatus
@@ -192,6 +193,7 @@ class L1Repairer:
         *,
         proposal_id: str | None = None,
         table_repair: dict[str, Any] | None = None,
+        target_ok: Any = None,
     ) -> L1Result:
         base = Path(job_dir)
         target = Path(out_dir)
@@ -232,22 +234,38 @@ class L1Repairer:
             )
             settings = dataclasses.replace(settings, project_root=overlay.root)
 
-        try:
-            run_pipeline(
-                source,
-                target,
-                settings=settings,
-                coverage_template=plan["template"],
+        if settings.sandbox:
+            # A fresh interpreter imports the current source tree, so the
+            # sandbox re-parse also exercises rule patches applied to disk.
+            ok, detail = run_pipeline_sandbox(
+                settings, source, target, coverage_template=plan["template"]
             )
-        except Exception as exc:  # noqa: BLE001 - repair failure must be reported
-            return L1Result(False, target, {}, None, f"重解析失败：{str(exc)[:300]}")
+            if not ok:
+                return L1Result(False, target, {}, None, f"重解析失败：{detail}")
+        else:
+            try:
+                run_pipeline(
+                    source,
+                    target,
+                    settings=settings,
+                    coverage_template=plan["template"],
+                )
+            except Exception as exc:  # noqa: BLE001 - repair failure must be reported
+                return L1Result(
+                    False, target, {}, None, f"重解析失败：{str(exc)[:300]}"
+                )
         after = load_result(target)
         if after is None:
             return L1Result(False, target, {}, None, "重解析未生成 result.json")
 
         diff = diff_results(before, after)
         diff["reproduced"] = True
-        if finding.target.table_id and not finding.target.record_id:
+        if target_ok is not None:
+            # Diagnosis scopes (missing item/field, document metadata, whole
+            # document) cannot be expressed as record+property in the legacy
+            # resolver; the caller supplies the target assertion instead.
+            diff["target_resolved"] = bool(target_ok(before, after))
+        elif finding.target.table_id and not finding.target.record_id:
             # Table-level feedback has no single field to compare; require the
             # table to gain or change at least one record/property.
             diff["target_resolved"] = _table_changed(diff, finding.target.table_id)

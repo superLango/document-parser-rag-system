@@ -148,7 +148,8 @@ def load_dictionary_index(root: str | Path | None = None) -> DictionaryIndex | N
     split_dir = base / "configs" / "dictionaries"
     if split_dir.is_dir():
         try:
-            return DictionaryIndex.build(load_dictionary_path(split_dir))
+            dictionary = load_dictionary_path(split_dir)
+            return DictionaryIndex.build(_with_learned(dictionary, base))
         except Exception:  # noqa: BLE001 - keep projection resilient
             pass
     snapshot = base / "configs" / "business_dictionary.hanson.json"
@@ -156,7 +157,16 @@ def load_dictionary_index(root: str | Path | None = None) -> DictionaryIndex | N
         return None
     override = base / "configs" / "business_dictionary.local.json"
     adapter = JsonDictionaryAdapter(snapshot, override if override.exists() else None)
-    return DictionaryIndex.build(adapter.load())
+    return DictionaryIndex.build(_with_learned(adapter.load(), base))
+
+
+def _with_learned(dictionary, base: Path):
+    try:
+        from .selfheal.lexicon import apply_learned_lexicon
+
+        return apply_learned_lexicon(dictionary, base)
+    except Exception:  # noqa: BLE001 - learned overlay is optional
+        return dictionary
 
 
 def load_dictionary_index_path(path: str | Path | None) -> DictionaryIndex | None:

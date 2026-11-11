@@ -120,7 +120,12 @@ def test_flag_on_feedback_flow(tmp_path, job):
 
     processed = client.post(f"/v1/selfheal/feedback/{feedback_id}/process")
     assert processed.status_code == 200
-    assert processed.json()["status"] in {"fixed", "needs_more_info", "processing"}
+    assert processed.json()["status"] in {
+        "fixed",
+        "needs_more_info",
+        "processing",
+        "unresolved",
+    }
 
     metrics = client.get("/v1/selfheal/metrics").json()
     assert "feedback" in metrics

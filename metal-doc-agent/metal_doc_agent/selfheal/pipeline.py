@@ -3,24 +3,31 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any, Callable
 
 from .audit import Reviewer, audit_job as run_audit_job
 from .config import SelfHealSettings
 from .contracts import (
+    EvidenceRef,
     FeedbackStatus,
     Finding,
+    FindingSource,
     FindingStatus,
     GateDecision,
     GateResult,
+    FindingVerdict,
     ProposalStatus,
+    RepairLevel,
     RepairOutcome,
+    RepairProposal,
     new_id,
 )
-from .feedback import FeedbackService
+from .diagnose import Diagnosis, diagnose
+from .feedback import CATEGORY_VERDICT, FeedbackService
 from .gates import GateContext, evaluate
-from .l1 import L1Repairer
+from .l1 import L1Repairer, target_resolved
 from .l2 import L2Repairer, rollback_overlay
 from .l3 import CodePatchService
 from .locate import locate_job_dir, load_result
@@ -97,21 +104,9 @@ class SelfHealPipeline:
         self.store.update_feedback(
             feedback_id, status=FeedbackStatus.processing.value, iterations=iterations
         )
-        findings = self.feedback.ensure_located(feedback_id)
-        if not findings:
-            return self._finish(
-                feedback_id,
-                FeedbackStatus.needs_more_info,
-                "未生成可核查的问题记录，请补充更精确的定位或原文引文。",
-                iterations,
-            )
-        finding = findings[0]
-        if finding.rule_code in AUDIT_RULE_CODES:
-            return self._audit_feedback(feedback_id, finding, iterations)
-
         job_dir = locate_job_dir(self.settings, item.job_id)
         result = load_result(job_dir) if job_dir else None
-        if result is None:
+        if result is None or job_dir is None:
             return self._finish(
                 feedback_id,
                 FeedbackStatus.needs_more_info,
@@ -119,52 +114,341 @@ class SelfHealPipeline:
                 iterations,
             )
 
-        # Writable self-heal workspace; the engine jobs tree is mounted read-only.
+        diagnosis = diagnose(
+            self.settings,
+            result,
+            job_dir,
+            description=item.description,
+            category=item.category.value,
+            target=item.target,
+            expected=item.expected_value,
+            source_quote=item.source_quote or "",
+        )
+        self._save_diagnosis(feedback_id, diagnosis)
+
+        findings = self.feedback.ensure_located(feedback_id)
+        if findings:
+            finding = findings[0]
+            if diagnosis.target and _diagnosis_target_present(diagnosis, result):
+                finding = finding.model_copy(
+                    update={
+                        "target": diagnosis.target,
+                        "expected": finding.expected or diagnosis.expected,
+                        "evidence": finding.evidence
+                        or [
+                            EvidenceRef(**entry)
+                            for entry in diagnosis.evidence
+                            if entry.get("quote")
+                        ],
+                        "rule_code": finding.rule_code
+                        or f"diagnosis_{diagnosis.scope}",
+                    }
+                )
+        else:
+            finding = self._finding_from_diagnosis(item, diagnosis)
+            if finding is None:
+                return self._finish(
+                    feedback_id,
+                    FeedbackStatus.unresolved,
+                    self._evidence_reply(
+                        diagnosis,
+                        "诊断",
+                        "已定位问题，但未生成可核查的问题记录",
+                    ),
+                    iterations,
+                )
+            if not self.store.add_finding(finding, feedback_id=feedback_id):
+                existing = self.store.find_finding(
+                    item.doc_id, finding.target, finding.verdict
+                )
+                if existing is not None:
+                    finding = existing
+
         base = self.settings.jobs_root / feedback_id
         attempts: list[str] = []
-        l1 = self._attempt_l1(finding, job_dir, base / "sandbox", iterations)
-        attempts.append(l1["detail"])
-        if l1["ok"]:
-            self.store.update_finding_status(finding.finding_id, FindingStatus.fixed.value)
-            reply = (
-                "已按文档级重解析修复。\n"
-                f"变更：{json.dumps(l1['diff'].get('summary'), ensure_ascii=False)}\n"
-                f"沙箱产物：{l1['out_dir']}"
-            )
-            return self._finish(
-                feedback_id, FeedbackStatus.fixed, reply, iterations, l1["proposal"], l1["gate"]
-            )
+        resolver = self._resolver(finding, diagnosis)
 
-        l2 = self._attempt_l2(finding, job_dir, result, base, iterations)
-        attempts.append(l2["detail"])
-        if l2["ok"]:
-            self.store.update_finding_status(finding.finding_id, FindingStatus.fixed.value)
-            reply = (
-                f"已生成候选配置并做过 shadow 验证：{l2['proposal'].operator}\n"
-                f"签名：{l2['proposal'].target_signature}\n"
-                f"候选目录：{l2['proposal'].artifact_dir}"
+        if diagnosis.action == "document_meta":
+            meta = self._apply_document_meta(
+                feedback_id, finding, diagnosis, result, base, iterations
             )
-            return self._finish(
-                feedback_id, FeedbackStatus.fixed, reply, iterations, l2["proposal"], l2["gate"]
-            )
+            if meta is not None:
+                return meta
+            attempts.append("文档元数据修正未通过")
 
-        l3 = self._attempt_l3(finding, result, iterations)
-        attempts.append(l3["detail"])
-        if l3["patch"] is not None:
-            patch = l3["patch"]
-            reply = (
-                "已生成代码补丁提案（默认不自动合并）。\n"
-                f"文件：{', '.join(patch.files)}\n"
-                f"状态：{patch.status.value}，原因：{patch.reason}"
+        if diagnosis.action == "table_repair" and finding.target.table_id:
+            fixed = self._apply_table_fix(
+                feedback_id, finding, item.description, iterations
             )
-            return self._finish(
-                feedback_id, FeedbackStatus.processing, reply, iterations
-            )
+            if fixed is not None:
+                return fixed
+            attempts.append("表结构修复未通过")
 
-        reply = "自动修复未通过门禁，已保留证据与尝试记录：\n- " + "\n- ".join(attempts)
-        return self._finish(
-            feedback_id, FeedbackStatus.needs_more_info, reply, iterations
+        if diagnosis.action != "report_only":
+            l1 = self._attempt_l1(
+                finding,
+                job_dir,
+                base / "sandbox",
+                iterations,
+                target_ok=resolver,
+            )
+            attempts.append(l1["detail"])
+            if l1["ok"]:
+                self.store.update_finding_status(
+                    finding.finding_id, FindingStatus.fixed.value
+                )
+                reply = self._evidence_reply(
+                    diagnosis,
+                    "L1 文档重解析（沙箱）",
+                    "已生成修正，等待你确认应用。"
+                    f"\n变更：{json.dumps(l1['diff'].get('summary'), ensure_ascii=False)}",
+                )
+                return self._finish(
+                    feedback_id,
+                    FeedbackStatus.fixed,
+                    reply,
+                    iterations,
+                    l1["proposal"],
+                    l1["gate"],
+                )
+
+            l2 = self._attempt_l2(finding, job_dir, result, base, iterations)
+            attempts.append(l2["detail"])
+            if l2["ok"]:
+                self.store.update_finding_status(
+                    finding.finding_id, FindingStatus.fixed.value
+                )
+                reply = self._evidence_reply(
+                    diagnosis,
+                    f"L2 规则修复（{l2['proposal'].operator}）",
+                    "已生成候选规则并通过 shadow 验证，等待你确认应用。"
+                    f"\n签名：{l2['proposal'].target_signature}",
+                )
+                return self._finish(
+                    feedback_id,
+                    FeedbackStatus.fixed,
+                    reply,
+                    iterations,
+                    l2["proposal"],
+                    l2["gate"],
+                )
+
+            l3 = self._attempt_l3(
+                finding,
+                result,
+                iterations,
+                diagnosis=diagnosis,
+                feedback_id=feedback_id,
+            )
+            attempts.append(l3["detail"])
+            if l3["patch"] is not None:
+                patch = l3["patch"]
+                reply = self._evidence_reply(
+                    diagnosis,
+                    "L3 代码修复",
+                    "已生成规则补丁，等待确认。"
+                    f"\n文件：{', '.join(patch.files)}"
+                    f"\n状态：{patch.status.value}，原因：{patch.reason}",
+                )
+                return self._finish(
+                    feedback_id, FeedbackStatus.processing, reply, iterations
+                )
+
+        reply = self._evidence_reply(
+            diagnosis,
+            "；".join(attempts) or "仅诊断，未执行修改",
+            "自动修复未通过门禁，已保留证据与尝试记录。",
         )
+        return self._finish(
+            feedback_id, FeedbackStatus.unresolved, reply, iterations
+        )
+
+    def _save_diagnosis(self, feedback_id: str, diagnosis: Diagnosis) -> None:
+        base = self.settings.jobs_root / feedback_id
+        base.mkdir(parents=True, exist_ok=True)
+        (base / "diagnosis.json").write_text(
+            json.dumps(diagnosis.to_dict(), ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+    def _finding_from_diagnosis(self, item, diagnosis: Diagnosis) -> Finding | None:
+        target = diagnosis.target
+        if not (target.record_id or target.table_id or target.feature):
+            return None
+        evidence = [
+            EvidenceRef(**entry)
+            for entry in diagnosis.evidence
+            if entry.get("quote")
+        ]
+        return Finding(
+            doc_id=item.doc_id,
+            job_id=item.job_id,
+            source=FindingSource.user,
+            verdict=CATEGORY_VERDICT.get(item.category, FindingVerdict.ambiguous),
+            target=target,
+            expected=diagnosis.expected,
+            evidence=evidence,
+            rule_code=f"diagnosis_{diagnosis.scope}",
+            confidence=diagnosis.confidence,
+            priority=item.priority,
+        )
+
+    def _resolver(self, finding: Finding, diagnosis: Diagnosis):
+        def check(before: Any, after: Any) -> bool:
+            scope = diagnosis.scope
+            expected = diagnosis.expected
+            if scope == "document_meta":
+                field = (
+                    diagnosis.correction.field
+                    if diagnosis.correction is not None
+                    else None
+                ) or "standard_no"
+                if diagnosis.target.feature in {"standard_no", "title", "version"}:
+                    field = diagnosis.target.feature
+                current = getattr(after.document, field, None)
+                return bool(current) and _norm(current) == _norm(expected)
+            if scope == "missing_item":
+                feature = diagnosis.target.feature or expected
+                return _feature_present(after, feature)
+            if scope == "missing_field":
+                name = (
+                    diagnosis.target.property
+                    or diagnosis.target.feature
+                    or expected
+                )
+                return _field_present(after, name, diagnosis.target.table_id)
+            if scope == "table" and diagnosis.target.table_id and not diagnosis.target.property:
+                return _table_changed(before, after, diagnosis.target.table_id)
+            if finding.target.record_id:
+                return target_resolved(finding, after)
+            return _document_changed(before, after)
+
+        return check
+
+    def _apply_document_meta(
+        self,
+        feedback_id: str,
+        finding: Finding,
+        diagnosis: Diagnosis,
+        result: Any,
+        base: Path,
+        iterations: int,
+    ) -> RepairOutcome | None:
+        """Patch document metadata (standard number/title) without a full reparse."""
+
+        field = (
+            diagnosis.correction.field
+            if diagnosis.correction is not None
+            else None
+        ) or "standard_no"
+        if diagnosis.target.feature in {"standard_no", "title", "version"}:
+            field = diagnosis.target.feature
+        value = diagnosis.expected or (
+            diagnosis.correction.value
+            if diagnosis.correction is not None
+            else None
+        )
+        if not value:
+            return None
+        before_value = getattr(result.document, field, None)
+        if _norm(before_value) == _norm(value):
+            return None
+
+        out_dir = base / "document_meta"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        after = result.model_copy(
+            update={
+                "document": result.document.model_copy(update={field: value})
+            }
+        )
+        (out_dir / "result.json").write_text(
+            json.dumps(after.model_dump(mode="json"), ensure_ascii=False, indent=2)
+            + "\n",
+            encoding="utf-8",
+        )
+        diff = {
+            "reproduced": True,
+            "target_resolved": True,
+            "new_errors": 0,
+            "summary": {
+                "records_before": len(result.records),
+                "records_after": len(result.records),
+                "added": 0,
+                "removed": 0,
+                "changed": 1,
+            },
+            "changed": [
+                {
+                    "field": field,
+                    "before": before_value,
+                    "after": value,
+                }
+            ],
+        }
+        (out_dir / "repair_diff.json").write_text(
+            json.dumps(diff, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        proposal = RepairProposal(
+            finding_ids=[finding.finding_id],
+            level=RepairLevel.L1,
+            operator="document.meta",
+            params={"field": field, "value": value},
+            status=ProposalStatus.verified,
+            artifact_dir=str(out_dir),
+        )
+        self.store.add_proposal(proposal)
+        gate = self._gate(finding, proposal, diff, iterations)
+        if gate.decision != GateDecision.accept:
+            self.store.update_proposal_status(
+                proposal.proposal_id, ProposalStatus.rolled_back.value
+            )
+            return None
+        self.store.update_proposal_status(
+            proposal.proposal_id, ProposalStatus.applied.value
+        )
+        self.store.update_finding_status(finding.finding_id, FindingStatus.fixed.value)
+        reply = self._evidence_reply(
+            diagnosis,
+            "文档元数据修正",
+            "已生成修正，等待你确认应用。"
+            f"\n{field}: {before_value or '空'} → {value}",
+        )
+        return self._finish(
+            feedback_id,
+            FeedbackStatus.fixed,
+            reply,
+            iterations,
+            proposal,
+            gate,
+        )
+
+    def _evidence_reply(
+        self, diagnosis: Diagnosis, executed: str, outcome: str
+    ) -> str:
+        lines = [
+            f"判定：{_diagnosis_label(diagnosis)}"
+            f"（{diagnosis.root_cause}，置信度 {diagnosis.confidence:.2f}）"
+        ]
+        if diagnosis.expected:
+            lines.append(f"正解：{diagnosis.expected}")
+        if diagnosis.mechanism:
+            lines.append(f"机制：{diagnosis.mechanism}")
+        if diagnosis.evidence:
+            lines.append("依据：")
+            for entry in diagnosis.evidence[:6]:
+                lines.append(
+                    f"- {_evidence_label(entry)}「{str(entry.get('quote') or '')[:120]}」"
+                )
+        elif diagnosis.checks:
+            lines.append("依据（已核对）：")
+            for check in diagnosis.checks[:8]:
+                lines.append(f"- {check}")
+        else:
+            lines.append("依据：未在原文、表网格、条款中找到可确认内容")
+        lines.append(f"已执行：{executed or '仅诊断'}")
+        lines.append(f"结果：{outcome}")
+        return "\n".join(lines)
 
     def _apply_table_fix(
         self,
@@ -400,10 +684,17 @@ class SelfHealPipeline:
         iterations: int,
         *,
         plan_only: bool = False,
+        target_ok=None,
     ) -> dict[str, Any]:
         proposal_id = new_id("prp")
         try:
-            result = self.l1.apply(finding, job_dir, out_dir, proposal_id=proposal_id)
+            result = self.l1.apply(
+                finding,
+                job_dir,
+                out_dir,
+                proposal_id=proposal_id,
+                target_ok=target_ok,
+            )
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "detail": f"L1 重解析不可用：{str(exc)[:200]}"}
         if not result.ok or result.proposal is None:
@@ -481,21 +772,55 @@ class SelfHealPipeline:
         return {"ok": False, "detail": "L2 未通过门禁：" + _failed_checks(gate)}
 
     def _attempt_l3(
-        self, finding: Finding, result: Any, iterations: int
+        self,
+        finding: Finding,
+        result: Any,
+        iterations: int,
+        *,
+        diagnosis: Diagnosis | None = None,
+        feedback_id: str = "",
     ) -> dict[str, Any]:
         if not self.settings.code_agent:
             return {"ok": False, "detail": "L3 未启用（SELFHEAL_CODE_AGENT=off）", "patch": None}
-        if self.patch_provider is None:
-            return {"ok": False, "detail": "L3 未配置补丁生成器", "patch": None}
-        diff = self.patch_provider(finding, result)
+        report: dict[str, Any] = {}
+        if self.patch_provider is not None:
+            diff = self.patch_provider(finding, result)
+        else:
+            from .codefix import CodeFixAgent
+
+            diff, report = CodeFixAgent(self.settings).propose(
+                finding,
+                result,
+                diagnosis.to_dict() if diagnosis is not None else None,
+                feedback_id=feedback_id,
+            )
         if not diff:
-            return {"ok": False, "detail": "L3 未生成补丁", "patch": None}
+            return {
+                "ok": False,
+                "detail": report.get("reason") or "L3 未生成补丁",
+                "patch": None,
+                "report": report,
+            }
         proposal_id = new_id("prp")
         patch = self.l3.propose(finding, proposal_id, diff)
         if patch is None:
-            return {"ok": False, "detail": "L3 提案被策略拒绝", "patch": None}
+            return {
+                "ok": False,
+                "detail": "L3 提案被策略拒绝",
+                "patch": None,
+                "report": report,
+            }
         self.store.add_code_patch(patch)
-        return {"ok": True, "detail": "L3 已生成补丁提案", "patch": patch}
+        if report.get("applied"):
+            self.store.update_proposal_status(
+                proposal_id, ProposalStatus.applied.value
+            )
+        return {
+            "ok": True,
+            "detail": "L3 已生成补丁提案",
+            "patch": patch,
+            "report": report,
+        }
 
     def _planner(self) -> tuple[Planner | None, Planner | None]:
         if self.planner is not None:
@@ -610,3 +935,112 @@ def _scope_label(finding: Finding) -> str:
 def _failed_checks(gate: GateResult) -> str:
     failed = [f"{check.name}({check.detail})" for check in gate.checks if not check.passed]
     return ", ".join(failed) if failed else "未知原因"
+
+
+def _norm(text: Any) -> str:
+    return re.sub(r"\s+", "", str(text or ""))
+
+
+def _diagnosis_target_present(diagnosis: Diagnosis, result: Any) -> bool:
+    target = diagnosis.target
+    if target.table_id and not any(
+        table.table_id == target.table_id for table in result.tables
+    ):
+        return False
+    if target.record_id and not any(
+        record.record_id == target.record_id for record in result.records
+    ):
+        return False
+    return bool(target.table_id or target.record_id or target.feature)
+
+
+def _diagnosis_label(diagnosis: Diagnosis) -> str:
+    return {
+        "document_meta": "文档元数据（标准编号/名称）",
+        "missing_item": "检验项目缺失",
+        "missing_field": "字段缺失",
+        "table": "整表解析问题",
+        "clause": "条款解析问题",
+        "field": "字段值问题",
+        "document": "整篇解析问题",
+    }.get(diagnosis.scope, "解析问题")
+
+
+def _evidence_label(entry: dict[str, Any]) -> str:
+    parts = []
+    if entry.get("page_no"):
+        parts.append(f"第{entry['page_no']}页")
+    if entry.get("table_id"):
+        parts.append(f"表{entry['table_id']}")
+    if entry.get("row") is not None:
+        parts.append(f"第{int(entry['row']) + 1}行")
+    if entry.get("col") is not None:
+        parts.append(f"第{int(entry['col']) + 1}列")
+    return " ".join(parts) or "原文"
+
+
+def _feature_present(result: Any, feature: str | None) -> bool:
+    needle = _norm(feature)
+    if not needle:
+        return False
+    for item in result.inspection_items:
+        if needle in _norm(item.item):
+            return True
+    for table in result.tables:
+        haystack = _norm(
+            " ".join([table.caption or ""] + [" ".join(path) for path in table.header_paths])
+        )
+        if needle in haystack:
+            return True
+    for record in result.records:
+        if needle in _norm(record.grade or record.grade_level):
+            return True
+        if any(needle in _norm(name) for name in record.properties):
+            return True
+    return False
+
+
+def _field_present(result: Any, name: str | None, table_id: str | None) -> bool:
+    needle = _norm(name)
+    if not needle:
+        return False
+    for record in result.records:
+        if table_id and record.source_table_id != table_id:
+            continue
+        if any(needle in _norm(key) for key in record.properties):
+            return True
+    return False
+
+
+def _document_changed(before: Any, after: Any) -> bool:
+    if before.document.model_dump() != after.document.model_dump():
+        return True
+    if len(before.records) != len(after.records):
+        return True
+    if len(before.tables) != len(after.tables):
+        return True
+    if {item.item for item in before.inspection_items} != {
+        item.item for item in after.inspection_items
+    }:
+        return True
+    return _table_changed(before, after, None)
+
+
+def _table_changed(before: Any, after: Any, table_id: str | None) -> bool:
+    def snapshot(result: Any) -> dict[tuple, dict[str, str]]:
+        rows: dict[tuple, dict[str, str]] = {}
+        for record in result.records:
+            if table_id and record.source_table_id != table_id:
+                continue
+            key = (
+                record.source_table_id,
+                _norm(record.grade or record.grade_level),
+                _norm(record.condition),
+            )
+            rows[key] = {
+                name: _norm(value.raw or value.text)
+                for name, value in record.properties.items()
+            }
+        return rows
+
+    return snapshot(before) != snapshot(after)

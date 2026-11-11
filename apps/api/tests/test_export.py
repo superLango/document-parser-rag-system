@@ -113,23 +113,14 @@ class ExportTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_hanson_csv_xlsx_exports(self) -> None:
-        hanson = self.client.get(
-            f"/v1/documents/{self.document_id}/export?format=hanson",
-            headers=self.headers,
-        )
-        self.assertEqual(hanson.status_code, 200, hanson.text)
-        payload = hanson.json()
-        self.assertIn("categories", payload)
-        self.assertGreater(payload["summary"]["total_records"], 0)
-        self.assertIn("attachment", hanson.headers.get("Content-Disposition", ""))
-
         csv_response = self.client.get(
             f"/v1/documents/{self.document_id}/export?format=csv",
             headers=self.headers,
         )
         self.assertEqual(csv_response.status_code, 200, csv_response.text)
-        self.assertIn("record_id", csv_response.text)
+        self.assertIn("类别", csv_response.text)
         self.assertIn("2A14", csv_response.text)
+        self.assertNotIn("record_id", csv_response.text)
 
         xlsx = self.client.get(
             f"/v1/documents/{self.document_id}/export?format=xlsx",
@@ -137,6 +128,13 @@ class ExportTests(unittest.TestCase):
         )
         self.assertEqual(xlsx.status_code, 200, xlsx.text)
         self.assertTrue(xlsx.content.startswith(b"PK"))
+
+        for legacy in ("hanson", "json"):
+            removed = self.client.get(
+                f"/v1/documents/{self.document_id}/export?format={legacy}",
+                headers=self.headers,
+            )
+            self.assertEqual(removed.status_code, 422)
 
         bad = self.client.get(
             f"/v1/documents/{self.document_id}/export?format=pdf",

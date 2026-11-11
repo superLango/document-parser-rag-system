@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from metal_doc_agent.selfheal.config import SelfHealSettings
 from metal_doc_agent.selfheal.contracts import (
@@ -50,8 +51,9 @@ def test_settings_default_off(monkeypatch):
     settings = SelfHealSettings.from_env(project_root="C:/tmp/project")
     assert settings.enabled is False
     assert settings.root.as_posix().endswith("data/selfheal")
-    assert settings.code_agent is False
-    assert settings.auto_merge is False
+    assert settings.code_agent is True
+    assert settings.auto_merge is True
+    assert settings.repo_root == Path("C:/tmp/project")
 
 
 def test_settings_env_switch(monkeypatch):
@@ -59,11 +61,13 @@ def test_settings_env_switch(monkeypatch):
     monkeypatch.setenv("SELFHEAL_CODE_AGENT", "on")
     monkeypatch.setenv("SELFHEAL_MAX_ITERATIONS", "5")
     monkeypatch.setenv("SELFHEAL_MODEL", "Qwen3.6-35B-A3B-NVFP4")
+    monkeypatch.setenv("SELFHEAL_REPO_ROOT", "C:/workspace")
     settings = SelfHealSettings.from_env(project_root="C:/tmp/project")
     assert settings.enabled is True
     assert settings.code_agent is True
     assert settings.max_iterations == 5
     assert settings.model_name == "Qwen3.6-35B-A3B-NVFP4"
+    assert settings.repo_root == Path("C:/workspace")
 
 
 def test_store_roundtrip(tmp_path):

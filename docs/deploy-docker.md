@@ -268,7 +268,39 @@ docker compose -p hanson-r1 exec platform-api alembic downgrade -1
 
 > 升级前请先备份 `postgres-data`、`platform-data`、`engine-data` 三个卷。
 
-## 13. 常见问题
+## 13. 问题反馈自动修复（可选）
+
+自愈服务独立于主栈，按需启动：
+
+```bash
+docker compose -f infra/docker/compose.selfheal.yaml up -d --build
+```
+
+挂载与开关（`compose.selfheal.yaml` 已默认配置）：
+
+| 项 | 值 | 作用 |
+|---|---|---|
+| `../../metal-doc-agent:/app/metal-doc-agent` | 读写 | 补丁直接落到宿主源码 |
+| `../../:/workspace` | 读写 | 提供 `.git`，供 `git apply` 与测试 |
+| `SELFHEAL_REPO_ROOT` | `/workspace` | git 仓库根 |
+| `SELFHEAL_CODE_AGENT` | `1` | 开启规则补丁生成 |
+| `SELFHEAL_AUTO_MERGE` | `1` | 用户应用后自动改代码 |
+| `METAL_DOC_SANDBOX` | `1` | 每个任务用新解释器执行，加载最新规则代码 |
+| `SELFHEAL_TEST_COMMAND` | 自愈测试集 | 合并前必须通过 |
+
+用户点“应用”后的顺序：
+
+1. 诊断并给出正解与依据；
+2. 学习别名/规则（词典只读，写入 `configs/learned/`）；
+3. 代码补丁依次通过反硬编码、兼容性、导入验证、回归测试；
+4. 通过后 `git apply` 到宿主源码；
+5. 下一个解析任务由沙箱子进程执行时，直接加载新规则代码，**无需重启任何服务**。
+
+主栈的 `engine-api`、`worker-prod`、`worker-explore` 以只读方式挂载源码，解析任务统一由 `METAL_DOC_SANDBOX=1` 的子进程执行，因此自愈补丁不会因进程缓存而失效，也不会中断正在运行的服务。
+
+关闭自动改代码：在 `.env` 设置 `SELFHEAL_AUTO_MERGE=0`，补丁只保留提案；关闭沙箱：设置 `METAL_DOC_SANDBOX=0`（不推荐）。
+
+## 14. 常见问题
 
 | 现象 | 处理 |
 |---|---|
@@ -280,7 +312,7 @@ docker compose -p hanson-r1 exec platform-api alembic downgrade -1
 | 数据库连不上 | 检查 `POSTGRES_PASSWORD` 是否与 `hanson` 用户一致；不要手工改 `HANSON_DATABASE_URL` 里的库名 |
 | 前端构建失败 | 检查 `NPM_REGISTRY` 与网络；确认 `pnpm-lock.yaml` 未被修改 |
 
-## 14. 安全提示
+## 15. 安全提示
 
 - 默认免登录 + 允许 iframe 嵌入，建议部署在内网或网关之后。
 - 对外暴露时设置 `HANSON_REQUIRE_AUTH=true`、`HANSON_ALLOW_EMBED=false`，并为外部系统创建最小权限 API Key。

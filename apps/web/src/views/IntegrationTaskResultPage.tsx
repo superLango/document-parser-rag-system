@@ -24,10 +24,8 @@ import { formatDateTime } from '@/lib/utils'
 import KbExtractionDetailPage from '@/views/KbExtractionDetailPage'
 
 const EXPORT_FORMATS = [
-  { format: 'hanson' as const, title: 'Schema JSON', desc: '平台标准结构，供下游接入' },
-  { format: 'json' as const, title: 'JSON', desc: '完整抽取结果' },
-  { format: 'csv' as const, title: 'CSV', desc: '表格软件可直接打开' },
-  { format: 'xlsx' as const, title: 'XLSX', desc: '按类别拆分为工作表' },
+  { format: 'csv' as const, title: 'CSV', desc: '与结果表格内容一致，可直接打开' },
+  { format: 'xlsx' as const, title: 'XLSX', desc: '每个检验项目一个工作表，内容与表格一致' },
 ]
 
 function statusBadge(
@@ -162,7 +160,7 @@ export default function IntegrationTaskResultPage() {
     }
   }
 
-  async function exportResult(format: 'hanson' | 'json' | 'csv' | 'xlsx') {
+  async function exportResult(format: 'csv' | 'xlsx') {
     if (!taskId || exporting) return
     setExporting(format)
     try {
@@ -180,7 +178,7 @@ export default function IntegrationTaskResultPage() {
       const link = document.createElement('a')
       const stem = (task?.filename || 'result').replace(/\.pdf$/i, '')
       link.href = url
-      link.download = `${stem}-${format}.${format === 'hanson' ? 'json' : format}`
+      link.download = `${stem}-${format}.${format}`
       link.click()
       URL.revokeObjectURL(url)
       setExportOpen(false)

@@ -44,6 +44,10 @@ x-engine-env: &engine-env
   OCR_BLOCK_CONCURRENCY: ${OCR_BLOCK_CONCURRENCY:-2}
   OCR_MAX_INFLIGHT: ${OCR_MAX_INFLIGHT:-2}
   OCR_TABLE_INFLIGHT: ${OCR_TABLE_INFLIGHT:-2}
+  # Each job runs in a fresh interpreter so self-heal patches take effect for
+  # the next job without restarting the worker.
+  METAL_DOC_SANDBOX: ${METAL_DOC_SANDBOX:-1}
+  METAL_DOC_SANDBOX_TIMEOUT: ${METAL_DOC_SANDBOX_TIMEOUT:-0}
 
 services:
   postgres:
@@ -93,6 +97,7 @@ services:
     build:
       context: ../..
       dockerfile: infra/docker/Dockerfile.api
+      network: host
       args:
         PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
     environment:
@@ -149,6 +154,7 @@ services:
       - engine-data:/data/engine
       - platform-data:/data/platform:ro
       - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent:/app/metal-doc-agent:ro
       - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
     healthcheck:
       test:
@@ -181,6 +187,7 @@ services:
       - engine-data:/data/engine
       - platform-data:/data/platform:ro
       - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent:/app/metal-doc-agent:ro
       - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
     depends_on:
       engine-api:
@@ -204,6 +211,7 @@ services:
       - engine-data:/data/engine
       - platform-data:/data/platform:ro
       - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent:/app/metal-doc-agent:ro
       - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
     depends_on:
       engine-api:
@@ -215,6 +223,7 @@ services:
     build:
       context: ../..
       dockerfile: infra/docker/Dockerfile.web
+      network: host
       args:
         NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org}
     ports:

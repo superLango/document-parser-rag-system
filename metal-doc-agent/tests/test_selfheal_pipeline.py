@@ -120,13 +120,15 @@ def test_feedback_missing_job_needs_more_info(tmp_path):
     assert outcome["finding"] is None
 
 
-def test_feedback_bad_quote_needs_more_info(job, tmp_path):
+def test_feedback_bad_quote_is_a_hint_not_a_rejection(job, tmp_path):
     store = _store(tmp_path)
     service = FeedbackService(store, _settings(tmp_path))
     outcome = service.create(
         _payload(job, source_quote="原文中不存在的句子")
     )
-    assert any("引文" in item for item in outcome["problems"])
+    assert outcome["problems"] == []
+    assert outcome["feedback"].status == FeedbackStatus.open
+    assert outcome["finding"] is not None
 
 
 def test_diff_results_detects_changes():
@@ -248,17 +250,22 @@ def test_gates_rollback_without_evidence(tmp_path):
     assert gate.decision == GateDecision.rollback
 
 
-def test_pipeline_reports_needs_more_info(job, tmp_path):
+def test_pipeline_reports_evidence_when_gate_fails(job, tmp_path):
     store = _store(tmp_path)
     settings = _settings(tmp_path)
     service = FeedbackService(store, settings)
     created = service.create(_payload(job))
     pipeline = SelfHealPipeline(store, settings)
     outcome = pipeline.process_feedback(created["feedback"].feedback_id)
-    assert outcome.status == FeedbackStatus.needs_more_info
-    assert store.get_feedback(created["feedback"].feedback_id).status == FeedbackStatus.needs_more_info
+    assert outcome.status in {
+        FeedbackStatus.unresolved,
+        FeedbackStatus.fixed,
+    }
+    assert store.get_feedback(created["feedback"].feedback_id).status == outcome.status
     messages = store.list_messages(created["feedback"].feedback_id)
-    assert any("门禁" in item.content for item in messages)
+    assert any(
+        "依据" in item.content or "已执行" in item.content for item in messages
+    )
 
 
 def test_iteration_limit_quarantines(job, tmp_path):

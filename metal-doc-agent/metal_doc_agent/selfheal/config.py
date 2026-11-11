@@ -30,12 +30,15 @@ class SelfHealSettings:
     root: Path
     db_path: Path
     project_root: Path
+    repo_root: Path
     data_dir: Path
     model_base_url: str | None
     model_name: str
     model_timeout: float
     code_agent: bool
     auto_merge: bool
+    auto_learn: bool
+    test_command: str
     max_iterations: int
     max_audit_tables: int
     max_audit_records: int
@@ -73,6 +76,7 @@ class SelfHealSettings:
             root=root,
             db_path=db_path,
             project_root=root_project,
+            repo_root=Path(os.environ.get("SELFHEAL_REPO_ROOT", root_project)),
             data_dir=data_dir,
             model_base_url=(
                 os.environ.get("SELFHEAL_MODEL_URL")
@@ -84,8 +88,14 @@ class SelfHealSettings:
                 or "Qwen3.6-35B-A3B-NVFP4"
             ),
             model_timeout=float(os.environ.get("SELFHEAL_MODEL_TIMEOUT", "300")),
-            code_agent=_env_bool("SELFHEAL_CODE_AGENT", False),
-            auto_merge=_env_bool("SELFHEAL_AUTO_MERGE", False),
+            code_agent=_env_bool("SELFHEAL_CODE_AGENT", True),
+            auto_merge=_env_bool("SELFHEAL_AUTO_MERGE", True),
+            auto_learn=_env_bool("SELFHEAL_AUTO_LEARN", True),
+            test_command=os.environ.get(
+                "SELFHEAL_TEST_COMMAND",
+                "python -m pytest -q tests/test_selfheal_agent.py "
+                "tests/test_selfheal_pipeline.py tests/test_selfheal_l2_l3.py",
+            ),
             max_iterations=int(os.environ.get("SELFHEAL_MAX_ITERATIONS", "3")),
             max_audit_tables=int(os.environ.get("SELFHEAL_MAX_AUDIT_TABLES", "20")),
             max_audit_records=int(os.environ.get("SELFHEAL_MAX_AUDIT_RECORDS", "200")),

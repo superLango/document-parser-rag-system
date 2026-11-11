@@ -15,6 +15,7 @@ from metal_doc_agent.selfheal.config import SelfHealSettings
 from metal_doc_agent.selfheal.contracts import (
     FeedbackCategory,
     FeedbackCreate,
+    FeedbackStatus,
     FeedbackTarget,
     Finding,
     FindingSource,
@@ -215,7 +216,7 @@ def test_table_level_feedback_creates_audit_finding(job, tmp_path):
     assert outcome["finding"].rule_code == "user_feedback_table"
 
 
-def test_table_feedback_runs_audit(job, tmp_path):
+def test_table_feedback_returns_evidence(job, tmp_path):
     settings = _settings(tmp_path, model_base_url=None)
     settings.ensure_dirs()
     store = SelfHealStore(settings.db_path)
@@ -231,10 +232,11 @@ def test_table_feedback_runs_audit(job, tmp_path):
         )
     )
     repaired = pipeline.process_feedback(outcome["feedback"].feedback_id)
-    assert "重新审查" in repaired.reply
+    assert "判定：" in repaired.reply
+    assert "依据" in repaired.reply
 
 
-def test_vague_feedback_asks_for_more_detail(job, tmp_path):
+def test_vague_feedback_is_accepted_and_diagnosed(job, tmp_path):
     settings = _settings(tmp_path, model_base_url=None)
     settings.ensure_dirs()
     store = SelfHealStore(settings.db_path)
@@ -249,8 +251,8 @@ def test_vague_feedback_asks_for_more_detail(job, tmp_path):
             description="这个结果有点问题",
         )
     )
-    assert outcome["problems"]
-    assert outcome["finding"] is None
+    assert outcome["problems"] == []
+    assert outcome["feedback"].status == FeedbackStatus.open
 
 
 def test_repeated_feedback_gets_distinct_findings(job, tmp_path):

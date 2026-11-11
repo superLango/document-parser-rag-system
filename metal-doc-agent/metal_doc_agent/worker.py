@@ -27,6 +27,7 @@ from .jobs import LANES, JobStore
 from .logging_setup import configure_logging
 from .pipeline import run_pipeline
 from .runner import run_job
+from .sandbox_exec import run_job_sandbox, sandbox_enabled
 from .settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -39,6 +40,10 @@ def run_queued(
 
     ``pool`` limits the worker to one lane (production/explore/human) so
     exploratory jobs cannot starve production work.
+
+    With ``METAL_DOC_SANDBOX=1`` (default) each job runs in a fresh interpreter
+    that imports the current source tree, so a self-heal patch is picked up by
+    the next job without restarting this worker.
     """
 
     recovered = store.recover_stale_running()
@@ -53,13 +58,46 @@ def run_queued(
     queued.sort(key=lambda state: state.created_at or "")
     ran: list[str] = []
     for state in queued[:limit]:
-        try:
-            run_job(store, state.job_id, settings)
-        except (KeyError, RuntimeError) as exc:
-            logger.warning("skip job %s: %s", state.job_id, exc)
-            continue
+        if sandbox_enabled(settings):
+            ok, detail = run_job_sandbox(settings, store.root, state.job_id)
+            if not ok:
+                logger.warning("sandboxed job %s failed: %s", state.job_id, detail)
+                _mark_failed(store, state.job_id, detail)
+                continue
+        else:
+            try:
+                run_job(store, state.job_id, settings)
+            except (KeyError, RuntimeError) as exc:
+                logger.warning("skip job %s: %s", state.job_id, exc)
+                continue
         ran.append(state.job_id)
     return ran
+
+
+def _mark_failed(store: JobStore, job_id: str, detail: str) -> None:
+    """A hard child-process failure must not leave the job stuck in running."""
+
+    try:
+        state = store.get(job_id)
+        if state is None:
+            return
+        if state.status == "queued":
+            claimed = store.claim(job_id)
+            if claimed is None:
+                # Another worker owns it; leave the job to that worker.
+                return
+            state = claimed
+        if state.status == "running":
+            store.update(
+                job_id,
+                status="failed",
+                stage="error",
+                error=detail[:1000],
+                failure_code="engine_failed",
+            )
+        store.release_claim(job_id)
+    except Exception:  # noqa: BLE001 - the queue must keep moving
+        logger.exception("failed to mark job %s as failed", job_id)
 
 
 def main(argv: list[str] | None = None) -> int:

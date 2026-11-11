@@ -96,20 +96,16 @@ class FeedbackService:
                     payload.source_quote or "",
                     category=payload.category.value,
                     expected_value=payload.expected_value,
-                    model_url=self.settings.model_base_url,
+                    # Intake stays rule-only and fast; the diagnosing agent
+                    # runs during process with the full evidence pack.
+                    model_url=None,
                     model_name=self.settings.model_name,
                     timeout=self.settings.model_timeout,
                 )
-                if analysis.action == "need_more_info":
-                    problems.append(
-                        analysis.need_info
-                        or "还需要补充具体的问题位置或期望值"
-                    )
-                else:
+                if analysis.action != "need_more_info":
                     target = analysis.target
                     expected = expected or analysis.expected
                     located_note = _analysis_note(analysis)
-            problems.extend(self._validate_target(payload.category, target, result))
             evidence = _load_evidence(job_dir) if job_dir else {}
             if payload.source_quote:
                 match = next(
@@ -120,11 +116,11 @@ class FeedbackService:
                     ),
                     None,
                 )
-                if match is None:
-                    problems.append("原文引文未能在证据中找到，请补充更精确的引文")
-                else:
+                # A quote that cannot be matched is a locating hint, not a
+                # reason to reject the feedback; diagnosis searches the source.
+                if match is not None:
                     evidence_refs.append(_ref(match))
-            else:
+            elif target.table_id or target.record_id:
                 evidence_refs = [
                     ref
                     for ref in [self._evidence_ref(target, result, job_dir)]
@@ -146,7 +142,12 @@ class FeedbackService:
         )
         self.store.add_feedback(item)
 
-        if result is not None and not problems:
+        target_problems = (
+            self._validate_target(payload.category, target, result)
+            if result is not None
+            else []
+        )
+        if result is not None and not problems and not target_problems:
             observed = self._observed(target, result)
             finding = Finding(
                 doc_id=payload.doc_id,
@@ -169,12 +170,10 @@ class FeedbackService:
                 )
 
         reply = (
-            "已收到反馈并生成问题记录，开始自动核查。"
+            located_note + "已受理，开始定位问题并核对原文。"
             if not problems
-            else "还需要补充信息：" + "；".join(problems)
+            else "暂时无法处理：" + "；".join(problems)
         )
-        if located_note and not problems:
-            reply = located_note + reply
         self.store.add_message(
             FeedbackMessage(
                 feedback_id=item.feedback_id, role="system", content=reply

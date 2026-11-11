@@ -93,7 +93,7 @@ from .access import (
 )
 from .config import PlatformSettings
 from .db import build_engine, build_session_factory, init_db, verify_migrations
-from .export import export_bytes
+from .export import result_table_schema, table_export_bytes
 from .modules import (
     MODULES,
     ensure_module_kb,
@@ -1071,38 +1071,15 @@ def create_platform_router(
     def document_export_response(
         db: Session, document: Document, state: Any, export_format: str
     ) -> Response:
-        payload = read_json(state, ("result.json",))
-        records = reviewed_records(db, document, state)
-        payload["records"] = records
         try:
-            items = read_json(
-                state, ("item_inventory_aligned.json", "item_inventory.json")
-            ).get("items") or []
+            schema = project_document_schema(db, document, state)
         except HTTPException:
-            items = []
+            # Projection needs the schema template; export still has to work
+            # for jobs that only produced result.json.
+            schema = result_table_schema(read_json(state, ("result.json",)))
         try:
-            clauses = payload.get("clauses") or read_jsonl(
-                state, "clauses.jsonl", 100000
-            )
-        except HTTPException:
-            clauses = payload.get("clauses") or []
-        timing_seconds = 0.0
-        try:
-            trace = read_json(state, ("trace.json",))
-            timing_seconds = float(trace.get("elapsed_ms") or 0) / 1000.0
-        except HTTPException:
-            pass
-        try:
-            content, media_type, extension = export_bytes(
-                export_format,
-                result=payload,
-                records=records,
-                items=items,
-                clauses=clauses,
-                engine_root=settings.engine_root,
-                timing_seconds=timing_seconds,
-                job_dir=Path(state.out_dir),
-                dictionary_path=document_dictionary_path(document),
+            content, media_type, extension = table_export_bytes(
+                export_format, schema
             )
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
@@ -3769,6 +3746,14 @@ def create_platform_router(
         if isinstance(snapshot, dict):
             learning_source = snapshot
         learned = save_learned_repair(learning_source, repair)
+        try:
+            rule_learning = selfheal_call(
+                "POST",
+                f"/v1/selfheal/feedback/{feedback_id}/learn",
+                timeout=180.0,
+            )
+        except HTTPException:
+            rule_learning = {"status": "skipped", "reason": "学习服务不可用"}
         audit(
             db,
             principal,
@@ -3792,6 +3777,7 @@ def create_platform_router(
             "counts": counts,
             "backup": str(backup),
             **learned,
+            "rule_learning": rule_learning,
         }
 
     @router.get("/v1/system/template-repairs")
@@ -4155,12 +4141,12 @@ def create_platform_router(
     @router.get("/v1/documents/{document_id}/export")
     def export_document(
         document_id: str,
-        format: str = Query("hanson"),
+        format: str = Query("csv"),
         principal: Principal = Depends(get_principal),
         db: Session = Depends(get_db),
     ) -> Response:
         require_scope(principal, READ_SCOPE)
-        if format not in {"hanson", "json", "csv", "xlsx"}:
+        if format not in {"csv", "xlsx"}:
             raise HTTPException(status_code=422, detail="unsupported export format")
         document = document_or_404(db, document_id, principal)
         state = require_job(document)
@@ -4760,10 +4746,10 @@ def create_platform_router(
     @router.get("/v1/share/{token}/export")
     def shared_document_export(
         token: str,
-        format: str = Query("hanson"),
+        format: str = Query("csv"),
         db: Session = Depends(get_db),
     ) -> Response:
-        if format not in {"hanson", "json", "csv", "xlsx"}:
+        if format not in {"csv", "xlsx"}:
             raise HTTPException(status_code=422, detail="unsupported export format")
         document_id = verify_share_token(settings.secret_key, token)
         if document_id is None:

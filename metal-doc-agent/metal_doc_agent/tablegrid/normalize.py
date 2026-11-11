@@ -352,6 +352,12 @@ def canonical_property(header: str | None) -> str | None:
 
 SUM_ELEMENT_RE = re.compile(r"[+＋]")
 ELEMENT_COUNT_RE = re.compile(r"[A-Za-z][a-z]?\s*[+＋]\s*\d")
+# Combined-element rows spell the two symbols in brackets, e.g. "氮+氧(N+O)".
+# The CJK half also contains "+", so counting split parts treated the row as a
+# multi-element sum limit and dropped it. The bracketed formula is the row key.
+COMBINED_FORMULA_RE = re.compile(
+    r"[（(]\s*([A-Z][a-z]?(?:\s*[+＋]\s*[A-Z][a-z]?)+)\s*[)）]"
+)
 
 
 def canonical_element(header: str | None) -> str | None:
@@ -359,6 +365,9 @@ def canonical_element(header: str | None) -> str | None:
     if not text:
         return None
     lower = text.lower()
+    formula = COMBINED_FORMULA_RE.search(text)
+    if formula:
+        return re.sub(r"\s+", "", formula.group(1)).replace("＋", "+")
     # Sum constraints ("Cr+Cu+Mo+Ni ≤0.70", "Cu+6Sn") do not describe a single
     # element; mapping them to the first symbol duplicated Cr and silently
     # changed the meaning of the limit. A two-element addition ("Ni+Ta") keeps

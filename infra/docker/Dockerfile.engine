@@ -3,20 +3,34 @@ FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
     METAL_DOC_HOME=/app/metal-doc-agent \
     METAL_DOC_DATA=/data/engine
 
 ARG PIP_INDEX_URL=https://pypi.org/simple
+ARG PIP_EXTRAS=api,yaml,models
+# Slow or unstable mirrors: generous timeout/retries keep CI and air-gapped
+# rebuilds from failing halfway through a dependency download.
+ARG PIP_TIMEOUT=600
+ARG PIP_RETRIES=20
+# The self-heal plane applies verified rule patches with `git apply` against the
+# bind-mounted repository, so that image needs git; parsing workers do not.
+ARG INSTALL_GIT=0
 
 WORKDIR /app
 COPY metal-doc-agent /app/metal-doc-agent
-RUN pip install --no-cache-dir --index-url "$PIP_INDEX_URL" \
-    --timeout 120 --retries 8 \
-    -e "/app/metal-doc-agent[api,yaml,models]"
+RUN if [ "$INSTALL_GIT" = "1" ]; then \
+      apt-get update \
+      && apt-get install -y --no-install-recommends git \
+      && rm -rf /var/lib/apt/lists/*; \
+    fi
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --index-url "$PIP_INDEX_URL" \
+    --timeout "$PIP_TIMEOUT" --retries "$PIP_RETRIES" \
+    -e "/app/metal-doc-agent[${PIP_EXTRAS}]"
 # Keep packaging tooling out of the scanned blast radius (pip/setuptools advisories).
-RUN pip install --no-cache-dir --index-url "$PIP_INDEX_URL" \
-    --timeout 120 --retries 8 --upgrade pip setuptools
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --index-url "$PIP_INDEX_URL" \
+    --timeout "$PIP_TIMEOUT" --retries "$PIP_RETRIES" --upgrade pip setuptools
 
 WORKDIR /app/metal-doc-agent
 EXPOSE 8010

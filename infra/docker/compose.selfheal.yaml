@@ -8,20 +8,39 @@ name: metal-agent-selfheal
 # Requirements on the host:
 #   - engine-data already populated by the production worker (read-only here)
 #   - a reachable Qwen3.6-35B-A3B endpoint for audit/repair planning
+#   - host sources mounted read-write so applied rule patches land on disk;
+#     parsing workers run jobs in fresh interpreters and need no restart
 #
 # Set SELFHEAL_ENABLED=0 (default) to keep the service inert.
 
 x-selfheal-env: &selfheal-env
   METAL_DOC_HOME: /app/metal-doc-agent
   METAL_DOC_DATA: /data/engine
+  # Repo root is mounted at /workspace so code patches hit the same .git and
+  # survive container restarts. /app/metal-doc-agent is a bind mount of the
+  # host sources, so an applied patch is immediately visible to the engine.
+  SELFHEAL_REPO_ROOT: /workspace
   SELFHEAL_ENABLED: ${SELFHEAL_ENABLED:-1}
   SELFHEAL_ROOT: /data/selfheal
   SELFHEAL_DB: /data/selfheal/selfheal.db
   SELFHEAL_MODEL_URL: ${SELFHEAL_MODEL_URL:-http://192.168.188.75:9991/v1}
   SELFHEAL_MODEL: ${SELFHEAL_MODEL:-Qwen3.6-35B-A3B-NVFP4}
   SELFHEAL_MODEL_TIMEOUT: ${SELFHEAL_MODEL_TIMEOUT:-300}
-  SELFHEAL_CODE_AGENT: ${SELFHEAL_CODE_AGENT:-0}
-  SELFHEAL_AUTO_MERGE: ${SELFHEAL_AUTO_MERGE:-0}
+  SELFHEAL_CODE_AGENT: ${SELFHEAL_CODE_AGENT:-1}
+  # The user's "apply" is the authorization: generated rule patches are
+  # guarded, tested, then applied automatically. Set 0 to proposal-only.
+  SELFHEAL_AUTO_MERGE: ${SELFHEAL_AUTO_MERGE:-1}
+  SELFHEAL_AUTO_LEARN: ${SELFHEAL_AUTO_LEARN:-1}
+  SELFHEAL_TEST_COMMAND: ${SELFHEAL_TEST_COMMAND:-python -m pytest -q tests/test_selfheal_agent.py tests/test_selfheal_pipeline.py tests/test_selfheal_l2_l3.py}
+  # Reparses run in fresh interpreters, so patched rule code is always used.
+  METAL_DOC_SANDBOX: ${METAL_DOC_SANDBOX:-1}
+  METAL_DOC_SANDBOX_TIMEOUT: ${METAL_DOC_SANDBOX_TIMEOUT:-0}
+  # Bind-mounted repo: avoid Git "dubious ownership" and CRLF patch failures.
+  GIT_CONFIG_COUNT: "2"
+  GIT_CONFIG_KEY_0: safe.directory
+  GIT_CONFIG_VALUE_0: "*"
+  GIT_CONFIG_KEY_1: core.autocrlf
+  GIT_CONFIG_VALUE_1: "false"
   SELFHEAL_MAX_ITERATIONS: ${SELFHEAL_MAX_ITERATIONS:-3}
   SELFHEAL_MAX_AUDIT_TABLES: ${SELFHEAL_MAX_AUDIT_TABLES:-20}
   SELFHEAL_MAX_AUDIT_RECORDS: ${SELFHEAL_MAX_AUDIT_RECORDS:-200}
@@ -44,17 +63,25 @@ services:
     build:
       context: ../..
       dockerfile: infra/docker/Dockerfile.engine
+      # Bridge/NAT throttled package downloads to a crawl on this host.
+      network: host
       args:
         PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+        PIP_EXTRAS: api,yaml,models,dev
+        INSTALL_GIT: "1"
     command: ["uvicorn", "apps.selfheal.main:app", "--host", "0.0.0.0", "--port", "8100"]
     environment: *selfheal-env
     # Same reason as worker-prod: bridge/NAT stalls streamed model responses.
     network_mode: host
     volumes:
       - selfheal-data:/data/selfheal
-      - engine-data:/data/engine:ro
+      # Writable: the applied rule patch and the worker restart marker live here.
+      - engine-data:/data/engine
       - platform-data:/data/platform:ro
       - ../../markdown:/app/markdown:ro
+      # Host sources + git metadata: patches persist and can be tested/applied.
+      - ../../metal-doc-agent:/app/metal-doc-agent
+      - ../../:/workspace
       - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
     depends_on:
       - selfheal-worker
@@ -65,16 +92,22 @@ services:
     build:
       context: ../..
       dockerfile: infra/docker/Dockerfile.engine
+      # Bridge/NAT throttled package downloads to a crawl on this host.
+      network: host
       args:
         PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+        PIP_EXTRAS: api,yaml,models,dev
+        INSTALL_GIT: "1"
     command: ["python", "apps/selfheal/worker.py", "--interval", "15"]
     environment: *selfheal-env
     network_mode: host
     volumes:
       - selfheal-data:/data/selfheal
-      - engine-data:/data/engine:ro
+      - engine-data:/data/engine
       - platform-data:/data/platform:ro
       - ../../markdown:/app/markdown:ro
+      - ../../metal-doc-agent:/app/metal-doc-agent
+      - ../../:/workspace
       - ../../metal-doc-agent/data/standards_library:/app/metal-doc-agent/data/standards_library:ro
     restart: unless-stopped
 

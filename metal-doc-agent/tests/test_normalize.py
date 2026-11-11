@@ -77,6 +77,16 @@ class NormalizeTests(unittest.TestCase):
         self.assertIsNone(canonical_element("Pcm不大于"))
         self.assertIsNone(canonical_element("CEV"))
 
+    def test_combined_element_rows_keep_their_formula(self):
+        # "氮+氧(N+O)" is one row, not a multi-element sum limit. The CJK half
+        # also contains "+", which used to make the label look like Cr+Cu+Mo+Ni.
+        self.assertEqual(canonical_element("氮+氧(N+O)"), "N+O")
+        self.assertEqual(canonical_element("氮+氧（N+O）"), "N+O")
+        self.assertEqual(canonical_element("氢+氧 (H+O)"), "H+O")
+        # Real sum constraints still describe no single element.
+        self.assertIsNone(canonical_element("Cr+Cu+Mo+Ni"))
+        self.assertIsNone(canonical_element("Cu+6Sn"))
+
     def test_fracture_toughness_unit(self):
         self.assertEqual(parse_unit("断裂韧度KIC/MPa·M1/2"), "MPa·m^1/2")
         self.assertEqual(parse_unit("断裂韧度KICbMPa·M1/2"), "MPa·m^1/2")

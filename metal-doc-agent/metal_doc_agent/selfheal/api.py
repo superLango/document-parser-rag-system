@@ -88,6 +88,9 @@ def create_selfheal_app(
                 finding.model_dump(mode="json")
                 for finding in store.list_findings_for_feedback(feedback_id)
             ],
+            "diagnosis": _read_optional_json(
+                settings.jobs_root / feedback_id / "diagnosis.json"
+            ),
         }
 
     @app.post("/v1/selfheal/feedback/{feedback_id}/messages")
@@ -104,7 +107,20 @@ def create_selfheal_app(
         outcome = runner.process_feedback(feedback_id)
         return outcome.model_dump(mode="json")
 
-    ARTIFACT_KINDS = {"table_fix", "sandbox", "audit"}
+    @app.post("/v1/selfheal/feedback/{feedback_id}/learn")
+    def learn(feedback_id: str) -> dict[str, Any]:
+        if store.get_feedback(feedback_id) is None:
+            raise HTTPException(status_code=404, detail="feedback not found")
+        from .learn import learn_from_applied
+
+        report = learn_from_applied(settings, feedback_id)
+        service.add_message(
+            feedback_id,
+            f"学习结果：{report.get('reason') or report.get('status')}",
+        )
+        return report
+
+    ARTIFACT_KINDS = {"table_fix", "document_meta", "sandbox", "audit"}
     ARTIFACT_NAMES = {
         "result.json",
         "repair_diff.json",
@@ -132,7 +148,7 @@ def create_selfheal_app(
         if store.get_feedback(feedback_id) is None:
             raise HTTPException(status_code=404, detail="feedback not found")
         base = settings.jobs_root / feedback_id
-        for kind in ("table_fix", "sandbox", "audit"):
+        for kind in ("document_meta", "table_fix", "sandbox", "audit"):
             result_path = base / kind / "result.json"
             if not result_path.exists():
                 continue
@@ -242,6 +258,16 @@ def create_selfheal_app(
         return FileResponse(index)
 
     return app
+
+
+def _read_optional_json(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+    return payload if isinstance(payload, dict) else None
 
 
 def _latest_diff(store: SelfHealStore, settings: SelfHealSettings, job_id: str) -> dict | None:

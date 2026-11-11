@@ -102,8 +102,9 @@ const FEEDBACK_CATEGORIES = [
 const FEEDBACK_STATUS: Record<string, { label: string; variant: 'secondary' | 'info' | 'success' | 'warning' | 'destructive' }> = {
   open: { label: '待处理', variant: 'secondary' },
   processing: { label: '修复中', variant: 'info' },
-  fixed: { label: '已修复', variant: 'success' },
-  needs_more_info: { label: '需补充信息', variant: 'warning' },
+  fixed: { label: '待确认应用', variant: 'success' },
+  unresolved: { label: '未修复（有依据）', variant: 'warning' },
+  needs_more_info: { label: '无法处理', variant: 'warning' },
   rejected: { label: '未采纳', variant: 'destructive' },
 }
 
@@ -114,10 +115,8 @@ function cellText(value: unknown): string {
 }
 
 const EXPORT_FORMATS = [
-  { format: 'hanson' as const, title: 'Schema JSON', desc: '平台标准结构，供下游接入' },
-  { format: 'json' as const, title: 'JSON', desc: '完整抽取结果' },
-  { format: 'csv' as const, title: 'CSV', desc: '表格软件可直接打开' },
-  { format: 'xlsx' as const, title: 'XLSX', desc: '按类别拆分为工作表' },
+  { format: 'csv' as const, title: 'CSV', desc: '与结果表格内容一致，可直接打开' },
+  { format: 'xlsx' as const, title: 'XLSX', desc: '每个检验项目一个工作表，内容与表格一致' },
 ]
 
 export default function KbExtractionDetailPage({
@@ -347,8 +346,10 @@ export default function KbExtractionDetailPage({
     setFeedbackApplied('')
     try {
       const outcome = await feedbackApi.apply(docId, feedbackId)
+      const learning = outcome.rule_learning
       setFeedbackApplied(
-        `已应用修复结果（修改 ${outcome.summary?.changed ?? 0} 处）`,
+        `已应用修复结果（修改 ${outcome.summary?.changed ?? 0} 处）` +
+          (learning?.reason ? `\n规则学习：${learning.reason}` : ''),
       )
       setTemplateSignature(outcome.template_signature || '')
       setTemplateStatus(outcome.template_status || '')
@@ -415,7 +416,7 @@ export default function KbExtractionDetailPage({
         source_quote: feedbackQuote || undefined,
       })
       if (created.problems.length) {
-        setFeedbackReply(`需要补充信息：${created.problems.join('；')}`)
+        setFeedbackReply(`暂时无法处理：${created.problems.join('；')}`)
         void loadFeedback()
         return
       }
@@ -464,7 +465,7 @@ export default function KbExtractionDetailPage({
     }
   }
 
-  async function exportFile(format: 'hanson' | 'json' | 'csv' | 'xlsx') {
+  async function exportFile(format: 'csv' | 'xlsx') {
     if (!docId) return
     setBusy(true)
     setBusyAction(format)
@@ -478,7 +479,7 @@ export default function KbExtractionDetailPage({
       const url = URL.createObjectURL(blob)
       const link = window.document.createElement('a')
       link.href = url
-      link.download = `${docId}-${format}.${format === 'hanson' ? 'json' : format}`
+      link.download = `${docId}-${format}.${format}`
       link.click()
       URL.revokeObjectURL(url)
     } catch (err) {
@@ -1316,7 +1317,7 @@ export default function KbExtractionDetailPage({
                 ))}
               </Select>
               <p className="text-[11px] text-muted-foreground">
-                不选记录时，请写明元素/字段、表号或原文数值。
+                可以不选记录，直接描述问题，系统会回到原文定位并给出依据。
               </p>
             </div>
           </div>
@@ -1346,11 +1347,11 @@ export default function KbExtractionDetailPage({
               onChange={(event) => setFeedbackDescription(event.target.value)}
               rows={3}
               disabled={feedbackBusy}
-              placeholder="请写明元素/字段、表号、条件和期望值，例如：表1 C 的最大值不对，应为 0.015~0.060"
+              placeholder="直接描述问题即可，例如：室温拉伸标准要求不对、持久项目没有解析出来、标准编号不对"
               className="w-full rounded-md border border-input bg-card px-3 py-2 text-sm shadow-soft transition-all duration-200 placeholder:text-muted-foreground/70 focus-visible:border-primary/50 focus-visible:shadow-glow disabled:opacity-50"
             />
             <p className="text-[11px] text-muted-foreground">
-              也可以描述整表、整篇或条款问题，例如“室温拉伸大部分内容有问题”，系统会先审查再决定修复方式。
+              系统会自己定位错误、从原文找出正解并生成修正；无法修复时会列出查过的页、表和原因。
             </p>
           </div>
 

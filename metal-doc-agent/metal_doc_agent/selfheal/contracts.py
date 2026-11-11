@@ -40,6 +40,7 @@ class FeedbackStatus(str, Enum):
     processing = "processing"
     fixed = "fixed"
     rejected = "rejected"
+    unresolved = "unresolved"
     needs_more_info = "needs_more_info"
 
 
