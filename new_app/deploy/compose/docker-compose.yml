@@ -36,6 +36,18 @@ x-app: &app
     LAYOUT_TIMEOUT_SECONDS: ${LAYOUT_TIMEOUT_SECONDS:-60}
     RECIPE_REGISTRY_URL: ${RECIPE_REGISTRY_URL:-http://recipe-registry:8005}
     ROUTE_USE_FAKE: ${ROUTE_USE_FAKE:-false}
+    SANDBOX_URL: ${SANDBOX_URL:-http://sandbox:8004}
+    SANDBOX_USE_FAKE: ${SANDBOX_USE_FAKE:-false}
+    SANDBOX_EXECUTOR: ${SANDBOX_EXECUTOR:-docker}
+    SANDBOX_RUNTIME: ${SANDBOX_RUNTIME:-runc}
+    SANDBOX_ENGINE_IMAGE: ${SANDBOX_ENGINE_IMAGE:-hanson-sandbox-runtime:local}
+    SANDBOX_ENGINE_VERSION: ${SANDBOX_ENGINE_VERSION:-sandbox-engine/1}
+    SANDBOX_DOCKER_SOCKET: /var/run/docker.sock
+    SANDBOX_WORKSPACE_ROOT: /tmp/hanson-sandbox
+    SANDBOX_RUN_TIMEOUT_SECONDS: ${SANDBOX_RUN_TIMEOUT_SECONDS:-120}
+    SANDBOX_TIMEOUT_SECONDS: ${SANDBOX_TIMEOUT_SECONDS:-300}
+    SANDBOX_TEMPLATE_ID: ${SANDBOX_TEMPLATE_ID:-product_full}
+    SANDBOX_TEMPLATE_VERSION: ${SANDBOX_TEMPLATE_VERSION:-1.0.0}
   depends_on:
     postgres:
       condition: service_healthy
@@ -143,6 +155,11 @@ services:
     command: ["uvicorn", "services.sandbox.main:app", "--host", "0.0.0.0", "--port", "8004"]
     ports:
       - "18004:8004"
+    volumes:
+      # Docker-outside-of-Docker: the sandbox service creates short-lived
+      # sibling containers on the host daemon. The execution container never
+      # receives the socket.
+      - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8004/healthz')\""]
       interval: 10s
@@ -170,6 +187,16 @@ services:
       interval: 10s
       timeout: 3s
       retries: 10
+
+  # 构建型服务：只用于构建沙箱引擎镜像，不参与默认启动。
+  #   docker compose --profile build build sandbox-runtime
+  sandbox-runtime:
+    profiles: ["build"]
+    build:
+      context: ../..
+      dockerfile: services/sandbox/runtime/Dockerfile
+    image: hanson-sandbox-runtime:local
+    command: ["true"]
 
 volumes:
   postgres-data:

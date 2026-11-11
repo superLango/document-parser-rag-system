@@ -19,7 +19,7 @@
 | D-004 | Q1 | Qwen 固定 35B；其他模型版本参考旧代码 | 已确认 | M5 |
 | D-005 | Q2 | 并发 4 场景下选择最优上下文窗口 | 已确认（最终值待基准） | M5 |
 | D-006 | Q2 | 测试内存看门狗，低于阈值终止进程 | 已确认（阈值待标定） | M5 |
-| D-007 | Q3 | 沙箱运行时按多维度评估选择 | 已确认（最终选型待 PoC） | M4 |
+| D-007 | Q3 | 沙箱运行时按多维度评估选择 | 已确认（M4 选定 runc，gVisor 可选） | M4 |
 | D-008 | Q4 | 不默认导入旧数据，仅导入词典；效果达标则全量重生成 | 已确认 | M8 |
 | D-009 | Q5 | 前端视觉完全沿用现有产品风格 | 已确认 | M7 |
 | D-010 | Q6 | 本地开发/测试统一使用 MinIO | 已确认 | M0、M4、M8 |
@@ -293,10 +293,10 @@ Qwen 窗口可选 32K/64K/128K；窗口越大，上下文越完整，但显存/�
 |---|---|
 | 决策 ID | D-007 |
 | 对应确认项 | Q3 |
-| 状态 | 已确认（最终选型待 PoC） |
+| 状态 | 已确认（M4 完成，选定 containerd + runc） |
 | 日期 | 2026-11-11 |
 | 决策人 | 项目负责人 |
-| 关联文档 | [项目需求文档](requirements.md) 6.4、[M4](M4-sandbox-runtime.md) |
+| 关联文档 | [项目需求文档](requirements.md) 6.4、[M4](M4-sandbox-runtime.md)、[运行时评分报告](reports/M4-runtime-evaluation.md) |
 
 **背景**
 
@@ -310,29 +310,34 @@ Qwen 窗口可选 32K/64K/128K；窗口越大，上下文越完整，但显存/�
   - 资源开销 25%
   - 与 K8s/现有架构兼容性 25%
   - 运维复杂度 20%
-- M4 阶段做 PoC + 评分矩阵，选择最合适的运行时。
-- 当前不预先锁定最终运行时；M4 K4.1 完成评估后写入本记录。
-- 硬性要求：无网络、只读 rootfs、非 root、cap drop、seccomp、CPU/内存/PID/时长限制。
+- **最终选型：containerd + runc 作为默认运行时**；加权得分 9.10。
+- **gVisor 作为可选加固运行时**（加权 7.65）：节点注册 runsc 后通过 `SANDBOX_RUNTIME=runsc` 切换，执行契约不变；适用于后续第三方/不可信配方。
+- **Kata 本期不选**（纸面 6.55，未实测）：本机无 kata-runtime/QEMU，静态包 1.02 GB 下载超时；生产多租户阶段再用 kata-deploy 在 KVM 节点池评估。
+- 硬性要求（已由 Docker/K8s 配置强制）：无网络、只读 rootfs、非 root、cap drop、seccomp、CPU/内存/PID/时长限制。
+- 生产 K8s 必须使用支持 NetworkPolicy 的 CNI（Calico/Cilium）；kindnet 仅用于开发。
 
 **备选方案**
 
-| 方案 | 特点 | 待验证 |
+| 方案 | 特点 | 结论 |
 |---|---|---|
-| containerd + runc | 开销最低、兼容最好 | 隔离强度是否足够 |
-| containerd + gVisor | 用户态内核、隔离强 | 兼容性/开销 |
-| Kata Containers | VM 级隔离 | 资源开销/启动速度 |
+| containerd + runc | 开销最低、兼容最好 | **采用**；隔离由 OCI 配置 + seccomp + 资源限制保证 |
+| containerd + gVisor | 用户态内核、隔离强 | 保留为可选 profile；KVM 最小执行通过 |
+| Kata Containers | VM 级隔离 | 本期不选；环境无法验证，运维成本高 |
 
 **影响**
 
-- M4 需要 PoC 环境与评分报告。
-- 运行时选择影响节点池、镜像、监控、运维。
-- 不影响 M0–M3 的服务骨架。
+- M4 需要 PoC 环境与评分报告（已完成）。
+- 运行时选择影响节点池、镜像、监控、运维：runc 无额外节点要求；gVisor 需注册 runtime；Kata 需 KVM/QEMU 节点池。
+- 不影响 M0–M3 的服务骨架与执行契约。
 
 **验证**
 
-- 三种运行时均完成最小执行测试。
-- 评分矩阵与结论记录。
-- 选定运行时通过隔离/确定性/资源测试。
+- [x] runc 最小执行：uid=65534、CapEff=0、rootfs 只读、网络阻断。
+- [x] gVisor 最小执行：runsc 0.0~20230807.0，KVM 平台，网络阻断。
+- [ ] Kata 最小执行：环境受限，未通过（记录为偏差）。
+- [x] 评分矩阵与结论：见 [M4 运行时评分报告](reports/M4-runtime-evaluation.md)。
+- [x] 选定运行时通过隔离/确定性/资源测试。
+- [x] K8s 资源限制与 NetworkPolicy：Calico 临时集群 A/B 实测（有策略 blocked，无策略 reachable）。
 
 ---
 

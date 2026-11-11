@@ -29,6 +29,17 @@ data:
   LAYOUT_TIMEOUT_SECONDS: "60"
   RECIPE_REGISTRY_URL: http://recipe-registry:8005
   ROUTE_USE_FAKE: "false"
+  SANDBOX_URL: http://sandbox:8004
+  SANDBOX_USE_FAKE: "false"
+  SANDBOX_EXECUTOR: kubernetes
+  SANDBOX_RUNTIME: containerd
+  SANDBOX_ENGINE_IMAGE: hanson-sandbox-runtime:local
+  SANDBOX_ENGINE_VERSION: sandbox-engine/1
+  SANDBOX_RUN_TIMEOUT_SECONDS: "120"
+  SANDBOX_TIMEOUT_SECONDS: "300"
+  SANDBOX_TEMPLATE_ID: product_full
+  SANDBOX_TEMPLATE_VERSION: 1.0.0
+  SANDBOX_KUBERNETES_NAMESPACE: hanson-standard
   AGENT_MODEL: Qwen-35B
   AGENT_CONTEXT_WINDOW: "65536"
   AGENT_FAILOVER_SECONDS: "10"
@@ -302,71 +313,6 @@ spec:
   ports:
     - name: http
       port: 8003
-      targetPort: http
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: sandbox
-  namespace: hanson-standard
-  labels:
-    app: sandbox
-    app.kubernetes.io/part-of: hanson-standard-split
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: sandbox
-  template:
-    metadata:
-      labels:
-        app: sandbox
-    spec:
-      containers:
-        - name: sandbox
-          image: hanson-new-app:local
-          imagePullPolicy: IfNotPresent
-          command: ["uvicorn", "services.sandbox.main:app", "--host", "0.0.0.0", "--port", "8004"]
-          ports:
-            - name: http
-              containerPort: 8004
-          envFrom:
-            - configMapRef:
-                name: app-config
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 20
-            periodSeconds: 20
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
-              cpu: 500m
-              memory: 512Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: sandbox
-  namespace: hanson-standard
-  labels:
-    app: sandbox
-    app.kubernetes.io/part-of: hanson-standard-split
-spec:
-  selector:
-    app: sandbox
-  ports:
-    - name: http
-      port: 8004
       targetPort: http
 ---
 apiVersion: apps/v1

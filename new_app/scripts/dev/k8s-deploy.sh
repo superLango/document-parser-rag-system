@@ -5,6 +5,7 @@ set -euo pipefail
 CLUSTER_NAME="${CLUSTER_NAME:-hanson}"
 NAMESPACE="${NAMESPACE:-hanson-standard}"
 APP_IMAGE="${APP_IMAGE:-hanson-new-app:local}"
+SANDBOX_IMAGE="${SANDBOX_IMAGE:-hanson-sandbox-runtime:local}"
 BASE_IMAGES=("postgres:16-alpine" "minio/minio:latest" "redis:7-alpine")
 SERVICES=("api-gateway" "orchestration" "ocr" "agent" "sandbox" "recipe-registry" "review")
 
@@ -13,6 +14,12 @@ NEW_APP_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 K8S_DIR="$NEW_APP_DIR/deploy/k8s/base"
 
 export PATH="$PATH:$HOME/.local/bin"
+
+echo "[0/5] 构建沙箱引擎镜像"
+if ! docker image inspect "$SANDBOX_IMAGE" >/dev/null 2>&1; then
+  docker build -f "$NEW_APP_DIR/services/sandbox/runtime/Dockerfile" -t "$SANDBOX_IMAGE" "$NEW_APP_DIR"
+fi
+echo "  ok $SANDBOX_IMAGE"
 
 echo "[1/5] 检查本地镜像"
 for img in "$APP_IMAGE" "${BASE_IMAGES[@]}"; do
@@ -27,7 +34,7 @@ echo "[2/5] 加载镜像到 kind 集群 $CLUSTER_NAME"
 # kind v0.24 的 `kind load` 会带 --all-platforms，在 Docker 使用 containerd
 # image store 时因缺少其它平台 blob 而失败；这里直接 save 后由节点 ctr 导入。
 NODE="${CLUSTER_NAME}-control-plane"
-for img in "$APP_IMAGE" "${BASE_IMAGES[@]}"; do
+for img in "$APP_IMAGE" "$SANDBOX_IMAGE" "${BASE_IMAGES[@]}"; do
   echo "  loading $img"
   docker save --platform linux/amd64 "$img" | docker exec -i "$NODE" \
     ctr --namespace=k8s.io images import --digests=false -

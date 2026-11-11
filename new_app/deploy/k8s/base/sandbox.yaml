@@ -1,0 +1,131 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sandbox
+  namespace: hanson-standard
+  labels:
+    app: sandbox
+    app.kubernetes.io/part-of: hanson-standard-split
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sandbox-job-manager
+  namespace: hanson-standard
+  labels:
+    app: sandbox
+    app.kubernetes.io/part-of: hanson-standard-split
+rules:
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["create", "get", "list", "watch", "delete"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["create", "get", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sandbox-job-manager
+  namespace: hanson-standard
+  labels:
+    app: sandbox
+    app.kubernetes.io/part-of: hanson-standard-split
+subjects:
+  - kind: ServiceAccount
+    name: sandbox
+    namespace: hanson-standard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sandbox-job-manager
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandbox
+  namespace: hanson-standard
+  labels:
+    app: sandbox
+    app.kubernetes.io/part-of: hanson-standard-split
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sandbox
+  template:
+    metadata:
+      labels:
+        app: sandbox
+    spec:
+      serviceAccountName: sandbox
+      containers:
+        - name: sandbox
+          image: hanson-new-app:local
+          imagePullPolicy: IfNotPresent
+          command: ["uvicorn", "services.sandbox.main:app", "--host", "0.0.0.0", "--port", "8004"]
+          ports:
+            - name: http
+              containerPort: 8004
+          envFrom:
+            - configMapRef:
+                name: app-config
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sandbox
+  namespace: hanson-standard
+  labels:
+    app: sandbox
+    app.kubernetes.io/part-of: hanson-standard-split
+spec:
+  selector:
+    app: sandbox
+  ports:
+    - name: http
+      port: 8004
+      targetPort: http
+---
+# 每个执行 Job 的 Pod 都带有 app=hanson-sandbox-job 标签。
+# deny-all：没有入站/出站规则，执行容器无法访问集群内外任何网络。
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: sandbox-job-deny-all
+  namespace: hanson-standard
+  labels:
+    app: sandbox
+    app.kubernetes.io/part-of: hanson-standard-split
+spec:
+  podSelector:
+    matchLabels:
+      app: hanson-sandbox-job
+  policyTypes:
+    - Ingress
+    - Egress

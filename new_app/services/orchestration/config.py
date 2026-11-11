@@ -26,6 +26,18 @@ class Settings(BaseSettings):
     recipe_registry_url: str = "http://localhost:18005"
     # 回滚开关：置 true 时路由阶段回到 M1 的 fake 实现。
     route_use_fake: bool = False
+    sandbox_url: str = "http://localhost:18004"
+    sandbox_timeout_seconds: float = 300.0
+    sandbox_run_timeout_seconds: int = 120
+    sandbox_cpu: float = 1.0
+    sandbox_memory_mb: int = 512
+    sandbox_pids: int = 128
+    sandbox_template_id: str = "product_full"
+    sandbox_template_version: str = "1.0.0"
+    sandbox_engine_image: str = "hanson-sandbox-runtime:local"
+    sandbox_engine_version: str = "sandbox-engine/1"
+    # 回滚开关：置 true 时沙箱阶段回到 M1 的 fake 实现。
+    sandbox_use_fake: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

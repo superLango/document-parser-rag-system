@@ -6,6 +6,17 @@ from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 
 import httpx
+from hanson_contracts import (
+    DocumentRef,
+    EngineRef,
+    ExecutionRequest,
+    ExecutionResult,
+    ObjectInput,
+    RecipeRef,
+    ResourceLimits,
+    TableAssignment,
+    TemplateRef,
+)
 from sqlalchemy import func, select
 
 from services.shared.storage import ObjectStore
@@ -83,7 +94,7 @@ async def _attempt_stage(
     stage: str,
     running_state: RunState,
     done_state: RunState,
-    artifact_role: str,
+    artifact_role: str | None,
     action: StageAction,
     attempt: int,
 ) -> None:
@@ -128,7 +139,17 @@ async def _attempt_stage(
         await asyncio.sleep(settings.mock_stage_delay_seconds)
         _inject_mock_failure(stage, attempt)
         output = await action(run)
-        artifact_key = await _store_artifact(session, run, artifact_role, output)
+        if artifact_role is None:
+            if "output_refs" in output:
+                artifact_key = str(output.get("result_key") or "")
+                output_refs = dict(output.get("output_refs") or {})
+            else:
+                # 回滚到 fake 沙箱时没有外部执行，按普通阶段产物落盘。
+                artifact_key = await _store_artifact(session, run, "result", output)
+                output_refs = {"artifact": artifact_key}
+        else:
+            artifact_key = await _store_artifact(session, run, artifact_role, output)
+            output_refs = {"artifact": artifact_key}
         ensure_transition(run.status, done_state)
         run.status = done_state
         run.stage = done_state
@@ -136,14 +157,14 @@ async def _attempt_stage(
         # 系统时钟可能回跳（WSL/NTP 校正），保证结束时间不早于开始时间。
         stage_row.finished_at = max(now(), started)
         stage_row.duration_ms = int((stage_row.finished_at - started).total_seconds() * 1000)
-        stage_row.output_refs = {"artifact": artifact_key}
+        stage_row.output_refs = output_refs
         await _append_event(
             session,
             run,
             "run.stage.completed",
             stage,
             "completed",
-            {"artifact": artifact_key, "attempt": attempt},
+            {"attempt": attempt, **output_refs},
         )
         await session.commit()
 
@@ -207,7 +228,7 @@ async def _execute_stage(
     stage: str,
     running_state: RunState,
     done_state: RunState,
-    artifact_role: str,
+    artifact_role: str | None,
     action: StageAction,
 ) -> None:
     attempts = max(1, settings.stage_max_attempts)
@@ -365,6 +386,141 @@ async def _match_table(table: dict) -> dict:
     return response.json()["result"]
 
 
+class SandboxStageError(RuntimeError):
+    def __init__(self, error_code: str, message: str) -> None:
+        super().__init__(message)
+        self.error_code = error_code
+
+
+async def _sandbox_stage(run: Run) -> dict:
+    async with SessionLocal() as session:
+        document = await session.get(Document, run.document_id)
+        if document is None:
+            raise RuntimeError(f"document not found: {run.document_id}")
+        ocr_result = await session.execute(
+            select(Artifact)
+            .where(Artifact.run_id == run.id, Artifact.role == "ocr")
+            .order_by(Artifact.created_at.desc())
+        )
+        ocr_artifact = ocr_result.scalars().first()
+        routing_result = await session.execute(
+            select(Artifact)
+            .where(Artifact.run_id == run.id, Artifact.role == "routing")
+            .order_by(Artifact.created_at.desc())
+        )
+        routing_artifact = routing_result.scalars().first()
+    if ocr_artifact is None:
+        raise RuntimeError(f"ocr artifact missing for run {run.id}")
+    if routing_artifact is None:
+        raise RuntimeError(f"routing artifact missing for run {run.id}")
+
+    routing = json.loads(await get_store().get_bytes(routing_artifact.storage_key))
+    assignments = [
+        TableAssignment(
+            table_id=str(item.get("table_id") or ""),
+            recipe_id=str(item.get("recipe_id")),
+            version=str(item.get("version")),
+            digest=str(item.get("digest") or ""),
+        )
+        for item in routing.get("assignments") or []
+        if item.get("table_id") and item.get("recipe_id") and item.get("version")
+    ]
+    primary = (
+        assignments[0]
+        if assignments
+        else TableAssignment(
+            table_id="", recipe_id="mechanical_properties_v1", version="1.0.0"
+        )
+    )
+    request = ExecutionRequest(
+        trace_id=run.trace_id or run.id,
+        run_id=run.id,
+        document=DocumentRef(
+            document_id=document.id,
+            filename=document.filename,
+            storage_key=document.storage_key,
+            sha256=document.sha256,
+            size=document.size,
+            content_type=document.content_type,
+        ),
+        ocr=ObjectInput(storage_key=ocr_artifact.storage_key, sha256=ocr_artifact.sha256),
+        assignments=assignments,
+        recipe=RecipeRef(
+            recipe_id=primary.recipe_id,
+            version=primary.version,
+            digest=primary.digest,
+        ),
+        template=TemplateRef(
+            template_id=settings.sandbox_template_id,
+            version=settings.sandbox_template_version,
+        ),
+        engine=EngineRef(
+            version=settings.sandbox_engine_version,
+            image=settings.sandbox_engine_image,
+        ),
+        limits=ResourceLimits(
+            cpu=settings.sandbox_cpu,
+            memory_mb=settings.sandbox_memory_mb,
+            pids=settings.sandbox_pids,
+            timeout_seconds=settings.sandbox_run_timeout_seconds,
+        ),
+    )
+    result = await _call_sandbox(request)
+    if result.status != "succeeded":
+        raise SandboxStageError(
+            result.error_code or "SANDBOX_FAILED",
+            result.error_message or f"sandbox finished with status {result.status}",
+        )
+    artifacts = await _record_sandbox_artifacts(run, result)
+    return {
+        "status": result.status,
+        "result_key": artifacts.get("result", ""),
+        "output_refs": {"artifacts": artifacts},
+        "outputs": {role: item.storage_key for role, item in result.outputs.items()},
+        "metrics": result.metrics.model_dump(mode="json"),
+        "diagnostics": [item.model_dump(mode="json") for item in result.diagnostics],
+    }
+
+
+async def _call_sandbox(request: ExecutionRequest) -> ExecutionResult:
+    url = f"{settings.sandbox_url.rstrip('/')}/internal/sandbox/execute"
+    try:
+        async with httpx.AsyncClient(timeout=settings.sandbox_timeout_seconds) as client:
+            response = await client.post(url, json=request.model_dump(mode="json"))
+    except httpx.HTTPError as exc:
+        raise RuntimeError(f"sandbox service unavailable: {exc}") from exc
+    if response.status_code != 200:
+        raise RuntimeError(f"sandbox service error {response.status_code}: {response.text[:500]}")
+    return ExecutionResult.model_validate(response.json())
+
+
+async def _record_sandbox_artifacts(run: Run, result: ExecutionResult) -> dict[str, str]:
+    keys = {role: item.storage_key for role, item in result.outputs.items()}
+    if not keys:
+        return {}
+    async with SessionLocal() as session:
+        existing = await session.execute(
+            select(Artifact.storage_key).where(
+                Artifact.run_id == run.id, Artifact.storage_key.in_(list(keys.values()))
+            )
+        )
+        present = set(existing.scalars())
+        for role, item in result.outputs.items():
+            if item.storage_key in present:
+                continue
+            session.add(
+                Artifact(
+                    run_id=run.id,
+                    role=role,
+                    storage_key=item.storage_key,
+                    sha256=item.sha256,
+                    bytes=item.bytes,
+                )
+            )
+        await session.commit()
+    return keys
+
+
 async def _fake_sandbox(_: Run) -> dict:
     return {
         "records": [
@@ -399,7 +555,9 @@ async def _finalize(run_id: str) -> None:
             run.stage = RunState.STRUCTURED_READY.value
             run.finished_at = now()
             result = await session.execute(
-                select(Artifact).where(Artifact.run_id == run.id, Artifact.role == "result")
+                select(Artifact)
+                .where(Artifact.run_id == run.id, Artifact.role == "result")
+                .order_by(Artifact.created_at.desc())
             )
             artifact = result.scalars().first()
             run.result_key = artifact.storage_key if artifact else None
@@ -483,8 +641,8 @@ async def run_workflow(run_id: str) -> None:
             "sandbox",
             RunState.SANDBOX_RUNNING,
             RunState.PARSED,
-            "result",
-            _fake_sandbox,
+            None,
+            _fake_sandbox if settings.sandbox_use_fake else _sandbox_stage,
         )
         await _execute_stage(
             run_id,
@@ -498,7 +656,7 @@ async def run_workflow(run_id: str) -> None:
     except asyncio.CancelledError:
         raise
     except Exception as exc:
-        await _mark_failed(run_id, "INTERNAL", str(exc))
+        await _mark_failed(run_id, getattr(exc, "error_code", "INTERNAL"), str(exc))
 
 
 def schedule(run_id: str) -> None:
