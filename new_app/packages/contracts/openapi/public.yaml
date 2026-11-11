@@ -1,0 +1,32 @@
+openapi: 3.1.0
+info:
+  title: Hanson Standard Split Public API
+  version: 0.0.0
+  description: M0 skeleton. Public APIs use the /v1 prefix.
+servers:
+  - url: http://localhost:8000
+paths:
+  /v1/health:
+    get:
+      summary: Public health check
+      operationId: getPublicHealth
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, service, version]
+      properties:
+        status:
+          type: string
+          const: ok
+        service:
+          type: string
+        version:
+          type: string

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hanson.local/schemas/run-manifest-1.0.json",
+  "title": "RunManifest",
+  "type": "object",
+  "required": ["manifest_version", "run_id", "trace_id", "document", "engine"],
+  "properties": {
+    "manifest_version": {"type": "string", "const": "1.0"},
+    "run_id": {"type": "string"},
+    "trace_id": {"type": "string"},
+    "document": {"type": "object"},
+    "engine": {"type": "object"},
+    "ocr": {"type": "object"},
+    "recipes": {"type": "array", "items": {"type": "object"}},
+    "templates": {"type": "array", "items": {"type": "object"}},
+    "prompts": {"type": "array", "items": {"type": "object"}},
+    "model": {"type": "object"},
+    "artifacts": {"type": "array", "items": {"type": "object"}},
+    "started_at": {"type": "string"},
+    "finished_at": {"type": ["string", "null"]},
+    "status": {"type": "string"}
+  },
+  "additionalProperties": true
+}

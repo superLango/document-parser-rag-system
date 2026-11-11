@@ -1,0 +1,55 @@
+name: new-app-ci
+
+on:
+  push:
+    branches: [new_doc_parse]
+    paths:
+      - "new_app/**"
+      - ".github/workflows/new-app-ci.yml"
+  pull_request:
+    branches: [new_doc_parse]
+    paths:
+      - "new_app/**"
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: new_app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Lint
+        run: ruff check services packages tests
+      - name: Compile
+        run: python -m compileall -q services packages tests
+      - name: Tests
+        run: pytest
+      - name: Forbid legacy imports
+        run: |
+          if grep -R -n -E "import (metal_doc_agent|hanson_api)|from (metal_doc_agent|hanson_api)" services packages tests; then
+            echo "legacy imports are forbidden"
+            exit 1
+          fi
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: new_app/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install
+        run: npm install
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build
+        run: npm run build

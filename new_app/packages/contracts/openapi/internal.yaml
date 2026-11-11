@@ -1,0 +1,32 @@
+openapi: 3.1.0
+info:
+  title: Hanson Standard Split Internal API
+  version: 0.0.0
+  description: M0 skeleton. Internal APIs use the /internal prefix and are not public.
+servers:
+  - url: http://orchestration:8001
+paths:
+  /internal/health:
+    get:
+      summary: Internal health check
+      operationId: getInternalHealth
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, service, version]
+      properties:
+        status:
+          type: string
+          const: ready
+        service:
+          type: string
+        version:
+          type: string

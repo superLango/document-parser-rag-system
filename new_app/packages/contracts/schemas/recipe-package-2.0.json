@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hanson.local/schemas/recipe-package-2.0.json",
+  "title": "RecipePackageManifest",
+  "type": "object",
+  "required": ["schema_version", "recipe_id", "version", "engine_api", "profile"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "2.0"},
+    "recipe_id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "engine_api": {"type": "string", "minLength": 1},
+    "profile": {"type": "string", "minLength": 1},
+    "signature": {"type": "object"},
+    "bindings": {"type": "object"},
+    "entrypoint": {"type": ["object", "null"]},
+    "templates": {"type": "array", "items": {"type": "string"}},
+    "tests": {"type": "array", "items": {"type": "string"}},
+    "checksum": {"type": "string"},
+    "compatibility": {"type": "object"}
+  },
+  "additionalProperties": true
+}

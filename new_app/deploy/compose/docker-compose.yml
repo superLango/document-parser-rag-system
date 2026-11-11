@@ -1,0 +1,163 @@
+name: hanson-new-app
+
+x-app: &app
+  build:
+    context: ../..
+    dockerfile: deploy/compose/Dockerfile
+  image: hanson-new-app:local
+  restart: unless-stopped
+  environment:
+    DATABASE_URL: ${DATABASE_URL:-postgresql://hanson:hanson@postgres:5432/hanson}
+    REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT:-http://minio:9000}
+    OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:-hanson-docs}
+    OBJECT_STORAGE_ACCESS_KEY: ${OBJECT_STORAGE_ACCESS_KEY:-minioadmin}
+    OBJECT_STORAGE_SECRET_KEY: ${OBJECT_STORAGE_SECRET_KEY:-minioadmin}
+    AGENT_BASE_URL_PRIMARY: ${AGENT_BASE_URL_PRIMARY:-}
+    AGENT_BASE_URL_SECONDARY: ${AGENT_BASE_URL_SECONDARY:-}
+    AGENT_BASE_URL_TERTIARY: ${AGENT_BASE_URL_TERTIARY:-http://192.168.1.35}
+    AGENT_FAILOVER_SECONDS: ${AGENT_FAILOVER_SECONDS:-10}
+    AGENT_MODEL: ${AGENT_MODEL:-Qwen-35B}
+    AGENT_CONTEXT_WINDOW: ${AGENT_CONTEXT_WINDOW:-65536}
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+    minio:
+      condition: service_started
+  networks:
+    - hanson
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hanson
+      POSTGRES_PASSWORD: hanson
+      POSTGRES_DB: hanson
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hanson -d hanson"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - hanson
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - hanson
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - hanson
+
+  api-gateway:
+    <<: *app
+    command: ["uvicorn", "services.api_gateway.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  orchestration:
+    <<: *app
+    command: ["uvicorn", "services.orchestration.main:app", "--host", "0.0.0.0", "--port", "8001"]
+    ports:
+      - "8001:8001"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/healthz')\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  ocr:
+    <<: *app
+    command: ["uvicorn", "services.ocr.main:app", "--host", "0.0.0.0", "--port", "8002"]
+    ports:
+      - "8002:8002"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8002/healthz')\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  agent:
+    <<: *app
+    command: ["uvicorn", "services.agent.main:app", "--host", "0.0.0.0", "--port", "8003"]
+    ports:
+      - "8003:8003"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8003/healthz')\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  sandbox:
+    <<: *app
+    command: ["uvicorn", "services.sandbox.main:app", "--host", "0.0.0.0", "--port", "8004"]
+    ports:
+      - "8004:8004"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8004/healthz')\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  recipe-registry:
+    <<: *app
+    command: ["uvicorn", "services.recipe_registry.main:app", "--host", "0.0.0.0", "--port", "8005"]
+    ports:
+      - "8005:8005"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8005/healthz')\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  review:
+    <<: *app
+    command: ["uvicorn", "services.review.main:app", "--host", "0.0.0.0", "--port", "8006"]
+    ports:
+      - "8006:8006"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8006/healthz')\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres-data:
+  minio-data:
+
+networks:
+  hanson:
+    driver: bridge
