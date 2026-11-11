@@ -2,6 +2,7 @@
 import asyncio
 import hashlib
 import json
+import logging
 from collections.abc import AsyncIterator
 from uuid import uuid4
 
@@ -20,8 +21,10 @@ from .schemas import (
     RunStageOut,
     RunTimelineOut,
 )
-from .state import is_terminal
+from .state import TERMINAL_STATES, is_terminal
 from .workflow import cancel, get_store, schedule
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/internal")
 
@@ -98,16 +101,44 @@ async def get_document(document_id: str) -> DocumentOut:
 
 @router.delete("/documents/{document_id}", status_code=204)
 async def delete_document(document_id: str) -> None:
+    await _get_document(document_id)
+
+    terminal = [state.value for state in TERMINAL_STATES]
     async with SessionLocal() as session:
+        result = await session.execute(
+            select(Run.id).where(
+                Run.document_id == document_id, Run.status.notin_(terminal)
+            )
+        )
+        active_run_ids = list(result.scalars())
+
+    # 先停掉未完成的 run，避免删除后仍有任务写入产物。
+    for run_id in active_run_ids:
+        await cancel(run_id)
+
+    async with SessionLocal() as session:
+        keys_result = await session.execute(
+            select(Artifact.storage_key)
+            .join(Run, Artifact.run_id == Run.id)
+            .where(Run.document_id == document_id)
+        )
+        object_keys = set(keys_result.scalars())
+
         document = await session.get(Document, document_id)
         if document is None:
             raise HTTPException(status_code=404, detail="document not found")
-        runs = await session.execute(select(Run.id).where(Run.document_id == document_id))
-        if runs.first() is not None:
-            raise HTTPException(status_code=409, detail="document has runs")
-        await get_store().delete(document.storage_key)
+        object_keys.add(document.storage_key)
+
+        # 子表由数据库外键 ON DELETE CASCADE 清理。
         await session.delete(document)
         await session.commit()
+
+    store = get_store()
+    for key in object_keys:
+        try:
+            await store.delete(key)
+        except Exception:
+            logger.warning("failed to delete object %s", key, exc_info=True)
 
 
 @router.post("/documents/{document_id}/runs", response_model=RunOut, status_code=201)

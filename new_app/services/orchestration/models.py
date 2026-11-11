@@ -1,7 +1,17 @@
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .db import Base
@@ -22,7 +32,7 @@ class Document(Base):
     filename: Mapped[str] = mapped_column(String(512))
     content_type: Mapped[str] = mapped_column(String(128), default="application/octet-stream")
     size: Mapped[int] = mapped_column(Integer, default=0)
-    sha256: Mapped[str] = mapped_column(String(64), index=True)
+    sha256: Mapped[str] = mapped_column(String(64), index=True, unique=True)
     storage_key: Mapped[str] = mapped_column(String(1024))
     status: Mapped[str] = mapped_column(String(32), default="uploaded")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
@@ -32,7 +42,9 @@ class DocumentVersion(Base):
     __tablename__ = "document_versions"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
-    document_id: Mapped[str] = mapped_column(ForeignKey("documents.id"), index=True)
+    document_id: Mapped[str] = mapped_column(
+        ForeignKey("documents.id", ondelete="CASCADE"), index=True
+    )
     version: Mapped[int] = mapped_column(Integer, default=1)
     storage_key: Mapped[str] = mapped_column(String(1024))
     sha256: Mapped[str] = mapped_column(String(64))
@@ -43,7 +55,9 @@ class Run(Base):
     __tablename__ = "runs"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
-    document_id: Mapped[str] = mapped_column(ForeignKey("documents.id"), index=True)
+    document_id: Mapped[str] = mapped_column(
+        ForeignKey("documents.id", ondelete="CASCADE"), index=True
+    )
     document_version: Mapped[int] = mapped_column(Integer, default=1)
     status: Mapped[str] = mapped_column(String(32), default="RECEIVED", index=True)
     stage: Mapped[str] = mapped_column(String(32), default="RECEIVED")
@@ -59,9 +73,10 @@ class Run(Base):
 
 class RunStage(Base):
     __tablename__ = "run_stages"
+    __table_args__ = (UniqueConstraint("run_id", "stage", name="uq_run_stages_run_stage"),)
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
-    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id"), index=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
     stage: Mapped[str] = mapped_column(String(32))
     status: Mapped[str] = mapped_column(String(32), default="pending")
     input_refs: Mapped[dict] = mapped_column(JSON, default=dict)
@@ -75,9 +90,10 @@ class RunStage(Base):
 
 class RunEvent(Base):
     __tablename__ = "run_events"
+    __table_args__ = (UniqueConstraint("run_id", "sequence", name="uq_run_events_run_sequence"),)
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
-    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id"), index=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
     sequence: Mapped[int] = mapped_column(Integer)
     type: Mapped[str] = mapped_column(String(64))
     stage: Mapped[str] = mapped_column(String(32))
@@ -90,7 +106,7 @@ class Artifact(Base):
     __tablename__ = "artifacts"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
-    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id"), index=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
     role: Mapped[str] = mapped_column(String(64))
     storage_key: Mapped[str] = mapped_column(String(1024))
     sha256: Mapped[str] = mapped_column(String(64))
@@ -102,7 +118,7 @@ class ReviewReport(Base):
     __tablename__ = "review_reports"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
-    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id"), index=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
     status: Mapped[str] = mapped_column(String(32))
     ruleset_version: Mapped[str] = mapped_column(String(32), default="m1")
     stats: Mapped[dict] = mapped_column(JSON, default=dict)
@@ -114,8 +130,10 @@ class Finding(Base):
     __tablename__ = "findings"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
-    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id"), index=True)
-    report_id: Mapped[str] = mapped_column(ForeignKey("review_reports.id"), index=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    report_id: Mapped[str] = mapped_column(
+        ForeignKey("review_reports.id", ondelete="CASCADE"), index=True
+    )
     source: Mapped[str] = mapped_column(String(32), default="deterministic")
     category: Mapped[str] = mapped_column(String(64))
     severity: Mapped[str] = mapped_column(String(32))
@@ -132,8 +150,10 @@ class Feedback(Base):
     __tablename__ = "feedback"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=new_id)
-    document_id: Mapped[str] = mapped_column(ForeignKey("documents.id"), index=True)
-    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id"), index=True)
+    document_id: Mapped[str] = mapped_column(
+        ForeignKey("documents.id", ondelete="CASCADE"), index=True
+    )
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
     category: Mapped[str] = mapped_column(String(64))
     target: Mapped[dict] = mapped_column(JSON, default=dict)
     description: Mapped[str] = mapped_column(Text)

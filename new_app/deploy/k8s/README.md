@@ -36,6 +36,9 @@ M0 已落地命名空间、基础设施与七个服务的 Deployment/Service；H
 | `scripts/dev/k8s-e2e.sh` | 经 NodePort 上传 → run → 结果 |
 | `scripts/dev/verify-k8s.sh` | 集群、节点、命名空间状态 |
 | `scripts/dev/k8s-inspect-run.sh` | 查询 run / run_stages / run_events 原始数据 |
+| `scripts/dev/k8s-db-check.sh` | 检查 Alembic 版本、表与外键/唯一约束 |
+| `scripts/dev/k8s-retry-check.sh` | 注入一次 ocr 失败，验证阶段重试与事件序列 |
+| `scripts/dev/k8s-check-delete.sh` | 运行中删除文档，验证取消、级联清理与对象删除 |
 
 ## 约束
 

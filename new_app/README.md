@@ -1,6 +1,6 @@
 # new_app
 
-Hanson 标准拆分平台重构代码目录。当前为 M0 脚手架，只包含服务健康检查、契约占位、前端骨架与本地基础设施，不包含业务逻辑。
+Hanson 标准拆分平台重构代码目录。M0 脚手架已完成；M1 已落地核心领域模型、Run 状态机、事件/产物与 fake 编排链路（真实 OCR/沙箱/审核在 M2/M4/M5 接入）。
 
 ## 服务
 
@@ -46,6 +46,16 @@ npm run dev
 ```powershell
 cd new_app
 docker compose -f deploy/compose/docker-compose.yml up -d
+```
+
+## 数据库迁移
+
+`orchestration` 启动时自动执行 `alembic upgrade head`（迁移脚本在 `services/orchestration/migrations/`）。手动执行：
+
+```powershell
+cd new_app
+$env:DATABASE_URL = "postgresql://hanson:hanson@localhost:15432/hanson"
+alembic -c services/orchestration/alembic.ini upgrade head
 ```
 
 ## 目录

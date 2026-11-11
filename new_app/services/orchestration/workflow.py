@@ -76,13 +76,14 @@ async def _store_artifact(session, run: Run, role: str, payload: dict) -> str:
     return key
 
 
-async def _execute_stage(
+async def _attempt_stage(
     run_id: str,
     stage: str,
     running_state: RunState,
     done_state: RunState,
     artifact_role: str,
     action: StageAction,
+    attempt: int,
 ) -> None:
     async with SessionLocal() as session:
         run = await session.get(Run, run_id)
@@ -117,40 +118,117 @@ async def _execute_stage(
             stage_row.finished_at = None
             stage_row.error_code = None
 
-        await _append_event(session, run, "run.stage.started", stage, "started", {})
+        await _append_event(
+            session, run, "run.stage.started", stage, "started", {"attempt": attempt}
+        )
         await session.commit()
 
-        try:
-            await asyncio.sleep(settings.mock_stage_delay_seconds)
-            output = await action(run)
-            artifact_key = await _store_artifact(session, run, artifact_role, output)
-            ensure_transition(run.status, done_state)
-            run.status = done_state
-            run.stage = done_state
-            stage_row.status = "completed"
-            # 系统时钟可能回跳（WSL/NTP 校正），保证结束时间不早于开始时间。
-            stage_row.finished_at = max(now(), started)
-            stage_row.duration_ms = int(
-                (stage_row.finished_at - started).total_seconds() * 1000
-            )
-            stage_row.output_refs = {"artifact": artifact_key}
+        await asyncio.sleep(settings.mock_stage_delay_seconds)
+        _inject_mock_failure(stage, attempt)
+        output = await action(run)
+        artifact_key = await _store_artifact(session, run, artifact_role, output)
+        ensure_transition(run.status, done_state)
+        run.status = done_state
+        run.stage = done_state
+        stage_row.status = "completed"
+        # 系统时钟可能回跳（WSL/NTP 校正），保证结束时间不早于开始时间。
+        stage_row.finished_at = max(now(), started)
+        stage_row.duration_ms = int((stage_row.finished_at - started).total_seconds() * 1000)
+        stage_row.output_refs = {"artifact": artifact_key}
+        await _append_event(
+            session,
+            run,
+            "run.stage.completed",
+            stage,
+            "completed",
+            {"artifact": artifact_key, "attempt": attempt},
+        )
+        await session.commit()
+
+
+def _inject_mock_failure(stage: str, attempt: int) -> None:
+    """开发期故障注入，用于验证阶段重试；接入真实实现后移除。"""
+    if settings.mock_fail_stage == stage and attempt <= settings.mock_fail_times:
+        raise RuntimeError(f"mock failure in stage {stage} attempt {attempt}")
+
+
+async def _record_stage_failure(
+    run_id: str,
+    stage: str,
+    attempt: int,
+    final: bool,
+    exc: Exception,
+) -> None:
+    logger.warning(
+        "stage %s failed for run %s (attempt %s/%s, final=%s): %s",
+        stage,
+        run_id,
+        attempt,
+        settings.stage_max_attempts,
+        final,
+        exc,
+    )
+    async with SessionLocal() as session:
+        result = await session.execute(
+            select(RunStage).where(RunStage.run_id == run_id, RunStage.stage == stage)
+        )
+        stage_row = result.scalars().first()
+        if stage_row is not None:
+            stage_row.status = "failed"
+            stage_row.error_code = "INTERNAL"
+            if stage_row.started_at is not None:
+                stage_row.finished_at = max(now(), stage_row.started_at)
+                stage_row.duration_ms = int(
+                    (stage_row.finished_at - stage_row.started_at).total_seconds() * 1000
+                )
+            else:
+                stage_row.finished_at = now()
+        run = await session.get(Run, run_id)
+        if run is not None:
             await _append_event(
                 session,
                 run,
-                "run.stage.completed",
+                "run.stage.failed",
                 stage,
-                "completed",
-                {"artifact": artifact_key},
+                "failed",
+                {
+                    "attempt": attempt,
+                    "will_retry": not final,
+                    "error": str(exc)[:500],
+                },
             )
-            await session.commit()
+        await session.commit()
+
+
+async def _execute_stage(
+    run_id: str,
+    stage: str,
+    running_state: RunState,
+    done_state: RunState,
+    artifact_role: str,
+    action: StageAction,
+) -> None:
+    attempts = max(1, settings.stage_max_attempts)
+    for attempt in range(1, attempts + 1):
+        try:
+            await _attempt_stage(
+                run_id,
+                stage,
+                running_state,
+                done_state,
+                artifact_role,
+                action,
+                attempt,
+            )
+            return
+        except asyncio.CancelledError:
+            raise
         except Exception as exc:
-            logger.exception("stage %s failed for run %s", stage, run_id)
-            stage_row.status = "failed"
-            stage_row.finished_at = max(now(), started)
-            stage_row.error_code = "INTERNAL"
-            stage_row.duration_ms = int((stage_row.finished_at - started).total_seconds() * 1000)
-            await session.commit()
-            raise exc
+            final = attempt >= attempts
+            await _record_stage_failure(run_id, stage, attempt, final, exc)
+            if final:
+                raise
+            await asyncio.sleep(settings.stage_retry_backoff_seconds * attempt)
 
 
 async def _fake_ocr(_: Run) -> dict:
@@ -239,6 +317,10 @@ async def cancel(run_id: str) -> None:
     task = _tasks.get(run_id)
     if task is not None and not task.done():
         task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass
     async with SessionLocal() as session:
         run = await session.get(Run, run_id)
         if run is None or is_terminal(run.status):

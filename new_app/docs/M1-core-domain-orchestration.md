@@ -1,6 +1,6 @@
 # M1 里程碑详细执行计划：核心领域与编排骨架
 
-> 文档版本：v1.3  
+> 文档版本：v1.4  
 > 编制日期：2026-11-11  
 > 计划周期：2026-11-19 ~ 2026-12-02  
 > 主责角色：项目负责人（兼后端/架构/测试）  
@@ -213,6 +213,7 @@ artifact.created
 | v1.1 | 2026-11-11 | 补充 Q7 `/v1`、Q8 单人角色 | 项目负责人 |
 | v1.2 | 2026-11-11 | 记录 M1 主链路执行结果与待收口项 | 项目负责人 |
 | v1.3 | 2026-11-11 | 记录 K8s 端到端验证；修复 timeline 阶段排序与时钟回跳导致的负 duration | 项目负责人 |
+| v1.4 | 2026-11-11 | 完成 M1 收口：Alembic 基线、阶段失败重试、文档删除级联；记录三项实测证据 | 项目负责人 |
 
 ---
 
@@ -247,13 +248,17 @@ artifact.created
 | 取消 | 运行中取消，状态变为 `CANCELLED` |
 | K8s 端到端 | kind 集群内经 NodePort `30080` 完成上传 → run → `STRUCTURED_READY`；四阶段顺序正确、`duration_ms` 均为正 |
 | 时钟回跳防护 | timeline 阶段改为按业务顺序输出；`finished_at` 取 `max(now, started_at)`，避免负 duration |
+| Alembic 迁移 | 空库启动 orchestration 后 `alembic_version=0001_initial`；9 张业务表、外键与唯一约束齐全 |
+| 阶段重试 | 注入 ocr 首次失败：`started(attempt=1)` → `failed(attempt=1, will_retry=true)` → `started(attempt=2)` → `completed(attempt=2)`，run 最终 `STRUCTURED_READY` |
+| 删除级联 | 运行中删除文档返回 204、文档 GET 404；runs/stages/events/artifacts 由 `1/2/3/1` 变为 `0/0/0/0`，MinIO 中 run 目录已移除 |
+| Compose 迁移 | `docker compose down -v` 后 `up -d --wait` 全部健康；上传与列表在空库上正常 |
 
-### 13.3 待收口（M1 验收前）
+### 13.3 收口结果（2026-11-11）
 
-- [ ] 数据库迁移：当前用 `create_all` 做开发期建表，需补 Alembic 基线并在 Compose/生产使用 `alembic upgrade head`。
+- [x] 数据库迁移：补齐 Alembic 基线 `0001_initial`（9 张表、级联外键、`run_stages(run_id, stage)` 与 `run_events(run_id, sequence)` 唯一约束）；`init_db` 启动时执行 `alembic upgrade head`，不再使用 `create_all`。
+- [x] 失败重试：`STAGE_MAX_ATTEMPTS`（默认 2）+ `STAGE_RETRY_BACKOFF_SECONDS`（默认 0.5，按尝试次数线性退避）；每次失败写 `run.stage.failed` 事件，末次失败标记 `FAILED`。
+- [x] 文档删除级联：删除前先取消未完成 run；子表由 `ON DELETE CASCADE` 清理；文档与产物对象同步删除。
 - [ ] M1 前端联调：当前仅 API 可用，前端页面在 M7 重建。
 - [ ] 真实 OCR/沙箱/审核：M2/M4/M5 接入，M1 使用 fake。
-- [ ] 运行失败后的重试策略：当前标记 `FAILED`，未实现自动重试。
-- [ ] 文档删除与 run 外键的级联策略：当前有 run 的文档禁止删除。
 
 > 实测使用 WSL Docker Compose；服务端口 `18000–18006`，Postgres `15432`，MinIO `19000/19001`，Redis `16379`。
