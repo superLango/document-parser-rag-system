@@ -128,7 +128,8 @@ async def _execute_stage(
             run.status = done_state
             run.stage = done_state
             stage_row.status = "completed"
-            stage_row.finished_at = now()
+            # 系统时钟可能回跳（WSL/NTP 校正），保证结束时间不早于开始时间。
+            stage_row.finished_at = max(now(), started)
             stage_row.duration_ms = int(
                 (stage_row.finished_at - started).total_seconds() * 1000
             )
@@ -145,7 +146,7 @@ async def _execute_stage(
         except Exception as exc:
             logger.exception("stage %s failed for run %s", stage, run_id)
             stage_row.status = "failed"
-            stage_row.finished_at = now()
+            stage_row.finished_at = max(now(), started)
             stage_row.error_code = "INTERNAL"
             stage_row.duration_ms = int((stage_row.finished_at - started).total_seconds() * 1000)
             await session.commit()

@@ -1,6 +1,6 @@
 # M0 里程碑详细执行计划：项目启动与脚手架
 
-> 文档版本：v1.2  
+> 文档版本：v1.5  
 > 编制日期：2026-11-11  
 > 计划周期：2026-11-11 ~ 2026-11-18  
 > 主责角色：项目负责人（兼架构/DevOps）  
@@ -206,6 +206,7 @@
 | v1.2 | 2026-11-11 | 记录 M0 执行结果；补充第三模型地址 `192.168.1.35` | 项目负责人 |
 | v1.3 | 2026-11-11 | 记录 WSL Compose 实测通过、端口调整与 K8s 网络受限情况 | 项目负责人 |
 | v1.4 | 2026-11-11 | kind 集群创建成功；节点 Ready、命名空间 Active；七服务 K8s 部署列为待完成 | 项目负责人 |
+| v1.5 | 2026-11-11 | 七服务与基础设施已部署到 kind；集群内健康与 NodePort 端到端验证通过；K8s 部署项收口 | 项目负责人 |
 
 ---
 
@@ -242,13 +243,18 @@
 | 基础设施 | MinIO 存活、Postgres `pg_isready`、Redis `PONG` |
 | WSL kind 集群 | 集群 `hanson` 创建成功；节点 `hanson-control-plane` 为 `Ready`（v1.30.0） |
 | 命名空间 | `hanson-standard` 状态 `Active` |
+| K8s 镜像加载 | `hanson-new-app:local`、`postgres:16-alpine`、`minio/minio:latest`、`redis:7-alpine` 已导入节点 containerd |
+| K8s 部署 | 10 个 Pod 全部 `Running 1/1`；10 个 Service 创建完成；`api-gateway` 以 NodePort `30080` 暴露 |
+| K8s 集群内健康 | 七服务 `/healthz` 全部 `status=ok`；Postgres/Redis TCP 可连；MinIO `/minio/health/live` 返回 200 |
+| K8s 端到端 | 经 NodePort 上传 → run → `STRUCTURED_READY` → 结果 `Q355B / Rm=470 MPa`，四个阶段 `completed` |
 | 旧包 import 检查 | `new_app` 无旧包 import |
 
 ### 13.3 待完成（验收前）
 
-- [ ] 将七个服务镜像加载到 kind 并部署到 `hanson-standard`，验证 Pod/Service 健康。
 - [ ] CI 在远端 `new_doc_parse` 分支跑通。
 - [ ] 项目负责人最终验收签字。
 
 > WSL Docker Compose 已实测通过；WSL kind 集群与命名空间已就绪。K8s 选型：kind v0.24.0 + kindest/node v1.30.0（经国内代理下载 kind，kubectl 经 Google 存储源下载）。  
-> Compose 主机端口：服务 `18000–18006`、Postgres `15432`、MinIO `19000/19001`、Redis `16379`。这样避开了本机 SonarQube 的 `9000`、旧平台的 `8000` 等已占用端口。
+> Compose 主机端口：服务 `18000–18006`、Postgres `15432`、MinIO `19000/19001`、Redis `16379`。这样避开了本机 SonarQube 的 `9000`、旧平台的 `8000` 等已占用端口。  
+> K8s 复现脚本：`scripts/dev/k8s-deploy.sh`（加载镜像 + 应用清单 + 等待就绪）、`k8s-smoke.sh`（集群内健康）、`k8s-e2e.sh`（上传到结果主链路）。  
+> `kind load docker-image` 在 Docker 使用 containerd image store 时会因 `--all-platforms` 报 digest 缺失，脚本已改为 `docker save --platform linux/amd64 | ctr images import`。

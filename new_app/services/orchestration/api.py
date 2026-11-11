@@ -25,6 +25,9 @@ from .workflow import cancel, get_store, schedule
 
 router = APIRouter(prefix="/internal")
 
+# 阶段展示顺序固定为业务链路顺序，避免依赖时间戳（系统时钟回跳会把顺序打乱）。
+STAGE_ORDER = {"ocr": 1, "routing": 2, "sandbox": 3, "review": 4}
+
 
 async def _get_document(document_id: str) -> Document:
     async with SessionLocal() as session:
@@ -199,14 +202,19 @@ async def get_timeline(run_id: str) -> RunTimelineOut:
     run = await _get_run(run_id)
     async with SessionLocal() as session:
         stages = await session.execute(
-            select(RunStage).where(RunStage.run_id == run_id).order_by(RunStage.started_at)
+            select(RunStage).where(RunStage.run_id == run_id)
         )
         events = await session.execute(
             select(RunEvent).where(RunEvent.run_id == run_id).order_by(RunEvent.sequence)
         )
         return RunTimelineOut(
             run=RunOut.model_validate(run),
-            stages=[RunStageOut.model_validate(item) for item in stages.scalars()],
+            stages=[
+                RunStageOut.model_validate(item)
+                for item in sorted(
+                    stages.scalars(), key=lambda s: STAGE_ORDER.get(s.stage, 99)
+                )
+            ],
             events=[RunEventOut.model_validate(item) for item in events.scalars()],
         )
 
