@@ -205,6 +205,7 @@
 | v1.1 | 2026-11-11 | 补充 Q1 WSL K8s、Q6 MinIO、Q7 `/v1`、Q8 单人约束 | 项目负责人 |
 | v1.2 | 2026-11-11 | 记录 M0 执行结果；补充第三模型地址 `192.168.1.35` | 项目负责人 |
 | v1.3 | 2026-11-11 | 记录 WSL Compose 实测通过、端口调整与 K8s 网络受限情况 | 项目负责人 |
+| v1.4 | 2026-11-11 | kind 集群创建成功；节点 Ready、命名空间 Active；七服务 K8s 部署列为待完成 | 项目负责人 |
 
 ---
 
@@ -239,13 +240,15 @@
 | Compose 实机启动 | WSL Docker Compose 实际启动 10 个容器 |
 | 七服务健康 | `18000–18006/healthz` 全部返回 `status=ok` |
 | 基础设施 | MinIO 存活、Postgres `pg_isready`、Redis `PONG` |
+| WSL kind 集群 | 集群 `hanson` 创建成功；节点 `hanson-control-plane` 为 `Ready`（v1.30.0） |
+| 命名空间 | `hanson-standard` 状态 `Active` |
 | 旧包 import 检查 | `new_app` 无旧包 import |
 
 ### 13.3 待完成（验收前）
 
-- [ ] 在本机 WSL 内安装并验证轻量 K8s（k3s/kind/minikube 选型）。
+- [ ] 将七个服务镜像加载到 kind 并部署到 `hanson-standard`，验证 Pod/Service 健康。
 - [ ] CI 在远端 `new_doc_parse` 分支跑通。
 - [ ] 项目负责人最终验收签字。
 
-> WSL Docker Compose 已实测通过。WSL K8s 尝试记录：kind/minikube 下载受网络限制；k3s 镜像拉取较慢，待完成后补 K8s 节点与命名空间验证。  
+> WSL Docker Compose 已实测通过；WSL kind 集群与命名空间已就绪。K8s 选型：kind v0.24.0 + kindest/node v1.30.0（经国内代理下载 kind，kubectl 经 Google 存储源下载）。  
 > Compose 主机端口：服务 `18000–18006`、Postgres `15432`、MinIO `19000/19001`、Redis `16379`。这样避开了本机 SonarQube 的 `9000`、旧平台的 `8000` 等已占用端口。
