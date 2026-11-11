@@ -1,3 +1,23 @@
-from services.common import create_app
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
-app = create_app("ocr")
+from fastapi import FastAPI
+
+from services.common import create_app
+from services.shared.storage import build_store
+
+from .api import router
+from .config import settings
+from .service import set_store
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    store = build_store(settings.storage_config())
+    await store.ensure_ready()
+    set_store(store)
+    yield
+
+
+app = create_app("ocr", lifespan=lifespan)
+app.include_router(router)

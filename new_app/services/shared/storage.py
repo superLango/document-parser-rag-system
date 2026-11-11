@@ -1,12 +1,11 @@
 import asyncio
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
 import boto3
 from botocore.client import Config
 from botocore.exceptions import ClientError
-
-from .config import settings
 
 
 class ObjectStore(Protocol):
@@ -24,14 +23,23 @@ class ObjectStore(Protocol):
     async def delete(self, key: str) -> None: ...
 
 
+@dataclass(frozen=True)
+class StorageConfig:
+    endpoint: str
+    bucket: str
+    access_key: str
+    secret_key: str
+    local_dir: Path = Path("/tmp/hanson-new-app")
+
+
 class S3ObjectStore:
-    def __init__(self) -> None:
-        self.bucket = settings.object_storage_bucket
+    def __init__(self, config: StorageConfig) -> None:
+        self.bucket = config.bucket
         self.client = boto3.client(
             "s3",
-            endpoint_url=settings.object_storage_endpoint,
-            aws_access_key_id=settings.object_storage_access_key,
-            aws_secret_access_key=settings.object_storage_secret_key,
+            endpoint_url=config.endpoint,
+            aws_access_key_id=config.access_key,
+            aws_secret_access_key=config.secret_key,
             region_name="us-east-1",
             config=Config(s3={"addressing_style": "path"}),
         )
@@ -72,8 +80,8 @@ class S3ObjectStore:
 
 
 class LocalObjectStore:
-    def __init__(self, root: Path | None = None) -> None:
-        self.root = root or settings.local_storage_dir
+    def __init__(self, config: StorageConfig) -> None:
+        self.root = config.local_dir
 
     def _path(self, key: str) -> Path:
         path = (self.root / key).resolve()
@@ -105,8 +113,8 @@ class LocalObjectStore:
             path.unlink()
 
 
-def build_store() -> ObjectStore:
-    endpoint = settings.object_storage_endpoint.strip()
-    if endpoint and endpoint.startswith("http"):
-        return S3ObjectStore()
-    return LocalObjectStore()
+def build_store(config: StorageConfig) -> ObjectStore:
+    endpoint = config.endpoint.strip()
+    if endpoint.startswith("http"):
+        return S3ObjectStore(config)
+    return LocalObjectStore(config)

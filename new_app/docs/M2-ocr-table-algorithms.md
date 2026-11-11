@@ -1,13 +1,13 @@
 # M2 里程碑详细执行计划：OCR 服务与表格结构算法
 
-> 文档版本：v1.0  
+> 文档版本：v1.2  
 > 编制日期：2026-11-11  
 > 计划周期：2026-12-03 ~ 2026-12-16  
 > 主责角色：项目负责人（兼算法/后端）  
 > 协作角色：外部模型服务器管理员（按需）、业务/领域专家（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
 > 前置里程碑：[M0](M0-project-scaffold.md)、[M1](M1-core-domain-orchestration.md)  
-> 当前状态：计划中（未开工）
+> 当前状态：进行中（核心链路已落地；金标语料与 GLM 联调待补）
 
 ---
 
@@ -250,3 +250,45 @@ class TableGrid(BaseModel):
 |---|---|---|---|
 | v1.0 | 2026-11-11 | 初版 | 项目负责人 |
 | v1.1 | 2026-11-11 | 补充 Q1 模型服务器/版本、Q8 单人角色 | 项目负责人 |
+| v1.2 | 2026-11-11 | 记录 M2 执行结果：OCR 适配器、TableGrid 算法、表型与修复规则、编排集成 | 项目负责人 |
+
+---
+
+## 14. 执行记录（2026-11-11）
+
+### 14.1 已完成
+
+| 项 | 结果 |
+|---|---|
+| OCR 契约 | `services/ocr/contracts.py`：`OcrRequest`/`OcrResult`/`Page`/`TableGrid`/`TableBlock`/`Merge`/`ArtifactRef` |
+| 适配器 | `text`（md/txt）、`pdf`（PyMuPDF 渲染页图 + 文本/表格）、`glm`（OpenAI 兼容多模态）、`mock`、`auto` 工厂 |
+| 表格算法 | `normalize.py`、`table_grid.py`（rowspan/colspan、表头路径、跨页合并、分块）、`profile.py`、`repairs.py` |
+| 修复规则 | `services/ocr/data/table_repairs.json`，支持 `rebuild_grid`/`header_rows`/`patch_cells`/`replace_rows`/`delete_rows`/`trim_trailing` |
+| 产物 | 页图 PNG、markdown、pages.json、tables.json、ocr.json，均记录 sha256/bytes |
+| OCR API | `POST /internal/ocr/parse`（对象存储读取）、`POST /internal/ocr/parse-file`（直传） |
+| 错误码 | `OCR_BACKEND_UNAVAILABLE`/`OCR_BACKEND_ERROR`/`OCR_PDF_INVALID`/`OCR_EMPTY_DOCUMENT`/`OCR_UNKNOWN_BACKEND` |
+| 编排集成 | OCR 阶段调用真实服务；`OCR_USE_FAKE=true` 可回退 M1 fake |
+| 共享存储 | `services/shared/storage.py` 供 orchestration 与 ocr 共用 |
+| 测试 | `tests/algorithm/table/test_table_grid.py` 5 个用例 |
+| 基准 | `scripts/benchmark/table_benchmark.py`；报告见 [M2-table-benchmark](reports/M2-table-benchmark.md) |
+| 文档 | `services/ocr/README.md`、`PROVENANCE.md` 已记录算法来源 |
+
+### 14.2 验证证据
+
+| 验证 | 结果 |
+|---|---|
+| Markdown + HTML 表格 | `backend=text`，识别 T1：`mechanical_properties`，3 行 3 列，header_paths 正确，4 个产物 |
+| PDF 原生渲染 | `backend=pdf`，1 页，页图 `ocr/pdfcheck/pages/1.png`，markdown 正常 |
+| 编排端到端（K8s） | 上传 fixture → `STRUCTURED_READY`；artifacts 含 `markdown.md`/`pages.json`/`tables.json`/`ocr.json` 及 run 级产物 |
+| Compose | 全部容器 Healthy；`18002/internal/ocr/parse-file` 返回完整 `OcrResult` |
+| 算法单测 | 5 passed |
+| 基准 | 平均 1.45 ms、p95 1.91 ms、50 次输出哈希一致 |
+| Ruff | 通过 |
+
+### 14.3 未完成与限制
+
+- [ ] GLM 适配器未联调：`192.168.1.35:9977`、`192.168.188.75:9977`、公网地址均不可达，`auto` 当前走 `text`/`pdf`。
+- [ ] 版面（layout blocks）未实现：PDF 原生只输出页与文本；GLM 恢复后再补 layout 适配。
+- [ ] 金标语料与旧基线指标未建立：基准报告仅覆盖本地 fixture。
+- [ ] 矩阵/条款抽取、Schema 投影按计划留给 M3/M5。
+

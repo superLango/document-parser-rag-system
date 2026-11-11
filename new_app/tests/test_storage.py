@@ -1,10 +1,23 @@
 import asyncio
+from pathlib import Path
 
-from services.orchestration.storage import LocalObjectStore
+from services.shared.storage import LocalObjectStore, StorageConfig
+
+
+def _store(tmp_path: Path) -> LocalObjectStore:
+    return LocalObjectStore(
+        StorageConfig(
+            endpoint="",
+            bucket="test",
+            access_key="",
+            secret_key="",
+            local_dir=tmp_path,
+        )
+    )
 
 
 def test_local_store_roundtrip(tmp_path) -> None:
-    store = LocalObjectStore(tmp_path)
+    store = _store(tmp_path)
 
     async def run() -> bytes:
         await store.ensure_ready()
@@ -15,7 +28,7 @@ def test_local_store_roundtrip(tmp_path) -> None:
 
 
 def test_local_store_rejects_path_traversal(tmp_path) -> None:
-    store = LocalObjectStore(tmp_path)
+    store = _store(tmp_path)
 
     async def run() -> None:
         await store.ensure_ready()

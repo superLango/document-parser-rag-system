@@ -2,6 +2,8 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from services.shared.storage import StorageConfig
+
 
 class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://hanson:hanson@localhost:15432/hanson"
@@ -16,6 +18,11 @@ class Settings(BaseSettings):
     # 开发期故障注入，仅用于验证阶段重试；接入真实实现后移除。
     mock_fail_stage: str = ""
     mock_fail_times: int = 0
+    ocr_url: str = "http://localhost:18002"
+    ocr_backend: str = "auto"
+    ocr_timeout_seconds: float = 300.0
+    # 回滚开关：置 true 时 OCR 阶段回到 M1 的 fake 实现。
+    ocr_use_fake: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
@@ -27,6 +34,15 @@ class Settings(BaseSettings):
         if url.startswith("postgres://"):
             return url.replace("postgres://", "postgresql+asyncpg://", 1)
         return url
+
+    def storage_config(self) -> StorageConfig:
+        return StorageConfig(
+            endpoint=self.object_storage_endpoint,
+            bucket=self.object_storage_bucket,
+            access_key=self.object_storage_access_key,
+            secret_key=self.object_storage_secret_key,
+            local_dir=self.local_storage_dir,
+        )
 
 
 settings = Settings()

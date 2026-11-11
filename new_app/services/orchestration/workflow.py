@@ -5,13 +5,15 @@ import logging
 from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 
+import httpx
 from sqlalchemy import func, select
+
+from services.shared.storage import ObjectStore
 
 from .config import settings
 from .db import SessionLocal
-from .models import Artifact, Run, RunEvent, RunStage
+from .models import Artifact, Document, Run, RunEvent, RunStage
 from .state import TERMINAL_STATES, RunState, ensure_transition, is_terminal
-from .storage import ObjectStore
 
 logger = logging.getLogger(__name__)
 
@@ -248,6 +250,56 @@ async def _fake_ocr(_: Run) -> dict:
     }
 
 
+async def _ocr_stage(run: Run) -> dict:
+    async with SessionLocal() as session:
+        document = await session.get(Document, run.document_id)
+        if document is None:
+            raise RuntimeError(f"document not found: {run.document_id}")
+        payload = {
+            "document_id": document.id,
+            "storage_key": document.storage_key,
+            "filename": document.filename,
+            "content_type": document.content_type,
+            "backend": settings.ocr_backend or None,
+        }
+
+    result = await _call_ocr(payload)
+    await _record_ocr_artifacts(run, result.get("artifacts") or [])
+    return result
+
+
+async def _call_ocr(payload: dict) -> dict:
+    url = f"{settings.ocr_url.rstrip('/')}/internal/ocr/parse"
+    try:
+        async with httpx.AsyncClient(timeout=settings.ocr_timeout_seconds) as client:
+            response = await client.post(url, json=payload)
+    except httpx.HTTPError as exc:
+        raise RuntimeError(f"ocr service unavailable: {exc}") from exc
+    if response.status_code != 200:
+        raise RuntimeError(f"ocr service error {response.status_code}: {response.text[:500]}")
+    return response.json()
+
+
+async def _record_ocr_artifacts(run: Run, artifacts: list[dict]) -> None:
+    if not artifacts:
+        return
+    async with SessionLocal() as session:
+        for item in artifacts:
+            key = str(item.get("key") or "")
+            if not key:
+                continue
+            session.add(
+                Artifact(
+                    run_id=run.id,
+                    role=key.rsplit("/", 1)[-1],
+                    storage_key=key,
+                    sha256=str(item.get("sha256") or ""),
+                    bytes=int(item.get("bytes") or 0),
+                )
+            )
+        await session.commit()
+
+
 async def _fake_route(_: Run) -> dict:
     return {
         "assignments": [
@@ -367,7 +419,7 @@ async def run_workflow(run_id: str) -> None:
             RunState.OCR_RUNNING,
             RunState.OCR_DONE,
             "ocr",
-            _fake_ocr,
+            _fake_ocr if settings.ocr_use_fake else _ocr_stage,
         )
         await _execute_stage(
             run_id,

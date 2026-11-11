@@ -4,17 +4,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from services.common import create_app
+from services.shared.storage import build_store
 
 from .api import router
+from .config import settings
 from .db import init_db
-from .storage import build_store
 from .workflow import resume_incomplete_runs, set_store
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     await init_db()
-    store = build_store()
+    store = build_store(settings.storage_config())
     await store.ensure_ready()
     set_store(store)
     await resume_incomplete_runs()

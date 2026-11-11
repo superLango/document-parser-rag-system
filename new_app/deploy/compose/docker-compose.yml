@@ -25,6 +25,13 @@ x-app: &app
     STAGE_RETRY_BACKOFF_SECONDS: ${STAGE_RETRY_BACKOFF_SECONDS:-0.5}
     MOCK_FAIL_STAGE: ${MOCK_FAIL_STAGE:-}
     MOCK_FAIL_TIMES: ${MOCK_FAIL_TIMES:-0}
+    OCR_URL: ${OCR_URL:-http://ocr:8002}
+    OCR_BACKEND: ${OCR_BACKEND:-auto}
+    OCR_DPI: ${OCR_DPI:-150}
+    OCR_USE_FAKE: ${OCR_USE_FAKE:-false}
+    GLM_OCR_BASE_URL: ${GLM_OCR_BASE_URL:-}
+    GLM_OCR_MODEL: ${GLM_OCR_MODEL:-}
+    GLM_OCR_TIMEOUT_SECONDS: ${GLM_OCR_TIMEOUT_SECONDS:-180}
   depends_on:
     postgres:
       condition: service_healthy
