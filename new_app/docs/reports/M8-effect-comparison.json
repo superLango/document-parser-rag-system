@@ -1,0 +1,772 @@
+{
+  "generated_at": "2026-11-11T17:22:51+00:00",
+  "api": "http://localhost:18000",
+  "old_runs": "F:\\hanson\\hanson_doc_parse\\data\\validation-2026-11-06\\runs\\full9",
+  "metrics": {
+    "documents": 12,
+    "old_fields": 1808,
+    "new_fields": 829,
+    "common_fields": 460,
+    "precision": 0.5549,
+    "recall": 0.2544,
+    "field_f1": 0.3489,
+    "value_match_rate": 0.9087,
+    "silent_errors": 42,
+    "silent_error_rate": 0.0913,
+    "coverage": 1.0,
+    "p95_seconds": 74.97,
+    "evidence_rate": 1.0,
+    "failed_runs": 0,
+    "thresholds": {
+      "field_f1": 0.8,
+      "value_match": 0.9,
+      "silent_error_rate": 0.05,
+      "coverage": 0.9,
+      "p95_seconds": 120.0
+    },
+    "verdict": "below_target"
+  },
+  "documents": [
+    {
+      "doc_id": "pdf__GBT33084-2016",
+      "run_id": "083b3310-2541-4fae-a1bc-29361be7fb0a",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 17.29,
+      "old_fields": 812,
+      "new_fields": 238,
+      "common_fields": 198,
+      "only_old": 614,
+      "only_new": 40,
+      "value_matches": 198,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 0.8319,
+      "recall": 0.2438,
+      "f1": 0.3771,
+      "new_records": 138,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_element_rows_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "chemical",
+      "tables": 8,
+      "examples_only_old": [
+        "12CR1MOV/A",
+        "12CR1MOV/C",
+        "12CR1MOV/Cr",
+        "12CR1MOV/HB",
+        "12CR1MOV/KV2",
+        "12CR1MOV/Mo",
+        "12CR1MOV/P",
+        "12CR1MOV/S"
+      ],
+      "examples_only_new": [
+        "12CRMO/KU2",
+        "15CR/KU2",
+        "15CR2NI2/KU2",
+        "15CRMO/KU2",
+        "15CRNI4MO/KU2",
+        "16CRMN/KU2",
+        "17CR2NI2MO/KU2",
+        "20CR/KU2"
+      ]
+    },
+    {
+      "doc_id": "da6e78317ae045d7aef37604fe257ff5",
+      "run_id": "b5b27fc8-b8ab-46a3-9d1c-01af7a0a1601",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 9.17,
+      "old_fields": 232,
+      "new_fields": 37,
+      "common_fields": 30,
+      "only_old": 202,
+      "only_new": 7,
+      "value_matches": 30,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 0.8108,
+      "recall": 0.1293,
+      "f1": 0.223,
+      "new_records": 104,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        }
+      ],
+      "dominant": "chemical",
+      "tables": 9,
+      "examples_only_old": [
+        "GH1016A/B",
+        "GH1016A/C",
+        "GH1016A/Ce",
+        "GH1016A/Cr",
+        "GH1016A/Fe",
+        "GH1016A/Mo",
+        "GH1016A/Nb",
+        "GH1016A/Ni"
+      ],
+      "examples_only_new": [
+        "GH2150C/Si",
+        "GH3044D/Si",
+        "GH3536E/Si",
+        "GH4133/Si",
+        "GH4163/Si",
+        "GH4169F/Si",
+        "同一温度下，持久试验首次试验按高应力组数据进行；若不合格，重复试验时，可按低应力组数据进行，试样数量仍按首次试验规定数量。/Si"
+      ]
+    },
+    {
+      "doc_id": "5c7ee8be97c44d1faeb914342670b6a0",
+      "run_id": "a2837eb8-3d9b-46fe-bf11-db29b6709101",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 4.1,
+      "old_fields": 140,
+      "new_fields": 156,
+      "common_fields": 21,
+      "only_old": 119,
+      "only_new": 135,
+      "value_matches": 21,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 0.1346,
+      "recall": 0.15,
+      "f1": 0.1419,
+      "new_records": 324,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_element_rows_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "classification",
+          "recipe_id": "classification_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "hardness_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "chemical",
+      "tables": 23,
+      "examples_only_old": [
+        "07CR18NI11NB/HB",
+        "07CR18NI11NB/HRC",
+        "07CR18NI11NB/HV",
+        "07CR19NI11TI/HB",
+        "07CR19NI11TI/HRC",
+        "07CR19NI11TI/HV",
+        "07CR22NI25W3CU3CO2MONBN/HB",
+        "07CR22NI25W3CU3CO2MONBN/HRC"
+      ],
+      "examples_only_new": [
+        "07CR18NI11NB/KU2",
+        "07CR18NI11NB/Mn",
+        "07CR18NI11NB/Si",
+        "07CR19NI10/A",
+        "07CR19NI10/KU2",
+        "07CR19NI10/Mn",
+        "07CR19NI10/RM",
+        "07CR19NI10/RP0.2"
+      ]
+    },
+    {
+      "doc_id": "65c7cfb83be748febdb2dff1b1d8f6291779257620839",
+      "run_id": "f58c6347-2733-49bd-b3b8-9cafffb1e439",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 5.12,
+      "old_fields": 138,
+      "new_fields": 40,
+      "common_fields": 32,
+      "only_old": 106,
+      "only_new": 8,
+      "value_matches": 29,
+      "value_match_rate": 0.9062,
+      "silent_errors": 3,
+      "precision": 0.8,
+      "recall": 0.2319,
+      "f1": 0.3596,
+      "new_records": 276,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_element_rows_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "dimension",
+          "recipe_id": "dimension_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "hardness_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "chemical",
+      "tables": 44,
+      "examples_only_old": [
+        "04CR15NI6CUMONB/C",
+        "04CR15NI6CUMONB/Cr",
+        "04CR15NI6CUMONB/Cu",
+        "04CR15NI6CUMONB/Mo",
+        "04CR15NI6CUMONB/Ni",
+        "04CR15NI6CUMONB/P",
+        "04CR15NI6CUMONB/S",
+        "05CR15NI4CU4MO2/C"
+      ],
+      "examples_only_new": [
+        "ATHIS GRADE IS ONLY APPLICABLE TO CLASS 2 AND 3 BARS./Mn",
+        "ATHIS GRADE IS ONLY APPLICABLE TO CLASS 2 AND 3 BARS./Si",
+        "A在工作温度高于150℃的水或蒸汽中使用时应考虑应力腐蚀的危险。B对于2、3级棒材，其最大允许值可以到0.030%。/Mn",
+        "A在工作温度高于150℃的水或蒸汽中使用时应考虑应力腐蚀的危险。B对于2、3级棒材，其最大允许值可以到0.030%。/Si",
+        "A成品分析时，其最大允许值可增加0.005%。/Mn",
+        "A成品分析时，其最大允许值可增加0.005%。/Si",
+        "该牌号仅适用于2，3级棒材。/Mn",
+        "该牌号仅适用于2，3级棒材。/Si"
+      ]
+    },
+    {
+      "doc_id": "78a0de4c51a24c958575b9909f6308ae",
+      "run_id": "eaabdf32-e2c7-4bc8-9cbe-81b50f322dde",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 69.91,
+      "old_fields": 122,
+      "new_fields": 114,
+      "common_fields": 98,
+      "only_old": 24,
+      "only_new": 16,
+      "value_matches": 94,
+      "value_match_rate": 0.9592,
+      "silent_errors": 4,
+      "precision": 0.8596,
+      "recall": 0.8033,
+      "f1": 0.8305,
+      "new_records": 90,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "classification",
+          "recipe_id": "classification_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "dimension",
+          "recipe_id": "dimension_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "mechanical",
+      "tables": 9,
+      "examples_only_old": [
+        "TA0/C",
+        "TA0/Fe",
+        "TA0/H",
+        "TA0/N",
+        "TA0/O",
+        "TA0/Ti",
+        "TA1/C",
+        "TA1/Fe"
+      ],
+      "examples_only_new": [
+        "ATC6棒材测定普通退火状态的性能。当需方要求并在合同中注明时,方测定等温退火状态的性能。/A",
+        "ATC6棒材测定普通退火状态的性能。当需方要求并在合同中注明时,方测定等温退火状态的性能。/RM",
+        "ATC6棒材测定普通退火状态的性能。当需方要求并在合同中注明时,方测定等温退火状态的性能。/RP0.2",
+        "ATC6棒材测定普通退火状态的性能。当需方要求并在合同中注明时,方测定等温退火状态的性能。/Z",
+        "TA15/持久时间",
+        "TA19/持久时间",
+        "TA6/持久时间",
+        "TA7/持久时间"
+      ]
+    },
+    {
+      "doc_id": "d26323581f4047d08fb304ef395ef7361790210741923",
+      "run_id": "5b92e737-6693-4f17-a4b4-5352870d664d",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 34.48,
+      "old_fields": 80,
+      "new_fields": 97,
+      "common_fields": 18,
+      "only_old": 62,
+      "only_new": 79,
+      "value_matches": 4,
+      "value_match_rate": 0.2222,
+      "silent_errors": 14,
+      "precision": 0.1856,
+      "recall": 0.225,
+      "f1": 0.2034,
+      "new_records": 82,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "classification",
+          "recipe_id": "classification_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "mechanical",
+      "tables": 10,
+      "examples_only_old": [
+        "-/A",
+        "-/HB",
+        "-/RM",
+        "-/ReH",
+        "-/Z",
+        "17CRNIMO6/KV2",
+        "17CRNIMO6/ReH",
+        "20CR2NI418CR2NI4WA/KV2"
+      ],
+      "examples_only_new": [
+        "1000/A",
+        "1000/KU2",
+        "1000/RP0.2",
+        "1000/Z",
+        "1050/A",
+        "1050/KU2",
+        "1050/RP0.2",
+        "1050/Z"
+      ]
+    },
+    {
+      "doc_id": "754a537ea3f945528159e82a88fc96b31789604489041",
+      "run_id": "59ecb358-4be9-4d52-af69-c4d036033dfe",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 24.35,
+      "old_fields": 27,
+      "new_fields": 15,
+      "common_fields": 6,
+      "only_old": 21,
+      "only_new": 9,
+      "value_matches": 6,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 0.4,
+      "recall": 0.2222,
+      "f1": 0.2857,
+      "new_records": 25,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "classification",
+          "recipe_id": "classification_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "mechanical",
+      "tables": 10,
+      "examples_only_old": [
+        "18CR2NI4WA/KU2",
+        "25CR2MOVA/HB",
+        "25CR2MOVA/KU2",
+        "25CR2MOVA/KV2",
+        "25CR2MOVA/Z",
+        "40CRNIMOA/HB",
+        "40CRNIMOA/KU2",
+        "40CRNIMOA/KV2"
+      ],
+      "examples_only_new": [
+        "0.37~0.44/Mn",
+        "0.37~0.44/Si",
+        "18CR2NI4WA/A",
+        "18CR2NI4WA/Mn",
+        "18CR2NI4WA/RM",
+        "18CR2NI4WA/RP0.2",
+        "18CR2NI4WA/Si",
+        "25CR2MOVA/Mn"
+      ]
+    },
+    {
+      "doc_id": "1741e4503e464eefa4979511533a70131789604448717",
+      "run_id": "64f0e852-b50e-4928-86d2-beed42af9088",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 13.23,
+      "old_fields": 22,
+      "new_fields": 12,
+      "common_fields": 6,
+      "only_old": 16,
+      "only_new": 6,
+      "value_matches": 6,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 0.5,
+      "recall": 0.2727,
+      "f1": 0.3529,
+      "new_records": 11,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "classification",
+          "recipe_id": "classification_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "mechanical",
+      "tables": 7,
+      "examples_only_old": [
+        "25CR2MOVA/HB",
+        "25CR2MOVA/KU2",
+        "25CR2MOVA/KV2",
+        "25CR2MOVA/Z",
+        "40CRNIMOA/HB",
+        "40CRNIMOA/KV2",
+        "~/C",
+        "~/Cr"
+      ],
+      "examples_only_new": [
+        "0.37~0.44/Mn",
+        "0.37~0.44/Si",
+        "25CR2MOVA/Mn",
+        "25CR2MOVA/Si",
+        "允许偏差/Mn",
+        "允许偏差/Si"
+      ]
+    },
+    {
+      "doc_id": "pdf__gbt1591_2018",
+      "run_id": "6a8af24c-e0a8-4c8e-bbaf-d8566d8f25bc",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 13.21,
+      "old_fields": 65,
+      "new_fields": 14,
+      "common_fields": 0,
+      "only_old": 65,
+      "only_new": 14,
+      "value_matches": 0,
+      "value_match_rate": 0.0,
+      "silent_errors": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "new_records": 131,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "dimension",
+          "recipe_id": "dimension_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "other",
+      "tables": 16,
+      "examples_only_old": [
+        "Q355/KV2",
+        "Q355M/KV2",
+        "Q355MB/CEV",
+        "Q355MB/Pcm",
+        "Q355MC/CEV",
+        "Q355MC/Pcm",
+        "Q355MD/CEV",
+        "Q355MD/Pcm"
+      ],
+      "examples_only_new": [
+        "Q355/A",
+        "Q355M/KU2",
+        "Q355M、 Q390M、Q420M Q460M/KU2",
+        "Q355M、Q390M、 Q420M/KU2",
+        "Q355N/KU2",
+        "Q355N、Q390N Q420N、Q460N/KU2",
+        "Q355N、Q390N、 Q420N/KU2",
+        "Q355、Q390/KU2"
+      ]
+    },
+    {
+      "doc_id": "a671647676ee4290b1a914b9766f3672",
+      "run_id": "89540f32-e3ed-463b-83e5-effced4b232f",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 4.09,
+      "old_fields": 24,
+      "new_fields": 44,
+      "common_fields": 0,
+      "only_old": 24,
+      "only_new": 44,
+      "value_matches": 0,
+      "value_match_rate": 0.0,
+      "silent_errors": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "new_records": 191,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "dimension",
+          "recipe_id": "dimension_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "hardness_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "other",
+      "tables": 17,
+      "examples_only_old": [
+        "L245MH/BMH/CEV",
+        "L245NH/BH/CEV",
+        "L245QH/BQH/CEV",
+        "L290MH/X42MH/CEV",
+        "L290NH/X42NH/CEV",
+        "L290QH/X42QH/CEV",
+        "L320MH/X46MH/CEV",
+        "L320NH/X46NH/CEV"
+      ],
+      "examples_only_new": [
+        "<219.1/HBW",
+        "HFW[见API SPEC 5L:2018中图5B)]/HBW",
+        "L245MH/BMH/Mn",
+        "L245MH/BMH/Si",
+        "L245NH/BH/Mn",
+        "L245NH/BH/Si",
+        "L245NH/BNH L245QH/BQH L245MH/BMH/A",
+        "L245NH/BNH L245QH/BQH L245MH/BMH/RM"
+      ]
+    },
+    {
+      "doc_id": "4417071b32c147858c7f681c4deea4331787725949473",
+      "run_id": "cc36570f-cc88-4960-8d76-e47424813f82",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 7.12,
+      "old_fields": 81,
+      "new_fields": 46,
+      "common_fields": 35,
+      "only_old": 46,
+      "only_new": 11,
+      "value_matches": 14,
+      "value_match_rate": 0.4,
+      "silent_errors": 21,
+      "precision": 0.7609,
+      "recall": 0.4321,
+      "f1": 0.5512,
+      "new_records": 34,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.0.1"
+        }
+      ],
+      "dominant": "chemical",
+      "tables": 7,
+      "examples_only_old": [
+        "022CR17NI12MO2/C",
+        "022CR17NI12MO2/Cr",
+        "022CR17NI12MO2/Cu",
+        "022CR17NI12MO2/Mo",
+        "022CR17NI12MO2/Ni",
+        "022CR17NI12MO2/P",
+        "022CR17NI12MO2/S",
+        "022CR19NI10/C"
+      ],
+      "examples_only_new": [
+        "022CR17NI12MO2/KU2",
+        "022CR19NI10/KU2",
+        "026CR18NI12MO2N/KU2",
+        "026CR19NI10N/KU2",
+        "06CR17NI12MO2/KU2",
+        "06CR18NI11TI/KU2",
+        "06CR19NI10/KU2",
+        "T表示钢板公称厚度。/A"
+      ]
+    },
+    {
+      "doc_id": "564ae4f40b9a4787824477f821ab5ac81787031930715",
+      "run_id": "c243eee2-4b9c-4e99-8e60-b1a8477140fc",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 74.97,
+      "old_fields": 65,
+      "new_fields": 16,
+      "common_fields": 16,
+      "only_old": 49,
+      "only_new": 0,
+      "value_matches": 16,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 1.0,
+      "recall": 0.2462,
+      "f1": 0.3951,
+      "new_records": 78,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_composition_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "chemical_composition",
+          "recipe_id": "chemical_element_rows_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        }
+      ],
+      "dominant": "chemical",
+      "tables": 18,
+      "examples_only_old": [
+        "022CR17NI12MO2/C",
+        "022CR17NI12MO2/Cr",
+        "022CR17NI12MO2/KV2",
+        "022CR17NI12MO2/Ni",
+        "022CR17NI12MO2/P",
+        "022CR17NI12MO2/S",
+        "022CR19NI10/C",
+        "022CR19NI10/Cr"
+      ],
+      "examples_only_new": []
+    }
+  ]
+}

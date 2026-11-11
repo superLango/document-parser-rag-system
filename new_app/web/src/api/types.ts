@@ -249,7 +249,11 @@ export type DictionaryEntry = {
   business_name: string;
   type: string;
   family?: string | null;
+  facets?: Record<string, unknown>;
   aliases?: string[];
+  standard_no?: string | null;
+  category_code?: string | null;
+  category_name?: string | null;
   status?: string;
   version?: string;
 };

@@ -87,7 +87,9 @@ test("运行记录、业务词典与配方版本页面可用", async ({ page }) 
 
   await page.goto("/dictionary");
   await expect(page.locator("h1")).toContainText("业务词典");
-  await expect(page.getByText("ITEM_CHEMICAL")).toBeVisible();
+  await expect(page.getByText("项目大类", { exact: false }).first()).toBeVisible();
+  await page.getByRole("tab", { name: "检测项目" }).click();
+  await expect(page.getByText("HT_ITEM:0179")).toBeVisible();
   await page.getByRole("tab", { name: "分类概览" }).click();
   await expect(page.getByText("拉伸").first()).toBeVisible();
 

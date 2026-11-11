@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-11-11T17:05:27+00:00",
+  "duration_seconds": 0.03,
+  "source_dir": "F:\\hanson\\hanson_doc_parse\\legacy\\metal-doc-agent\\configs\\dictionaries",
+  "source": null,
+  "output": "F:\\hanson\\hanson_doc_parse\\new_app\\services\\orchestration\\data\\dictionary\\business_dictionary.json",
+  "version": "hanson-ht-64c316a7",
+  "stats": {
+    "entries": 2203,
+    "categories": 78,
+    "items": 1045,
+    "methods": 1080,
+    "aliases": 108,
+    "active": 2202,
+    "inactive": 1
+  },
+  "source_stats": [
+    {
+      "file": "categories.json",
+      "sha256": "dbdfb931e6b4465c95306cdbc240174965f257419b9ae168e765ca2ca0d417db",
+      "entries": 79,
+      "source_entries": 79,
+      "resumed": true
+    },
+    {
+      "file": "items.json",
+      "sha256": "ce1467eb41b5b70e0d1cee0aa4a8bc7fb07a58232c232bcfb4e5bcc19b18b195",
+      "entries": 1045,
+      "source_entries": 1045,
+      "resumed": true
+    },
+    {
+      "file": "methods.json",
+      "sha256": "579d723569a97ea23108a1c90214b7d884da19e2d707ed98fb334e8547230489",
+      "entries": 1080,
+      "source_entries": 1080,
+      "resumed": true
+    }
+  ],
+  "conflicts": [
+    {
+      "code": "CATEGORY:19",
+      "type": "category",
+      "kept": "弯曲试验",
+      "merged": "弯曲",
+      "reason": "DUPLICATE_CODE_MERGED"
+    }
+  ],
+  "failures": [],
+  "reconciliation": {
+    "source_entries": 2204,
+    "output_entries": 2203,
+    "source_unique_codes": 2203,
+    "output_codes": 2203,
+    "missing_codes": [],
+    "extra_codes": [],
+    "source_types": {
+      "category": 79,
+      "item": 1045,
+      "method": 1080
+    },
+    "output_types": {
+      "category": 78,
+      "item": 1045,
+      "method": 1080
+    },
+    "duplicate_codes": [
+      "CATEGORY:19"
+    ],
+    "failures": 0,
+    "alias_diffs": [
+      {
+        "code": "CATEGORY:19",
+        "source": [
+          "冷弯"
+        ],
+        "output": [
+          "冷弯",
+          "弯曲"
+        ]
+      }
+    ],
+    "alias_diff_count": 1,
+    "status_diffs": [],
+    "status_diff_count": 0,
+    "alias_total": 108,
+    "status_counts": {
+      "active": 2202,
+      "inactive": 1
+    },
+    "verdict": "pass"
+  },
+  "checkpoint": "F:\\hanson\\hanson_doc_parse\\new_app\\docs\\reports\\M8-dictionary-import.checkpoint.json",
+  "check_only": false
+}

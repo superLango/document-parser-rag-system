@@ -24,6 +24,7 @@ import {
 } from "../components/ui/table";
 
 const TABS = [
+  { id: "categories", label: "项目大类" },
   { id: "items", label: "检测项目" },
   { id: "methods", label: "试验方法" },
   { id: "families", label: "分类概览" }
@@ -56,11 +57,18 @@ function familyLabel(name: string): string {
 }
 
 export default function DictionaryPage() {
-  const [tab, setTab] = useState("items");
+  const [tab, setTab] = useState("categories");
   const [keyword, setKeyword] = useState("");
   const [family, setFamily] = useState("");
   const deferredKeyword = useDeferredValue(keyword);
-  const type = tab === "items" ? "item" : tab === "methods" ? "method" : "";
+  const type =
+    tab === "categories"
+      ? "category"
+      : tab === "items"
+        ? "item"
+        : tab === "methods"
+          ? "method"
+          : "item";
 
   const query = useQuery({
     queryKey: ["dictionary", type, deferredKeyword, tab === "families" ? "" : family],
@@ -68,7 +76,8 @@ export default function DictionaryPage() {
       dictionaryApi.query({
         type,
         q: deferredKeyword || undefined,
-        family: tab === "families" ? undefined : family || undefined
+        family: tab === "families" ? undefined : family || undefined,
+        limit: 2000
       })
   });
 
@@ -176,7 +185,17 @@ export default function DictionaryPage() {
               {entries.map((entry) => (
                 <TableRow key={`${entry.type}-${entry.business_code}`}>
                   <TableCell className="font-mono text-xs">{entry.business_code}</TableCell>
-                  <TableCell className="font-medium">{entry.business_name}</TableCell>
+                  <TableCell>
+                    <p className="font-medium">{entry.business_name}</p>
+                    {entry.category_name ? (
+                      <p className="text-[11px] text-muted-foreground">{entry.category_name}</p>
+                    ) : null}
+                    {entry.standard_no ? (
+                      <p className="font-mono text-[11px] text-muted-foreground">
+                        {entry.standard_no}
+                      </p>
+                    ) : null}
+                  </TableCell>
                   <TableCell>
                     {entry.family ? (
                       <Badge tone="info">{familyLabel(entry.family)}</Badge>

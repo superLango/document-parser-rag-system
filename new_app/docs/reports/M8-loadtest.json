@@ -1,0 +1,90 @@
+{
+  "generated_at": "2026-11-11T17:23:34+00:00",
+  "api": "http://localhost:18000",
+  "agent": "http://localhost:18003",
+  "scenarios": [
+    {
+      "scenario": "documents_list",
+      "requests": 50,
+      "concurrency": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "throughput_rps": 118.82,
+      "p50_ms": 41.49,
+      "p95_ms": 52.21,
+      "max_ms": 55.01,
+      "duration_seconds": 0.42
+    },
+    {
+      "scenario": "runs_list",
+      "requests": 50,
+      "concurrency": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "throughput_rps": 98.87,
+      "p50_ms": 42.0,
+      "p95_ms": 113.04,
+      "max_ms": 128.01,
+      "duration_seconds": 0.51
+    },
+    {
+      "scenario": "upload_dedupe",
+      "requests": 20,
+      "concurrency": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "throughput_rps": 110.79,
+      "p50_ms": 44.3,
+      "p95_ms": 49.23,
+      "max_ms": 49.56,
+      "duration_seconds": 0.18
+    },
+    {
+      "scenario": "create_run",
+      "requests": 3,
+      "concurrency": 3,
+      "errors": 0,
+      "error_rate": 0.0,
+      "throughput_rps": 26.73,
+      "p50_ms": 110.74,
+      "p95_ms": 111.25,
+      "max_ms": 111.25,
+      "duration_seconds": 0.11
+    },
+    {
+      "scenario": "result_query",
+      "requests": 60,
+      "concurrency": 5,
+      "errors": 0,
+      "error_rate": 0.0,
+      "throughput_rps": 100.5,
+      "p50_ms": 47.64,
+      "p95_ms": 66.33,
+      "max_ms": 81.82,
+      "duration_seconds": 0.6
+    },
+    {
+      "scenario": "agent_triage",
+      "requests": 2,
+      "concurrency": 1,
+      "errors": 0,
+      "error_rate": 0.0,
+      "throughput_rps": 0.35,
+      "p50_ms": 2819.64,
+      "p95_ms": 2900.53,
+      "max_ms": 2900.53,
+      "duration_seconds": 5.72
+    }
+  ],
+  "summary": {
+    "requests": 185,
+    "errors": 0,
+    "error_rate": 0.0,
+    "max_p95_ms": 2900.53,
+    "create_run_ids": [
+      "b8e76134-24b9-4af4-a206-36b954645d87",
+      "61760793-bfb5-4fbc-a5d3-3a7ee9cb9987",
+      "7f37f8e0-25d1-40ca-a006-937b0c46eeab"
+    ]
+  }
+}

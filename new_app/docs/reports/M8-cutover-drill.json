@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-11-11T17:25:34Z",
+  "entry": "http://localhost:18088",
+  "new_upstream": {"web": "http://localhost:4173", "api": "http://localhost:18000"},
+  "old_upstream": {"web": "http://localhost:8080", "api": "http://localhost:8000"},
+  "checks": {
+    "new_health": {"status": "ok", "service": "api-gateway", "version": "0.0.0"},
+    "switch_to_old_ok": true,
+    "switch_to_old_ms": 455,
+    "old_web_status": 200,
+    "switch_back_new_ok": true,
+    "switch_back_new_ms": 475
+  }
+}
