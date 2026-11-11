@@ -24,7 +24,7 @@ for _ in $(seq 1 20); do
   sleep 0.5
 done
 
-echo "[1/3] Markdown + HTML 表格"
+echo "[1/4] Markdown + HTML 表格"
 result="$(curl -fsS -X POST "http://localhost:18012/internal/ocr/parse-file" \
   -F "file=@${FIXTURE};type=text/markdown")"
 printf '%s' "$result" | python3 -c '
@@ -45,7 +45,7 @@ for table in data["tables"]:
     )
 '
 
-echo "[2/3] PDF 原生渲染"
+echo "[2/4] PDF 原生渲染"
 kubectl -n "$NAMESPACE" exec -i deploy/ocr -- python - <<'PY'
 import asyncio
 
@@ -70,7 +70,7 @@ print("  markdown_len =", len(result.markdown))
 print("  assets =", sorted(output.assets))
 PY
 
-echo "[3/3] 编排端到端"
+echo "[3/4] 编排端到端"
 doc_json="$(curl -fsS -X POST "$GATEWAY/v1/documents" \
   -F "file=@${FIXTURE};type=text/markdown")"
 doc_id="$(printf '%s' "$doc_json" | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')"
@@ -97,4 +97,60 @@ if [ "$status" != "STRUCTURED_READY" ]; then
   echo "[k8s] OCR CHECK FAILED"
   exit 1
 fi
+
+echo "[4/4] GLM PDF 识别（集群内）"
+kubectl -n "$NAMESPACE" exec -i deploy/ocr -- python - <<'PY'
+import asyncio
+
+import pymupdf
+
+from services.ocr.config import settings
+from services.ocr.contracts import OcrRequest
+from services.ocr.service import parse_document
+from services.shared.storage import build_store
+
+if not settings.glm_ocr_base_url or not settings.glm_ocr_model:
+    print("  skipped: GLM is not configured")
+    raise SystemExit(0)
+
+doc = pymupdf.open()
+page = doc.new_page()
+for y in (72, 100, 128, 156):
+    page.draw_line((72, y), (400, y))
+for x in (72, 180, 290, 400):
+    page.draw_line((x, 72), (x, 156))
+for x, y, text in (
+    (80, 92, "Grade"),
+    (190, 92, "Rm MPa"),
+    (300, 92, "A %"),
+    (80, 120, "Q355B"),
+    (190, 120, "470"),
+    (300, 120, "22"),
+    (80, 148, "Q235B"),
+    (190, 148, "400"),
+    (300, 148, "26"),
+):
+    page.insert_text((x, y), text, fontsize=10)
+data = doc.tobytes()
+
+request = OcrRequest(document_id="glmcheck", storage_key="", filename="t.pdf", backend="glm")
+store = build_store(settings.storage_config())
+
+
+async def run():
+    await store.ensure_ready()
+    return await parse_document(data, request, store)
+
+
+result = asyncio.run(run())
+print("  backend =", result.backend, "pages =", len(result.pages), "quality =", result.quality)
+for table in result.tables:
+    print(
+        "  table", table.table_id,
+        "profile =", table.profile,
+        "rows =", table.n_rows,
+        "cols =", table.n_cols,
+    )
+PY
+
 echo "[k8s] OCR CHECK DONE"

@@ -98,6 +98,6 @@ python scripts/benchmark/table_benchmark.py
 
 ## 已知限制
 
-- GLM 地址在当前开发网络不可达，M2 以 `text`/`pdf` 路径验证；GLM 适配器待模型服务器恢复后联调。
+- GLM-OCR 已在 `192.168.1.35:9977` 启动并联调通过；启动、停止与排障见 `docs/model-server-glm-ocr.md`。
 - PDF 原生路径依赖 PyMuPDF 的表格识别，复杂合并表以 OCR 返回的 HTML 为主。
 - 跨页合并与表型规则直接沿用旧启发式，需要金标语料继续回归。

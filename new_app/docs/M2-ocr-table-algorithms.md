@@ -282,12 +282,13 @@ class TableGrid(BaseModel):
 | 编排端到端（K8s） | 上传 fixture → `STRUCTURED_READY`；artifacts 含 `markdown.md`/`pages.json`/`tables.json`/`ocr.json` 及 run 级产物 |
 | Compose | 全部容器 Healthy；`18002/internal/ocr/parse-file` 返回完整 `OcrResult` |
 | 算法单测 | 5 passed |
+| GLM 真实识别 | `192.168.1.35:9977` 启动后，Compose 与 K8s 内均识别出 `mechanical_properties` 3×3 表格，`backend=glm` |
 | 基准 | 平均 1.45 ms、p95 1.91 ms、50 次输出哈希一致 |
 | Ruff | 通过 |
 
 ### 14.3 未完成与限制
 
-- [ ] GLM 适配器未联调：`192.168.1.35:9977`、`192.168.188.75:9977`、公网地址均不可达，`auto` 当前走 `text`/`pdf`。
+- [x] GLM 适配器已联调：2026-11-11 在 `192.168.1.35` 启动 9977，Compose 与 K8s 均完成真实 PDF 表格识别；步骤见 [模型服务器 GLM-OCR 启动手册](model-server-glm-ocr.md)。
 - [ ] 版面（layout blocks）未实现：PDF 原生只输出页与文本；GLM 恢复后再补 layout 适配。
 - [ ] 金标语料与旧基线指标未建立：基准报告仅覆盖本地 fixture。
 - [ ] 矩阵/条款抽取、Schema 投影按计划留给 M3/M5。
