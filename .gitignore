@@ -27,12 +27,16 @@ extracted_json.zip
 !new_app/services/ocr/data/**
 !new_app/services/recipe_registry/data/
 !new_app/services/recipe_registry/data/**
+!new_app/services/orchestration/data/
+!new_app/services/orchestration/data/**
 
 # New app local state
 new_app/.venv/
 new_app/**/__pycache__/
 new_app/web/node_modules/
 new_app/web/dist/
+new_app/web/test-results/
+new_app/web/playwright-report/
 new_app/.env
 new_app/**/.env
 

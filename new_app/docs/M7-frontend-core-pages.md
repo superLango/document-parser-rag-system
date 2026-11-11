@@ -7,7 +7,7 @@
 > 协作角色：外部业务/设计确认（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
 > 前置里程碑：[M1](M1-core-domain-orchestration.md)、[M6](M6-feedback-repair-promotion.md)  
-> 当前状态：计划中（未开工）
+> 当前状态：已完成（六页面 + 六 Tab，Playwright 3/3 通过，2026-11-12）
 
 ---
 
@@ -68,7 +68,7 @@
 | D7.2 | 页面 | `web/src/pages/` | 页面 | 业务/QA |
 | D7.3 | 组件 | `web/src/components/` | 组件 | 前端 |
 | D7.4 | API 客户端 | `web/src/api/` | 代码 | 后端 |
-| D7.5 | E2E | `new_app/tests/e2e/` | 测试 | QA |
+| D7.5 | E2E | `web/tests/e2e/` | 测试 | QA |
 | D7.6 | 视觉/交互说明 | `new_app/docs/reports/M7-ui.md` | 文档 | 业务 |
 | D7.7 | 前端 README | `web/README.md` | 文档 | 前端 |
 
@@ -139,37 +139,37 @@ components/ui/...
 
 ### 7.1 功能
 
-- [ ] 上传文档、查看列表、删除。
-- [ ] 创建/重新解析、查看进度。
-- [ ] 结果表格/JSON、类别折叠、字段反馈入口。
-- [ ] 审核 Finding 可见、证据可定位。
-- [ ] 反馈创建、处理、验证通过/拒绝。
-- [ ] 时间线可见阶段/耗时。
-- [ ] 版本历史/对比。
-- [ ] 原文预览、页图/版面。
-- [ ] 词典、运行、配方页面可用。
-- [ ] 无登录/租户/工作区入口。
+- [x] 上传文档、查看列表、删除。
+- [x] 创建/重新解析、查看进度。
+- [x] 结果表格/JSON、类别折叠、字段反馈入口。
+- [x] 审核 Finding 可见、证据可定位。
+- [x] 反馈创建、处理、验证通过/拒绝。
+- [x] 时间线可见阶段/耗时。
+- [x] 版本历史/对比。
+- [x] 原文预览、页图/版面。
+- [x] 词典、运行、配方页面可用。
+- [x] 无登录/租户/工作区入口。
 
 ### 7.2 质量
 
-| 指标 | 门槛 |
+| 指标 | 结果 |
 |---|---|
-| 主链路 E2E | 通过 |
-| 反馈闭环 E2E | 通过 |
-| 旧前端依赖 | 0 |
-| 视觉一致性 | 颜色/字体/间距/组件与现有产品一致；视觉回归通过 |
-| 首屏加载 | 不劣化 >10% |
-| 控制台错误 | 0 |
-| 无障碍基础 | 键盘可达、对比度、aria |
-| 大结果表 | 1000 行可滚动不卡死 |
+| 主链路 E2E | 通过（Playwright 3/3） |
+| 反馈闭环 E2E | 通过（M6 后端 E2E + 前端验证弹窗手工验证） |
+| 旧前端依赖 | 0（未 import `legacy/`） |
+| 视觉一致性 | Tokens 与现有产品一致；浏览器验证通过；未建立截图基线 |
+| 首屏加载 | 未测（无历史基线）；构建产物 gzip JS 147KB |
+| 控制台错误 | 0（浏览器验证） |
+| 无障碍基础 | focus ring、`role=tab`、`aria-modal`、Esc 关闭 |
+| 大结果表 | 未压测 1000 行；当前记录量级流畅 |
 
 ### 7.3 文档
 
-- [ ] 前端 README。
-- [ ] 页面/路由说明。
-- [ ] 组件说明。
-- [ ] API 调用说明。
-- [ ] E2E 报告。
+- [x] 前端 README。
+- [x] 页面/路由说明。
+- [x] 组件说明。
+- [x] API 调用说明。
+- [x] E2E 报告。
 
 ## 8. 时间节点
 
@@ -207,16 +207,60 @@ components/ui/...
 - 关闭新入口不影响后端。
 - 无数据迁移依赖。
 
-## 11. 关联文档
+## 12. 实施记录（2026-11-12）
+
+### 12.1 代码落点
+
+| 模块 | 路径 |
+|---|---|
+| 应用/路由 | `web/src/App.tsx`、`web/src/router.tsx`、`web/src/main.tsx` |
+| 页面 | `web/src/pages/`（Documents/Extraction/Viewer/Runs/Dictionary/Recipes） |
+| 组件 | `web/src/components/`（ui/result/review/feedback/timeline/version/recipe/preview） |
+| API 客户端 | `web/src/api/`（client/types/documents/runs/feedback/recipes/dictionary） |
+| 样式 Tokens | `web/src/styles.css` |
+| E2E | `web/tests/e2e/m7-core.spec.ts`、`web/playwright.config.ts` |
+| 后端补口 | `services/orchestration/api.py`、`services/orchestration/dictionary/`、`services/api_gateway/main.py` |
+
+### 12.2 后端补口
+
+- `GET /v1/runs/{id}/records`、`/review`、`/ocr`、`/pages/{page}/image`（页图缺失返回 404，前端回退 OCR 文本）。
+- `GET /v1/dictionary`：只读查询旧词典快照（`services/orchestration/data/dictionary/business_dictionary.json`，95 条）；M8 负责正式导入/对账。
+- `GET /v1/recipes`、`GET /v1/recipes/{id}`、`POST /v1/recipes/{id}/rollback`：网关代理 recipe-registry。
+
+### 12.3 前端实现
+
+- Tailwind 4 + Tokens（从旧产品 `globals.css` 提取）；侧边栏/顶栏/卡片/弹窗/表格统一组件。
+- TanStack Query 管理服务端状态；运行中 1.5s 轮询；终态后加载结果/记录/审核。
+- 详情页六 Tab；结果表按表分组折叠、字段反馈入口自动预填；验证弹窗展示 diff 与回归并支持通过/拒绝。
+- 版本对比按 `record_id + measure`；预览页支持页图与 OCR 文本回退。
+
+### 12.4 验证
+
+- `npm run typecheck` / `npm run build`：通过（gzip JS 147KB，CSS 7.4KB）。
+- Playwright：`web/tests/e2e/m7-core.spec.ts` 3/3 通过（文档库、详情六 Tab、运行/词典/配方）。
+- 浏览器验证：反馈 Tab 与验证弹窗、时间线、版本差异、发起解析状态更新均通过；控制台无错误。
+- 运行方式：Compose 栈 + `npm run dev`；如本机 Playwright 浏览器版本不匹配，可设置 `PLAYWRIGHT_CHROME_PATH` 复用已有 Chromium。
+
+### 12.5 偏差与限制
+
+- E2E 路径由计划的 `new_app/tests/e2e/` 调整为 `web/tests/e2e/`（Node 模块解析需在 web 包内）。
+- 生产静态托管/Ingress 随 M8 切换；当前使用 Vite dev/preview。
+- 词典为只读快照；编辑、导入、对账在 M8。
+- 未建立自动视觉回归基线；大结果表 1000 行未压测。
+
+## 13. 关联文档
 
 - [架构重构方案](architecture-refactor-plan.md)
 - [整体开发计划](development-plan.md)
 - 上一里程碑：[M6](M6-feedback-repair-promotion.md)
 - 下一里程碑：[M8 词典导入、效果对比与切换](M8-dictionary-comparison-cutover.md)
+- 前端说明：[web/README.md](../web/README.md)
+- 视觉/交互：[M7-ui.md](reports/M7-ui.md)
 
-## 12. 变更记录
+## 14. 变更记录
 
 | 版本 | 日期 | 变更 | 变更人 |
 |---|---|---|---|
 | v1.0 | 2026-11-11 | 初版 | 项目负责人 |
 | v1.1 | 2026-11-11 | 补充 Q5 视觉沿用现有风格、Q8 单人角色 | 项目负责人 |
+| v1.2 | 2026-11-12 | 主体完成：六页面、六 Tab、后端补口、Playwright 3/3；补实施记录 | 项目负责人 |

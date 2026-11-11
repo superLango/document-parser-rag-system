@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from services.common import create_app
 
 ORCHESTRATION_URL = os.getenv("ORCHESTRATION_URL", "http://localhost:18001")
+RECIPE_REGISTRY_URL = os.getenv("RECIPE_REGISTRY_URL", "http://localhost:18005")
 
 
 class CreateRunRequest(BaseModel):
@@ -37,6 +38,21 @@ async def _request(method: str, path: str, timeout: float = 30, **kwargs) -> Res
         status_code=response.status_code,
         media_type=content_type or None,
     )
+
+
+async def _registry_request(
+    method: str, path: str, timeout: float = 30, **kwargs
+) -> Response:
+    try:
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            response = await client.request(
+                method, f"{RECIPE_REGISTRY_URL}{path}", **kwargs
+            )
+    except httpx.HTTPError as exc:
+        raise HTTPException(
+            status_code=502, detail=f"recipe registry unavailable: {exc}"
+        ) from exc
+    return JSONResponse(status_code=response.status_code, content=response.json())
 
 
 @router.get("/health")
@@ -115,6 +131,64 @@ async def get_timeline(run_id: str) -> Response:
 @router.get("/runs/{run_id}/artifacts")
 async def get_artifacts(run_id: str) -> Response:
     return await _request("GET", f"/internal/runs/{run_id}/artifacts")
+
+
+@router.get("/runs/{run_id}/records")
+async def get_records(run_id: str) -> Response:
+    return await _request("GET", f"/internal/runs/{run_id}/records")
+
+
+@router.get("/runs/{run_id}/review")
+async def get_review(run_id: str) -> Response:
+    return await _request("GET", f"/internal/runs/{run_id}/review")
+
+
+@router.get("/runs/{run_id}/ocr")
+async def get_ocr(run_id: str) -> Response:
+    return await _request("GET", f"/internal/runs/{run_id}/ocr")
+
+
+@router.get("/runs/{run_id}/pages/{page_no}/image")
+async def get_page_image(run_id: str, page_no: int) -> Response:
+    return await _request("GET", f"/internal/runs/{run_id}/pages/{page_no}/image")
+
+
+@router.get("/dictionary")
+async def get_dictionary(
+    type: str = Query(default=""),
+    q: str = Query(default=""),
+    family: str = Query(default=""),
+    status: str = Query(default=""),
+    limit: int = Query(default=500, ge=1, le=2000),
+) -> Response:
+    return await _request(
+        "GET",
+        "/internal/dictionary",
+        params={
+            "type": type,
+            "q": q,
+            "family": family,
+            "status": status,
+            "limit": limit,
+        },
+    )
+
+
+@router.get("/recipes")
+async def list_recipes() -> Response:
+    return await _registry_request("GET", "/internal/recipes")
+
+
+@router.get("/recipes/{recipe_id}")
+async def get_recipe(recipe_id: str) -> Response:
+    return await _registry_request("GET", f"/internal/recipes/{recipe_id}")
+
+
+@router.post("/recipes/{recipe_id}/rollback")
+async def rollback_recipe(recipe_id: str, payload: dict = Body(...)) -> Response:
+    return await _registry_request(
+        "POST", f"/internal/recipes/{recipe_id}/rollback", json=payload
+    )
 
 
 @router.post("/feedback", status_code=201)

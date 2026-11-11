@@ -6,12 +6,13 @@ import logging
 from collections.abc import AsyncIterator
 from uuid import uuid4
 
-from fastapi import APIRouter, File, HTTPException, Query, UploadFile
+from fastapi import APIRouter, File, HTTPException, Query, Response, UploadFile
 from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 
 from .db import SessionLocal
-from .models import Artifact, Document, DocumentVersion, Run, RunEvent, RunStage
+from .models import Artifact, Document, DocumentVersion, Finding, Run, RunEvent, RunStage
+from .models import ReviewReport as ReviewReportRow
 from .schemas import (
     CreateRunIn,
     DocumentOut,
@@ -266,3 +267,105 @@ async def list_artifacts(run_id: str) -> list[dict]:
             }
             for item in result.scalars()
         ]
+
+
+async def _artifact_payload(run_id: str, role: str) -> dict | None:
+    async with SessionLocal() as session:
+        result = await session.execute(
+            select(Artifact)
+            .where(Artifact.run_id == run_id, Artifact.role == role)
+            .order_by(Artifact.created_at.desc())
+        )
+        artifact = result.scalars().first()
+    if artifact is None:
+        return None
+    data = await get_store().get_bytes(artifact.storage_key)
+    payload = json.loads(data.decode("utf-8"))
+    return payload if isinstance(payload, dict) else None
+
+
+@router.get("/runs/{run_id}/records")
+async def get_records(run_id: str) -> dict:
+    await _get_run(run_id)
+    payload = await _artifact_payload(run_id, "records")
+    if payload is None:
+        raise HTTPException(status_code=404, detail="records not ready")
+    return payload
+
+
+@router.get("/runs/{run_id}/ocr")
+async def get_ocr(run_id: str) -> dict:
+    await _get_run(run_id)
+    payload = await _artifact_payload(run_id, "ocr")
+    if payload is None:
+        raise HTTPException(status_code=404, detail="ocr not ready")
+    return payload
+
+
+@router.get("/runs/{run_id}/review")
+async def get_review(run_id: str) -> dict:
+    await _get_run(run_id)
+    async with SessionLocal() as session:
+        result = await session.execute(
+            select(ReviewReportRow)
+            .where(ReviewReportRow.run_id == run_id)
+            .order_by(ReviewReportRow.created_at.desc())
+        )
+        report = result.scalars().first()
+        if report is None:
+            raise HTTPException(status_code=404, detail="review not ready")
+        findings = await session.execute(
+            select(Finding)
+            .where(Finding.run_id == run_id)
+            .order_by(Finding.created_at)
+        )
+        return {
+            "run_id": run_id,
+            "status": report.status,
+            "ruleset_version": report.ruleset_version,
+            "stats": report.stats,
+            "degraded": report.degraded,
+            "findings": [
+                {
+                    "id": item.id,
+                    "source": item.source,
+                    "category": item.category,
+                    "severity": item.severity,
+                    "target": item.target,
+                    "observed": item.observed,
+                    "expected": item.expected,
+                    "evidence_refs": item.evidence_refs,
+                    "confidence": item.confidence,
+                    "status": item.status,
+                }
+                for item in findings.scalars()
+            ],
+        }
+
+
+@router.get("/runs/{run_id}/pages/{page_no}/image")
+async def get_page_image(run_id: str, page_no: int) -> Response:
+    await _get_run(run_id)
+    payload = await _artifact_payload(run_id, "ocr")
+    if payload is None:
+        raise HTTPException(status_code=404, detail="ocr not ready")
+    page = next(
+        (
+            item
+            for item in payload.get("pages") or []
+            if int(item.get("page_no") or 0) == page_no
+        ),
+        None,
+    )
+    key = str((page or {}).get("image_key") or "")
+    if not key:
+        raise HTTPException(status_code=404, detail="page image not available")
+    try:
+        data = await get_store().get_bytes(key)
+    except Exception as exc:  # noqa: BLE001 - storage errors map to 404
+        raise HTTPException(status_code=404, detail="page image not found") from exc
+    return Response(
+        content=data,
+        media_type="image/png",
+        headers={"Cache-Control": "private, max-age=300"},
+    )
