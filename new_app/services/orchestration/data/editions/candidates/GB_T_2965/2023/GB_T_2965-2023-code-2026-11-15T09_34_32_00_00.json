@@ -1,0 +1,39 @@
+{
+  "candidate_id": "GB/T 2965-2023-code-2026-11-15T09:34:32+00:00",
+  "standard_id": "GB/T 2965",
+  "edition": "2023",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "profile_changed: , profile admin -> unknown",
+    "profile_changed: 6.3,室温拉伸性能 profile mechanical_properties -> admin",
+    "missing_table: 7.1.1产品应由供方或第三方进行检验,保证产品质量符合本文件的规定及订货单的要求。 table expected by the edition profile was not found",
+    "missing_table: 每批产品均应进行化学成分、外形尺寸及其允许偏差、室温拉伸性能、低倍组织和外观质量的检验。 table expected by the edition profile was not found",
+    "missing_table: 附录,a table expected by the edition profile was not found"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [
+      "7.1.1产品应由供方或第三方进行检验,保证产品质量符合本文件的规定及订货单的要求。",
+      "每批产品均应进行化学成分、外形尺寸及其允许偏差、室温拉伸性能、低倍组织和外观质量的检验。",
+      "附录,a"
+    ],
+    "profile_changes": [
+      ",: profile admin -> unknown",
+      "6.3,室温拉伸性能: profile mechanical_properties -> admin"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T09:34:32+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

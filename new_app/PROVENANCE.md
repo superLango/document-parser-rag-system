@@ -13,6 +13,9 @@
 | `services/recipe_registry/package.py` | `metal-doc-agent/metal_doc_agent/contracts.py`（`Recipe`/`RecipeSignature`） | 参考重写 | 改为 recipe-package 2.0 manifest，增加 semver、engine_api、digest 与不可变校验 | `tests/contract/recipes/test_package.py` |
 | `services/recipe_registry/matcher.py` | `metal-doc-agent/metal_doc_agent/recipes/signature.py` | 复制后重写 | 使用新 `TableGrid` 契约与共享 `clean_text`，打分与阈值保持一致 | `tests/contract/recipes/test_matcher.py`、`scripts/benchmark/route_parity.py` |
 | `services/recipe_registry/registry.py` | `metal-doc-agent/metal_doc_agent/recipes/router.py`、`lifecycle.py` | 参考重写 | 用 `stable/candidate/shadow/deprecated` 通道指针替代 L0–L5，增加版本不可变与 history | `tests/contract/recipes/test_registry.py` |
+| `services/sandbox/runtime/builtin.py`（`MEASURE_ALIASES`/`DEFAULT_ROW_KEY`/`CONDITION_TOKENS`） | `metal-doc-agent/configs/column_aliases.json` | 数据迁移后重写 | 迁移字段别名、行键、条件关键词与单位兜底；不引入旧 pipeline | `tests/integration/sandbox/test_builtin_rules.py` |
+| `services/recipe_registry/data/recipes/mechanical_properties_v1/1.2.0/manifest.json` | `metal-doc-agent/configs/column_aliases.json` + `1.1.0` manifest | 数据迁移后发版 | 增加 E/侧向膨胀/持久/蠕变 measures 与条件绑定，stable 指针切换 1.2.0 | `tests/contract/recipes`、50 份标准回归 |
+| `services/ocr/adapters/layout_first.py` | `metal-doc-agent/metal_doc_agent/ocr/glm.py` | 复制后重写 | 版面块驱动分块 OCR；文本块复用可读文本层，表格块裁剪送 GLM，GLM 不可用回退 native table/text；改 async 契约 | `tests/integration/ocr/test_layout_first.py`、Phase 0 PoC |
 
 > legacy 来源为 2026-11-11 清理前归档版本；归档后的 `legacy/` 只读，不再更新。
 

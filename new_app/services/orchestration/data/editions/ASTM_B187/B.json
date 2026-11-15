@@ -1,0 +1,233 @@
+{
+  "standard_id": "ASTM B187",
+  "edition": "B",
+  "document_sha256": "",
+  "page_count": 9,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "copperunsno.3",
+        "referencedesignation"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "copperunsno.3",
+        "referencedesignation"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 7,
+      "header_signature": [
+        "composition%maximum(unlessshownasarangeorminimum)/copperunsno.",
+        "composition%maximum(unlessshownasarangeorminimum)/copper(incl.silver)",
+        "composition%maximum(unlessshownasarangeorminimum)/phos-phorus",
+        "composition%maximum(unlessshownasarangeorminimum)/silver",
+        "composition%maximum(unlessshownasarangeorminimum)/oxygen",
+        "composition%maximum(unlessshownasarangeorminimum)/tellurium",
+        "composition%maximum(unlessshownasarangeorminimum)/tin"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "temperdesignation",
+        "temperdesignation"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 13,
+      "header_signature": [
+        "temperdesignation/standard",
+        "temperdesignation/former",
+        "diameterordistancebetweenparallelsurfaces,in.",
+        "tensilestrength,ksi,[mpa]b/min",
+        "tensilestrength,ksi,[mpa]b/max",
+        "tensilestrength,ksi,[mpa]b/min",
+        "heldstrength,ksi,[mpa]minc/elongationin4×diameterorthicknessofspecimenmin.%d",
+        "heldstrength,ksi,[mpa]minc/bendtestangleofbend°",
+        "electricalresistivity,emax,ω·g/m2at20°c[68°f]/c10100",
+        "electricalresistivity,emax,ω·g/m2at20°c[68°f]/c10200,c10400,c10500,c10700,c10920,c10930,c10940,c11000,c11020,c11300,c11400,c11500,c11600",
+        "electricalresistivity,emax,ω·g/m2at20°c[68°f]/c10300",
+        "electricalresistivity,emax,ω·g/m2at20°c[68°f]/c12000",
+        "electricalresistivity,emax,ω·g/m2at20°c[68°f]/rockwellhardnessfscale,60kgload,1/16in.ball"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "diameterordistancebetweenparallelsurfaces,in.[mm]",
+        "tolerances,plusandminus,in.[mm]/round",
+        "tolerances,plusandminus,in.[mm]/hexagonaloroctagonal"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "thickness",
+        "width,in.[mm]",
+        "width,in.[mm]",
+        "width,in.[mm]",
+        "width,in.[mm]"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "thickness",
+        "2[50]andunderincl.",
+        "over2[50]to4[100]incl.",
+        "over4[100]to8[200]incl.",
+        "over8[200]to12[300]incl."
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "width,in.[mm]",
+        "tolerances,plusandminus,in.[mm]"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "thickness",
+        "width,in.[mm]",
+        "width,in.[mm]"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "classification",
+      "n_cols": 2,
+      "header_signature": [
+        "lengthclassification/specificlengths",
+        "tolerances,allplus,in.[mm](applicableonlytofull-lengthpieces)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "diameterordistancebetweenparallelsurfacesforroundhexagonal,octagonalrodandsquarebar,in.[mm]",
+        "rectangularbararea,in[mm]",
+        "nominallength,ft[mm]",
+        "shortestpermissiblelength%ofnominallength",
+        "maximumpermissibleweightofends,%oflotweight"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "",
+        "maximumcurvature(depthofarc),in.[mm]",
+        "portionoftotallengthinwhichdepthofarcismeasured,in.[mm]"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "specifiedthickness,in.[mm]",
+        "maximumradiuspermissibleforsquarecorners,in.[mm]"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "specifiedthickness,in.[mm]",
+        "nominalradiusofcorners,in.[mm]/forwidthsuptoandincluding2×thickness",
+        "nominalradiusofcorners,in.[mm]/forwidthsmorethan2×thickness"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "specifiedthickness,in.[mm]",
+        "nominalradiusofroundededge,in.[mm]",
+        "toleranceonradius,plusandminus,in.[mm]"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "element",
+        "astmtestmethod"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 10,
+      "header_signature": [
+        "conductivityat68°f,%",
+        "101.0",
+        "100.0",
+        "99.37",
+        "98.40",
+        "98.35",
+        "98.16",
+        "97.40",
+        "96.16",
+        "92.20"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_composition_v1": "1.1.217",
+    "mechanical_properties_v1": "1.6.51",
+    "dimension_v1": "1.0.2"
+  },
+  "sample_doc_id": "df695e2e-196d-4060-8bfc-e04ca9639b3f",
+  "created_at": "2026-11-15T06:43:29+00:00"
+}

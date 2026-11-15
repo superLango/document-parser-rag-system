@@ -22,7 +22,14 @@ try:  # resource is Unix-only; imported so the runtime can be smoke-tested on Wi
 except ImportError:  # pragma: no cover - runtime image is Linux
     resource = None  # type: ignore[assignment]
 
-from builtin import parse_table
+# Hot-loaded parser bundle: the workspace copy wins over the image fallback.
+ENGINE_DIR = Path(os.environ.get("HANSON_ENGINE_DIR", "/work/engine"))
+if ENGINE_DIR.is_dir():
+    sys.path.insert(0, str(ENGINE_DIR))
+
+import builtin as builtin_module  # noqa: E402
+import projection as projection_module  # noqa: E402
+from builtin import parse_table  # noqa: E402
 
 INPUT_DIR = Path(os.environ.get("HANSON_INPUT_DIR", "/work/input"))
 OUTPUT_DIR = Path(os.environ.get("HANSON_OUTPUT_DIR", "/work/output"))
@@ -37,6 +44,10 @@ OUTPUT_NAMES = (
     "diagnostics.json",
     "metrics.json",
     "manifest.json",
+    "clauses.json",
+    "inventory.json",
+    "references.json",
+    "document_intelligence.json",
 )
 REQUIRED_FOR_ENTRYPOINT = ("result.json", "records.json", "evidence.jsonl", "diagnostics.json")
 EXIT_INVALID_REQUEST = 2
@@ -135,6 +146,23 @@ def run_entrypoint(
     return completed.returncode
 
 
+def _dedupe_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """去掉完全相同的记录（跨页续表/重复表导致同一牌号同一条件重复出现）。"""
+    seen: set[tuple[str, str, str]] = set()
+    unique: list[dict[str, Any]] = []
+    for record in records:
+        key = (
+            str(record.get("grade") or ""),
+            str(record.get("condition_key") or ""),
+            canonical(record.get("properties") or {}),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(record)
+    return unique
+
+
 def run_builtin(request: dict[str, Any], diagnostics: list[dict[str, Any]]) -> dict[str, Any]:
     ocr_path = INPUT_DIR / "ocr.json"
     ocr = read_json(ocr_path)
@@ -150,6 +178,27 @@ def run_builtin(request: dict[str, Any], diagnostics: list[dict[str, Any]]) -> d
     for table in tables:
         table_id = str(table.get("table_id") or "")
         assignment = assignments.get(table_id)
+        if assignments and assignment is None:
+            diagnostics.append(
+                {
+                    "code": "UNROUTED_TABLE",
+                    "message": f"table {table_id} has no recipe assignment; skipped",
+                    "severity": "warning",
+                    "detail": {"table_id": table_id},
+                }
+            )
+            table_summaries.append(
+                {
+                    "table_id": table_id,
+                    "page_no": int(table.get("page_no") or 0),
+                    "profile": str(table.get("profile") or "unknown"),
+                    "recipe_id": "",
+                    "recipe_version": "",
+                    "rows": len(table.get("rows") or []),
+                    "records": 0,
+                }
+            )
+            continue
         recipe_id = str(
             (assignment or {}).get("recipe_id")
             or (request.get("recipe") or {}).get("recipe_id")
@@ -179,8 +228,60 @@ def run_builtin(request: dict[str, Any], diagnostics: list[dict[str, Any]]) -> d
                 "profile": manifest.get("profile"),
             }
 
+    prose_records, prose_evidence = builtin_module.document_heat_records(ocr)
+    if prose_records:
+        records.extend(prose_records)
+        evidence.extend(prose_evidence)
+        diagnostics.append(
+            {
+                "code": "DOCUMENT_HEAT_TREATMENT",
+                "message": f"extracted {len(prose_records)} heat treatment row(s) from prose",
+                "severity": "info",
+                "detail": {"records": len(prose_records)},
+            }
+        )
+
     records.sort(key=lambda item: (item["page_no"], item["table_id"], item["row_index"]))
-    evidence.sort(key=lambda item: (item["page_no"], item["table_id"], item["row_index"]))
+    deduped = _dedupe_records(records)
+    if len(deduped) != len(records):
+        diagnostics.append(
+            {
+                "code": "DUPLICATE_RECORDS_REMOVED",
+                "message": f"removed {len(records) - len(deduped)} duplicated records",
+                "severity": "info",
+                "detail": {"removed": len(records) - len(deduped)},
+            }
+        )
+        records = deduped
+    merged_records = builtin_module._merge_fragments(records)
+    if len(merged_records) != len(records):
+        diagnostics.append(
+            {
+                "code": "FRAGMENT_RECORDS_MERGED",
+                "message": (
+                    f"merged {len(records) - len(merged_records)} complementary "
+                    "records with the same grade/condition"
+                ),
+                "severity": "info",
+                "detail": {"merged": len(records) - len(merged_records)},
+            }
+        )
+        records = merged_records
+    records, adjusted = builtin_module._disambiguate_duplicate_keys(records, diagnostics)
+    if adjusted:
+        diagnostics.append(
+            {
+                "code": "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY",
+                "message": f"appended occurrence index to {adjusted} duplicate-key records",
+                "severity": "warning",
+                "detail": {"adjusted": adjusted},
+            }
+        )
+    # Document-level metadata (试验方法/取样数量/取样说明) and prose-only items
+    # live in inspection tables and clauses, not in the performance tables.
+    intelligence = projection_module.apply_document_intelligence(
+        records, evidence, ocr, diagnostics
+    )
     table_summaries.sort(key=lambda item: (item["page_no"], item["table_id"]))
 
     template = {
@@ -197,6 +298,12 @@ def run_builtin(request: dict[str, Any], diagnostics: list[dict[str, Any]]) -> d
         "stats": {
             "tables": len(table_summaries),
             "records": len(records),
+            "clauses": intelligence["clauses"]["stats"]["clauses"],
+            "inventory_items": len(intelligence["inventory"]["items"]),
+            "references": intelligence["references"]["stats"]["total"],
+            "qualitative_records": intelligence["intelligence"]["stats"][
+                "qualitative_records"
+            ],
             "diagnostics": len(diagnostics),
         },
         "outputs": list(OUTPUT_NAMES),
@@ -207,6 +314,10 @@ def run_builtin(request: dict[str, Any], diagnostics: list[dict[str, Any]]) -> d
         {"schema_version": "sandbox-records/1", "records": records},
     )
     write_jsonl("evidence.jsonl", evidence)
+    write_payload("clauses.json", intelligence["clauses"])
+    write_payload("inventory.json", intelligence["inventory"])
+    write_payload("references.json", intelligence["references"])
+    write_payload("document_intelligence.json", intelligence["intelligence"])
     write_payload(
         "diagnostics.json",
         {"schema_version": "sandbox-diagnostics/1", "diagnostics": diagnostics},
@@ -291,6 +402,10 @@ def append_timings(
         isolation = json.loads(os.environ.get("HANSON_ISOLATION") or "{}")
     except ValueError:
         isolation = {}
+    try:
+        engine_assets = json.loads(os.environ.get("HANSON_ENGINE_ASSETS") or "{}")
+    except ValueError:
+        engine_assets = {}
     write_payload(
         "manifest.json",
         {
@@ -300,6 +415,7 @@ def append_timings(
                 "version": os.environ.get("HANSON_ENGINE_VERSION", ""),
                 "image": os.environ.get("HANSON_ENGINE_IMAGE", ""),
                 "digest": os.environ.get("HANSON_ENGINE_IMAGE_DIGEST", ""),
+                "assets": engine_assets,
                 "runtime": os.environ.get("HANSON_RUNTIME", ""),
             },
             "recipe": request.get("recipe") or {},
@@ -344,6 +460,21 @@ def emit_envelope(status: str, error_code: str, message: str) -> None:
 def main() -> int:
     started = time.monotonic()
     diagnostics: list[dict[str, Any]] = []
+    try:
+        engine_assets = json.loads(os.environ.get("HANSON_ENGINE_ASSETS") or "{}")
+    except ValueError:
+        engine_assets = {}
+    diagnostics.append(
+        {
+            "code": "ENGINE_ASSETS",
+            "message": "parser assets resolved",
+            "severity": "info",
+            "detail": {
+                "assets": engine_assets,
+                "builtin_path": getattr(builtin_module, "__file__", ""),
+            },
+        }
+    )
     if not REQUEST_PATH.exists():
         print(f"HANSON_INVALID_REQUEST: missing {REQUEST_PATH}", file=sys.stderr)
         emit_envelope("rejected", "SANDBOX_REQUEST_INVALID", "missing request")

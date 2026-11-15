@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-11-12T05:22:29+00:00",
+  "api": "http://localhost:18000",
+  "environment": "compose（生产镜像）",
+  "suites": {
+    "pdf": {
+      "documents": 1,
+      "structured_ready": 1,
+      "failed": 0,
+      "status_counts": {
+        "STRUCTURED_READY": 1
+      },
+      "records": 20,
+      "fields": 43,
+      "tables": 13,
+      "review_findings": 3,
+      "p50_seconds": 42.38,
+      "p95_seconds": 42.38,
+      "max_seconds": 42.38,
+      "stages": {
+        "ocr": {
+          "samples": 1,
+          "p50_seconds": 30.58,
+          "p95_seconds": 30.58
+        },
+        "routing": {
+          "samples": 1,
+          "p50_seconds": 0.39,
+          "p95_seconds": 0.39
+        },
+        "sandbox": {
+          "samples": 1,
+          "p50_seconds": 0.96,
+          "p95_seconds": 0.96
+        },
+        "review": {
+          "samples": 1,
+          "p50_seconds": 7.08,
+          "p95_seconds": 7.08
+        }
+      }
+    }
+  },
+  "documents": {
+    "pdf": [
+      {
+        "name": "AMS4050K.pdf",
+        "document_id": "ec886010-7fe1-4407-867e-31f18181764d",
+        "run_id": "24b4daa9-0455-4fe2-a43f-350aa55c5093",
+        "status": "STRUCTURED_READY",
+        "error_code": null,
+        "elapsed_seconds": 42.38,
+        "records": 20,
+        "fields": 43,
+        "tables": 13,
+        "review_status": "warn",
+        "findings": 3,
+        "artifacts": 30,
+        "stage_ms": {
+          "ocr": 30580,
+          "routing": 386,
+          "sandbox": 963,
+          "review": 7081
+        },
+        "category": "美国标准",
+        "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS4050K.pdf"
+      }
+    ]
+  },
+  "branches": []
+}

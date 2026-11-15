@@ -24,12 +24,36 @@ sys.path.insert(0, str(NEW_APP_DIR))
 from services.ocr.algorithms.table_grid import extract_tables  # noqa: E402
 from services.ocr.contracts import Page  # noqa: E402
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from teds import teds_score  # noqa: E402
+
 REPEATS = 20
-METRICS = ("profile", "orientation", "cols", "header_rows", "header_path", "cell")
+METRICS = (
+    "profile",
+    "orientation",
+    "cols",
+    "header_rows",
+    "header_path",
+    "cell",
+    "teds",
+)
 
 
 def normalize(value) -> str:
     return re.sub(r"\s+", "", str(value or ""))
+
+
+def build_grid(header_paths, header_rows: int, data_rows, width: int) -> list[list[str]]:
+    paths = [list(path)[:header_rows] for path in header_paths[:width]]
+    paths += [[""] * header_rows for _ in range(max(0, width - len(paths)))]
+    grid = [
+        [paths[col][row] if row < len(paths[col]) else "" for col in range(width)]
+        for row in range(header_rows)
+    ]
+    for row in data_rows:
+        values = list(row[:width])
+        grid.append(values + [""] * (width - len(values)))
+    return grid
 
 
 def evaluate(tables, expect: dict) -> dict:
@@ -40,7 +64,9 @@ def evaluate(tables, expect: dict) -> dict:
 
     header_total = max(1, exp["n_cols"])
     header_hits = 0
-    for index in range(min(exp["n_cols"], len(table.header_paths), len(exp["header_paths"]))):
+    for index in range(
+        min(exp["n_cols"], len(table.header_paths), len(exp["header_paths"]))
+    ):
         actual = [normalize(part) for part in table.header_paths[index]]
         want = [normalize(part) for part in exp["header_paths"][index]]
         if actual == want:
@@ -55,8 +81,21 @@ def evaluate(tables, expect: dict) -> dict:
             continue
         actual_row = data_rows[row_index]
         for col_index, want in enumerate(want_row):
-            if col_index < len(actual_row) and normalize(actual_row[col_index]) == normalize(want):
+            if (
+                col_index < len(actual_row)
+                and normalize(actual_row[col_index]) == normalize(want)
+            ):
                 cell_hits += 1
+
+    expected_grid = build_grid(
+        exp["header_paths"], exp["header_rows"], exp["data_rows"], exp["n_cols"]
+    )
+    actual_grid = build_grid(
+        table.header_paths,
+        table.header_rows,
+        data_rows[: len(exp["data_rows"])],
+        exp["n_cols"],
+    )
 
     return {
         "profile": float(table.profile == exp["profile"]),
@@ -65,6 +104,7 @@ def evaluate(tables, expect: dict) -> dict:
         "header_rows": float(table.header_rows == exp["header_rows"]),
         "header_path": header_hits / header_total,
         "cell": cell_hits / cell_total if cell_total else 0.0,
+        "teds": teds_score(expected_grid, actual_grid),
     }
 
 
@@ -122,14 +162,17 @@ def main() -> None:
                     f"{metrics['header_rows']:.2f}",
                     f"{metrics['header_path']:.3f}",
                     f"{metrics['cell']:.3f}",
+                    f"{metrics['teds']:.3f}",
                 ]
             )
         latencies["new"] += latency(run_new, text)
         latencies["legacy"] += latency(run_legacy, text)
 
     count = len(cases)
-    print("| case | algo | profile | orientation | cols | header_rows | header_path | cell |")
-    print("|---|---|---|---|---|---|---|---|")
+    print(
+        "| case | algo | profile | orientation | cols | header_rows | header_path | cell | teds |"
+    )
+    print("|---|---|---|---|---|---|---|---|---|")
     for row in rows:
         print("| " + " | ".join(row) + " |")
 

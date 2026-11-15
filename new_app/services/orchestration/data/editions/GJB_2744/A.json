@@ -1,0 +1,1782 @@
+{
+  "standard_id": "GJB 2744",
+  "edition": "A",
+  "document_sha256": "",
+  "page_count": 16,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "fl",
+        "6210"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gjb",
+        "2744a-2007"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "代替",
+        "gjb2744-1996"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "标题"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2007-05-22",
+        "发布"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "前言"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "本规范与gjb2744-1996相比主要有以下变化:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "i"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "航空用钛及钛合金锻件规范"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "1",
+        "范围"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2",
+        "规范性引用文件"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t228",
+        "金属材料",
+        "室温拉伸试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t229",
+        "金属夏比缺口冲击试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t231.1",
+        "金属布氏硬度",
+        "第一部分:试验方法"
+      ],
+      "measures": [
+        "布氏硬度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t2039",
+        "金属拉伸蠕变及持久试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t3620.2",
+        "钛及钛合金加工产品化学成分及成分允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t4161",
+        "金属材料平面应变断裂韧度kic试验方法"
+      ],
+      "measures": [
+        "断裂韧度",
+        "kic"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t4338",
+        "金属材料",
+        "高温拉伸试验"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t4698(所有部分)",
+        "海绵钛、钛及钛合金化学分析方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t5168",
+        "两相钛合金高低倍组织检验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t5193",
+        "钛和钛合金加工产品超声波探伤方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t8180",
+        "钛及钛合金加工产品的包装、标志、运输和贮存"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gjb3763a-2004",
+        "钛及钛合金热处理"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "hb6623.1",
+        "钛及钛合金β转变温度测定方法",
+        "差热分析法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "hb6623.2",
+        "钛及钛合金β转变温度测定方法",
+        "金相法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3",
+        "要求"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.1",
+        "材料"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.1.2",
+        "自耗电极不允许使用钨极氩弧焊焊接。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.2",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.2",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.2.1",
+        "锻件的化学成分应符合表1的规定。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.3",
+        "供货状态"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.3.1锻件一般以热处理状态供货,也可以不经热处理供货。锻件以热处理状态供货时,其热处理制度应按gjb3763a-2004的规定进行。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "3.3.2",
+        "锻件表面清理后供货。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.4",
+        "力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.4",
+        "力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "表1",
+        "锻件的化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 20,
+      "header_signature": [
+        "主要元素/材料牌号",
+        "主要元素/ti",
+        "主要元素/al",
+        "主要元素/sn",
+        "主要元素/zr",
+        "主要元素/mo",
+        "主要元素/v",
+        "主要元素/cr",
+        "主要元素/fe",
+        "主要元素/si",
+        "主要元素/mn",
+        "杂质元素,不大于/fe",
+        "杂质元素,不大于/si",
+        "杂质元素,不大于/c",
+        "杂质元素,不大于/n",
+        "杂质元素,不大于/h",
+        "杂质元素,不大于/o",
+        "其他元素/单个",
+        "其他元素/总和",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "表2",
+        "锻件的室温力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 11,
+      "header_signature": [
+        "材料牌号",
+        "状态",
+        "厚度mm",
+        "取样方向",
+        "rm(σb)mpa/不小于",
+        "rp0.2(σp0.2)mpa/不小于",
+        "a(δ5)%/不小于",
+        "z(psi)%/不小于",
+        "kicmpasqrtm/不小于",
+        "akuj/cm/不小于",
+        "hbs10/29.42knd,mm"
+      ],
+      "measures": [
+        "rm",
+        "rp0.2",
+        "a",
+        "z"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 （续）",
+      "profile": "mechanical_properties",
+      "n_cols": 11,
+      "header_signature": [
+        "材料牌号",
+        "状态",
+        "厚度mm",
+        "取样方向",
+        "rm(σb)mpa/不小于",
+        "rp0.2(σp0.2)mpa/不小于",
+        "a(δs)%/不小于",
+        "z(ψ)%/不小于",
+        "kicmpasqrtm/不小于",
+        "akuj/cm2/不小于",
+        "hbs10/29.42knd,mm"
+      ],
+      "measures": [
+        "rm",
+        "rp0.2",
+        "a",
+        "z"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "3"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 12,
+      "header_signature": [
+        "表3",
+        "锻件的高温力学性能",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "表4",
+        "锻件的热稳定性"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 9,
+      "header_signature": [
+        "材料牌号",
+        "状态",
+        "热暴露条件/温度°c",
+        "热暴露条件/时间h",
+        "热暴露条件/冷却方式",
+        "室温拉伸性能,不小于/取样方向",
+        "室温拉伸性能,不小于/rm(σb)mpa",
+        "室温拉伸性能,不小于/a(δs)%",
+        "室温拉伸性能,不小于/z(ψ)%"
+      ],
+      "measures": [
+        "rm",
+        "a",
+        "z"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.5",
+        "低倍组织"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "3.5.1",
+        "锻件按图样规定剖面检查低倍组织。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.5.2",
+        "锻件低倍不允许有裂纹、夹杂、偏析、缩孔、气孔、分层及其他冶金缺陷。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6",
+        "显微组织"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6.1",
+        "一般要求"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "锻件的显微组织应是经α相区或α+β两相区加工的均匀组织,即α基体或由转变β基体和等轴或条状初生α相组成。初生α相含量应不小于5%。所有β晶界α应充分破碎,不允许存在连续、平直的晶界α相。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6.2",
+        "a合金"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "材料",
+        "工业纯钛和ta7合金显微组织应符合3.6.1的规定。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6.3",
+        "近α合金"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "表5",
+        "锻件的低倍组织"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 6,
+      "header_signature": [
+        "合金类型",
+        "材料牌号",
+        "厚度mm",
+        "合格组织等级",
+        "临界组织等级/等级",
+        "临界组织等级/判据"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.6.3.2ta15、ta19合金显微组织应符合3.6.1的规定,并按图3进行评定。1类~5类为合格组织,条状初生α相长度应不大于0.25mm。6类~9类为不合格组织。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.6.3.2ta15、ta19合金显微组织应符合3.6.1的规定,并按图3进行评定。1类~5类为合格组织,条状初生α相长度应不大于0.25mm。6类~9类为不合格组织。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6.4",
+        "α-β合金"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.6.4.1tc4、tc11合金显微组织应符合3.6.1的规定,并按图3进行评定。1类~5类为合格组织,条状初生α相长度应不大于0.25mm。6类~9类为不合格组织。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.6.4.2tc6合金显微组织按图3进行评定。1类~7类为合格组织,条状初生α相长度应不大于0.25mm。8类和9类为不合格组织。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6.5",
+        "近β合金"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "tb6合金显微组织应由时效β基体和球状或条状初生α相组成,并按图5进行评定。1类~5类为合格组织,初生α相含量应不小于10%。原始β晶粒边界应不出现连续的、平直的α相网络。不允许出现粗大的晶界α相组织,当出现明显的但经过变形的晶界α相时,晶粒尺寸应不大于150μm。β斑(初生α相含量小于5%的区域)在任意方向上的长度应不大于0.76mm。6类和7类组织的面积不大于观察试样面积的10%时,为合格组织,大于10%时为不合格组织。8类~9类为不合格组织。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "3.7",
+        "β",
+        "转变温度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.8",
+        "超声波检验"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "5"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 6 锻件的超声波检验验收质量等级",
+      "profile": "inspection",
+      "n_cols": 9,
+      "header_signature": [
+        "材料牌号",
+        "等级",
+        "单个不连续性指示/当量平底孔直径,mm",
+        "多个不连续性指示/当量平底孔直径,mm",
+        "多个不连续性指示/间距mm",
+        "长条形不连续性指示/当量平底孔直径,mm",
+        "长条形不连续性指示/长度mm",
+        "噪声db",
+        "底反射损失%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 1,
+      "header_signature": [
+        "3.9尺寸和公差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.10",
+        "外观质量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "标题"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.10.2",
+        "锻件的表面上不允许有裂纹、分层、折叠等缺陷。对表面缺陷允许采用打磨或机械加工的方法清理,但清理深度应不超过该处机械加工余量之半;对压伤、压坑等缺陷,如其深度不超过机械加工余量的2/3,则允许不清除。在所有清除和允许不清除缺陷的部位,均须保证锻件留有1/3的名义加工余量。需方有要求时,还应保证锻件留有后续加工过程中所需的附加加工余量。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.10.3锻件若要求进行超声波检验时,其表面质量应满足超声波检验的要求,表面粗糙度ra值一般应不大于3.2μm。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.11产品标识"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "合格锻件应有以下标识:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "a)",
+        "材料牌号;"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "b)",
+        "锻件图号或代号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "c)",
+        "熔炼炉号或代号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "d)",
+        "热处理批(次)号或代号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "e)",
+        "供方检印;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "6"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4",
+        "质量保证规定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.1",
+        "检验分类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2",
+        "质量一致性检验"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.1",
+        "组批规则"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.2",
+        "检验项目、取样数量、取样部位"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 检验项目、取样数量",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.2",
+        "检验项目、取样数量、取样部位"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 检验项目、取样数量",
+      "profile": "inspection",
+      "n_cols": 6,
+      "header_signature": [
+        "检验项目",
+        "取样数量/i类",
+        "取样数量/ii类",
+        "取样数量/iii类",
+        "要求的章条号",
+        "检验或试验方法的章条号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "4.2.2.3经需方同意,允许供方在半个锻件上检验力学性能、金相组织和氢含量,另半个锻件作为该批产品的一部分供需方复验使用。氢分析试样取自成品锻件最小截面并距表面4mm内。力学性能、低倍组织、显微组织的取样部位应在锻件图样或取样图样上注明。显微组织试样也可取自拉断的拉伸试样上。按头部管理时,应检验靠近头部的锻件。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.2",
+        "检验结果的判定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.2",
+        "检验结果的判定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.3.1",
+        "符合本规范第3章规定的锻件判为合格件。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.3.3力学性能第一次检验结果不合格时",
+        "则从原受检锻件上取双倍试样对不合格项目进行重复试验(原锻件无法切取双倍试样时,可另取同一批号锻件进行双倍试样检验)。若重复试验结果仍有一个试样不合格,则该批锻件判为不合格。对不合格批次的锻件,可进行重复热处理,重复热处理次数应不超过两次。重复热处理后,应按本规范的规定重新提交验收。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "heat_treatment",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.3.4",
+        "当氢含量不合格时,可按gjb3763a-2004规定进行真空除氢处理。需要时应重新热处理并"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "7"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 1,
+      "header_signature": [
+        "检验力学性能和氢含量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.1",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3",
+        "检验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.2",
+        "室温拉伸"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.3",
+        "室温冲击"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.4",
+        "室温硬度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "参数名称",
+        "数值或单位"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.5",
+        "金属材料平面应变断裂韧度kic"
+      ],
+      "measures": [
+        "断裂韧度",
+        "kic"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "金属材料平面应变断裂韧度kic按gb/t4161规定进行。"
+      ],
+      "measures": [
+        "断裂韧度",
+        "kic"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.6",
+        "高温拉伸"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.7",
+        "高温持久"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.8",
+        "低倍组织和显微组织"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "两相钛合金低倍组织和显微组织检验按gb/t5168规定进行。其他合金按照供需双方商定的检验方法进行。tb6合金在775°c或β转变温度以下25°c(取二者中的较高温度)加热水淬后检查β斑,放大倍率一般选用100倍。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.9",
+        "β转变温度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "beta转变温度按hb6623.1、hb6623.2或其他适宜的方法测定。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "参数",
+        "值"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.11",
+        "尺寸和公差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.12",
+        "外观质量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5",
+        "交货准备"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "名称",
+        "规格"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.2",
+        "质量证明书"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "a)",
+        "供方名称;"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "b)",
+        "需方名称;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "c)",
+        "产品名称及合同号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "项目",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "f)",
+        "锻件数量;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "题号",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "h)",
+        "β转变温度和热处理制度;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6",
+        "说明事项"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "6.1",
+        "预定用途"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6.2",
+        "分类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "合同或订单中应注明下列内容:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "e)",
+        "材料牌号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "f)",
+        "供应状态;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "g)",
+        "锻件类别和数量;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "i)",
+        "头部管理;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "j)",
+        "其他需要说明的事项。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "图1",
+        "低倍组织评级图,1级~10级,1×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "9"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "图2",
+        "tc1、tc2钛合金显微组织评级图,1类~9类,500×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "10"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "图3",
+        "近a、a-β型钛合金显微组织评级图,1类~9类,500×"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "11"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "12"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "200×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "200×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "200×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "200×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "200×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "200×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "100×"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "图5",
+        "tb6钛合金显微组织评级图,1类~9类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "13"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gjb",
+        "2744a",
+        "2007"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "国家军用标准"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "出版社",
+        "出版发行部"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "国防科工委军标出版发行部印刷车间印刷"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 7,
+      "header_signature": [
+        "开本",
+        "880×1230",
+        "1/16",
+        "印张",
+        "11⁄4",
+        "字数",
+        "34千字"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "2007年11月第1版",
+        "2007年11月第1次印刷"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "印数",
+        "1-500"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "军标出字第",
+        "6865号"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "mechanical_properties_v1": "1.6.51",
+    "chemical_composition_v1": "1.1.217",
+    "chemical_element_rows_v1": "1.2.3",
+    "inspection_rules_v1": "1.1.0",
+    "dimension_v1": "1.0.2",
+    "heat_treatment_v1": "1.0.0"
+  },
+  "sample_doc_id": "8526582f-5f07-4ca8-8288-11e0e01e9c64",
+  "created_at": "2026-11-15T09:03:28+00:00"
+}

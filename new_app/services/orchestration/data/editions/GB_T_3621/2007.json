@@ -1,0 +1,1202 @@
+{
+  "standard_id": "GB/T 3621",
+  "edition": "2007",
+  "document_sha256": "",
+  "page_count": 12,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "ics",
+        "77.150.50"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "h64"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t",
+        "3621-2007"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "代替gb/t3621-1994"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "钛及钛合金板材"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "material"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2007-04-30",
+        "发布"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "代码",
+        "日期"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "前言"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "增加了ta8、ta8-1、ta9-1、ta11、ta15、ta17、ta18、tb5、tb6、tb8、tc4eli等11个新的合金牌号及其产品尺寸允许偏差、力学性能、工艺性能等;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "将冷轧成品厚度规格从原来的0.3mm~4.0mm改为0.3mm~6.0mm。热轧成品厚度规格修订为>4.75mm~60.0mm;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "纯钛和tc4成品厚度规格修订为0.3mm~25mm和0.8mm~25mm,对部分规格板材的长度允许偏差进行了修订;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "增加β合金和近β合金板材的不平度要求;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "将尺寸偏差中厚度规格划分为连续式;",
+        "将尺寸偏差中厚度规格划分为连续式;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "板材室温力学性能规定残余伸长应力σr0.2改为规定非比例延伸强度rp0.2;"
+      ],
+      "measures": [
+        "rp0.2"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "对纯钛板材的力学性能和工艺性能指标进行了重大调整,规定非比例延伸强度采用了astmb265-2006的指标,抗拉强度和断后伸长率指标均高于astmb265-2006;"
+      ],
+      "measures": [
+        "抗拉强度",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "--增加了复合板用ta10板材的力学性能指标(b类);"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "增加砂光表面的板材。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "本标准主要起草人"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "gb/t3621-1983、gb/t3621-1994。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "i"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "钛及钛合金板材"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "1",
+        "范围"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "2",
+        "规范性引用文件"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t228",
+        "金属材料",
+        "室温拉伸试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t232",
+        "金属材料",
+        "弯曲试验方法"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t2039",
+        "金属拉伸蠕变及持久试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t3620.1",
+        "钛及钛合金牌号和化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t3620.2",
+        "钛及钛合金加工产品化学成分允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t4338",
+        "金属材料",
+        "高温拉伸试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t8180",
+        "钛及钛合金加工产品的包装、标志、运输和贮存"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3",
+        "要求"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.1产品分类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 1 产品牌号、制造方法、供应状态及规格分类",
+      "profile": "classification",
+      "n_cols": 1,
+      "header_signature": [
+        "品牌号、制造方法、供应状态及规格分类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 1 产品牌号、制造方法、供应状态及规格分类",
+      "profile": "dimension",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "制造方法",
+        "供应状态",
+        "规格/厚度/mm",
+        "规格/宽度/mm",
+        "规格/长度/mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.1.2",
+        "标记示例"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "用ta2制成的厚度为3.0mm、宽度500mm、长度2000mm的退火态板材,标记为:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 5,
+      "header_signature": [
+        "板",
+        "ta2m",
+        "3.0×500",
+        "2000gb/t",
+        "3621-2007"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.2",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.2.2",
+        "可以供应氧含量不大于质量分数0.15%的ta7板材,但应在合同中注明。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.3尺寸允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表2",
+        "板材厚度的允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "厚度",
+        "宽度",
+        "宽度",
+        "宽度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表3",
+        "板材宽度和长度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 5,
+      "header_signature": [
+        "厚度",
+        "宽度",
+        "宽度允许偏差",
+        "长度",
+        "长度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 4 板材的不平度",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "度应符合表4的规定。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 4 板材的不平度",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "厚度/mm",
+        "规定宽度的不平度/(mm/m)",
+        "规定宽度的不平度/(mm/m)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.4",
+        "力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.4.1板材横向室温力学性能应符合表5的规定。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "表5",
+        "板材室温力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "牌号",
+        "牌号",
+        "状态",
+        "板材厚度/mm",
+        "抗拉强度rm/mpa",
+        "规定非比例延伸强度rp0.2/mpa",
+        "断后伸长率aa/%,不小于"
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "rp0.2",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 （续）",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "板材厚度/mm",
+        "抗拉强度rm/mpa",
+        "规定非比例延伸强度rp0.2/mpa",
+        "断后伸长率aa/%,不小于"
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "rp0.2",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "表6",
+        "板材高温力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "合金牌号",
+        "板材厚度/mm",
+        "试验温度/°c",
+        "抗拉强度σb/mpa,不小于",
+        "持久强度σ100h/mpa,不小于"
+      ],
+      "measures": [
+        "抗拉强度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "3.5",
+        "工艺性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "表7",
+        "板材弯芯直径和弯曲角",
+        "",
+        "",
+        ""
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "5"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 （续）",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "板材厚度/mm",
+        "弯芯直径/mm",
+        "弯曲角α/度"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "6"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 （续）",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "板材厚度/mm",
+        "弯芯直径/mm",
+        "弯曲角α/度"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6",
+        "外观质量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6.1",
+        "热轧板的表面应光洁。板材允许以碱酸洗、喷砂及砂光表面供货。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "标题"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6.5",
+        "板材不应有分层。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4",
+        "试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "4.1",
+        "化学成分仲裁分析方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "化学成分的仲裁分析按gb/t4698进行。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 1,
+      "header_signature": [
+        "尺寸检验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 1,
+      "header_signature": [
+        "4.3力学性能检验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "4.3.1板材的室温拉伸试验按gb/t228进行。厚度不大于3.0mm的板材,取p1试样,3.0mm~6.0mm的板材取p7试样;厚度大于6.0mm~10.0mm的板材取r8试样;厚度大于10.0mm的板材取r7试样。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "实验名称",
+        "实验内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5",
+        "检验规则"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.1",
+        "检查和验收"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "7"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.2",
+        "组批"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.3",
+        "检验项目"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 3,
+      "header_signature": [
+        "名称",
+        "取样位置",
+        "取样数量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "表8",
+        "取样位置和取样数量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "检验项目",
+        "取样位置和取样数量",
+        "要求的章条号",
+        "试验方法章条号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "5.5",
+        "检验结果的判定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.5.1",
+        "化学成分不合格时,判该批产品不合格。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "标志、包装、运输和贮存"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "6.1产品标志"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "a)",
+        "牌号;"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "b)规格;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "c)",
+        "供应状态;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "标题"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6.3",
+        "质量证明书"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "7",
+        "订货单(或合同)内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "b)",
+        "牌号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "d)",
+        "尺寸规格;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "e)",
+        "高温性能及温度;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "f)",
+        "重量或张数;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "g)",
+        "本标准编号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "h)",
+        "其他。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "9"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "国家标准"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "中国标准出版社出版发行"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "电话:",
+        "68523946",
+        "68517548"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t",
+        "3621",
+        "2007"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "网址",
+        "www.spc.net.cn"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "中国标准出版社秦皇岛印刷厂印刷"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 7,
+      "header_signature": [
+        "开本",
+        "880×1230",
+        "1/16",
+        "印张",
+        "1",
+        "字数",
+        "19千字"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2007年8月第一版",
+        "2007年8月第一次印刷"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "如有印装差错",
+        "由本社发行中心调换"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "书号:155066·1-29797",
+        "定价16.00元"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "版权专有",
+        "侵权必究"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "举报电话:(010)68533533"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "inspection_rules_v1": "1.1.0",
+    "chemical_composition_v1": "1.1.217",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "660fb7d3-e07b-45da-8a7c-7cdc83a2e004",
+  "created_at": "2026-11-15T03:52:27+00:00"
+}

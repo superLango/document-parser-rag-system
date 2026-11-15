@@ -20,7 +20,7 @@ from hanson_contracts import RuntimeInfo
 
 from .config import Settings
 from .executor import ExecutorError, RawExecution
-from .validation import REQUIRED_FILES
+from .validation import OUTPUT_FILES
 from .workspace import Workspace
 
 SANDBOX_USER = "65534:65534"
@@ -73,7 +73,7 @@ def _extract_outputs(data: bytes, limit: int) -> dict[str, bytes]:
                 raise ExecutorError(
                     "SANDBOX_OUTPUT_INVALID", f"unsupported output entry: {member.name}"
                 )
-            if "/" in name or name not in REQUIRED_FILES:
+            if "/" in name or name not in OUTPUT_FILES:
                 raise ExecutorError(
                     "SANDBOX_OUTPUT_INVALID", f"unexpected output file: {name}"
                 )
@@ -260,6 +260,9 @@ class DockerExecutor:
             f"HANSON_ENGINE_VERSION={self.settings.engine_version}",
             f"HANSON_ENGINE_IMAGE={self.settings.engine_image}",
             f"HANSON_ENGINE_IMAGE_DIGEST={image_digest}",
+            "HANSON_ENGINE_DIR=/work/engine",
+            "HANSON_ENGINE_ASSETS="
+            + json.dumps(workspace.assets, sort_keys=True, separators=(",", ":")),
             f"HANSON_RUNTIME={runtime}",
             f"HANSON_ISOLATION={json.dumps(isolation, sort_keys=True, separators=(',', ':'))}",
             "HANSON_EMIT_ENVELOPE=0",

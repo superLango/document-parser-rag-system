@@ -26,7 +26,15 @@ DEFAULT_OLD_RUNS = REPO_ROOT / "data" / "validation-2026-11-06" / "runs" / "full
 DEFAULT_OUT_JSON = REPO_ROOT / "new_app" / "docs" / "reports" / "M8-effect-comparison.json"
 DEFAULT_OUT_MD = REPO_ROOT / "new_app" / "docs" / "reports" / "M8-effect-comparison.md"
 DEFAULT_API = os.getenv("API_BASE", "http://localhost:18000")
-TERMINAL = {"STRUCTURED_READY", "REVIEW_FAILED", "FAILED", "CANCELLED"}
+TERMINAL = {
+    "STRUCTURED_READY",
+    "REVIEW_FAILED",
+    "HUMAN_REJECTED",
+    "UNROUTED",
+    "FAILED",
+    "CANCELLED",
+}
+WAITING = {"HUMAN_REVIEW"}
 
 ELEMENTS = {
     "C", "Si", "Mn", "P", "S", "Ni", "Cr", "Mo", "Cu", "Al", "Ti", "V", "Nb",
@@ -59,11 +67,38 @@ def normalize_text(value: Any) -> str:
     return re.sub(r"\s+", "", text)
 
 
-def normalize_measure(value: str) -> str:
+def normalize_measure(value: str, *, symbols: bool = False) -> str:
     text = str(value or "").strip()
-    if text.upper() in MECHANICAL:
-        return text.upper()
+    upper = text.upper().replace("，", ",")
+    if symbols:
+        # W3 双口径：字段字典把 σb/ReL/KU2/HBS 等别名归一到同一符号。
+        return SYMBOL_ALIASES.get(upper, upper)
+    if upper in MECHANICAL:
+        return upper
     return text
+
+
+# 原始符号 -> 归一化符号（两套 F1 口径共用一份字典）。
+SYMBOL_ALIASES = {
+    "ΣB": "RM",
+    "ΣS": "REL",
+    "Δ5": "A",
+    "Δ10": "A",
+    "ΔS": "A",
+    "A5.65": "A",
+    "A50MM": "A",
+    "A11.3": "A",
+    "Ψ": "Z",
+    "AKU": "KU2",
+    "AKV": "KV2",
+    "AKU2": "KU2",
+    "AKV2": "KV2",
+    "HBS": "HB",
+    "HBW": "HB",
+    "HV": "HV",
+    "RP0,2": "RP0.2",
+    "RP02": "RP0.2",
+}
 
 
 def normalize_grade(value: Any) -> str:
@@ -83,8 +118,11 @@ def prop_value(prop: dict[str, Any] | None) -> tuple[float | None, str]:
     return number, raw or normalize_text(value)
 
 
-def fields_of(records: list[dict[str, Any]], *, new: bool) -> dict[tuple[str, str], dict[str, Any]]:
-    fields: dict[tuple[str, str], dict[str, Any]] = {}
+def fields_of(
+    records: list[dict[str, Any]], *, new: bool, symbols: bool = False
+) -> dict[tuple[str, ...], list[dict[str, Any]]]:
+    """Group fields by (grade, facet, measure); duplicates become a value list."""
+    fields: dict[tuple[str, ...], list[dict[str, Any]]] = {}
     for record in records or []:
         if not isinstance(record, dict):
             continue
@@ -94,24 +132,65 @@ def fields_of(records: list[dict[str, Any]], *, new: bool) -> dict[tuple[str, st
             # Legacy rows without a grade often carry the facet in
             # ``condition``; the new pipeline stores it in ``conditions``.
             grade = normalize_text(condition)
+        facet = facet_of(record, new=new)
+        if facet and normalize_text(facet) == grade:
+            # Legacy rows encode the condition as the grade (e.g. grade
+            # "成品分析"); do not duplicate it in the key.
+            facet = ""
         properties = record.get("properties") or {}
         if not isinstance(properties, dict):
             continue
         for measure, prop in properties.items():
             if not isinstance(prop, dict):
                 continue
-            key = (grade, normalize_measure(str(measure)))
-            if key in fields:
-                continue
+            key: tuple[str, ...] = (
+                (grade, facet, normalize_measure(str(measure), symbols=symbols))
+                if facet
+                else (grade, normalize_measure(str(measure), symbols=symbols))
+            )
             number, text = prop_value(prop)
-            fields[key] = {
-                "value": number,
-                "text": text,
-                "raw": str(prop.get("raw") or ""),
-                "unit": str(prop.get("unit") or ""),
-                "record_id": str(record.get("record_id") or ""),
-            }
+            fields.setdefault(key, []).append(
+                {
+                    "value": number,
+                    "text": text,
+                    "raw": str(prop.get("raw") or ""),
+                    "unit": str(prop.get("unit") or ""),
+                    "record_id": str(record.get("record_id") or ""),
+                }
+            )
     return fields
+
+
+FACET_TOKENS = (
+    "熔炼分析",
+    "成品分析",
+    "室温",
+    "高温",
+    "低温",
+    "最大",
+    "最小",
+    "标准",
+    "允许偏差",
+    "纵向",
+    "切向",
+    "热轧",
+    "冷轧",
+    "退火",
+    "固溶",
+    "时效",
+    "淬火",
+    "回火",
+)
+
+
+def facet_of(record: dict[str, Any], *, new: bool) -> str:
+    text = condition_of(record, new=new)
+    if new:
+        text += " " + normalize_text(record.get("condition_key") or "")
+    for token in FACET_TOKENS:
+        if token in text:
+            return token
+    return ""
 
 
 def condition_of(record: dict[str, Any], *, new: bool) -> str:
@@ -202,7 +281,7 @@ def load_candidates(old_runs: Path, limit: int) -> list[dict[str, Any]]:
             continue
         seen_hashes.add(content_hash)
         seen_titles.add(title_key)
-        family_counts = Counter(family_of(measure) for _, measure in fields)
+        family_counts = Counter(family_of(key[-1]) for key in fields)
         dominant = family_counts.most_common(1)[0][0]
         candidates.append(
             {
@@ -251,11 +330,19 @@ def new_parse(client: httpx.Client, api: str, markdown: str, name: str) -> dict[
     created.raise_for_status()
     run = created.json()
     run_id = run["id"]
-    deadline = time.monotonic() + 180
+    deadline = time.monotonic() + 600
     while time.monotonic() < deadline:
         response = client.get(f"{api}/v1/runs/{run_id}")
         response.raise_for_status()
         run = response.json()
+        if run["status"] in WAITING:
+            accepted = client.post(
+                f"{api}/v1/runs/{run_id}/accept",
+                params={"actor": "regression", "note": "automated gate"},
+            )
+            if accepted.status_code == 200:
+                run = {**run, "status": accepted.json().get("run_status", "STRUCTURED_READY")}
+            break
         if run["status"] in TERMINAL:
             break
         time.sleep(1)
@@ -279,17 +366,49 @@ def new_parse(client: httpx.Client, api: str, markdown: str, name: str) -> dict[
     }
 
 
-def compare_doc(old: dict[str, Any], new: dict[str, Any]) -> dict[str, Any]:
-    old_fields = old["fields"]
-    new_fields = fields_of(new["records"], new=True)
+def _compare_fields(
+    old_fields: dict[tuple[str, ...], list[dict[str, Any]]],
+    new_fields: dict[tuple[str, ...], list[dict[str, Any]]],
+) -> dict[str, Any]:
     common = set(old_fields) & set(new_fields)
     only_old = set(old_fields) - set(new_fields)
     only_new = set(new_fields) - set(old_fields)
-    matches = sum(1 for key in common if same_value(old_fields[key], new_fields[key]))
+    matches = sum(
+        1
+        for key in common
+        if any(
+            same_value(left, right)
+            for left in old_fields[key]
+            for right in new_fields[key]
+        )
+    )
     silent = len(common) - matches
     precision = len(common) / len(new_fields) if new_fields else 0.0
     recall = len(common) / len(old_fields) if old_fields else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
+    return {
+        "old_fields": len(old_fields),
+        "new_fields": len(new_fields),
+        "common": len(common),
+        "only_old": only_old,
+        "only_new": only_new,
+        "value_matches": matches,
+        "silent_errors": silent,
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "f1": round(f1, 4),
+    }
+
+
+def compare_doc(old: dict[str, Any], new: dict[str, Any]) -> dict[str, Any]:
+    old_fields = old["fields"]
+    new_fields = fields_of(new["records"], new=True)
+    raw = _compare_fields(old_fields, new_fields)
+    # W3 双口径：同一份数据再按字段字典归一化符号后比较一次。
+    normalized = _compare_fields(
+        fields_of(old["records"], new=False, symbols=True),
+        fields_of(new["records"], new=True, symbols=True),
+    )
     evidence_records = sum(
         1
         for record in new["records"]
@@ -302,17 +421,32 @@ def compare_doc(old: dict[str, Any], new: dict[str, Any]) -> dict[str, Any]:
         "status": new["status"],
         "error_code": new.get("error_code"),
         "elapsed_seconds": new["elapsed_seconds"],
-        "old_fields": len(old_fields),
-        "new_fields": len(new_fields),
-        "common_fields": len(common),
-        "only_old": len(only_old),
-        "only_new": len(only_new),
-        "value_matches": matches,
-        "value_match_rate": round(matches / len(common), 4) if common else 0.0,
-        "silent_errors": silent,
-        "precision": round(precision, 4),
-        "recall": round(recall, 4),
-        "f1": round(f1, 4),
+        "old_fields": raw["old_fields"],
+        "new_fields": raw["new_fields"],
+        "common_fields": raw["common"],
+        "only_old": len(raw["only_old"]),
+        "only_new": len(raw["only_new"]),
+        "value_matches": raw["value_matches"],
+        "value_match_rate": round(raw["value_matches"] / raw["common"], 4)
+        if raw["common"]
+        else 0.0,
+        "silent_errors": raw["silent_errors"],
+        "precision": raw["precision"],
+        "recall": raw["recall"],
+        "f1": raw["f1"],
+        "f1_normalized": normalized["f1"],
+        "precision_normalized": normalized["precision"],
+        "recall_normalized": normalized["recall"],
+        "silent_errors_normalized": normalized["silent_errors"],
+        "common_fields_normalized": normalized["common"],
+        "old_fields_normalized": normalized["old_fields"],
+        "new_fields_normalized": normalized["new_fields"],
+        "value_matches_normalized": normalized["value_matches"],
+        "value_match_rate_normalized": round(
+            normalized["value_matches"] / normalized["common"], 4
+        )
+        if normalized["common"]
+        else 0.0,
         "new_records": len(new["records"]),
         "evidence_rate": round(evidence_records / len(new["records"]), 4)
         if new["records"]
@@ -320,9 +454,16 @@ def compare_doc(old: dict[str, Any], new: dict[str, Any]) -> dict[str, Any]:
         "recipes": recipes,
         "dominant": old["dominant"],
         "tables": old["tables"],
-        "examples_only_old": sorted(f"{grade}/{measure}" for grade, measure in only_old)[:8],
-        "examples_only_new": sorted(f"{grade}/{measure}" for grade, measure in only_new)[:8],
+        "examples_only_old": sorted(key_label(key) for key in raw["only_old"])[:8],
+        "examples_only_new": sorted(key_label(key) for key in raw["only_new"])[:8],
     }
+
+
+def key_label(key: tuple[str, ...]) -> str:
+    grade = key[0]
+    measure = key[-1]
+    facet = key[1] if len(key) == 3 else ""
+    return f"{grade}/{measure}" + (f"@{facet}" if facet else "")
 
 
 def p95(values: list[float]) -> float:
@@ -342,6 +483,17 @@ def aggregate(docs: list[dict[str, Any]]) -> dict[str, Any]:
     recall = total_common / total_old if total_old else 0.0
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     covered = sum(1 for item in docs if item["new_fields"] > 0)
+    norm_old = sum(item.get("old_fields_normalized", 0) for item in docs)
+    norm_new = sum(item.get("new_fields_normalized", 0) for item in docs)
+    norm_common = sum(item.get("common_fields_normalized", 0) for item in docs)
+    norm_matches = sum(item.get("value_matches_normalized", 0) for item in docs)
+    norm_precision = norm_common / norm_new if norm_new else 0.0
+    norm_recall = norm_common / norm_old if norm_old else 0.0
+    norm_f1 = (
+        2 * norm_precision * norm_recall / (norm_precision + norm_recall)
+        if norm_precision + norm_recall
+        else 0.0
+    )
     metrics = {
         "documents": len(docs),
         "old_fields": total_old,
@@ -350,6 +502,16 @@ def aggregate(docs: list[dict[str, Any]]) -> dict[str, Any]:
         "precision": round(precision, 4),
         "recall": round(recall, 4),
         "field_f1": round(f1, 4),
+        "field_f1_normalized": round(norm_f1, 4),
+        "precision_normalized": round(norm_precision, 4),
+        "recall_normalized": round(norm_recall, 4),
+        "common_fields_normalized": norm_common,
+        "silent_errors_normalized": norm_common - norm_matches,
+        "silent_error_rate_normalized": round(
+            (norm_common - norm_matches) / norm_common, 4
+        )
+        if norm_common
+        else 0.0,
         "value_match_rate": round(total_matches / total_common, 4) if total_common else 0.0,
         "silent_errors": total_common - total_matches,
         "silent_error_rate": round((total_common - total_matches) / total_common, 4)
@@ -389,9 +551,11 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
         "",
         "| 指标 | 结果 | 门槛 |",
         "|---|---|---|",
-        f"| Field F1 | {metrics['field_f1']:.4f} | ≥ {THRESHOLDS['field_f1']:.2f} |",
+        f"| Field F1（原始符号） | {metrics['field_f1']:.4f} | ≥ {THRESHOLDS['field_f1']:.2f} |",
+        f"| Field F1（归一化符号） | {metrics['field_f1_normalized']:.4f} | 参考 |",
         f"| Value match | {metrics['value_match_rate']:.4f} | ≥ {THRESHOLDS['value_match']:.2f} |",
         f"| 静默错误率 | {metrics['silent_error_rate']:.4f} | ≤ {THRESHOLDS['silent_error_rate']:.2f} |",  # noqa: E501
+        f"| 静默错误率（归一化符号） | {metrics['silent_error_rate_normalized']:.4f} | 参考 |",
         f"| 覆盖率 | {metrics['coverage']:.4f} | ≥ {THRESHOLDS['coverage']:.2f} |",
         f"| p95 延迟 | {metrics['p95_seconds']:.2f}s | ≤ {THRESHOLDS['p95_seconds']:.2f}s |",
         f"| 证据命中率 | {metrics['evidence_rate']:.4f} | 参考 |",
@@ -402,12 +566,13 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
         "",
         "## 2. 文档明细",
         "",
-        "| 文档 | 类型 | 旧字段 | 新字段 | 共同 | 值匹配 | F1 | 静默错误 | 耗时(s) | 状态 |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "| 文档 | 类型 | 旧字段 | 新字段 | 共同 | 值匹配 | F1 | F1归一 | 静默错误 "
+        "| 耗时(s) | 状态 |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for item in payload["documents"]:
         lines.append(
-            "| {doc} | {family} | {old} | {new} | {common} | {match:.2f} | {f1:.3f} | {silent} | {elapsed:.1f} | {status} |".format(  # noqa: E501
+            "| {doc} | {family} | {old} | {new} | {common} | {match:.2f} | {f1:.3f} | {f1n:.3f} | {silent} | {elapsed:.1f} | {status} |".format(  # noqa: E501
                 doc=item["doc_id"][:12],
                 family=item["dominant"],
                 old=item["old_fields"],
@@ -415,6 +580,7 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
                 common=item["common_fields"],
                 match=item["value_match_rate"],
                 f1=item["f1"],
+                f1n=item.get("f1_normalized", 0.0),
                 silent=item["silent_errors"],
                 elapsed=item["elapsed_seconds"],
                 status=item["status"],
@@ -438,7 +604,7 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
             "## 4. 说明",
             "",
             "- 两侧使用同一份表结构：旧 `result.json` 的 tables 重建为 HTML 后输入新系统，OCR/版面识别差异不在本样本内。",  # noqa: E501
-            "- 字段键为 `(grade, measure)`；同一键重复时取首条。",
+            "- 字段键为 `(牌号, 指标, 条件)`；同一键多值时逐一比较并取最佳匹配。",
             "- 数值比较优先使用解析后的 value（1e-6 容差），缺失时比较归一化 raw。",
             "- 结论用于 Q4 数据导入门禁：达标不导入旧文档；未达标输出差异清单并确认导入范围。",
         ]

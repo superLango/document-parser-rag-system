@@ -12,6 +12,7 @@ from lxml import html as lxml_html
 
 from ..contracts import Merge, Page, TableBlock, TableGrid
 from .normalize import (
+    canonical_element,
     clean_text,
     is_footnote_row,
     is_numeric_like,
@@ -23,6 +24,48 @@ from .profile import annotate_table
 TABLE_RE = re.compile(r"<table\b.*?</table>", re.IGNORECASE | re.DOTALL)
 CAPTION_RE = re.compile(r"(?:^|\n)\s*#{0,6}\s*(表\s*[A-Za-z]?\.?\s*\d+(?:\.\d+)?)\s*([^\n]*)")
 TABLE_NUMBER_RE = re.compile(r"表\s*([A-Za-z]?\.?\s*\d+(?:\.\d+)?)")
+# W3：列级元数据。表头路径里出现这些词时，该列（或该列的值域）受对应条件约束。
+CONDITION_COLUMN_MARKERS = (
+    ("温度", ("温度", "temperature", "℃", "°c", "室温", "常温", "高温", "低温")),
+    ("方向", ("方向", "orientation", "direction", "纵向", "横向", "弦向", "径向")),
+    (
+        "规格",
+        (
+            "厚度", "thickness", "直径", "diameter", "尺寸", "规格", "壁厚",
+            "外径", "宽度", "width", "长度", "length", "公称",
+        ),
+    ),
+    ("状态", ("状态", "condition", "temper", "热处理", "交货", "试样", "表面")),
+)
+RANGE_TOKEN_RE = re.compile(
+    r"^(?:[<>≤≥]\s*)?\d+(?:\.\d+)?"
+    r"(?:\s*[~～\-–]\s*(?:[<>≤≥]\s*)?\d+(?:\.\d+)?)?"
+    r"(?:\s*(?:mm|℃|°c))?$",
+    re.IGNORECASE,
+)
+COMBINED_ELEMENT_RE = re.compile(r"^([A-Z][a-z]?(?:\s*[+＋]\s*[A-Z][a-z]?)+)$")
+# 延伸率/断面收缩率永远是百分比，表头里的标距（"2 in. or 50 mm"）不是单位。
+ELONGATION_MARKERS = (
+    "elongation",
+    "reduction of area",
+    "伸长率",
+    "延伸率",
+    "断后伸长",
+    "断面收缩",
+)
+# 数字+单位是限定语（"0.2% offset"、"50 mm gauge"），不能当作列单位。
+NUMERIC_UNIT_RE = re.compile(
+    r"\d+(?:[.,]\d+)?\s*(?:%|mm|cm|mpa|gpa|℃|°c)(?![A-Za-z])",
+    re.IGNORECASE,
+)
+CJK_ELEMENT_LABELS = {
+    "碳": "C", "硅": "Si", "锰": "Mn", "磷": "P", "硫": "S", "镍": "Ni",
+    "铬": "Cr", "钼": "Mo", "铜": "Cu", "钛": "Ti", "铌": "Nb", "钒": "V",
+    "铝": "Al", "钴": "Co", "钨": "W", "硼": "B", "锡": "Sn", "锑": "Sb",
+    "砷": "As", "氮": "N", "氧": "O", "氢": "H", "铁": "Fe", "镁": "Mg",
+    "钙": "Ca", "锆": "Zr", "铅": "Pb", "铋": "Bi", "硒": "Se", "碲": "Te",
+    "钽": "Ta",
+}
 REPEATED_HEADER_KEYS = {
     "级别",
     "牌号",
@@ -149,6 +192,7 @@ def parse_table(
     header_paths = _build_header_paths(rows, header_rows)
     n_cols = max((len(row) for row in rows), default=n_cols)
     units = _collect_units(header_paths, context)
+    column_units, column_conditions, column_elements = _column_metadata(header_paths, n_cols)
     footnotes = _collect_footnotes(node, rows, after_context)
 
     table = TableGrid(
@@ -163,6 +207,9 @@ def parse_table(
         header_paths=header_paths,
         merges=merges,
         units=units,
+        column_units=column_units,
+        column_conditions=column_conditions,
+        column_elements=column_elements,
         footnotes=footnotes,
         raw_html=raw_html[:50000],
     )
@@ -176,6 +223,11 @@ def rebuild_table(table: TableGrid) -> TableGrid:
     table.n_rows = len(table.rows)
     table.n_cols = max((len(row) for row in table.rows), default=0)
     table.header_paths = _build_header_paths(table.rows, table.header_rows)
+    (
+        table.column_units,
+        table.column_conditions,
+        table.column_elements,
+    ) = _column_metadata(table.header_paths, table.n_cols)
     table.blocks = _split_blocks(table)
     return table
 
@@ -598,6 +650,87 @@ def _collect_units(header_paths: list[list[str]], context: str) -> list[str]:
     return units
 
 
+def _column_metadata(
+    header_paths: list[list[str]], n_cols: int
+) -> tuple[list[str], list[str], list[str]]:
+    """W3: per-column units/conditions/elements inherited from header paths."""
+    units: list[str] = []
+    conditions: list[str] = []
+    elements: list[str] = []
+    for path in header_paths:
+        parts = [clean_text(part) for part in path if clean_text(part)]
+        condition = _column_condition(parts)
+        element = _column_element(parts)
+        units.append(_column_unit(parts, condition, element))
+        conditions.append(condition)
+        elements.append(element)
+    while len(units) < n_cols:
+        units.append("")
+        conditions.append("")
+        elements.append("")
+    return units[:n_cols], conditions[:n_cols], elements[:n_cols]
+
+
+def _is_condition_part(text: str) -> bool:
+    lowered = text.lower()
+    return any(
+        marker.lower() in lowered
+        for _, markers in CONDITION_COLUMN_MARKERS
+        for marker in markers
+    )
+
+
+def _column_unit(parts: list[str], condition: str, element: str) -> str:
+    """Unit printed on the measure part of the column, not on its condition."""
+    measure_column = bool(element) or not condition
+    joined = " ".join(parts).lower()
+    if any(marker in joined for marker in ELONGATION_MARKERS):
+        # "Elongation in 2 in. or 50 mm" 的 50 mm 是标距，延伸率单位为 %。
+        return "%"
+    for part in reversed(parts):
+        text = clean_text(part)
+        if RANGE_TOKEN_RE.fullmatch(text):
+            continue
+        if measure_column and _is_condition_part(text):
+            continue
+        # "0.2% Offset"、"50 mm gauge" 里的数字+单位是限定语，不是列单位。
+        text = NUMERIC_UNIT_RE.sub(" ", text)
+        unit = parse_unit(text)
+        if unit:
+            return unit
+    return ""
+
+
+def _column_condition(parts: list[str]) -> str:
+    """Name of the test condition a column is restricted to ("" if none)."""
+    if not parts:
+        return ""
+    if RANGE_TOKEN_RE.fullmatch(clean_text(parts[-1])) and len(parts) == 1:
+        # A bare range header ("≤16") is a thickness/size band.
+        return "规格"
+    text = " ".join(parts).lower()
+    for name, markers in CONDITION_COLUMN_MARKERS:
+        if any(marker.lower() in text for marker in markers):
+            return name
+    return ""
+
+
+def _column_element(parts: list[str]) -> str:
+    """Element symbol a column measures ("Ni", "Ni+Co", ...)."""
+    for part in reversed(parts):
+        text = clean_text(part)
+        combined = COMBINED_ELEMENT_RE.fullmatch(text)
+        if combined:
+            return re.sub(r"\s+", "", combined.group(1)).replace("＋", "+")
+        bare = CJK_ELEMENT_LABELS.get(re.sub(r"[（(][^）)]*[）)]", "", text).strip())
+        if bare:
+            return bare
+        symbol = canonical_element(text)
+        if symbol:
+            return symbol
+    return ""
+
+
 def _collect_footnotes(
     node, rows: list[list[str]], after_context: str = ""
 ) -> list[str]:
@@ -759,6 +892,9 @@ def _split_blocks(table: TableGrid) -> list[TableBlock]:
         header_rows = table.header_rows if start == 0 else _detect_block_header_rows(block_rows)
         header_rows = max(1, min(header_rows, len(block_rows)))
         header_paths = _build_header_paths(block_rows, header_rows)
+        block_units, block_conditions, block_elements = _column_metadata(
+            header_paths, max((len(row) for row in block_rows), default=0)
+        )
         blocks.append(
             TableBlock(
                 block_id=f"{table.table_id}-B{index + 1}",
@@ -766,6 +902,9 @@ def _split_blocks(table: TableGrid) -> list[TableBlock]:
                 header_rows=header_rows,
                 header_paths=header_paths,
                 rows=block_rows,
+                column_units=block_units,
+                column_conditions=block_conditions,
+                column_elements=block_elements,
             )
         )
     return blocks

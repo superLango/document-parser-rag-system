@@ -1,0 +1,270 @@
+{
+  "standard_id": "ASTM B265",
+  "edition": "25",
+  "document_sha256": "",
+  "page_count": 12,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "specifiedthickness,in.(mm)",
+        "permissiblevariationsinthickness,plusandminus,in.(mm)forcoldrolledsheet",
+        "permissiblevariationsinthicknessplusandminus,in.(mm)forhotrolledsheet/widthto84in.(2134mm),incl",
+        "permissiblevariationsinthicknessplusandminus,in.(mm)forhotrolledsheet/widthover84in.(2134mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "specifiedwidth,in.(mm),forthicknessesunder3/16in.",
+        "permissiblevariationsinwidth,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "theactualweightofanyoneitemofanorderedthicknessandsizeinanyfinishislimitedinoverweightbythefollowingtolerance:anyitemoffivesheetsorless,oranyitemestimatedtoweigh200lb(91kg)orless,mayactuallyweighasmuchas10%overtheestimatedweight.anyitemofmorethanfivesheetsandestimatedtoweighmorethan200lbmayactuallyweighasmuchas71%overtheestimatedweight.thereisnoundertoleranceinweightfortitaniumsheets,undertolerancebeingrestrictedbythepermissiblethicknessvariations.onlyrandom(ormillsize)sheetsmaybeorderedonasquarefootbasis,andthenumberofsquarefeetshippedmayexceedthenumberorderedbyasmuchas5%。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "specifiedlength,in.(mm)",
+        "specifiedwidth,in.(mm)",
+        "permissiblevariationsin.(mm)/width",
+        "permissiblevariationsin.(mm)/length"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 10,
+      "header_signature": [
+        "specifiedthickness,in.(mm)",
+        "48(1219)orunder",
+        "48,exclto60(1219to1524),excl",
+        "60to72,(1524to1829),excl",
+        "72to84(1829to2134),excl",
+        "84to96(2134to2438),excl",
+        "96to108(2438to2743),excl",
+        "108to120(2743to3048),excl",
+        "120to144(3048to3658),excl",
+        "144(3658)andover"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 10,
+      "header_signature": [
+        "grade",
+        "tensilestrength,min",
+        "tensilestrength,min",
+        "yieldstrength,0.2%offset",
+        "yieldstrength,0.2%offset",
+        "yieldstrength,0.2%offset",
+        "yieldstrength,0.2%offset",
+        "elongationin2in,or50mm,min,%",
+        "bendtest(radiusofmandrel)b",
+        "bendtest(radiusofmandrel)b"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 21,
+      "header_signature": [
+        "grade",
+        "unsnumber",
+        "carbon,max",
+        "oxygenrangeormax.",
+        "nitrogen,max.",
+        "hydrogen,max.",
+        "ironrangeormax.",
+        "aluminum",
+        "vanadium",
+        "palladium",
+        "ruthenium",
+        "nickel",
+        "molybdenum",
+        "chromium",
+        "cobalt",
+        "zirconium",
+        "niobium",
+        "tin",
+        "silicon",
+        "otherelements,elements,max,each",
+        "otherelements,elements,max,total"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 19,
+      "header_signature": [
+        "grade",
+        "unsnumber",
+        "carbon,max.",
+        "oxygenrangeormax.",
+        "nitrogen,hydrogen,max.",
+        "ironrangeormax.",
+        "aluminum",
+        "vanadium",
+        "palladium,ruthenium",
+        "nickel",
+        "molybdenum",
+        "chromium",
+        "cobalt",
+        "zirconium",
+        "niobium",
+        "tin",
+        "silicon",
+        "otherelements,elements,max.total",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "atminimum,theanalysisofsamplesfromthetopandbottomoftheingotshallbecompletedandreportedforallelements(excepthydrogen-seefootnoteb)listedfortherespectivegradeinthistable."
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "element",
+        "productanalysislimits,maxorrange,%",
+        "permissiblevariationinproductanalysis"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 7,
+      "header_signature": [
+        "specifiedthickness,in.(mm)",
+        "permissiblevariationsfromspecifiedwidth,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedwidth,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedwidth,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedwidth,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedwidth,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedwidth,plusandminus,forwidthsgiven,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "specifiedlength,ft(m)",
+        "permissiblevariationsinlength,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 9,
+      "header_signature": [
+        "specifiedthickness,in.(mm)",
+        "permissiblevariationsfromspecifiedthickness,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedthickness,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedthickness,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedthickness,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedthickness,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedthickness,plusandminus,forwidthsgiven,in.(mm)",
+        "permissiblevariationsfromspecifiedthickness,plusandminus,forwidthsgiven,in.(mm)",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 8,
+      "header_signature": [
+        "specifiedlength,in.(mm)",
+        "specifiedwidth,in.(mm)",
+        "permissiblevariationsoverspecifieddimensionforthicknessesgiven,in.(mm)",
+        "permissiblevariationsoverspecifieddimensionforthicknessesgiven,in.(mm)",
+        "permissiblevariationsoverspecifieddimensionforthicknessesgiven,in.(mm)",
+        "permissiblevariationsoverspecifieddimensionforthicknessesgiven,in.(mm)",
+        "permissiblevariationsoverspecifieddimensionforthicknessesgiven,in.(mm)",
+        "permissiblevariationsoverspecifieddimensionforthicknessesgiven,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 10,
+      "header_signature": [
+        "specifiedthickness,in.(mm)",
+        "permissiblevariationsfromaflatsurfaceforwidthorlengthgiven,in.(mm)",
+        "permissiblevariationsfromaflatsurfaceforwidthorlengthgiven,in.(mm)",
+        "permissiblevariationsfromaflatsurfaceforwidthorlengthgiven,in.(mm)",
+        "permissiblevariationsfromaflatsurfaceforwidthorlengthgiven,in.(mm)",
+        "permissiblevariationsfromaflatsurfaceforwidthorlengthgiven,in.(mm)",
+        "permissiblevariationsfromaflatsurfaceforwidthorlengthgiven,in.(mm)",
+        "permissiblevariationsfromaflatsurfaceforwidthorlengthgiven,in.(mm)",
+        "permissiblevariationsfromaflatsurfaceforwidthorlengthgiven,in.(mm)",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "specifiedthickness,in.(mm)",
+        "to84(2134),incl/tolerancesoverspecifiedthickness,in.(mm)",
+        "over84(2134)to120(3048),incl/tolerancesoverspecifiedthickness,in.(mm)",
+        "over120(3048)to144(3658),incl/tolerancesoverspecifiedthickness,in.(mm)",
+        "over144(3658)/tolerancesoverspecifiedthickness,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "applicablegrades",
+        "minimumelongation",
+        "bendradius"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "mechanical_properties_v1": "1.6.51",
+    "chemical_composition_v1": "1.1.217",
+    "dimension_v1": "1.0.2"
+  },
+  "sample_doc_id": "210392d3-92c2-4f3a-b70c-2404152d5789",
+  "created_at": "2026-11-15T08:40:48+00:00"
+}

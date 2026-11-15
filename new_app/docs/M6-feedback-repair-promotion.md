@@ -42,9 +42,13 @@
   → 沙箱定向重解析 + 回归
   → VerificationPackage
   → 用户验证
-      → 通过：原子晋升 stable
+      → 通过：进入 shadow 灰度（不直接改 stable）
+          → 满 N 份双跑通过：默认 ready，等人工 promote/abandon
+          → 显式 SHADOW_AUTO_PROMOTE=true 才自动晋升 stable
       → 不通过：丢弃候选，stable 不变
 ```
+
+> 审批语义（方案 B，2026-11-12 确认）：人工 approve 是必要条件；AI 修复不能直接进入 stable。超时批次置 `expired`，反馈退回 `verified`，由人工重新审批或放弃。
 
 ## 2. 范围与不做
 
@@ -160,10 +164,13 @@ open → processing → proposed → verifying → verified → promoted
 ```text
 POST /v1/feedback/{id}/verify {decision: approve}
   → 校验 verification 通过
-  → 乐观锁读取 stable
-  → 写 promotions
-  → 原子更新 recipe_channels.stable / engine_channels.stable
-  → 发 promotion.completed
+  → 候选 promote 到 shadow（写 promotions(channel=shadow)）
+  → 启动 N 份文档双跑
+  → 满额：默认 ready（metrics.waiting_for=manual_promotion）
+       → 人工 POST /v1/shadow/batches/{id}/promote
+       → 或     POST /v1/shadow/batches/{id}/abandon
+  → 仅当 SHADOW_AUTO_PROMOTE=true：满额后自动执行下方 PromotionWorkflow
+  → PromotionWorkflow（乐观锁 → 写 promotions → 原子更新 stable → 发 promotion.completed）
 ```
 
 拒绝：
@@ -202,7 +209,8 @@ POST /v1/feedback/{id}/verify {decision: reject, reason}
 - [x] Triage 输出根因 + 修复范围 + 证据。
 - [x] Repair 生成候选包/补丁 + 测试计划。
 - [x] 沙箱可定向重解析并生成 VerificationPackage。
-- [x] 用户 approve 后 stable 原子切换。
+- [x] 用户 approve 后进入 shadow；满额默认 ready，人工 promote 后 stable 原子切换。
+- [x] shadow 超时置 expired，反馈退回 verified；提供人工强制晋升与放弃出口。
 - [x] 用户 reject 后 candidate 丢弃，stable 不变。
 - [x] 所有步骤有 run_events 审计。
 

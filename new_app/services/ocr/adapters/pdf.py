@@ -3,6 +3,7 @@ from html import escape
 
 import pymupdf
 
+from ..algorithms.text_tables import build_table
 from ..config import settings
 from ..contracts import OcrRequest, OcrResult, Page
 from .base import AdapterOutput, OcrBackendError
@@ -68,11 +69,17 @@ def _page_markdown(page) -> str:
         tables = page.find_tables()
     except Exception:
         tables = None
+    found = False
     if tables is not None:
         for table in tables.tables:
             html = _table_html(table)
             if html:
                 items.append((float(table.bbox[1]), html))
+                found = True
+    if not found and settings.ocr_text_table_fallback:
+        recovered = build_table(page.get_text("words"))
+        if recovered:
+            items.append((recovered.y0, recovered.html))
     items.sort(key=lambda item: item[0])
     return "\n\n".join(value for _, value in items)
 

@@ -1,0 +1,85 @@
+{
+  "standard_id": "AMS 4108",
+  "edition": "G",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "aerospacematerialspecification",
+        "ams4108tm",
+        "rev.g"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 3,
+      "header_signature": [
+        "element",
+        "min",
+        "max"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "nominalthicknessattimeofheattreatmentinches",
+        "specimenorientation",
+        "tensilestrengthksi",
+        "yieldstrengthat0.2%offsetksi",
+        "elongationin4d%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "nominalthicknessattimeofheattreatmentmillimeters",
+        "specimenorientation",
+        "tensilestrengthmpa",
+        "yieldstrengthat0.2%offsetmpa",
+        "elongationin4d%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "specimenorientation",
+        "nominalthicknessinches",
+        "minimumkicksisqrtinch"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "specimenorientation",
+        "nominalthicknessmillimeters",
+        "nominalthicknessmillimeters",
+        "minimumkicmpasqrtm"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "a3623d08-056c-4230-90a9-edab67800732",
+  "created_at": "2026-11-14T16:32:01+00:00"
+}

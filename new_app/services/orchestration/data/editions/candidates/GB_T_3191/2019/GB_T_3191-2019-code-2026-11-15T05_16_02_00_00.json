@@ -1,0 +1,47 @@
+{
+  "candidate_id": "GB/T 3191-2019-code-2026-11-15T05:16:02+00:00",
+  "standard_id": "GB/T 3191",
+  "edition": "2019",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "profile_changed: 表3,方棒或六角棒的倒角半径 profile admin -> unknown",
+    "profile_changed: 表10,棒材高温持久纵向拉伸力学性能 profile admin -> mechanical_properties",
+    "profile_changed: 表12,棒材粗晶环 profile admin -> unknown",
+    "missing_table: t1,t2,--棒材翘起端的两侧端点与平台间的间隙值。 table expected by the edition profile was not found",
+    "profile_changed: 4.4,高温持久拉伸力学性能 profile admin -> mechanical_properties",
+    "profile_changed: , profile admin -> unknown",
+    "missing_table: 特殊的高抗拉强度性能要求;,特殊的高抗拉强度性能要求; table expected by the edition profile was not found",
+    "missing_table: 特殊,低倍组织粗晶环级别要求; table expected by the edition profile was not found",
+    "missing_table: 特殊包装要求; table expected by the edition profile was not found"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [
+      "t1,t2,--棒材翘起端的两侧端点与平台间的间隙值。",
+      "特殊的高抗拉强度性能要求;,特殊的高抗拉强度性能要求;",
+      "特殊,低倍组织粗晶环级别要求;",
+      "特殊包装要求;"
+    ],
+    "profile_changes": [
+      "表3,方棒或六角棒的倒角半径: profile admin -> unknown",
+      "表10,棒材高温持久纵向拉伸力学性能: profile admin -> mechanical_properties",
+      "表12,棒材粗晶环: profile admin -> unknown",
+      "4.4,高温持久拉伸力学性能: profile admin -> mechanical_properties",
+      ",: profile admin -> unknown"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T05:16:02+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

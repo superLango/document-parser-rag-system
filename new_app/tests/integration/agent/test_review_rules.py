@@ -5,7 +5,7 @@ import asyncio
 from hanson_contracts import AgentResult, ReviewRequest
 
 from services.review.config import Settings
-from services.review.rules import run_rules
+from services.review.rules import run_intelligence_rules, run_rules
 from services.review.service import ReviewService
 
 
@@ -51,6 +51,41 @@ def _records() -> list[dict]:
 
 def _evidence() -> list[dict]:
     return [{"evidence_id": "E1", "table_id": "T1", "page_no": 1, "cells": {}}]
+
+
+def test_intelligence_rules_flag_conflicts_and_coverage() -> None:
+    findings = run_intelligence_rules(
+        {
+            "stats": {
+                "qualitative_items": 2,
+                "qualitative_records": 1,
+                "references": {"unresolved": 3},
+            },
+            "qualitative_items": [{"feature": "晶粒度"}],
+        },
+        {
+            "items": [
+                {
+                    "feature": "尺寸",
+                    "status": "probable",
+                    "sources": ["clause"],
+                    "conflicts": ["method:GB/T 702!=GB/T 706"],
+                },
+                {
+                    "feature": "低倍",
+                    "status": "probable",
+                    "sources": ["clause"],
+                    "conflicts": [],
+                },
+            ]
+        },
+        {"stats": {"unresolved": 3}},
+    )
+    rule_ids = {finding.rule_id for finding in findings}
+    assert "DOC-INVENTORY-CONFLICT" in rule_ids
+    assert "DOC-QUALITATIVE-MISSING" in rule_ids
+    assert "DOC-REFERENCE-UNRESOLVED" in rule_ids
+    assert "DOC-CLAUSE-UNMAPPED" in rule_ids
 
 
 def test_rules_cover_injected_errors() -> None:

@@ -21,6 +21,13 @@ class CreateRunIn(BaseModel):
     parse_profile: str = "standard"
 
 
+class ReparseIn(BaseModel):
+    """Optional parser bundle pin for candidate validation runs."""
+
+    parser_version: str | None = None
+    reuse_ocr: bool = False
+
+
 class RunOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -29,9 +36,11 @@ class RunOut(BaseModel):
     document_version: int
     status: str
     stage: str
+    progress: int = 0
     trace_id: str
     recipe_channel: str
     engine_version: str
+    parser_version: str | None = None
     result_key: str | None
     error_code: str | None
     created_at: datetime

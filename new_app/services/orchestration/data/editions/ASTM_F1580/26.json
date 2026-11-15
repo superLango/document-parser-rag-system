@@ -1,0 +1,40 @@
+{
+  "standard_id": "ASTM F1580",
+  "edition": "26",
+  "document_sha256": "",
+  "page_count": 6,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 9,
+      "header_signature": [
+        "element",
+        "unalloyedtipowdera%(mass/mass)/min",
+        "unalloyedtipowdera%(mass/mass)/max",
+        "tispongepowderb%(mass/mass)/min",
+        "tispongepowderb%(mass/mass)/max",
+        "ti-6al-4vpowderc%(mass/mass)/min",
+        "ti-6al-4vpowderc%(mass/mass)/max",
+        "ti-6al-4velipowderd%(mass/mass)/min",
+        "ti-6al-4velipowderd%(mass/mass)/max"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "element",
+        "elementvariationunderminorovermax%(mass/mass)"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3"
+  },
+  "sample_doc_id": "4a368fcd-5ca8-4745-a85f-03730ab20957",
+  "created_at": "2026-11-15T06:38:57+00:00"
+}

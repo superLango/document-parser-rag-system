@@ -1,0 +1,204 @@
+{
+  "standard_id": "GB/T 3621",
+  "edition": "1994",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "表1",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号/ta0、ta1、ta2、ta3、ta5、ta6、ta7、ta9、ta10、tb2、tc1、tc2、tc3、tc4",
+        "制造方法/热轧/冷轧",
+        "供应状态/热加工状态(r)退火状态(m)/冷加工状态(y)退火状态(m)",
+        "规格厚度×宽度×长度mm/(4.1~60.0)×(400~3000)×(1000~4000)/(0.3~4.0)×(400~1000)×(1000~3000)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "编号",
+        "名称"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "厚度允许偏差厚度",
+        "400~1000",
+        ">1000~2000",
+        ">2000"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3",
+      "profile": "admin",
+      "n_cols": 5,
+      "header_signature": [
+        "厚度",
+        "宽度",
+        "宽度允许偏差",
+        "长度",
+        "长度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "不平度mm/m不大于厚度,mm",
+        "≤2000",
+        ">2000"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "板材厚度mm",
+        "室温力学性能不小于/抗拉强度σb/n/mm2",
+        "室温力学性能不小于/规定残余伸长应力σr0.2/n/mm2",
+        "室温力学性能不小于/伸长率δ3%"
+      ],
+      "measures": [
+        "抗拉强度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "编号",
+        "名称"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "板材厚度mm",
+        "室温力学性能不小于/抗拉强度σb/n/mm2",
+        "室温力学性能不小于/规定残余伸长应力σ10.2/n/mm2",
+        "室温力学性能不小于/伸长率δs%"
+      ],
+      "measures": [
+        "抗拉强度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "351"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "板材厚度mm",
+        "室温力学性能不小于/抗拉强度σb/n/mm2",
+        "室温力学性能不小于/规定残余伸长应力σr0.2/n/mm2",
+        "室温力学性能不小于/伸长率δ%%"
+      ],
+      "measures": [
+        "抗拉强度"
+      ]
+    },
+    {
+      "caption": "表6",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "合金牌号",
+        "试验温度°c",
+        "高温力学性能/抗拉强度σb,n/mm/不小于",
+        "高温力学性能/持久强度σ100h,n/mm/不小于"
+      ],
+      "measures": [
+        "抗拉强度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "352"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "板材厚度mm",
+        "弯曲角α,度不小于"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "353"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "编号",
+        "名称"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "33.5"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "27916acb-f402-46ed-92b0-447d82749151",
+  "created_at": "2026-11-15T03:39:09+00:00"
+}

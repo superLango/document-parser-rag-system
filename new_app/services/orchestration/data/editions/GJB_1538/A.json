@@ -1,0 +1,1905 @@
+{
+  "standard_id": "GJB 1538",
+  "edition": "A",
+  "document_sha256": "",
+  "page_count": 37,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "fl",
+        "6210"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gjb",
+        "1538a-2008"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "代替gjb1538-1992"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "标题"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "2008-03-17",
+        "发布"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "前言"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "增加了tb6钛合金棒材产品的各项有关规定;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "序号",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "1",
+        "范围"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2",
+        "规范性引用文件"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t228-2002",
+        "金属材料",
+        "室温拉伸试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t4161",
+        "金属材料平面应变断裂韧度kic试验方法"
+      ],
+      "measures": [
+        "断裂韧度",
+        "kic"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t4338",
+        "金属材料",
+        "高温拉伸试验"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t5168",
+        "两相钛合金高低倍组织检验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "3要求"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.1",
+        "材料"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.1.2",
+        "自耗电极不允许使用钨极氩弧焊焊接。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.2",
+        "牌号、状态、规格"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "供应状态",
+        "规格mm/直径",
+        "规格mm/长度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.3",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "序号",
+        "项目名称",
+        "备注"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 14,
+      "header_signature": [
+        "牌号",
+        "主要成分%/ti",
+        "主要成分%/al",
+        "主要成分%/v",
+        "主要成分%/fe",
+        "杂质元素,不大于%/fe",
+        "杂质元素,不大于%/si",
+        "杂质元素,不大于%/c",
+        "杂质元素,不大于%/n",
+        "杂质元素,不大于%/h",
+        "杂质元素,不大于%/o",
+        "杂质元素,不大于%/y",
+        "杂质元素,不大于%/其他a/单个",
+        "杂质元素,不大于%/其他a/总和"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.4",
+        "力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表3"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "牌号",
+        "直径mm",
+        "抗拉强度rmn/mm2/不小于",
+        "规定非比例伸长应力rp0.2n/mm2/不小于",
+        "断后伸长率a%/纵向/不小于",
+        "断后伸长率a%/横向/不小于",
+        "断面收缩率z%/纵向/不小于",
+        "断面收缩率z%/横向/不小于"
+      ],
+      "measures": [
+        "抗拉强度",
+        "断后伸长率",
+        "a",
+        "断面收缩率",
+        "z"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "牌号",
+        "直径mm",
+        "取样方向",
+        "抗拉强度rmn/mm2/不小于",
+        "规定非比例伸长应力rp0.2n/mm2/不小于",
+        "断后伸长率a%/不小于",
+        "断面收缩率z%/不小于",
+        "平面应变断裂韧度kjn/mm2·sqrtm/不小于"
+      ],
+      "measures": [
+        "抗拉强度",
+        "断后伸长率",
+        "a",
+        "断面收缩率",
+        "z",
+        "断裂韧度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表5"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "牌号",
+        "直径mm",
+        "取样方向",
+        "试验温度°c",
+        "抗拉强度rmn/mm2/不小于",
+        "断后伸长率a%/不小于",
+        "断面收缩率z%/不小于",
+        "持久强度σ100n/mm2"
+      ],
+      "measures": [
+        "抗拉强度",
+        "断后伸长率",
+        "a",
+        "断面收缩率",
+        "z"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "3.5",
+        "β",
+        "转变温度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6",
+        "超声波检验"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表6"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 8,
+      "header_signature": [
+        "牌号",
+        "棒材直径mm",
+        "单个不连续性指示/当量平底孔直径mm",
+        "多个不连续性指示/当量平底孔直径mm",
+        "多个不连续性指示/间距mm",
+        "长条形不连续性指示/当量平底孔直径mm",
+        "长条形不连续性指示/长度mm",
+        "非几何因素引起的底波损失"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.7",
+        "尺寸和外形"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "牌号",
+        "直径mm",
+        "允许偏差mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 （续）",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "牌号",
+        "直径mm",
+        "允许偏差mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.8",
+        "低倍组织"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.9",
+        "显微组织"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.10",
+        "表面状况"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "棒材表面粗糙度的ra值应不大于3.2μm。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.11",
+        "外观质量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.12",
+        "产品标志"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "b)",
+        "产品牌号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "c)",
+        "熔炼炉号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "g)",
+        "锭节号。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "f)",
+        "批号:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4",
+        "质量保证规定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.1",
+        "检验分类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2",
+        "质量一致性检验"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.1",
+        "组批"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.2",
+        "检验项目及取样"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 5,
+      "header_signature": [
+        "检验项目",
+        "取样位置",
+        "取样数量",
+        "要求的章条号",
+        "检验或试验方法的章条号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "s"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表9"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 5,
+      "header_signature": [
+        "棒材直径mm",
+        "拉伸性能",
+        "拉伸性能",
+        "kic",
+        "横向显微组织"
+      ],
+      "measures": [
+        "kic"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表10"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 5,
+      "header_signature": [
+        "棒材直径mm",
+        "拉伸性能",
+        "拉伸性能",
+        "kic",
+        "横向显微组织"
+      ],
+      "measures": [
+        "kic"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.3",
+        "检验结果的判定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3",
+        "检验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "6"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "验时选放大倍数为100倍。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5",
+        "交货准备"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.2",
+        "质量证明书"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "f)",
+        "β",
+        "转变温度;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "i)",
+        "净重和件数;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6",
+        "说明事项"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "6.1",
+        "预定用途"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "c)",
+        "高温力学性能(见3.3.3);"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "序号",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×1",
+        "×1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "9"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "c)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×1",
+        "×1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "10"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "×1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "a)"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "11"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "12"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "f"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "13"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "编号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "15"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "k)",
+        "×1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "16"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "序号",
+        "数值"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "18"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "序号",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "b)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "19"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "p"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "20"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×250",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×250",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "21"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×250",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×250",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×250",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "22"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×250",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "图4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×250",
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×250"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "23"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "24"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "25"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100/q)",
+        "×100/q)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "26"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "27"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "×100",
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "图5"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "28"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "数值",
+        "单位"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "×200"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "数值",
+        "单位"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "29"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "×200"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "d)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "×200"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "数量",
+        "200"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "30"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×200"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "×200"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "6-9,×200"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "31"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "×200"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "j)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "k"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "×100"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "图6"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "32"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "附录a"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "(规范性附录)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "a.5",
+        "耦合剂"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "33"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "图a.1"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表a.1"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "合金牌号",
+        "被检验棒材直径",
+        "平底孔直径"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "34"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "式中:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "d",
+        "被检验棒材直径,单位为毫米(mm);"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "v1",
+        "超声波在水中传播的速度,单位为米每秒(m/s);"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "图a.2"
+      ],
+      "measures": [
+        "a"
+      ]
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "chemical_composition_v1": "1.1.217",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "fa844d55-b5e6-4285-87b5-3f83e10467a6",
+  "created_at": "2026-11-15T08:56:35+00:00"
+}

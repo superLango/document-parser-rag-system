@@ -1,0 +1,90 @@
+﻿[pdf] 50 documents
+[pdf 1/50] GBT 14845-2026.pdf -> STRUCTURED_READY
+[pdf 2/50] GBT 14976-2025.pdf -> STRUCTURED_READY
+[pdf 3/50] GBT 16598-2013.pdf -> STRUCTURED_READY
+[pdf 4/50] GBT 1591-2018.pdf -> STRUCTURED_READY
+[pdf 5/50] GBT 2054-2023.pdf -> STRUCTURED_READY
+[pdf 6/50] GBT 24627-2023.pdf -> STRUCTURED_READY
+[pdf 7/50] GBT 2965-1996过期.pdf -> STRUCTURED_READY
+[pdf 8/50] GBT 3280-2015.pdf -> STRUCTURED_READY
+[pdf 9/50] GBT 3620.1-2016.pdf -> STRUCTURED_READY
+[pdf 10/50] GBT 3623-2022.pdf -> STRUCTURED_READY
+[pdf 11/50] GBT 3621-1994 过期.pdf -> STRUCTURED_READY
+[pdf 12/50] GBT 8547-2019.pdf -> STRUCTURED_READY
+[pdf 13/50] GBT 8732-2014.pdf -> STRUCTURED_READY
+[pdf 14/50] ISO 5832-2-2018-过期.pdf -> STRUCTURED_READY
+[pdf 15/50] ISO 5832-3-2021.pdf -> STRUCTURED_READY
+[pdf 16/50] GJB 5040-2001 航空用钢锻件规范.pdf -> STRUCTURED_READY
+[pdf 17/50] AMS-QQ-A250-4B.pdf -> STRUCTURED_READY
+[pdf 18/50] AMS4901V.pdf -> STRUCTURED_READY
+[pdf 19/50] AMS4911T.pdf -> STRUCTURED_READY
+[pdf 20/50] AMS4943M.pdf -> STRUCTURED_READY
+[pdf 21/50] AMS4967N.pdf -> STRUCTURED_READY
+[pdf 22/50] ASME SA264-2021-过期.pdf -> STRUCTURED_READY
+[pdf 23/50] AMS5618K.pdf -> STRUCTURED_READY
+[pdf 24/50] ASME SB265-2021-过期.pdf -> STRUCTURED_READY
+[pdf 25/50] ASME SB338-2025.pdf -> STRUCTURED_READY
+[pdf 26/50] ASTM B338-17(2026)--+.pdf -> STRUCTURED_READY
+[pdf 27/50] ASME SB575-2025.pdf -> STRUCTURED_READY
+[pdf 28/50] ASTM B381-13(2019)-过期.pdf -> STRUCTURED_READY
+[pdf 29/50] ASTM B861-24.pdf -> STRUCTURED_READY
+[pdf 30/50] ASTM B898-20-过期.pdf -> STRUCTURED_READY
+[pdf 31/50] ASTM F2063-26--.pdf -> STRUCTURED_READY
+[pdf 32/50] NB-T 47019.8-2011 锅炉、热交换器用管订货技术条件 第8部分 有色金属 钛和钛合金.pdf -> STRUCTURED_READY
+[pdf 33/50] HB 20079-2012 航空用高强度沉淀硬化不锈钢锻件规范.pdf -> STRUCTURED_READY
+[pdf 34/50] YST 397-2015.pdf -> STRUCTURED_READY
+[pdf 35/50] YST 1077-2015.pdf -> STRUCTURED_READY
+[pdf 36/50] AMS4050K.pdf -> STRUCTURED_READY
+[pdf 37/50] YST 579-2014.pdf -> STRUCTURED_READY
+[pdf 38/50] AMS4900S.pdf -> STRUCTURED_READY
+[pdf 39/50] AMS4108G--.pdf -> STRUCTURED_READY
+[pdf 40/50] AMS4902L-过期.pdf -> STRUCTURED_READY
+[pdf 41/50] AMS4901U-过期.pdf -> STRUCTURED_READY
+[pdf 42/50] AMS4902M.pdf -> STRUCTURED_READY
+[pdf 43/50] AMS4911R-过期.pdf -> STRUCTURED_READY
+[pdf 44/50] AMS4914J.pdf -> STRUCTURED_READY
+[pdf 45/50] AMS4911S-过期.pdf -> STRUCTURED_READY
+[pdf 46/50] AMS4928U-过期.pdf -> STRUCTURED_READY
+[pdf 47/50] AMS4928X.pdf -> STRUCTURED_READY
+[pdf 48/50] AMS4931C-过期.pdf -> STRUCTURED_READY
+[pdf 49/50] AMS4931H.pdf -> STRUCTURED_READY
+[pdf 50/50] AMS4944M-过期.pdf -> STRUCTURED_READY
+{
+  "pdf": {
+    "documents": 50,
+    "structured_ready": 50,
+    "failed": 0,
+    "status_counts": {
+      "STRUCTURED_READY": 50
+    },
+    "records": 160,
+    "fields": 533,
+    "tables": 226,
+    "review_findings": 83,
+    "p50_seconds": 10.16,
+    "p95_seconds": 12.31,
+    "max_seconds": 16.19,
+    "stages": {
+      "ocr": {
+        "samples": 50,
+        "p50_seconds": 2.15,
+        "p95_seconds": 4.64
+      },
+      "routing": {
+        "samples": 50,
+        "p50_seconds": 0.24,
+        "p95_seconds": 0.48
+      },
+      "sandbox": {
+        "samples": 50,
+        "p50_seconds": 0.95,
+        "p95_seconds": 1.43
+      },
+      "review": {
+        "samples": 50,
+        "p50_seconds": 6.11,
+        "p95_seconds": 6.82
+      }
+    }
+  }
+}

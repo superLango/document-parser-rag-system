@@ -51,6 +51,9 @@ flowchart TB
   ORCH --> OBS
 ```
 
+> 服务口径（D-017，2026-11-12 确认）：**业务微服务固定 7 个**（api-gateway、orchestration、ocr、agent、sandbox、recipe-registry、review）。
+> `layout_api`、GLM-OCR、layout 模型等属于**外部模型服务**，由 OCR 服务通过适配器调用，不计入业务微服务数量，也不允许其他业务服务直连。
+
 ### 0.3 核心决策
 
 | # | 决策 | 说明 |
@@ -189,7 +192,7 @@ flowchart TB
 | Q1 模型访问 | 共**三个地址**：旧代码两种 + 新增 `192.168.1.35`；任一地址连续 **10 秒**无法连接自动切换至下一个可用地址；防抖/回切；Qwen 固定 **35B**，其他模型版本参考旧代码 |
 | Q2 窗口 | 并发 **4**、与 GLM/Layout 共跑，基准选择 32K/64K/128K；默认 64K 可配 |
 | Q2 看门狗 | 监控模型服务器剩余内存，低于阈值主动终止测试进程，防止死机 |
-| Q3 沙箱 | containerd/Kata/gVisor 按安全/开销/兼容性/运维评分，M4 PoC 后选定 |
+| Q3 沙箱 | containerd/Kata/gVisor 评分后选定 **containerd + runc**（D-007，M4 已落地）；Kata 保留为高隔离场景的后续增强 |
 | Q4 数据 | 不默认全量导入旧数据；仅导入业务词典；重构后效果对比，达标则全部重新生成，未达标再确认导入范围 |
 | Q5 前端视觉 | 完全沿用现有产品风格规范 |
 | Q6 对象存储 | 本地开发/测试统一使用 MinIO；生产 S3 兼容 |
@@ -1174,7 +1177,10 @@ Candidate 构建
   → 沙箱验证（目标修复 + 回归）
   → VerificationPackage
   → 用户 approve
-  → PromotionWorkflow：
+  → 进入 shadow 灰度（人工 approve 是必要条件）
+  → 连续 N 份文档双跑通过
+  → 默认停在 ready，等待人工 promote / abandon
+  → （可选）SHADOW_AUTO_PROMOTE=true 时自动执行 PromotionWorkflow
       1. 读取 stable 当前版本（乐观锁）
       2. 校验 candidate digest/测试/审批人
       3. 写 promotions
@@ -1183,6 +1189,8 @@ Candidate 构建
       6. 失效缓存
 ```
 
+- 审批语义（方案 B，2026-11-12 确认）：`approve` 只进入 shadow，不直接改 stable；shadow 满额后默认 `ready`，需人工二次确认；`SHADOW_AUTO_PROMOTE=false` 为默认值，显式开启才自动晋升。
+- 超时与出口：批次带 `deadline_at`，超时置 `expired` 并把反馈退回 `verified`；提供 `promote`（强制晋升）与 `abandon`（放弃灰度）两个人工出口，均写 `promotions` 审计。
 - 回滚：`rollback` 指向上一 stable。
 - 丢弃：候选标记 `discarded`，stable 不变。
 - 引擎版本同理：`engine_channels.stable` 指向镜像 digest。
@@ -1315,10 +1323,10 @@ artifacts.json
 | containerd + gVisor | 用户态内核、隔离强 | 兼容性、I/O 开销 |
 | Kata Containers | VM 级隔离 | 启动速度、资源开销、K8s 兼容 |
 
-- 评估维度与权重：安全性 30%、资源开销 25%、K8s/架构兼容性 25%、运维复杂度 20%。
-- M4 阶段做 PoC + 评分矩阵，最终选型写入 [项目决策记录](decision-log.md) D-007。
-- 当前不预先锁定最终运行时；但硬性隔离要求不变：无网络、只读 rootfs、非 root、cap drop、seccomp、CPU/内存/PID/时长限制。
-- 选定运行时后再完成节点池、RuntimeClass、镜像与监控配置。
+- M4 阶段完成 PoC + 评分，最终选型已写入 [项目决策记录](decision-log.md) D-007：**containerd + runc**（Compose 下通过 Docker-outside-of-Docker 在宿主 daemon 创建短生命周期容器）。
+- Kata Containers 未纳入当前交付，保留为高隔离场景的后续增强；gVisor 可选。
+- 硬性隔离要求不变：无网络、只读 rootfs、非 root、cap drop、seccomp、CPU/内存/PID/时长限制。
+- 节点池、RuntimeClass、镜像与监控配置在 K8s 部署阶段落地。
 
 ---
 

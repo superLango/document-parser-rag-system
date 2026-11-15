@@ -1,0 +1,1114 @@
+{
+  "standard_id": "GB/T 3280",
+  "edition": "2015",
+  "document_sha256": "",
+  "page_count": 48,
+  "tables": [
+    {
+      "caption": "表1 公称尺寸范围",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "形态",
+        "公称厚度",
+        "公称宽度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 宽钢带及卷切钢板、纵剪宽钢带及卷切钢带Ⅰ的厚度允许偏差 单位为毫米",
+      "profile": "dimension",
+      "n_cols": 6,
+      "header_signature": [
+        "公称厚度",
+        "pt.a",
+        "pt.a",
+        "pt.b",
+        "pt.b",
+        "pt.b"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表3 窄钢带及卷切钢带Ⅱ的厚度允许偏差",
+      "profile": "dimension",
+      "n_cols": 7,
+      "header_signature": [
+        "公称厚度",
+        "pt.a",
+        "pt.a",
+        "pt.a",
+        "pt.b",
+        "pt.b",
+        "pt.b"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表4 切边宽钢带及卷切钢板、纵剪宽钢带及卷切钢带Ⅰ宽度允许偏差 单位为毫米",
+      "profile": "dimension",
+      "n_cols": 9,
+      "header_signature": [
+        "公称厚度",
+        "公称宽度/≤125/pw.a",
+        "公称宽度/≤125/pw.b",
+        "公称宽度/>125~250/pw.a",
+        "公称宽度/>125~250/pw.b",
+        "公称宽度/>250~600/pw.a",
+        "公称宽度/>250~600/pw.b",
+        "公称宽度/>600~1000/pw.a",
+        "公称宽度/>1000/pw.a"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表5 不切边宽钢带及卷切钢板宽度允许偏差",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "边缘状态",
+        "公称宽度",
+        "公称宽度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6 切边窄钢带及卷切钢带Ⅱ宽度允许偏差",
+      "profile": "dimension",
+      "n_cols": 9,
+      "header_signature": [
+        "公称厚度",
+        "公称宽度/≤40/pw.a",
+        "公称宽度/≤40/pw.b",
+        "公称宽度/>40~125/pw.a",
+        "公称宽度/>40~125/pw.b",
+        "公称宽度/>125~250/pw.a",
+        "公称宽度/>125~250/pw.b",
+        "公称宽度/>250~600/pw.a",
+        "公称宽度/>250~600/pw.b"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表7 卷切钢板及卷切钢带Ⅰ的长度允许偏差",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "公称长度",
+        "pl.a",
+        "pl.b"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表8 卷切钢带Ⅱ的长度允许偏差",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "公称长度",
+        "pl.a",
+        "pl.b"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表9 卷切钢板及卷切钢带Ⅰ的不平度a",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "公称长度",
+        "pf.a",
+        "pf.b"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表10 卷切钢带Ⅱ的不平度a",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "公称长度",
+        "pf.a",
+        "pf.b"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表10 卷切钢带Ⅱ的不平度a",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "公称宽度",
+        "厚度",
+        "h1/4",
+        "h1/2",
+        "h3/4、h、h2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表13 窄钢带及卷切钢带Ⅱ的镰刀弯",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "公称宽度",
+        "任意1000mm长度上的镰刀弯"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表13 窄钢带及卷切钢带Ⅱ的镰刀弯",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "公称宽度",
+        "任意1000mm长度上的镰刀弯/pc.a",
+        "任意1000mm长度上的镰刀弯/pc.b"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表14 卷切钢板及卷切钢带Ⅰ的切斜度",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "卷切钢板长度",
+        "对角线最大差值"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表15 卷切钢带Ⅱ的切斜度",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "公称宽度",
+        "切斜度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "表16",
+        "奥氏体型钢的化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 14,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "化学成分(质量分数)/%/c",
+        "化学成分(质量分数)/%/si",
+        "化学成分(质量分数)/%/mn",
+        "化学成分(质量分数)/%/p",
+        "化学成分(质量分数)/%/s",
+        "化学成分(质量分数)/%/ni",
+        "化学成分(质量分数)/%/cr",
+        "化学成分(质量分数)/%/mo",
+        "化学成分(质量分数)/%/cu",
+        "化学成分(质量分数)/%/n",
+        "化学成分(质量分数)/%/其他元素",
+        "化学成分(质量分数)/%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "10"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 14,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "化学成分(质量分数)/%/c",
+        "化学成分(质量分数)/%/si",
+        "化学成分(质量分数)/%/mn",
+        "化学成分(质量分数)/%/p",
+        "化学成分(质量分数)/%/s",
+        "化学成分(质量分数)/%/ni",
+        "化学成分(质量分数)/%/cr",
+        "化学成分(质量分数)/%/mo",
+        "化学成分(质量分数)/%/cu",
+        "化学成分(质量分数)/%/n",
+        "化学成分(质量分数)/%/其他元素",
+        "化学成分(质量分数)/%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 14,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "化学成分(质量分数)/%/c",
+        "化学成分(质量分数)/%/si",
+        "化学成分(质量分数)/%/mn",
+        "化学成分(质量分数)/%/p",
+        "化学成分(质量分数)/%/s",
+        "化学成分(质量分数)/%/ni",
+        "化学成分(质量分数)/%/cr",
+        "化学成分(质量分数)/%/mo",
+        "化学成分(质量分数)/%/cu",
+        "化学成分(质量分数)/%/n",
+        "化学成分(质量分数)/%/其他元素",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "表18",
+        "铁素体型钢的化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 13,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "化学成分(质量分数)/%/c",
+        "化学成分(质量分数)/%/si",
+        "化学成分(质量分数)/%/mn",
+        "化学成分(质量分数)/%/p",
+        "化学成分(质量分数)/%/s",
+        "化学成分(质量分数)/%/ni",
+        "化学成分(质量分数)/%/cr",
+        "化学成分(质量分数)/%/mo",
+        "化学成分(质量分数)/%/cu",
+        "化学成分(质量分数)/%/n",
+        "化学成分(质量分数)/%/其他元素"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "13"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 13,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "化学成分(质量分数)/%/c",
+        "化学成分(质量分数)/%/si",
+        "化学成分(质量分数)/%/mn",
+        "化学成分(质量分数)/%/p",
+        "化学成分(质量分数)/%/s",
+        "化学成分(质量分数)/%/ni",
+        "化学成分(质量分数)/%/cr",
+        "化学成分(质量分数)/%/mo",
+        "化学成分(质量分数)/%/cu",
+        "化学成分(质量分数)/%/n",
+        "其他元素"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "表19",
+        "马氏体型钢的化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 15,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "化学成分(质量分数)/%/c",
+        "化学成分(质量分数)/%/si",
+        "化学成分(质量分数)/%/mn",
+        "化学成分(质量分数)/%/p",
+        "化学成分(质量分数)/%/s",
+        "化学成分(质量分数)/%/ni",
+        "化学成分(质量分数)/%/cr",
+        "化学成分(质量分数)/%/mo",
+        "化学成分(质量分数)/%/cu",
+        "化学成分(质量分数)/%/n",
+        "化学成分(质量分数)/%/其他元素",
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 14,
+      "header_signature": [
+        "表20",
+        "沉淀硬化型钢的化学成分",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "15"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表21 经固溶处理的奥氏体型钢板和钢带的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后伸长率aa/%/不小于",
+        "硬度值/hbw/不大于",
+        "硬度值/hrb/不大于",
+        "硬度值/hv/不大于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "hbw",
+        "hrb",
+        "hv"
+      ]
+    },
+    {
+      "caption": "表22 (续)",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后伸长率textcircledaa/%/厚度<0.4mm/不小于",
+        "断后伸长率textcircledaa/%/厚度0.4mm~<0.8mm/不小于",
+        "断后伸长率textcircledaa/%/厚度≥0.8mm/不小于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "表23 H1/2状态的钢板和钢带的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后伸长率aa/%/厚度<0.4mm/不小于",
+        "断后伸长率aa/%/厚度0.4mm~<0.8mm/不小于",
+        "断后伸长率aa/%/厚度≥0.8mm/不小于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "表24 H3/4状态的钢板和钢带的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后伸长率aa/%/厚度<0.4mm/不小于",
+        "断后伸长率aa/%/厚度0.4mm~<0.8mm/不小于",
+        "断后伸长率aa/%/厚度≥0.8mm/不小于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "表25 H 状态的钢板和钢带的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后伸长率aa/%/厚度<0.4mm/不小于",
+        "断后伸长率aa/%/厚度0.4mm~<0.8mm/不小于",
+        "断后伸长率aa/%/厚度≥0.8mm/不小于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "表26 H2状态的钢板和钢带的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后伸长率aa/%/厚度<0.4mm/不小于",
+        "断后伸长率aa/%/厚度0.4mm<0.8mm/不小于",
+        "断后伸长率aa/%/厚度≥0.8mm/不小于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "表27 经固溶处理的奥氏体-铁素体型钢板和钢带的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后伸长率aa/%/不小于",
+        "硬度值/hbw/不大于",
+        "硬度值/hrc/不大于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "hbw",
+        "hrc"
+      ]
+    },
+    {
+      "caption": "表28 经退火处理的铁素体型钢板和钢带的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 9,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa",
+        "抗拉强度rm/mpa",
+        "断后伸长率aa/%",
+        "180°弯曲试验弯曲压头直径d",
+        "硬度值",
+        "硬度值",
+        "硬度值"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 9,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "规定塑性延伸强度rp0.2/mpa",
+        "抗拉强度rm/mpa",
+        "断后伸长率aa/%",
+        "180°弯曲试验弯曲压头直径d",
+        "硬度值",
+        "硬度值",
+        "硬度值"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "表30 经固溶处理的沉淀硬化型钢板和钢带试样的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "钢材厚度/mm",
+        "规定塑性延伸强度rp0.2/mpa/不大于",
+        "抗拉强度rm/mpa/不大于",
+        "断后伸长率a/%/不小于",
+        "硬度值/hrc/不大于",
+        "硬度值/hbw/不大于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "a",
+        "hrc",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "表31 经时效处理后的沉淀硬化型钢板和钢带试样的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 9,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "钢材厚度mm",
+        "处理温度°c",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后b,c伸长率a/%/不小于",
+        "硬度值/hrc/不小于",
+        "硬度值/hbw/不小于"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "a",
+        "hrc",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "表31 (续)",
+      "profile": "mechanical_properties",
+      "n_cols": 10,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "钢材厚度mm",
+        "处理温度°c",
+        "规定塑性延伸强度rp0.2/mpa/不小于",
+        "抗拉强度rm/mpa/不小于",
+        "断后b,c伸长率a/%/不小于",
+        "硬度值/hrc/不小于",
+        "硬度值/hbw/不小于",
+        ""
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rp0.2",
+        "抗拉强度",
+        "rm",
+        "a",
+        "hrc",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "表32 经固溶处理后沉淀硬化型钢板和钢带的弯曲性能",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "厚度/mm",
+        "180°弯曲试验弯曲压头直径d"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "表33 10%草酸浸蚀试验的判别",
+      "profile": "inspection",
+      "n_cols": 6,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "试验状态",
+        "硫酸-硫酸铁腐蚀试验",
+        "65%硝酸腐蚀试验",
+        "硫酸-硫酸铜腐蚀试验"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表34 硫酸-硫酸铁腐蚀试验的腐蚀减量",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "试验状态",
+        "腐蚀减量/[g/(m2·h)]"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表35 65%硝酸腐蚀试验的腐蚀减量",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "试验状态",
+        "腐蚀减量/[g/(m2·h)]"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表36 硫酸-硫酸铜腐蚀试验后弯曲面状态",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "试验状态",
+        "试验后弯曲面状态"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "表37 表面加工类型",
+      "profile": "unknown",
+      "n_cols": 4,
+      "header_signature": [
+        "简称",
+        "加工类型",
+        "表面状态",
+        "备注"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 5,
+      "header_signature": [
+        "序号",
+        "检验项目",
+        "取样方法及部位",
+        "取样数量",
+        "试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "附录",
+        "a"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "classification",
+      "n_cols": 2,
+      "header_signature": [
+        "表a.1",
+        "各国不锈钢牌号对照表"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "(资料性附录)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "classification",
+      "n_cols": 2,
+      "header_signature": [
+        "各国不锈钢牌号",
+        "对照表"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 8,
+      "header_signature": [
+        "gb/t20878-2007中序号",
+        "统一数字代号",
+        "牌号",
+        "旧牌号",
+        "美国astma959",
+        "日本jisg4303、jisg4311、jisg4305等",
+        "国际iso15510iso4955",
+        "欧洲en10088-1en10095"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "30"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表a.1(续)"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 8,
+      "header_signature": [
+        "gb/t20878-2007中序号",
+        "统一数字代号",
+        "牌号",
+        "旧牌号",
+        "美国astma959",
+        "日本jisg4303、jisg4311、jisg4305等",
+        "国际iso15510iso4955",
+        "欧洲en10088-1en10095"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "31"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表a.1(续)"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 8,
+      "header_signature": [
+        "gb/t20878-2007中序号",
+        "统一数字代号",
+        "牌号",
+        "旧牌号",
+        "美国astma959",
+        "日本jisg4303、jisg4311、jisg4305等",
+        "国际iso15510iso4955",
+        "欧洲en10088-1en10095"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "32"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表a.1(续)"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 8,
+      "header_signature": [
+        "gb/t20878-2007中序号",
+        "统一数字代号",
+        "牌号",
+        "旧牌号",
+        "美国astma959",
+        "日本jisg4303、jisg4311、jisg4305等",
+        "国际iso15510iso4955",
+        "欧洲en10088-1en10095"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "33"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表a.1(续)"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 8,
+      "header_signature": [
+        "gb/t20878-2007中序号",
+        "统一数字代号",
+        "牌号",
+        "旧牌号",
+        "美国astma959",
+        "日本jisg4303、jisg4311、jisg4305等",
+        "国际iso15510iso4955",
+        "欧洲en10088-1en10095"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "34"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表B. 1 不锈钢的特性和用途",
+      "profile": "classification",
+      "n_cols": 4,
+      "header_signature": [
+        "类型",
+        "统一数字代号",
+        "牌号",
+        "特性和用途"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表B. 1 (续)",
+      "profile": "classification",
+      "n_cols": 4,
+      "header_signature": [
+        "类型",
+        "统一数字代号",
+        "牌号",
+        "特性和用途"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表B. 1 (续)",
+      "profile": "classification",
+      "n_cols": 4,
+      "header_signature": [
+        "类型",
+        "统一数字代号",
+        "牌号",
+        "特性和用途"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表C. 1 奥氏体型钢的热处理制度",
+      "profile": "heat_treatment",
+      "n_cols": 3,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "热处理温度及冷却方式"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表C. 2 奥氏体-铁素体型钢的热处理制度",
+      "profile": "heat_treatment",
+      "n_cols": 3,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "热处理温度及冷却方式"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表C. 2 奥氏体-铁素体型钢的热处理制度",
+      "profile": "heat_treatment",
+      "n_cols": 3,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "热处理温度及冷却方式"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表C. 3 铁素体型钢的热处理制度",
+      "profile": "heat_treatment",
+      "n_cols": 3,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "热处理温度及冷却方式"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表C. 4 马氏体型钢的热处理制度",
+      "profile": "heat_treatment",
+      "n_cols": 5,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "退火处理",
+        "淬火",
+        "回火"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表C. 5 沉淀硬化型钢的热处理制度",
+      "profile": "heat_treatment",
+      "n_cols": 4,
+      "header_signature": [
+        "统一数字代号",
+        "牌号",
+        "固溶处理",
+        "沉淀硬化处理"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "chemical_composition_v1": "1.1.12",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0",
+    "classification_v1": "1.0.3",
+    "heat_treatment_v1": "1.0.0"
+  },
+  "sample_doc_id": "61978ed7-6f69-44e6-ab53-7af0164007b8",
+  "created_at": "2026-11-14T16:37:26+00:00"
+}

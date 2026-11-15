@@ -1,0 +1,98 @@
+{
+  "standard_id": "YS/T 397",
+  "edition": "2015",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "表1 海绵错的化学成分",
+      "profile": "chemical_composition",
+      "n_cols": 8,
+      "header_signature": [
+        "产品级别/产品牌号",
+        "产品级别/产品牌号",
+        "产品级别/产品牌号",
+        "核级/hzr-01",
+        "核级/hzr-02",
+        "工业级/hzr-1",
+        "工业级/hzr-2",
+        "火器级/hqzr-1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表1 (续)",
+      "profile": "classification",
+      "n_cols": 9,
+      "header_signature": [
+        "产品级别/产品牌号",
+        "产品级别/产品牌号",
+        "产品级别/产品牌号",
+        "产品级别/产品牌号",
+        "核级/hzr-01",
+        "核级/hzr-02",
+        "工业级/hzr-1",
+        "工业级/hzr-2",
+        "火器级/hqzr-1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 2 化学成分允许偏差",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "元素",
+        "按表1规定范围的允许偏差/%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.1",
+        "检查与验收"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "表3",
+        "检验项目及取样",
+        "",
+        ""
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_composition_v1": "1.1.217",
+    "classification_v1": "1.0.3",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "5e305000-d2ee-40ab-b8c1-07a797f5eecd",
+  "created_at": "2026-11-15T06:47:28+00:00"
+}

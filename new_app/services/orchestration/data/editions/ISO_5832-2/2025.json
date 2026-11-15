@@ -1,0 +1,107 @@
+{
+  "standard_id": "ISO 5832-2",
+  "edition": "2025",
+  "document_sha256": "",
+  "page_count": 12,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "internationalstandard"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "contents"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "contents/foreword/introduction",
+        "contents/foreword/introduction",
+        "page/foreword/v"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "iii"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "v"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 6,
+      "header_signature": [
+        "element",
+        "compositionallimits/massfraction%/grade1eli",
+        "compositionallimits/massfraction%/grade1",
+        "compositionallimits/massfraction%/grade2",
+        "compositionallimits/massfraction%/grade3",
+        "compositionallimits/massfraction%/grades4aand4b"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 9,
+      "header_signature": [
+        "grade",
+        "condition",
+        "tensilestrength/rm/mpaminimum",
+        "proofstrengthoryieldstrength/rp0,2/mpaminimum",
+        "percentageelongationafterfracture/a/%minimum",
+        "reductionofarea/z/%minimum",
+        "mandreldiameterforbendtestforsheetandstripe/wheret<2mm/mm",
+        "mandreldiameterforbendtestforsheetandstripe/where2mm≤t<5mm/mm",
+        ""
+      ],
+      "measures": [
+        "rm",
+        "a",
+        "z"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "requirement",
+        "relevantclause",
+        "methodoftest"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "ca6baccd-b69a-4491-aefd-e53e988b2729",
+  "created_at": "2026-11-15T05:39:13+00:00"
+}

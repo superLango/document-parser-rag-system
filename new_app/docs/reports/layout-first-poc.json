@@ -1,0 +1,1543 @@
+{
+  "generated_at": "2026-11-12T04:33:59+00:00",
+  "api": "http://192.168.188.75:9978",
+  "health": {
+    "status": "ok",
+    "model_dir": "/home/grainuser/hansonDoc_RAG/models/pp_doclayoutv3",
+    "device": "cuda:0",
+    "weight_sha256": "5b76c1ff..."
+  },
+  "documents": [
+    {
+      "name": "ASME SA264-2021-过期.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 2,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 31,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 38,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 31,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "image",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 31,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 29,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        }
+      ],
+      "blocks": 162,
+      "table_blocks": [
+        {
+          "page_no": 4,
+          "bbox": [
+            0.07868018804811965,
+            0.3025703661369555,
+            0.4722939285577512,
+            0.35085067749023435
+          ],
+          "confidence": 0.9174872636795044
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.07833516737994026,
+            0.7119783343690814,
+            0.47082298129212624,
+            0.7708455403645833
+          ],
+          "confidence": 0.9276539087295532
+        },
+        {
+          "page_no": 5,
+          "bbox": [
+            0.1080042745552811,
+            0.24112708351828835,
+            0.5007469027650122,
+            0.3001143253210819
+          ],
+          "confidence": 0.9434038996696472
+        }
+      ],
+      "pages_with_tables": 2,
+      "errors": [],
+      "elapsed_seconds": 2.55
+    },
+    {
+      "name": "ASME SB265-2021-过期.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 2,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 38,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 33,
+          "tables": 1,
+          "types": [
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 23,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 27,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 17,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 7,
+          "blocks": 3,
+          "tables": 1,
+          "types": [
+            "aside_text",
+            "image_caption",
+            "table"
+          ]
+        },
+        {
+          "page_no": 8,
+          "blocks": 8,
+          "tables": 1,
+          "types": [
+            "aside_text",
+            "footnote",
+            "image_caption",
+            "table"
+          ]
+        }
+      ],
+      "blocks": 151,
+      "table_blocks": [
+        {
+          "page_no": 3,
+          "bbox": [
+            0.10616290522556679,
+            0.6945656978722775,
+            0.9220400941138174,
+            0.8913035074869792
+          ],
+          "confidence": 0.9649245142936707
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.07840671913296568,
+            0.11565367958762429,
+            0.4755928787530637,
+            0.20218778668027937
+          ],
+          "confidence": 0.9473257064819336
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.49511422549977024,
+            0.11539866129557291,
+            0.8914697385301777,
+            0.39359620990175187
+          ],
+          "confidence": 0.9484723210334778
+        },
+        {
+          "page_no": 5,
+          "bbox": [
+            0.10420247994217219,
+            0.10503593213630445,
+            0.919092036228554,
+            0.21725900823419744
+          ],
+          "confidence": 0.9523886442184448
+        },
+        {
+          "page_no": 6,
+          "bbox": [
+            0.07550403370576746,
+            0.10261757590553977,
+            0.8895194259344362,
+            0.5781493215849905
+          ],
+          "confidence": 0.971518337726593
+        },
+        {
+          "page_no": 7,
+          "bbox": [
+            0.06970393440940163,
+            0.1345258675369562,
+            0.8985760313091856,
+            0.9130914426317402
+          ],
+          "confidence": 0.9315826296806335
+        },
+        {
+          "page_no": 8,
+          "bbox": [
+            0.07860112045750474,
+            0.2839276482077206,
+            0.9144510904947917,
+            0.6048492431640625
+          ],
+          "confidence": 0.9561710357666016
+        }
+      ],
+      "pages_with_tables": 6,
+      "errors": [],
+      "elapsed_seconds": 1.5
+    },
+    {
+      "name": "ASME SB338-2025.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 2,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 36,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 45,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 4,
+          "tables": 1,
+          "types": [
+            "aside_text",
+            "image_caption",
+            "table"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 6,
+          "tables": 1,
+          "types": [
+            "aside_text",
+            "footnote",
+            "image_caption",
+            "table"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 32,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "formula",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 7,
+          "blocks": 23,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 8,
+          "blocks": 29,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "formula",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        }
+      ],
+      "blocks": 177,
+      "table_blocks": [
+        {
+          "page_no": 4,
+          "bbox": [
+            0.09598437222567471,
+            0.1022635067210478,
+            0.9149181019176137,
+            0.8915601543351716
+          ],
+          "confidence": 0.9066563248634338
+        },
+        {
+          "page_no": 5,
+          "bbox": [
+            0.07865175767378374,
+            0.4039504406498928,
+            0.9162611527876421,
+            0.5456995346966912
+          ],
+          "confidence": 0.9194427132606506
+        },
+        {
+          "page_no": 6,
+          "bbox": [
+            0.07665625179515165,
+            0.10471059625799006,
+            0.47036282408471203,
+            0.3812130783543442
+          ],
+          "confidence": 0.9697525501251221
+        },
+        {
+          "page_no": 7,
+          "bbox": [
+            0.1178071190329159,
+            0.10359089013301966,
+            0.9231730741613051,
+            0.48294686982125945
+          ],
+          "confidence": 0.9637554287910461
+        },
+        {
+          "page_no": 7,
+          "bbox": [
+            0.10834441839479933,
+            0.5950005733605587,
+            0.5041412353515625,
+            0.8724382805101799
+          ],
+          "confidence": 0.9480376839637756
+        },
+        {
+          "page_no": 8,
+          "bbox": [
+            0.07607029185575598,
+            0.7039095329515862,
+            0.4731316659964767,
+            0.7933799050071023
+          ],
+          "confidence": 0.9524311423301697
+        },
+        {
+          "page_no": 8,
+          "bbox": [
+            0.49432373046875,
+            0.8204527883818655,
+            0.891404634363511,
+            0.890522627397017
+          ],
+          "confidence": 0.9242837429046631
+        }
+      ],
+      "pages_with_tables": 5,
+      "errors": [],
+      "elapsed_seconds": 1.54
+    },
+    {
+      "name": "ASME SB575-2025.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 3,
+          "tables": 0,
+          "types": [
+            "image",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 22,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 6,
+          "tables": 1,
+          "types": [
+            "aside_text",
+            "footnote",
+            "image_caption",
+            "table"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 33,
+          "tables": 3,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 23,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        }
+      ],
+      "blocks": 87,
+      "table_blocks": [
+        {
+          "page_no": 3,
+          "bbox": [
+            0.08630281506162701,
+            0.371968048694087,
+            0.9077070756392045,
+            0.6585603003408395
+          ],
+          "confidence": 0.9622929692268372
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.07877284031288297,
+            0.10335477193196614,
+            0.8900993197571998,
+            0.25555572509765623
+          ],
+          "confidence": 0.9549452662467957
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.4998622520297181,
+            0.4543595285126657,
+            0.8559425503599878,
+            0.5975337172999526
+          ],
+          "confidence": 0.9481423497200012
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.4957363053864124,
+            0.835954423384233,
+            0.8904731900084253,
+            0.8914195667613637
+          ],
+          "confidence": 0.9219626188278198
+        }
+      ],
+      "pages_with_tables": 2,
+      "errors": [],
+      "elapsed_seconds": 1.82
+    },
+    {
+      "name": "ASTM B338-17(2026)--+.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 40,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 46,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 2,
+          "tables": 1,
+          "types": [
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 3,
+          "tables": 1,
+          "types": [
+            "image_caption",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 35,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "formula",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 23,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 7,
+          "blocks": 29,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "formula",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 8,
+          "blocks": 30,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        }
+      ],
+      "blocks": 208,
+      "table_blocks": [
+        {
+          "page_no": 3,
+          "bbox": [
+            0.10852649841622238,
+            0.08077630535602935,
+            0.948473217798529,
+            0.9424810870647065
+          ],
+          "confidence": 0.9341641068458557
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.36370281913420155,
+            0.07190799786325427,
+            0.6570863008254111,
+            0.9413663405962203
+          ],
+          "confidence": 0.876755952835083
+        },
+        {
+          "page_no": 5,
+          "bbox": [
+            0.049449442346931605,
+            0.0928288106266938,
+            0.4862142094360226,
+            0.38473831610046527
+          ],
+          "confidence": 0.9725654125213623
+        },
+        {
+          "page_no": 6,
+          "bbox": [
+            0.06507104714874863,
+            0.08983275383505013,
+            0.9475415064154034,
+            0.49237491493488583
+          ],
+          "confidence": 0.954096794128418
+        },
+        {
+          "page_no": 6,
+          "bbox": [
+            0.05205455517352301,
+            0.6130748172036886,
+            0.4887107856962198,
+            0.9069629355933423
+          ],
+          "confidence": 0.9454985857009888
+        },
+        {
+          "page_no": 7,
+          "bbox": [
+            0.04947681564221279,
+            0.7291278970854519,
+            0.4884801004062821,
+            0.8239228957813699
+          ],
+          "confidence": 0.9551970958709717
+        },
+        {
+          "page_no": 7,
+          "bbox": [
+            0.5107251252569374,
+            0.8540290135744436,
+            0.9503061543510727,
+            0.9285958934909824
+          ],
+          "confidence": 0.9133703708648682
+        }
+      ],
+      "pages_with_tables": 5,
+      "errors": [],
+      "elapsed_seconds": 2.73
+    },
+    {
+      "name": "ASTM B381-13(2019)-过期.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 42,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 48,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 13,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 4,
+          "tables": 1,
+          "types": [
+            "image_caption",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 5,
+          "tables": 2,
+          "types": [
+            "image_caption",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 27,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 7,
+          "blocks": 26,
+          "tables": 1,
+          "types": [
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 8,
+          "blocks": 15,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        }
+      ],
+      "blocks": 180,
+      "table_blocks": [
+        {
+          "page_no": 3,
+          "bbox": [
+            0.048340349501230485,
+            0.08612954643993129,
+            0.9499191174404227,
+            0.6693797722653252
+          ],
+          "confidence": 0.9775847792625427
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.07428526608818972,
+            0.07860914158619832,
+            0.947329043851972,
+            0.9405807061828473
+          ],
+          "confidence": 0.9710608124732971
+        },
+        {
+          "page_no": 5,
+          "bbox": [
+            0.30592626902941933,
+            0.07651194808854567,
+            0.6051554194702274,
+            0.9414158994567824
+          ],
+          "confidence": 0.5690327286720276
+        },
+        {
+          "page_no": 5,
+          "bbox": [
+            0.3050666958063014,
+            0.06691512417445618,
+            0.7541359629929985,
+            0.9448510123872793
+          ],
+          "confidence": 0.5446765422821045
+        },
+        {
+          "page_no": 6,
+          "bbox": [
+            0.05626042161178981,
+            0.09093954887009545,
+            0.4859841514344328,
+            0.47882215919992327
+          ],
+          "confidence": 0.9723212122917175
+        },
+        {
+          "page_no": 7,
+          "bbox": [
+            0.07223457422677929,
+            0.5590390771147112,
+            0.3254480156109487,
+            0.5954713038271057
+          ],
+          "confidence": 0.4279065430164337
+        }
+      ],
+      "pages_with_tables": 5,
+      "errors": [],
+      "elapsed_seconds": 1.88
+    },
+    {
+      "name": "ASTM B861-24.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 41,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 52,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 3,
+          "tables": 1,
+          "types": [
+            "image_caption",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 4,
+          "tables": 2,
+          "types": [
+            "image_caption",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 4,
+          "tables": 1,
+          "types": [
+            "image_caption",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 29,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 7,
+          "blocks": 8,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text"
+          ]
+        },
+        {
+          "page_no": 8,
+          "blocks": 39,
+          "tables": 0,
+          "types": [
+            "formula",
+            "text",
+            "title"
+          ]
+        }
+      ],
+      "blocks": 180,
+      "table_blocks": [
+        {
+          "page_no": 3,
+          "bbox": [
+            0.08269250601193152,
+            0.0799309297972977,
+            0.9479061491320336,
+            0.9434608348222852
+          ],
+          "confidence": 0.9565111994743347
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.33981103691265735,
+            0.07157921955755649,
+            0.5699035707260085,
+            0.9405203736569455
+          ],
+          "confidence": 0.6142670512199402
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.3387061312166784,
+            0.06604307793875612,
+            0.7155490102895362,
+            0.9443017428230526
+          ],
+          "confidence": 0.5531600713729858
+        },
+        {
+          "page_no": 5,
+          "bbox": [
+            0.27365535724322326,
+            0.07673737532527102,
+            0.7746114074142472,
+            0.9380724095236953
+          ],
+          "confidence": 0.9630022644996643
+        },
+        {
+          "page_no": 6,
+          "bbox": [
+            0.05044060890378099,
+            0.09091014964527473,
+            0.4848029047465153,
+            0.18776280717125143
+          ],
+          "confidence": 0.9416282176971436
+        },
+        {
+          "page_no": 6,
+          "bbox": [
+            0.049171016493167075,
+            0.2481581482261488,
+            0.4907708319951182,
+            0.5853722104638335
+          ],
+          "confidence": 0.9740853905677795
+        },
+        {
+          "page_no": 7,
+          "bbox": [
+            0.051778285623454365,
+            0.09081974454046851,
+            0.9466658746105794,
+            0.6971533446703521
+          ],
+          "confidence": 0.9594081044197083
+        }
+      ],
+      "pages_with_tables": 5,
+      "errors": [],
+      "elapsed_seconds": 1.57
+    },
+    {
+      "name": "ASTM B898-20-过期.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 35,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 45,
+          "tables": 0,
+          "types": [
+            "image",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 25,
+          "tables": 3,
+          "types": [
+            "image",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 29,
+          "tables": 6,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 31,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 37,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 7,
+          "blocks": 29,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 8,
+          "blocks": 4,
+          "tables": 0,
+          "types": [
+            "text"
+          ]
+        }
+      ],
+      "blocks": 235,
+      "table_blocks": [
+        {
+          "page_no": 3,
+          "bbox": [
+            0.05015978367208577,
+            0.3880178432508514,
+            0.9474449040098278,
+            0.45162015316217385
+          ],
+          "confidence": 0.941747784614563
+        },
+        {
+          "page_no": 3,
+          "bbox": [
+            0.5113887649645908,
+            0.755651724311085,
+            0.9491555820633671,
+            0.8283249217550844
+          ],
+          "confidence": 0.9340555667877197
+        },
+        {
+          "page_no": 3,
+          "bbox": [
+            0.5108578281069341,
+            0.8495452014281946,
+            0.9498087146911934,
+            0.9288166131043745
+          ],
+          "confidence": 0.8617459535598755
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.05042889821443626,
+            0.09003590183448353,
+            0.48692753038082925,
+            0.16141565634668192
+          ],
+          "confidence": 0.9405485987663269
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.049989102433176225,
+            0.1818428771457394,
+            0.4872272487534526,
+            0.26104328802523025
+          ],
+          "confidence": 0.8713834285736084
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.05092264863471946,
+            0.7671296594697333,
+            0.48790942483178634,
+            0.8400240917893803
+          ],
+          "confidence": 0.9406179785728455
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.05132399556080582,
+            0.8487806459252686,
+            0.4885910049861896,
+            0.9279260525589985
+          ],
+          "confidence": 0.8318222761154175
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.5130128772261209,
+            0.5112280329647928,
+            0.9480115335744796,
+            0.5852621317092767
+          ],
+          "confidence": 0.9538090825080872
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.5129938703891798,
+            0.7369291549998801,
+            0.9486442166021647,
+            0.8031311269366366
+          ],
+          "confidence": 0.9139981269836426
+        }
+      ],
+      "pages_with_tables": 2,
+      "errors": [],
+      "elapsed_seconds": 1.73
+    },
+    {
+      "name": "ASTM F2063-26--.pdf",
+      "category": "美国标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 31,
+          "tables": 0,
+          "types": [
+            "footnote",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 51,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 29,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 28,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 29,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 18,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 7,
+          "blocks": 25,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 8,
+          "blocks": 4,
+          "tables": 0,
+          "types": [
+            "text"
+          ]
+        }
+      ],
+      "blocks": 215,
+      "table_blocks": [
+        {
+          "page_no": 2,
+          "bbox": [
+            0.510209870607978,
+            0.7546246192680353,
+            0.9499242612048754,
+            0.8896083407281274
+          ],
+          "confidence": 0.9544931650161743
+        },
+        {
+          "page_no": 3,
+          "bbox": [
+            0.5103588202261852,
+            0.0897297716470105,
+            0.9495527810452531,
+            0.23504797934753932
+          ],
+          "confidence": 0.9560052752494812
+        },
+        {
+          "page_no": 3,
+          "bbox": [
+            0.5121231627978867,
+            0.8781144324395626,
+            0.9484459934842304,
+            0.929063470566721
+          ],
+          "confidence": 0.8910437226295471
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.5119981128657342,
+            0.8535671512255372,
+            0.9477041622840121,
+            0.9131298753177763
+          ],
+          "confidence": 0.9054551124572754
+        }
+      ],
+      "pages_with_tables": 3,
+      "errors": [],
+      "elapsed_seconds": 1.69
+    },
+    {
+      "name": "GBT 2965-1996过期.pdf",
+      "category": "国家标准",
+      "native_tables": 0,
+      "pages": [
+        {
+          "page_no": 1,
+          "blocks": 21,
+          "tables": 1,
+          "types": [
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 2,
+          "blocks": 19,
+          "tables": 2,
+          "types": [
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 3,
+          "blocks": 15,
+          "tables": 2,
+          "types": [
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 4,
+          "blocks": 11,
+          "tables": 2,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 5,
+          "blocks": 35,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 6,
+          "blocks": 17,
+          "tables": 0,
+          "types": [
+            "text",
+            "title"
+          ]
+        },
+        {
+          "page_no": 7,
+          "blocks": 11,
+          "tables": 1,
+          "types": [
+            "footnote",
+            "image_caption",
+            "table",
+            "text",
+            "title"
+          ]
+        }
+      ],
+      "blocks": 129,
+      "table_blocks": [
+        {
+          "page_no": 1,
+          "bbox": [
+            0.13408971435667916,
+            0.664448807344087,
+            0.8865287149076599,
+            0.8886144817689612
+          ],
+          "confidence": 0.9682114124298096
+        },
+        {
+          "page_no": 2,
+          "bbox": [
+            0.12234696788721647,
+            0.43813000918291695,
+            0.8780515157295798,
+            0.6932030793662384
+          ],
+          "confidence": 0.9714469909667969
+        },
+        {
+          "page_no": 2,
+          "bbox": [
+            0.12452301343124458,
+            0.7334510040831685,
+            0.8808549569867068,
+            0.9023520869372305
+          ],
+          "confidence": 0.9478881359100342
+        },
+        {
+          "page_no": 3,
+          "bbox": [
+            0.12871718323934062,
+            0.2721675431274151,
+            0.8821147565033156,
+            0.36631729926761325
+          ],
+          "confidence": 0.9480469822883606
+        },
+        {
+          "page_no": 3,
+          "bbox": [
+            0.13010894820781171,
+            0.5004823137580877,
+            0.8858053711421666,
+            0.9103057005695093
+          ],
+          "confidence": 0.9690300226211548
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.11864948414550539,
+            0.1461557131889996,
+            0.8761170916351636,
+            0.42898662685062455
+          ],
+          "confidence": 0.9425539970397949
+        },
+        {
+          "page_no": 4,
+          "bbox": [
+            0.12138458993332069,
+            0.4547649194318386,
+            0.8778508895094819,
+            0.7942997639681434
+          ],
+          "confidence": 0.9693037867546082
+        },
+        {
+          "page_no": 7,
+          "bbox": [
+            0.12716490216460863,
+            0.21721690306125316,
+            0.892061399006879,
+            0.6787223898190375
+          ],
+          "confidence": 0.9703544974327087
+        }
+      ],
+      "pages_with_tables": 5,
+      "errors": [],
+      "elapsed_seconds": 2.46
+    }
+  ],
+  "summary": {
+    "documents": 10,
+    "with_table_blocks": 10,
+    "table_blocks": 62,
+    "pages_with_tables": 40,
+    "errors": 0
+  }
+}

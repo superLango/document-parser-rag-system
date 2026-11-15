@@ -1,0 +1,201 @@
+{
+  "standard_id": "GB/T 2054",
+  "edition": "2023",
+  "document_sha256": "",
+  "page_count": 15,
+  "tables": [
+    {
+      "caption": "表2 热轧产品的尺寸及其允许偏差",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "规格mm",
+        "规格mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 热轧产品的尺寸及其允许偏差",
+      "profile": "admin",
+      "n_cols": 7,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的厚度允许偏差/50~1000",
+        "规定宽度范围的厚度允许偏差/>1000~3000",
+        "宽度及其允许偏差/50~1000",
+        "宽度及其允许偏差/>1000~3000",
+        "长度及其允许偏差/≤3000",
+        "长度及其允许偏差/>3000~6000"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 冷轧产品的尺寸及其允许偏差",
+      "profile": "admin",
+      "n_cols": 7,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的厚度允许偏差/50~1000",
+        "规定宽度范围的厚度允许偏差/>1000~3000",
+        "宽度及其允许偏差/50~1000",
+        "宽度及其允许偏差/>1000~3000",
+        "长度及其允许偏差/≤3000",
+        "长度及其允许偏差/>3000~6000"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 冷轧产品的尺寸及其允许偏差",
+      "profile": "admin",
+      "n_cols": 5,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的厚度允许偏差/50~600",
+        "规定宽度范围的厚度允许偏差/>600~1500",
+        "宽度允许偏差",
+        "长度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4 圆形产品直径的允许偏差",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "直径",
+        "规定厚度范围的直径允许偏差/0.5~4.0",
+        "规定厚度范围的直径允许偏差/>4.0~50.0",
+        "规定厚度范围的直径允许偏差/>50.0~100.0"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 热轧矩形产品和热轧圆形产品的不平度",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "直径",
+        "规定厚度范围的直径允许偏差/0.5~4.0",
+        "规定厚度范围的直径允许偏差/>4.0~50.0",
+        "规定厚度范围的直径允许偏差/>50.0~100.0"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 热轧矩形产品和热轧圆形产品的不平度",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "厚度mm",
+        "规定宽度或直径范围的不平度a,不大于mm/m",
+        "规定宽度或直径范围的不平度a,不大于mm/m",
+        "规定宽度或直径范围的不平度a,不大于mm/m"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表6 冷轧矩形产品的不平度",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "厚度mm",
+        "长度方向上的不平度,不大于mm/m"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 室温力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "厚度mm",
+        "室温拉伸性能/抗拉强度(rm)mpa",
+        "室温拉伸性能/规定塑性延伸强度b(rp0.2)mpa",
+        "室温拉伸性能/断后伸长率(a50mm)%",
+        "硬度a/hv",
+        "硬度a/hrb"
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "规定塑性延伸强度",
+        "rp0.2",
+        "断后伸长率",
+        "a",
+        "hv",
+        "hrb"
+      ]
+    },
+    {
+      "caption": "表8 退火态产品的平均晶粒度",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "厚度mm",
+        "宽度mm",
+        "显微晶粒度级别数g"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表9 室温力学性能试验推荐试样",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "产品厚度mm",
+        "推荐试样"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表10 检验项目",
+      "profile": "inspection",
+      "n_cols": 3,
+      "header_signature": [
+        "检验项目",
+        "出厂检验项目",
+        "型式检验项目"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表11 取样",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "检验项目",
+        "取样规定",
+        "要求的章条号",
+        "试验方法的章条号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表A. 1 本文件与国内外相关标准相应牌号对照",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "本文件采用的牌号",
+        "gb/t15007牌号",
+        "astm牌号a"
+      ],
+      "measures": [
+        "a"
+      ]
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "e7701e38-2388-4253-9ab5-9b535ec2a531",
+  "created_at": "2026-11-15T02:51:05+00:00"
+}

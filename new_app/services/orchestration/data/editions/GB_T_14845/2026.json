@@ -1,0 +1,119 @@
+{
+  "standard_id": "GB/T 14845",
+  "edition": "2026",
+  "document_sha256": "",
+  "page_count": 11,
+  "tables": [
+    {
+      "caption": "表2 化学成分",
+      "profile": "chemical_composition",
+      "n_cols": 5,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "规格mm/厚度",
+        "规格mm/宽度",
+        "规格mm/长度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 化学成分",
+      "profile": "chemical_composition",
+      "n_cols": 10,
+      "header_signature": [
+        "牌号",
+        "主要成分(质量分数)/ti",
+        "主要成分(质量分数)/pd",
+        "杂质(质量分数),不大于/fe",
+        "杂质(质量分数),不大于/c",
+        "杂质(质量分数),不大于/n",
+        "杂质(质量分数),不大于/h",
+        "杂质(质量分数),不大于/o",
+        "杂质(质量分数),不大于/其他元素/单一",
+        "杂质(质量分数),不大于/其他元素/总和"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4 不平度",
+      "profile": "admin",
+      "n_cols": 6,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的厚度允许偏差/300~1000",
+        "规定宽度范围的厚度允许偏差/>1000~1500",
+        "规定宽度范围的宽度允许偏差/300~1000",
+        "规定宽度范围的宽度允许偏差/>1000~1500",
+        "长度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4 不平度",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围每1000mm范围内的不平度",
+        "规定宽度范围每1000mm范围内的不平度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 室温拉伸性能",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "厚度mm",
+        "抗拉强度(rm)mpa",
+        "规定塑性延伸强度(rp0.2)mpa",
+        "断后伸长率(a)%"
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "规定塑性延伸强度",
+        "rp0.2",
+        "断后伸长率",
+        "a"
+      ]
+    },
+    {
+      "caption": "表6 弯曲性能",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "厚度mm",
+        "弯曲压头直径mm",
+        "弯曲角(°)"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "表7 取样",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "检验项目",
+        "取样规定",
+        "技术要求",
+        "试验方法"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_composition_v1": "1.1.217",
+    "dimension_v1": "1.0.2",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "42c5fc5f-4146-4417-a130-2b75fd8abc32",
+  "created_at": "2026-11-14T17:02:57+00:00"
+}

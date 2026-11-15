@@ -1,0 +1,60 @@
+{
+  "standard_id": "GB/T 24627",
+  "edition": "2023",
+  "document_sha256": "",
+  "page_count": 15,
+  "tables": [
+    {
+      "caption": "表1 化学成分",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "元素",
+        "质量分数%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 产品最大分析允许偏差a",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "元素",
+        "质量分数最大分析允许偏差b%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 相变温度允许偏差",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "as",
+        "允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4 退火态机械性能",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "直径或两平行表面间距mm",
+        "抗拉强度(rm)mpa",
+        "断后伸长率(a),测量长度50mm或4d%"
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "a"
+      ]
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "bc081803-b36b-462b-8d95-ae218288e83d",
+  "created_at": "2026-11-14T12:56:11+00:00"
+}

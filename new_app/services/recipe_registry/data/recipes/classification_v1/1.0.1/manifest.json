@@ -1,0 +1,70 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "classification_v1",
+  "version": "1.0.1",
+  "engine_api": "recipe-engine/1",
+  "profile": "classification",
+  "signature": {
+    "profile": "classification",
+    "orientation": "grade_rows",
+    "n_cols": 6,
+    "blocks": 0,
+    "tokens": [
+      "牌号",
+      "类别",
+      "状态",
+      "级别",
+      "新牌号",
+      "旧牌号",
+      "统一数字代号",
+      "说明",
+      "序号"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "新牌号",
+      "统一数字代号"
+    ],
+    "conditions": [
+      "状态",
+      "级别"
+    ],
+    "measures": {
+      "0": {
+        "unit": "string",
+        "family": "text",
+        "column": "新牌号"
+      },
+      "1": {
+        "unit": "string",
+        "family": "text",
+        "column": "统一数字代号"
+      },
+      "2": {
+        "unit": "string",
+        "family": "text",
+        "column": "说明"
+      }
+    }
+  },
+  "rules": {
+    "extract_mode": "nonrecord",
+    "item_type": "classification"
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": "material_master_v1"
+  },
+  "checksum": "e02106746ec509dbc95fbee333fccf1240899e09c3b764f6e6276a925c0685a5",
+  "created_at": "2026-11-12T17:08:22+00:00"
+}

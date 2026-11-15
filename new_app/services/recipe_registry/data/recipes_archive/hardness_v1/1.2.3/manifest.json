@@ -1,0 +1,126 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "hardness_v1",
+  "version": "1.2.3",
+  "engine_api": "recipe-engine/1",
+  "profile": "mechanical_properties",
+  "signature": {
+    "profile": "mechanical_properties",
+    "orientation": "grade_rows",
+    "n_cols": 3,
+    "blocks": 0,
+    "tokens": [
+      "硬度",
+      "布氏硬度",
+      "洛氏硬度",
+      "维氏硬度",
+      "hrc",
+      "hrb",
+      "hv",
+      "hbw",
+      "hb"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "钢号",
+      "grade",
+      "材料牌号",
+      "名称",
+      "材料",
+      "材料名称",
+      "统一数字代号",
+      "新牌号",
+      "原牌号",
+      "designation"
+    ],
+    "conditions": [
+      "规格",
+      "状态",
+      "厚度",
+      "试验温度",
+      "试样",
+      "部位",
+      "热处理",
+      "方向",
+      "直径"
+    ],
+    "measures": {
+      "HB": {
+        "unit": "HB",
+        "family": "hardness"
+      },
+      "HBW": {
+        "unit": "HBW",
+        "family": "hardness"
+      },
+      "HRC": {
+        "unit": "HRC",
+        "family": "hardness"
+      },
+      "HRB": {
+        "unit": "HRB",
+        "family": "hardness"
+      },
+      "HV": {
+        "unit": "HV",
+        "family": "hardness"
+      },
+      "E": {
+        "family": "tensile",
+        "unit": "MPa"
+      },
+      "ReH": {
+        "family": "tensile",
+        "unit": "MPa"
+      },
+      "ReL": {
+        "family": "tensile",
+        "unit": "MPa"
+      },
+      "Rp1.0": {
+        "family": "tensile",
+        "unit": "MPa"
+      },
+      "KIC": {
+        "family": "fracture_toughness",
+        "unit": "MPa*sqrt(m)"
+      },
+      "KU2": {
+        "family": "impact",
+        "unit": "J"
+      },
+      "KU5": {
+        "family": "impact",
+        "unit": "J"
+      },
+      "KV2": {
+        "family": "impact",
+        "unit": "J"
+      },
+      "Z": {
+        "family": "tensile",
+        "unit": "%"
+      }
+    }
+  },
+  "rules": {
+    "hardness_scale_required": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": null
+  },
+  "checksum": "048cc795ee0102a82893c94666eebb91b43b1e38021d31305422da3a215ad134",
+  "created_at": "2026-11-14T05:11:45+00:00"
+}

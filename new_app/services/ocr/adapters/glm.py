@@ -13,6 +13,20 @@ PROMPT = (
     "表格必须使用 HTML <table> 标签，保留表头与合并单元格信息。不要添加解释。"
 )
 
+# 进程级并发闸门：多个文档同时解析时共享，避免超过模型 max-num-seqs。
+_LIMITERS: dict[tuple[int, int], asyncio.Semaphore] = {}
+
+
+def _request_limit() -> asyncio.Semaphore:
+    loop = asyncio.get_running_loop()
+    size = max(1, settings.glm_ocr_max_concurrency)
+    key = (id(loop), size)
+    limiter = _LIMITERS.get(key)
+    if limiter is None:
+        limiter = asyncio.Semaphore(size)
+        _LIMITERS[key] = limiter
+    return limiter
+
 
 class GlmOcrAdapter:
     """GLM vision OCR through an OpenAI-compatible chat completions endpoint."""
@@ -35,14 +49,18 @@ class GlmOcrAdapter:
         )
         try:
             async with asyncio.timeout(budget):
-                async with httpx.AsyncClient(
-                    timeout=settings.glm_ocr_timeout_seconds
-                ) as client:
-                    for page in pages:
+                semaphore = asyncio.Semaphore(
+                    max(1, settings.glm_ocr_page_concurrency)
+                )
+
+                async def run_page(page: Page) -> str:
+                    async with semaphore:
                         image_key = page.image_key or ""
-                        page.markdown = await self._ocr_image(
-                            client, assets[image_key]
-                        )
+                        return await self._ocr_image(assets[image_key])
+
+                results = await asyncio.gather(*(run_page(page) for page in pages))
+                for page, markdown in zip(pages, results, strict=True):
+                    page.markdown = markdown
         except TimeoutError as exc:
             raise OcrBackendError(
                 "OCR_BACKEND_TIMEOUT",
@@ -60,7 +78,7 @@ class GlmOcrAdapter:
             assets=assets,
         )
 
-    async def _ocr_image(self, client: httpx.AsyncClient, image: bytes) -> str:
+    async def _ocr_image(self, image: bytes, prompt: str | None = None) -> str:
         url = f"{settings.glm_ocr_base_url.rstrip('/')}/chat/completions"
         payload = {
             "model": settings.glm_ocr_model,
@@ -75,14 +93,28 @@ class GlmOcrAdapter:
                                 + base64.b64encode(image).decode("ascii")
                             },
                         },
-                        {"type": "text", "text": PROMPT},
+                        {"type": "text", "text": prompt or PROMPT},
                     ],
                 }
             ],
             "temperature": 0,
+            "max_tokens": settings.glm_ocr_max_tokens,
         }
+        timeout = httpx.Timeout(
+            connect=5.0,
+            read=settings.glm_ocr_read_timeout_seconds,
+            write=30.0,
+            pool=10.0,
+        )
         try:
-            response = await client.post(url, json=payload)
+            # A fresh connection per call: pooled sockets can be silently
+            # dropped by the NAT path while the client still sees ESTABLISHED,
+            # which hangs the request until the read timeout.
+            async with _request_limit():
+                async with httpx.AsyncClient(
+                    timeout=timeout, limits=httpx.Limits(max_keepalive_connections=0)
+                ) as client:
+                    response = await client.post(url, json=payload)
         except httpx.HTTPError as exc:
             raise OcrBackendError(
                 "OCR_BACKEND_UNAVAILABLE", f"glm ocr request failed: {exc}"
@@ -100,6 +132,14 @@ class GlmOcrAdapter:
                 str(part.get("text", "")) for part in content if isinstance(part, dict)
             )
         return str(content)
+
+    async def ocr_block(
+        self,
+        image: bytes,
+        prompt: str | None = None,
+    ) -> str:
+        """OCR one layout block image; used by the layout-first adapter."""
+        return await self._ocr_image(image, prompt=prompt)
 
 
 def _render_pages(data: bytes, request: OcrRequest) -> tuple[list[Page], dict[str, bytes]]:

@@ -25,7 +25,7 @@ from hanson_contracts import RuntimeInfo
 
 from .config import Settings
 from .executor import ExecutorError, RawExecution
-from .validation import REQUIRED_FILES
+from .validation import OUTPUT_FILES
 from .workspace import Workspace
 
 ENVELOPE_PREFIX = "HANSON_ENVELOPE "
@@ -49,6 +49,11 @@ def _pod_env(
         {"name": "HANSON_ENGINE_VERSION", "value": settings.engine_version},
         {"name": "HANSON_ENGINE_IMAGE", "value": settings.engine_image},
         {"name": "HANSON_ENGINE_IMAGE_DIGEST", "value": ""},
+        {"name": "HANSON_ENGINE_DIR", "value": "/work/engine"},
+        {
+            "name": "HANSON_ENGINE_ASSETS",
+            "value": json.dumps(workspace.assets, sort_keys=True, separators=(",", ":")),
+        },
         {"name": "HANSON_RUNTIME", "value": "containerd"},
         {"name": "HANSON_ISOLATION", "value": json.dumps(isolation, sort_keys=True)},
         {"name": "HANSON_EMIT_ENVELOPE", "value": "1"},
@@ -482,7 +487,7 @@ class KubernetesExecutor:
         files: dict[str, bytes] = {}
         total = 0
         for name, content in encoded.items():
-            if name not in REQUIRED_FILES:
+            if name not in OUTPUT_FILES:
                 raise ExecutorError(
                     "SANDBOX_OUTPUT_INVALID", f"unexpected output file: {name}"
                 )

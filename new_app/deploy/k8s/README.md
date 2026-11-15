@@ -8,7 +8,8 @@ M0 已落地命名空间、基础设施与七个服务的 Deployment/Service；H
 |---|---|
 | `base/namespace.yaml` | `hanson-standard` 命名空间 |
 | `base/infra.yaml` | Postgres、MinIO、Redis（Deployment + Service + PVC） |
-| `base/apps.yaml` | 七服务 Deployment/Service 与公共 ConfigMap |
+| `base/apps.yaml` | 七服务 Deployment/Service 与公共 ConfigMap（就绪探针统一走 `/readyz`，数据目录挂 PVC） |
+| `base/web.yaml` | 前端 nginx Deployment/Service 与 Ingress（`hanson.local`，需集群已装 ingress-nginx） |
 | `base/kustomization.yaml` | 汇总入口，配合 `kubectl apply -k` |
 
 ## 端口
@@ -16,6 +17,7 @@ M0 已落地命名空间、基础设施与七个服务的 Deployment/Service；H
 | 组件 | 集群内端口 | 访问方式 |
 |---|---|---|
 | api-gateway | 8000 | NodePort `30080` |
+| web | 80 | Ingress `hanson.local`（ingress-nginx） |
 | orchestration | 8001 | ClusterIP |
 | ocr | 8002 | ClusterIP |
 | agent | 8003 | ClusterIP |

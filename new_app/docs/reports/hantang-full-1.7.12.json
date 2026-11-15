@@ -1,0 +1,274 @@
+{
+  "generated_at": "2026-11-15T02:33:13+00:00",
+  "api": "http://localhost:18000",
+  "concurrency": 3,
+  "summary": {
+    "documents": 3,
+    "structured_ready": 3,
+    "failed": 0,
+    "status_counts": {
+      "STRUCTURED_READY": 3
+    },
+    "records": 80,
+    "fields": 192,
+    "tables": 202,
+    "empty_documents": 0,
+    "empty_document_rate": 0.0,
+    "review_findings": 40,
+    "docs_with_findings": 3,
+    "skipped_large": 0,
+    "skipped_large_names": [],
+    "p50_seconds": 174.29,
+    "p95_seconds": 334.38,
+    "max_seconds": 334.38,
+    "total_seconds": 640.36,
+    "diagnostics": {
+      "DOCUMENT_GRADE_FALLBACK": 2,
+      "DOCUMENT_INTELLIGENCE_APPLIED": 3,
+      "DOCUMENT_METADATA_APPLIED": 3,
+      "DUPLICATE_KEY_DISAMBIGUATED": 8,
+      "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY": 1,
+      "DUPLICATE_RECORDS_REMOVED": 1,
+      "EMPTY_RECORD_SKIPPED": 1,
+      "ENGINE_ASSETS": 3,
+      "FRAGMENT_RECORDS_MERGED": 1,
+      "GRADE_SPLIT": 1,
+      "MEASURE_COLUMN_MISSING": 337,
+      "NONRECORD_TABLE": 15,
+      "NO_RECORDS": 4,
+      "PARSER_BUNDLE": 3,
+      "ROW_KEY_NOT_FOUND": 2,
+      "ROW_SKIPPED": 1,
+      "STRATEGY_MISS": 6,
+      "UNROUTED_TABLE": 175
+    },
+    "strategy_documents": {},
+    "by_category": {
+      "国家标准": {
+        "documents": 3,
+        "structured_ready": 3,
+        "records": 80,
+        "fields": 192,
+        "empty_docs": 0,
+        "seconds": 508.78
+      }
+    }
+  },
+  "documents": [
+    {
+      "name": "GB 24627-2009过期.pdf",
+      "document_id": "43dda7dc-43c8-42a7-ad35-ecddc0fe3260",
+      "run_id": "33f11d55-1ec4-4417-a3f3-bd3ce0ad2f2f",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 174.29,
+      "records": 9,
+      "fields": 18,
+      "tables": 47,
+      "review_status": "warn",
+      "findings": 5,
+      "artifacts": 28,
+      "stage_ms": {
+        "ocr": 146062,
+        "routing": 8606,
+        "sandbox": 1734,
+        "cross_standard": 246,
+        "review": 16512
+      },
+      "category": "国家标准",
+      "bytes": 347137,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国家标准（54）\\GB 24627-2009过期.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-VALUE-002"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "3 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 45,
+        "PARSER_BUNDLE": 1,
+        "DOCUMENT_GRADE_FALLBACK": 2,
+        "ROW_KEY_NOT_FOUND": 1,
+        "MEASURE_COLUMN_MISSING": 30,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/33f11d55-1ec4-4417-a3f3-bd3ce0ad2f2f/sandbox/a89542a8b73e469c9f9eaba0decb2602/diagnostics.json"
+    },
+    {
+      "name": "GBT 13810-2017.pdf",
+      "document_id": "bb0e06c6-6716-460b-b6c3-6c6d40957c1c",
+      "run_id": "22d52691-5915-491a-9bf2-28d6cb3c56f0",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 334.38,
+      "records": 55,
+      "fields": 127,
+      "tables": 148,
+      "review_status": "warn",
+      "findings": 24,
+      "artifacts": 34,
+      "stage_ms": {
+        "ocr": 219595,
+        "routing": 9154,
+        "sandbox": 2548,
+        "cross_standard": 277,
+        "review": 101666
+      },
+      "category": "国家标准",
+      "bytes": 21207554,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国家标准（54）\\GBT 13810-2017.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-TABLE-001"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-TABLE-001",
+          "severity": "warning",
+          "message": "record count does not match the table summary"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "11 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "1 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 129,
+        "PARSER_BUNDLE": 1,
+        "NO_RECORDS": 3,
+        "ROW_KEY_NOT_FOUND": 1,
+        "MEASURE_COLUMN_MISSING": 160,
+        "STRATEGY_MISS": 6,
+        "NONRECORD_TABLE": 13,
+        "ROW_SKIPPED": 1,
+        "DUPLICATE_RECORDS_REMOVED": 1,
+        "FRAGMENT_RECORDS_MERGED": 1,
+        "DUPLICATE_KEY_DISAMBIGUATED": 8,
+        "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/22d52691-5915-491a-9bf2-28d6cb3c56f0/sandbox/53da5583753449389b7bc840b1a6162e/diagnostics.json"
+    },
+    {
+      "name": "GBT 14845-2026.pdf",
+      "document_id": "42c5fc5f-4146-4417-a130-2b75fd8abc32",
+      "run_id": "614d6401-e8f9-4ac1-886d-8df6a3cfbbd3",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.11,
+      "records": 16,
+      "fields": 47,
+      "tables": 7,
+      "review_status": "warn",
+      "findings": 11,
+      "artifacts": 30,
+      "stage_ms": {
+        "ocr": 40468,
+        "routing": 711,
+        "sandbox": 1200,
+        "review": 38647
+      },
+      "category": "国家标准",
+      "bytes": 294346,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国家标准（54）\\GBT 14845-2026.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "M5-VALUE-002"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "PARSER_BUNDLE": 1,
+        "MEASURE_COLUMN_MISSING": 147,
+        "EMPTY_RECORD_SKIPPED": 1,
+        "NO_RECORDS": 1,
+        "UNROUTED_TABLE": 1,
+        "NONRECORD_TABLE": 2,
+        "GRADE_SPLIT": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/614d6401-e8f9-4ac1-886d-8df6a3cfbbd3/sandbox/efd23b33397349b28db57ec58fd16eee/diagnostics.json"
+    }
+  ]
+}

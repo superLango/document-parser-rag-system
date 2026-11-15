@@ -4,6 +4,7 @@ import type { DocumentItem, RunItem } from "./types";
 export const documentsApi = {
   list: () => apiRequest<DocumentItem[]>("/documents"),
   get: (id: string) => apiRequest<DocumentItem>(`/documents/${id}`),
+  fileUrl: (id: string) => `/v1/documents/${id}/file`,
   upload: (file: File) => apiUpload<DocumentItem>("/documents", file),
   remove: (id: string) => apiRequest<void>(`/documents/${id}`, { method: "DELETE" }),
   createRun: (id: string) =>

@@ -1,0 +1,2369 @@
+{
+  "generated_at": "2026-11-15T06:48:41+00:00",
+  "api": "http://localhost:18000",
+  "concurrency": 4,
+  "parser_version": "1.7.24",
+  "summary": {
+    "documents": 30,
+    "structured_ready": 23,
+    "failed": 7,
+    "status_counts": {
+      "FAILED": 1,
+      "HUMAN_REVIEW": 1,
+      "REVIEW_FAILED": 1,
+      "STRUCTURED_READY": 23,
+      "UNROUTED": 4
+    },
+    "records": 836,
+    "fields": 2493,
+    "tables": 565,
+    "empty_documents": 0,
+    "empty_document_rate": 0.0,
+    "review_findings": 355,
+    "docs_with_findings": 28,
+    "skipped_large": 0,
+    "skipped_large_names": [],
+    "p50_seconds": 60.85,
+    "p95_seconds": 1797.46,
+    "max_seconds": 1890.77,
+    "total_seconds": 434.64,
+    "diagnostics": {
+      "DOCUMENT_GRADE_FALLBACK": 6,
+      "DOCUMENT_INTELLIGENCE_APPLIED": 21,
+      "DOCUMENT_METADATA_APPLIED": 21,
+      "DUPLICATE_KEY_DISAMBIGUATED": 12,
+      "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY": 5,
+      "DUPLICATE_RECORDS_REMOVED": 2,
+      "ELEMENT_COLUMNS_NOT_FOUND": 1,
+      "EMPTY_RECORD_SKIPPED": 139,
+      "ENGINE_ASSETS": 21,
+      "FRAGMENT_RECORDS_MERGED": 2,
+      "HEAT_TREATMENT_DERIVED": 1,
+      "MEASURE_COLUMN_MISSING": 1428,
+      "NONRECORD_TABLE": 59,
+      "NO_RECORDS": 20,
+      "PARSER_BUNDLE": 21,
+      "ROW_KEY_NOT_FOUND": 17,
+      "ROW_SKIPPED": 56,
+      "STRATEGY_BLOCKED": 1,
+      "STRATEGY_MISS": 24,
+      "UNROUTED_TABLE": 549,
+      "VALUE_OUT_OF_RANGE": 4
+    },
+    "strategy_documents": {},
+    "by_category": {
+      "企业标准": {
+        "documents": 3,
+        "structured_ready": 2,
+        "records": 3,
+        "fields": 13,
+        "empty_docs": 0,
+        "seconds": 503.75
+      },
+      "国军标": {
+        "documents": 7,
+        "structured_ready": 4,
+        "records": 304,
+        "fields": 818,
+        "empty_docs": 0,
+        "seconds": 7913.92
+      },
+      "国家标准": {
+        "documents": 1,
+        "structured_ready": 1,
+        "records": 54,
+        "fields": 234,
+        "empty_docs": 0,
+        "seconds": 0.24
+      },
+      "国际标准": {
+        "documents": 2,
+        "structured_ready": 2,
+        "records": 42,
+        "fields": 126,
+        "empty_docs": 0,
+        "seconds": 225.88
+      },
+      "美国标准": {
+        "documents": 11,
+        "structured_ready": 10,
+        "records": 349,
+        "fields": 1006,
+        "empty_docs": 0,
+        "seconds": 755.3
+      },
+      "行业标准": {
+        "documents": 6,
+        "structured_ready": 4,
+        "records": 84,
+        "fields": 296,
+        "empty_docs": 0,
+        "seconds": 544.36
+      }
+    }
+  },
+  "documents": [
+    {
+      "name": "GGX-FJLA-1-22.pdf",
+      "document_id": "d757e6df-9596-4588-9487-d71c1adcbabe",
+      "run_id": "02d85bfd-f0bf-4c15-ab0e-b96b269fe97a",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.18,
+      "records": 1,
+      "fields": 1,
+      "tables": 57,
+      "review_status": "warn",
+      "findings": 1,
+      "artifacts": 37,
+      "stage_ms": {
+        "ocr": 2210580,
+        "routing": 2812,
+        "sandbox": 1764,
+        "cross_standard": 259,
+        "review": 6978
+      },
+      "category": "企业标准",
+      "bytes": 2940104,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\企业标准（5）\\GGX-FJLA-1-22.pdf",
+      "reparsed": true,
+      "review_rules": [
+        ""
+      ],
+      "top_findings": [
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 56,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/02d85bfd-f0bf-4c15-ab0e-b96b269fe97a/sandbox/a3aea63e822f4ca4af35fc3f0be6ba16/diagnostics.json"
+    },
+    {
+      "name": "GGX-FJLA-46-22.pdf",
+      "document_id": "ea18d65e-2771-49c3-8d95-70caa27144dc",
+      "run_id": "33ec2568-81cd-42e3-953e-eac9c3831656",
+      "status": "FAILED",
+      "error_code": "INTERNAL",
+      "elapsed_seconds": 0.27,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "",
+      "findings": 0,
+      "artifacts": 0,
+      "stage_ms": {
+        "ocr": 644079
+      },
+      "category": "企业标准",
+      "bytes": 6988681,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\企业标准（5）\\GGX-FJLA-46-22.pdf",
+      "reparsed": true,
+      "review_rules": [],
+      "top_findings": [],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "XX454-2022.pdf",
+      "document_id": "11ad973c-328b-4239-a93e-6a8cad6c4cb9",
+      "run_id": "38e35809-3d82-4929-939a-c6d40ceac66e",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 503.3,
+      "records": 2,
+      "fields": 12,
+      "tables": 91,
+      "review_status": "warn",
+      "findings": 6,
+      "artifacts": 25,
+      "stage_ms": {
+        "ocr": 393574,
+        "routing": 5869,
+        "sandbox": 1448,
+        "cross_standard": 266,
+        "review": 46683
+      },
+      "category": "企业标准",
+      "bytes": 1196429,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\企业标准（5）\\XX454-2022.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-LOW-COVERAGE",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-VALUE-002"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "DOC-LOW-COVERAGE",
+          "severity": "warning",
+          "message": "most detected tables produced no records"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "8 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "3 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 75,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 9,
+        "ROW_KEY_NOT_FOUND": 4,
+        "MEASURE_COLUMN_MISSING": 242,
+        "NO_RECORDS": 6,
+        "ROW_SKIPPED": 6,
+        "EMPTY_RECORD_SKIPPED": 13,
+        "STRATEGY_MISS": 12,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/38e35809-3d82-4929-939a-c6d40ceac66e/sandbox/25f2438f00654882aefea8a53271e321/diagnostics.json"
+    },
+    {
+      "name": "GJB 2218-1994过期.pdf",
+      "document_id": "05e6eb82-8761-471e-81e8-626fc2fec362",
+      "run_id": "86171fcb-e596-4c14-abe9-7246a31289e5",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 700.04,
+      "records": 28,
+      "fields": 77,
+      "tables": 113,
+      "review_status": "warn",
+      "findings": 7,
+      "artifacts": 27,
+      "stage_ms": {
+        "ocr": 602278,
+        "routing": 5360,
+        "sandbox": 1430,
+        "cross_standard": 257,
+        "review": 37327
+      },
+      "category": "国军标",
+      "bytes": 199796,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准2\\国军标（33）\\GJB 2218-1994过期.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-INVENTORY-CONFLICT",
+        "DOC-REFERENCE-UNRESOLVED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-INVENTORY-CONFLICT",
+          "severity": "warning",
+          "message": "1 inventory item(s) have conflicting sources"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "6 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 102,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 6,
+        "MEASURE_COLUMN_MISSING": 103,
+        "ROW_SKIPPED": 1,
+        "NO_RECORDS": 3,
+        "DUPLICATE_KEY_DISAMBIGUATED": 3,
+        "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/86171fcb-e596-4c14-abe9-7246a31289e5/sandbox/9af43354c14b435bbcaf1135bb3c9f10/diagnostics.json"
+    },
+    {
+      "name": "GJB 2219A-2015.pdf",
+      "document_id": "cdfb52b0-5e1d-406b-b5cc-763946f0c2c0",
+      "run_id": "72fb0428-ebc4-48fe-bc31-8c75e5f160c4",
+      "status": "UNROUTED",
+      "error_code": "UNROUTED",
+      "elapsed_seconds": 1673.27,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "pass",
+      "findings": 3,
+      "artifacts": 28,
+      "stage_ms": {
+        "ocr": 1667612,
+        "routing": 659,
+        "sandbox": 1581,
+        "cross_standard": 273,
+        "review": 1849
+      },
+      "category": "国军标",
+      "bytes": 3046322,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准2\\国军标（33）\\GJB 2219A-2015.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-NO-APPLICABLE-TABLES",
+        "DOC-REFERENCE-UNRESOLVED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-NO-APPLICABLE-TABLES",
+          "severity": "info",
+          "message": "tables were detected but none can produce records"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "10 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "2 clause-only item(s) have no projected row"
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 29,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/72fb0428-ebc4-48fe-bc31-8c75e5f160c4/sandbox/99240f4253fc4e0b88724b84ec02e78b/diagnostics.json"
+    },
+    {
+      "name": "GJB 2296A-2005 航空用不锈钢无缝钢管规范.pdf",
+      "document_id": "d6ee6f98-2604-4675-a206-5717506da6f9",
+      "run_id": "27eb4f48-c0b4-45dc-9ad1-330d40b0f63d",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 422.04,
+      "records": 16,
+      "fields": 39,
+      "tables": 95,
+      "review_status": "warn",
+      "findings": 10,
+      "artifacts": 27,
+      "stage_ms": {
+        "ocr": 353068,
+        "routing": 1506,
+        "sandbox": 1371,
+        "cross_standard": 259,
+        "review": 65116
+      },
+      "category": "国军标",
+      "bytes": 1155840,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准2\\国军标（33）\\GJB 2296A-2005 航空用不锈钢无缝钢管规范.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-REFERENCE-UNRESOLVED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "21 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "1 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 90,
+        "PARSER_BUNDLE": 1,
+        "MEASURE_COLUMN_MISSING": 70,
+        "NONRECORD_TABLE": 3,
+        "DUPLICATE_KEY_DISAMBIGUATED": 3,
+        "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/27eb4f48-c0b4-45dc-9ad1-330d40b0f63d/sandbox/fb0656d449c34380a42f5654f6dc0905/diagnostics.json"
+    },
+    {
+      "name": "GJB 494A-2008.pdf",
+      "document_id": "5b3b8e17-2cad-4323-b308-48185a4249ef",
+      "run_id": "dbbf9c64-bb5e-436c-ad1a-f94a365156a9",
+      "status": "UNROUTED",
+      "error_code": "UNROUTED",
+      "elapsed_seconds": 1890.77,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "pass",
+      "findings": 2,
+      "artifacts": 43,
+      "stage_ms": {
+        "ocr": 1883835,
+        "routing": 2737,
+        "sandbox": 1210,
+        "cross_standard": 253,
+        "review": 2345
+      },
+      "category": "国军标",
+      "bytes": 1394163,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准2\\国军标（33）\\GJB 494A-2008.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "DOC-NO-APPLICABLE-TABLES",
+        "DOC-REFERENCE-UNRESOLVED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-NO-APPLICABLE-TABLES",
+          "severity": "info",
+          "message": "tables were detected but none can produce records"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "1 cited standard(s) are not in the normative-reference list"
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 98,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 2,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/dbbf9c64-bb5e-436c-ad1a-f94a365156a9/sandbox/cfad7021bf6a400fa9ea92dcdf6e5f2f/diagnostics.json"
+    },
+    {
+      "name": "GJB 5040-2001 航空用钢锻件规范.pdf",
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准2\\国军标（33）\\GJB 5040-2001 航空用钢锻件规范.pdf",
+      "category": "国军标",
+      "bytes": 874245,
+      "run_id": "de7c2294-aee5-44f2-920e-d9fa8f121d7f",
+      "reparsed": true,
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "parser_version": "1.7.24",
+      "records": 227,
+      "fields": 559,
+      "tables": 12,
+      "review_status": "warn",
+      "findings": 103,
+      "artifacts": 0,
+      "review_rules": [],
+      "top_findings": [
+        {
+          "id": "7a754b5f-c07b-4a8a-a75c-ced71f42e4f6",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T2-R1-HT",
+            "table_id": "T2",
+            "page_no": 3,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T2-R1"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "08ec41b6-347f-43c8-a903-be75c3dd2861",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T2-R2-HT",
+            "table_id": "T2",
+            "page_no": 3,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T2-R2"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "d6361521-415c-498f-8123-0dac4b8d43fc",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T2-R3-HT",
+            "table_id": "T2",
+            "page_no": 3,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T2-R3"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "0771ee56-ef5e-4978-bd9a-286da31b96b2",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T2-R4-HT",
+            "table_id": "T2",
+            "page_no": 3,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T2-R4"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "85076138-8b55-4cee-93b6-0a2362f60991",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T2-R5-HT",
+            "table_id": "T2",
+            "page_no": 3,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T2-R5"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        }
+      ],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "GJB 713A-2020航天用高温合金棒材规范.pdf",
+      "document_id": "d256e268-ca38-44c9-90c8-0e7bc4bdbe34",
+      "run_id": "d93d300e-5089-4f1e-b2c0-52319ad5bbf2",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 1797.46,
+      "records": 33,
+      "fields": 143,
+      "tables": 47,
+      "review_status": "warn",
+      "findings": 22,
+      "artifacts": 31,
+      "stage_ms": {
+        "ocr": 1728819,
+        "routing": 11095,
+        "sandbox": 3068,
+        "cross_standard": 505,
+        "review": 52376
+      },
+      "category": "国军标",
+      "bytes": 994742,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准2\\国军标（33）\\GJB 713A-2020航天用高温合金棒材规范.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-VALUE-002"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 39,
+        "PARSER_BUNDLE": 1,
+        "MEASURE_COLUMN_MISSING": 166,
+        "EMPTY_RECORD_SKIPPED": 106,
+        "NO_RECORDS": 2,
+        "ROW_KEY_NOT_FOUND": 3,
+        "STRATEGY_MISS": 6,
+        "VALUE_OUT_OF_RANGE": 4,
+        "HEAT_TREATMENT_DERIVED": 1,
+        "NONRECORD_TABLE": 2,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/d93d300e-5089-4f1e-b2c0-52319ad5bbf2/sandbox/bb906a68981c443f857966a6e0e3f851/diagnostics.json"
+    },
+    {
+      "name": "GJB 9581-2018 钛及钛合金焊丝规范.pdf",
+      "document_id": "df09efe1-1ee7-4662-b7f7-3d123ca1e399",
+      "run_id": "86960758-b927-41b4-917f-e07ac480ce98",
+      "status": "UNROUTED",
+      "error_code": "UNROUTED",
+      "elapsed_seconds": 1430.34,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "",
+      "findings": 0,
+      "artifacts": 15,
+      "stage_ms": {
+        "ocr": 1427855,
+        "routing": 1034
+      },
+      "category": "国军标",
+      "bytes": 1050469,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准2\\国军标（33）\\GJB 9581-2018 钛及钛合金焊丝规范.pdf",
+      "reparsed": true,
+      "review_rules": [],
+      "top_findings": [],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "GBT 8732-2014.pdf",
+      "document_id": "13b8fd38-1128-4b5d-b073-0fc6d8be8dcd",
+      "run_id": "5bcf98c8-6493-4638-92ae-f8582cac16d1",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.24,
+      "records": 54,
+      "fields": 234,
+      "tables": 17,
+      "review_status": "warn",
+      "findings": 2,
+      "artifacts": 34,
+      "stage_ms": {
+        "ocr": 479876,
+        "routing": 1591,
+        "sandbox": 1465,
+        "cross_standard": 248,
+        "review": 1523
+      },
+      "category": "国家标准",
+      "bytes": 799885,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国家标准（54）\\GBT 8732-2014.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "DOC-INVENTORY-CONFLICT",
+        "DOC-REFERENCE-UNRESOLVED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-INVENTORY-CONFLICT",
+          "severity": "warning",
+          "message": "2 inventory item(s) have conflicting sources"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "1 cited standard(s) are not in the normative-reference list"
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 7,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 6,
+        "MEASURE_COLUMN_MISSING": 65,
+        "NO_RECORDS": 1,
+        "ROW_SKIPPED": 1,
+        "DUPLICATE_KEY_DISAMBIGUATED": 1,
+        "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/5bcf98c8-6493-4638-92ae-f8582cac16d1/sandbox/b8021fc0f70c4d589445d389b487ff28/diagnostics.json"
+    },
+    {
+      "name": "ISO 5832-2-2025.pdf",
+      "document_id": "ca6baccd-b69a-4491-aefd-e53e988b2729",
+      "run_id": "9528c930-745f-4965-8ce0-65bc7aa63a9f",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 225.72,
+      "records": 19,
+      "fields": 66,
+      "tables": 8,
+      "review_status": "warn",
+      "findings": 7,
+      "artifacts": 31,
+      "stage_ms": {
+        "ocr": 207624,
+        "routing": 736,
+        "sandbox": 1539,
+        "cross_standard": 264,
+        "review": 13922
+      },
+      "category": "国际标准",
+      "bytes": 1833141,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国际标准（3）\\ISO 5832-2-2025.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-REFERENCE-UNRESOLVED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "2 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 6,
+        "PARSER_BUNDLE": 1,
+        "MEASURE_COLUMN_MISSING": 26,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/9528c930-745f-4965-8ce0-65bc7aa63a9f/sandbox/4b3c12a5404f411489b955f634d5a353/diagnostics.json"
+    },
+    {
+      "name": "ISO 5832-3-2021.pdf",
+      "document_id": "5bce310b-aaa7-45b8-8c00-76b7543c8642",
+      "run_id": "ccbe2a94-c81e-4b8e-a7bd-1c482377e94e",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.16,
+      "records": 23,
+      "fields": 60,
+      "tables": 8,
+      "review_status": "warn",
+      "findings": 18,
+      "artifacts": 35,
+      "stage_ms": {
+        "ocr": 44940,
+        "routing": 8468,
+        "sandbox": 1659,
+        "review": 37990
+      },
+      "category": "国际标准",
+      "bytes": 993509,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国际标准（3）\\ISO 5832-3-2021.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-TABLE-001"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-TABLE-001",
+          "severity": "warning",
+          "message": "record count does not match the table summary"
+        },
+        {
+          "rule_id": "M5-TABLE-001",
+          "severity": "warning",
+          "message": "record count does not match the table summary"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "2 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "1 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 4,
+        "PARSER_BUNDLE": 1,
+        "DOCUMENT_GRADE_FALLBACK": 4,
+        "ROW_KEY_NOT_FOUND": 3,
+        "MEASURE_COLUMN_MISSING": 82,
+        "DUPLICATE_RECORDS_REMOVED": 1,
+        "FRAGMENT_RECORDS_MERGED": 1,
+        "DUPLICATE_KEY_DISAMBIGUATED": 2,
+        "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/ccbe2a94-c81e-4b8e-a7bd-1c482377e94e/sandbox/e73436bd64274eaf933830f419f5f6a1/diagnostics.json"
+    },
+    {
+      "name": "AMS4967N.pdf",
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS4967N.pdf",
+      "category": "美国标准",
+      "bytes": 208729,
+      "run_id": "ce95ba82-bee6-4c80-bbc4-e763825f4cda",
+      "reparsed": true,
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "parser_version": "1.7.24",
+      "records": 64,
+      "fields": 184,
+      "tables": 8,
+      "review_status": "warn",
+      "findings": 9,
+      "artifacts": 0,
+      "review_rules": [],
+      "top_findings": [
+        {
+          "id": "d980edc7-be57-40de-b82d-28aa5a4a7e61",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T7-R1",
+            "property": "A"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "10",
+          "expected": "10 %",
+          "evidence_refs": [
+            "T7-R1"
+          ],
+          "confidence": 1.0,
+          "status": "open"
+        },
+        {
+          "id": "246d0d1c-87a2-446f-b4a4-ab18c580e3da",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T7-R2",
+            "property": "A"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "10",
+          "expected": "10 %",
+          "evidence_refs": [
+            "T7-R2"
+          ],
+          "confidence": 1.0,
+          "status": "open"
+        },
+        {
+          "id": "7cd816fc-9e70-4f95-b525-f2b86461e70f",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T7-R3",
+            "property": "A"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "10",
+          "expected": "10 %",
+          "evidence_refs": [
+            "T7-R3"
+          ],
+          "confidence": 1.0,
+          "status": "open"
+        },
+        {
+          "id": "e223c9ec-355e-46e8-b9a4-b36c7fbbdf5b",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T7-R4",
+            "property": "A"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "10",
+          "expected": "10 %",
+          "evidence_refs": [
+            "T7-R4"
+          ],
+          "confidence": 1.0,
+          "status": "open"
+        },
+        {
+          "id": "7ff5b430-88eb-4acf-b90d-2d9bd83cc4ed",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T7-R5",
+            "property": "A"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "10",
+          "expected": "10 %",
+          "evidence_refs": [
+            "T7-R5"
+          ],
+          "confidence": 1.0,
+          "status": "open"
+        }
+      ],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "AMS5663P.pdf",
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS5663P.pdf",
+      "category": "美国标准",
+      "bytes": 199608,
+      "run_id": "b8f77610-c26f-414a-a296-9ac6a0eec42b",
+      "reparsed": true,
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "parser_version": "1.7.24",
+      "records": 35,
+      "fields": 116,
+      "tables": 6,
+      "review_status": "warn",
+      "findings": 16,
+      "artifacts": 0,
+      "review_rules": [],
+      "top_findings": [
+        {
+          "id": "4415f3d5-7042-4c09-9247-6266c276f7f3",
+          "source": "deterministic",
+          "category": "consistency",
+          "severity": "warning",
+          "target": {
+            "level": "document",
+            "feature": "室温拉伸"
+          },
+          "message": "3 inventory item(s) have conflicting sources",
+          "rule_id": "DOC-INVENTORY-CONFLICT",
+          "observed": "method:ASTM E8!=ASTM E21；method:ASTM E8!=ASTM E10",
+          "expected": "one method per item",
+          "evidence_refs": [],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "f1829b9b-6fab-4abe-98ac-a21fd24ff05d",
+          "source": "deterministic",
+          "category": "reference",
+          "severity": "info",
+          "target": {
+            "level": "document"
+          },
+          "message": "1 cited standard(s) are not in the normative-reference list",
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "observed": "1",
+          "expected": "resolved against the normative list",
+          "evidence_refs": [],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "e7a2104e-b4f0-4b75-ae5b-05f7ae05f957",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T2-C1",
+            "property": "Bi"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "3e-05",
+          "expected": "0.0003 (3e-04)",
+          "evidence_refs": [
+            "T2-C1"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        },
+        {
+          "id": "585a3a6e-a2c5-44ed-b7f5-896e37856c11",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T2-C1",
+            "property": "Pb"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "0.0005",
+          "expected": "0.005 (50ppm)",
+          "evidence_refs": [
+            "T2-C1"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        },
+        {
+          "id": "d830fcd0-a48e-411e-aa6d-ef7de178d116",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T2-C1",
+            "property": "Se"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "0.0003",
+          "expected": "0.003 (30ppm)",
+          "evidence_refs": [
+            "T2-C1"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        }
+      ],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "ASME SB523-SB523M-2025.pdf",
+      "document_id": "63d1e371-6b01-4322-ab1c-94fde56dd3f1",
+      "run_id": "3aeabc80-2c0b-4af2-b5de-bbd579a1570b",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.16,
+      "records": 6,
+      "fields": 6,
+      "tables": 6,
+      "review_status": "warn",
+      "findings": 3,
+      "artifacts": 22,
+      "stage_ms": {
+        "ocr": 58124,
+        "routing": 688,
+        "sandbox": 1489,
+        "cross_standard": 245,
+        "review": 14835
+      },
+      "category": "美国标准",
+      "bytes": 110122,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASME SB523-SB523M-2025.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "3 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "PARSER_BUNDLE": 1,
+        "MEASURE_COLUMN_MISSING": 49,
+        "ROW_SKIPPED": 7,
+        "EMPTY_RECORD_SKIPPED": 2,
+        "NO_RECORDS": 1,
+        "UNROUTED_TABLE": 5,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/3aeabc80-2c0b-4af2-b5de-bbd579a1570b/sandbox/85d7c5843815475a94b9ffe87685e2c7/diagnostics.json"
+    },
+    {
+      "name": "ASTM B187_B187M-26--.pdf",
+      "document_id": "df695e2e-196d-4060-8bfc-e04ca9639b3f",
+      "run_id": "e9cca1d8-292f-40e4-b03e-289ec8718c4f",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 196.29,
+      "records": 40,
+      "fields": 96,
+      "tables": 18,
+      "review_status": "warn",
+      "findings": 18,
+      "artifacts": 27,
+      "stage_ms": {
+        "ocr": 91374,
+        "routing": 13523,
+        "sandbox": 1648,
+        "cross_standard": 263,
+        "review": 88214
+      },
+      "category": "美国标准",
+      "bytes": 291359,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASTM B187_B187M-26--.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-VALUE-002"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 8,
+        "PARSER_BUNDLE": 1,
+        "ROW_KEY_NOT_FOUND": 2,
+        "MEASURE_COLUMN_MISSING": 102,
+        "EMPTY_RECORD_SKIPPED": 6,
+        "NONRECORD_TABLE": 7,
+        "STRATEGY_BLOCKED": 1,
+        "NO_RECORDS": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/e9cca1d8-292f-40e4-b03e-289ec8718c4f/sandbox/586156a172224abf8f4514c3aaea305a/diagnostics.json"
+    },
+    {
+      "name": "ASTM B338-17(2026)--+.pdf",
+      "document_id": "403c98d6-3ef1-4337-8b27-48faff25141d",
+      "run_id": "c01678d8-d50c-41fe-92fd-628806c7fd8c",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 324.57,
+      "records": 69,
+      "fields": 166,
+      "tables": 7,
+      "review_status": "warn",
+      "findings": 12,
+      "artifacts": 27,
+      "stage_ms": {
+        "ocr": 255687,
+        "routing": 601,
+        "sandbox": 1639,
+        "cross_standard": 252,
+        "review": 65849
+      },
+      "category": "美国标准",
+      "bytes": 271770,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASTM B338-17(2026)--+.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "M5-TABLE-001"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-TABLE-001",
+          "severity": "warning",
+          "message": "record count does not match the table summary"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "1 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "PARSER_BUNDLE": 1,
+        "ROW_KEY_NOT_FOUND": 2,
+        "MEASURE_COLUMN_MISSING": 106,
+        "ROW_SKIPPED": 32,
+        "UNROUTED_TABLE": 3,
+        "NONRECORD_TABLE": 1,
+        "DUPLICATE_RECORDS_REMOVED": 1,
+        "DUPLICATE_KEY_DISAMBIGUATED": 3,
+        "DUPLICATE_KEY_DISAMBIGUATED_SUMMARY": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/c01678d8-d50c-41fe-92fd-628806c7fd8c/sandbox/d579c342212a4a40a5c1088d93d5ab73/diagnostics.json"
+    },
+    {
+      "name": "ASTM B708-25--+.pdf",
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASTM B708-25--+.pdf",
+      "category": "美国标准",
+      "bytes": 289549,
+      "run_id": "eb3e7521-6f7c-431c-b732-a6ae828a9b1c",
+      "reparsed": true,
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "parser_version": "1.7.24",
+      "records": 29,
+      "fields": 230,
+      "tables": 6,
+      "review_status": "warn",
+      "findings": 21,
+      "artifacts": 0,
+      "review_rules": [],
+      "top_findings": [
+        {
+          "id": "0cd8d021-48e4-4270-921b-30dfa7ef1c54",
+          "source": "deterministic",
+          "category": "consistency",
+          "severity": "warning",
+          "target": {
+            "record_id": "T2-C6",
+            "table_id": "T2",
+            "page_no": 3
+          },
+          "message": "same grade and conditions appear in multiple records",
+          "rule_id": "M5-DUP-001",
+          "observed": "T2-C6",
+          "expected": "T1-C6",
+          "evidence_refs": [],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "e1ecf692-2d90-4385-8cd2-79fe8c4e0efb",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T5-C2",
+            "property": "Al"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "5",
+          "expected": "5 ppm",
+          "evidence_refs": [
+            "T5-C2"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        },
+        {
+          "id": "d311fc50-9556-4611-9d31-44ab400239f6",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T5-C2",
+            "property": "C"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "40",
+          "expected": "40 ppm",
+          "evidence_refs": [
+            "T5-C2"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        },
+        {
+          "id": "74dd4a40-2f78-4fc5-a9f7-657c43664641",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T5-C2",
+            "property": "O"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "100",
+          "expected": "100 ppm",
+          "evidence_refs": [
+            "T5-C2"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        },
+        {
+          "id": "4c2098af-53d0-46e0-871b-b0cbf13e3ed2",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T5-C2",
+            "property": "W"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "150",
+          "expected": "150 ppm",
+          "evidence_refs": [
+            "T5-C2"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        }
+      ],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "ASTM B898-20(2026)---.pdf",
+      "document_id": "741881f7-7d28-4069-b7f3-7d7e8151a2b7",
+      "run_id": "a6af3b46-8f07-4dfd-aebe-1a4a578a05c6",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.2,
+      "records": 21,
+      "fields": 21,
+      "tables": 11,
+      "review_status": "warn",
+      "findings": 7,
+      "artifacts": 26,
+      "stage_ms": {
+        "ocr": 17729,
+        "routing": 1374,
+        "sandbox": 1331,
+        "cross_standard": 243,
+        "review": 45914
+      },
+      "category": "美国标准",
+      "bytes": 399045,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASTM B898-20(2026)---.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "3 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 5,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 6,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/a6af3b46-8f07-4dfd-aebe-1a4a578a05c6/sandbox/38fda2632eb44a22918d776aed70a387/diagnostics.json"
+    },
+    {
+      "name": "ASTM F136-26--.pdf",
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASTM F136-26--.pdf",
+      "category": "美国标准",
+      "bytes": 261792,
+      "run_id": "12ee601d-660a-43ec-ae3f-b829a61e8b06",
+      "reparsed": true,
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "parser_version": "1.7.24",
+      "records": 21,
+      "fields": 35,
+      "tables": 4,
+      "review_status": "warn",
+      "findings": 13,
+      "artifacts": 0,
+      "review_rules": [],
+      "top_findings": [
+        {
+          "id": "a10e3166-cb21-4bc9-af80-0c15eae3442c",
+          "source": "deterministic",
+          "category": "consistency",
+          "severity": "warning",
+          "target": {
+            "table_id": "T4"
+          },
+          "message": "record count does not match the table summary",
+          "rule_id": "M5-TABLE-001",
+          "observed": "4",
+          "expected": "5",
+          "evidence_refs": [],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "1c3524a9-2099-44e0-bfc7-464274a7710c",
+          "source": "deterministic",
+          "category": "reference",
+          "severity": "info",
+          "target": {
+            "level": "document"
+          },
+          "message": "4 cited standard(s) are not in the normative-reference list",
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "observed": "4",
+          "expected": "resolved against the normative list",
+          "evidence_refs": [],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "6fabe82b-670c-487c-9c81-a860bb57cd0b",
+          "source": "deterministic",
+          "category": "coverage",
+          "severity": "info",
+          "target": {
+            "level": "document"
+          },
+          "message": "2 clause-only item(s) have no projected row",
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "observed": "尺寸；弯曲",
+          "expected": "mapped to a numeric or qualitative row",
+          "evidence_refs": [],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "5970166a-32d4-48f9-9270-7af367295f76",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T4-R2",
+            "property": "Rm"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "125.0",
+          "expected": "860",
+          "evidence_refs": [
+            "T4-R2"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        },
+        {
+          "id": "247360ef-a031-426b-80b6-1d2202b47663",
+          "source": "model",
+          "category": "unit",
+          "severity": "error",
+          "target": {
+            "record_id": "T4-R2",
+            "property": "Rp0.2"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "115.0",
+          "expected": "795",
+          "evidence_refs": [
+            "T4-R2"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        }
+      ],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "ASTM F1580-26--+.pdf",
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASTM F1580-26--+.pdf",
+      "category": "美国标准",
+      "bytes": 252226,
+      "run_id": "7bdfdc3e-2b6b-481f-b880-e53d0bab2ce7",
+      "reparsed": false,
+      "status": "HUMAN_REVIEW",
+      "error_code": null,
+      "parser_version": "1.7.24",
+      "records": 5,
+      "fields": 20,
+      "tables": 0,
+      "review_status": "warn",
+      "findings": 8,
+      "artifacts": 0,
+      "review_rules": [],
+      "top_findings": [
+        {
+          "id": "b2ef7edb-351a-4cb2-91af-ab222f93692f",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T1-C1",
+            "table_id": "T1",
+            "page_no": 2,
+            "property": "Ti"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "balanceI",
+          "expected": null,
+          "evidence_refs": [
+            "T1-C1"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "b49e9088-0988-4e58-a3c0-8f7fb5042eb7",
+          "source": "deterministic",
+          "category": "reference",
+          "severity": "info",
+          "target": {
+            "level": "document"
+          },
+          "message": "1 cited standard(s) are not in the normative-reference list",
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "observed": "1",
+          "expected": "resolved against the normative list",
+          "evidence_refs": [],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "e8d4f1ea-d469-4a3d-8112-0fe3f2072842",
+          "source": "deterministic",
+          "category": "coverage",
+          "severity": "info",
+          "target": {
+            "level": "document"
+          },
+          "message": "2 clause-only item(s) have no projected row",
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "observed": "外观；尺寸",
+          "expected": "mapped to a numeric or qualitative row",
+          "evidence_refs": [],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "e70b4604-bdeb-45c2-af4c-e56f3c51f7c9",
+          "source": "model",
+          "category": "semantic",
+          "severity": "error",
+          "target": {
+            "record_id": "T1-C1",
+            "property": "Ti"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "balanceI",
+          "expected": "numeric value or 'balance'",
+          "evidence_refs": [
+            "T1-C1"
+          ],
+          "confidence": 0.95,
+          "status": "open"
+        },
+        {
+          "id": "f1fe7164-0c23-464f-80e8-dd46836013b3",
+          "source": "model",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T1-C1",
+            "property": "Co"
+          },
+          "message": "",
+          "rule_id": "",
+          "observed": "≤<0.10",
+          "expected": "standard operator format (e.g., ≤0.10)",
+          "evidence_refs": [
+            "T1-C1"
+          ],
+          "confidence": 0.85,
+          "status": "open"
+        }
+      ],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "ASTM F2063-26--.pdf",
+      "document_id": "44df96e9-0766-46f8-8436-69bb18692aa6",
+      "run_id": "11a501c7-f428-4687-8b2c-8e0d6fe9d176",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 141.26,
+      "records": 21,
+      "fields": 32,
+      "tables": 4,
+      "review_status": "warn",
+      "findings": 9,
+      "artifacts": 26,
+      "stage_ms": {
+        "ocr": 20802,
+        "routing": 548,
+        "sandbox": 1414,
+        "cross_standard": 241,
+        "review": 51716
+      },
+      "category": "美国标准",
+      "bytes": 269224,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASTM F2063-26--.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-INVENTORY-CONFLICT",
+        "DOC-REFERENCE-UNRESOLVED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-INVENTORY-CONFLICT",
+          "severity": "warning",
+          "message": "1 inventory item(s) have conflicting sources"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "3 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 1,
+        "PARSER_BUNDLE": 1,
+        "DOCUMENT_GRADE_FALLBACK": 2,
+        "NONRECORD_TABLE": 1,
+        "ROW_KEY_NOT_FOUND": 1,
+        "MEASURE_COLUMN_MISSING": 29,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/11a501c7-f428-4687-8b2c-8e0d6fe9d176/sandbox/9dcf545221784b7192d4fb37f3af1def/diagnostics.json"
+    },
+    {
+      "name": "ASTM F67-24--.pdf",
+      "document_id": "111f57c9-8c0f-46d7-abc6-98e572d15dc2",
+      "run_id": "067e1503-7cba-45e9-9b3e-db221abcf6e0",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 92.82,
+      "records": 38,
+      "fields": 100,
+      "tables": 6,
+      "review_status": "warn",
+      "findings": 13,
+      "artifacts": 25,
+      "stage_ms": {
+        "ocr": 43253,
+        "routing": 974,
+        "sandbox": 1502,
+        "cross_standard": 243,
+        "review": 44936
+      },
+      "category": "美国标准",
+      "bytes": 366412,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASTM F67-24--.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-TABLE-001"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-TABLE-001",
+          "severity": "warning",
+          "message": "record count does not match the table summary"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "1 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "1 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "PARSER_BUNDLE": 1,
+        "MEASURE_COLUMN_MISSING": 131,
+        "EMPTY_RECORD_SKIPPED": 7,
+        "NO_RECORDS": 1,
+        "NONRECORD_TABLE": 2,
+        "FRAGMENT_RECORDS_MERGED": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/067e1503-7cba-45e9-9b3e-db221abcf6e0/sandbox/1b9fd2d2a66448b183e6e131c3bcb308/diagnostics.json"
+    },
+    {
+      "name": "HB 20079-2012 航空用高强度沉淀硬化不锈钢锻件规范.pdf",
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\行业标准（13）\\HB 20079-2012 航空用高强度沉淀硬化不锈钢锻件规范.pdf",
+      "category": "行业标准",
+      "bytes": 2713679,
+      "run_id": "42eaefcb-800f-4bc7-8817-fc1cc3b8c3f2",
+      "reparsed": true,
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "parser_version": "1.7.24",
+      "records": 53,
+      "fields": 188,
+      "tables": 13,
+      "review_status": "warn",
+      "findings": 12,
+      "artifacts": 0,
+      "review_rules": [],
+      "top_findings": [
+        {
+          "id": "cfe65b14-b27c-4e42-be21-a5ae3ec65c7e",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T5-R1-HT",
+            "table_id": "T5",
+            "page_no": 6,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T5-R1"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "62aecc25-fad6-4818-a389-56dba73b30f7",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T5-R2-HT",
+            "table_id": "T5",
+            "page_no": 6,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T5-R2"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "b85a4360-bb15-4053-a435-f1ebe5aae3e5",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T5-R3-HT",
+            "table_id": "T5",
+            "page_no": 6,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "水冷、油冷、空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T5-R3"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "7784c6a1-1b4a-401b-a1da-7476f84455b9",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T5-R4-HT",
+            "table_id": "T5",
+            "page_no": 6,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T5-R4"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        },
+        {
+          "id": "2eb78753-e74f-4d4e-b670-9b0471ec3af5",
+          "source": "deterministic",
+          "category": "semantic",
+          "severity": "warning",
+          "target": {
+            "record_id": "T5-R5-HT",
+            "table_id": "T5",
+            "page_no": 6,
+            "property": "冷却介质"
+          },
+          "message": "value is not numeric",
+          "rule_id": "M5-VALUE-002",
+          "observed": "空冷",
+          "expected": null,
+          "evidence_refs": [
+            "T5-R5"
+          ],
+          "confidence": 0.99,
+          "status": "open"
+        }
+      ],
+      "diagnostics": {},
+      "strategy_hits": [],
+      "diagnostic_key": ""
+    },
+    {
+      "name": "NB-T 47019.8-2011 锅炉、热交换器用管订货技术条件 第8部分 有色金属 钛和钛合金.pdf",
+      "document_id": "b4117f7b-82bb-4e05-a884-199e4036bb50",
+      "run_id": "868644d0-96f3-4d54-b09f-2a8f53fb740f",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 82.9,
+      "records": 18,
+      "fields": 61,
+      "tables": 10,
+      "review_status": "warn",
+      "findings": 10,
+      "artifacts": 28,
+      "stage_ms": {
+        "ocr": 56572,
+        "routing": 1065,
+        "sandbox": 1558,
+        "cross_standard": 250,
+        "review": 22511
+      },
+      "category": "行业标准",
+      "bytes": 1154474,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\行业标准（13）\\NB-T 47019.8-2011 锅炉、热交换器用管订货技术条件 第8部分 有色金属 钛和钛合金.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-VALUE-002"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 3,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 5,
+        "MEASURE_COLUMN_MISSING": 67,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/868644d0-96f3-4d54-b09f-2a8f53fb740f/sandbox/b6233009cb044e7dad84ec8a40763866/diagnostics.json"
+    },
+    {
+      "name": "YST 1077-2015.pdf",
+      "document_id": "2cc73d6f-3848-4cc2-b04b-e2f2471eeff1",
+      "run_id": "5cc5ab3d-2099-4482-a6ca-61583cbb2755",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 60.85,
+      "records": 8,
+      "fields": 18,
+      "tables": 14,
+      "review_status": "warn",
+      "findings": 7,
+      "artifacts": 26,
+      "stage_ms": {
+        "ocr": 41160,
+        "routing": 1288,
+        "sandbox": 1210,
+        "cross_standard": 238,
+        "review": 16653
+      },
+      "category": "行业标准",
+      "bytes": 2202401,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\行业标准（13）\\YST 1077-2015.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-REFERENCE-UNRESOLVED",
+        "M5-VALUE-002"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "1 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 5,
+        "PARSER_BUNDLE": 1,
+        "NONRECORD_TABLE": 4,
+        "MEASURE_COLUMN_MISSING": 99,
+        "NO_RECORDS": 3,
+        "ROW_KEY_NOT_FOUND": 2,
+        "EMPTY_RECORD_SKIPPED": 5,
+        "STRATEGY_MISS": 6,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/5cc5ab3d-2099-4482-a6ca-61583cbb2755/sandbox/14dffec6b1df4428b38e150e9148adfd/diagnostics.json"
+    },
+    {
+      "name": "YST 397-2015.pdf",
+      "document_id": "5e305000-d2ee-40ab-b8c1-07a797f5eecd",
+      "run_id": "59f181b4-5a9d-4d24-a320-a92dacc98dc1",
+      "status": "UNROUTED",
+      "error_code": "UNROUTED",
+      "elapsed_seconds": 203.98,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "pass",
+      "findings": 3,
+      "artifacts": 25,
+      "stage_ms": {
+        "ocr": 197160,
+        "routing": 433,
+        "sandbox": 1173,
+        "cross_standard": 238,
+        "review": 2728
+      },
+      "category": "行业标准",
+      "bytes": 2182345,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\行业标准（13）\\YST 397-2015.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-NO-APPLICABLE-TABLES",
+        "DOC-REFERENCE-UNRESOLVED"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-NO-APPLICABLE-TABLES",
+          "severity": "info",
+          "message": "tables were detected but none can produce records"
+        },
+        {
+          "rule_id": "DOC-REFERENCE-UNRESOLVED",
+          "severity": "info",
+          "message": "1 cited standard(s) are not in the normative-reference list"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "2 clause-only item(s) have no projected row"
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "PARSER_BUNDLE": 1,
+        "MEASURE_COLUMN_MISSING": 49,
+        "ROW_SKIPPED": 9,
+        "NO_RECORDS": 1,
+        "UNROUTED_TABLE": 4,
+        "NONRECORD_TABLE": 2,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/59f181b4-5a9d-4d24-a320-a92dacc98dc1/sandbox/61961afab72248abb1f8fee497db9c14/diagnostics.json"
+    },
+    {
+      "name": "YST 579-2014.pdf",
+      "document_id": "c6eaf047-e2a8-4860-8cdf-2095b8a3f3df",
+      "run_id": "e64e126a-3f6c-469d-954a-fc326335a911",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 52.53,
+      "records": 5,
+      "fields": 29,
+      "tables": 4,
+      "review_status": "warn",
+      "findings": 9,
+      "artifacts": 24,
+      "stage_ms": {
+        "ocr": 14835,
+        "routing": 537,
+        "sandbox": 2007,
+        "cross_standard": 242,
+        "review": 33015
+      },
+      "category": "行业标准",
+      "bytes": 1143449,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\行业标准（13）\\YST 579-2014.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "M5-VALUE-002"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "M5-VALUE-002",
+          "severity": "warning",
+          "message": "value is not numeric"
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "PARSER_BUNDLE": 1,
+        "MEASURE_COLUMN_MISSING": 42,
+        "UNROUTED_TABLE": 2,
+        "NONRECORD_TABLE": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/e64e126a-3f6c-469d-954a-fc326335a911/sandbox/119a0ebc7b9e4a9a82f79bc0d637ef17/diagnostics.json"
+    },
+    {
+      "name": "YST 656-2015.pdf",
+      "document_id": "702fbb32-0760-4150-99fb-6ef83af61364",
+      "run_id": "4e76acab-b919-49bf-addb-f63e83e84d96",
+      "status": "REVIEW_FAILED",
+      "error_code": "REVIEW_FAILED",
+      "elapsed_seconds": 144.1,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "fail",
+      "findings": 4,
+      "artifacts": 22,
+      "stage_ms": {
+        "ocr": 55355,
+        "routing": 725,
+        "sandbox": 1565,
+        "cross_standard": 252,
+        "review": 11451
+      },
+      "category": "行业标准",
+      "bytes": 1383313,
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\行业标准（13）\\YST 656-2015.pdf",
+      "reparsed": true,
+      "review_rules": [
+        "",
+        "DOC-CLAUSE-UNMAPPED",
+        "DOC-NO-RECORDS"
+      ],
+      "top_findings": [
+        {
+          "rule_id": "DOC-NO-RECORDS",
+          "severity": "error",
+          "message": "document contains tables but no records were extracted"
+        },
+        {
+          "rule_id": "DOC-CLAUSE-UNMAPPED",
+          "severity": "info",
+          "message": "1 clause-only item(s) have no projected row"
+        },
+        {
+          "rule_id": "",
+          "severity": "error",
+          "message": ""
+        },
+        {
+          "rule_id": "",
+          "severity": "warning",
+          "message": ""
+        }
+      ],
+      "diagnostics": {
+        "ENGINE_ASSETS": 1,
+        "UNROUTED_TABLE": 7,
+        "PARSER_BUNDLE": 1,
+        "ELEMENT_COLUMNS_NOT_FOUND": 1,
+        "NO_RECORDS": 1,
+        "DOCUMENT_METADATA_APPLIED": 1,
+        "DOCUMENT_INTELLIGENCE_APPLIED": 1
+      },
+      "strategy_hits": [],
+      "diagnostic_key": "runs/4e76acab-b919-49bf-addb-f63e83e84d96/sandbox/5d78a3031e8b40f996763d8da063ad7d/diagnostics.json"
+    }
+  ]
+}

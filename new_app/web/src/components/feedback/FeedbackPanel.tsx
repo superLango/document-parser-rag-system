@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronDown, MessageSquarePlus, PlayCircle, ShieldCheck } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronRight, MessageSquarePlus, PlayCircle, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { feedbackApi } from "../../api/feedback";
 import type { FeedbackDetail } from "../../api/types";
@@ -8,6 +9,7 @@ import { Badge, Button, Card, CardContent, EmptyState, Skeleton } from "../ui/pr
 import { Select } from "../ui/form";
 import { FEEDBACK_STATUS, ROOT_CAUSE_LABELS } from "../../lib/status";
 import { formatDateTime } from "../../lib/utils";
+import { useToast } from "../ui/toast";
 import { FeedbackDialog } from "./FeedbackDialog";
 import { VerificationDialog } from "./VerificationDialog";
 
@@ -25,9 +27,11 @@ export function FeedbackPanel({
   onSeedConsumed?: () => void;
 }) {
   const queryClient = useQueryClient();
+  const { push } = useToast();
   const [status, setStatus] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [verifyTarget, setVerifyTarget] = useState<FeedbackDetail | null>(null);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (seed) setCreateOpen(true);
@@ -46,7 +50,34 @@ export function FeedbackPanel({
     }
   });
 
-  const items = useMemo(() => query.data ?? [], [query.data]);
+  const approveCodeMutation = useMutation({
+    mutationFn: (id: string) => feedbackApi.approveCode(id, "用户应用修复结果"),
+    onSuccess: () => {
+      push("success", "已应用修复结果", "代码补丁已发布到 shadow，可在新运行中查看");
+      void queryClient.invalidateQueries({ queryKey: ["feedback", documentId] });
+    },
+    onError: (error: Error) => push("error", "应用失败", error.message)
+  });
+
+  const applyRecipeMutation = useMutation({
+    mutationFn: (id: string) =>
+      // 用户点击“应用修复结果”即视为确认应用，已确认字段变化也一并接受。
+      feedbackApi.verify(id, "approve", "用户应用修复结果", true),
+    onSuccess: () => {
+      push("success", "已应用修复结果", "候选配方已进入 shadow，可在新运行中查看");
+      void queryClient.invalidateQueries({ queryKey: ["feedback", documentId] });
+      void queryClient.invalidateQueries({ queryKey: ["runs"] });
+    },
+    onError: (error: Error) => push("error", "应用失败", error.message)
+  });
+
+  const items = useMemo(
+    () =>
+      (query.data ?? []).filter(
+        (item) => !String(item.target.rule_id ?? "").startsWith("DOC-")
+      ),
+    [query.data]
+  );
 
   function refresh() {
     void queryClient.invalidateQueries({ queryKey: ["feedback", documentId] });
@@ -101,10 +132,26 @@ export function FeedbackPanel({
               tone: "neutral" as const
             };
             const canProcess = item.status === "open" || item.status === "needs_more_info";
+            const open = Boolean(expanded[item.id]);
             return (
               <Card key={item.id}>
                 <CardContent className="space-y-3">
                   <div className="flex flex-wrap items-start gap-2">
+                    <button
+                      type="button"
+                      className="mt-0.5 rounded-md p-0.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                      onClick={() =>
+                        setExpanded((prev) => ({ ...prev, [item.id]: !open }))
+                      }
+                      aria-expanded={open}
+                      title={open ? "收起详情" : "展开详情"}
+                    >
+                      {open ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </button>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-sm font-medium">{item.description}</span>
@@ -121,8 +168,57 @@ export function FeedbackPanel({
                         {item.target.recipe_id ? ` · ${item.target.recipe_id}` : ""}
                         {item.expected_value ? ` · 期望 ${item.expected_value}` : ""}
                       </p>
+                      {item.status === "verified" && item.verification?.passed ? (
+                        <p className="mt-1 text-[11px] text-emerald-700">
+                          已验证通过，点击「应用修复结果」后会生成新的运行，可在「查看新结果」中确认。
+                        </p>
+                      ) : null}
+                      {item.status === "applied" ? (
+                        <p className="mt-1 text-[11px] text-emerald-700">
+                          已自动应用修复，新运行已生成，点击「查看新结果」查看。
+                        </p>
+                      ) : null}
                     </div>
                     <div className="flex items-center gap-1.5">
+                      {item.root_cause?.applied_run_id ? (
+                        <Link
+                          to={`/documents/${item.document_id}?run=${item.root_cause.applied_run_id}`}
+                          className="inline-flex h-8 items-center rounded-md border border-border bg-card px-2.5 text-xs font-medium text-primary-strong shadow-soft transition-colors hover:border-primary/40"
+                        >
+                          查看新结果
+                        </Link>
+                      ) : null}
+                      {item.status === "verified" &&
+                      item.verification?.passed &&
+                      item.proposal?.scope === "engine" ? (
+                        <Button
+                          size="sm"
+                          icon={<CheckCircle2 className="h-3.5 w-3.5" />}
+                          loading={
+                            approveCodeMutation.isPending &&
+                            approveCodeMutation.variables === item.id
+                          }
+                          onClick={() => approveCodeMutation.mutate(item.id)}
+                        >
+                          应用修复结果
+                        </Button>
+                      ) : null}
+                      {item.status === "verified" &&
+                      item.verification?.passed &&
+                      Boolean(item.candidate) &&
+                      item.proposal?.scope !== "engine" ? (
+                        <Button
+                          size="sm"
+                          icon={<CheckCircle2 className="h-3.5 w-3.5" />}
+                          loading={
+                            applyRecipeMutation.isPending &&
+                            applyRecipeMutation.variables === item.id
+                          }
+                          onClick={() => applyRecipeMutation.mutate(item.id)}
+                        >
+                          应用修复结果
+                        </Button>
+                      ) : null}
                       {canProcess ? (
                         <Button
                           size="sm"
@@ -148,6 +244,32 @@ export function FeedbackPanel({
                       ) : null}
                     </div>
                   </div>
+
+                  {open ? (
+                    <>
+                  {item.root_cause?.intent ||
+                  item.root_cause?.target?.table_id ? (
+                    <div className="rounded-lg border border-border px-3 py-2 text-xs">
+                      <p>
+                        <span className="text-muted-foreground">系统理解：</span>
+                        {[
+                          item.root_cause?.intent?.subject,
+                          item.root_cause?.intent?.field,
+                          item.root_cause?.intent?.assumption
+                        ]
+                          .filter(Boolean)
+                          .join(" · ") || "未定位到具体对象"}
+                      </p>
+                      {item.root_cause?.target?.table_id ? (
+                        <p className="mt-0.5 text-muted-foreground">
+                          定位：表 {item.root_cause.target.table_id}
+                          {item.root_cause.target.page_no
+                            ? `（第 ${item.root_cause.target.page_no} 页）`
+                            : ""}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
 
                   {item.triage ? (
                     <div className="rounded-lg border border-border bg-background-soft px-3 py-2 text-xs">
@@ -217,6 +339,8 @@ export function FeedbackPanel({
                         ))}
                       </ol>
                     </details>
+                  ) : null}
+                    </>
                   ) : null}
                 </CardContent>
               </Card>

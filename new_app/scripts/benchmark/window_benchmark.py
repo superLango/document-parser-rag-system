@@ -5,8 +5,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import statistics
 import subprocess
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import httpx
@@ -25,6 +27,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="Qwen3.6-35B-A3B-NVFP4")
     parser.add_argument("--sizes", default="32000,64000,120000")
     parser.add_argument("--max-tokens", type=int, default=32)
+    # P2-02：并发 4 组合压测（32K/64K/128K x 4）。
+    parser.add_argument("--concurrency", type=int, default=4)
     parser.add_argument("--timeout", type=float, default=900.0)
     parser.add_argument("--ssh-host", default="192.168.1.35")
     parser.add_argument("--ssh-user", default="grainuser")
@@ -145,6 +149,30 @@ def chat_once(
     return result
 
 
+def run_concurrent(
+    base: str,
+    model: str,
+    prompt: str,
+    max_tokens: int,
+    concurrency: int,
+    timeout: float,
+) -> list[dict]:
+    def one(_: int) -> dict:
+        with httpx.Client(timeout=timeout) as client:
+            return chat_once(client, base, model, prompt, max_tokens)
+
+    with ThreadPoolExecutor(max_workers=max(1, concurrency)) as pool:
+        return list(pool.map(one, range(max(1, concurrency))))
+
+
+def percentile(values: list[float], ratio: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    index = min(len(ordered) - 1, max(0, int(round(len(ordered) * ratio)) - 1))
+    return round(ordered[index], 1)
+
+
 def main() -> int:
     args = parse_args()
     base = api_base(args.base_url)
@@ -154,16 +182,33 @@ def main() -> int:
         for target in sizes:
             prompt, actual_tokens = build_prompt(client, base, args.model, target)
             before = memory_mb(args.ssh_host, args.ssh_user)
-            outcome = chat_once(client, base, args.model, prompt, args.max_tokens)
-            after = memory_mb(args.ssh_host, args.ssh_user)
-            outcome.update(
-                {
-                    "target_tokens": target,
-                    "built_tokens": actual_tokens,
-                    "memory_before_mb": before,
-                    "memory_after_mb": after,
-                }
+            outcomes = run_concurrent(
+                base,
+                args.model,
+                prompt,
+                args.max_tokens,
+                args.concurrency,
+                args.timeout,
             )
+            after = memory_mb(args.ssh_host, args.ssh_user)
+            latencies = [float(item.get("latency_ms") or 0) for item in outcomes]
+            successes = sum(1 for item in outcomes if item.get("status_code") == 200)
+            outcome = {
+                "target_tokens": target,
+                "built_tokens": actual_tokens,
+                "concurrency": args.concurrency,
+                "requests": len(outcomes),
+                "success": successes,
+                "p50_latency_ms": percentile(latencies, 0.5),
+                "p95_latency_ms": percentile(latencies, 0.95),
+                "mean_latency_ms": round(statistics.mean(latencies), 1)
+                if latencies
+                else 0.0,
+                "memory_before_mb": before,
+                "memory_after_mb": after,
+                "status_code": 200 if successes == len(outcomes) else 500,
+                "samples": outcomes,
+            }
             results.append(outcome)
             print(json.dumps(outcome, ensure_ascii=False), flush=True)
     output = {

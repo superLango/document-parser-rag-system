@@ -15,6 +15,15 @@ REQUIRED_FILES = (
     "metrics.json",
     "manifest.json",
 )
+# Produced by the document-understanding layer. Older recipe entrypoints do not
+# write them, so they are validated only when present.
+OPTIONAL_FILES = (
+    "clauses.json",
+    "inventory.json",
+    "references.json",
+    "document_intelligence.json",
+)
+OUTPUT_FILES = REQUIRED_FILES + OPTIONAL_FILES
 ROLE_CONTENT_TYPES = {
     "result": "application/json",
     "records": "application/json",
@@ -22,6 +31,10 @@ ROLE_CONTENT_TYPES = {
     "diagnostics": "application/json",
     "metrics": "application/json",
     "manifest": "application/json",
+    "clauses": "application/json",
+    "inventory": "application/json",
+    "references": "application/json",
+    "document_intelligence": "application/json",
 }
 
 
@@ -79,7 +92,7 @@ def validate_outputs(
             f"outputs exceed {max_output_bytes} bytes: {total}",
         )
     missing = sorted(set(REQUIRED_FILES) - set(files))
-    extra = sorted(set(files) - set(REQUIRED_FILES))
+    extra = sorted(set(files) - set(OUTPUT_FILES))
     if missing or extra:
         raise ValidationError(
             "SANDBOX_OUTPUT_INVALID",
@@ -158,6 +171,27 @@ def validate_outputs(
         raise ValidationError("SANDBOX_OUTPUT_INVALID", "metrics.json schema_version mismatch")
     if not isinstance(metrics.get("duration_ms"), int):
         raise ValidationError("SANDBOX_OUTPUT_INVALID", "metrics.duration_ms is missing")
+
+    for name, version, key in (
+        ("clauses.json", "document-clauses/1", "clauses"),
+        ("inventory.json", "document-inventory/1", "items"),
+        ("references.json", "document-references/1", "references"),
+        ("document_intelligence.json", "document-intelligence/1", "stats"),
+    ):
+        if name not in files:
+            continue
+        payload = _require_object(name, _json(name, files[name]))
+        if payload.get("schema_version") != version:
+            raise ValidationError(
+                "SANDBOX_OUTPUT_INVALID", f"{name} schema_version mismatch"
+            )
+        if key == "stats":
+            if not isinstance(payload.get(key), dict):
+                raise ValidationError(
+                    "SANDBOX_OUTPUT_INVALID", f"{name} {key} must be an object"
+                )
+        else:
+            _require_list(f"{name} {key}", payload.get(key))
 
     manifest = _require_object("manifest.json", _json("manifest.json", files["manifest.json"]))
     if manifest.get("schema_version") != "sandbox-manifest/1":

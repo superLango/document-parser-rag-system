@@ -35,7 +35,17 @@ export function formatBytes(value: number): string {
 export function formatDuration(ms: number | null | undefined): string {
   if (ms === null || ms === undefined) return "—";
   if (ms < 1000) return `${ms} ms`;
-  return `${(ms / 1000).toFixed(1)} s`;
+  const seconds = ms / 1000;
+  if (seconds < 60) return `${seconds.toFixed(1)} s`;
+  const totalSeconds = Math.round(seconds);
+  const minutes = Math.floor(totalSeconds / 60);
+  if (minutes < 60) {
+    const rest = totalSeconds % 60;
+    return rest ? `${minutes}分${rest}秒` : `${minutes}分`;
+  }
+  const hours = Math.floor(minutes / 60);
+  const restMinutes = minutes % 60;
+  return restMinutes ? `${hours}小时${restMinutes}分` : `${hours}小时`;
 }
 
 export function formatPercent(value: number | null | undefined): string {

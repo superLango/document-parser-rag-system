@@ -2,7 +2,7 @@
 
 M5 Qwen Agent Runtime：独立 `agent-service`，承载 RouterAgent、ReviewAgent、会话/检查点、上下文压缩、长任务分段与模型网关。
 
-模型：`Qwen3.6-35B-A3B-NVFP4`（模型服务器 `192.168.1.35:9988`）。  
+模型：`Qwen3.6-35B-A3B-FP8`（模型服务器 `192.168.1.35:9988`）。  
 默认运行时：containerd + runc（M4 D-007）。
 
 ---
@@ -97,7 +97,7 @@ ReviewAgent 护栏：
 
 ## 4. Model Gateway
 
-- 端点：primary / secondary / tertiary，跳过空地址；默认 primary `http://39.107.239.208:35035`、secondary `http://192.168.188.75:9991`、tertiary `http://192.168.1.35:9988`。
+- 端点：primary / secondary / tertiary，跳过空地址；默认 primary `http://39.107.239.208:35035`、secondary `http://192.168.1.35:9991`、tertiary `http://192.168.1.35:9988`。
 - 启动探测：每个端点 GET `/v1/models`（2 秒超时），模型名必须等于 `AGENT_MODEL`；不可达/模型不匹配标记 down，active 落到第一个健康端点。
 - 周期探测：每 60 秒复查；旧地址恢复且提供同一模型后自动启用/回切。
 - 连接失败/429/5xx 视为可切换错误。
@@ -158,8 +158,8 @@ ReviewAgent 护栏：
 
 | 变量 | 默认 | 说明 |
 |---|---|---|
-| `AGENT_MODEL` | `Qwen3.6-35B-A3B-NVFP4` | 模型名 |
-| `AGENT_BASE_URL_PRIMARY/SECONDARY/TERTIARY` | `http://39.107.239.208:35035` / `http://192.168.188.75:9991` / `http://192.168.1.35:9988` | 三地址；启动探测自动跳过不可用/模型不匹配端点 |
+| `AGENT_MODEL` | `Qwen3.6-35B-A3B-FP8` | 模型名 |
+| `AGENT_BASE_URL_PRIMARY/SECONDARY/TERTIARY` | `http://39.107.239.208:35035` / `http://192.168.1.35:9991` / `http://192.168.1.35:9988` | 三地址；启动探测自动跳过不可用/模型不匹配端点 |
 | `AGENT_FAILOVER_SECONDS` | 10 | 连续失败切换窗口 |
 | `AGENT_FAILOVER_COOLDOWN` | 30 | 回切探测冷却 |
 | `AGENT_CONTEXT_WINDOW` | 65536 | 上下文预算 |

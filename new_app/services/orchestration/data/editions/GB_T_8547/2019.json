@@ -1,0 +1,250 @@
+{
+  "standard_id": "GB/T 8547",
+  "edition": "2019",
+  "document_sha256": "",
+  "page_count": 13,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "ics",
+        "77.150.50"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "h",
+        "64"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t",
+        "8547-2019"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "代替gb/t8547-2006"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "钛-钢复合板"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "material"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "2019-06-04发布"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "2020-05-01",
+        "实施"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "3.1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "钛-钢复合板",
+        "titaniumcladsteelplate"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表1 分类和代号",
+      "profile": "classification",
+      "n_cols": 4,
+      "header_signature": [
+        "生产方式",
+        "分类",
+        "代号",
+        "推荐用途"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 复材和基材",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "复材",
+        "基材"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 不平度",
+      "profile": "classification",
+      "n_cols": 3,
+      "header_signature": [
+        "复合板分类",
+        "规定厚度范围的不平度/厚度≤30mm",
+        "规定厚度范围的不平度/厚度>30mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4 拉伸性能",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "抗拉强度rmmpa",
+        "断后伸长率a%"
+      ],
+      "measures": [
+        "抗拉强度",
+        "断后伸长率",
+        "a"
+      ]
+    },
+    {
+      "caption": "表5 剪切强度",
+      "profile": "classification",
+      "n_cols": 2,
+      "header_signature": [
+        "复合板分类",
+        "剪切强度τmpa"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6 弯曲性能",
+      "profile": "classification",
+      "n_cols": 3,
+      "header_signature": [
+        "弯曲类别",
+        "弯曲角α(°)",
+        "弯曲直径dmm"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "表7 结合面积",
+      "profile": "classification",
+      "n_cols": 4,
+      "header_signature": [
+        "复合板分类",
+        "0类",
+        "1类",
+        "2类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表8 产品检验项目",
+      "profile": "inspection",
+      "n_cols": 8,
+      "header_signature": [
+        "检验项目",
+        "复合板代号",
+        "复合板代号",
+        "复合板代号",
+        "复合板代号",
+        "复合板代号",
+        "复合板代号",
+        "复合板代号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表9 结合面积检验位置",
+      "profile": "classification",
+      "n_cols": 3,
+      "header_signature": [
+        "复合板分类",
+        "0类和1类",
+        "2类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "(a.1)"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "(a.2)"
+      ],
+      "measures": [
+        "a"
+      ]
+    }
+  ],
+  "recipe_pins": {
+    "classification_v1": "1.0.3",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "690ab8d5-923e-4ad1-b62e-9295a6e60ce8",
+  "created_at": "2026-11-15T05:00:30+00:00"
+}

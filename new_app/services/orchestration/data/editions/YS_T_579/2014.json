@@ -1,0 +1,60 @@
+{
+  "standard_id": "YS/T 579",
+  "edition": "2014",
+  "document_sha256": "",
+  "page_count": 6,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 8,
+      "header_signature": [
+        "牌号",
+        "主成分/v",
+        "主成分/al",
+        "杂质元素,不大于/fe",
+        "杂质元素,不大于/si",
+        "杂质元素,不大于/c",
+        "杂质元素,不大于/o",
+        "杂质元素,不大于/n"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "检验项目",
+        "取样",
+        "要求的章条号",
+        "试验方法的章条号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "2"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_composition_v1": "1.1.217",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "c6eaf047-e2a8-4860-8cdf-2095b8a3f3df",
+  "created_at": "2026-11-15T06:46:03+00:00"
+}

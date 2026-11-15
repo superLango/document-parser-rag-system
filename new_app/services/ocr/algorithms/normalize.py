@@ -39,7 +39,7 @@ ENGLISH_ELEMENTS = {
 }
 
 UNIT_RE = re.compile(
-    r"(?<![A-Za-z])(?P<unit>%|MPa|GPa|mm|cm|m|HBW?|HRC|HRB|HV|℃|°C|K|g/cm3|kg/m3)"
+    r"(?<![A-Za-z])(?P<unit>%|MPa|GPa|ksi|mm|cm|m|HBW?|HRC|HRB|HV|℃|°C|K|g/cm3|kg/m3)"
     r"(?![A-Za-z0-9])",
     re.IGNORECASE,
 )

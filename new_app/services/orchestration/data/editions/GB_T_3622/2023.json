@@ -1,0 +1,1105 @@
+{
+  "standard_id": "GB/T 3622",
+  "edition": "2023",
+  "document_sha256": "",
+  "page_count": 11,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "ccsh",
+        "64"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "ics",
+        "77.150.50"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "gb/t3622-2023"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "代替gb/t3622-2012"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "材料"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "material"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "2023-05-23发布"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2023-12-01",
+        "实施"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "前",
+        "言"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "本文件起草单位:宝钛集团有限公司、宝鸡钛业股份有限公司、有色金属技术经济研究院有限责任公司、湖南湘投金天钛金属股份有限公司、新疆湘润新材料科技有限公司、中铝沈阳有色金属加工有限公司、西安庄信新材料科技有限公司。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "本文件主要起草人:冯军宁、刘娜、李晓军、杨娟丽、牛蓉蓉、高飞、张江峰、白智辉、马佳琨、解晨、齐航、王勤波、孔玢、同晓乐、戴山、郭磊、马忠贤、冯永琦、高颀。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "i"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "钛及钛合金带、箔材"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "1",
+        "范围"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2",
+        "规范性引用文件"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "gb/t228.1-2021",
+        "金属材料",
+        "拉伸试验",
+        "第1部分:室温试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t232",
+        "金属材料",
+        "弯曲试验方法"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t3620.1",
+        "钛及钛合金牌号和化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t3620.2",
+        "钛及钛合金加工产品化学成分允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t4698(所有部分)",
+        "海绵钛、钛及钛合金化学分析方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t6611",
+        "钛及钛合金术语和金相图谱"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t8180",
+        "钛及钛合金加工产品的包装、标志、运输和贮存"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t38982",
+        "钛及钛合金加工产品外形尺寸检测方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "ys/t1262",
+        "海绵钛、钛及钛合金化学分析方法",
+        "多元素含量的测定",
+        "电感耦合等离子体原子发射光谱法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3",
+        "术语和定义"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "文件名称",
+        "版本"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "3.1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "带材",
+        "strip"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "厚度0.10mm~5.00mm,宽度不大于1500mm,以卷式供货的产品。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "3.2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "箔材",
+        "foil"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "厚度小于0.10mm,宽度不大于300mm,以卷式供货的产品。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4",
+        "分类和标记"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.1",
+        "产品分类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表1",
+        "牌号、状态、规格"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "classification",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "产品分类",
+        "状态",
+        "规格mm/厚度",
+        "规格mm/宽度",
+        "规格mm/长度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2",
+        "产品标记"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 1,
+      "header_signature": [
+        "示例1:用ta1g牌号制造的、状态为冷加工态(y)、厚度为0.03mm、宽度为80mm的箔材,标记为:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "箔ta1gy0.03×80gb/t3622-2023"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "带ta2gm0.40×150gb/t3622-2023"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5",
+        "技术要求"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.1",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "名称",
+        "尺寸及其允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表2",
+        "厚度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 5,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的厚度允许偏差",
+        "规定宽度范围的厚度允许偏差",
+        "规定宽度范围的厚度允许偏差",
+        "规定宽度范围的厚度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表2",
+        "厚度允许偏差(续)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 5,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的厚度允许偏差",
+        "规定宽度范围的厚度允许偏差",
+        "规定宽度范围的厚度允许偏差",
+        "规定宽度范围的厚度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表3",
+        "宽度允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "厚度/0.01~0.30",
+        "宽度允许偏差/普通精度/±1.0",
+        "宽度允许偏差/高精度/±0.5"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表4",
+        "卷的塔形"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "宽度",
+        "塔形a值"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.3",
+        "室温拉伸性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "表5",
+        "室温拉伸性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "厚度mm",
+        "抗拉强度rmmpa",
+        "规定塑性延伸强度rp0.2mpa",
+        "断后伸长率a50mm%/i级",
+        "断后伸长率a50mm%/ii级"
+      ],
+      "measures": [
+        "抗拉强度",
+        "规定塑性延伸强度",
+        "断后伸长率"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.4",
+        "弯曲性能"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "5"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "表6",
+        "弯曲性能"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "厚度mm",
+        "弯曲压头直径mm",
+        "弯曲角(°)"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.5",
+        "外观质量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "5.5.4带材和箔材的表面缺陷(如:裂纹、起皮、氧化皮、压折、金属和非金属夹杂等宏观缺陷以及过酸洗的痕迹)应不超过整个钛卷的5%。1m长度范围内的一系列缺陷算为1处缺陷。例:长度为100m的钛卷,缺陷应不超过5处。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "6"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.5.5",
+        "带材和箔材边部应无裂口、卷边,允许有轻微的毛刺。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6",
+        "试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6.1",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6.2",
+        "外形尺寸及其允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6.4",
+        "弯曲性能"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6.5",
+        "外观质量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "7",
+        "检验规则"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "7.1",
+        "检查和验收"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "7.2",
+        "组批"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "7.3",
+        "检验项目"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "7.4",
+        "取样"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "7"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表7",
+        "取样"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 5,
+      "header_signature": [
+        "检验项目",
+        "检验项目",
+        "取样规定",
+        "技术要求的章条号",
+        "试验方法的章条号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "7.5",
+        "检验结果的判定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "8",
+        "标志、包装、运输、贮存及随行文件"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "8.1",
+        "标志"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "8.1.1",
+        "产品标志"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "b)",
+        "牌号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "c)",
+        "规格;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "e)",
+        "批号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "8.1.2",
+        "包装标志"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "标题",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "8.3",
+        "随行文件"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "产品名称、牌号、规格和状态;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "项目"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "*",
+        "产品的主要性能及技术参数;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "项"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "·",
+        "锭号或批号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        "检验日期;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "检验员签名或盖章。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "9",
+        "订货单内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "b)",
+        "牌号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "e)",
+        "重量;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "h)",
+        "其他。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "9"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "mechanical_properties_v1": "1.6.51",
+    "chemical_element_rows_v1": "1.2.3",
+    "classification_v1": "1.0.3",
+    "dimension_v1": "1.0.2",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "58815d6d-b9c0-46fb-84df-38a2e6f1f2e3",
+  "created_at": "2026-11-15T03:58:24+00:00"
+}

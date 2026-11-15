@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "kind": "parser",
+  "asset_id": "parser_core",
+  "version": "1.0.20",
+  "runtime_api": "sandbox-engine/1",
+  "python": "3.12",
+  "stdlib_only": true,
+  "entry_modules": [
+    "builtin",
+    "strategies"
+  ],
+  "files": [
+    {
+      "path": "builtin.py",
+      "sha256": "93910abc74c820ab08f3508be5b2e0922c6e72f41a1dbdac3569d82715fe51c8"
+    },
+    {
+      "path": "strategies.py",
+      "sha256": "6092379870ca29bf605c448e88dc13f5f838c208fb75fc46da0e0c9b64f6f464"
+    }
+  ],
+  "tests": [],
+  "checksum": "4a211e4a7f5ce684b81a57dc20358150b01ac65e3a7171d675d65b9ad92ba7b9",
+  "created_at": "2026-11-13T03:20:09+00:00"
+}

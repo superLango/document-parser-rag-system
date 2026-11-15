@@ -1,36 +1,29 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Ban,
-  ExternalLink,
+  Download,
   FileText,
+  MessageSquarePlus,
   RefreshCcw,
   RotateCcw,
   ShieldCheck
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 import { documentsApi } from "../api/documents";
 import { runsApi } from "../api/runs";
-import type {
-  RecordItem,
-  ReviewReport,
-  RunItem,
-  SandboxResult
-} from "../api/types";
+import type { RecordItem, SandboxResult } from "../api/types";
+import { CrossStandardPanel } from "../components/cross-standard/CrossStandardPanel";
 import { FeedbackPanel } from "../components/feedback/FeedbackPanel";
-import { PagePreview } from "../components/preview/PagePreview";
-import { RecipeTraceCard } from "../components/recipe/RecipeTraceCard";
+import { FeedbackDialog } from "../components/feedback/FeedbackDialog";
 import { ResultJson } from "../components/result/ResultJson";
 import { ResultTable } from "../components/result/ResultTable";
-import { ReviewFindings } from "../components/review/ReviewFindings";
 import { RunTimelineView } from "../components/timeline/RunTimeline";
-import { VersionCompare } from "../components/version/VersionCompare";
 import {
   Badge,
   Button,
   Card,
-  CardContent,
   EmptyState,
   PageHeader,
   Skeleton
@@ -40,18 +33,27 @@ import { Tabs } from "../components/ui/tabs";
 import { useToast } from "../components/ui/toast";
 import { RUN_TERMINAL, runStatusMeta } from "../lib/status";
 import { formatBytes, formatDateTime } from "../lib/utils";
+import {
+  buildResultCsv,
+  downloadBlob,
+  resultCsvFilename
+} from "../lib/resultExport";
 
 const TABS = [
   { id: "result", label: "结果" },
-  { id: "review", label: "审核" },
+  { id: "cross", label: "跨标准" },
   { id: "feedback", label: "反馈" },
-  { id: "timeline", label: "时间线" },
-  { id: "versions", label: "版本" },
-  { id: "preview", label: "原文预览" }
+  { id: "timeline", label: "时间线" }
 ];
 
-export default function ExtractionPage() {
-  const { documentId = "" } = useParams();
+type ExtractionPageProps = {
+  /** 一站式解析页从对接任务解析出 document_id 后复用同一套解析详情。 */
+  documentIdOverride?: string;
+};
+
+export default function ExtractionPage({ documentIdOverride }: ExtractionPageProps = {}) {
+  const { documentId: routeDocumentId = "" } = useParams();
+  const documentId = documentIdOverride || routeDocumentId;
   const [searchParams, setSearchParams] = useSearchParams();
   const { push } = useToast();
   const queryClient = useQueryClient();
@@ -59,13 +61,12 @@ export default function ExtractionPage() {
   const [tab, setTab] = useState("result");
   const [view, setView] = useState<"table" | "json">("table");
   const [selectedRunId, setSelectedRunId] = useState(searchParams.get("run") ?? "");
-  const [pageNo, setPageNo] = useState(1);
   const [feedbackSeed, setFeedbackSeed] = useState<{
     measure: string;
     description: string;
   } | null>(null);
-  const [leftId, setLeftId] = useState("");
-  const [rightId, setRightId] = useState("");
+  const [manualFeedbackOpen, setManualFeedbackOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const documentQuery = useQuery({
     queryKey: ["document", documentId],
@@ -87,6 +88,13 @@ export default function ExtractionPage() {
   });
 
   const runs = useMemo(() => runsQuery.data ?? [], [runsQuery.data]);
+  const runVersions = useMemo(() => {
+    const ascending = [...runs].sort(
+      (left, right) =>
+        new Date(left.created_at).getTime() - new Date(right.created_at).getTime()
+    );
+    return new Map(ascending.map((run, index) => [run.id, index + 1]));
+  }, [runs]);
 
   useEffect(() => {
     if (runs.length === 0) return;
@@ -94,13 +102,6 @@ export default function ExtractionPage() {
       setSelectedRunId(runs[0].id);
     }
   }, [runs, selectedRunId]);
-
-  useEffect(() => {
-    if (runs.length >= 2 && !leftId) {
-      setLeftId(runs[1].id);
-      setRightId(runs[0].id);
-    }
-  }, [runs, leftId]);
 
   const selectedRun = runs.find((run) => run.id === selectedRunId) ?? null;
   const runId = selectedRun?.id ?? "";
@@ -121,12 +122,6 @@ export default function ExtractionPage() {
     enabled: Boolean(runId) && terminal,
     retry: false
   });
-  const reviewQuery = useQuery({
-    queryKey: ["review", runId],
-    queryFn: () => runsApi.review(runId),
-    enabled: Boolean(runId) && terminal,
-    retry: false
-  });
   const ocrQuery = useQuery({
     queryKey: ["ocr", runId],
     queryFn: () => runsApi.ocr(runId),
@@ -137,23 +132,25 @@ export default function ExtractionPage() {
     queryKey: ["timeline", runId],
     queryFn: () => runsApi.timeline(runId),
     enabled: Boolean(runId),
-    refetchInterval: terminal ? false : 1500
+    // SSE 为主，轮询仅作为连接失败时的兜底。
+    refetchInterval: terminal ? false : 5000
   });
 
-  const leftRun = runs.find((run) => run.id === leftId) ?? null;
-  const rightRun = runs.find((run) => run.id === rightId) ?? null;
-  const leftRecords = useQuery({
-    queryKey: ["records", leftId],
-    queryFn: () => runsApi.records(leftId),
-    enabled: Boolean(leftId) && (leftRun ? RUN_TERMINAL.has(leftRun.status) : false),
-    retry: false
-  });
-  const rightRecords = useQuery({
-    queryKey: ["records", rightId],
-    queryFn: () => runsApi.records(rightId),
-    enabled: Boolean(rightId) && (rightRun ? RUN_TERMINAL.has(rightRun.status) : false),
-    retry: false
-  });
+  useEffect(() => {
+    if (!runId || terminal) return;
+    let timer: number | undefined;
+    const stop = runsApi.subscribeEvents(runId, 0, () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        void queryClient.invalidateQueries({ queryKey: ["timeline", runId] });
+        void queryClient.invalidateQueries({ queryKey: ["runs", documentId] });
+      }, 150);
+    });
+    return () => {
+      window.clearTimeout(timer);
+      stop();
+    };
+  }, [runId, terminal, documentId, queryClient]);
 
   const runMutation = useMutation({
     mutationFn: () => documentsApi.createRun(documentId),
@@ -175,6 +172,15 @@ export default function ExtractionPage() {
     onError: (error: Error) => push("error", "取消失败", error.message)
   });
 
+  const approveMutation = useMutation({
+    mutationFn: () => runsApi.approve(runId),
+    onSuccess: () => {
+      push("success", "已确认结果");
+      void queryClient.invalidateQueries({ queryKey: ["runs", documentId] });
+    },
+    onError: (error: Error) => push("error", "确认失败", error.message)
+  });
+
   function selectRun(value: string) {
     setSelectedRunId(value);
     setSearchParams({ run: value }, { replace: true });
@@ -186,6 +192,27 @@ export default function ExtractionPage() {
       description: `${record.grade} 的 ${measure} 抽取有误`
     });
     setTab("feedback");
+  }
+
+  async function exportResult(currentRecords: RecordItem[]) {
+    if (!currentRecords.length) {
+      push("error", "暂无可导出的结构化结果");
+      return;
+    }
+    const filename = documentQuery.data?.filename || "解析结果";
+    setExporting(true);
+    try {
+      const csv = buildResultCsv(
+        currentRecords,
+        filename,
+        ocrQuery.data?.markdown ?? ""
+      );
+      const target = resultCsvFilename(filename);
+      downloadBlob(new Blob([csv], { type: "text/csv;charset=utf-8" }), target);
+      push("success", "导出完成", target);
+    } finally {
+      setExporting(false);
+    }
   }
 
   const result = resultQuery.data?.result ?? null;
@@ -216,11 +243,19 @@ export default function ExtractionPage() {
               {runs.length === 0 ? <option value="">暂无运行</option> : null}
               {runs.map((run) => (
                 <option key={run.id} value={run.id}>
-                  {run.id.slice(0, 8)} · {runStatusMeta(run.status).label} ·{" "}
-                  {formatDateTime(run.created_at)}
+                  v{runVersions.get(run.id) ?? "?"} · {formatDateTime(run.created_at)}
                 </option>
               ))}
             </Select>
+            <Button
+              variant="secondary"
+              icon={<Download className="h-4 w-4" />}
+              loading={exporting}
+              disabled={!terminal || records.length === 0}
+              onClick={() => void exportResult(records)}
+            >
+              导出
+            </Button>
             <Button
               variant="secondary"
               icon={<RotateCcw className="h-4 w-4" />}
@@ -229,6 +264,15 @@ export default function ExtractionPage() {
             >
               重新解析
             </Button>
+            {selectedRun?.status === "HUMAN_REVIEW" ? (
+              <Button
+                icon={<ShieldCheck className="h-4 w-4" />}
+                loading={approveMutation.isPending}
+                onClick={() => approveMutation.mutate()}
+              >
+                确认结果
+              </Button>
+            ) : null}
             {selectedRun && !terminal ? (
               <Button
                 variant="secondary"
@@ -239,32 +283,19 @@ export default function ExtractionPage() {
                 取消
               </Button>
             ) : null}
-            {runId ? (
-              <Link
-                to={`/documents/${documentId}/viewer?run=${runId}`}
-                className="inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-sm font-medium text-foreground shadow-soft transition-colors hover:border-primary/40"
-              >
-                <ExternalLink className="h-4 w-4" />
-                预览
-              </Link>
-            ) : null}
           </>
         }
       />
 
       {selectedRun ? (
-        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {statusMeta ? (
             <Badge tone={statusMeta.tone} dot>
               {statusMeta.label}
             </Badge>
           ) : null}
-          <span>运行 {selectedRun.id.slice(0, 8)}</span>
-          <span>通道 {selectedRun.recipe_channel}</span>
+          <span>v{runVersions.get(selectedRun.id) ?? "?"}</span>
           <span>阶段 {selectedRun.stage}</span>
-          {selectedRun.error_code ? (
-            <Badge tone="danger">{selectedRun.error_code}</Badge>
-          ) : null}
           {selectedRun.started_at && selectedRun.finished_at ? (
             <span>
               耗时{" "}
@@ -276,34 +307,31 @@ export default function ExtractionPage() {
               s
             </span>
           ) : null}
+          {selectedRun.error_code ? (
+            <Badge tone="danger">{selectedRun.error_code}</Badge>
+          ) : null}
         </div>
       ) : null}
 
-      <Tabs
-        items={TABS}
-        active={tab}
-        onChange={setTab}
-        className="mb-4"
-      />
+      <Tabs items={TABS} active={tab} onChange={setTab} className="mb-4" />
 
       {!selectedRun ? (
         <Card>
-          <CardContent>
-            <EmptyState
-              title="还没有运行"
-              description="点击「重新解析」创建第一个运行"
-              action={
-                <Button onClick={() => runMutation.mutate()} loading={runMutation.isPending}>
-                  发起解析
-                </Button>
-              }
-            />
-          </CardContent>
+          <EmptyState
+            title="还没有运行"
+            description="点击「重新解析」创建第一个运行"
+            action={
+              <Button onClick={() => runMutation.mutate()} loading={runMutation.isPending}>
+                发起解析
+              </Button>
+            }
+          />
         </Card>
       ) : null}
 
       {tab === "result" && selectedRun ? (
         <ResultTab
+          documentId={documentId}
           view={view}
           onView={setView}
           terminal={terminal}
@@ -311,33 +339,16 @@ export default function ExtractionPage() {
           loading={recordsQuery.isLoading}
           error={recordsQuery.isError ? recordsQuery.error.message : ""}
           result={result}
-          review={reviewQuery.data ?? null}
-          run={selectedRun}
+          filename={documentQuery.data?.filename ?? ""}
+          markdown={ocrQuery.data?.markdown ?? ""}
           onFeedback={feedbackFor}
+          onNewFeedback={() => setManualFeedbackOpen(true)}
           onRetry={() => void recordsQuery.refetch()}
         />
       ) : null}
 
-      {tab === "review" && selectedRun ? (
-        reviewQuery.isLoading ? (
-          <Skeleton className="h-40 w-full" />
-        ) : reviewQuery.isError || !reviewQuery.data ? (
-          <Card>
-            <CardContent>
-              <EmptyState
-                title="审核结果尚未生成"
-                description={
-                  terminal
-                    ? reviewQuery.error?.message ?? "运行未产出审核报告"
-                    : "运行完成后自动生成审核报告"
-                }
-                action={<ShieldCheck className="mx-auto h-8 w-8 text-muted-foreground" />}
-              />
-            </CardContent>
-          </Card>
-        ) : (
-          <ReviewFindings report={reviewQuery.data} />
-        )
+      {tab === "cross" && selectedRun ? (
+        <CrossStandardPanel documentId={documentId} runId={selectedRun.id} />
       ) : null}
 
       {tab === "feedback" && selectedRun ? (
@@ -355,62 +366,36 @@ export default function ExtractionPage() {
           <Skeleton className="h-64 w-full" />
         ) : timelineQuery.isError || !timelineQuery.data ? (
           <Card>
-            <CardContent>
-              <EmptyState
-                title="时间线加载失败"
-                description={timelineQuery.error?.message}
-              />
-            </CardContent>
+            <EmptyState
+              title="时间线加载失败"
+              description={timelineQuery.error?.message}
+            />
           </Card>
         ) : (
           <RunTimelineView timeline={timelineQuery.data} />
         )
       ) : null}
 
-      {tab === "versions" ? (
-        <VersionCompare
-          runs={runs}
-          leftId={leftId}
-          rightId={rightId}
-          onLeft={setLeftId}
-          onRight={setRightId}
-          leftRecords={leftRecords.data?.records ?? []}
-          rightRecords={rightRecords.data?.records ?? []}
-          loading={leftRecords.isLoading || rightRecords.isLoading}
+      {selectedRun ? (
+        <FeedbackDialog
+          open={manualFeedbackOpen}
+          runId={runId}
+          recipeId={recipeId}
+          onClose={() => setManualFeedbackOpen(false)}
+          onCreated={() => {
+            void queryClient.invalidateQueries({
+              queryKey: ["feedback", documentId]
+            });
+            setTab("feedback");
+          }}
         />
-      ) : null}
-
-      {tab === "preview" && selectedRun ? (
-        ocrQuery.isLoading ? (
-          <Skeleton className="h-80 w-full" />
-        ) : ocrQuery.isError || !ocrQuery.data ? (
-          <Card>
-            <CardContent>
-              <EmptyState
-                title="原文预览尚未就绪"
-                description={
-                  ocrReady
-                    ? ocrQuery.error?.message ?? "OCR 未产出页面"
-                    : "OCR 完成后可查看原文与表格"
-                }
-              />
-            </CardContent>
-          </Card>
-        ) : (
-          <PagePreview
-            runId={selectedRun.id}
-            ocr={ocrQuery.data}
-            pageNo={pageNo}
-            onPageChange={setPageNo}
-            tall
-          />
-        )
       ) : null}
     </div>
   );
 }
 
 function ResultTab({
+  documentId,
   view,
   onView,
   terminal,
@@ -418,11 +403,13 @@ function ResultTab({
   loading,
   error,
   result,
-  review,
-  run,
+  filename,
+  markdown,
   onFeedback,
+  onNewFeedback,
   onRetry
 }: {
+  documentId: string;
   view: "table" | "json";
   onView: (value: "table" | "json") => void;
   terminal: boolean;
@@ -430,13 +417,36 @@ function ResultTab({
   loading: boolean;
   error: string;
   result: SandboxResult | null;
-  review: ReviewReport | null;
-  run: RunItem;
+  filename: string;
+  markdown: string;
   onFeedback: (record: RecordItem, measure: string) => void;
+  onNewFeedback: () => void;
   onRetry: () => void;
 }) {
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="grid items-start gap-4 xl:grid-cols-2">
+      <Card className="min-w-0 overflow-hidden xl:sticky xl:top-20">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-5 py-3">
+          <div>
+            <h3 className="text-sm font-semibold">原文</h3>
+            <p className="text-xs text-muted-foreground">{filename || "标准原文"}</p>
+          </div>
+          <a
+            href={documentsApi.fileUrl(documentId)}
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-medium text-primary-strong hover:underline"
+          >
+            新窗口打开
+          </a>
+        </div>
+        <iframe
+          src={`${documentsApi.fileUrl(documentId)}#navpanes=0`}
+          title="标准原文"
+          className="h-[calc(100vh-260px)] min-h-[520px] w-full bg-white"
+        />
+      </Card>
+
       <Card className="min-w-0">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-5 py-3">
           <div>
@@ -445,35 +455,45 @@ function ResultTab({
               {terminal ? `${records.length} 条记录` : "解析进行中"}
             </p>
           </div>
-          <div className="flex items-center gap-1 rounded-lg border border-border bg-background-soft p-0.5">
-            <button
-              type="button"
-              className={`rounded-md px-2.5 py-1 text-xs ${
-                view === "table" ? "bg-card shadow-soft" : "text-muted-foreground"
-              }`}
-              onClick={() => onView("table")}
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              icon={<MessageSquarePlus className="h-3.5 w-3.5" />}
+              onClick={onNewFeedback}
             >
-              表格
-            </button>
-            <button
-              type="button"
-              className={`rounded-md px-2.5 py-1 text-xs ${
-                view === "json" ? "bg-card shadow-soft" : "text-muted-foreground"
-              }`}
-              onClick={() => onView("json")}
-            >
-              JSON
-            </button>
+              新建反馈
+            </Button>
+            <div className="flex items-center gap-1 rounded-lg border border-border bg-background-soft p-0.5">
+              <button
+                type="button"
+                className={`rounded-md px-2.5 py-1 text-xs ${
+                  view === "table" ? "bg-card shadow-soft" : "text-muted-foreground"
+                }`}
+                onClick={() => onView("table")}
+              >
+                表格
+              </button>
+              <button
+                type="button"
+                className={`rounded-md px-2.5 py-1 text-xs ${
+                  view === "json" ? "bg-card shadow-soft" : "text-muted-foreground"
+                }`}
+                onClick={() => onView("json")}
+              >
+                JSON
+              </button>
+            </div>
           </div>
         </div>
         {!terminal ? (
-          <CardContent>
+          <div className="p-5">
             <EmptyState
               title="解析进行中"
               description="运行完成后自动展示结果，无需刷新页面"
               action={<FileText className="mx-auto h-8 w-8 text-primary" />}
             />
-          </CardContent>
+          </div>
         ) : loading ? (
           <div className="space-y-3 p-5">
             <Skeleton className="h-12 w-full" />
@@ -481,34 +501,34 @@ function ResultTab({
             <Skeleton className="h-12 w-2/3" />
           </div>
         ) : error ? (
-          <CardContent>
+          <div className="p-5">
             <EmptyState
               title="结果加载失败"
               description={error}
               action={
-                <Button variant="secondary" icon={<RefreshCcw className="h-4 w-4" />} onClick={onRetry}>
+                <Button
+                  variant="secondary"
+                  icon={<RefreshCcw className="h-4 w-4" />}
+                  onClick={onRetry}
+                >
                   重试
                 </Button>
               }
             />
-          </CardContent>
+          </div>
         ) : view === "table" ? (
-          <ResultTable records={records} onFeedback={onFeedback} />
+          <ResultTable
+            records={records}
+            filename={filename}
+            markdown={markdown}
+            onFeedback={onFeedback}
+          />
         ) : (
           <div className="p-4">
             <ResultJson value={{ result, records }} />
           </div>
         )}
       </Card>
-      <div className="space-y-4">
-        <RecipeTraceCard run={run} result={result} review={review} />
-        <Card>
-          <CardContent className="space-y-1 text-xs text-muted-foreground">
-            <p>点击结果单元格旁的图标可直接发起字段反馈。</p>
-            <p>反馈处理会生成候选配方并在沙箱中定向验证。</p>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

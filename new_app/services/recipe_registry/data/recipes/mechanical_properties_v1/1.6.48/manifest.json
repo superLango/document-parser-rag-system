@@ -1,0 +1,277 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "mechanical_properties_v1",
+  "version": "1.6.48",
+  "engine_api": "recipe-engine/1",
+  "profile": "mechanical_properties",
+  "signature": {
+    "profile": "mechanical_properties",
+    "orientation": "grade_rows",
+    "n_cols": 9,
+    "blocks": 0,
+    "tokens": [
+      "牌号",
+      "级别",
+      "规格",
+      "公称直径",
+      "热处理制度",
+      "热处理状态",
+      "取样方向",
+      "力学性能",
+      "室温力学性能",
+      "室温拉伸",
+      "瞬时拉伸性能",
+      "rm",
+      "rp0.2",
+      "σb",
+      "σ0.2",
+      "δs",
+      "断后伸长率",
+      "断面收缩率",
+      "冲击",
+      "冲击吸收能量",
+      "ku2",
+      "kv2",
+      "ku5",
+      "硬度",
+      "布氏硬度",
+      "hb",
+      "持久",
+      "时间",
+      "e",
+      "gpa",
+      "弹性模量",
+      "蠕变",
+      "侧向膨胀",
+      "akv",
+      "akuj"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "钢号",
+      "grade",
+      "材料牌号",
+      "级别",
+      "钢级",
+      "质量等级",
+      "合金牌号",
+      "统一数字代号",
+      "新牌号",
+      "原牌号",
+      "锻件种类",
+      "材料",
+      "名称",
+      "材料名称",
+      "designation"
+    ],
+    "conditions": [
+      "规格",
+      "方向",
+      "试验温度",
+      "状态",
+      "热处理",
+      "厚度",
+      "尺寸",
+      "交货",
+      "试样",
+      "部位",
+      "温度",
+      "公称",
+      "类型",
+      "壁厚",
+      "外径",
+      "产品形式",
+      "表面状态",
+      "轧制",
+      "冷轧",
+      "热轧",
+      "固溶",
+      "时效",
+      "退火",
+      "正火",
+      "回火",
+      "淬火",
+      "项目",
+      "试验项目",
+      "名称"
+    ],
+    "measures": {
+      "Rm": {
+        "unit": "MPa",
+        "family": "mechanical"
+      },
+      "Rp0.2": {
+        "unit": "MPa",
+        "family": "mechanical"
+      },
+      "Rp1.0": {
+        "unit": "MPa",
+        "family": "mechanical"
+      },
+      "ReH": {
+        "unit": "MPa",
+        "family": "mechanical"
+      },
+      "ReL": {
+        "unit": "MPa",
+        "family": "mechanical"
+      },
+      "A": {
+        "unit": "%",
+        "family": "mechanical"
+      },
+      "Z": {
+        "unit": "%",
+        "family": "mechanical"
+      },
+      "KU2": {
+        "unit": "J",
+        "family": "mechanical"
+      },
+      "KV2": {
+        "unit": "J",
+        "family": "mechanical"
+      },
+      "KU5": {
+        "unit": "J",
+        "family": "mechanical"
+      },
+      "HB": {
+        "unit": "HBW",
+        "family": "mechanical"
+      },
+      "HBW": {
+        "unit": "HBW",
+        "family": "mechanical"
+      },
+      "HRC": {
+        "unit": "HRC",
+        "family": "mechanical"
+      },
+      "HRB": {
+        "unit": "HRB",
+        "family": "mechanical"
+      },
+      "HV": {
+        "unit": "HV",
+        "family": "mechanical"
+      },
+      "持久时间": {
+        "unit": "h",
+        "family": "mechanical"
+      },
+      "KIC": {
+        "family": "mechanical",
+        "unit": "ksi√inch"
+      },
+      "E": {
+        "unit": "GPa",
+        "family": "mechanical"
+      },
+      "侧向膨胀值": {
+        "unit": "mm",
+        "family": "mechanical"
+      },
+      "持久应力": {
+        "unit": "MPa",
+        "family": "mechanical"
+      },
+      "持久温度": {
+        "unit": "℃",
+        "family": "mechanical"
+      },
+      "蠕变速率": {
+        "unit": "%/h",
+        "family": "mechanical"
+      },
+      "蠕变变形": {
+        "unit": "%",
+        "family": "mechanical"
+      },
+      "B": {
+        "family": "chemical",
+        "unit": "%"
+      },
+      "弯曲试验": {
+        "family": "mechanical",
+        "unit": ""
+      }
+    },
+    "column_aliases": {
+      "A": [
+        "断后伸长率%",
+        "断后伸长率"
+      ],
+      "B": [
+        "弯曲半径b"
+      ],
+      "KIC": [
+        "断裂韧度"
+      ],
+      "KU5": [
+        "冲击吸收能量(KU5)",
+        "KU5"
+      ],
+      "Rm": [
+        "抗拉强度(Rm)MPa",
+        "抗拉强度"
+      ],
+      "Rp0.2": [
+        "规定非比例延伸强度(Rp0.2)MPa",
+        "规定非比例延伸强度"
+      ],
+      "Rp1.0": [
+        "规定非比例延伸强度(Rp1.0)MPa",
+        "Rp1.0"
+      ],
+      "侧向膨胀值": [
+        "侧向膨胀值"
+      ],
+      "持久应力": [
+        "持久应力"
+      ],
+      "持久时间": [
+        "持久时间"
+      ],
+      "持久温度": [
+        "持久温度"
+      ],
+      "蠕变变形": [
+        "蠕变变形"
+      ],
+      "蠕变速率": [
+        "蠕变速率"
+      ]
+    }
+  },
+  "rules": {
+    "inherit_group_units": true,
+    "strip_footnote_marks": true,
+    "strategy_chain": [
+      "nonrecord",
+      "property_matrix",
+      "grade_property_matrix",
+      "grade_property_tail",
+      "property_rows",
+      "hardness_minmax",
+      "element_matrix"
+    ]
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": "material_master_v1"
+  },
+  "checksum": "93919b4d22578d694391165b3bebc3b5f2491d262dd2a706d16a2c1f612cae3a",
+  "created_at": "2026-11-14T05:06:51+00:00"
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "chemical_element_rows_v1",
+  "version": "1.2.11",
+  "engine_api": "recipe-engine/1",
+  "profile": "chemical_composition",
+  "signature": {
+    "profile": "chemical_composition",
+    "orientation": "element_rows",
+    "n_cols": 5,
+    "blocks": 1,
+    "tokens": [
+      "元素",
+      "牌号",
+      "化学成分",
+      "element",
+      "grade",
+      "c",
+      "si",
+      "mn",
+      "p",
+      "s",
+      "cr",
+      "ni",
+      "mo",
+      "cu",
+      "al",
+      "ti",
+      "v",
+      "nb",
+      "n",
+      "b",
+      "co",
+      "w",
+      "fe",
+      "sn",
+      "as",
+      "pb",
+      "sb",
+      "bi",
+      "ta",
+      "zr"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号"
+    ],
+    "conditions": [
+      "Nominal Thickness Millimeters"
+    ]
+  },
+  "rules": {
+    "transposed": false,
+    "strip_footnote_marks": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": null
+  },
+  "checksum": "49db917fdb1e399cc6661a9c10aaaf280b4b46e2eb7b59a7bf3de3f050aafebf",
+  "created_at": "2026-11-14T05:55:37+00:00"
+}

@@ -1,0 +1,97 @@
+{
+  "standard_id": "ASTM B708",
+  "edition": "25",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 6,
+      "header_signature": [
+        "element",
+        "electron-beamcast(r05200)vacuum-arccast(r05200)unalloyedtantalum",
+        "sintered(r05400)unalloyedtantalum",
+        "electron-beamcast(r05255)vacuum-arccast(r05255)90%tantalum10%tungsten",
+        "electron-beamcast(r05252)vacuum-arccast(r05252)97.5%tantalum2.5%tungsten",
+        "electron-beamcast(r05240)vacuum-arccast(r05240)60%tantalum40%niobium"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 6,
+      "header_signature": [
+        "element",
+        "electron-beamcast(r05200)vacuum-arccast(r05200)unalloyedtantalum",
+        "sintered(r05400)unalloyedtantalum",
+        "electron-beamcast(r05255)vacuum-arccast(r05255)90%tantalum10%tungsten",
+        "electron-beamcast(r05252)vacuum-arccast(r05252)97.5%tantalum2.5%tungsten",
+        "electronbeamcast(r05240)vacuum-arccast(r05240)60%tantalum40%niobium"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "gradeandform/unalloyedtantalum(r05200)(r05400)/plate,sheetandstrip",
+        "annealedcondition",
+        "annealedcondition/ultimatetensilestrength,min,psi(mpa)",
+        "annealedcondition/yieldstrength,min,psi(mpa)(0.2%offset)",
+        "annealedcondition/elongation,min,%(1in.gaugelength)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 9,
+      "header_signature": [
+        "thicknessoftantalumin.(mm)",
+        "toleranceonthickness,plusorminus,in.(mm)/widthunder6in(152.4mm)",
+        "toleranceonthickness,plusorminus,in.(mm)/width6in.to24in(152.4mmto609.6mm)",
+        "toleranceonwidth(slit),plusorminus,in.(mm)/widthunder6in(152.4mm)",
+        "toleranceonwidth(slit),plusorminus,in.(mm)/width6in.to24in(152.4mmto609.6mm)",
+        "toleranceonshearedlengths,in.(mm)/length12in.(304.8mm)andunder/plus",
+        "toleranceonshearedlengths,in.(mm)/length12in.(304.8mm)andunder/minus",
+        "toleranceonshearedlengths,in.(mm)/lengthover12in.(304.8mm)/plus",
+        "toleranceonshearedlengths,in.(mm)/lengthover12in.(304.8mm)/minus"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 5,
+      "header_signature": [
+        "element",
+        "3n5purity99.95%min.(ppmmax)",
+        "4npurity99.95%min.(ppmmax)",
+        "4n5purity99.95%min.(ppmmax)",
+        "5npurity99.95%min.(ppmmax)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "nominalgauge(inches)",
+        "grainsizeandstructurerequirementsaveragethroughthicknessgrainsize",
+        "recrystallization"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51",
+    "dimension_v1": "1.0.2"
+  },
+  "sample_doc_id": "f6fef2d2-4bf2-4e5b-94a0-b6fab576c3c1",
+  "created_at": "2026-11-14T16:47:40+00:00"
+}

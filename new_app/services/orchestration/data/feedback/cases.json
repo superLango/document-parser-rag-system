@@ -1,0 +1,248 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "fingerprint": "7dceffa814aa",
+      "concept_id": "",
+      "rule_id": "DOC-DUP-KEYS",
+      "level": "L2",
+      "operator": "recipe.binding_override",
+      "patch": {
+        "ops": [
+          {
+            "op": "add",
+            "path": "/bindings/conditions/-",
+            "value": "Batch"
+          }
+        ]
+      },
+      "root_cause": "extraction_rule",
+      "action_tier": "review",
+      "feedback_id": "10ab4e4b-9471-4815-a60f-8eb213b0210c",
+      "verified_at": "2026-11-13T13:06:39+00:00",
+      "_identity": "7dceffa814aa||recipe.binding_override|{\"ops\": [{\"op\": \"add\", \"path\": \"/bindings/conditions/-\", \"value\": \"Batch\"}]}"
+    },
+    {
+      "fingerprint": "b6b2d644598a",
+      "concept_id": "",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "level": "L1",
+      "operator": "table_repair.add",
+      "patch": {
+        "table_repair": {
+          "table_id": "T8",
+          "spec": {
+            "header_rows": 3,
+            "patch_cells": {
+              "3": {
+                "3": "抗拉强度",
+                "4": "规定残余伸长应力",
+                "5": "伸长率"
+              }
+            }
+          }
+        }
+      },
+      "root_cause": "table_structure",
+      "action_tier": "auto",
+      "feedback_id": "b868608f-76cf-42ac-8ece-fe0dd5a04862",
+      "verified_at": "2026-11-13T17:10:10+00:00",
+      "_identity": "b6b2d644598a||table_repair.add|{\"table_repair\": {\"spec\": {\"header_rows\": 3, \"patch_cells\": {\"3\": {\"3\": \"抗拉强度\", \"4\": \"规定残余伸长应力\", \"5\": \"伸长率\"}}}, \"table_id\": \"T8\"}}"
+    },
+    {
+      "fingerprint": "84465e740998",
+      "concept_id": "",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "level": "L1",
+      "operator": "table_repair.add",
+      "patch": {
+        "table_repair": {
+          "table_id": "T8",
+          "spec": {
+            "header_rows": 1,
+            "patch_cells": {
+              "1": {
+                "1": "≥27"
+              }
+            }
+          }
+        }
+      },
+      "root_cause": "table_structure",
+      "action_tier": "auto",
+      "feedback_id": "b86c54cd-84ea-4c84-bcc5-67061415dccb",
+      "verified_at": "2026-11-13T18:03:04+00:00",
+      "_identity": "84465e740998||table_repair.add|{\"table_repair\": {\"spec\": {\"header_rows\": 1, \"patch_cells\": {\"1\": {\"1\": \"≥27\"}}}, \"table_id\": \"T8\"}}"
+    },
+    {
+      "fingerprint": "5a4126e40891",
+      "concept_id": "",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "level": "L1",
+      "operator": "table_repair.add",
+      "patch": {
+        "table_repair": {
+          "table_id": "T1",
+          "spec": {
+            "header_rows": 1,
+            "patch_cells": {
+              "1": {
+                "1": "Grade",
+                "2": "UNS Number",
+                "3": "C",
+                "4": "O",
+                "5": "N",
+                "6": "H",
+                "7": "Fe",
+                "8": "Al",
+                "9": "V",
+                "10": "Pd",
+                "11": "Ru",
+                "12": "Ni",
+                "13": "Mo",
+                "14": "Cr",
+                "15": "Co",
+                "16": "Zr",
+                "17": "Nb",
+                "18": "Sn",
+                "19": "Si",
+                "20": "Other"
+              }
+            }
+          }
+        }
+      },
+      "root_cause": "table_structure",
+      "action_tier": "auto",
+      "feedback_id": "f42ec5d1-18a6-408d-beee-5c1a8229ac6e",
+      "verified_at": "2026-11-13T18:06:19+00:00",
+      "_identity": "5a4126e40891||table_repair.add|{\"table_repair\": {\"spec\": {\"header_rows\": 1, \"patch_cells\": {\"1\": {\"1\": \"Grade\", \"10\": \"Pd\", \"11\": \"Ru\", \"12\": \"Ni\", \"13\": \"Mo\", \"14\": \"Cr\", \"15\": \"Co\", \"16\": \"Zr\", \"17\": \"Nb\", \"18\": \"Sn\", \"19\": \"Si\", \"2\": \"UNS Number\", \"20\": \"Other\", \"3\": \"C\", \"4\": \"O\", \"5\": \"N\", \"6\": \"H\", \"7\": \"Fe\", \"8\": \"Al\", \"9\": \"V\"}}}, \"table_id\": \"T1\"}}"
+    },
+    {
+      "fingerprint": "d7d001144e67",
+      "concept_id": "",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "level": "L1",
+      "operator": "table_repair.add",
+      "patch": {
+        "table_repair": {
+          "table_id": "T1",
+          "spec": {
+            "header_rows": 1,
+            "patch_cells": {
+              "1": {
+                "2": "C",
+                "3": "O",
+                "4": "N",
+                "5": "H",
+                "6": "Fe",
+                "7": "Al",
+                "8": "V",
+                "9": "Pd",
+                "10": "Ru",
+                "11": "Ni",
+                "12": "Mo",
+                "13": "Cr",
+                "14": "Co",
+                "15": "Zr",
+                "16": "Nb",
+                "17": "Sn",
+                "18": "Si"
+              }
+            }
+          }
+        }
+      },
+      "root_cause": "table_structure",
+      "action_tier": "auto",
+      "feedback_id": "8e31f24a-6a59-4d2a-a99b-3cbf65173341",
+      "verified_at": "2026-11-13T18:17:17+00:00",
+      "_identity": "d7d001144e67||table_repair.add|{\"table_repair\": {\"spec\": {\"header_rows\": 1, \"patch_cells\": {\"1\": {\"10\": \"Ru\", \"11\": \"Ni\", \"12\": \"Mo\", \"13\": \"Cr\", \"14\": \"Co\", \"15\": \"Zr\", \"16\": \"Nb\", \"17\": \"Sn\", \"18\": \"Si\", \"2\": \"C\", \"3\": \"O\", \"4\": \"N\", \"5\": \"H\", \"6\": \"Fe\", \"7\": \"Al\", \"8\": \"V\", \"9\": \"Pd\"}}}, \"table_id\": \"T1\"}}"
+    },
+    {
+      "fingerprint": "45a26f30e775",
+      "concept_id": "",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "level": "L1",
+      "operator": "table_repair.add",
+      "patch": {
+        "table_repair": {
+          "table_id": "T4",
+          "spec": {
+            "header_rows": 1,
+            "patch_cells": {
+              "1": {
+                "1": "E",
+                "2": "Rm",
+                "3": "Rm",
+                "4": "Rp0.2",
+                "5": "Rp0.2",
+                "6": "Rp0.2",
+                "7": "Rp0.2",
+                "8": "A"
+              }
+            }
+          }
+        }
+      },
+      "root_cause": "table_structure",
+      "action_tier": "auto",
+      "feedback_id": "02e5ccb0-8138-4cfa-ba35-e8d2d6277a93",
+      "verified_at": "2026-11-13T18:20:03+00:00",
+      "_identity": "45a26f30e775||table_repair.add|{\"table_repair\": {\"spec\": {\"header_rows\": 1, \"patch_cells\": {\"1\": {\"1\": \"E\", \"2\": \"Rm\", \"3\": \"Rm\", \"4\": \"Rp0.2\", \"5\": \"Rp0.2\", \"6\": \"Rp0.2\", \"7\": \"Rp0.2\", \"8\": \"A\"}}}, \"table_id\": \"T4\"}}"
+    },
+    {
+      "fingerprint": "e0315b1a7958",
+      "concept_id": "",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "level": "L1",
+      "operator": "table_repair.add",
+      "patch": {
+        "table_repair": {
+          "table_id": "T3",
+          "spec": {
+            "header_rows": 1,
+            "patch_cells": {
+              "1": {
+                "1": "Tensile Strength",
+                "2": "Yield Strength",
+                "3": "Elongation"
+              }
+            }
+          }
+        }
+      },
+      "root_cause": "table_structure",
+      "action_tier": "auto",
+      "feedback_id": "48135811-a1a9-4f70-bc8d-c4fbb545f207",
+      "verified_at": "2026-11-14T05:18:52+00:00",
+      "_identity": "e0315b1a7958||table_repair.add|{\"table_repair\": {\"spec\": {\"header_rows\": 1, \"patch_cells\": {\"1\": {\"1\": \"Tensile Strength\", \"2\": \"Yield Strength\", \"3\": \"Elongation\"}}}, \"table_id\": \"T3\"}}"
+    },
+    {
+      "fingerprint": "ec40731e1780",
+      "concept_id": "",
+      "rule_id": "DOC-INVENTORY-CONFLICT",
+      "level": "L1",
+      "operator": "table_repair.add",
+      "patch": {
+        "table_repair": {
+          "table_id": "T1",
+          "spec": {
+            "header_rows": 1,
+            "patch_cells": {
+              "0": {
+                "0": "检验项目",
+                "1": "试验方法"
+              }
+            }
+          }
+        }
+      },
+      "root_cause": "table_structure",
+      "action_tier": "auto",
+      "feedback_id": "bbb3e111-915d-4d4a-9e5e-30da77c594c5",
+      "verified_at": "2026-11-15T05:20:21+00:00",
+      "_identity": "ec40731e1780||table_repair.add|{\"table_repair\": {\"spec\": {\"header_rows\": 1, \"patch_cells\": {\"0\": {\"0\": \"检验项目\", \"1\": \"试验方法\"}}}, \"table_id\": \"T1\"}}"
+    }
+  ]
+}

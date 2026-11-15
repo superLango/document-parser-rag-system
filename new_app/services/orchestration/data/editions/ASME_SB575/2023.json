@@ -1,0 +1,70 @@
+{
+  "standard_id": "ASME SB575",
+  "edition": "2023",
+  "document_sha256": "",
+  "page_count": 5,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 13,
+      "header_signature": [
+        "element",
+        "compositionlimits,%/alloyn06035",
+        "compositionlimits,%/alloyn06044",
+        "compositionlimits,%/alloyn10276",
+        "compositionlimits,%/alloyn06022",
+        "compositionlimits,%/alloyn06455",
+        "compositionlimits,%/alloyn06059",
+        "compositionlimits,%/alloyn06058",
+        "compositionlimits,%/alloyn06200",
+        "compositionlimits,%/alloyn06210",
+        "compositionlimits,%/alloyn10362",
+        "compositionlimits,%/alloyn06686",
+        "compositionlimits,%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "alloy",
+        "tensilestrength,min,psi(mpa)",
+        "yieldstrength(0.2%offset),min,psi(mpa)",
+        "elongationin2in.(50.8mm)or4dmin,%",
+        "rockwellhardness,max"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "alloy",
+        "ib/in.3",
+        "g/cm3"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "thickness,in.(mm)",
+        "astmmicrograinsizenumber",
+        "averagegraindiameter,mm(in.)"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "hardness_v1": "1.2.0"
+  },
+  "sample_doc_id": "9de31627-a596-47d4-b5b4-8e101f6dbadf",
+  "created_at": "2026-11-14T16:54:56+00:00"
+}

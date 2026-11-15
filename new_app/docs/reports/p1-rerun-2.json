@@ -1,0 +1,233 @@
+{
+  "documents": [
+    {
+      "name": "GBT 3274-2017.pdf",
+      "document_id": "e824f666-67fc-4b56-a2f7-58655c2a0b07",
+      "run_id": "36b2c9ad-1d09-4b92-ba69-868ab4c2b890",
+      "status": "UNROUTED",
+      "error_code": "UNROUTED",
+      "elapsed_seconds": 50.43,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "",
+      "findings": 0,
+      "artifacts": 0,
+      "stage_ms": {
+        "ocr": 44747,
+        "routing": 1341,
+        "sandbox": 1026,
+        "review": 1594
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国家标准（54）\\GBT 3274-2017.pdf"
+    },
+    {
+      "name": "AMS4108G--.pdf",
+      "document_id": "c3972a6c-e362-4216-a9d4-bc10983bab38",
+      "run_id": "2d9320d1-46cc-4beb-b08b-3a5e87b3bfb8",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 153.07,
+      "records": 42,
+      "fields": 133,
+      "tables": 6,
+      "review_status": "warn",
+      "findings": 2,
+      "artifacts": 22,
+      "stage_ms": {
+        "ocr": 11422,
+        "routing": 686,
+        "sandbox": 1189,
+        "review": 86697
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS4108G--.pdf"
+    },
+    {
+      "name": "AMS4911S-过期.pdf",
+      "document_id": "b4154ca1-2f81-44d0-bbef-3a3b3c8a49ce",
+      "run_id": "631470e8-0dec-4e1d-a122-dc56751bc132",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 96.75,
+      "records": 13,
+      "fields": 41,
+      "tables": 5,
+      "review_status": "warn",
+      "findings": 6,
+      "artifacts": 22,
+      "stage_ms": {
+        "ocr": 7458,
+        "routing": 520,
+        "sandbox": 937,
+        "review": 9445
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS4911S-过期.pdf"
+    },
+    {
+      "name": "AMS4943M.pdf",
+      "document_id": "3c2bdcb0-7132-4b9a-9bee-1505de2b36b0",
+      "run_id": "183c4c1b-fe3a-49da-9fe9-a1f730829d2f",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 70.58,
+      "records": 3,
+      "fields": 13,
+      "tables": 3,
+      "review_status": "warn",
+      "findings": 6,
+      "artifacts": 23,
+      "stage_ms": {
+        "ocr": 5550,
+        "routing": 531,
+        "sandbox": 1316,
+        "review": 7260
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS4943M.pdf"
+    },
+    {
+      "name": "GB 24627-2009过期.pdf",
+      "document_id": "22c2de75-a357-4e8b-900f-56104704aaa8",
+      "run_id": "ce1659b1-15d7-48b3-89ae-a5cafb344d38",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 90.81,
+      "records": 2,
+      "fields": 4,
+      "tables": 47,
+      "review_status": "warn",
+      "findings": 3,
+      "artifacts": 23,
+      "stage_ms": {
+        "ocr": 53530,
+        "routing": 5680,
+        "sandbox": 1299,
+        "review": 6414
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国家标准（54）\\GB 24627-2009过期.pdf"
+    },
+    {
+      "name": "YST 255-2009.pdf",
+      "document_id": "61decef3-88ee-4a0e-81f6-8f34ba05ef5e",
+      "run_id": "5258ffae-79d6-4551-894b-cab5f93e7178",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 141.03,
+      "records": 6,
+      "fields": 88,
+      "tables": 80,
+      "review_status": "warn",
+      "findings": 28,
+      "artifacts": 20,
+      "stage_ms": {
+        "ocr": 53154,
+        "routing": 1625,
+        "sandbox": 1275,
+        "review": 59604
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\行业标准（13）\\YST 255-2009.pdf"
+    },
+    {
+      "name": "AS4076.pdf",
+      "document_id": "848f7132-e306-402a-b21c-6917a57736da",
+      "run_id": "b66ed6f6-627f-4148-bbfe-2df2b6eea7d6",
+      "status": "UNROUTED",
+      "error_code": "UNROUTED",
+      "elapsed_seconds": 70.56,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "",
+      "findings": 0,
+      "artifacts": 0,
+      "stage_ms": {
+        "ocr": 63050,
+        "routing": 3136,
+        "sandbox": 984,
+        "review": 1641
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AS4076.pdf"
+    },
+    {
+      "name": "ASME SA264-2023-过期.pdf",
+      "document_id": "4ddad40b-aec3-4381-b5e4-1ee530ad5757",
+      "run_id": "0b511ef3-f107-4528-a720-082fc7477750",
+      "status": "UNROUTED",
+      "error_code": "UNROUTED",
+      "elapsed_seconds": 10.16,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "",
+      "findings": 0,
+      "artifacts": 0,
+      "stage_ms": {
+        "ocr": 8669,
+        "routing": 531
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\ASME SA264-2023-过期.pdf"
+    },
+    {
+      "name": "GBT 3880.2-2012过期.pdf",
+      "document_id": "de343f52-f333-4ce8-8320-087418618f3a",
+      "run_id": "0b034abb-a835-44b8-9d2f-856b312cec5f",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 715.2,
+      "records": 174,
+      "fields": 288,
+      "tables": 130,
+      "review_status": "warn",
+      "findings": 76,
+      "artifacts": 68,
+      "stage_ms": {
+        "ocr": 594257,
+        "routing": 8321,
+        "sandbox": 1242,
+        "review": 24811
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国家标准（54）\\GBT 3880.2-2012过期.pdf"
+    },
+    {
+      "name": "GBT 3623-2022.pdf",
+      "document_id": "58aa2d16-d18c-4ac6-b049-60fdb31fe26b",
+      "run_id": "4bcfe0c9-fe1d-41b7-8936-2c56ef5f7452",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 157.24,
+      "records": 32,
+      "fields": 263,
+      "tables": 4,
+      "review_status": "warn",
+      "findings": 47,
+      "artifacts": 23,
+      "stage_ms": {
+        "ocr": 17957,
+        "routing": 533,
+        "sandbox": 1096,
+        "review": 33956
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准1\\国家标准（54）\\GBT 3623-2022.pdf"
+    },
+    {
+      "name": "NBT 47014-2011过期.pdf",
+      "document_id": "84fcc9fa-a430-44df-9b56-cacfa0dfefdd",
+      "run_id": "48f0b52b-e728-4e2a-bf6b-39c9581b910b",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 887.93,
+      "records": 6,
+      "fields": 11,
+      "tables": 680,
+      "review_status": "warn",
+      "findings": 15,
+      "artifacts": 101,
+      "stage_ms": {
+        "ocr": 746300,
+        "routing": 23564,
+        "sandbox": 1599,
+        "review": 28653
+      },
+      "path": "F:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\行业标准（13）\\NBT 47014-2011过期.pdf"
+    }
+  ]
+}

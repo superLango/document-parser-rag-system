@@ -1,0 +1,26 @@
+﻿[1/13] DOC-LOW-COVERAGE     status=needs_more_info ops=2 passed=False 12.7s err=
+[2/13] DOC-LOW-COVERAGE     status=needs_more_info ops=7 passed=False 5.0s err=
+[3/13] DOC-LOW-COVERAGE     status=needs_more_info ops=5 passed=False 15.8s err=
+[4/13] DOC-NO-RECORDS       status=needs_more_info ops=0 passed=False 8.0s err=
+[5/13] DOC-NO-RECORDS       status=needs_more_info ops=3 passed=False 10.5s err=
+[6/13] DOC-NO-RECORDS       status=needs_more_info ops=0 passed=False 106.7s err=
+[7/13] DOC-UNBOUND-COLUMNS  status=needs_more_info ops=0 passed=False 78.9s err=
+[8/13] DOC-UNBOUND-COLUMNS  status=needs_more_info ops=0 passed=False 68.8s err=
+[9/13] DOC-UNBOUND-COLUMNS  status=needs_more_info ops=5 passed=False 13.8s err=
+[10/13] DOC-DUP-KEYS         status=needs_more_info ops=0 passed=False 10.9s err=
+[11/13] DOC-DUP-KEYS         status=needs_more_info ops=2 passed=False 10.6s err=
+[12/13] DOC-DUP-KEYS         status=needs_more_info ops=0 passed=None 7.9s err=
+[13/13] DOC-NO-TABLES        status=needs_more_info ops=0 passed=None 8.7s err=
+{
+  "sampled": 13,
+  "processed_ok": 13,
+  "status_dist": {
+    "needs_more_info": 13
+  },
+  "verified": 0,
+  "noop_intercepted": 6,
+  "conflict_errors": 0,
+  "avg_ops": 1.85,
+  "latency_p50": 10.9,
+  "latency_p95": 78.9
+}

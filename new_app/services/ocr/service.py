@@ -7,6 +7,7 @@ from services.shared.storage import ObjectStore
 from .adapters.base import OcrBackendError
 from .adapters.factory import build_adapter
 from .adapters.layout import LayoutClient
+from .algorithms.quality import score_tables
 from .algorithms.repairs import apply_repairs, load_rules
 from .algorithms.table_grid import extract_tables
 from .config import settings
@@ -46,6 +47,7 @@ async def parse_document(
         document=DocumentMeta(file_name=request.filename),
         rules=load_rules(settings.table_repairs_path or None),
     )
+    tables = score_tables(tables)
     result.tables = tables
     if applied:
         logger.info(
@@ -73,13 +75,22 @@ async def _run_layout(result: OcrResult, assets: dict[str, bytes]) -> None:
     """Attach PP-DocLayoutV3 blocks; failures degrade to warnings."""
     if not settings.layout_base_url:
         return
+    if settings.layout_only_for_vision and result.backend in {
+        "pdf",
+        "pdf_fallback",
+        "layout_first",
+    }:
+        # Native text extraction already preserves table geometry, and the
+        # layout-first adapter has already attached its blocks.
+        return
     client = LayoutClient(settings.layout_base_url, settings.layout_timeout_seconds)
+    failures = 0
     for page in result.pages:
         image = assets.get(page.image_key or "")
         if image is None:
             continue
         try:
-            blocks, failures, raw = await client.analyze(
+            blocks, block_failures, raw = await client.analyze(
                 page_no=page.page_no,
                 width=page.width,
                 height=page.height,
@@ -87,6 +98,7 @@ async def _run_layout(result: OcrResult, assets: dict[str, bytes]) -> None:
                 image=image,
             )
         except OcrBackendError as exc:
+            failures += 1
             result.warnings.append(f"layout page {page.page_no}: {exc.code}")
             logger.warning(
                 "layout failed document=%s page=%s code=%s",
@@ -94,10 +106,13 @@ async def _run_layout(result: OcrResult, assets: dict[str, bytes]) -> None:
                 page.page_no,
                 exc.code,
             )
+            if failures >= 2:
+                result.warnings.append("layout disabled after repeated failures")
+                break
             continue
-        if failures:
+        if block_failures:
             result.warnings.append(
-                f"layout page {page.page_no}: {len(failures)} block failures"
+                f"layout page {page.page_no}: {len(block_failures)} block failures"
             )
         result.layout.extend(blocks)
         key = f"ocr/{result.document_id}/layout/{page.page_no}.json"

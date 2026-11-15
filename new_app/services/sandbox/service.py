@@ -22,7 +22,7 @@ from services.shared.storage import ObjectStore
 from .config import Settings
 from .executor import Executor, ExecutorError, RawExecution
 from .validation import (
-    REQUIRED_FILES,
+    OUTPUT_FILES,
     ROLE_CONTENT_TYPES,
     ValidatedOutputs,
     ValidationError,
@@ -52,6 +52,9 @@ class SandboxService:
         workspace = None
         try:
             workspace = await prepare_workspace(request, self.store, self.settings)
+            logger.info(
+                "sandbox workspace run=%s assets=%s", request.run_id, workspace.assets
+            )
             raw = await self.executor.execute(workspace)
             return await self._finalize(workspace, raw, execution_id)
         except WorkspaceError as exc:
@@ -178,7 +181,9 @@ class SandboxService:
         prefix = f"runs/{run_id}/sandbox/{execution_id}"
         uploads = []
         names = []
-        for name in REQUIRED_FILES:
+        for name in OUTPUT_FILES:
+            if name not in validated.files:
+                continue
             data = validated.files[name]
             role = name.rsplit(".", 1)[0]
             key = f"{prefix}/{name}"

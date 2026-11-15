@@ -24,10 +24,26 @@ export const feedbackApi = {
     apiRequest<FeedbackDetail>(`/feedback/${id}/process`, { method: "POST" }),
   verification: (id: string) =>
     apiRequest<VerificationPackage>(`/feedback/${id}/verification`),
-  verify: (id: string, decision: "approve" | "reject", reason: string) =>
+  verify: (id: string, decision: "approve" | "reject", reason: string, confirm = false) =>
     apiRequest<FeedbackDetail>(`/feedback/${id}/verify`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ decision, reason, actor: "local" })
+      body: JSON.stringify({
+        decision,
+        reason,
+        actor: "local",
+        confirm_accepted_change: confirm
+      })
+    }),
+  approveCode: (id: string, reason: string) =>
+    apiRequest<FeedbackDetail>(`/feedback/${id}/approve-code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        actor: "local",
+        reason,
+        confirm: true,
+        verification_id: id
+      })
     })
 };

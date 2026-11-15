@@ -1,0 +1,1204 @@
+{
+  "summary": {
+    "sampled": 13,
+    "processed_ok": 13,
+    "failed": 0,
+    "llm_triage_rate": 92.3,
+    "triage_match_rate": 92.3,
+    "proposal_rate": 84.6,
+    "avg_ops": 9.73,
+    "plausible_ops": 35,
+    "redundant_ops": 68,
+    "total_ops": 107,
+    "latency_p50": 25.6,
+    "latency_p95": 79.0,
+    "status_dist": {
+      "needs_more_info": 13
+    },
+    "root_dist": {
+      "recipe_binding": 10,
+      "table_structure": 2,
+      "unknown": 1
+    }
+  },
+  "results": [
+    {
+      "feedback_id": "c3543554-f48e-4222-bc08-e694d5d92f4d",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "category": "coverage",
+      "description": "most detected tables produced no records",
+      "elapsed": 35.4,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.9,
+        "needs_human": false,
+        "summary": "The recipe has empty measure bindings and a rigid 'element_rows' structure that fails to match the document's actual table types (classified as dimension/classification). Update the recipe's bindings "
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 10,
+        "summary": "Add chemical element measures to bindings to enable record extraction",
+        "score": {
+          "total": 10,
+          "plausible": 0,
+          "redundant": 10,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/C",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Si",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Mn",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/P",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/S",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Cr",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Ni",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Mo",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Cu",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Al",
+              "verdict": "redundant"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "a79328ac-6ac0-4f55-aa23-614900929b4b",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "category": "coverage",
+      "description": "most detected tables produced no records",
+      "elapsed": 24.8,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.9,
+        "needs_human": false,
+        "summary": "Update recipe bindings or table structure definition to correctly map chemical composition measures to the columns in the majority of tables, and adjust classification rules to identify tolerance/anal"
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 7,
+        "summary": "Add missing chemical composition measures and signature tokens to improve table column mapping coverage.",
+        "score": {
+          "total": 7,
+          "plausible": 6,
+          "redundant": 1,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/Re",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "6fb9620f-7d40-46f1-aa7f-815a4246d7db",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "category": "coverage",
+      "description": "most detected tables produced no records",
+      "elapsed": 22.0,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "recipe",
+        "confidence": 0.85,
+        "needs_human": false,
+        "summary": "The recipe's extraction strategies and row_key bindings are not matching the structure of the detected tables (T3, T4), causing fallback to a generic classification recipe or no records. The recipe ne"
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 5,
+        "summary": "Add alternative row_key tokens and signature tokens to improve table structure matching for chemical composition tables.",
+        "score": {
+          "total": 5,
+          "plausible": 3,
+          "redundant": 0,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/row_key/-",
+              "verdict": "unverified"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/row_key/-",
+              "verdict": "unverified"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "9f317d9f-c777-470c-89f0-01d64da55edb",
+      "rule_id": "DOC-NO-RECORDS",
+      "category": "coverage",
+      "description": "document contains tables but no records were extracted",
+      "elapsed": 29.4,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.9,
+        "needs_human": false,
+        "summary": "Update the recipe's row_key and measure bindings to match the actual column headers found in the document tables."
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 5,
+        "summary": "Update row_key and measure bindings to match actual table headers (ICS, H) and add missing measure bindings for diameter/thickness if implied, or adjust row_key to match observed headers 'ICS' and 'H'",
+        "score": {
+          "total": 5,
+          "plausible": 4,
+          "redundant": 0,
+          "detail": [
+            {
+              "op": "replace",
+              "path": "/bindings/row_key",
+              "verdict": "unverified"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/直径",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/厚度",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "d4814744-5fb3-4d91-8c68-666db77b3fba",
+      "rule_id": "DOC-NO-RECORDS",
+      "category": "coverage",
+      "description": "document contains tables but no records were extracted",
+      "elapsed": 21.3,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.95,
+        "needs_human": false,
+        "summary": "The recipe is misconfigured for the document structure: the row_key columns are missing from the table headers, and no measures are bound. Update the recipe's row_key and measures bindings to match th"
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 4,
+        "summary": "Add missing measure bindings and update row_key to match table headers",
+        "score": {
+          "total": 4,
+          "plausible": 3,
+          "redundant": 0,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/0",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/1",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/2",
+              "verdict": "plausible"
+            },
+            {
+              "op": "replace",
+              "path": "/bindings/row_key",
+              "verdict": "unverified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "d727b890-5c4b-454c-ac18-b9246f5bc5ee",
+      "rule_id": "DOC-NO-RECORDS",
+      "category": "coverage",
+      "description": "document contains tables but no records were extracted",
+      "elapsed": 79.0,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.95,
+        "needs_human": false,
+        "summary": "Update the recipe bindings to correctly map the measures to the actual column headers present in the document table T1, or adjust the table structure definition if the headers are non-standard."
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 40,
+        "summary": "Add missing chemical composition measure bindings (Ag, Al, As, etc.) to recipe bindings.measures to resolve MEASURE_COLUMN_MISSING warnings and ensure record extraction.",
+        "score": {
+          "total": 40,
+          "plausible": 0,
+          "redundant": 40,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/Ag",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Al",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/As",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/B",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Bi",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/C",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/CEV",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Ca",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Ce",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Co",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Cr",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Cu",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Fe",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/H",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/La",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Mg",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Mn",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Mo",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/N",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Nb",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Nd",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Ni",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/O",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/P",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Pb",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Pcm",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Re",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/S",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Sb",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Se",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Si",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Sn",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Ta",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Te",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Ti",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/V",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/W",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Y",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Zn",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Zr",
+              "verdict": "redundant"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "dae7cf9f-dc48-4cef-8d4d-7808115feb2c",
+      "rule_id": "DOC-UNBOUND-COLUMNS",
+      "category": "structure",
+      "description": "measure columns could not be bound to recipe bindings",
+      "elapsed": 32.4,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.95,
+        "needs_human": false,
+        "summary": "The recipe's measure bindings are not matching the actual columns present in the document table. The recipe needs to be updated to either remove unbound measures or adjust the binding logic/column map"
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 14,
+        "summary": "Add missing measure bindings for Al, B, C, Si, Mn, P, S to resolve unbound column warnings.",
+        "score": {
+          "total": 14,
+          "plausible": 7,
+          "redundant": 7,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/Al",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/B",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/C",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Si",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Mn",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/P",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/S",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "ec54e5de-236f-49a6-a5ad-bec87349f3ce",
+      "rule_id": "DOC-UNBOUND-COLUMNS",
+      "category": "structure",
+      "description": "measure columns could not be bound to recipe bindings",
+      "elapsed": 25.6,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.95,
+        "needs_human": false,
+        "summary": "Update the recipe bindings to handle missing measures gracefully or adjust the recipe's expected measures to match the actual table structure in the document."
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 9,
+        "summary": "Add missing tensile measure bindings (Rm, Rp0.2, A, Z) and signature tokens to resolve unbound column errors.",
+        "score": {
+          "total": 9,
+          "plausible": 5,
+          "redundant": 4,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/Rm",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Rp0.2",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/A",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/Z",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "98d2ce33-2b16-4795-96d9-b9dbf3e96546",
+      "rule_id": "DOC-UNBOUND-COLUMNS",
+      "category": "structure",
+      "description": "measure columns could not be bound to recipe bindings",
+      "elapsed": 26.2,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.95,
+        "needs_human": false,
+        "summary": "The recipe's measure bindings are not satisfied by the document's table structure. Either the recipe needs to be updated to reflect the actual columns present in the document, or the document parsing "
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 8,
+        "summary": "Add missing chemical composition measure bindings (Al, B, C, CEV, etc.) and signature tokens to resolve unbound column errors for document f8cb98f6.",
+        "score": {
+          "total": 8,
+          "plausible": 4,
+          "redundant": 4,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/Al",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/B",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/C",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/bindings/measures/CEV",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "e161b236-974e-44e9-ab24-a3f2cfb2201e",
+      "rule_id": "DOC-DUP-KEYS",
+      "category": "consistency",
+      "description": "same grade and measure repeat across too many records",
+      "elapsed": 18.1,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.85,
+        "needs_human": false,
+        "summary": "The recipe is configured for chemical composition only and lacks a binding for the mechanical property 'Rm'. The recipe needs to be updated to include 'Rm' in the measures and potentially adjust the p"
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 3,
+        "summary": "Add binding for mechanical property 'Rm' (Tensile Strength) to the recipe measures and signature tokens.",
+        "score": {
+          "total": 3,
+          "plausible": 2,
+          "redundant": 1,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/Rm",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "04b91599-41cc-402e-bbc7-4234112918fc",
+      "rule_id": "DOC-DUP-KEYS",
+      "category": "consistency",
+      "description": "same grade and measure repeat across too many records",
+      "elapsed": 206.1,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "recipe",
+        "confidence": 0.85,
+        "needs_human": false,
+        "summary": "The recipe's row_key and table structure expectations do not match the actual document tables (T3, T4), causing record extraction failures and potential duplicates from fallback or misidentified table"
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": "recipe",
+        "ops": 2,
+        "summary": "Add A binding and signature token to the recipe.",
+        "score": {
+          "total": 2,
+          "plausible": 1,
+          "redundant": 1,
+          "detail": [
+            {
+              "op": "add",
+              "path": "/bindings/measures/A",
+              "verdict": "redundant"
+            },
+            {
+              "op": "add",
+              "path": "/signature/tokens/-",
+              "verdict": "plausible"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "feedback_id": "5e0dc3d9-1e69-47d7-85e7-698d6b9afe85",
+      "rule_id": "DOC-DUP-KEYS",
+      "category": "consistency",
+      "description": "same grade and measure repeat across too many records",
+      "elapsed": 11.0,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.85,
+        "needs_human": true,
+        "summary": "The recipe is configured for chemical composition but the feedback concerns mechanical property (Rp0.2) duplication. The recipe needs to be updated to include mechanical properties in its binding stru"
+      },
+      "fallback": false,
+      "triage_match": true,
+      "proposal": {
+        "scope": null,
+        "ops": 0,
+        "summary": "",
+        "score": {
+          "total": 0,
+          "plausible": 0,
+          "redundant": 0,
+          "detail": []
+        }
+      }
+    },
+    {
+      "feedback_id": "2d0884c6-e192-4e3d-9c8c-b9b01e635d6f",
+      "rule_id": "DOC-NO-TABLES",
+      "category": "coverage",
+      "description": "no tables were detected in a multi-page document",
+      "elapsed": 6.6,
+      "status": "needs_more_info",
+      "error": "",
+      "triage": {
+        "root_cause": "unknown",
+        "repair_scope": "none",
+        "confidence": 0.5,
+        "needs_human": true,
+        "summary": "Insufficient evidence to determine if the lack of table detection is due to OCR errors, missing recipe configuration, or template schema issues. Human review needed to inspect the document and recipe "
+      },
+      "fallback": true,
+      "triage_match": false,
+      "proposal": {
+        "scope": null,
+        "ops": 0,
+        "summary": "",
+        "score": {
+          "total": 0,
+          "plausible": 0,
+          "redundant": 0,
+          "detail": []
+        }
+      }
+    }
+  ],
+  "verification": {
+    "summary": {
+      "evaluated": 13,
+      "verification_passed": 0,
+      "fix_rate": 0.0,
+      "ops_total": 107,
+      "ops_usable": 15,
+      "ops_redundant": 58,
+      "ops_other": 34,
+      "no_ops": 2,
+      "new_errors_total": 5,
+      "target_recipes": {
+        "classification_v1": 7,
+        "inspection_rules_v1": 1,
+        "chemical_composition_v1": 4,
+        "null": 1
+      }
+    },
+    "rows": [
+      {
+        "feedback_id": "c3543554-f48e-4222-bc08-e694d5d92f4d",
+        "rule_id": "DOC-LOW-COVERAGE",
+        "recipe": "classification_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.9,
+        "ops": 10,
+        "usable": 10,
+        "redundant": 0,
+        "other": 0,
+        "passed": false,
+        "summary": "Target DOC-LOW-COVERAGE: not fixed; new errors=0.",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 0
+      },
+      {
+        "feedback_id": "a79328ac-6ac0-4f55-aa23-614900929b4b",
+        "rule_id": "DOC-LOW-COVERAGE",
+        "recipe": "classification_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.9,
+        "ops": 7,
+        "usable": 1,
+        "redundant": 0,
+        "other": 6,
+        "passed": false,
+        "summary": "Target DOC-LOW-COVERAGE: not fixed; new errors=0.",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 0
+      },
+      {
+        "feedback_id": "6fb9620f-7d40-46f1-aa7f-815a4246d7db",
+        "rule_id": "DOC-LOW-COVERAGE",
+        "recipe": "classification_v1",
+        "status": "needs_more_info",
+        "root": "table_structure",
+        "confidence": 0.85,
+        "ops": 5,
+        "usable": 0,
+        "redundant": 0,
+        "other": 5,
+        "passed": false,
+        "summary": "Target DOC-LOW-COVERAGE: not fixed; new errors=0.",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 0
+      },
+      {
+        "feedback_id": "9f317d9f-c777-470c-89f0-01d64da55edb",
+        "rule_id": "DOC-NO-RECORDS",
+        "recipe": "inspection_rules_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.9,
+        "ops": 5,
+        "usable": 2,
+        "redundant": 0,
+        "other": 3,
+        "passed": false,
+        "summary": "Target DOC-NO-RECORDS: not fixed; new errors=0.",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 0
+      },
+      {
+        "feedback_id": "d4814744-5fb3-4d91-8c68-666db77b3fba",
+        "rule_id": "DOC-NO-RECORDS",
+        "recipe": "classification_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.95,
+        "ops": 4,
+        "usable": 0,
+        "redundant": 3,
+        "other": 1,
+        "passed": false,
+        "summary": "Target DOC-NO-RECORDS: not fixed; new errors=0.",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 0
+      },
+      {
+        "feedback_id": "d727b890-5c4b-454c-ac18-b9246f5bc5ee",
+        "rule_id": "DOC-NO-RECORDS",
+        "recipe": "chemical_composition_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.95,
+        "ops": 40,
+        "usable": 0,
+        "redundant": 40,
+        "other": 0,
+        "passed": false,
+        "summary": "Target DOC-NO-RECORDS: not fixed; new errors=0.",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 0
+      },
+      {
+        "feedback_id": "dae7cf9f-dc48-4cef-8d4d-7808115feb2c",
+        "rule_id": "DOC-UNBOUND-COLUMNS",
+        "recipe": "chemical_composition_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.95,
+        "ops": 14,
+        "usable": 0,
+        "redundant": 7,
+        "other": 7,
+        "passed": false,
+        "summary": "candidate sandbox failed: SANDBOX_RECIPE_CONFLICT",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 1
+      },
+      {
+        "feedback_id": "ec54e5de-236f-49a6-a5ad-bec87349f3ce",
+        "rule_id": "DOC-UNBOUND-COLUMNS",
+        "recipe": "chemical_composition_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.95,
+        "ops": 9,
+        "usable": 0,
+        "redundant": 4,
+        "other": 5,
+        "passed": false,
+        "summary": "candidate sandbox failed: SANDBOX_RECIPE_CONFLICT",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 1
+      },
+      {
+        "feedback_id": "98d2ce33-2b16-4795-96d9-b9dbf3e96546",
+        "rule_id": "DOC-UNBOUND-COLUMNS",
+        "recipe": "chemical_composition_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.95,
+        "ops": 8,
+        "usable": 0,
+        "redundant": 4,
+        "other": 4,
+        "passed": false,
+        "summary": "candidate sandbox failed: SANDBOX_RECIPE_CONFLICT",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 1
+      },
+      {
+        "feedback_id": "e161b236-974e-44e9-ab24-a3f2cfb2201e",
+        "rule_id": "DOC-DUP-KEYS",
+        "recipe": "classification_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.85,
+        "ops": 3,
+        "usable": 1,
+        "redundant": 0,
+        "other": 2,
+        "passed": false,
+        "summary": "candidate sandbox failed: SANDBOX_RECIPE_CONFLICT",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 1
+      },
+      {
+        "feedback_id": "04b91599-41cc-402e-bbc7-4234112918fc",
+        "rule_id": "DOC-DUP-KEYS",
+        "recipe": "classification_v1",
+        "status": "needs_more_info",
+        "root": "table_structure",
+        "confidence": 0.85,
+        "ops": 2,
+        "usable": 1,
+        "redundant": 0,
+        "other": 1,
+        "passed": false,
+        "summary": "candidate sandbox failed: SANDBOX_RECIPE_CONFLICT",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": 1
+      },
+      {
+        "feedback_id": "5e0dc3d9-1e69-47d7-85e7-698d6b9afe85",
+        "rule_id": "DOC-DUP-KEYS",
+        "recipe": "classification_v1",
+        "status": "needs_more_info",
+        "root": "recipe_binding",
+        "confidence": 0.85,
+        "ops": 0,
+        "usable": 0,
+        "redundant": 0,
+        "other": 0,
+        "passed": false,
+        "summary": "",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": null
+      },
+      {
+        "feedback_id": "2d0884c6-e192-4e3d-9c8c-b9b01e635d6f",
+        "rule_id": "DOC-NO-TABLES",
+        "recipe": null,
+        "status": "needs_more_info",
+        "root": "unknown",
+        "confidence": 0.5,
+        "ops": 0,
+        "usable": 0,
+        "redundant": 0,
+        "other": 0,
+        "passed": false,
+        "summary": "",
+        "added": 0,
+        "removed": 0,
+        "changed": 0,
+        "new_errors": null
+      }
+    ]
+  }
+}

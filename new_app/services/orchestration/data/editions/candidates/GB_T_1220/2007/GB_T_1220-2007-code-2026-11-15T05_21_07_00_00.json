@@ -1,0 +1,61 @@
+{
+  "candidate_id": "GB/T 1220-2007-code-2026-11-15T05:21:07+00:00",
+  "standard_id": "GB/T 1220",
+  "edition": "2007",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "missing_table: 本标准代替gb/t1220-1992《不锈钢棒》。 table expected by the edition profile was not found",
+    "missing_table: 项目 table expected by the edition profile was not found",
+    "missing_table: 项目,内容 table expected by the edition profile was not found",
+    "profile_changed: gb/t4334.2,不锈钢,硫酸-硫酸铁腐蚀试验方法 profile admin -> inspection",
+    "profile_changed: gb/t10121,钢材塔形发纹磁粉检验方法 profile admin -> inspection",
+    "profile_changed: 4,订货内容 profile admin -> unknown",
+    "missing_table: b),产品名称; table expected by the edition profile was not found",
+    "missing_table: g),使用加工方法(见5.2); table expected by the edition profile was not found",
+    "missing_table: 内容 table expected by the edition profile was not found",
+    "profile_changed: 表1,奥氏体型不锈钢的化学成分 profile chemical_composition -> admin",
+    "missing_table: 表2,奥氏体-铁素体型不锈钢的化学成分 table expected by the edition profile was not found",
+    "missing_table: 表4,马氏体型不锈钢的化学成分 table expected by the edition profile was not found",
+    "missing_table: 钢棒应按批检查和验收。 table expected by the edition profile was not found",
+    "missing_table: 标题,内容 table expected by the edition profile was not found",
+    "profile_changed: 10,包装、标志和质量证明书 profile admin -> unknown",
+    "profile_changed: 18 profile admin -> unknown"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [
+      "本标准代替gb/t1220-1992《不锈钢棒》。",
+      "项目",
+      "项目,内容",
+      "b),产品名称;",
+      "g),使用加工方法(见5.2);",
+      "内容",
+      "表2,奥氏体-铁素体型不锈钢的化学成分",
+      "表4,马氏体型不锈钢的化学成分",
+      "钢棒应按批检查和验收。",
+      "标题,内容"
+    ],
+    "profile_changes": [
+      "gb/t4334.2,不锈钢,硫酸-硫酸铁腐蚀试验方法: profile admin -> inspection",
+      "gb/t10121,钢材塔形发纹磁粉检验方法: profile admin -> inspection",
+      "4,订货内容: profile admin -> unknown",
+      "表1,奥氏体型不锈钢的化学成分: profile chemical_composition -> admin",
+      "10,包装、标志和质量证明书: profile admin -> unknown",
+      "18: profile admin -> unknown"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T05:21:07+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

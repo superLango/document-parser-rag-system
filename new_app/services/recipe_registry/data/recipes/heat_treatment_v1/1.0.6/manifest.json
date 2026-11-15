@@ -1,0 +1,101 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "heat_treatment_v1",
+  "version": "1.0.6",
+  "engine_api": "recipe-engine/1",
+  "profile": "heat_treatment",
+  "signature": {
+    "profile": "heat_treatment",
+    "orientation": "grade_rows",
+    "n_cols": 4,
+    "blocks": 1,
+    "tokens": [
+      "牌号",
+      "热处理制度",
+      "推荐热处理制度",
+      "热处理温度",
+      "固溶处理",
+      "淬火",
+      "回火",
+      "退火",
+      "正火",
+      "沉淀硬化",
+      "冷却方式",
+      "热处理"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "钢号",
+      "grade",
+      "材料牌号"
+    ],
+    "conditions": [],
+    "measures": {
+      "E": {
+        "unit": "GPa",
+        "family": "elastic"
+      },
+      "HBW": {
+        "unit": "HBW",
+        "family": "hardness"
+      },
+      "HRB": {
+        "unit": "HRB",
+        "family": "hardness"
+      },
+      "HRC": {
+        "family": "hardness",
+        "unit": "HRC"
+      },
+      "HV": {
+        "unit": "HV",
+        "family": "hardness"
+      },
+      "B": {
+        "family": "chemical",
+        "unit": "%"
+      },
+      "Rm": {
+        "family": "tensile",
+        "unit": "MPa"
+      },
+      "Rp0.2": {
+        "family": "tensile",
+        "unit": "MPa"
+      },
+      "A": {
+        "unit": "%",
+        "family": "tensile"
+      },
+      "Z": {
+        "family": "tensile",
+        "unit": "%"
+      },
+      "HB": {
+        "unit": "HB",
+        "family": "hardness"
+      }
+    }
+  },
+  "rules": {
+    "transposed": false,
+    "strip_footnote_marks": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": null
+  },
+  "checksum": "d67790ceea6babf037b0871da594cdac93cb3be40770d47482af74ed2feac239",
+  "created_at": "2026-11-14T09:56:47+00:00"
+}

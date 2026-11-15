@@ -63,9 +63,11 @@ class ReviewAgent:
         evidence = [item for item in (task.inputs.get("evidence") or []) if isinstance(item, dict)]
         tables = [item for item in (task.inputs.get("tables") or []) if isinstance(item, dict)]
         deterministic = task.inputs.get("deterministic_findings") or []
+        sampled_records = _sample_records(records)
+        sampled_evidence = _sample_evidence(evidence, sampled_records)
         compact = {
-            "records": [_compact_record(item) for item in records[:50]],
-            "evidence": evidence[:100],
+            "records": [_compact_record(item) for item in sampled_records],
+            "evidence": sampled_evidence,
             "tables": [
                 {
                     "table_id": item.get("table_id"),
@@ -77,6 +79,12 @@ class ReviewAgent:
                 for item in tables
             ],
             "deterministic_findings": deterministic,
+            "sampling": {
+                "records_total": len(records),
+                "records_sent": len(sampled_records),
+                "evidence_total": len(evidence),
+                "evidence_sent": len(sampled_evidence),
+            },
         }
         degraded = False
         response = None
@@ -129,6 +137,51 @@ class ReviewAgent:
             prompt_hash=prompt.sha256,
             degraded=degraded,
         )
+
+
+def _sample_records(records: list[dict[str, Any]], limit: int = 60) -> list[dict[str, Any]]:
+    """Table-balanced sample so one large table cannot starve the others."""
+    if len(records) <= limit:
+        return records
+    buckets: dict[str, list[dict[str, Any]]] = {}
+    for record in records:
+        buckets.setdefault(str(record.get("table_id") or ""), []).append(record)
+    per_table = max(1, limit // max(1, len(buckets)))
+    sampled: list[dict[str, Any]] = []
+    for items in buckets.values():
+        sampled.extend(items[:per_table])
+    if len(sampled) < limit:
+        taken = {id(item) for item in sampled}
+        for record in records:
+            if len(sampled) >= limit:
+                break
+            if id(record) not in taken:
+                sampled.append(record)
+    return sampled[:limit]
+
+
+def _sample_evidence(
+    evidence: list[dict[str, Any]],
+    records: list[dict[str, Any]],
+    limit: int = 120,
+) -> list[dict[str, Any]]:
+    """Prefer evidence referenced by the sampled records, then fill evenly."""
+    wanted = {
+        str(ref)
+        for record in records
+        for ref in record.get("evidence_refs") or []
+    }
+    selected = [
+        item for item in evidence if str(item.get("evidence_id")) in wanted
+    ][:limit]
+    if len(selected) < limit:
+        taken = {id(item) for item in selected}
+        for item in evidence:
+            if len(selected) >= limit:
+                break
+            if id(item) not in taken:
+                selected.append(item)
+    return selected
 
 
 def _sample_rows(rows: Any) -> list[Any]:

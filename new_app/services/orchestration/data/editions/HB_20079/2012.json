@@ -1,0 +1,234 @@
+{
+  "standard_id": "HB 20079",
+  "edition": "2012",
+  "document_sha256": "",
+  "page_count": 14,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "i"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "序号",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表1 化学成分",
+      "profile": "chemical_composition",
+      "n_cols": 15,
+      "header_signature": [
+        "序号",
+        "牌号",
+        "化学成分,%/c",
+        "化学成分,%/mn",
+        "化学成分,%/si",
+        "化学成分,%/s",
+        "化学成分,%/p",
+        "化学成分,%/cr",
+        "化学成分,%/ni",
+        "化学成分,%/mo",
+        "化学成分,%/al",
+        "化学成分,%/ti",
+        "化学成分,%/cu",
+        "化学成分,%/nb+ta",
+        "n"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 化学成分允许偏差",
+      "profile": "admin",
+      "n_cols": 15,
+      "header_signature": [
+        "序号",
+        "牌号",
+        "化学成分允许偏差,%/c",
+        "化学成分允许偏差,%/mn",
+        "化学成分允许偏差,%/si",
+        "化学成分允许偏差,%/s",
+        "化学成分允许偏差,%/p",
+        "化学成分允许偏差,%/cr",
+        "化学成分允许偏差,%/ni",
+        "化学成分允许偏差,%/mo",
+        "化学成分允许偏差,%/al",
+        "化学成分允许偏差,%/ti",
+        "化学成分允许偏差,%/cu",
+        "化学成分允许偏差,%/nb",
+        "化学成分允许偏差,%/n"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 锻件供应状态",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "序号",
+        "牌号",
+        "供应状态",
+        "热处理制度",
+        "硬度,hbw"
+      ],
+      "measures": [
+        "hbw"
+      ]
+    },
+    {
+      "caption": "表4 OCr15Ni5Cu2Ti 和1 Cr15Ni4Mo3N 铜银件除氢处理制度",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "锻件厚度mm",
+        "除氢温度°c",
+        "保温时间h不小于",
+        "冷却方式"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 OCr16Ni6 铜锻件除氢处理保温时间",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "锻件厚度mm",
+        "除氢温度°c",
+        "保温时间h不小于",
+        "冷却方式"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6 室温力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 17,
+      "header_signature": [
+        "序号",
+        "牌号",
+        "热处理状态代号",
+        "检验试样热处理制度/固溶",
+        "检验试样热处理制度/冷处理",
+        "检验试样热处理制度/时效",
+        "检验试样热处理制度/不小于",
+        "取样方向/不小于",
+        "rmmpa/不小于",
+        "rp0.2mpa/不小于",
+        "a%/不小于",
+        "z%/不小于",
+        "ku2j",
+        "k1cmpam",
+        "hrc",
+        "",
+        ""
+      ],
+      "measures": [
+        "a",
+        "z",
+        "hrc"
+      ]
+    },
+    {
+      "caption": "表6 (镇)",
+      "profile": "mechanical_properties",
+      "n_cols": 14,
+      "header_signature": [
+        "序号",
+        "牌号",
+        "热处理状态代号",
+        "检验试样热处理制度/固溶",
+        "检验试样热处理制度/冷处理",
+        "检验试样热处理制度/时效",
+        "取样方向",
+        "rmmpa/不小于",
+        "rp0.2mpa/不小于",
+        "a%/不小于",
+        "z%/不小于",
+        "ku2j/不小于",
+        "k1cmpam",
+        "i1rc"
+      ],
+      "measures": [
+        "a",
+        "z"
+      ]
+    },
+    {
+      "caption": "表7 中温力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 12,
+      "header_signature": [
+        "序号",
+        "牌号",
+        "检验试样热处理制度/固溶",
+        "检验试样热处理制度/冷处理",
+        "检验试样热处理制度/时效",
+        "试验温度°c",
+        "取样方向",
+        "rmmpa/不小于",
+        "rp0.2mpa/不小于",
+        "a%/不小于",
+        "z%/不小于",
+        "ku2j/不小于"
+      ],
+      "measures": [
+        "a",
+        "z"
+      ]
+    },
+    {
+      "caption": "表8 iJf倍组织缺陆允许级别",
+      "profile": "inspection",
+      "n_cols": 6,
+      "header_signature": [
+        "序号",
+        "牌号",
+        "缺陷类型/暗斑",
+        "缺陷类型/白斑",
+        "缺陷类型/径向偏析",
+        "缺陷类型/环状花样"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表9 检验项目",
+      "profile": "inspection",
+      "n_cols": 5,
+      "header_signature": [
+        "序号",
+        "检验项目",
+        "取样数量和取样部位",
+        "要求的章条号",
+        "检验方法的章条号"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_composition_v1": "1.1.12",
+    "hardness_v1": "1.2.0",
+    "dimension_v1": "1.0.2",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "fb45df45-639f-49a5-a1a6-422253306a58",
+  "created_at": "2026-11-14T12:54:10+00:00"
+}

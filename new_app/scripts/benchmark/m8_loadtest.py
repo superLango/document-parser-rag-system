@@ -13,6 +13,7 @@ import json
 import math
 import os
 import time
+from collections import Counter, defaultdict
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import UTC, datetime
@@ -100,8 +101,10 @@ def find_completed_run(client: httpx.Client, api: str) -> str:
     raise RuntimeError("no completed run found")
 
 
-def ensure_fixture_document(client: httpx.Client, api: str) -> str:
-    data = FIXTURE.read_bytes()
+def ensure_fixture_document(
+    client: httpx.Client, api: str, suffix: str = ""
+) -> str:
+    data = FIXTURE.read_bytes() + suffix.encode()
     response = client.post(
         f"{api}/v1/documents",
         files={"file": (FIXTURE.name, data, "text/markdown")},
@@ -121,6 +124,84 @@ def wait_run(client: httpx.Client, api: str, run_id: str, timeout: float = 180) 
             return run
         time.sleep(1)
     return run
+
+
+def percentile_ms(values: list[float], ratio: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    index = min(len(ordered) - 1, math.ceil(len(ordered) * ratio) - 1)
+    return round(ordered[index], 2)
+
+
+def pipeline_stats(
+    client: httpx.Client, api: str, run_ids: list[str]
+) -> dict[str, Any]:
+    """并发跑完后的流水线结果：成功率与 OCR/沙箱阶段耗时。"""
+    statuses: Counter[str] = Counter()
+    stage_ms: dict[str, list[float]] = defaultdict(list)
+    for run_id in run_ids:
+        run = wait_run(client, api, run_id)
+        statuses[str(run.get("status") or "UNKNOWN")] += 1
+        timeline = client.get(f"{api}/v1/runs/{run_id}/timeline")
+        if timeline.status_code >= 300:
+            continue
+        for stage in timeline.json().get("stages") or []:
+            duration = stage.get("duration_ms")
+            if duration:
+                stage_ms[str(stage.get("stage"))].append(float(duration))
+    succeeded = statuses.get("STRUCTURED_READY", 0)
+    total = sum(statuses.values())
+    return {
+        "runs": total,
+        "succeeded": succeeded,
+        "success_rate": round(succeeded / total, 4) if total else 0.0,
+        "statuses": dict(statuses),
+        "stages": {
+            name: {
+                "count": len(values),
+                "p50_ms": percentile_ms(values, 0.50),
+                "p95_ms": percentile_ms(values, 0.95),
+            }
+            for name, values in sorted(stage_ms.items())
+        },
+    }
+
+
+def scan_stats(
+    client: httpx.Client, api: str, fixture: Path | None
+) -> dict[str, Any]:
+    """扫描件成功率：需要显式提供扫描件 PDF，未提供时标记不可用。"""
+    if fixture is None or not fixture.exists():
+        return {"available": False, "note": "no scan fixture provided"}
+    data = fixture.read_bytes()
+    uploaded = client.post(
+        f"{api}/v1/documents",
+        files={"file": (fixture.name, data, "application/pdf")},
+    )
+    uploaded.raise_for_status()
+    run = client.post(
+        f"{api}/v1/documents/{uploaded.json()['id']}/runs",
+        json={"recipe_channel": "stable"},
+    )
+    run.raise_for_status()
+    final = wait_run(client, api, str(run.json()["id"]))
+    timeline = client.get(f"{api}/v1/runs/{run.json()['id']}/timeline").json()
+    ocr = next(
+        (
+            item
+            for item in timeline.get("stages") or []
+            if item.get("stage") == "ocr"
+        ),
+        {},
+    )
+    return {
+        "available": True,
+        "fixture": fixture.name,
+        "status": final.get("status"),
+        "success": final.get("status") == "STRUCTURED_READY",
+        "ocr_ms": ocr.get("duration_ms"),
+    }
 
 
 def agent_task(index: int) -> dict[str, Any]:
@@ -156,6 +237,9 @@ def main() -> int:
     parser.add_argument("--agent", default=DEFAULT_AGENT)
     parser.add_argument("--out-json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-md", type=Path, default=DEFAULT_OUT_MD)
+    parser.add_argument("--run-count", type=int, default=6)
+    parser.add_argument("--run-concurrency", type=int, default=3)
+    parser.add_argument("--scan-fixture", type=Path, default=None)
     args = parser.parse_args()
     api = args.api.rstrip("/")
     agent = args.agent.rstrip("/")
@@ -164,7 +248,10 @@ def main() -> int:
 
     with httpx.Client(timeout=300) as client:
         run_id = find_completed_run(client, api)
-        document_id = ensure_fixture_document(client, api)
+        run_documents = [
+            ensure_fixture_document(client, api, f"\n<!-- run {index} -->")
+            for index in range(args.run_count)
+        ]
 
         def documents_list(index: int) -> int:
             return client.get(f"{api}/v1/documents").status_code
@@ -184,7 +271,7 @@ def main() -> int:
 
         def create_run(index: int) -> int:
             response = client.post(
-                f"{api}/v1/documents/{document_id}/runs",
+                f"{api}/v1/documents/{run_documents[index]}/runs",
                 json={"recipe_channel": "stable", "parse_profile": "standard"},
                 headers=shares_headers,
             )
@@ -208,11 +295,11 @@ def main() -> int:
             run_parallel("documents_list", 50, 5, documents_list),
             run_parallel("runs_list", 50, 5, runs_list),
             run_parallel("upload_dedupe", 20, 5, upload),
-            run_parallel("create_run", 3, 3, create_run),
+            run_parallel("create_run", args.run_count, args.run_concurrency, create_run),
         ]
 
-        for run in run_ids:
-            wait_run(client, api, run)
+        pipeline = pipeline_stats(client, api, list(run_ids))
+        scan = scan_stats(client, api, args.scan_fixture)
         scenarios.append(run_parallel("result_query", 60, 5, result_query))
         scenarios.append(run_parallel("agent_triage", 2, 1, agent_call))
 
@@ -224,12 +311,16 @@ def main() -> int:
         "api": api,
         "agent": agent,
         "scenarios": scenarios,
+        "pipeline": pipeline,
+        "scan": scan,
         "summary": {
             "requests": totals,
             "errors": failures,
             "error_rate": round(failures / totals, 4) if totals else 0.0,
             "max_p95_ms": max(p95_values) if p95_values else 0.0,
             "create_run_ids": run_ids,
+            "pipeline_success_rate": pipeline["success_rate"],
+            "scan_success": scan.get("success") if scan.get("available") else None,
         },
     }
     args.out_json.parent.mkdir(parents=True, exist_ok=True)
@@ -265,17 +356,51 @@ def write_markdown(path: Path, payload: dict[str, Any]) -> None:
             f"{item['error_rate']:.2%} | {item['p50_ms']:.0f} | {item['p95_ms']:.0f} | "
             f"{item['max_ms']:.0f} | {item['throughput_rps']:.2f} |"
         )
+    pipeline = payload.get("pipeline") or {}
+    scan = payload.get("scan") or {}
     lines.extend(
         [
             "",
-            "## 2. 说明",
+            "## 2. 流水线成功率与阶段耗时",
+            "",
+            f"- 运行数 {pipeline.get('runs', 0)}，成功 {pipeline.get('succeeded', 0)}，"
+            f"成功率 {pipeline.get('success_rate', 0):.2%}",
+            f"- 终态分布：{json.dumps(pipeline.get('statuses') or {}, ensure_ascii=False)}",
+            "",
+            "| 阶段 | 样本 | p50 (ms) | p95 (ms) |",
+            "|---|---|---|---|",
+        ]
+    )
+    for name, item in (pipeline.get("stages") or {}).items():
+        lines.append(
+            f"| {name} | {item['count']} | {item['p50_ms']:.0f} | {item['p95_ms']:.0f} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## 3. 扫描件成功率",
+            "",
+            (
+                f"- {scan.get('fixture')}：status={scan.get('status')} "
+                f"success={scan.get('success')} ocr={scan.get('ocr_ms')}ms"
+                if scan.get("available")
+                else f"- 不可用：{scan.get('note', 'no scan fixture provided')}"
+            ),
+        ]
+    )
+    lines.extend(
+        [
+            "",
+            "## 4. 说明",
             "",
             "- 上传场景使用同一文件，按 sha256 去重，主要衡量网关/上传链路开销。",
-            "- 创建 run 场景并发 3，包含 OCR→路由→沙箱→审核完整链路；result_query 在运行完成后执行。",  # noqa: E501
+            f"- 创建 run 场景并发 {payload['scenarios'][3]['concurrency']}，"
+            "包含 OCR→路由→沙箱→审核完整链路；result_query 在运行完成后执行。",
             "- Agent 场景调用 triage 角色 2 次，包含真实模型调用，未做高并发，避免压垮单模型服务。",
+            "- 扫描件成功率需要 `--scan-fixture` 指定扫描件 PDF，未提供时标记不可用。",
             "- 压测为单机 Compose，非生产规格；结论用于发现明显瓶颈，不作为容量承诺。",
             "",
-            "## 3. 结果查询目标",
+            "## 5. 结果查询目标",
             "",
             f"- 已完成运行查询使用既有 STRUCTURED_READY 运行（{payload['scenarios'][-2]['scenario']}）。",  # noqa: E501
             f"- 新建运行：{', '.join(payload['summary']['create_run_ids']) or '无'}",

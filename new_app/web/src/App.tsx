@@ -1,9 +1,9 @@
 import {
   BookOpen,
   ChevronRight,
+  ClipboardList,
   FileSearch,
-  Layers,
-  ListChecks
+  Layers
 } from "lucide-react";
 import type { ComponentType } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
@@ -12,14 +12,14 @@ import { cn } from "./lib/utils";
 
 const NAV = [
   { to: "/", label: "文档库", icon: FileSearch, end: true },
-  { to: "/runs", label: "运行记录", icon: ListChecks },
+  { to: "/issues", label: "问题台账", icon: ClipboardList },
   { to: "/dictionary", label: "业务词典", icon: BookOpen },
   { to: "/recipes", label: "配方版本", icon: Layers }
 ];
 
 const TITLES: Record<string, { eyebrow: string; title: string }> = {
   "/": { eyebrow: "标准拆分", title: "文档库" },
-  "/runs": { eyebrow: "运行", title: "运行记录" },
+  "/issues": { eyebrow: "质量", title: "问题台账" },
   "/dictionary": { eyebrow: "数据", title: "业务词典" },
   "/recipes": { eyebrow: "版本", title: "配方版本" }
 };
@@ -65,9 +65,6 @@ function NavItem({
 }
 
 function HeaderTitle(pathname: string) {
-  if (pathname.startsWith("/documents/") && pathname.endsWith("/viewer")) {
-    return { eyebrow: "标准拆分", title: "原文预览" };
-  }
   if (pathname.startsWith("/documents/")) {
     return { eyebrow: "标准拆分", title: "解析详情" };
   }

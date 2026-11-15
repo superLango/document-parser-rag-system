@@ -42,6 +42,57 @@ def test_same_version_same_content_is_idempotent(tmp_path) -> None:
     assert first.digest == second.digest
 
 
+def test_candidate_behind_stable_is_rejected(tmp_path) -> None:
+    registry = RecipeRegistry(tmp_path)
+    registry.publish(_manifest("1.0.0"))
+    registry.publish(_manifest("1.1.0"))
+    registry.promote("mechanical_properties_v1", "1.1.0", "stable", actor="qa")
+    with pytest.raises(RegistryError) as exc:
+        registry.promote("mechanical_properties_v1", "1.0.0", "candidate", actor="qa")
+    assert exc.value.code == "RECIPE_CANDIDATE_BEHIND_STABLE"
+
+
+def test_governance_reports_missing_tests(tmp_path) -> None:
+    registry = RecipeRegistry(tmp_path)
+    registry.publish(_manifest())
+    registry.promote("mechanical_properties_v1", "1.0.0", "stable", actor="qa")
+    issues = registry.governance()
+    assert any(item["code"] == "RECIPE_TESTS_MISSING" for item in issues)
+
+
+def test_governance_reports_missing_test_file(tmp_path, monkeypatch) -> None:
+    from services.recipe_registry import package as package_module
+
+    monkeypatch.setattr(package_module, "REPO_ROOT", tmp_path)
+    registry = RecipeRegistry(tmp_path / "recipes")
+    manifest = build_package(
+        {
+            "recipe_id": "mechanical_properties_v1",
+            "version": "1.0.0",
+            "profile": "mechanical_properties",
+            "tests": ["tests/does_not_exist.py"],
+        }
+    )
+    registry.publish(manifest)
+    registry.promote("mechanical_properties_v1", "1.0.0", "stable", actor="qa")
+    issues = registry.governance()
+    assert any(item["code"] == "RECIPE_TEST_FILE_MISSING" for item in issues)
+
+
+def test_stale_candidates_are_archived(tmp_path) -> None:
+    registry = RecipeRegistry(tmp_path)
+    for version in ("1.0.0", "1.1.0", "1.2.0"):
+        registry.publish(_manifest(version))
+    registry.promote("mechanical_properties_v1", "1.0.0", "stable", actor="qa")
+    registry.promote("mechanical_properties_v1", "1.2.0", "candidate", actor="qa")
+    assert registry.stale_candidate_versions("mechanical_properties_v1") == ["1.1.0"]
+    moved = registry.archive_stale_candidates("mechanical_properties_v1", actor="qa")
+    assert moved == ["1.1.0"]
+    assert not (tmp_path / "mechanical_properties_v1" / "1.1.0").exists()
+    assert (tmp_path.parent / "recipes_archive" / "mechanical_properties_v1" / "1.1.0").is_dir()
+    assert registry.stale_candidate_versions("mechanical_properties_v1") == []
+
+
 def test_promote_and_resolve(tmp_path) -> None:
     registry = RecipeRegistry(tmp_path)
     registry.publish(_manifest())
@@ -82,3 +133,15 @@ def test_resolve_unknown_channel(tmp_path) -> None:
     with pytest.raises(RegistryError) as exc:
         registry.resolve("mechanical_properties_v1", "production")
     assert exc.value.code == "RECIPE_CHANNEL_INVALID"
+
+
+def test_channel_for_returns_actual_binding(tmp_path) -> None:
+    registry = RecipeRegistry(tmp_path)
+    registry.publish(_manifest("1.0.0"))
+    registry.publish(_manifest("1.1.0"))
+    registry.promote("mechanical_properties_v1", "1.0.0", "stable", actor="qa")
+    registry.promote("mechanical_properties_v1", "1.1.0", "candidate", actor="qa")
+
+    assert registry.channel_for("mechanical_properties_v1", "1.0.0") == "stable"
+    assert registry.channel_for("mechanical_properties_v1", "1.1.0") == "candidate"
+    assert registry.channel_for("mechanical_properties_v1", "9.9.9") is None

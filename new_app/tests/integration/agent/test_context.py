@@ -37,6 +37,7 @@ def test_compaction_preserves_invariants() -> None:
         )
         assert before.tokens <= 120
         assert before.compaction_level >= 1
+        assert before.lossless["lossless"] is True
         regression = manager.check_lossless(before, before)
         assert regression["lossless"] is True
         assert regression["lost_evidence"] == []

@@ -26,6 +26,10 @@ def test_builtin_engine_produces_contract_artifacts(tmp_path: Path) -> None:
         "diagnostics.json",
         "metrics.json",
         "manifest.json",
+        "clauses.json",
+        "inventory.json",
+        "references.json",
+        "document_intelligence.json",
     }
 
     result = json.loads(outputs["result.json"])
@@ -47,6 +51,10 @@ def test_builtin_engine_produces_contract_artifacts(tmp_path: Path) -> None:
         "evidence.jsonl",
         "diagnostics.json",
         "metrics.json",
+        "clauses.json",
+        "inventory.json",
+        "references.json",
+        "document_intelligence.json",
     }
 
     envelope = parse_envelope(completed.stdout)

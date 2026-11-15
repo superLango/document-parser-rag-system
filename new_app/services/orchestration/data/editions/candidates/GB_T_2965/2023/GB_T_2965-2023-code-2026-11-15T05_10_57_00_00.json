@@ -1,0 +1,45 @@
+{
+  "candidate_id": "GB/T 2965-2023-code-2026-11-15T05:10:57+00:00",
+  "standard_id": "GB/T 2965",
+  "edition": "2023",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "profile_changed: gb/t228.1-2021,金属材料,拉伸试验 profile admin -> mechanical_properties",
+    "profile_changed: , profile admin -> unknown",
+    "missing_table: 6.3,室温拉伸性能 table expected by the edition profile was not found",
+    "missing_table: 7.1.1产品应由供方或第三方进行检验,保证产品质量符合本文件的规定及订货单的要求。 table expected by the edition profile was not found",
+    "profile_changed:  profile admin -> dimension",
+    "profile_changed: •,其他。 profile admin -> unknown",
+    "missing_table: 附录,a table expected by the edition profile was not found",
+    "missing_table: (资料性) table expected by the edition profile was not found"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [
+      "6.3,室温拉伸性能",
+      "7.1.1产品应由供方或第三方进行检验,保证产品质量符合本文件的规定及订货单的要求。",
+      "附录,a",
+      "(资料性)"
+    ],
+    "profile_changes": [
+      "gb/t228.1-2021,金属材料,拉伸试验: profile admin -> mechanical_properties",
+      ",: profile admin -> unknown",
+      ": profile admin -> dimension",
+      "•,其他。: profile admin -> unknown"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T05:10:57+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

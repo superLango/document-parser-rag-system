@@ -11,6 +11,14 @@ WORKDIR /engine
 
 COPY services/sandbox/runtime/runner.py /engine/runner.py
 COPY services/sandbox/runtime/builtin.py /engine/builtin.py
+COPY services/sandbox/runtime/strategies.py /engine/strategies.py
+COPY services/sandbox/runtime/clauses.py /engine/clauses.py
+COPY services/sandbox/runtime/inventory.py /engine/inventory.py
+COPY services/sandbox/runtime/references.py /engine/references.py
+COPY services/sandbox/runtime/projection.py /engine/projection.py
+COPY services/sandbox/runtime/dictionary.py /engine/dictionary.py
+COPY services/sandbox/runtime/dictionary_data.json /engine/dictionary_data.json
+COPY services/sandbox/runtime/translate.py /engine/translate.py
 COPY services/sandbox/runtime/prepare.py /engine/prepare.py
 
 # The workspace is mounted at /work. These symlinks keep the documented

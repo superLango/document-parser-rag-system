@@ -5,7 +5,7 @@ from pathlib import Path
 
 from hanson_contracts import AgentBudget, AgentTask, ModelResponse
 
-from services.agent.agents.repair import RepairAgent
+from services.agent.agents.repair import RepairAgent, _parse_repair
 from services.agent.agents.triage import TriageAgent
 from services.agent.context import ContextManager, HeuristicTokenizer
 from services.agent.model_gateway import ModelUnavailable
@@ -153,3 +153,217 @@ def test_repair_fallback_adds_measure_binding(tmp_path: Path) -> None:
             sessions.close()
 
     asyncio.run(scenario())
+
+
+def test_repair_rejects_noop_binding_patch(tmp_path: Path) -> None:
+    """补丁只是重复添加已有绑定时应拦截，不再进入沙箱验证。"""
+    recipe = {
+        "recipe_id": "mechanical_properties_v1",
+        "version": "1.0.0",
+        "bindings": {"measures": {"Z": {"unit": "%", "family": "tensile"}}},
+        "signature": {"tokens": ["牌号", "断面收缩率"]},
+    }
+
+    async def scenario() -> None:
+        _, repair, sessions = _agents(
+            tmp_path,
+            FakeGateway(
+                {
+                    "root_cause": "recipe_binding",
+                    "scope": "recipe",
+                    "summary": "add Z again",
+                    "patch": {
+                        "ops": [
+                            {
+                                "op": "add",
+                                "path": "/bindings/measures/Z",
+                                "value": {"unit": "%", "family": "tensile"},
+                            },
+                            {
+                                "op": "add",
+                                "path": "/signature/tokens/-",
+                                "value": "断面收缩率",
+                            },
+                        ]
+                    },
+                    "test_plan": ["reparse"],
+                    "risk": "low",
+                    "confidence": 0.9,
+                }
+            ),
+        )
+        task = _task("repair")
+        task.inputs["recipe"] = recipe
+        try:
+            result = await repair.run(task)
+            assert result.output["needs_human"] is True
+            assert result.output["patch"] in ({}, {"ops": []})
+        finally:
+            sessions.close()
+
+    asyncio.run(scenario())
+
+
+def test_repair_keeps_actionable_op_when_one_is_redundant(tmp_path: Path) -> None:
+    recipe = {
+        "recipe_id": "mechanical_properties_v1",
+        "version": "1.0.0",
+        "bindings": {"measures": {"Z": {"unit": "%", "family": "tensile"}}},
+        "signature": {"tokens": ["牌号"]},
+    }
+
+    async def scenario() -> None:
+        _, repair, sessions = _agents(
+            tmp_path,
+            FakeGateway(
+                {
+                    "root_cause": "recipe_binding",
+                    "scope": "recipe",
+                    "summary": "add Z token",
+                    "patch": {
+                        "ops": [
+                            {
+                                "op": "add",
+                                "path": "/bindings/measures/Z",
+                                "value": {"unit": "%", "family": "tensile"},
+                            },
+                            {
+                                "op": "add",
+                                "path": "/signature/tokens/-",
+                                "value": "断面收缩率",
+                            },
+                        ]
+                    },
+                    "test_plan": ["reparse"],
+                    "risk": "low",
+                    "confidence": 0.9,
+                }
+            ),
+        )
+        task = _task("repair")
+        task.inputs["recipe"] = recipe
+        try:
+            result = await repair.run(task)
+            ops = result.output["patch"]["ops"]
+            assert [op["path"] for op in ops] == ["/signature/tokens/-"]
+        finally:
+            sessions.close()
+
+    asyncio.run(scenario())
+
+
+def test_parse_repair_keeps_data_table_repair_patch() -> None:
+    proposal = _parse_repair(
+        {
+            "root_cause": "table_structure",
+            "scope": "data",
+            "summary": "repair header row",
+            "patch": {
+                "table_repair": {
+                    "table_id": "T8",
+                    "spec": {"header_rows": 1, "patch_cells": {"1": {"1": "≥27"}}},
+                }
+            },
+            "test_plan": ["rerun T8"],
+            "risk": "medium",
+            "needs_human": False,
+            "confidence": 0.7,
+        },
+        {"target": {}},
+        {"repair_scope": "data"},
+        {},
+    )
+    assert proposal.scope == "data"
+    assert proposal.patch["table_repair"]["table_id"] == "T8"
+    assert proposal.needs_human is False
+
+
+def test_parse_repair_keeps_flattened_data_table_repair() -> None:
+    proposal = _parse_repair(
+        {
+            "root_cause": "table_structure",
+            "scope": "data",
+            "summary": "repair header row",
+            "patch": {
+                "table_repair": {
+                    "table_id": "T5",
+                    "header_rows": 2,
+                    "patch_cells": {"0": {"1": "化学成分(质量分数)/%"}},
+                }
+            },
+            "test_plan": ["rerun T5"],
+            "risk": "medium",
+            "needs_human": False,
+            "confidence": 0.7,
+        },
+        {"target": {}},
+        {"repair_scope": "data"},
+        {},
+    )
+    spec = proposal.patch["table_repair"]["spec"]
+    assert proposal.patch["table_repair"]["table_id"] == "T5"
+    assert spec["header_rows"] == 2
+    assert spec["patch_cells"] == {"0": {"1": "化学成分(质量分数)/%"}}
+
+
+def test_parse_repair_unwraps_nested_proposal() -> None:
+    nested = {
+        "root_cause": "table_structure",
+        "scope": "data",
+        "summary": "repair header",
+        "patch": {
+            "table_repair": {"table_id": "T1", "spec": {"header_rows": 1}}
+        },
+        "test_plan": [],
+        "needs_human": False,
+    }
+    proposal = _parse_repair(
+        {"patch": nested}, {"target": {}}, {"repair_scope": "data"}, {}
+    )
+    assert proposal.scope == "data"
+    assert proposal.patch["table_repair"]["table_id"] == "T1"
+
+
+def test_parse_repair_reclassifies_recipe_ops_declared_as_data() -> None:
+    proposal = _parse_repair(
+        {
+            "root_cause": "recipe_binding",
+            "scope": "data",
+            "summary": "bind Ag",
+            "patch": {
+                "ops": [
+                    {
+                        "op": "add",
+                        "path": "/bindings/measures/Ag",
+                        "value": {"unit": "%"},
+                    }
+                ]
+            },
+            "test_plan": [],
+            "needs_human": False,
+        },
+        {"target": {}},
+        {"repair_scope": "recipe"},
+        {},
+    )
+    assert proposal.scope == "recipe"
+    assert proposal.patch["ops"][0]["path"] == "/bindings/measures/Ag"
+    assert proposal.needs_human is False
+
+
+def test_parse_repair_still_rejects_empty_data_patch() -> None:
+    proposal = _parse_repair(
+        {
+            "root_cause": "table_structure",
+            "scope": "data",
+            "summary": "no spec",
+            "patch": {},
+            "test_plan": [],
+            "needs_human": False,
+        },
+        {"target": {}},
+        {"repair_scope": "data"},
+        {},
+    )
+    assert proposal.needs_human is True
+    assert not proposal.patch.get("ops")

@@ -40,13 +40,15 @@
   },
   "entrypoint": null,
   "templates": [],
-  "tests": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
   "compatibility": {
     "legacy_status": "active",
     "legacy_version": 1,
     "coverage_template": "product_full",
     "business_dictionary": "material_master_v1"
   },
-  "checksum": "fab9e20dc671d1ce03f123795cb675f7b4562d12e92d55094910a975a08d930a",
+  "checksum": "bf634485ef942690aa3d96177b5e344d503a7ce9577fe84a83b175484d8d8d37",
   "created_at": "2026-11-11T13:47:54+00:00"
 }

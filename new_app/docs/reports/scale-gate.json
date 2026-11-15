@@ -1,0 +1,59 @@
+{
+  "generated_at": "",
+  "gate": {
+    "field_f1": 0.6,
+    "silent_error_rate": 0.03,
+    "coverage": 0.9
+  },
+  "metrics": {
+    "documents": 50,
+    "old_fields": 2780,
+    "new_fields": 3154,
+    "common_fields": 1804,
+    "precision": 0.572,
+    "recall": 0.6489,
+    "field_f1": 0.608,
+    "value_match_rate": 0.9745,
+    "silent_errors": 46,
+    "silent_error_rate": 0.0255,
+    "coverage": 0.98,
+    "p95_seconds": 120.6,
+    "evidence_rate": 0.98,
+    "failed_runs": 1,
+    "thresholds": {
+      "field_f1": 0.8,
+      "value_match": 0.9,
+      "silent_error_rate": 0.05,
+      "coverage": 0.9,
+      "p95_seconds": 120.0
+    },
+    "verdict": "below_target"
+  },
+  "gold": {
+    "documents": 1,
+    "old_fields": 812,
+    "new_fields": 797,
+    "common_fields": 651,
+    "precision": 0.8168,
+    "recall": 0.8017,
+    "field_f1": 0.8092,
+    "value_match_rate": 1.0,
+    "silent_errors": 0,
+    "silent_error_rate": 0.0,
+    "coverage": 1.0,
+    "p95_seconds": 0.09,
+    "evidence_rate": 1.0,
+    "failed_runs": 0,
+    "thresholds": {
+      "field_f1": 0.8,
+      "value_match": 0.9,
+      "silent_error_rate": 0.05,
+      "coverage": 0.9,
+      "p95_seconds": 120.0
+    },
+    "verdict": "pass"
+  },
+  "failures": [
+    "failed_runs 1 != 0"
+  ]
+}

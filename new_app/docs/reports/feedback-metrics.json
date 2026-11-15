@@ -1,0 +1,73 @@
+{
+  "total": 12334,
+  "processed": 23,
+  "status_dist": {
+    "open": 12310,
+    "verified": 4,
+    "needs_more_info": 20
+  },
+  "verified": 4,
+  "verified_rate": 0.1739,
+  "human_takeover_rate": 0.8261,
+  "l1_attempts": 6,
+  "l1_rollbacks": 4,
+  "l1_success_rate": 0.3333,
+  "action_tiers": {
+    "auto": 5,
+    "review": 3
+  },
+  "check_failures": {
+    "target_metric": 4
+  },
+  "patch": {
+    "avg_ops": 1.22,
+    "empty_patch_rate": 0.0435,
+    "verified_rate": 0.1739
+  },
+  "intent": {
+    "rerank_rate": 0.0,
+    "clarifying_rate": 0.0,
+    "assumption_rate": 0.1304,
+    "labeled": 0,
+    "top1_accuracy": 0.0,
+    "top3_accuracy": 0.0,
+    "concepts": {
+      "unknown": {
+        "concept": "",
+        "total": 3,
+        "verified": 0,
+        "rerank": 0,
+        "clarifying": 0,
+        "labeled": 0,
+        "top1_hits": 0,
+        "top3_hits": 0,
+        "verified_rate": 0.0,
+        "rerank_rate": 0.0,
+        "clarifying_rate": 0.0,
+        "top1_accuracy": 0.0,
+        "top3_accuracy": 0.0
+      }
+    }
+  },
+  "diagnosis": {
+    "total": 3,
+    "root_causes": {
+      "table_structure": 1,
+      "recipe_binding": 2
+    },
+    "repairability": {
+      "data": 1,
+      "recipe_binding": 2
+    },
+    "needs_model_rate": 0.0,
+    "model_used_rate": 0.0,
+    "expected_present_rate": 0.0,
+    "rule_change_present_rate": 1.0,
+    "evidence_present_rate": 0.0
+  },
+  "latency": {
+    "samples": 23,
+    "p50": 15.0,
+    "p95": 2482.0
+  }
+}

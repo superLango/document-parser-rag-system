@@ -6,7 +6,14 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-AgentRole = Literal["router", "review", "repair", "triage"]
+AgentRole = Literal[
+    "router",
+    "review",
+    "repair",
+    "triage",
+    "intent_rerank",
+    "diagnosis",
+]
 AgentStatus = Literal["running", "completed", "waiting_human", "failed", "cancelled"]
 
 
@@ -136,6 +143,7 @@ class ReviewFinding(BaseModel):
     category: str
     severity: Literal["info", "warning", "error"] = "warning"
     target: dict[str, Any] = Field(default_factory=dict)
+    message: str = ""
     observed: str | None = None
     expected: str | None = None
     evidence_refs: list[str] = Field(default_factory=list)
@@ -161,4 +169,11 @@ class ReviewRequest(BaseModel):
     evidence: list[dict[str, Any]] = Field(default_factory=list)
     tables: list[dict[str, Any]] = Field(default_factory=list)
     template: dict[str, Any] = Field(default_factory=dict)
+    # 文档级门禁输入：OCR 页数，以及沙箱下发的解析诊断。
+    pages: int = 0
+    diagnostics: list[dict[str, Any]] = Field(default_factory=list)
+    # 文档理解层产物（旧运行可能没有这些产物）。
+    document_intelligence: dict[str, Any] = Field(default_factory=dict)
+    inventory: dict[str, Any] = Field(default_factory=dict)
+    references: dict[str, Any] = Field(default_factory=dict)
     deterministic_findings: list[ReviewFinding] = Field(default_factory=list)

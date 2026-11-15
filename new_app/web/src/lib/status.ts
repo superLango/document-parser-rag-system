@@ -3,6 +3,10 @@ export type Tone = "success" | "warning" | "danger" | "info" | "neutral";
 export const RUN_TERMINAL = new Set([
   "STRUCTURED_READY",
   "REVIEW_FAILED",
+  "HUMAN_REVIEW",
+  "HUMAN_APPROVED",
+  "HUMAN_REJECTED",
+  "UNROUTED",
   "FAILED",
   "CANCELLED"
 ]);
@@ -13,11 +17,17 @@ const RUN_STATUS: Record<string, { label: string; tone: Tone }> = {
   OCR_DONE: { label: "OCR 完成", tone: "info" },
   ROUTING: { label: "路由中", tone: "info" },
   ROUTED: { label: "路由完成", tone: "info" },
+  UNROUTED: { label: "未路由", tone: "warning" },
   SANDBOX_RUNNING: { label: "沙箱解析中", tone: "info" },
   PARSED: { label: "解析完成", tone: "info" },
   REVIEWING: { label: "审核中", tone: "info" },
   REVIEW_PASSED: { label: "审核通过", tone: "info" },
   REVIEW_FAILED: { label: "审核未通过", tone: "danger" },
+  REPAIRING: { label: "自动修复中", tone: "info" },
+  REPARSING: { label: "重新解析中", tone: "info" },
+  HUMAN_REVIEW: { label: "待人工审核", tone: "warning" },
+  HUMAN_APPROVED: { label: "人工审核通过", tone: "info" },
+  HUMAN_REJECTED: { label: "人工审核驳回", tone: "danger" },
   STRUCTURED_READY: { label: "结构化就绪", tone: "success" },
   FAILED: { label: "失败", tone: "danger" },
   CANCELLED: { label: "已取消", tone: "neutral" }
@@ -31,6 +41,7 @@ export const STAGE_LABELS: Record<string, string> = {
   ocr: "OCR",
   routing: "配方路由",
   sandbox: "沙箱解析",
+  cross_standard: "跨标准补全",
   review: "规则审核"
 };
 
@@ -40,6 +51,8 @@ export const FEEDBACK_STATUS: Record<string, { label: string; tone: Tone }> = {
   proposed: { label: "已提案", tone: "info" },
   verifying: { label: "验证中", tone: "info" },
   verified: { label: "待决策", tone: "warning" },
+  applied: { label: "已应用", tone: "success" },
+  shadow: { label: "灰度验证中", tone: "info" },
   promoted: { label: "已晋升", tone: "success" },
   discarded: { label: "已丢弃", tone: "neutral" },
   needs_more_info: { label: "需补充", tone: "danger" }

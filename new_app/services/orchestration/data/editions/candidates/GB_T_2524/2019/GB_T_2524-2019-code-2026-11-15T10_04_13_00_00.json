@@ -1,0 +1,39 @@
+{
+  "candidate_id": "GB/T 2524-2019-code-2026-11-15T10:04:13+00:00",
+  "standard_id": "GB/T 2524",
+  "edition": "2019",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "profile_changed: 表2,海绵钛的粒度规格 profile dimension -> admin",
+    "missing_table: b),二次试样的采取 table expected by the edition profile was not found",
+    "missing_table: b.2.2.3,试锭和试样的制备 table expected by the edition profile was not found",
+    "profile_changed: 图b.1,试样的制备 profile admin -> unknown",
+    "missing_table: b.5,海绵钛外观质量和粒度检验方法 table expected by the edition profile was not found"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [
+      "b),二次试样的采取",
+      "b.2.2.3,试锭和试样的制备",
+      "b.5,海绵钛外观质量和粒度检验方法"
+    ],
+    "profile_changes": [
+      "表2,海绵钛的粒度规格: profile dimension -> admin",
+      "图b.1,试样的制备: profile admin -> unknown"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T10:04:13+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "kind": "parser",
+  "asset_id": "parser_core",
+  "version": "1.1.0",
+  "runtime_api": "sandbox-engine/1",
+  "python": "3.12",
+  "stdlib_only": true,
+  "entry_modules": [
+    "builtin",
+    "strategies",
+    "clauses",
+    "inventory",
+    "projection"
+  ],
+  "files": [
+    {
+      "path": "builtin.py",
+      "sha256": "373d0efc227f5c2088d39afcb0a8c81a75031d4f62272a3ea597d8ce7f070ae9"
+    },
+    {
+      "path": "strategies.py",
+      "sha256": "bb67a9cb582e5573e419945b1e0edc5c7e958092b0df447b14a642e2d0952acf"
+    },
+    {
+      "path": "clauses.py",
+      "sha256": "d43852e05622cff8c14ed9b4119bf967a97f63f493df57e0f456296fabe81552"
+    },
+    {
+      "path": "inventory.py",
+      "sha256": "e5f0727c8d0924c5ac81be37cd75d4f1ed9afa24597d39a2a75239dc28cbb65c"
+    },
+    {
+      "path": "projection.py",
+      "sha256": "2311ce3cc06653fa567677ec37304ee67cc3d019402e56936301b9f1267589e1"
+    }
+  ],
+  "tests": [],
+  "checksum": "caa29d422e94182affb2458f423b60b38dab302c5510393a2c213bec6a9933a9",
+  "created_at": "2026-11-14T14:43:13+00:00"
+}

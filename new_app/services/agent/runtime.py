@@ -9,7 +9,17 @@ from typing import Any
 
 from hanson_contracts import AgentResult, AgentResumeRequest, AgentTask
 
-from .agents import RepairAgent, ReviewAgent, RouterAgent, TriageAgent
+from .agents import (
+    DIAGNOSIS_SCHEMA,
+    INTENT_RERANK_SCHEMA,
+    RepairAgent,
+    ReviewAgent,
+    RouterAgent,
+    SingleCallAgent,
+    TriageAgent,
+    parse_diagnosis,
+    parse_intent_rerank,
+)
 from .config import Settings
 from .context import ContextManager, build_tokenizer
 from .harness import AgentHarness
@@ -68,6 +78,24 @@ class AgentRuntime:
         self.repair = RepairAgent(
             self.gateway, self.context_manager, self.sessions, self.prompts
         )
+        self.intent_rerank = SingleCallAgent(
+            self.gateway,
+            self.context_manager,
+            self.sessions,
+            self.prompts,
+            role="intent_rerank",
+            schema=INTENT_RERANK_SCHEMA,
+            parse=parse_intent_rerank,
+        )
+        self.diagnosis = SingleCallAgent(
+            self.gateway,
+            self.context_manager,
+            self.sessions,
+            self.prompts,
+            role="diagnosis",
+            schema=DIAGNOSIS_SCHEMA,
+            parse=parse_diagnosis,
+        )
         self._probe_task: asyncio.Task[None] | None = None
 
     async def start(self) -> None:
@@ -105,6 +133,10 @@ class AgentRuntime:
             return await self.triage.run(task)
         if task.role == "repair":
             return await self.repair.run(task)
+        if task.role == "intent_rerank":
+            return await self.intent_rerank.run(task)
+        if task.role == "diagnosis":
+            return await self.diagnosis.run(task)
         return await self.harness.run(task)
 
     async def resume(self, request: AgentResumeRequest) -> AgentResult:

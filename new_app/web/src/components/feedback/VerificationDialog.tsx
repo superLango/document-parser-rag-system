@@ -25,10 +25,18 @@ export function VerificationDialog({
     mutationFn: (decision: "approve" | "reject") =>
       feedbackApi.verify(feedback!.id, decision, reason),
     onSuccess: (result) => {
+      const title =
+        result.status === "discarded"
+          ? "候选已丢弃"
+          : result.status === "promoted"
+            ? "已晋升 stable"
+            : "已应用修复结果";
       push(
         "success",
-        result.status === "promoted" ? "已晋升 stable" : "候选已丢弃",
-        `反馈 ${result.id.slice(0, 8)}`
+        title,
+        result.root_cause?.applied_run_id
+          ? `新运行 ${String(result.root_cause.applied_run_id).slice(0, 8)} 正在解析`
+          : `反馈 ${result.id.slice(0, 8)}`
       );
       onDecided();
       onClose();
@@ -65,7 +73,7 @@ export function VerificationDialog({
             loading={mutation.isPending && mutation.variables === "approve"}
             onClick={() => mutation.mutate("approve")}
           >
-            通过并晋升
+            应用修复结果
           </Button>
         </>
       }

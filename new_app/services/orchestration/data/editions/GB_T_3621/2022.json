@@ -1,0 +1,224 @@
+{
+  "standard_id": "GB/T 3621",
+  "edition": "2022",
+  "document_sha256": "",
+  "page_count": 19,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "规格mm/厚度",
+        "规格mm/宽度",
+        "规格mm/长度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的厚度允许偏差a",
+        "规定宽度范围的厚度允许偏差a",
+        "规定宽度范围的厚度允许偏差a"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的厚度允许偏差a",
+        "规定宽度范围的厚度允许偏差a",
+        "规定宽度范围的厚度允许偏差a"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "厚度",
+        "规定宽度范围的宽度允许偏差/400~3000",
+        "规定长度范围的长度允许偏差/1000~4000",
+        "规定长度范围的长度允许偏差/>4000~6000"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "板材厚度",
+        "规定宽度范围的不平度,每1000mm范围内不大于",
+        "规定宽度范围的不平度,每1000mm范围内不大于",
+        "规定宽度范围的不平度,每1000mm范围内不大于"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "厚度mm",
+        "抗拉强度rmmpa",
+        "规定塑性延伸强度rp0.2mpa",
+        "断后伸长率a%"
+      ],
+      "measures": [
+        "抗拉强度",
+        "规定塑性延伸强度",
+        "断后伸长率",
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "厚度mm",
+        "抗拉强度rmmpa",
+        "规定塑性延伸强度rp0.2mpa",
+        "断后伸长率a%"
+      ],
+      "measures": [
+        "抗拉强度",
+        "规定塑性延伸强度",
+        "断后伸长率",
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "厚度mm",
+        "抗拉强度rmmpa",
+        "规定塑性延伸强度rp0.2mpa",
+        "断后伸长率a%"
+      ],
+      "measures": [
+        "抗拉强度",
+        "规定塑性延伸强度",
+        "断后伸长率",
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "厚度mm",
+        "试验温度°c",
+        "抗拉强度rmmpa",
+        "持久性能/初始应力σ0/mpa",
+        "持久性能/蠕变断裂时间tu/h"
+      ],
+      "measures": [
+        "抗拉强度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "厚度mm",
+        "试验温度°c",
+        "抗拉强度rmmpa",
+        "持久性能/初始应力σ0/mpa",
+        "持久性能/蠕变断裂时间tu/h"
+      ],
+      "measures": [
+        "抗拉强度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "厚度mm",
+        "弯曲压头直径mm",
+        "弯曲角(°)"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "厚度mm",
+        "弯曲压头直径mm",
+        "弯曲角(°)"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "厚度mm",
+        "弯曲压头直径mm",
+        "弯曲角(°)"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 5,
+      "header_signature": [
+        "检验项目",
+        "检验项目",
+        "取样规定",
+        "技术要求的章条号",
+        "试验方法的章条号"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "dfb043c5-0b0e-46a4-b76d-a0c7eed4274c",
+  "created_at": "2026-11-14T11:08:54+00:00"
+}

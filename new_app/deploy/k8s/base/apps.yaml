@@ -21,12 +21,15 @@ data:
   OCR_URL: http://ocr:8002
   OCR_BACKEND: auto
   OCR_DPI: "150"
+  OCR_TIMEOUT_SECONDS: "2400"
   OCR_USE_FAKE: "false"
   GLM_OCR_BASE_URL: http://192.168.1.35:9977/v1
   GLM_OCR_MODEL: GLM-OCR
   GLM_OCR_TIMEOUT_SECONDS: "180"
+  GLM_OCR_MAX_TOKENS: "4096"
   LAYOUT_BASE_URL: http://192.168.1.35:9978
-  LAYOUT_TIMEOUT_SECONDS: "60"
+  LAYOUT_TIMEOUT_SECONDS: "15"
+  OCR_LAYOUT_FIRST: "true"
   RECIPE_REGISTRY_URL: http://recipe-registry:8005
   ROUTE_USE_FAKE: "false"
   SANDBOX_URL: http://sandbox:8004
@@ -44,15 +47,61 @@ data:
   AGENT_CONTEXT_WINDOW: "65536"
   AGENT_FAILOVER_SECONDS: "10"
   AGENT_BASE_URL_PRIMARY: http://39.107.239.208:35035
-  AGENT_BASE_URL_SECONDARY: http://192.168.188.75:9991
+  AGENT_BASE_URL_SECONDARY: http://192.168.1.35:9991
   AGENT_BASE_URL_TERTIARY: http://192.168.1.35:9988
   AGENT_TOKENIZER_MODE: remote
   AGENT_SESSION_DB: /tmp/hanson-agent/sessions.db
   REVIEW_URL: http://review:8006
   REVIEW_AGENT_URL: http://agent:8003
   REVIEW_USE_AGENT: "true"
+  HUMAN_REVIEW_REQUIRED: "true"
+  AUTO_REPAIR_ENABLED: "false"
+  AUTO_REPAIR_MAX_ATTEMPTS: "2"
+  INTERNAL_API_TOKEN: change-me-approval-token
   AGENT_URL: http://agent:8003
   FEEDBACK_TIMEOUT_SECONDS: "300"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agent-sessions-data
+  namespace: hanson-standard
+  labels:
+    app.kubernetes.io/part-of: hanson-standard-split
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: recipe-registry-data
+  namespace: hanson-standard
+  labels:
+    app.kubernetes.io/part-of: hanson-standard-split
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: orchestration-data
+  namespace: hanson-standard
+  labels:
+    app.kubernetes.io/part-of: hanson-standard-split
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -85,7 +134,7 @@ spec:
                 name: app-config
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -158,9 +207,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: app-config
+          volumeMounts:
+            - name: orchestration-data
+              mountPath: /app/services/orchestration/data
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -177,6 +229,10 @@ spec:
             limits:
               cpu: 500m
               memory: 768Mi
+      volumes:
+        - name: orchestration-data
+          persistentVolumeClaim:
+            claimName: orchestration-data
 ---
 apiVersion: v1
 kind: Service
@@ -225,7 +281,7 @@ spec:
                 name: app-config
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -288,9 +344,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: app-config
+          volumeMounts:
+            - name: agent-sessions
+              mountPath: /tmp/hanson-agent
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -307,6 +366,10 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+      volumes:
+        - name: agent-sessions
+          persistentVolumeClaim:
+            claimName: agent-sessions-data
 ---
 apiVersion: v1
 kind: Service
@@ -353,9 +416,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: app-config
+          volumeMounts:
+            - name: registry-data
+              mountPath: /app/services/recipe_registry/data
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -372,6 +438,10 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+      volumes:
+        - name: registry-data
+          persistentVolumeClaim:
+            claimName: recipe-registry-data
 ---
 apiVersion: v1
 kind: Service
@@ -420,7 +490,7 @@ spec:
                 name: app-config
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10

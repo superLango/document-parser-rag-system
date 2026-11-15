@@ -14,7 +14,7 @@ x-app: &app
     OBJECT_STORAGE_ACCESS_KEY: ${OBJECT_STORAGE_ACCESS_KEY:-minioadmin}
     OBJECT_STORAGE_SECRET_KEY: ${OBJECT_STORAGE_SECRET_KEY:-minioadmin}
     AGENT_BASE_URL_PRIMARY: ${AGENT_BASE_URL_PRIMARY:-http://39.107.239.208:35035}
-    AGENT_BASE_URL_SECONDARY: ${AGENT_BASE_URL_SECONDARY:-http://192.168.188.75:9991}
+    AGENT_BASE_URL_SECONDARY: ${AGENT_BASE_URL_SECONDARY:-http://192.168.1.35:9991}
     AGENT_BASE_URL_TERTIARY: ${AGENT_BASE_URL_TERTIARY:-http://192.168.1.35:9988}
     AGENT_FAILOVER_SECONDS: ${AGENT_FAILOVER_SECONDS:-10}
     AGENT_FAILOVER_COOLDOWN: ${AGENT_FAILOVER_COOLDOWN:-30}
@@ -23,28 +23,54 @@ x-app: &app
     AGENT_MAX_OUTPUT_TOKENS: ${AGENT_MAX_OUTPUT_TOKENS:-4096}
     AGENT_TOKENIZER_MODE: ${AGENT_TOKENIZER_MODE:-remote}
     AGENT_SESSION_DB: ${AGENT_SESSION_DB:-/tmp/hanson-agent/sessions.db}
+    ENVIRONMENT: ${ENVIRONMENT:-dev}
+    AGENT_SANDBOX_URL: ${AGENT_SANDBOX_URL:-http://sandbox:8004}
+    AGENT_REVIEW_URL: ${AGENT_REVIEW_URL:-http://review:8006}
     REVIEW_URL: ${REVIEW_URL:-http://review:8006}
     REVIEW_AGENT_URL: ${REVIEW_AGENT_URL:-http://agent:8003}
     REVIEW_USE_AGENT: ${REVIEW_USE_AGENT:-true}
+    REVIEW_USE_FAKE: ${REVIEW_USE_FAKE:-false}
+    HUMAN_REVIEW_REQUIRED: ${HUMAN_REVIEW_REQUIRED:-true}
+    AUTO_REPAIR_ENABLED: ${AUTO_REPAIR_ENABLED:-false}
+    AUTO_REPAIR_MAX_ATTEMPTS: ${AUTO_REPAIR_MAX_ATTEMPTS:-2}
+    INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:-change-me-approval-token}
+    API_AUTH_TOKEN: ${API_AUTH_TOKEN:-}
     AGENT_URL: ${AGENT_URL:-http://agent:8003}
     FEEDBACK_TIMEOUT_SECONDS: ${FEEDBACK_TIMEOUT_SECONDS:-300}
+    SHADOW_REQUIRED_DOCUMENTS: ${SHADOW_REQUIRED_DOCUMENTS:-10}
+    SHADOW_AUTO_PROMOTE: ${SHADOW_AUTO_PROMOTE:-false}
+    SHADOW_TIMEOUT_SECONDS: ${SHADOW_TIMEOUT_SECONDS:-604800}
     ORCHESTRATION_URL: ${ORCHESTRATION_URL:-http://orchestration:8001}
+    AGENT_ORCHESTRATION_URL: ${ORCHESTRATION_URL:-http://orchestration:8001}
+    CROSS_STANDARD_ENABLED: ${CROSS_STANDARD_ENABLED:-true}
     MOCK_STAGE_DELAY_SECONDS: ${MOCK_STAGE_DELAY_SECONDS:-0.2}
     STAGE_MAX_ATTEMPTS: ${STAGE_MAX_ATTEMPTS:-2}
     STAGE_RETRY_BACKOFF_SECONDS: ${STAGE_RETRY_BACKOFF_SECONDS:-0.5}
     MOCK_FAIL_STAGE: ${MOCK_FAIL_STAGE:-}
     MOCK_FAIL_TIMES: ${MOCK_FAIL_TIMES:-0}
+    TABLE_ENGINE: ${TABLE_ENGINE:-stable}
+    TABLE_ENGINE_CANARY_PERCENT: ${TABLE_ENGINE_CANARY_PERCENT:-0}
+    TABLE_ENGINE_AUTO_ROLLBACK: ${TABLE_ENGINE_AUTO_ROLLBACK:-true}
+    EDITION_PROFILE_ENABLED: ${EDITION_PROFILE_ENABLED:-true}
+    EDITION_PROFILE_DIR: ${EDITION_PROFILE_DIR:-}
     OCR_URL: ${OCR_URL:-http://ocr:8002}
     OCR_BACKEND: ${OCR_BACKEND:-auto}
     OCR_DPI: ${OCR_DPI:-150}
+    OCR_TIMEOUT_SECONDS: ${OCR_TIMEOUT_SECONDS:-2400}
     OCR_USE_FAKE: ${OCR_USE_FAKE:-false}
     GLM_OCR_BASE_URL: ${GLM_OCR_BASE_URL:-http://192.168.1.35:9977/v1}
     GLM_OCR_MODEL: ${GLM_OCR_MODEL:-GLM-OCR}
     GLM_OCR_TIMEOUT_SECONDS: ${GLM_OCR_TIMEOUT_SECONDS:-180}
+    GLM_OCR_READ_TIMEOUT_SECONDS: ${GLM_OCR_READ_TIMEOUT_SECONDS:-300}
+    # 宽表（30+ 行 × 20+ 列）需要 >3072 tokens 才能完整输出，否则 HTML 截断后整表被丢弃。
+    GLM_OCR_MAX_TOKENS: ${GLM_OCR_MAX_TOKENS:-8192}
     LAYOUT_BASE_URL: ${LAYOUT_BASE_URL:-http://192.168.1.35:9978}
-    LAYOUT_TIMEOUT_SECONDS: ${LAYOUT_TIMEOUT_SECONDS:-60}
+    LAYOUT_TIMEOUT_SECONDS: ${LAYOUT_TIMEOUT_SECONDS:-15}
+    OCR_LAYOUT_FIRST: ${OCR_LAYOUT_FIRST:-true}
+    LAYOUT_BLOCK_CONCURRENCY: ${LAYOUT_BLOCK_CONCURRENCY:-4}
     RECIPE_REGISTRY_URL: ${RECIPE_REGISTRY_URL:-http://recipe-registry:8005}
     ROUTE_USE_FAKE: ${ROUTE_USE_FAKE:-false}
+    ROUTE_AGENT_ENABLED: ${ROUTE_AGENT_ENABLED:-true}
     SANDBOX_URL: ${SANDBOX_URL:-http://sandbox:8004}
     SANDBOX_USE_FAKE: ${SANDBOX_USE_FAKE:-false}
     SANDBOX_EXECUTOR: ${SANDBOX_EXECUTOR:-docker}
@@ -131,6 +157,11 @@ services:
     command: ["uvicorn", "services.orchestration.main:app", "--host", "0.0.0.0", "--port", "8001"]
     ports:
       - "18001:8001"
+    volumes:
+      # 词典导入写回宿主机，避免容器重建后丢失人工维护的条目。
+      - ../../services/orchestration/data:/app/services/orchestration/data
+      # 版本画像/L2 候选包需要读取配方 manifest；只读挂载避免编排写配方。
+      - ../../services/recipe_registry/data:/app/services/recipe_registry/data:ro
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/healthz')\""]
       interval: 10s
@@ -153,6 +184,9 @@ services:
     command: ["uvicorn", "services.agent.main:app", "--host", "0.0.0.0", "--port", "8003"]
     ports:
       - "18003:8003"
+    volumes:
+      # 会话 SQLite 需跨容器重建保留，否则历史会话与工具审计丢失。
+      - agent-sessions:/tmp/hanson-agent
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8003/healthz')\""]
       interval: 10s
@@ -180,6 +214,9 @@ services:
     command: ["uvicorn", "services.recipe_registry.main:app", "--host", "0.0.0.0", "--port", "8005"]
     ports:
       - "18005:8005"
+    volumes:
+      # 配方/parser 资产与通道指针必须跨容器重建持久化。
+      - ../../services/recipe_registry/data:/app/services/recipe_registry/data
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8005/healthz')\""]
       interval: 10s
@@ -197,6 +234,24 @@ services:
       timeout: 3s
       retries: 10
 
+  web:
+    build:
+      context: ../..
+      dockerfile: deploy/compose/web.Dockerfile
+    image: hanson-web:local
+    restart: unless-stopped
+    ports:
+      - "15173:80"
+    depends_on:
+      - api-gateway
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks:
+      - hanson
+
   # 构建型服务：只用于构建沙箱引擎镜像，不参与默认启动。
   #   docker compose --profile build build sandbox-runtime
   sandbox-runtime:
@@ -210,6 +265,7 @@ services:
 volumes:
   postgres-data:
   minio-data:
+  agent-sessions:
 
 networks:
   hanson:

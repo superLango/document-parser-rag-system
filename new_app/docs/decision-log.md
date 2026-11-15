@@ -26,6 +26,9 @@
 | D-011 | Q7 | 公开 API 保留 `/v1` 前缀 | 已确认 | M1、M7 |
 | D-012 | Q8 | 当前项目人力 1 人，按串行推进 | 已确认 | 全阶段 |
 | D-013 | M0 | 旧代码归档到 `legacy/`，只读参考，不参与构建 | 已确认 | M0 |
+| D-018 | Q9 | 依赖以 `requirements.txt` 为唯一源；`uv.lock` 待 uv 工具可用后生成并纳入 CI | 已确认 | M0 |
+| D-019 | Q9 | 生产弹性：api-gateway/orchestration/ocr 各 2–6 副本、CPU 70% HPA；节点池与存储随切换窗口回填 | 已确认（V-007 部分回填） | M8 |
+| D-020 | Q9 | 可观测与鉴权：各服务暴露 `/metrics`（Prometheus 文本）；`API_AUTH_TOKEN` 可选 Bearer 鉴权，默认关闭 | 已确认 | M8 |
 
 ---
 
@@ -644,20 +647,105 @@ M8 完成词典导入与新系统全链路；按 Q4 需用新旧效果对比决�
 
 ---
 
+### D-015 审批语义：方案 B（人工 approve 进 shadow，满额默认人工确认）
+
+| 项 | 内容 |
+|---|---|
+| 决策 ID | D-015 |
+| 对应确认项 | 全维度核查 P0-1 |
+| 状态 | 已确认 |
+| 日期 | 2026-11-12 |
+| 决策人 | 项目负责人 |
+| 关联文档 | [架构重构方案](architecture-refactor-plan.md)、[M6 计划](M6-feedback-repair-promotion.md)、[资产化方案](reports/algorithm-asset-hot-update-plan.md) |
+
+**背景**
+
+架构文档写"approve 后原子切 stable"，实现走"approve → shadow → 满 10 份自动 stable"，资产化文档内部又同时存在"人工确认"与"自动晋升"两套表述，审批责任不清。
+
+**决策（方案 B）**
+
+- 人工 `approve` 是必要条件：候选只能由人工审批后进入 shadow，AI 修复不能直接改 stable。
+- shadow 满 N 份双跑通过后默认停在 `ready`，等待人工 `promote` 或 `abandon`。
+- `SHADOW_AUTO_PROMOTE=false` 为默认值；显式开启才允许满额自动晋升。
+- 批次带 `deadline_at`（默认 7 天）；超时置 `expired`，反馈退回 `verified`，由人工重新审批或放弃。
+- 人工出口：`POST /v1/shadow/batches/{id}/promote`、`POST /v1/shadow/batches/{id}/abandon`，均写 `promotions` 审计。
+
+**影响**
+
+- 架构 7.7、M6 §6.4、资产化方案 5.5/5.6 的审批口径统一为本决策。
+- 部署新增 `SHADOW_AUTO_PROMOTE`、`SHADOW_TIMEOUT_SECONDS` 两个环境变量。
+- 需要重建 orchestration/api-gateway 镜像并执行迁移 0007。
+
+**验证**
+
+- `tests/contract/shadow/test_shadow_state.py` 覆盖 waiting/ready/auto-promote/failed/expired。
+- 端到端待验证：approve → shadow → ready → 人工 promote → stable；abandon → 反馈回到 verified。
+
+---
+
+### D-016 指标口径单一事实源
+
+| 项 | 内容 |
+|---|---|
+| 决策 ID | D-016 |
+| 对应确认项 | 全维度核查 AUD-B08 / AUD-D03 |
+| 状态 | 已确认 |
+| 日期 | 2026-11-12 |
+| 决策人 | 项目负责人 |
+| 关联文档 | [M8 验收](acceptance/M8.md)、[Phase 2 报告](reports/phase2-effect-comparison.md)、[规模化门禁](reports/scale-gate.md) |
+
+**背景**
+
+历史上同时存在 12 份样本 F1 0.3489 / 门槛 0.80、60 份样本 F1 0.4933 / 门槛 0.60、静默 ≤5% 与 ≤3% 等多套口径，导致验收结论不可比。
+
+**决策**
+
+| 口径 | 数据集 | 用途 | 门槛 |
+|---|---|---|---|
+| legacy-regression F1 | 50 份旧结果重建表 | 发布门禁 | F1 ≥0.60、静默 ≤3%、覆盖 ≥90%、失败 0 |
+| gold F1 | PDF 落地金标（当前 2 份） | 质量门禁（Phase 3 启用） | F1 ≥0.80、静默 ≤2% |
+| 历史 M8 | 12 份样本 | 仅历史记录 | 不再作为门禁 |
+
+- `gate_scale.py` 是 legacy-regression 的唯一执行入口；当前基线 F1 0.6025 / 静默 2.62%（50 份）。
+- 0.80 为 Phase 3 退出标准，不因阶段治理达标而豁免或下调。
+- 金标达到 ≥30 份前只报告不门禁。
+
+---
+
+### D-017 服务口径：7 个业务微服务 + 外部模型服务
+
+| 项 | 内容 |
+|---|---|
+| 决策 ID | D-017 |
+| 对应确认项 | 全维度核查 AUD-D01 |
+| 状态 | 已确认 |
+| 日期 | 2026-11-12 |
+| 决策人 | 项目负责人 |
+| 关联文档 | [架构重构方案](architecture-refactor-plan.md)、[资产化方案](reports/algorithm-asset-hot-update-plan.md) |
+
+**决策**
+
+- 业务微服务固定 **7 个**：api-gateway、orchestration、ocr、agent、sandbox、recipe-registry、review。
+- `layout_api`、GLM-OCR、layout 模型等属于**外部模型服务**，由 OCR 服务通过适配器调用，不计入业务微服务数量。
+- 除 OCR 服务外，其他业务服务不得直连外部模型服务。
+- 新增外部模型服务只需更新 OCR 适配器配置，不改变服务边界与部署单元。
+
+---
+
 ## 3. 待验证事项
 
 以下事项已确认处理方式，但最终参数/选型需在对应里程碑验证后回填本记录。
 
 | 编号 | 事项 | 验证阶段 | 回填内容 | 责任人 |
 |---|---|---|---|---|
-| V-001 | WSL 内 K8s 发行版选择（k3s/kind/minikube） | M0 | 发行版、版本、资源清单 | 项目负责人 |
-| V-002 | Qwen 最优上下文窗口（32K/64K/128K） | M5 | 窗口值、并发、内存、p95 | Agent 负责人 |
-| V-003 | 看门狗内存阈值 | M5 | 阈值、总内存、触发策略 | Agent 负责人 |
-| V-004 | 沙箱运行时最终选型 | M4 | 运行时、评分、开销、结论 | 沙箱负责人 |
-| V-005 | 旧数据对比达标线 | M8 | 已回填：F1≥0.80、Value≥0.90、静默≤5%、覆盖≥90%、p95≤120s；本轮 F1 0.349 未达标，不导入旧数据 | 业务/项目负责人 |
-| V-006 | 模型三地址实际配置（含 192.168.1.35） | M2/M5 | 配置项名、探测间隔、切换顺序、回切策略 | Agent 负责人 |
-| V-007 | 生产 K8s 资源配置 | M8 | 节点池、副本、HPA、存储 | DevOps |
-| V-008 | 单人串行时间表 | M0 | 新时间基线 | 项目负责人 |
+| V-001 | WSL 内 K8s 发行版选择（k3s/kind/minikube） | M0 | 已回填：kind（WSL），节点 Ready，`hanson-standard` 命名空间 Active；七服务 K8s 部署待切换窗口执行 | 项目负责人 |
+| V-002 | Qwen 最优上下文窗口（32K/64K/128K） | M5 | 已回填：默认 **64K**（32K 11.5s、64K 10.1s、128K/120K 实际 26.4s）；128K 保留为上限 | Agent 负责人 |
+| V-003 | 看门狗内存阈值 | M5 | 已回填：阈值 **4096 MiB**，窗口基准全程未触发（128K 请求后可用内存约 20.6 GiB） | Agent 负责人 |
+| V-004 | 沙箱运行时最终选型 | M4 | 已回填：**containerd + runc**（Compose 通过 Docker-outside-of-Docker）；Kata 未实测，保留为高隔离增强 | 沙箱负责人 |
+| V-005 | 旧数据对比达标线 | M8 | 已回填：发布门禁 F1≥0.60、静默≤3%、覆盖≥90%、失败 0（D-016）；金标质量门禁 F1≥0.80、静默≤2%。本轮 60 份 F1 0.6020、静默 2.55%，旧数据不导入 | 业务/项目负责人 |
+| V-006 | 模型三地址实际配置（含 192.168.1.35） | M2/M5 | 已回填：`AGENT_BASE_URL_PRIMARY/SECONDARY/TERTIARY`；连续失败窗口 10s 切换、冷却 30s、回切按优先级 | Agent 负责人 |
+| V-007 | 生产 K8s 资源配置 | M8 | 部分回填：api-gateway/orchestration/ocr 各 2–6 副本、CPU 70% HPA 已入库；节点池规格与存储随切换窗口确定 | DevOps |
+| V-008 | 单人串行时间表 | M0 | 已回填：按 M0→M8 串行，`development-plan.md` v1.2 为基线 | 项目负责人 |
 
 > 主/备地址与密钥不写入本文档；`192.168.1.35` 作为第三地址记录。实际地址以部署配置为准。
 

@@ -63,6 +63,7 @@ class ContextState:
     compaction_level: int = 0
     degraded: bool = False
     overflow: bool = False
+    lossless: dict[str, Any] = field(default_factory=dict)
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -81,6 +82,7 @@ class ContextState:
             "compaction_level": self.compaction_level,
             "degraded": self.degraded,
             "overflow": self.overflow,
+            "lossless": self.lossless,
         }
 
     @classmethod
@@ -103,6 +105,7 @@ class ContextState:
             compaction_level=int(payload.get("compaction_level") or 0),
             degraded=bool(payload.get("degraded")),
             overflow=bool(payload.get("overflow")),
+            lossless=dict(payload.get("lossless") or {}),
         )
 
 
@@ -166,6 +169,15 @@ class ContextManager:
                     ref=str(output.get("summary") or output.get("artifact_ref") or ""),
                 )
             )
+        before = ContextState(
+            objective=objective,
+            schema=dict(schema or {}),
+            decisions=list(decisions or []),
+            evidence_ids=[str(item) for item in (evidence_ids or [])],
+            header_paths=[[str(part) for part in path] for path in (header_paths or [])],
+            units=[str(item) for item in (units or [])],
+            fields=[str(item) for item in (fields or [])],
+        )
         await self._recount(state)
         if state.tokens > self.max_tokens:
             await self._compact_to(state, self.max_tokens * self.l1_ratio, level=1)
@@ -176,6 +188,7 @@ class ContextManager:
         if state.tokens > self.max_tokens:
             state.overflow = True
             raise ContextOverflow(state.tokens, self.max_tokens)
+        state.lossless = self.check_lossless(before, state)
         state.degraded = bool(getattr(self.tokenizer, "degraded", False))
         return state
 

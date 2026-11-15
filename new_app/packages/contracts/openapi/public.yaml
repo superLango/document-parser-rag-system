@@ -1,32 +1,1059 @@
-openapi: 3.1.0
+components:
+  schemas:
+    Body_upload_document_v1_documents_post:
+      properties:
+        file:
+          contentMediaType: application/octet-stream
+          title: File
+          type: string
+      required:
+      - file
+      title: Body_upload_document_v1_documents_post
+      type: object
+    CreateRunRequest:
+      properties:
+        parse_profile:
+          default: standard
+          title: Parse Profile
+          type: string
+        recipe_channel:
+          default: stable
+          title: Recipe Channel
+          type: string
+      title: CreateRunRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ReparseRequest:
+      properties:
+        parser_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parser Version
+      title: ReparseRequest
+      type: object
+    ValidationError:
+      properties:
+        ctx:
+          title: Context
+          type: object
+        input:
+          title: Input
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
 info:
-  title: Hanson Standard Split Public API
+  title: Hanson api-gateway
   version: 0.0.0
-  description: M0 skeleton. Public APIs use the /v1 prefix.
-servers:
-  - url: http://localhost:8000
+openapi: 3.1.0
 paths:
-  /v1/health:
+  /healthz:
     get:
-      summary: Public health check
-      operationId: getPublicHealth
+      operationId: healthz_healthz_get
       responses:
-        "200":
-          description: Service is healthy
+        '200':
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Health"
-components:
-  schemas:
-    Health:
-      type: object
-      required: [status, service, version]
-      properties:
-        status:
+                additionalProperties:
+                  type: string
+                title: Response Healthz Healthz Get
+                type: object
+          description: Successful Response
+      summary: Healthz
+  /readyz:
+    get:
+      operationId: readyz_readyz_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                title: Response Readyz Readyz Get
+                type: object
+          description: Successful Response
+      summary: Readyz
+  /v1/dictionary:
+    get:
+      operationId: get_dictionary_v1_dictionary_get
+      parameters:
+      - in: query
+        name: type
+        required: false
+        schema:
+          default: ''
+          title: Type
           type: string
-          const: ok
-        service:
+      - in: query
+        name: q
+        required: false
+        schema:
+          default: ''
+          title: Q
           type: string
-        version:
+      - in: query
+        name: family
+        required: false
+        schema:
+          default: ''
+          title: Family
           type: string
+      - in: query
+        name: status
+        required: false
+        schema:
+          default: ''
+          title: Status
+          type: string
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 500
+          maximum: 2000
+          minimum: 1
+          title: Limit
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Dictionary
+  /v1/documents:
+    get:
+      operationId: list_documents_v1_documents_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: List Documents
+    post:
+      operationId: upload_document_v1_documents_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_document_v1_documents_post'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Upload Document
+  /v1/documents/{document_id}:
+    delete:
+      operationId: delete_document_v1_documents__document_id__delete
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Document
+    get:
+      operationId: get_document_v1_documents__document_id__get
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Document
+  /v1/documents/{document_id}/runs:
+    post:
+      operationId: create_run_v1_documents__document_id__runs_post
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/CreateRunRequest'
+              - type: 'null'
+              title: Payload
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Run
+  /v1/documents/{document_id}/snapshot:
+    get:
+      operationId: get_document_snapshot_v1_documents__document_id__snapshot_get
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Document Snapshot
+  /v1/feedback:
+    get:
+      operationId: list_feedback_v1_feedback_get
+      parameters:
+      - in: query
+        name: status
+        required: false
+        schema:
+          default: ''
+          title: Status
+          type: string
+      - in: query
+        name: document_id
+        required: false
+        schema:
+          default: ''
+          title: Document Id
+          type: string
+      - in: query
+        name: run_id
+        required: false
+        schema:
+          default: ''
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Feedback
+    post:
+      operationId: create_feedback_v1_feedback_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              title: Payload
+              type: object
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Feedback
+  /v1/feedback/{feedback_id}:
+    get:
+      operationId: get_feedback_v1_feedback__feedback_id__get
+      parameters:
+      - in: path
+        name: feedback_id
+        required: true
+        schema:
+          title: Feedback Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Feedback
+  /v1/feedback/{feedback_id}/process:
+    post:
+      operationId: process_feedback_v1_feedback__feedback_id__process_post
+      parameters:
+      - in: path
+        name: feedback_id
+        required: true
+        schema:
+          title: Feedback Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Process Feedback
+  /v1/feedback/{feedback_id}/verification:
+    get:
+      operationId: get_feedback_verification_v1_feedback__feedback_id__verification_get
+      parameters:
+      - in: path
+        name: feedback_id
+        required: true
+        schema:
+          title: Feedback Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Feedback Verification
+  /v1/feedback/{feedback_id}/verify:
+    post:
+      operationId: verify_feedback_v1_feedback__feedback_id__verify_post
+      parameters:
+      - in: path
+        name: feedback_id
+        required: true
+        schema:
+          title: Feedback Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              title: Payload
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Verify Feedback
+  /v1/health:
+    get:
+      operationId: health_v1_health_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                title: Response Health V1 Health Get
+                type: object
+          description: Successful Response
+      summary: Health
+  /v1/recipes:
+    get:
+      operationId: list_recipes_v1_recipes_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: List Recipes
+  /v1/recipes/{recipe_id}:
+    get:
+      operationId: get_recipe_v1_recipes__recipe_id__get
+      parameters:
+      - in: path
+        name: recipe_id
+        required: true
+        schema:
+          title: Recipe Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Recipe
+  /v1/recipes/{recipe_id}/rollback:
+    post:
+      operationId: rollback_recipe_v1_recipes__recipe_id__rollback_post
+      parameters:
+      - in: path
+        name: recipe_id
+        required: true
+        schema:
+          title: Recipe Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              title: Payload
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Rollback Recipe
+  /v1/runs:
+    get:
+      operationId: list_runs_v1_runs_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: List Runs
+  /v1/runs/{run_id}:
+    get:
+      operationId: get_run_v1_runs__run_id__get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Run
+  /v1/runs/{run_id}/accept:
+    post:
+      operationId: accept_run_v1_runs__run_id__accept_post
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: query
+        name: actor
+        required: false
+        schema:
+          default: operator
+          title: Actor
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Accept Run
+  /v1/runs/{run_id}/artifacts:
+    get:
+      operationId: get_artifacts_v1_runs__run_id__artifacts_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Artifacts
+  /v1/runs/{run_id}/cancel:
+    post:
+      operationId: cancel_run_v1_runs__run_id__cancel_post
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Cancel Run
+  /v1/runs/{run_id}/diff:
+    get:
+      operationId: run_diff_v1_runs__run_id__diff_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: query
+        name: against
+        required: true
+        schema:
+          title: Against
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Run Diff
+  /v1/runs/{run_id}/events:
+    get:
+      operationId: stream_events_v1_runs__run_id__events_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: query
+        name: after
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          title: After
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Stream Events
+  /v1/runs/{run_id}/ocr:
+    get:
+      operationId: get_ocr_v1_runs__run_id__ocr_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Ocr
+  /v1/runs/{run_id}/pages/{page_no}/image:
+    get:
+      operationId: get_page_image_v1_runs__run_id__pages__page_no__image_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: path
+        name: page_no
+        required: true
+        schema:
+          title: Page No
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Page Image
+  /v1/runs/{run_id}/records:
+    get:
+      operationId: get_records_v1_runs__run_id__records_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Records
+  /v1/runs/{run_id}/reparse:
+    post:
+      operationId: reparse_run_v1_runs__run_id__reparse_post
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/ReparseRequest'
+              - type: 'null'
+              title: Payload
+      responses:
+        '202':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Reparse Run
+  /v1/runs/{run_id}/result:
+    get:
+      operationId: get_result_v1_runs__run_id__result_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Result
+  /v1/runs/{run_id}/review:
+    get:
+      operationId: get_review_v1_runs__run_id__review_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Review
+  /v1/runs/{run_id}/timeline:
+    get:
+      operationId: get_timeline_v1_runs__run_id__timeline_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Timeline
+  /v1/shadow/batches:
+    get:
+      operationId: list_shadow_batches_v1_shadow_batches_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: List Shadow Batches
+    post:
+      operationId: create_shadow_batch_v1_shadow_batches_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              title: Payload
+              type: object
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Shadow Batch
+  /v1/shadow/batches/{batch_id}:
+    get:
+      operationId: get_shadow_batch_v1_shadow_batches__batch_id__get
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        schema:
+          title: Batch Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Shadow Batch
+  /v1/shadow/batches/{batch_id}/abandon:
+    post:
+      operationId: abandon_shadow_batch_v1_shadow_batches__batch_id__abandon_post
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        schema:
+          title: Batch Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              title: Payload
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Abandon Shadow Batch
+  /v1/shadow/batches/{batch_id}/promote:
+    post:
+      operationId: promote_shadow_batch_v1_shadow_batches__batch_id__promote_post
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        schema:
+          title: Batch Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              title: Payload
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Promote Shadow Batch
+  /v1/shadow/batches/{batch_id}/run:
+    post:
+      operationId: run_shadow_batch_v1_shadow_batches__batch_id__run_post
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        schema:
+          title: Batch Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Run Shadow Batch
+  /v1/shadow/documents:
+    get:
+      operationId: list_shadow_documents_v1_shadow_documents_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+      summary: List Shadow Documents
+    post:
+      operationId: add_shadow_document_v1_shadow_documents_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              title: Payload
+              type: object
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Add Shadow Document
+  /v1/shadow/documents/{document_id}:
+    delete:
+      operationId: delete_shadow_document_v1_shadow_documents__document_id__delete
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Shadow Document

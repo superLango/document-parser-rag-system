@@ -144,6 +144,10 @@ def read_outputs(work: Path) -> dict[str, bytes]:
             "diagnostics.json",
             "metrics.json",
             "manifest.json",
+            "clauses.json",
+            "inventory.json",
+            "references.json",
+            "document_intelligence.json",
         )
         if (work / name).exists()
     }

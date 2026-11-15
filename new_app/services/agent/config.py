@@ -8,7 +8,7 @@ from .model_gateway import ModelEndpoint
 class Settings(BaseSettings):
     model: str = "Qwen3.6-35B-A3B-NVFP4"
     base_url_primary: str = "http://39.107.239.208:35035"
-    base_url_secondary: str = "http://192.168.188.75:9991"
+    base_url_secondary: str = "http://192.168.1.35:9991"
     base_url_tertiary: str = "http://192.168.1.35:9988"
     failover_seconds: float = 10.0
     cooldown_seconds: float = 30.0
@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     watchdog_floor_mb: int = 4096
     api_key: str = ""
     enable_thinking: bool = False
+    sandbox_url: str = ""
+    review_url: str = ""
+    orchestration_url: str = ""
 
     model_config = SettingsConfigDict(
         env_prefix="AGENT_", env_file=".env", extra="ignore"

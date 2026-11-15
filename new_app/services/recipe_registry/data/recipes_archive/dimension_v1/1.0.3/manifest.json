@@ -1,0 +1,64 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "dimension_v1",
+  "version": "1.0.3",
+  "engine_api": "recipe-engine/1",
+  "profile": "dimension",
+  "signature": {
+    "profile": "dimension",
+    "orientation": "grade_rows",
+    "n_cols": 4,
+    "blocks": 0,
+    "tokens": [
+      "尺寸",
+      "直径",
+      "厚度",
+      "偏差"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "规格",
+      "名称",
+      "公称尺寸",
+      "尺寸",
+      "外径",
+      "壁厚"
+    ],
+    "conditions": [
+      "厚度",
+      "直径",
+      "供应状态",
+      "试样状态",
+      "类型",
+      "产品形式",
+      "精度",
+      "交货状态"
+    ],
+    "measures": {
+      "尺寸偏差": {
+        "unit": "mm",
+        "family": "dimension"
+      }
+    }
+  },
+  "rules": {
+    "inherit_group_units": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": null
+  },
+  "checksum": "907659b076e09a6b493e2b0c03c9f08062cad7389f8b8f78a420579b90a7bff3",
+  "created_at": "2026-11-13T14:05:12+00:00"
+}

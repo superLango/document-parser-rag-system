@@ -11,6 +11,7 @@ from .package import (
     RecipeRef,
     dump_manifest,
     load_package,
+    missing_test_references,
     validate_manifest,
 )
 
@@ -30,9 +31,17 @@ def _now() -> str:
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
+def _version_key(version: str) -> tuple[int, ...]:
+    try:
+        return tuple(int(part) for part in version.split("."))
+    except ValueError:
+        return (0,)
+
+
 class RecipeRegistry:
     def __init__(self, root: str | Path | None = None) -> None:
         self.root = Path(root) if root else DEFAULT_ROOT
+        self.archive_root = self.root.parent / "recipes_archive"
         self.path = self.root / "registry.json"
         self._lock = threading.Lock()
         self.state = self._load()
@@ -85,6 +94,13 @@ class RecipeRegistry:
             return load_package(directory)
         except RecipePackageError as exc:
             raise RegistryError("RECIPE_NOT_FOUND", str(exc)) from exc
+
+    def channel_for(self, recipe_id: str, version: str) -> str | None:
+        """返回该版本实际绑定的通道；未绑定任何通道时返回 None。"""
+        for channel in CHANNELS:
+            if self.state["channels"][channel].get(recipe_id) == version:
+                return channel
+        return None
 
     def resolve(self, recipe_id: str, channel: str = "stable") -> RecipeRef:
         if channel not in CHANNELS:
@@ -148,6 +164,123 @@ class RecipeRegistry:
             manifests.append(self.get(recipe_id, version))
         return manifests
 
+    def stale_candidate_versions(self, recipe_id: str) -> list[str]:
+        """比 stable 新、但未绑定 candidate/shadow/stable 的历史候选版本。"""
+        stable = self.state["channels"]["stable"].get(recipe_id)
+        if not stable:
+            return []
+        bound = {
+            self.state["channels"][channel].get(recipe_id)
+            for channel in ("stable", "candidate", "shadow")
+        }
+        stale: list[str] = []
+        for ref in self.list_versions(recipe_id):
+            if ref.version in bound:
+                continue
+            if _version_key(ref.version) > _version_key(stable):
+                stale.append(ref.version)
+        return sorted(stale, key=_version_key)
+
+    def archive_stale_candidates(self, recipe_id: str, *, actor: str) -> list[str]:
+        """把历史候选版本移出 registry（归档到 data/recipes_archive）。"""
+        if not actor.strip():
+            raise RegistryError("RECIPE_ACTOR_REQUIRED", "actor is required")
+        versions = self.stale_candidate_versions(recipe_id)
+        moved: list[str] = []
+        for version in versions:
+            source = self.root / recipe_id / version
+            target = self.archive_root / recipe_id / version
+            if not source.is_dir():
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.exists():
+                raise RegistryError(
+                    "RECIPE_ARCHIVE_EXISTS", f"archive already exists: {target}"
+                )
+            source.rename(target)
+            self.state["history"].append(
+                {
+                    "kind": "archive",
+                    "recipe_id": recipe_id,
+                    "channel": "candidate",
+                    "from_version": version,
+                    "to_version": "",
+                    "digest": "",
+                    "actor": actor,
+                    "note": "superseded candidate archived",
+                    "at": _now(),
+                }
+            )
+            moved.append(version)
+        if moved:
+            with self._lock:
+                self._save()
+        return moved
+
+    def governance(self) -> list[dict]:
+        """Return version-governance violations without mutating the registry."""
+        issues: list[dict] = []
+        recipe_ids = {
+            recipe_id
+            for channel in CHANNELS
+            for recipe_id in self.state["channels"][channel]
+        }
+        for recipe_id in sorted(recipe_ids):
+            stable = self.state["channels"]["stable"].get(recipe_id)
+            candidate = self.state["channels"]["candidate"].get(recipe_id)
+            if (
+                stable
+                and candidate
+                and _version_key(candidate) < _version_key(stable)
+            ):
+                issues.append(
+                    {
+                        "code": "CANDIDATE_BEHIND_STABLE",
+                        "recipe_id": recipe_id,
+                        "stable": stable,
+                        "candidate": candidate,
+                    }
+                )
+            for channel in ("candidate", "shadow", "stable"):
+                version = self.state["channels"][channel].get(recipe_id)
+                if not version:
+                    continue
+                try:
+                    manifest = self.get(recipe_id, version)
+                except RecipePackageError:
+                    continue
+                if not manifest.tests:
+                    issues.append(
+                        {
+                            "code": "RECIPE_TESTS_MISSING",
+                            "recipe_id": recipe_id,
+                            "channel": channel,
+                            "version": version,
+                        }
+                    )
+                missing = missing_test_references(manifest)
+                if missing:
+                    issues.append(
+                        {
+                            "code": "RECIPE_TEST_FILE_MISSING",
+                            "recipe_id": recipe_id,
+                            "channel": channel,
+                            "version": version,
+                            "missing": missing,
+                        }
+                    )
+            stale = self.stale_candidate_versions(recipe_id)
+            if stale:
+                issues.append(
+                    {
+                        "code": "RECIPE_CANDIDATE_STALE",
+                        "recipe_id": recipe_id,
+                        "count": len(stale),
+                        "versions": stale[:20],
+                    }
+                )
+        return issues
+
     # -- write ------------------------------------------------------------
     def publish(self, manifest: RecipeManifest) -> RecipeRef:
         manifest = validate_manifest(manifest)
@@ -194,6 +327,13 @@ class RecipeRegistry:
                 "RECIPE_CHANNEL_INVALID", "use deprecate() for the deprecated channel"
             )
         manifest = self.get(recipe_id, version)
+        if channel == "candidate":
+            stable = self.state["channels"]["stable"].get(recipe_id)
+            if stable and _version_key(version) < _version_key(stable):
+                raise RegistryError(
+                    "RECIPE_CANDIDATE_BEHIND_STABLE",
+                    f"candidate {recipe_id}@{version} is behind stable {stable}",
+                )
         with self._lock:
             previous = self.state["channels"][channel].get(recipe_id)
             if previous == version:

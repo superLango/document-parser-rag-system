@@ -1,0 +1,167 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "dimension_v1",
+  "version": "1.0.32",
+  "engine_api": "recipe-engine/1",
+  "profile": "dimension",
+  "signature": {
+    "profile": "dimension",
+    "orientation": "grade_rows",
+    "n_cols": 4,
+    "blocks": 0,
+    "tokens": [
+      "尺寸",
+      "直径",
+      "厚度",
+      "偏差"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "规格",
+      "名称",
+      "公称尺寸",
+      "尺寸",
+      "外径",
+      "壁厚"
+    ],
+    "conditions": [
+      "包铝分类",
+      "试样状态",
+      "供应状态",
+      "试样状态",
+      "包铝分类",
+      "试样状态",
+      "供应状态",
+      "试样状态",
+      "厚度",
+      "直径",
+      "供应状态",
+      "试样状态",
+      "类型",
+      "产品形式",
+      "供应状态",
+      "试样状态",
+      "精度",
+      "交货状态"
+    ],
+    "measures": {
+      "Rm": {
+        "unit": "MPa",
+        "family": "tensile"
+      },
+      "Rp0.2": {
+        "family": "tensile",
+        "unit": "MPa"
+      },
+      "A": {
+        "family": "tensile",
+        "unit": "%"
+      },
+      "E": {
+        "family": "elastic",
+        "unit": "MPa"
+      },
+      "HB": {
+        "family": "hardness",
+        "unit": "HB"
+      },
+      "Z": {
+        "unit": "%",
+        "family": "tensile"
+      },
+      "B": {
+        "family": "tensile",
+        "unit": "-"
+      },
+      "HBW": {
+        "family": "hardness",
+        "unit": "HBW"
+      },
+      "HRB": {
+        "family": "hardness",
+        "unit": "HRB"
+      },
+      "HRC": {
+        "family": "hardness",
+        "unit": "HRC"
+      },
+      "KU2": {
+        "family": "impact",
+        "unit": "J"
+      },
+      "C": {
+        "family": "chemical",
+        "unit": "%"
+      },
+      "H": {
+        "family": "hardness",
+        "unit": "HV"
+      },
+      "持久应力": {
+        "unit": "MPa",
+        "family": "creep"
+      },
+      "ReH": {
+        "unit": "MPa",
+        "family": "tensile"
+      }
+    },
+    "column_aliases": {
+      "T11": {
+        "弯曲压头直径mm": "弯曲压头直径"
+      },
+      "T6": {
+        "抗拉强度RmMPa": "Rm",
+        "断后伸长率A%": "A",
+        "布氏硬度HB": "HB",
+        "冲击吸收能量KV2J": "KV2",
+        "冲击吸收能量KU2J": "KU2",
+        "冲击吸收能量KU5J": "KU5",
+        "洛氏硬度HRC": "HRC",
+        "洛氏硬度HRB": "HRB",
+        "维氏硬度HV": "HV",
+        "布氏硬度HBW": "HBW",
+        "屈服强度ReHMPa": "ReH",
+        "屈服强度ReLMPa": "ReL",
+        "规定塑性延伸强度Rp0.2MPa": "Rp0.2",
+        "规定塑性延伸强度Rp1.0MPa": "Rp1.0",
+        "断面收缩率Z%": "Z",
+        "弹性模量EGPa": "E",
+        "断裂韧度KIC": "KIC",
+        "持久应力MPa": "持久应力",
+        "持久时间h": "持久时间",
+        "持久温度℃": "持久温度",
+        "蠕变变形%": "蠕变变形",
+        "蠕变速率%h": "蠕变速率",
+        "断裂韧度L-T": "断裂韧度L-T",
+        "断裂韧度S-L": "断裂韧度S-L",
+        "断裂韧度T-L": "断裂韧度T-L",
+        "侧向膨胀值mm": "侧向膨胀值",
+        "弯曲半径180°": "弯曲半径180°",
+        "弯曲半径90°": "弯曲半径90°",
+        "弯曲试验": "弯曲试验",
+        "弯曲试验系数": "弯曲试验系数"
+      }
+    }
+  },
+  "rules": {
+    "inherit_group_units": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": null
+  },
+  "checksum": "f56bbe7bb3f71d6062eb15be3bb8f2382054952c4135f8ab18b85d070cbc9997",
+  "created_at": "2026-11-14T11:14:32+00:00"
+}

@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-11-11T19:19:06+00:00",
+  "generated_at": "2026-11-12T04:01:10+00:00",
   "api": "http://localhost:18000",
   "old_runs": "F:\\hanson\\hanson_doc_parse\\data\\validation-2026-11-06\\runs\\full9",
   "metrics": {
     "documents": 60,
-    "old_fields": 2866,
-    "new_fields": 2874,
-    "common_fields": 1479,
-    "precision": 0.5146,
-    "recall": 0.5161,
-    "field_f1": 0.5153,
-    "value_match_rate": 0.8959,
-    "silent_errors": 154,
-    "silent_error_rate": 0.1041,
+    "old_fields": 2932,
+    "new_fields": 2914,
+    "common_fields": 1442,
+    "precision": 0.4949,
+    "recall": 0.4918,
+    "field_f1": 0.4933,
+    "value_match_rate": 0.9508,
+    "silent_errors": 71,
+    "silent_error_rate": 0.0492,
     "coverage": 1.0,
-    "p95_seconds": 119.46,
+    "p95_seconds": 9.22,
     "evidence_rate": 1.0,
     "failed_runs": 0,
     "thresholds": {
@@ -29,10 +29,10 @@
   "documents": [
     {
       "doc_id": "05ecccc8ad8d40f7b76e52ac729030db1786753115680",
-      "run_id": "361e3aaa-b3ab-4c9e-b965-438fd35288dc",
+      "run_id": "83e93837-2a46-43fe-8f53-493136d30176",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 121.58,
+      "elapsed_seconds": 8.24,
       "old_fields": 36,
       "new_fields": 38,
       "common_fields": 34,
@@ -44,7 +44,7 @@
       "precision": 0.8947,
       "recall": 0.9444,
       "f1": 0.9189,
-      "new_records": 36,
+      "new_records": 6,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -60,7 +60,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -78,10 +78,10 @@
     },
     {
       "doc_id": "0684efec05a54ab8868faf6dfb3b05e71789376678753",
-      "run_id": "f036100d-f312-4db9-a80e-4591e49e3075",
+      "run_id": "606107c3-e311-413a-a792-62ebaac34edb",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 72.37,
+      "elapsed_seconds": 8.15,
       "old_fields": 15,
       "new_fields": 18,
       "common_fields": 12,
@@ -93,7 +93,7 @@
       "precision": 0.6667,
       "recall": 0.8,
       "f1": 0.7273,
-      "new_records": 9,
+      "new_records": 2,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -114,7 +114,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -135,22 +135,22 @@
     },
     {
       "doc_id": "0715f18cf44c469cb1c0510db73c9dea",
-      "run_id": "8b41309b-9862-4693-9db2-fadf6358e7eb",
+      "run_id": "35d589cf-cc61-4d17-9d16-07b7239ea87e",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 106.34,
-      "old_fields": 56,
-      "new_fields": 51,
-      "common_fields": 41,
-      "only_old": 15,
-      "only_new": 10,
-      "value_matches": 41,
-      "value_match_rate": 1.0,
-      "silent_errors": 0,
-      "precision": 0.8039,
-      "recall": 0.7321,
-      "f1": 0.7664,
-      "new_records": 32,
+      "elapsed_seconds": 8.26,
+      "old_fields": 57,
+      "new_fields": 56,
+      "common_fields": 30,
+      "only_old": 27,
+      "only_new": 26,
+      "value_matches": 29,
+      "value_match_rate": 0.9667,
+      "silent_errors": 1,
+      "precision": 0.5357,
+      "recall": 0.5263,
+      "f1": 0.531,
+      "new_records": 14,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -181,38 +181,38 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
       "tables": 10,
       "examples_only_old": [
+        "30CR3SINIMOVA/A@淬火",
         "30CR3SINIMOVA/B",
-        "30CR3SINIMOVA/KIC",
-        "30CR3SINIMOVA/KV2",
-        "30SI2MNCRMOVE/KV2",
-        "30SI2MNCRMOVE31SI2MNCRMOVE/B",
-        "30SI2MNCRMOVE31SI2MNCRMOVE/C",
-        "30SI2MNCRMOVEA/KIC",
-        "30SI2MNCRMOVEA/KV2"
+        "30CR3SINIMOVA/KIC@淬火",
+        "30CR3SINIMOVA/KV2@淬火",
+        "30CR3SINIMOVA/RM@淬火",
+        "30CR3SINIMOVA/RP0.2@淬火",
+        "30CR3SINIMOVA/Z@淬火",
+        "30SI2MNCRMOVE/KV2"
       ],
       "examples_only_new": [
         "30CR3SINIMOVA/Cu",
-        "30CR3SINIMOVA/HBW",
+        "30CR3SINIMOVA/HBW@退火",
         "30CR3SINIMOVA/KU2",
-        "30SI2MNCRMOVEA/KU2",
-        "30SI2MNCRMOVE、31SI2MNCRMOVE/HBW",
-        "31SI2MNCRMOVEA/KU2",
-        "允许偏差/C",
-        "允许偏差/Cr"
+        "30CR3SINIMOVA/RM",
+        "30CR3SINIMOVA/RP0.2",
+        "30CR3SINIMOVA/Z",
+        "30SI2MNCRMOVE/HBW@退火",
+        "30SI2MNCRMOVE/HBW@高温"
       ]
     },
     {
       "doc_id": "075993d8bda54c54b9dd8e1ca88724c31667182921102",
-      "run_id": "188f66a4-b1c7-4bb9-a3eb-77693a50dfd1",
+      "run_id": "aa1d2eeb-c649-4400-ab69-7d687d8e86d1",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 59.73,
+      "elapsed_seconds": 8.18,
       "old_fields": 20,
       "new_fields": 4,
       "common_fields": 4,
@@ -224,7 +224,7 @@
       "precision": 1.0,
       "recall": 0.2,
       "f1": 0.3333,
-      "new_records": 21,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -240,7 +240,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -259,10 +259,10 @@
     },
     {
       "doc_id": "0c87affede6e4522824189505c2821091787136466679",
-      "run_id": "06a7e7d1-4ddd-4149-b6df-5947189fdad8",
+      "run_id": "603b1eac-1939-48b3-8696-15d1bbf53d62",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 16.23,
+      "elapsed_seconds": 8.16,
       "old_fields": 45,
       "new_fields": 18,
       "common_fields": 4,
@@ -274,7 +274,7 @@
       "precision": 0.2222,
       "recall": 0.0889,
       "f1": 0.127,
-      "new_records": 19,
+      "new_records": 5,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -290,7 +290,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "mechanical",
@@ -318,10 +318,10 @@
     },
     {
       "doc_id": "100e43ba7722423cb8dd02adbd8727081788829847412",
-      "run_id": "0d285cae-c351-4bde-9013-1f0b32d9dae8",
+      "run_id": "38996c42-0249-4b3e-89da-636ce29bf796",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 50.06,
+      "elapsed_seconds": 8.25,
       "old_fields": 17,
       "new_fields": 16,
       "common_fields": 0,
@@ -333,7 +333,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 9,
+      "new_records": 3,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -377,10 +377,10 @@
     },
     {
       "doc_id": "10aef59a5c91456c92e5e5a8225f4acf1777941075774",
-      "run_id": "18eb82bd-1383-499e-ad8e-5bce01de9379",
+      "run_id": "efe607fa-ccc7-4971-999a-337fdbc33dab",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 16.24,
+      "elapsed_seconds": 8.15,
       "old_fields": 16,
       "new_fields": 16,
       "common_fields": 16,
@@ -392,7 +392,7 @@
       "precision": 1.0,
       "recall": 1.0,
       "f1": 1.0,
-      "new_records": 23,
+      "new_records": 2,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -413,7 +413,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -423,10 +423,10 @@
     },
     {
       "doc_id": "1738d3d4f8f74c7a8879da74e1c195f31788155976488",
-      "run_id": "f0a74ee3-c63e-432f-8eba-ec70d41df645",
+      "run_id": "ad2940bb-0c04-4b89-b358-23d1d0daff8e",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 39.73,
+      "elapsed_seconds": 8.24,
       "old_fields": 14,
       "new_fields": 9,
       "common_fields": 0,
@@ -438,7 +438,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 34,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -464,7 +464,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -492,22 +492,22 @@
     },
     {
       "doc_id": "1741e4503e464eefa4979511533a70131789604448717",
-      "run_id": "98ae3865-f5d6-42d3-ae27-49812d1a8fdf",
+      "run_id": "2bc80e06-1538-46ad-97ee-d5b013f96209",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 114.35,
-      "old_fields": 22,
-      "new_fields": 28,
-      "common_fields": 8,
-      "only_old": 14,
-      "only_new": 20,
-      "value_matches": 2,
-      "value_match_rate": 0.25,
-      "silent_errors": 6,
-      "precision": 0.2857,
-      "recall": 0.3636,
-      "f1": 0.32,
-      "new_records": 11,
+      "elapsed_seconds": 8.14,
+      "old_fields": 33,
+      "new_fields": 33,
+      "common_fields": 9,
+      "only_old": 24,
+      "only_new": 24,
+      "value_matches": 9,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 0.2727,
+      "recall": 0.2727,
+      "f1": 0.2727,
+      "new_records": 7,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -523,50 +523,50 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "mechanical",
       "tables": 7,
       "examples_only_old": [
-        "25CR2MOVA/A",
-        "25CR2MOVA/HB",
-        "25CR2MOVA/KU2",
-        "25CR2MOVA/KV2",
-        "25CR2MOVA/RM",
-        "25CR2MOVA/RP0.2",
-        "25CR2MOVA/Z",
-        "40CRNIMOA/A"
+        "25CR2MOVA/A@切向",
+        "25CR2MOVA/A@纵向",
+        "25CR2MOVA/HB@切向",
+        "25CR2MOVA/HB@纵向",
+        "25CR2MOVA/KU2@切向",
+        "25CR2MOVA/KV2@切向",
+        "25CR2MOVA/KV2@纵向",
+        "25CR2MOVA/RM@切向"
       ],
       "examples_only_new": [
         "25CR2MOVA/C",
         "25CR2MOVA/Cr",
         "25CR2MOVA/Cu",
+        "25CR2MOVA/KU2",
         "25CR2MOVA/Mn",
         "25CR2MOVA/Mo",
-        "25CR2MOVA/Ni",
-        "25CR2MOVA/P",
-        "25CR2MOVA/S"
+        "25CR2MOVA/N",
+        "25CR2MOVA/Ni"
       ]
     },
     {
       "doc_id": "1741e4503e464eefa4979511533a70131789604448717__446f7d20",
-      "run_id": "0dab1f97-d647-4da8-9c4e-0e07e68c8e58",
+      "run_id": "4080fb4d-2a13-43be-890a-b2fd37ae1a7a",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 32.6,
-      "old_fields": 22,
-      "new_fields": 28,
-      "common_fields": 8,
-      "only_old": 14,
-      "only_new": 20,
-      "value_matches": 2,
-      "value_match_rate": 0.25,
-      "silent_errors": 6,
-      "precision": 0.2857,
-      "recall": 0.3636,
-      "f1": 0.32,
-      "new_records": 28,
+      "elapsed_seconds": 8.16,
+      "old_fields": 33,
+      "new_fields": 33,
+      "common_fields": 9,
+      "only_old": 24,
+      "only_new": 24,
+      "value_matches": 9,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 0.2727,
+      "recall": 0.2727,
+      "f1": 0.2727,
+      "new_records": 7,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -582,38 +582,38 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "mechanical",
       "tables": 8,
       "examples_only_old": [
-        "25CR2MOVA/A",
-        "25CR2MOVA/HB",
-        "25CR2MOVA/KU2",
-        "25CR2MOVA/KV2",
-        "25CR2MOVA/RM",
-        "25CR2MOVA/RP0.2",
-        "25CR2MOVA/Z",
-        "40CRNIMOA/A"
+        "25CR2MOVA/A@切向",
+        "25CR2MOVA/A@纵向",
+        "25CR2MOVA/HB@切向",
+        "25CR2MOVA/HB@纵向",
+        "25CR2MOVA/KU2@切向",
+        "25CR2MOVA/KV2@切向",
+        "25CR2MOVA/KV2@纵向",
+        "25CR2MOVA/RM@切向"
       ],
       "examples_only_new": [
         "25CR2MOVA/C",
         "25CR2MOVA/Cr",
         "25CR2MOVA/Cu",
+        "25CR2MOVA/KU2",
         "25CR2MOVA/Mn",
         "25CR2MOVA/Mo",
-        "25CR2MOVA/Ni",
-        "25CR2MOVA/P",
-        "25CR2MOVA/S"
+        "25CR2MOVA/N",
+        "25CR2MOVA/Ni"
       ]
     },
     {
       "doc_id": "17d722e0e9d9445a9f3a443abcb572d31792472615612",
-      "run_id": "ea5c1324-1801-4aaf-a8e5-afb18db689d7",
+      "run_id": "dda02cfd-b3f6-4683-a976-929f7f23ed6d",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 37.53,
+      "elapsed_seconds": 8.14,
       "old_fields": 20,
       "new_fields": 26,
       "common_fields": 18,
@@ -625,7 +625,7 @@
       "precision": 0.6923,
       "recall": 0.9,
       "f1": 0.7826,
-      "new_records": 15,
+      "new_records": 6,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -668,22 +668,22 @@
     },
     {
       "doc_id": "187d5d3857cc4017a0a50413740996221777508416099",
-      "run_id": "af88ce08-0236-48af-acea-cec655786b03",
+      "run_id": "278c031e-93ed-4c07-9ca1-b470b4e232d9",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 47.81,
+      "elapsed_seconds": 8.24,
       "old_fields": 14,
       "new_fields": 21,
       "common_fields": 14,
       "only_old": 0,
       "only_new": 7,
-      "value_matches": 0,
-      "value_match_rate": 0.0,
-      "silent_errors": 14,
+      "value_matches": 14,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
       "precision": 0.6667,
       "recall": 1.0,
       "f1": 0.8,
-      "new_records": 91,
+      "new_records": 5,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -699,7 +699,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -717,10 +717,10 @@
     },
     {
       "doc_id": "1c4cf85c9255469184e338fda9af80f81768216448834",
-      "run_id": "2a575951-4b4d-4fdb-8164-36987195f7f5",
+      "run_id": "c6191e94-6149-4872-8ca9-49482e4782d8",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 19.28,
+      "elapsed_seconds": 7.23,
       "old_fields": 16,
       "new_fields": 10,
       "common_fields": 0,
@@ -732,7 +732,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 13,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -753,7 +753,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -781,10 +781,10 @@
     },
     {
       "doc_id": "208851e1280043d191423616d783e1a2",
-      "run_id": "cc0a2d2b-5e69-4719-be94-e2fefd826f66",
+      "run_id": "11dce561-02ff-451a-9f71-4ba3342c8e88",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 27.4,
+      "elapsed_seconds": 8.29,
       "old_fields": 16,
       "new_fields": 15,
       "common_fields": 7,
@@ -796,7 +796,7 @@
       "precision": 0.4667,
       "recall": 0.4375,
       "f1": 0.4516,
-      "new_records": 83,
+      "new_records": 3,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -827,7 +827,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -837,10 +837,10 @@
         "化学成分/Cr",
         "化学成分/Mn",
         "化学成分/Si",
-        "淬火温度880℃~900℃，油冷，回火温度510℃~570℃，油冷/室温/A",
-        "淬火温度880℃~900℃，油冷，回火温度510℃~570℃，油冷/室温/KV2",
-        "淬火温度880℃~900℃，油冷，回火温度510℃~570℃，油冷/室温/RM",
-        "淬火温度880℃~900℃，油冷，回火温度510℃~570℃，油冷/室温/RP0.2"
+        "淬火温度880℃~900℃，油冷，回火温度510℃~570℃，油冷/室温/A@室温",
+        "淬火温度880℃~900℃，油冷，回火温度510℃~570℃，油冷/室温/KV2@室温",
+        "淬火温度880℃~900℃，油冷，回火温度510℃~570℃，油冷/室温/RM@室温",
+        "淬火温度880℃~900℃，油冷，回火温度510℃~570℃，油冷/室温/RP0.2@室温"
       ],
       "examples_only_new": [
         "30CRMNSIA/Cu",
@@ -855,10 +855,10 @@
     },
     {
       "doc_id": "22b1476b150e43fea6dda44f8db9d0041790235357026",
-      "run_id": "ef253c9e-ec79-41c9-b3ca-64df031a3673",
+      "run_id": "2c2c43dd-5094-45c1-9b20-c6c63a87bd52",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 5.23,
+      "elapsed_seconds": 8.17,
       "old_fields": 14,
       "new_fields": 20,
       "common_fields": 0,
@@ -870,7 +870,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 211,
+      "new_records": 3,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -881,7 +881,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -909,22 +909,22 @@
     },
     {
       "doc_id": "27c4e67d00ff41a1b79fef9ab787d2eb1667181019302",
-      "run_id": "523f0e87-c41a-43f3-b751-6105f926c9dd",
+      "run_id": "6a67e5a0-394f-4457-b926-75337c34c0c7",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 72.94,
-      "old_fields": 30,
-      "new_fields": 27,
+      "elapsed_seconds": 8.16,
+      "old_fields": 34,
+      "new_fields": 29,
       "common_fields": 25,
-      "only_old": 5,
-      "only_new": 2,
-      "value_matches": 12,
-      "value_match_rate": 0.48,
-      "silent_errors": 13,
-      "precision": 0.9259,
-      "recall": 0.8333,
-      "f1": 0.8772,
-      "new_records": 25,
+      "only_old": 9,
+      "only_new": 4,
+      "value_matches": 23,
+      "value_match_rate": 0.92,
+      "silent_errors": 2,
+      "precision": 0.8621,
+      "recall": 0.7353,
+      "f1": 0.7937,
+      "new_records": 8,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -950,29 +950,34 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
       "tables": 8,
       "examples_only_old": [
         "GH4169D/A",
-        "GH4169D/HB",
+        "GH4169D/A@室温",
+        "GH4169D/HB@室温",
         "GH4169D/RM",
+        "GH4169D/RM@室温",
         "GH4169D/RP0.2",
+        "GH4169D/RP0.2@室温",
         "GH4169D/Z"
       ],
       "examples_only_new": [
         "公差/C",
-        "公差/H"
+        "公差/H",
+        "弦向/RP0.2",
+        "弦向/RP0.2@室温"
       ]
     },
     {
       "doc_id": "2ad6ce310e684a5cae57471d563a6f421792473701744",
-      "run_id": "4e5bc9b8-bec0-4555-80df-d378a8a7132c",
+      "run_id": "5833d669-700d-4d06-9296-7b01f3b28e70",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 39.53,
+      "elapsed_seconds": 8.29,
       "old_fields": 16,
       "new_fields": 12,
       "common_fields": 10,
@@ -984,7 +989,7 @@
       "precision": 0.8333,
       "recall": 0.625,
       "f1": 0.7143,
-      "new_records": 16,
+      "new_records": 4,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1005,17 +1010,17 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
       "tables": 6,
       "examples_only_old": [
-        "淬火830~860℃，油冷回火550~680℃，空冷/A",
-        "淬火830~860℃，油冷回火550~680℃，空冷/KV2",
-        "淬火830~860℃，油冷回火550~680℃，空冷/RM",
-        "淬火830~860℃，油冷回火550~680℃，空冷/RP0.2",
-        "淬火830~860℃，油冷回火550~680℃，空冷/Z",
+        "淬火830~860℃，油冷回火550~680℃，空冷/A@淬火",
+        "淬火830~860℃，油冷回火550~680℃，空冷/KV2@淬火",
+        "淬火830~860℃，油冷回火550~680℃，空冷/RM@淬火",
+        "淬火830~860℃，油冷回火550~680℃，空冷/RP0.2@淬火",
+        "淬火830~860℃，油冷回火550~680℃，空冷/Z@淬火",
         "热处理方式：正火温度870±20℃，淬火温度850±10℃/HRC"
       ],
       "examples_only_new": [
@@ -1025,10 +1030,10 @@
     },
     {
       "doc_id": "2af08cbfcabe4ffcbe56039cec9436791788486535272",
-      "run_id": "bdcea5d6-8679-4df9-b0d9-2431d21c3e88",
+      "run_id": "40cfdb9a-6c66-4a9e-bde7-9049189d7573",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 99.21,
+      "elapsed_seconds": 8.18,
       "old_fields": 17,
       "new_fields": 12,
       "common_fields": 0,
@@ -1040,7 +1045,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 11,
+      "new_records": 3,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1056,7 +1061,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1084,10 +1089,10 @@
     },
     {
       "doc_id": "3081c0f9b98d4d33b83f685c8f4235e41789712654410",
-      "run_id": "ae7c0fa4-bef1-4f8e-88c2-b14e83d2f1f0",
+      "run_id": "b91e26da-aca3-42df-be6f-4eee82f2a7c9",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 118.47,
+      "elapsed_seconds": 8.14,
       "old_fields": 16,
       "new_fields": 12,
       "common_fields": 11,
@@ -1099,7 +1104,7 @@
       "precision": 0.9167,
       "recall": 0.6875,
       "f1": 0.7857,
-      "new_records": 13,
+      "new_records": 2,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1120,7 +1125,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1138,10 +1143,10 @@
     },
     {
       "doc_id": "4417071b32c147858c7f681c4deea4331787725949473",
-      "run_id": "4372cd65-fd90-48bb-89a4-fcc0415c3be2",
+      "run_id": "442b18d9-67b5-40f4-95d7-d1890c837f33",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 31.81,
+      "elapsed_seconds": 8.14,
       "old_fields": 81,
       "new_fields": 112,
       "common_fields": 81,
@@ -1153,7 +1158,7 @@
       "precision": 0.7232,
       "recall": 1.0,
       "f1": 0.8394,
-      "new_records": 32,
+      "new_records": 21,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1164,7 +1169,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1183,10 +1188,10 @@
     },
     {
       "doc_id": "521854804389445498b69c559d95dbe01777940887289",
-      "run_id": "13e508f5-91f3-4d2a-935c-6139c58c45e5",
+      "run_id": "d7179a49-488c-4577-b2aa-1fa0685877ed",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 16.24,
+      "elapsed_seconds": 8.14,
       "old_fields": 16,
       "new_fields": 16,
       "common_fields": 16,
@@ -1198,7 +1203,7 @@
       "precision": 1.0,
       "recall": 1.0,
       "f1": 1.0,
-      "new_records": 15,
+      "new_records": 2,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1219,7 +1224,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1229,22 +1234,22 @@
     },
     {
       "doc_id": "564ae4f40b9a4787824477f821ab5ac81787031930715",
-      "run_id": "16eca82d-2ff5-4973-9532-88a8f5a206aa",
+      "run_id": "c6a880a5-faef-41b9-817b-3a7a4fc30f49",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 119.7,
-      "old_fields": 65,
+      "elapsed_seconds": 8.26,
+      "old_fields": 67,
       "new_fields": 76,
       "common_fields": 56,
-      "only_old": 9,
+      "only_old": 11,
       "only_new": 20,
       "value_matches": 56,
       "value_match_rate": 1.0,
       "silent_errors": 0,
       "precision": 0.7368,
-      "recall": 0.8615,
-      "f1": 0.7943,
-      "new_records": 56,
+      "recall": 0.8358,
+      "f1": 0.7832,
+      "new_records": 12,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1288,10 +1293,10 @@
     },
     {
       "doc_id": "59bebdcf7e10498984d48d1848577abe1789885503015",
-      "run_id": "f2089ab0-bc8f-467b-9f11-5b379b6dd51d",
+      "run_id": "bc108dbf-86ed-4e5b-8ae3-90c9d62693c8",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 136.45,
+      "elapsed_seconds": 8.25,
       "old_fields": 19,
       "new_fields": 3,
       "common_fields": 3,
@@ -1303,7 +1308,7 @@
       "precision": 1.0,
       "recall": 0.1579,
       "f1": 0.2727,
-      "new_records": 130,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1324,7 +1329,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1343,32 +1348,27 @@
     },
     {
       "doc_id": "5c7ee8be97c44d1faeb914342670b6a0",
-      "run_id": "7935c6a0-3c71-4b98-9506-a40b3495a7f8",
+      "run_id": "e87d5f73-f3f2-4a2f-93e8-2f018ae013c6",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 5.16,
-      "old_fields": 140,
-      "new_fields": 259,
-      "common_fields": 78,
-      "only_old": 62,
-      "only_new": 181,
-      "value_matches": 68,
-      "value_match_rate": 0.8718,
-      "silent_errors": 10,
-      "precision": 0.3012,
-      "recall": 0.5571,
-      "f1": 0.391,
-      "new_records": 234,
+      "elapsed_seconds": 9.35,
+      "old_fields": 154,
+      "new_fields": 219,
+      "common_fields": 48,
+      "only_old": 106,
+      "only_new": 171,
+      "value_matches": 31,
+      "value_match_rate": 0.6458,
+      "silent_errors": 17,
+      "precision": 0.2192,
+      "recall": 0.3117,
+      "f1": 0.2574,
+      "new_records": 56,
       "evidence_rate": 1.0,
       "recipes": [
         {
           "profile": "chemical_composition",
           "recipe_id": "chemical_composition_v1",
-          "version": "1.1.0"
-        },
-        {
-          "profile": "chemical_composition",
-          "recipe_id": "chemical_element_rows_v1",
           "version": "1.1.0"
         },
         {
@@ -1389,7 +1389,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1405,34 +1405,75 @@
         "07CR22NI25W3CU3CO2MONBN/HRC"
       ],
       "examples_only_new": [
-        "0.03/Cr",
-        "0.03/Mo",
-        "0.03/P",
-        "0.03/S",
-        "0.03/Ti",
-        "0.03/V",
         "07CR18NI11NB/HBW",
-        "07CR18NI11NB/KV2"
+        "07CR18NI11NB/KV2",
+        "07CR18NI11NB/P",
+        "07CR18NI11NB/REL",
+        "07CR18NI11NB/S",
+        "07CR19NI10/A",
+        "07CR19NI10/HBW",
+        "07CR19NI10/HV"
       ]
     },
     {
-      "doc_id": "65c7cfb83be748febdb2dff1b1d8f6291779257620839",
-      "run_id": "4805d6ff-fffb-466c-9c4a-f2874ab5b57d",
+      "doc_id": "608333b8e2df495aa0fbd65da69d13dd1790658253799",
+      "run_id": "732b77ec-9e6a-404f-a9f7-4e0fc9a4be40",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 5.24,
-      "old_fields": 146,
-      "new_fields": 158,
-      "common_fields": 127,
+      "elapsed_seconds": 8.21,
+      "old_fields": 10,
+      "new_fields": 6,
+      "common_fields": 6,
+      "only_old": 4,
+      "only_new": 0,
+      "value_matches": 6,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 1.0,
+      "recall": 0.6,
+      "f1": 0.75,
+      "new_records": 3,
+      "evidence_rate": 1.0,
+      "recipes": [
+        {
+          "profile": "inspection",
+          "recipe_id": "inspection_rules_v1",
+          "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.2.0"
+        }
+      ],
+      "dominant": "mechanical",
+      "tables": 3,
+      "examples_only_old": [
+        "6061/KV2",
+        "6061/KV2@纵向",
+        "6061/RP0.2",
+        "6061/RP0.2@纵向"
+      ],
+      "examples_only_new": []
+    },
+    {
+      "doc_id": "65c7cfb83be748febdb2dff1b1d8f6291779257620839",
+      "run_id": "97eeb84c-13bf-4251-926b-2b2792fe638a",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 10.36,
+      "old_fields": 162,
+      "new_fields": 192,
+      "common_fields": 143,
       "only_old": 19,
-      "only_new": 31,
-      "value_matches": 118,
-      "value_match_rate": 0.9291,
-      "silent_errors": 9,
-      "precision": 0.8038,
-      "recall": 0.8699,
-      "f1": 0.8355,
-      "new_records": 238,
+      "only_new": 49,
+      "value_matches": 139,
+      "value_match_rate": 0.972,
+      "silent_errors": 4,
+      "precision": 0.7448,
+      "recall": 0.8827,
+      "f1": 0.8079,
+      "new_records": 51,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1463,7 +1504,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1472,9 +1513,9 @@
         "0℃/-/A",
         "0℃/E",
         "350℃/rp0.2/mpa/A",
-        "a.对于1级和2级棒材，也可以为a%>=12，且z>=45%。b.所列规定值为单个最小值。/E",
-        "a仅对1级棒材。b仅对2、3级棒材。c仅对以固溶状态交货的棒材。d所列规定值为单个最小值。/A",
-        "a所列规定值为单个最小值。/E",
+        "a.对于1级和2级棒材，也可以为a%>=12，且z>=45%。b.所列规定值为单个最小值。/E@最小",
+        "a仅对1级棒材。b仅对2、3级棒材。c仅对以固溶状态交货的棒材。d所列规定值为单个最小值。/A@最小",
+        "a所列规定值为单个最小值。/E@最小",
         "~/C",
         "~/Cr"
       ],
@@ -1490,72 +1531,23 @@
       ]
     },
     {
-      "doc_id": "672c06b172704faba3cb299315779fbe1777508376270",
-      "run_id": "78a0193e-0cd9-4151-9050-58a669af2de7",
-      "status": "STRUCTURED_READY",
-      "error_code": null,
-      "elapsed_seconds": 88.56,
-      "old_fields": 14,
-      "new_fields": 21,
-      "common_fields": 14,
-      "only_old": 0,
-      "only_new": 7,
-      "value_matches": 0,
-      "value_match_rate": 0.0,
-      "silent_errors": 14,
-      "precision": 0.6667,
-      "recall": 1.0,
-      "f1": 0.8,
-      "new_records": 91,
-      "evidence_rate": 1.0,
-      "recipes": [
-        {
-          "profile": "chemical_composition",
-          "recipe_id": "chemical_composition_v1",
-          "version": "1.1.0"
-        },
-        {
-          "profile": "inspection",
-          "recipe_id": "inspection_rules_v1",
-          "version": "1.0.0"
-        },
-        {
-          "profile": "mechanical_properties",
-          "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
-        }
-      ],
-      "dominant": "chemical",
-      "tables": 15,
-      "examples_only_old": [],
-      "examples_only_new": [
-        "类别/C",
-        "类别/Cr",
-        "类别/Mn",
-        "类别/Ni",
-        "类别/P",
-        "类别/S",
-        "类别/Si"
-      ]
-    },
-    {
       "doc_id": "67a742b20c66475890fe1f259ccd4fee1790389928507",
-      "run_id": "f28b28fd-4764-48b3-bb2b-606ca7abf61e",
+      "run_id": "92945cf7-6262-4c8c-9058-2645c233b142",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 94.74,
+      "elapsed_seconds": 8.22,
       "old_fields": 18,
-      "new_fields": 43,
+      "new_fields": 35,
       "common_fields": 0,
       "only_old": 18,
-      "only_new": 43,
+      "only_new": 35,
       "value_matches": 0,
       "value_match_rate": 0.0,
       "silent_errors": 0,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 38,
+      "new_records": 6,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1576,7 +1568,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1604,10 +1596,10 @@
     },
     {
       "doc_id": "6db6bab718424f6dac55b919f13bc99b1787136455509",
-      "run_id": "8875d6e0-4531-4238-b66b-2da52fe2d68d",
+      "run_id": "e6ab331d-366b-47b7-9c53-0f1aeb37e111",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 45.0,
+      "elapsed_seconds": 8.16,
       "old_fields": 15,
       "new_fields": 10,
       "common_fields": 0,
@@ -1619,7 +1611,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 16,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1635,7 +1627,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1663,10 +1655,10 @@
     },
     {
       "doc_id": "7069f774d8d44a8bb2cce1f4191831e41792653520267",
-      "run_id": "740f8b4e-e63d-4117-8c1f-cdeae9d5cdf4",
+      "run_id": "90c91fc3-8740-4d1d-8961-7d5b9d3453b3",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 46.62,
+      "elapsed_seconds": 8.16,
       "old_fields": 24,
       "new_fields": 22,
       "common_fields": 0,
@@ -1678,7 +1670,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 16,
+      "new_records": 2,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1699,7 +1691,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1727,10 +1719,10 @@
     },
     {
       "doc_id": "728e72b0f2e64ff5bcec0974f6f4146c1787136380607",
-      "run_id": "d9ec6bcf-b8eb-4291-9f65-05a305ca6fd2",
+      "run_id": "41f30503-49c9-457e-8718-33ff0669ec77",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 38.49,
+      "elapsed_seconds": 8.23,
       "old_fields": 16,
       "new_fields": 15,
       "common_fields": 7,
@@ -1742,7 +1734,7 @@
       "precision": 0.4667,
       "recall": 0.4375,
       "f1": 0.4516,
-      "new_records": 64,
+      "new_records": 3,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1768,19 +1760,19 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
       "tables": 13,
       "examples_only_old": [
-        "0974/A",
+        "0974/A@室温",
         "0974/C",
         "0974/Cr",
-        "0974/KV2",
+        "0974/KV2@室温",
         "0974/Mn",
-        "0974/RM",
-        "0974/RP0.2",
+        "0974/RM@室温",
+        "0974/RP0.2@室温",
         "0974/Si"
       ],
       "examples_only_new": [
@@ -1796,10 +1788,10 @@
     },
     {
       "doc_id": "7319bf3dde60412bb4b7e30209da8a401792809205362",
-      "run_id": "c7dbef0a-e114-4ad4-98de-cd50d732f3d4",
+      "run_id": "3d657646-31d5-4560-9d70-ba0995718013",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 74.04,
+      "elapsed_seconds": 8.25,
       "old_fields": 30,
       "new_fields": 30,
       "common_fields": 25,
@@ -1811,7 +1803,7 @@
       "precision": 0.8333,
       "recall": 0.8333,
       "f1": 0.8333,
-      "new_records": 24,
+      "new_records": 3,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1854,22 +1846,22 @@
     },
     {
       "doc_id": "7373a8d9a442443b9733ecc5fecd5cfe1787899964564",
-      "run_id": "8e8a827e-4239-4e4f-838b-f5719da91a2e",
+      "run_id": "d5ff90c3-769d-474b-a051-ecbe98d431e1",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 61.74,
+      "elapsed_seconds": 8.17,
       "old_fields": 32,
-      "new_fields": 53,
-      "common_fields": 7,
-      "only_old": 25,
-      "only_new": 46,
-      "value_matches": 7,
-      "value_match_rate": 1.0,
+      "new_fields": 55,
+      "common_fields": 0,
+      "only_old": 32,
+      "only_new": 55,
+      "value_matches": 0,
+      "value_match_rate": 0.0,
       "silent_errors": 0,
-      "precision": 0.1321,
-      "recall": 0.2188,
-      "f1": 0.1647,
-      "new_records": 22,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "new_records": 11,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1890,7 +1882,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -1918,10 +1910,10 @@
     },
     {
       "doc_id": "74aec6bf74054d4782f5ed622a6166141788762643935",
-      "run_id": "dc439822-f86f-42d6-a36f-023ffadcc984",
+      "run_id": "e36f753b-e912-452a-a4da-26061c823ce9",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 117.4,
+      "elapsed_seconds": 8.23,
       "old_fields": 16,
       "new_fields": 15,
       "common_fields": 7,
@@ -1933,7 +1925,7 @@
       "precision": 0.4667,
       "recall": 0.4375,
       "f1": 0.4516,
-      "new_records": 79,
+      "new_records": 3,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -1964,19 +1956,19 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
       "tables": 13,
       "examples_only_old": [
-        "4782/A",
+        "4782/A@室温",
         "4782/C",
         "4782/Cr",
-        "4782/KV2",
+        "4782/KV2@室温",
         "4782/Mn",
-        "4782/RM",
-        "4782/RP0.2",
+        "4782/RM@室温",
+        "4782/RP0.2@室温",
         "4782/Si"
       ],
       "examples_only_new": [
@@ -1992,22 +1984,22 @@
     },
     {
       "doc_id": "754a537ea3f945528159e82a88fc96b31789604489041",
-      "run_id": "10a8f6a2-7f07-48b0-b438-1a94f260c42d",
+      "run_id": "1490a013-61a8-4943-80cb-31fe06fd928d",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 75.06,
-      "old_fields": 27,
-      "new_fields": 31,
-      "common_fields": 9,
-      "only_old": 18,
-      "only_new": 22,
-      "value_matches": 2,
-      "value_match_rate": 0.2222,
-      "silent_errors": 7,
-      "precision": 0.2903,
-      "recall": 0.3333,
-      "f1": 0.3103,
-      "new_records": 16,
+      "elapsed_seconds": 8.17,
+      "old_fields": 38,
+      "new_fields": 40,
+      "common_fields": 12,
+      "only_old": 26,
+      "only_new": 28,
+      "value_matches": 12,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
+      "precision": 0.3,
+      "recall": 0.3158,
+      "f1": 0.3077,
+      "new_records": 12,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2023,20 +2015,20 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "mechanical",
       "tables": 10,
       "examples_only_old": [
-        "18CR2NI4WA/KU2",
-        "25CR2MOVA/A",
-        "25CR2MOVA/HB",
-        "25CR2MOVA/KU2",
-        "25CR2MOVA/KV2",
-        "25CR2MOVA/RM",
-        "25CR2MOVA/RP0.2",
-        "25CR2MOVA/Z"
+        "25CR2MOVA/A@切向",
+        "25CR2MOVA/A@纵向",
+        "25CR2MOVA/HB@切向",
+        "25CR2MOVA/HB@纵向",
+        "25CR2MOVA/KU2@切向",
+        "25CR2MOVA/KV2@切向",
+        "25CR2MOVA/KV2@纵向",
+        "25CR2MOVA/RM@切向"
       ],
       "examples_only_new": [
         "18CR2NI4WA/C",
@@ -2044,29 +2036,29 @@
         "18CR2NI4WA/Cu",
         "18CR2NI4WA/Mn",
         "18CR2NI4WA/Mo",
+        "18CR2NI4WA/N",
         "18CR2NI4WA/Ni",
-        "18CR2NI4WA/P",
-        "18CR2NI4WA/S"
+        "18CR2NI4WA/P"
       ]
     },
     {
       "doc_id": "775043b538734e7b8cd7236e4d7c917e1792809007377",
-      "run_id": "425540e0-f409-4843-9549-bb66534c1967",
+      "run_id": "3b513fb8-2bf0-4fc6-a67f-03f8352fe433",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 16.26,
+      "elapsed_seconds": 8.16,
       "old_fields": 22,
       "new_fields": 23,
       "common_fields": 20,
       "only_old": 2,
       "only_new": 3,
-      "value_matches": 19,
-      "value_match_rate": 0.95,
-      "silent_errors": 1,
+      "value_matches": 20,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
       "precision": 0.8696,
       "recall": 0.9091,
       "f1": 0.8889,
-      "new_records": 27,
+      "new_records": 4,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2104,22 +2096,22 @@
     },
     {
       "doc_id": "78a0de4c51a24c958575b9909f6308ae",
-      "run_id": "43a5b18d-d388-4139-a36b-6a131e1eb76b",
+      "run_id": "2b1890a2-dcbe-40ca-8f4a-73e6af28d13b",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 115.75,
+      "elapsed_seconds": 8.14,
       "old_fields": 122,
       "new_fields": 110,
       "common_fields": 98,
       "only_old": 24,
       "only_new": 12,
-      "value_matches": 95,
-      "value_match_rate": 0.9694,
-      "silent_errors": 3,
+      "value_matches": 98,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
       "precision": 0.8909,
       "recall": 0.8033,
       "f1": 0.8448,
-      "new_records": 80,
+      "new_records": 44,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2145,7 +2137,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "mechanical",
@@ -2161,22 +2153,22 @@
         "TA3/RP0.2"
       ],
       "examples_only_new": [
-        "TA15/持久时间",
-        "TA19/持久时间",
-        "TA6/持久时间",
-        "TA7/持久时间",
-        "TC1/持久时间",
-        "TC10/持久时间",
-        "TC11A/持久时间",
-        "TC12/持久时间"
+        "TA15/持久应力",
+        "TA19/持久应力",
+        "TA6/持久应力",
+        "TA7/持久应力",
+        "TC1/持久应力",
+        "TC10/持久应力",
+        "TC11A/持久应力",
+        "TC12/持久应力"
       ]
     },
     {
       "doc_id": "7ad79a9408c948b490137ac4c29fa4931704785550850",
-      "run_id": "ce7e502a-2e9e-45e8-bf10-8418ba082d94",
+      "run_id": "6fe458fc-71ec-4564-a8d3-cd7642385fe7",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 11.18,
+      "elapsed_seconds": 8.24,
       "old_fields": 37,
       "new_fields": 33,
       "common_fields": 20,
@@ -2188,7 +2180,7 @@
       "precision": 0.6061,
       "recall": 0.5405,
       "f1": 0.5714,
-      "new_records": 17,
+      "new_records": 5,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2199,7 +2191,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2227,10 +2219,10 @@
     },
     {
       "doc_id": "92e35be4e585478abd81090c750ccb301788569067714",
-      "run_id": "246c67f5-435f-412d-a810-0e9488962b38",
+      "run_id": "15cd46e2-1023-41fe-bb06-2fdc838c43cf",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 113.35,
+      "elapsed_seconds": 8.15,
       "old_fields": 16,
       "new_fields": 42,
       "common_fields": 16,
@@ -2242,7 +2234,7 @@
       "precision": 0.381,
       "recall": 1.0,
       "f1": 0.5517,
-      "new_records": 25,
+      "new_records": 12,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2277,10 +2269,10 @@
     },
     {
       "doc_id": "9d1ae7d941e042c491a9c3601755953c",
-      "run_id": "75422fbe-0046-4d22-a5b8-95c5118055e9",
+      "run_id": "b47731fa-bc5a-4480-bcd1-fcab9ffe985a",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 11.18,
+      "elapsed_seconds": 8.15,
       "old_fields": 44,
       "new_fields": 3,
       "common_fields": 3,
@@ -2292,7 +2284,7 @@
       "precision": 1.0,
       "recall": 0.0682,
       "f1": 0.1277,
-      "new_records": 17,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2313,7 +2305,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2332,10 +2324,10 @@
     },
     {
       "doc_id": "a5fbc645696b4c3a91e2c781d369c7101792487564255",
-      "run_id": "41cff346-926a-4ec7-982a-ce9831945488",
+      "run_id": "492b3a9a-d05d-4463-9fa4-34ac2a8d312a",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 25.36,
+      "elapsed_seconds": 8.15,
       "old_fields": 20,
       "new_fields": 4,
       "common_fields": 0,
@@ -2347,7 +2339,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 12,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2368,7 +2360,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2392,22 +2384,22 @@
     },
     {
       "doc_id": "a671647676ee4290b1a914b9766f3672",
-      "run_id": "f84137d6-c626-4644-bddc-0e3c49f82660",
+      "run_id": "5d2f56b4-8b2d-4295-8b5b-d293265d2b5a",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 17.25,
+      "elapsed_seconds": 9.22,
       "old_fields": 24,
-      "new_fields": 116,
+      "new_fields": 146,
       "common_fields": 0,
       "only_old": 24,
-      "only_new": 116,
+      "only_new": 146,
       "value_matches": 0,
       "value_match_rate": 0.0,
       "silent_errors": 0,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 93,
+      "new_records": 40,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2428,7 +2420,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "other",
@@ -2444,22 +2436,22 @@
         "L320NH/X46NH/CEV"
       ],
       "examples_only_new": [
+        "E.在50MM的标距长度上/REL",
+        "E.在50MM的标距长度上/RM",
+        "E.在50MM的标距长度上/ReH",
         "L245MH/BMH/C",
         "L245MH/BMH/Mn",
         "L245MH/BMH/Nb",
         "L245MH/BMH/P",
-        "L245MH/BMH/S",
-        "L245MH/BMH/Si",
-        "L245MH/BMH/Ti",
-        "L245MH/BMH/V"
+        "L245MH/BMH/REL"
       ]
     },
     {
       "doc_id": "ae7a1887a2e0498abdf880f22f81bb361784857452729",
-      "run_id": "396d478e-667d-4e0c-9b7c-6d52e8ee9fbf",
+      "run_id": "a72cf684-c562-47af-a5bf-6550f1a0b25a",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 116.4,
+      "elapsed_seconds": 7.15,
       "old_fields": 22,
       "new_fields": 12,
       "common_fields": 0,
@@ -2471,7 +2463,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 29,
+      "new_records": 5,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2515,10 +2507,10 @@
     },
     {
       "doc_id": "b50805e0ab634fafb3658d1f5b1866bb1788487110394",
-      "run_id": "9d4b867e-a55c-43aa-b9bd-b2b7c370eb71",
+      "run_id": "4dbe90bc-e6ce-4ea9-ba79-2ecef0dc9c19",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 33.42,
+      "elapsed_seconds": 8.19,
       "old_fields": 18,
       "new_fields": 14,
       "common_fields": 2,
@@ -2530,7 +2522,7 @@
       "precision": 0.1429,
       "recall": 0.1111,
       "f1": 0.125,
-      "new_records": 15,
+      "new_records": 4,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2546,7 +2538,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2574,10 +2566,10 @@
     },
     {
       "doc_id": "b8c365836b9c4ff4a63c862899abb0441788486522717",
-      "run_id": "cdd08d31-d59f-4b4b-b438-e1cc3953f3f3",
+      "run_id": "d673ce23-1d10-439b-90a1-c9eaf072ec52",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 19.42,
+      "elapsed_seconds": 8.15,
       "old_fields": 24,
       "new_fields": 5,
       "common_fields": 4,
@@ -2589,7 +2581,7 @@
       "precision": 0.8,
       "recall": 0.1667,
       "f1": 0.2759,
-      "new_records": 17,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2600,7 +2592,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2621,22 +2613,22 @@
     },
     {
       "doc_id": "bc0fd7f758e54583936ad2f08a9e42471790389887355",
-      "run_id": "efb7243e-7d45-4db2-98f7-6381053dc064",
+      "run_id": "68f8e1d4-c2f9-4a0e-82a0-5ffcd3e14694",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 54.76,
+      "elapsed_seconds": 8.15,
       "old_fields": 17,
-      "new_fields": 40,
+      "new_fields": 32,
       "common_fields": 0,
       "only_old": 17,
-      "only_new": 40,
+      "only_new": 32,
       "value_matches": 0,
       "value_match_rate": 0.0,
       "silent_errors": 0,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 32,
+      "new_records": 5,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2652,7 +2644,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2680,10 +2672,10 @@
     },
     {
       "doc_id": "bc6e766f5cb74c04ba8dd4136c2046a51788498985583",
-      "run_id": "85be4544-37d2-438a-9467-a0d59bd692fc",
+      "run_id": "27b57523-aded-474e-9543-371125208cd4",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 119.46,
+      "elapsed_seconds": 8.16,
       "old_fields": 18,
       "new_fields": 1,
       "common_fields": 0,
@@ -2695,7 +2687,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 42,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2711,7 +2703,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2732,10 +2724,10 @@
     },
     {
       "doc_id": "be26fecfa3a0486d8b6566e0300937311675407000327",
-      "run_id": "c9cb1a70-534d-4359-b35c-bb4062e6231f",
+      "run_id": "dd06d77e-8922-4f36-a50d-bcd059c62b9a",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 115.03,
+      "elapsed_seconds": 8.25,
       "old_fields": 18,
       "new_fields": 14,
       "common_fields": 0,
@@ -2747,7 +2739,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 22,
+      "new_records": 4,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2763,7 +2755,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2791,10 +2783,10 @@
     },
     {
       "doc_id": "bf295b3df1a74b0b99bd76ef192a790d1783759265808",
-      "run_id": "2f4e030e-7821-4e1a-8d91-0c017a978ed1",
+      "run_id": "528d3517-18fe-453c-99e9-f1134e586391",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 14.22,
+      "elapsed_seconds": 8.25,
       "old_fields": 17,
       "new_fields": 24,
       "common_fields": 0,
@@ -2806,7 +2798,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 5,
+      "new_records": 4,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2845,10 +2837,10 @@
     },
     {
       "doc_id": "cdbfe0b1485a4e86ad5d0f92ed320c5c1787044347511",
-      "run_id": "3f653a51-c0a2-41c8-8fc6-fc5729002098",
+      "run_id": "39f9c66d-00cb-48e7-af0d-97d6ba41c2a8",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 17.27,
+      "elapsed_seconds": 7.15,
       "old_fields": 16,
       "new_fields": 16,
       "common_fields": 16,
@@ -2860,7 +2852,7 @@
       "precision": 1.0,
       "recall": 1.0,
       "f1": 1.0,
-      "new_records": 2,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2881,22 +2873,22 @@
     },
     {
       "doc_id": "d26323581f4047d08fb304ef395ef7361790210741923",
-      "run_id": "3bde6b7c-5415-456a-a5ba-ce7b39b05d31",
+      "run_id": "8e492b4b-4158-4725-af98-86124ba70453",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 47.92,
+      "elapsed_seconds": 8.16,
       "old_fields": 80,
-      "new_fields": 66,
+      "new_fields": 80,
       "common_fields": 48,
       "only_old": 32,
-      "only_new": 18,
-      "value_matches": 17,
-      "value_match_rate": 0.3542,
-      "silent_errors": 31,
-      "precision": 0.7273,
+      "only_new": 32,
+      "value_matches": 32,
+      "value_match_rate": 0.6667,
+      "silent_errors": 16,
+      "precision": 0.6,
       "recall": 0.6,
-      "f1": 0.6575,
-      "new_records": 55,
+      "f1": 0.6,
+      "new_records": 37,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2912,7 +2904,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "mechanical",
@@ -2928,22 +2920,22 @@
         "20CRMNMO12CRNI320CRNI2MO/KV2"
       ],
       "examples_only_new": [
-        "合金钢/Al",
-        "合金钢/Cu",
-        "合金钢/P",
-        "合金钢/S",
-        "碳钢、锰钢/Al",
-        "碳钢、锰钢/Cr",
-        "碳钢、锰钢/Cu",
-        "碳钢、锰钢/Mo"
+        "17CRNIMO6/V",
+        "20/A",
+        "20/HB",
+        "20/RM",
+        "20/ReH",
+        "20/Z",
+        "20CR2NI418CR2NI4WA/V",
+        "20CRMNMO12CRNI320CRNI2MO/V"
       ]
     },
     {
       "doc_id": "da33e865754147ac918bb58e10addfeb1723528545218",
-      "run_id": "b0bb6528-7e8b-4823-a15c-6671afdc2fb9",
+      "run_id": "d13d05c6-8b98-45f0-826d-4514bc2de968",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 18.25,
+      "elapsed_seconds": 8.24,
       "old_fields": 16,
       "new_fields": 11,
       "common_fields": 11,
@@ -2955,7 +2947,7 @@
       "precision": 1.0,
       "recall": 0.6875,
       "f1": 0.8148,
-      "new_records": 14,
+      "new_records": 1,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -2971,7 +2963,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -2987,22 +2979,22 @@
     },
     {
       "doc_id": "da6e78317ae045d7aef37604fe257ff5",
-      "run_id": "ee0a676e-c17f-4983-a24f-153af1dc9f64",
+      "run_id": "13b22dd7-511d-4c8f-9402-5d196b253b44",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 5.24,
+      "elapsed_seconds": 9.35,
       "old_fields": 232,
-      "new_fields": 380,
+      "new_fields": 375,
       "common_fields": 229,
       "only_old": 3,
-      "only_new": 151,
+      "only_new": 146,
       "value_matches": 229,
       "value_match_rate": 1.0,
       "silent_errors": 0,
-      "precision": 0.6026,
+      "precision": 0.6107,
       "recall": 0.9871,
-      "f1": 0.7484,
-      "new_records": 91,
+      "f1": 0.7545,
+      "new_records": 30,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -3014,6 +3006,11 @@
           "profile": "inspection",
           "recipe_id": "inspection_rules_v1",
           "version": "1.0.0"
+        },
+        {
+          "profile": "mechanical_properties",
+          "recipe_id": "mechanical_properties_v1",
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -3036,22 +3033,22 @@
     },
     {
       "doc_id": "de2adf26e9dd40d095d1924db4fade961788231324706",
-      "run_id": "ae6465d0-f579-4178-b584-0f84b8d7451d",
+      "run_id": "6cceac9f-bc54-4833-ab3d-ad931d85c0fe",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 39.9,
+      "elapsed_seconds": 8.25,
       "old_fields": 45,
       "new_fields": 43,
       "common_fields": 43,
       "only_old": 2,
       "only_new": 0,
-      "value_matches": 36,
-      "value_match_rate": 0.8372,
-      "silent_errors": 7,
+      "value_matches": 43,
+      "value_match_rate": 1.0,
+      "silent_errors": 0,
       "precision": 1.0,
       "recall": 0.9556,
       "f1": 0.9773,
-      "new_records": 19,
+      "new_records": 10,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -3080,33 +3077,28 @@
     },
     {
       "doc_id": "de301f981df74a44900286b1db33bde81792373139709",
-      "run_id": "479aa3b6-8e80-4377-8ab4-9477baa12d2d",
+      "run_id": "7b5b195f-b7b5-44eb-a15b-b841f06856b4",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 97.36,
+      "elapsed_seconds": 8.25,
       "old_fields": 19,
-      "new_fields": 9,
+      "new_fields": 10,
       "common_fields": 9,
       "only_old": 10,
-      "only_new": 0,
+      "only_new": 1,
       "value_matches": 9,
       "value_match_rate": 1.0,
       "silent_errors": 0,
-      "precision": 1.0,
+      "precision": 0.9,
       "recall": 0.4737,
-      "f1": 0.6429,
-      "new_records": 33,
+      "f1": 0.6207,
+      "new_records": 5,
       "evidence_rate": 1.0,
       "recipes": [
         {
           "profile": "chemical_composition",
           "recipe_id": "chemical_composition_v1",
           "version": "1.1.0"
-        },
-        {
-          "profile": "dimension",
-          "recipe_id": "dimension_v1",
-          "version": "1.0.0"
         },
         {
           "profile": "inspection",
@@ -3116,7 +3108,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "mechanical",
@@ -3127,18 +3119,20 @@
         "~/KV2",
         "~/RM",
         "~/RP0.2",
-        "淬火：990~1010℃油冷回火：>=700℃空冷/A",
-        "淬火：990~1010℃油冷回火：>=700℃空冷/HB",
-        "淬火：990~1010℃油冷回火：>=700℃空冷/KV2"
+        "淬火：990~1010℃油冷回火：>=700℃空冷/A@淬火",
+        "淬火：990~1010℃油冷回火：>=700℃空冷/HB@淬火",
+        "淬火：990~1010℃油冷回火：>=700℃空冷/KV2@淬火"
       ],
-      "examples_only_new": []
+      "examples_only_new": [
+        "~/B"
+      ]
     },
     {
       "doc_id": "e0ac84b49ef64068a61ee6e775c108af1791426984160",
-      "run_id": "a96a0c21-352e-4af5-88b4-46900a398171",
+      "run_id": "9183a5a5-3002-44ce-92b2-d8d63cde3240",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 62.79,
+      "elapsed_seconds": 8.24,
       "old_fields": 16,
       "new_fields": 20,
       "common_fields": 16,
@@ -3150,7 +3144,7 @@
       "precision": 0.8,
       "recall": 1.0,
       "f1": 0.8889,
-      "new_records": 23,
+      "new_records": 3,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -3186,10 +3180,10 @@
     },
     {
       "doc_id": "ec684db9f60946cf905b8f327c8af26e1792563440027",
-      "run_id": "d3e0b79e-befa-4439-8d4d-03933ff695e2",
+      "run_id": "8e494198-d107-40e8-b4f5-c23ab3efbabb",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 22.31,
+      "elapsed_seconds": 8.25,
       "old_fields": 17,
       "new_fields": 12,
       "common_fields": 0,
@@ -3201,7 +3195,7 @@
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 7,
+      "new_records": 5,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -3222,7 +3216,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -3250,10 +3244,10 @@
     },
     {
       "doc_id": "fc367075184b463daf6b6a5756545d7a1791857096031",
-      "run_id": "afb6575e-e08b-470d-81a6-8cbd0b19ad05",
+      "run_id": "706bd733-6478-4078-9594-b39d6c36ccdf",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 25.34,
+      "elapsed_seconds": 8.15,
       "old_fields": 23,
       "new_fields": 27,
       "common_fields": 0,
@@ -3299,10 +3293,10 @@
     },
     {
       "doc_id": "pdf__GBT33084-2016",
-      "run_id": "43541e58-cfeb-409a-84c3-e57df5eda6e1",
+      "run_id": "a253ae06-de13-4ba6-8a60-ec7a7d423cc6",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 5.23,
+      "elapsed_seconds": 9.21,
       "old_fields": 812,
       "new_fields": 568,
       "common_fields": 300,
@@ -3314,7 +3308,7 @@
       "precision": 0.5282,
       "recall": 0.3695,
       "f1": 0.4348,
-      "new_records": 131,
+      "new_records": 126,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -3335,7 +3329,7 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
@@ -3363,22 +3357,22 @@
     },
     {
       "doc_id": "pdf__JX-25-035_GH4698高温合金棒材采购技术协议",
-      "run_id": "28d5096c-9a93-49c9-bfa3-e780e885b80c",
+      "run_id": "43e2d655-2e6a-49b2-9908-c129fa9ab4d0",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 22.33,
+      "elapsed_seconds": 8.25,
       "old_fields": 25,
-      "new_fields": 14,
+      "new_fields": 17,
       "common_fields": 0,
       "only_old": 25,
-      "only_new": 14,
+      "only_new": 17,
       "value_matches": 0,
       "value_match_rate": 0.0,
       "silent_errors": 0,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
-      "new_records": 15,
+      "new_records": 8,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -3399,13 +3393,13 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "chemical",
       "tables": 6,
       "examples_only_old": [
-        "GH4698/A",
+        "GH4698/A@室温",
         "GH4698/Al",
         "GH4698/As",
         "GH4698/B",
@@ -3415,34 +3409,34 @@
         "GH4698/Fe"
       ],
       "examples_only_new": [
+        "16H/HB@室温",
+        "8H/HB@室温",
+        "保温4H/HB@室温",
         "元素/C",
         "元素/Cr",
         "元素/Mn",
         "元素/Ni",
-        "元素/P",
-        "元素/S",
-        "元素/Si",
-        "标准/C"
+        "元素/P"
       ]
     },
     {
       "doc_id": "pdf__gbt1591_2018",
-      "run_id": "2f36ede7-6349-480b-a04d-71e5cf0c2973",
+      "run_id": "3deb5ef7-2dab-4b16-a9e2-c0b7df17117d",
       "status": "STRUCTURED_READY",
       "error_code": null,
-      "elapsed_seconds": 18.38,
+      "elapsed_seconds": 8.16,
       "old_fields": 65,
-      "new_fields": 22,
-      "common_fields": 2,
-      "only_old": 63,
-      "only_new": 20,
+      "new_fields": 28,
+      "common_fields": 0,
+      "only_old": 65,
+      "only_new": 28,
       "value_matches": 0,
       "value_match_rate": 0.0,
-      "silent_errors": 2,
-      "precision": 0.0909,
-      "recall": 0.0308,
-      "f1": 0.046,
-      "new_records": 93,
+      "silent_errors": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "new_records": 41,
       "evidence_rate": 1.0,
       "recipes": [
         {
@@ -3463,30 +3457,30 @@
         {
           "profile": "mechanical_properties",
           "recipe_id": "mechanical_properties_v1",
-          "version": "1.1.0"
+          "version": "1.2.0"
         }
       ],
       "dominant": "other",
       "tables": 16,
       "examples_only_old": [
-        "Q355/KV2",
+        "Q355/KV2@纵向",
+        "Q355M/KV2@纵向",
         "Q355MB/CEV",
         "Q355MB/Pcm",
         "Q355MC/CEV",
         "Q355MC/Pcm",
         "Q355MD/CEV",
-        "Q355MD/Pcm",
-        "Q355ME/CEV"
+        "Q355MD/Pcm"
       ],
       "examples_only_new": [
         "Q355/A",
+        "Q355/KV2",
+        "Q355M/KV2",
         "Q355M/Pcm",
-        "Q355M、 Q390M、Q420M Q460M/KV2",
-        "Q355M、Q390M、 Q420M/KV2",
-        "Q355N、Q390N Q420N、Q460N/KV2",
-        "Q355N、Q390N、 Q420N/KV2",
-        "Q355、Q390/KV2",
-        "Q355、Q390、 Q420/KV2"
+        "Q355N/KV2",
+        "Q390/A",
+        "Q390/KV2",
+        "Q390M/KV2"
       ]
     }
   ]

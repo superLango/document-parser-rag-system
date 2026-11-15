@@ -1,0 +1,32 @@
+{
+  "candidate_id": "GB/T 13810-2017-code-2026-11-15T09:27:10+00:00",
+  "standard_id": "GB/T 13810",
+  "edition": "2017",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "profile_changed: 1 profile admin -> unknown",
+    "profile_changed: 4.7,晶粒度按gb/t6394进行。 profile admin -> inspection"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [],
+    "profile_changes": [
+      "1: profile admin -> unknown",
+      "4.7,晶粒度按gb/t6394进行。: profile admin -> inspection"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T09:27:10+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

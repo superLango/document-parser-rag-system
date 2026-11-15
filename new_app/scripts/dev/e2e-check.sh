@@ -16,7 +16,13 @@ for i in $(seq 1 120); do
     | python3 -c 'import json,sys; print(json.load(sys.stdin)["status"])')"
   echo "[$i] $status"
   case "$status" in
-    STRUCTURED_READY | FAILED | CANCELLED) break ;;
+    HUMAN_REVIEW)
+      curl -fsS -X POST "$GATEWAY/v1/runs/$run_id/accept?actor=dev&note=e2e" >/dev/null || true
+      status="$(curl -fsS "$GATEWAY/v1/runs/$run_id" \
+        | python3 -c 'import json,sys; print(json.load(sys.stdin)["status"])')"
+      break
+      ;;
+    STRUCTURED_READY | REVIEW_FAILED | HUMAN_REJECTED | UNROUTED | FAILED | CANCELLED) break ;;
   esac
   sleep 1
 done

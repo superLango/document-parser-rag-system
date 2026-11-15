@@ -1,0 +1,92 @@
+{
+  "standard_id": "AMS 5663",
+  "edition": "P",
+  "document_sha256": "",
+  "page_count": 10,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "aerospacematerialspecification",
+        "ams5663tm",
+        "rev.p"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 3,
+      "header_signature": [
+        "element",
+        "min",
+        "max"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "specimenorientation",
+        "diameterorthicknessinches",
+        "tensilestrengthksi",
+        "yieldstrengthat0.2%offsetksi",
+        "elongationin4d%",
+        "reductionofarea%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "specimenorientation",
+        "diameterorthickness,millimeters",
+        "tensilestrengthmpa",
+        "yieldstrengthat0.2%offsetmpa",
+        "elongationin4d%",
+        "reductionofarea%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "specimenorientation",
+        "diameterorthickness,inches",
+        "tensilestrengthksi",
+        "yieldstrengthat0.2%offsetksi",
+        "elongationin4d%",
+        "reductionofarea%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "specimenorientation",
+        "diameterorthickness,millimeters",
+        "tensilestrengthmpa",
+        "yieldstrengthat0.2%offsetmpa",
+        "elongationin4d%",
+        "reductionofarea%"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "ede913b3-5f0d-4fe0-acc6-bf46ef4a5eef",
+  "created_at": "2026-11-14T16:38:49+00:00"
+}

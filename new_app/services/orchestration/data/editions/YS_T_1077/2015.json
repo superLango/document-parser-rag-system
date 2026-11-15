@@ -1,0 +1,180 @@
+{
+  "standard_id": "YS/T 1077",
+  "edition": "2015",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "i"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表1 产品的牌号、状态和规格",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "牌号",
+        "供应状态",
+        "直径/mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表1 产品的牌号、状态和规格",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 产品的化学成分",
+      "profile": "chemical_composition",
+      "n_cols": 11,
+      "header_signature": [
+        "牌号",
+        "主含量/%/ti",
+        "主含量/%/al",
+        "主含量/%/v",
+        "杂质含量/%不大于/fe",
+        "杂质含量/%不大于/c",
+        "杂质含量/%不大于/n",
+        "杂质含量/%不大于/h",
+        "杂质含量/%不大于/o",
+        "杂质含量/%不大于/其他元素不大于/单一",
+        "杂质含量/%不大于/其他元素不大于/总和"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 产品的直径允许偏差",
+      "profile": "dimension",
+      "n_cols": 6,
+      "header_signature": [
+        "直径",
+        "0.7~1.0",
+        ">1.0~2.0",
+        ">2.0~4.0",
+        ">4.0~6.0",
+        ">4.0~8.0"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 产品的直径允许偏差",
+      "profile": "heat_treatment",
+      "n_cols": 2,
+      "header_signature": [
+        "表4",
+        "推荐的热处理制度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "heat_treatment",
+      "n_cols": 2,
+      "header_signature": [
+        "状态",
+        "热处理制度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表1 产品的牌号、状态和规格",
+      "profile": "heat_treatment",
+      "n_cols": 2,
+      "header_signature": [
+        "状态",
+        "热处理制度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "表5",
+        "室温力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "状态",
+        "抗拉强度rmmpa",
+        "规定塑性延伸强度rp0.2mpa",
+        "断后伸长率a%",
+        "断面收缩率z%"
+      ],
+      "measures": [
+        "抗拉强度",
+        "规定塑性延伸强度",
+        "断后伸长率",
+        "a",
+        "断面收缩率",
+        "z"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5",
+        "检验规则"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6 产品的取样",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.1",
+        "检查和验收"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6 产品的取样",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "检验项目",
+        "取样规定",
+        "要求的章条号",
+        "试验方法的章条号"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "chemical_composition_v1": "1.1.217",
+    "heat_treatment_v1": "1.0.0",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "2cc73d6f-3848-4cc2-b04b-e2f2471eeff1",
+  "created_at": "2026-11-15T06:48:00+00:00"
+}

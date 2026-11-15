@@ -66,3 +66,16 @@ def test_validate_is_idempotent() -> None:
     manifest = validate_manifest(RecipeManifest.model_validate(_manifest()))
     again = validate_manifest(manifest)
     assert again.checksum == manifest.checksum
+
+
+def test_digest_covers_referenced_test_file(tmp_path, monkeypatch) -> None:
+    from services.recipe_registry import package as package_module
+
+    monkeypatch.setattr(package_module, "REPO_ROOT", tmp_path)
+    test_file = tmp_path / "tests" / "recipe_test.py"
+    test_file.parent.mkdir(parents=True)
+    test_file.write_text("def test_a():\n    assert True\n", encoding="utf-8")
+    first = build_package(_manifest(tests=["tests/recipe_test.py"]))
+    test_file.write_text("def test_a():\n    assert False\n", encoding="utf-8")
+    second = build_package(_manifest(tests=["tests/recipe_test.py"]))
+    assert first.checksum != second.checksum

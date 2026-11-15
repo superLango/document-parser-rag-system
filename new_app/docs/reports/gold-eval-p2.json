@@ -1,0 +1,4108 @@
+{
+  "generated_at": "2026-11-14T17:11:23+00:00",
+  "registry": "docs\\reports\\gold-registry-p2.json",
+  "summary": {
+    "documents": 30,
+    "documents_with_pred": 30,
+    "gold": 17651,
+    "gold_placeholder": 7726,
+    "gold_all": 25377,
+    "pred": 11968,
+    "matched": 9264,
+    "precision": 0.7741,
+    "recall": 0.5248,
+    "f1": 0.6255,
+    "pred_common": 9887,
+    "silent": 623,
+    "silent_rate": 0.063,
+    "coverage": 1.0,
+    "unit_accuracy": 0.9822,
+    "condition_accuracy": 0.4312,
+    "unit_checked": 8612,
+    "condition_checked": 12512,
+    "table_gold": 227,
+    "table_pred": 348,
+    "table_matched": 217,
+    "table_match_rate": 0.9559,
+    "table_profile_accuracy": 0.7348,
+    "table_header_accuracy": 0.6001,
+    "table_cell_accuracy": 0.4626,
+    "table_teds": 0.4357,
+    "heat_gold": 261,
+    "heat_pred": 252,
+    "heat_matched": 204,
+    "heat_f1": 0.7953,
+    "clauses": 1896,
+    "inventory_items": 128,
+    "inventory_aligned_ratio": 1.0,
+    "qualitative_records": 22,
+    "qualitative_items": 22,
+    "qualitative_coverage": 1.0,
+    "qualitative_gold_features": 92,
+    "qualitative_pred_features": 22,
+    "qualitative_matched_features": 21,
+    "qualitative_feature_recall": 0.2283,
+    "qualitative_requirement_hits": 11,
+    "qualitative_requirement_rate": 0.5238,
+    "references": 227,
+    "reference_resolution_rate": 0.9479,
+    "method_bindings": 49,
+    "methods_filled": 18,
+    "classifications": 143,
+    "dictionary_version": "hanson-ht-64c316a7",
+    "dictionary_hit_rate": 0.9973,
+    "dictionary_method_hit_rate": 0.5512,
+    "method_fill_rate": 0.5735,
+    "sampling_fill_rate": 0.5912,
+    "fill_total": 11968
+  },
+  "features": {
+    "化学成分": {
+      "gold": 7431,
+      "pred": 5195,
+      "matched": 3522,
+      "precision": 0.678,
+      "recall": 0.474,
+      "f1": 0.5579
+    },
+    "夏比冲击": {
+      "gold": 333,
+      "pred": 80,
+      "matched": 62,
+      "precision": 0.775,
+      "recall": 0.1862,
+      "f1": 0.3002
+    },
+    "室温拉伸": {
+      "gold": 8175,
+      "pred": 5452,
+      "matched": 4708,
+      "precision": 0.8635,
+      "recall": 0.5759,
+      "f1": 0.691
+    },
+    "布氏硬度": {
+      "gold": 215,
+      "pred": 184,
+      "matched": 109,
+      "precision": 0.5924,
+      "recall": 0.507,
+      "f1": 0.5464
+    },
+    "弯曲": {
+      "gold": 1109,
+      "pred": 740,
+      "matched": 653,
+      "precision": 0.8824,
+      "recall": 0.5888,
+      "f1": 0.7063
+    },
+    "断裂韧度": {
+      "gold": 54,
+      "pred": 41,
+      "matched": 41,
+      "precision": 1.0,
+      "recall": 0.7593,
+      "f1": 0.8632
+    },
+    "洛氏硬度": {
+      "gold": 153,
+      "pred": 91,
+      "matched": 88,
+      "precision": 0.967,
+      "recall": 0.5752,
+      "f1": 0.7213
+    },
+    "维氏硬度": {
+      "gold": 69,
+      "pred": 38,
+      "matched": 38,
+      "precision": 1.0,
+      "recall": 0.5507,
+      "f1": 0.7103
+    },
+    "高温光滑持久": {
+      "gold": 42,
+      "pred": 21,
+      "matched": 21,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6667
+    },
+    "高温拉伸": {
+      "gold": 70,
+      "pred": 126,
+      "matched": 22,
+      "precision": 0.1746,
+      "recall": 0.3143,
+      "f1": 0.2245
+    }
+  },
+  "documents": [
+    {
+      "doc_id": "ams-4050k",
+      "standard_no": "AMS4050K",
+      "run_id": "c1aa4afc-0e5d-4acc-a1c1-7a7573a5bc9e",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 53,
+      "gold": 175,
+      "gold_placeholder": 19,
+      "pred": 143,
+      "matched": 143,
+      "precision": 1.0,
+      "recall": 0.8171,
+      "f1": 0.8994,
+      "pred_common": 143,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 143,
+      "unit_checked": 143,
+      "unit_accuracy": 1.0,
+      "condition_hits": 230,
+      "condition_checked": 268,
+      "condition_accuracy": 0.8582,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 3,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸",
+        "超声波检测"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 53,
+      "inventory_items": 3,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 146,
+      "dictionary_items_matched": 146,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 143,
+      "intelligence_error": "",
+      "table_gold": 6,
+      "table_pred": 7,
+      "table_matched": 6,
+      "table_profile_checked": 5,
+      "table_profile_hits": 3,
+      "table_header_hits": 6,
+      "table_header_total": 52,
+      "table_cell_hits": 21,
+      "table_cell_total": 504,
+      "table_teds_sum": 0.4986,
+      "table_teds_count": 4,
+      "missing_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 21
+        },
+        {
+          "feature": "断裂韧度",
+          "name": "断裂韧度",
+          "missing": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 2
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 2
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "missing": 1
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 12,
+          "pred": 9,
+          "matched": 9
+        },
+        "室温拉伸": {
+          "gold": 121,
+          "pred": 96,
+          "matched": 96
+        },
+        "断裂韧度": {
+          "gold": 42,
+          "pred": 38,
+          "matched": 38
+        }
+      },
+      "heat_gold": 1,
+      "heat_pred": 1,
+      "heat_matched": 1,
+      "heat_f1": 1.0
+    },
+    {
+      "doc_id": "ams-4108g",
+      "standard_no": "AMS4108G",
+      "run_id": "10729abf-d4ff-4bef-a323-63d5fc935d88",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 45,
+      "gold": 138,
+      "gold_placeholder": 0,
+      "pred": 132,
+      "matched": 132,
+      "precision": 1.0,
+      "recall": 0.9565,
+      "f1": 0.9778,
+      "pred_common": 132,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 132,
+      "unit_checked": 132,
+      "unit_accuracy": 1.0,
+      "condition_hits": 246,
+      "condition_checked": 366,
+      "condition_accuracy": 0.6721,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "超声波检测"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 55,
+      "inventory_items": 3,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 135,
+      "dictionary_items_matched": 135,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 132,
+      "intelligence_error": "",
+      "table_gold": 5,
+      "table_pred": 6,
+      "table_matched": 5,
+      "table_profile_checked": 5,
+      "table_profile_hits": 3,
+      "table_header_hits": 8,
+      "table_header_total": 39,
+      "table_cell_hits": 5,
+      "table_cell_total": 379,
+      "table_teds_sum": 1.1947,
+      "table_teds_count": 5,
+      "missing_top": [
+        {
+          "feature": "断裂韧度",
+          "name": "断裂韧度",
+          "missing": 3
+        },
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "missing": 1
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 12,
+          "pred": 9,
+          "matched": 9
+        },
+        "室温拉伸": {
+          "gold": 120,
+          "pred": 120,
+          "matched": 120
+        },
+        "断裂韧度": {
+          "gold": 6,
+          "pred": 3,
+          "matched": 3
+        }
+      },
+      "heat_gold": 1,
+      "heat_pred": 1,
+      "heat_matched": 1,
+      "heat_f1": 1.0
+    },
+    {
+      "doc_id": "ams-4911s",
+      "standard_no": "AMS4911S",
+      "run_id": "ac706812-b2fe-47de-8343-eda4bc53ed58",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 14,
+      "gold": 43,
+      "gold_placeholder": 0,
+      "pred": 32,
+      "matched": 30,
+      "precision": 0.9375,
+      "recall": 0.6977,
+      "f1": 0.8,
+      "pred_common": 32,
+      "silent": 2,
+      "silent_rate": 0.0625,
+      "unit_hits": 28,
+      "unit_checked": 28,
+      "unit_accuracy": 1.0,
+      "condition_hits": 28,
+      "condition_checked": 60,
+      "condition_accuracy": 0.4667,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 4,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸",
+        "超声波检测",
+        "高倍组织"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 63,
+      "inventory_items": 3,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 38,
+      "dictionary_items_matched": 38,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 32,
+      "intelligence_error": "",
+      "table_gold": 4,
+      "table_pred": 5,
+      "table_matched": 4,
+      "table_profile_checked": 4,
+      "table_profile_hits": 2,
+      "table_header_hits": 3,
+      "table_header_total": 29,
+      "table_cell_hits": 4,
+      "table_cell_total": 142,
+      "table_teds_sum": 0.7017,
+      "table_teds_count": 4,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 2
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "Fe",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "O",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "H",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "Y",
+          "missing": 1
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 11,
+          "pred": 2,
+          "matched": 0
+        },
+        "室温拉伸": {
+          "gold": 30,
+          "pred": 28,
+          "matched": 28
+        },
+        "弯曲": {
+          "gold": 2,
+          "pred": 2,
+          "matched": 2
+        }
+      },
+      "heat_gold": 1,
+      "heat_pred": 1,
+      "heat_matched": 1,
+      "heat_f1": 1.0
+    },
+    {
+      "doc_id": "ams-4967n",
+      "standard_no": "AMS4967N",
+      "run_id": "034b0dd7-e6e0-4f44-9bcd-f66c17127082",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 57,
+      "gold": 153,
+      "gold_placeholder": 0,
+      "pred": 164,
+      "matched": 125,
+      "precision": 0.7622,
+      "recall": 0.817,
+      "f1": 0.7886,
+      "pred_common": 164,
+      "silent": 39,
+      "silent_rate": 0.2378,
+      "unit_hits": 119,
+      "unit_checked": 125,
+      "unit_accuracy": 0.952,
+      "condition_hits": 42,
+      "condition_checked": 240,
+      "condition_accuracy": 0.175,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 4,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "低倍",
+        "外观",
+        "尺寸",
+        "高倍组织"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 65,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 175,
+      "dictionary_items_matched": 175,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 164,
+      "intelligence_error": "",
+      "table_gold": 5,
+      "table_pred": 8,
+      "table_matched": 5,
+      "table_profile_checked": 5,
+      "table_profile_hits": 4,
+      "table_header_hits": 19,
+      "table_header_total": 112,
+      "table_cell_hits": 54,
+      "table_cell_total": 423,
+      "table_teds_sum": 1.8219,
+      "table_teds_count": 4,
+      "missing_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 13
+        },
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "H",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "Y",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ti",
+          "missing": 1
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "断面收缩率",
+          "extra": 24
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "extra": 3
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "extra": 3
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 11,
+          "pred": 5,
+          "matched": 5
+        },
+        "室温拉伸": {
+          "gold": 142,
+          "pred": 159,
+          "matched": 120
+        }
+      },
+      "heat_gold": 2,
+      "heat_pred": 2,
+      "heat_matched": 2,
+      "heat_f1": 1.0
+    },
+    {
+      "doc_id": "ams-5663p",
+      "standard_no": "AMS5663P",
+      "run_id": "a02ba829-850b-40e4-b745-e99f5a90c1b7",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 24,
+      "gold": 106,
+      "gold_placeholder": 0,
+      "pred": 101,
+      "matched": 53,
+      "precision": 0.5248,
+      "recall": 0.5,
+      "f1": 0.5121,
+      "pred_common": 101,
+      "silent": 48,
+      "silent_rate": 0.4752,
+      "unit_hits": 53,
+      "unit_checked": 53,
+      "unit_accuracy": 1.0,
+      "condition_hits": 80,
+      "condition_checked": 80,
+      "condition_accuracy": 1.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 5,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "低倍",
+        "外观",
+        "尺寸",
+        "晶粒度",
+        "高倍组织"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 85,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 106,
+      "dictionary_items_matched": 106,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 101,
+      "intelligence_error": "",
+      "table_gold": 5,
+      "table_pred": 6,
+      "table_matched": 5,
+      "table_profile_checked": 5,
+      "table_profile_hits": 4,
+      "table_header_hits": 8,
+      "table_header_total": 51,
+      "table_cell_hits": 51,
+      "table_cell_total": 237,
+      "table_teds_sum": 3.1899,
+      "table_teds_count": 5,
+      "missing_top": [
+        {
+          "feature": "高温拉伸",
+          "name": "抗拉强度",
+          "missing": 12
+        },
+        {
+          "feature": "高温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 12
+        },
+        {
+          "feature": "高温拉伸",
+          "name": "断后伸长率",
+          "missing": 12
+        },
+        {
+          "feature": "高温拉伸",
+          "name": "断面收缩率",
+          "missing": 12
+        },
+        {
+          "feature": "化学成分",
+          "name": "columbium",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "Pb",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "Bi",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "Se",
+          "missing": 1
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "extra": 12
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "extra": 12
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "extra": 12
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断面收缩率",
+          "extra": 12
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 18,
+          "pred": 13,
+          "matched": 13
+        },
+        "室温拉伸": {
+          "gold": 40,
+          "pred": 88,
+          "matched": 40
+        },
+        "高温拉伸": {
+          "gold": 48,
+          "pred": 0,
+          "matched": 0
+        }
+      },
+      "heat_gold": 1,
+      "heat_pred": 1,
+      "heat_matched": 1,
+      "heat_f1": 1.0
+    },
+    {
+      "doc_id": "ams-qq-a250-4b",
+      "standard_no": "AMS-QQ-A-250/4B",
+      "run_id": "21af4a5e-6af2-4677-a709-9f113ba98a61",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 37,
+      "gold": 179,
+      "gold_placeholder": 9,
+      "pred": 109,
+      "matched": 101,
+      "precision": 0.9266,
+      "recall": 0.5642,
+      "f1": 0.7014,
+      "pred_common": 101,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 66,
+      "unit_checked": 101,
+      "unit_accuracy": 0.6535,
+      "condition_hits": 0,
+      "condition_checked": 202,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 1,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "超声波检测"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 22,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 112,
+      "dictionary_items_matched": 112,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 109,
+      "intelligence_error": "",
+      "table_gold": 5,
+      "table_pred": 6,
+      "table_matched": 5,
+      "table_profile_checked": 4,
+      "table_profile_hits": 2,
+      "table_header_hits": 18,
+      "table_header_total": 84,
+      "table_cell_hits": 22,
+      "table_cell_total": 573,
+      "table_teds_sum": 0.3686,
+      "table_teds_count": 3,
+      "missing_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "规定延伸载荷下的延伸率",
+          "missing": 35
+        },
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "missing": 26
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 3
+        },
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 2
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "missing": 1
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 1
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 11,
+          "pred": 8,
+          "matched": 0
+        },
+        "室温拉伸": {
+          "gold": 142,
+          "pred": 101,
+          "matched": 101
+        },
+        "弯曲": {
+          "gold": 26,
+          "pred": 0,
+          "matched": 0
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "asme-sb265-2025",
+      "standard_no": "ASME SB-265-2025",
+      "run_id": "64676879-2746-41d2-872a-aad4c87f73da",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 73,
+      "gold": 1108,
+      "gold_placeholder": 40,
+      "pred": 259,
+      "matched": 237,
+      "precision": 0.9151,
+      "recall": 0.2139,
+      "f1": 0.3467,
+      "pred_common": 241,
+      "silent": 4,
+      "silent_rate": 0.0166,
+      "unit_hits": 199,
+      "unit_checked": 237,
+      "unit_accuracy": 0.8397,
+      "condition_hits": 0,
+      "condition_checked": 128,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 72,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 324,
+      "dictionary_items_matched": 324,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 259,
+      "intelligence_error": "",
+      "table_gold": 4,
+      "table_pred": 19,
+      "table_matched": 4,
+      "table_profile_checked": 3,
+      "table_profile_hits": 0,
+      "table_header_hits": 30,
+      "table_header_total": 114,
+      "table_cell_hits": 93,
+      "table_cell_total": 1424,
+      "table_teds_sum": 0.0357,
+      "table_teds_count": 1,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 82
+        },
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "missing": 82
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 80
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 41
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "missing": 41
+        },
+        {
+          "feature": "化学成分",
+          "name": "V",
+          "missing": 41
+        },
+        {
+          "feature": "化学成分",
+          "name": "Pd",
+          "missing": 41
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ru",
+          "missing": 41
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "extra": 2
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 779,
+          "pred": 128,
+          "matched": 128
+        },
+        "室温拉伸": {
+          "gold": 247,
+          "pred": 131,
+          "matched": 109
+        },
+        "弯曲": {
+          "gold": 82,
+          "pred": 0,
+          "matched": 0
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "asme-sb338-2021",
+      "standard_no": "ASME SB-338-2021",
+      "run_id": "bdf7d972-c0f3-4400-897b-790d4df690f1",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 53,
+      "gold": 716,
+      "gold_placeholder": 33,
+      "pred": 118,
+      "matched": 118,
+      "precision": 1.0,
+      "recall": 0.1648,
+      "f1": 0.283,
+      "pred_common": 118,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 118,
+      "unit_checked": 118,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 17,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 4,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸",
+        "涡流检测",
+        "超声波检测"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 121,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 126,
+      "dictionary_items_matched": 126,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 118,
+      "intelligence_error": "",
+      "table_gold": 4,
+      "table_pred": 11,
+      "table_matched": 4,
+      "table_profile_checked": 3,
+      "table_profile_hits": 0,
+      "table_header_hits": 4085,
+      "table_header_total": 4173,
+      "table_cell_hits": 9030,
+      "table_cell_total": 10025,
+      "table_teds_sum": 0,
+      "table_teds_count": 0,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 56
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 51
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 31
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 28
+        },
+        {
+          "feature": "化学成分",
+          "name": "Fe",
+          "missing": 28
+        },
+        {
+          "feature": "化学成分",
+          "name": "Si",
+          "missing": 28
+        },
+        {
+          "feature": "化学成分",
+          "name": "O",
+          "missing": 27
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "missing": 27
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 521,
+          "pred": 5,
+          "matched": 5
+        },
+        "室温拉伸": {
+          "gold": 195,
+          "pred": 113,
+          "matched": 113
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "asme-sb575-2023",
+      "standard_no": "ASME SB-575-2023",
+      "run_id": "1c5c4b47-8a4c-442a-96e5-f6e2faf5e20e",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 22,
+      "gold": 176,
+      "gold_placeholder": 55,
+      "pred": 29,
+      "matched": 18,
+      "precision": 0.6207,
+      "recall": 0.1023,
+      "f1": 0.1756,
+      "pred_common": 18,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 18,
+      "unit_checked": 18,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 18,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "尺寸",
+        "晶粒度"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 46,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 103,
+      "dictionary_items_matched": 103,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 29,
+      "intelligence_error": "",
+      "table_gold": 3,
+      "table_pred": 4,
+      "table_matched": 3,
+      "table_profile_checked": 2,
+      "table_profile_hits": 2,
+      "table_header_hits": 10,
+      "table_header_total": 44,
+      "table_cell_hits": 145,
+      "table_cell_total": 438,
+      "table_teds_sum": 1.9318,
+      "table_teds_count": 2,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "Mo",
+          "missing": 11
+        },
+        {
+          "feature": "化学成分",
+          "name": "Cr",
+          "missing": 11
+        },
+        {
+          "feature": "化学成分",
+          "name": "Fe",
+          "missing": 11
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 11
+        },
+        {
+          "feature": "化学成分",
+          "name": "Mn",
+          "missing": 11
+        },
+        {
+          "feature": "化学成分",
+          "name": "P",
+          "missing": 11
+        },
+        {
+          "feature": "化学成分",
+          "name": "S",
+          "missing": 11
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ni",
+          "missing": 11
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "Ca",
+          "extra": 11
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 132,
+          "pred": 29,
+          "matched": 18
+        },
+        "室温拉伸": {
+          "gold": 33,
+          "pred": 0,
+          "matched": 0
+        },
+        "洛氏硬度": {
+          "gold": 11,
+          "pred": 0,
+          "matched": 0
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "astm-b338-17",
+      "standard_no": "ASTM B338-17",
+      "run_id": "43f0e823-1462-4fa7-8431-ebfb6db8cd4a",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 74,
+      "gold": 435,
+      "gold_placeholder": 314,
+      "pred": 219,
+      "matched": 144,
+      "precision": 0.6575,
+      "recall": 0.331,
+      "f1": 0.4404,
+      "pred_common": 162,
+      "silent": 18,
+      "silent_rate": 0.1111,
+      "unit_hits": 144,
+      "unit_checked": 144,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 96,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 4,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸",
+        "涡流检测",
+        "超声波检测"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 122,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 225,
+      "dictionary_items_matched": 225,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 219,
+      "intelligence_error": "",
+      "table_gold": 4,
+      "table_pred": 9,
+      "table_matched": 4,
+      "table_profile_checked": 3,
+      "table_profile_hits": 2,
+      "table_header_hits": 32,
+      "table_header_total": 102,
+      "table_cell_hits": 125,
+      "table_cell_total": 1238,
+      "table_teds_sum": 0.432,
+      "table_teds_count": 2,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 56
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 51
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 31
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 28
+        },
+        {
+          "feature": "化学成分",
+          "name": "Pd",
+          "missing": 10
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ru",
+          "missing": 9
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ni",
+          "missing": 6
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "B",
+          "extra": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "Sn",
+          "extra": 2
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 240,
+          "pred": 106,
+          "matched": 96
+        },
+        "室温拉伸": {
+          "gold": 195,
+          "pred": 113,
+          "matched": 48
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "astm-b348-13",
+      "standard_no": "ASTM B348-13",
+      "run_id": "d83af5a7-8cbd-4245-912b-48d35c389062",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 84,
+      "gold": 654,
+      "gold_placeholder": 387,
+      "pred": 355,
+      "matched": 221,
+      "precision": 0.6225,
+      "recall": 0.3379,
+      "f1": 0.4381,
+      "pred_common": 296,
+      "silent": 75,
+      "silent_rate": 0.2534,
+      "unit_hits": 221,
+      "unit_checked": 221,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 31,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 78,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 377,
+      "dictionary_items_matched": 377,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 355,
+      "intelligence_error": "",
+      "table_gold": 3,
+      "table_pred": 13,
+      "table_matched": 3,
+      "table_profile_checked": 3,
+      "table_profile_hits": 2,
+      "table_header_hits": 32,
+      "table_header_total": 100,
+      "table_cell_hits": 435,
+      "table_cell_total": 1192,
+      "table_teds_sum": 0,
+      "table_teds_count": 0,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 78
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 57
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 50
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 39
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "missing": 39
+        },
+        {
+          "feature": "化学成分",
+          "name": "Pd",
+          "missing": 14
+        },
+        {
+          "feature": "化学成分",
+          "name": "V",
+          "missing": 13
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ru",
+          "missing": 10
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "Si",
+          "extra": 31
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "extra": 15
+        },
+        {
+          "feature": "化学成分",
+          "name": "B",
+          "extra": 7
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 355,
+          "pred": 165,
+          "matched": 31
+        },
+        "室温拉伸": {
+          "gold": 299,
+          "pred": 190,
+          "matched": 190
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "astm-b708-25",
+      "standard_no": "ASTM B708-25",
+      "run_id": "f28eaf04-6c7c-412c-9a47-0883436b0aae",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 20,
+      "gold": 130,
+      "gold_placeholder": 0,
+      "pred": 215,
+      "matched": 6,
+      "precision": 0.0279,
+      "recall": 0.0462,
+      "f1": 0.0348,
+      "pred_common": 18,
+      "silent": 12,
+      "silent_rate": 0.6667,
+      "unit_hits": 6,
+      "unit_checked": 6,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 6,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 4,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸",
+        "晶粒度",
+        "高倍组织"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 99,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 223,
+      "dictionary_items_matched": 223,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 215,
+      "intelligence_error": "",
+      "table_gold": 3,
+      "table_pred": 6,
+      "table_matched": 3,
+      "table_profile_checked": 3,
+      "table_profile_hits": 3,
+      "table_header_hits": 13,
+      "table_header_total": 58,
+      "table_cell_hits": 62,
+      "table_cell_total": 273,
+      "table_teds_sum": 0.5998,
+      "table_teds_count": 2,
+      "missing_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 14
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 14
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ta",
+          "missing": 5
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "W",
+          "missing": 1
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "extra": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "Fe",
+          "extra": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "H",
+          "extra": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "Mo",
+          "extra": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "extra": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ni",
+          "extra": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "O",
+          "extra": 4
+        },
+        {
+          "feature": "化学成分",
+          "name": "Si",
+          "extra": 4
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 80,
+          "pred": 189,
+          "matched": 0
+        },
+        "室温拉伸": {
+          "gold": 50,
+          "pred": 26,
+          "matched": 6
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "astm-b861-14",
+      "standard_no": "ASTM B861-14",
+      "run_id": "d1d142f9-01ec-40cd-bc13-a55c259555b8",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 86,
+      "gold": 619,
+      "gold_placeholder": 0,
+      "pred": 234,
+      "matched": 217,
+      "precision": 0.9274,
+      "recall": 0.3506,
+      "f1": 0.5088,
+      "pred_common": 234,
+      "silent": 17,
+      "silent_rate": 0.0726,
+      "unit_hits": 217,
+      "unit_checked": 217,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 49,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 108,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 250,
+      "dictionary_items_matched": 250,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 234,
+      "intelligence_error": "",
+      "table_gold": 3,
+      "table_pred": 8,
+      "table_matched": 3,
+      "table_profile_checked": 3,
+      "table_profile_hits": 3,
+      "table_header_hits": 35,
+      "table_header_total": 90,
+      "table_cell_hits": 852,
+      "table_cell_total": 1208,
+      "table_teds_sum": 0,
+      "table_teds_count": 0,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 72
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 72
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 49
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 36
+        },
+        {
+          "feature": "化学成分",
+          "name": "Fe",
+          "missing": 22
+        },
+        {
+          "feature": "化学成分",
+          "name": "O",
+          "missing": 20
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "missing": 18
+        },
+        {
+          "feature": "化学成分",
+          "name": "H",
+          "missing": 18
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 328,
+          "pred": 66,
+          "matched": 49
+        },
+        "室温拉伸": {
+          "gold": 291,
+          "pred": 168,
+          "matched": 168
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "astm-b861-24",
+      "standard_no": "ASTM B861-24",
+      "run_id": "26247eca-0e84-4638-8b7f-42912bb7fe63",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 86,
+      "gold": 619,
+      "gold_placeholder": 0,
+      "pred": 246,
+      "matched": 155,
+      "precision": 0.6301,
+      "recall": 0.2504,
+      "f1": 0.3584,
+      "pred_common": 203,
+      "silent": 48,
+      "silent_rate": 0.2365,
+      "unit_hits": 155,
+      "unit_checked": 155,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 45,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 109,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 259,
+      "dictionary_items_matched": 259,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 246,
+      "intelligence_error": "",
+      "table_gold": 3,
+      "table_pred": 8,
+      "table_matched": 3,
+      "table_profile_checked": 3,
+      "table_profile_hits": 3,
+      "table_header_hits": 34,
+      "table_header_total": 90,
+      "table_cell_hits": 772,
+      "table_cell_total": 1208,
+      "table_teds_sum": 0,
+      "table_teds_count": 0,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 72
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 72
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 49
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 36
+        },
+        {
+          "feature": "化学成分",
+          "name": "Fe",
+          "missing": 22
+        },
+        {
+          "feature": "化学成分",
+          "name": "O",
+          "missing": 20
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "missing": 18
+        },
+        {
+          "feature": "化学成分",
+          "name": "H",
+          "missing": 18
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "Si",
+          "extra": 7
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 328,
+          "pred": 76,
+          "matched": 45
+        },
+        "室温拉伸": {
+          "gold": 291,
+          "pred": 170,
+          "matched": 110
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "astm-b862-23",
+      "standard_no": "ASTM B862-23",
+      "run_id": "dda0fe64-4273-4289-b6fe-46d35b6563d9",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 97,
+      "gold": 555,
+      "gold_placeholder": 378,
+      "pred": 290,
+      "matched": 262,
+      "precision": 0.9034,
+      "recall": 0.4721,
+      "f1": 0.6201,
+      "pred_common": 270,
+      "silent": 8,
+      "silent_rate": 0.0296,
+      "unit_hits": 262,
+      "unit_checked": 262,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 152,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 117,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 343,
+      "dictionary_items_matched": 343,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 290,
+      "intelligence_error": "",
+      "table_gold": 3,
+      "table_pred": 9,
+      "table_matched": 3,
+      "table_profile_checked": 3,
+      "table_profile_hits": 1,
+      "table_header_hits": 31,
+      "table_header_total": 147,
+      "table_cell_hits": 610,
+      "table_cell_total": 2169,
+      "table_teds_sum": 0,
+      "table_teds_count": 0,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 64
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 64
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 41
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 34
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "missing": 14
+        },
+        {
+          "feature": "化学成分",
+          "name": "V",
+          "missing": 12
+        },
+        {
+          "feature": "化学成分",
+          "name": "Pd",
+          "missing": 12
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ru",
+          "missing": 10
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "Ca",
+          "extra": 5
+        },
+        {
+          "feature": "化学成分",
+          "name": "H",
+          "extra": 3
+        },
+        {
+          "feature": "化学成分",
+          "name": "O",
+          "extra": 1
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 304,
+          "pred": 144,
+          "matched": 116
+        },
+        "室温拉伸": {
+          "gold": 251,
+          "pred": 146,
+          "matched": 146
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "astm-f136-26",
+      "standard_no": "ASTM F136-26",
+      "run_id": "70fd7620-79a8-4c8f-9a5c-3780714bcd18",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 17,
+      "gold": 65,
+      "gold_placeholder": 32,
+      "pred": 29,
+      "matched": 15,
+      "precision": 0.5172,
+      "recall": 0.2308,
+      "f1": 0.3191,
+      "pred_common": 29,
+      "silent": 14,
+      "silent_rate": 0.4828,
+      "unit_hits": 15,
+      "unit_checked": 15,
+      "unit_accuracy": 1.0,
+      "condition_hits": 14,
+      "condition_checked": 21,
+      "condition_accuracy": 0.6667,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 4,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "相变温度",
+        "超声波检测",
+        "高倍组织"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 75,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 33,
+      "dictionary_items_matched": 33,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 29,
+      "intelligence_error": "",
+      "table_gold": 3,
+      "table_pred": 4,
+      "table_matched": 3,
+      "table_profile_checked": 3,
+      "table_profile_hits": 2,
+      "table_header_hits": 18,
+      "table_header_total": 50,
+      "table_cell_hits": 134,
+      "table_cell_total": 247,
+      "table_teds_sum": 0.7548,
+      "table_teds_count": 3,
+      "missing_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 12
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 12
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断面收缩率",
+          "missing": 4
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 3
+        },
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "missing": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "H",
+          "missing": 1
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "Co",
+          "extra": 5
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 9,
+          "pred": 6,
+          "matched": 1
+        },
+        "室温拉伸": {
+          "gold": 54,
+          "pred": 23,
+          "matched": 14
+        },
+        "弯曲": {
+          "gold": 2,
+          "pred": 0,
+          "matched": 0
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gbt-14845-2026",
+      "standard_no": "GB/T 14845-2026",
+      "run_id": "a0ba362c-a038-4a31-85be-b7573349cd7e",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 12,
+      "gold": 38,
+      "gold_placeholder": 1,
+      "pred": 27,
+      "matched": 27,
+      "precision": 1.0,
+      "recall": 0.7105,
+      "f1": 0.8308,
+      "pred_common": 27,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 27,
+      "unit_checked": 27,
+      "unit_accuracy": 1.0,
+      "condition_hits": 18,
+      "condition_checked": 45,
+      "condition_accuracy": 0.4,
+      "qualitative_records": 3,
+      "qualitative_records_artifact": 3,
+      "qualitative_properties": 3,
+      "qualitative_items": 3,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 3,
+      "qualitative_pred_features": 3,
+      "qualitative_matched_features": 3,
+      "qualitative_feature_recall": 1.0,
+      "qualitative_requirement_hits": 3,
+      "qualitative_requirement_rate": 1.0,
+      "qualitative_missing_features": [],
+      "qualitative_extra_features": [],
+      "clauses": 44,
+      "inventory_items": 7,
+      "inventory_aligned_ratio": 1.0,
+      "references": 14,
+      "reference_resolution_rate": 1.0,
+      "method_bindings": 4,
+      "methods_filled": 1,
+      "classifications": 0,
+      "dictionary_items_checked": 37,
+      "dictionary_items_matched": 37,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 35,
+      "dictionary_method_matched": 34,
+      "dictionary_method_hit_rate": 0.9714,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 27,
+      "sampling_filled": 27,
+      "fill_total": 27,
+      "intelligence_error": "",
+      "table_gold": 7,
+      "table_pred": 7,
+      "table_matched": 7,
+      "table_profile_checked": 4,
+      "table_profile_hits": 3,
+      "table_header_hits": 41,
+      "table_header_total": 86,
+      "table_cell_hits": 148,
+      "table_cell_total": 192,
+      "table_teds_sum": 5.5867,
+      "table_teds_count": 7,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 6
+        },
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "missing": 3
+        },
+        {
+          "feature": "化学成分",
+          "name": "Pd",
+          "missing": 2
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 26,
+          "pred": 18,
+          "matched": 18
+        },
+        "室温拉伸": {
+          "gold": 9,
+          "pred": 9,
+          "matched": 9
+        },
+        "弯曲": {
+          "gold": 3,
+          "pred": 0,
+          "matched": 0
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gbt-14976-2025",
+      "standard_no": "GB/T 14976-2025",
+      "run_id": "980e246a-e26b-4658-9a11-f953b79951f7",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 95,
+      "gold": 457,
+      "gold_placeholder": 89,
+      "pred": 362,
+      "matched": 342,
+      "precision": 0.9448,
+      "recall": 0.7484,
+      "f1": 0.8352,
+      "pred_common": 349,
+      "silent": 7,
+      "silent_rate": 0.0201,
+      "unit_hits": 342,
+      "unit_checked": 342,
+      "unit_accuracy": 1.0,
+      "condition_hits": 245,
+      "condition_checked": 439,
+      "condition_accuracy": 0.5581,
+      "qualitative_records": 2,
+      "qualitative_records_artifact": 2,
+      "qualitative_properties": 2,
+      "qualitative_items": 2,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 5,
+      "qualitative_pred_features": 2,
+      "qualitative_matched_features": 2,
+      "qualitative_feature_recall": 0.4,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "晶粒度",
+        "非金属夹杂"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 105,
+      "inventory_items": 16,
+      "inventory_aligned_ratio": 1.0,
+      "references": 45,
+      "reference_resolution_rate": 0.9111,
+      "method_bindings": 9,
+      "methods_filled": 1,
+      "classifications": 0,
+      "dictionary_items_checked": 379,
+      "dictionary_items_matched": 375,
+      "dictionary_hit_rate": 0.9894,
+      "dictionary_method_checked": 378,
+      "dictionary_method_matched": 375,
+      "dictionary_method_hit_rate": 0.9921,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 362,
+      "sampling_filled": 362,
+      "fill_total": 362,
+      "intelligence_error": "",
+      "table_gold": 16,
+      "table_pred": 23,
+      "table_matched": 16,
+      "table_profile_checked": 10,
+      "table_profile_hits": 8,
+      "table_header_hits": 106,
+      "table_header_total": 310,
+      "table_cell_hits": 665,
+      "table_cell_total": 1701,
+      "table_teds_sum": 3.5907,
+      "table_teds_count": 12,
+      "missing_top": [
+        {
+          "feature": "夏比冲击",
+          "name": "冲击吸收能量",
+          "missing": 40
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 34
+        },
+        {
+          "feature": "夏比冲击",
+          "name": "侧膨胀值",
+          "missing": 10
+        },
+        {
+          "feature": "化学成分",
+          "name": "其他元素",
+          "missing": 9
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 3
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "missing": 1
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "extra": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "Mo",
+          "extra": 1
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 263,
+          "pred": 253,
+          "matched": 245
+        },
+        "室温拉伸": {
+          "gold": 144,
+          "pred": 109,
+          "matched": 97
+        },
+        "夏比冲击": {
+          "gold": 50,
+          "pred": 0,
+          "matched": 0
+        }
+      },
+      "heat_gold": 32,
+      "heat_pred": 23,
+      "heat_matched": 23,
+      "heat_f1": 0.8364
+    },
+    {
+      "doc_id": "gbt-1591-2018",
+      "standard_no": "GB/T 1591-2018",
+      "run_id": "e61bb482-c2f5-4368-9dcb-315bbcaebd3d",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 127,
+      "gold": 1312,
+      "gold_placeholder": 423,
+      "pred": 909,
+      "matched": 609,
+      "precision": 0.67,
+      "recall": 0.4642,
+      "f1": 0.5484,
+      "pred_common": 695,
+      "silent": 86,
+      "silent_rate": 0.1237,
+      "unit_hits": 588,
+      "unit_checked": 609,
+      "unit_accuracy": 0.9655,
+      "condition_hits": 609,
+      "condition_checked": 675,
+      "condition_accuracy": 0.9022,
+      "qualitative_records": 1,
+      "qualitative_records_artifact": 1,
+      "qualitative_properties": 1,
+      "qualitative_items": 1,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 1,
+      "qualitative_matched_features": 1,
+      "qualitative_feature_recall": 0.5,
+      "qualitative_requirement_hits": 1,
+      "qualitative_requirement_rate": 1.0,
+      "qualitative_missing_features": [
+        "外观"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 75,
+      "inventory_items": 8,
+      "inventory_aligned_ratio": 1.0,
+      "references": 39,
+      "reference_resolution_rate": 1.0,
+      "method_bindings": 4,
+      "methods_filled": 1,
+      "classifications": 0,
+      "dictionary_items_checked": 780,
+      "dictionary_items_matched": 778,
+      "dictionary_hit_rate": 0.9974,
+      "dictionary_method_checked": 780,
+      "dictionary_method_matched": 775,
+      "dictionary_method_hit_rate": 0.9936,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 909,
+      "sampling_filled": 909,
+      "fill_total": 909,
+      "intelligence_error": "",
+      "table_gold": 16,
+      "table_pred": 25,
+      "table_matched": 16,
+      "table_profile_checked": 12,
+      "table_profile_hits": 1,
+      "table_header_hits": 236,
+      "table_header_total": 627,
+      "table_cell_hits": 1906,
+      "table_cell_total": 4902,
+      "table_teds_sum": 0.1749,
+      "table_teds_count": 6,
+      "missing_top": [
+        {
+          "feature": "夏比冲击",
+          "name": "冲击吸收能量",
+          "missing": 175
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "上屈服强度",
+          "missing": 82
+        },
+        {
+          "feature": "化学成分",
+          "name": "Als",
+          "missing": 44
+        },
+        {
+          "feature": "化学成分",
+          "name": "碳当量",
+          "missing": 35
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 32
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "missing": 23
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 15
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 9
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "Pcm",
+          "extra": 20
+        },
+        {
+          "feature": "化学成分",
+          "name": "B",
+          "extra": 8
+        },
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "extra": 1
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 847,
+          "pred": 747,
+          "matched": 573
+        },
+        "室温拉伸": {
+          "gold": 263,
+          "pred": 134,
+          "matched": 18
+        },
+        "夏比冲击": {
+          "gold": 202,
+          "pred": 27,
+          "matched": 18
+        },
+        "弯曲": {
+          "gold": 0,
+          "pred": 1,
+          "matched": 0
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gbt-24627-2023",
+      "standard_no": "GB/T 24627-2023",
+      "run_id": "09d19de7-3658-41e6-8184-cc1f548549b6",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 5,
+      "gold": 15,
+      "gold_placeholder": 0,
+      "pred": 13,
+      "matched": 13,
+      "precision": 1.0,
+      "recall": 0.8667,
+      "f1": 0.9286,
+      "pred_common": 13,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 13,
+      "unit_checked": 13,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 19,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 2,
+      "qualitative_records_artifact": 2,
+      "qualitative_properties": 2,
+      "qualitative_items": 2,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 3,
+      "qualitative_pred_features": 2,
+      "qualitative_matched_features": 2,
+      "qualitative_feature_recall": 0.6667,
+      "qualitative_requirement_hits": 1,
+      "qualitative_requirement_rate": 0.5,
+      "qualitative_missing_features": [
+        "相变温度"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 41,
+      "inventory_items": 4,
+      "inventory_aligned_ratio": 1.0,
+      "references": 17,
+      "reference_resolution_rate": 0.8235,
+      "method_bindings": 5,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 17,
+      "dictionary_items_matched": 17,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 17,
+      "dictionary_method_matched": 16,
+      "dictionary_method_hit_rate": 0.9412,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 13,
+      "sampling_filled": 13,
+      "fill_total": 13,
+      "intelligence_error": "",
+      "table_gold": 4,
+      "table_pred": 4,
+      "table_matched": 4,
+      "table_profile_checked": 3,
+      "table_profile_hits": 2,
+      "table_header_hits": 8,
+      "table_header_total": 18,
+      "table_cell_hits": 61,
+      "table_cell_total": 70,
+      "table_teds_sum": 3.2941,
+      "table_teds_count": 4,
+      "missing_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 2
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 11,
+          "pred": 11,
+          "matched": 11
+        },
+        "室温拉伸": {
+          "gold": 4,
+          "pred": 2,
+          "matched": 2
+        }
+      },
+      "heat_gold": 1,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gbt-3280-2015",
+      "standard_no": "GB/T 3280-2015",
+      "run_id": "2c4ce3ba-bd39-42af-b8ce-bf9e7b1c89dc",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 373,
+      "gold": 841,
+      "gold_placeholder": 0,
+      "pred": 1461,
+      "matched": 550,
+      "precision": 0.3765,
+      "recall": 0.654,
+      "f1": 0.4778,
+      "pred_common": 584,
+      "silent": 34,
+      "silent_rate": 0.0582,
+      "unit_hits": 550,
+      "unit_checked": 550,
+      "unit_accuracy": 1.0,
+      "condition_hits": 598,
+      "condition_checked": 1199,
+      "condition_accuracy": 0.4987,
+      "qualitative_records": 1,
+      "qualitative_records_artifact": 1,
+      "qualitative_properties": 1,
+      "qualitative_items": 1,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 6,
+      "qualitative_pred_features": 1,
+      "qualitative_matched_features": 1,
+      "qualitative_feature_recall": 0.1667,
+      "qualitative_requirement_hits": 1,
+      "qualitative_requirement_rate": 1.0,
+      "qualitative_missing_features": [
+        "外观",
+        "晶间腐蚀",
+        "超声波检测",
+        "铁素体",
+        "非金属夹杂"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 68,
+      "inventory_items": 11,
+      "inventory_aligned_ratio": 1.0,
+      "references": 37,
+      "reference_resolution_rate": 1.0,
+      "method_bindings": 6,
+      "methods_filled": 3,
+      "classifications": 112,
+      "dictionary_items_checked": 1501,
+      "dictionary_items_matched": 1499,
+      "dictionary_hit_rate": 0.9987,
+      "dictionary_method_checked": 1500,
+      "dictionary_method_matched": 1497,
+      "dictionary_method_hit_rate": 0.998,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 1461,
+      "sampling_filled": 1461,
+      "fill_total": 1461,
+      "intelligence_error": "",
+      "table_gold": 18,
+      "table_pred": 54,
+      "table_matched": 15,
+      "table_profile_checked": 15,
+      "table_profile_hits": 10,
+      "table_header_hits": 74,
+      "table_header_total": 304,
+      "table_cell_hits": 289,
+      "table_cell_total": 2407,
+      "table_teds_sum": 1.9744,
+      "table_teds_count": 7,
+      "missing_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 84
+        },
+        {
+          "feature": "洛氏硬度",
+          "name": "洛氏硬度",
+          "missing": 38
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 33
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 33
+        },
+        {
+          "feature": "维氏硬度",
+          "name": "维氏硬度",
+          "missing": 31
+        },
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "missing": 30
+        },
+        {
+          "feature": "化学成分",
+          "name": "化学成分",
+          "missing": 1
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "extra": 95
+        },
+        {
+          "feature": "化学成分",
+          "name": "Cr",
+          "extra": 95
+        },
+        {
+          "feature": "化学成分",
+          "name": "Mn",
+          "extra": 95
+        },
+        {
+          "feature": "化学成分",
+          "name": "P",
+          "extra": 95
+        },
+        {
+          "feature": "化学成分",
+          "name": "S",
+          "extra": 95
+        },
+        {
+          "feature": "化学成分",
+          "name": "Si",
+          "extra": 95
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ni",
+          "extra": 86
+        },
+        {
+          "feature": "化学成分",
+          "name": "N",
+          "extra": 62
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 1,
+          "pred": 789,
+          "matched": 0
+        },
+        "室温拉伸": {
+          "gold": 529,
+          "pred": 379,
+          "matched": 373
+        },
+        "布氏硬度": {
+          "gold": 89,
+          "pred": 91,
+          "matched": 56
+        },
+        "洛氏硬度": {
+          "gold": 123,
+          "pred": 85,
+          "matched": 83
+        },
+        "维氏硬度": {
+          "gold": 69,
+          "pred": 38,
+          "matched": 38
+        },
+        "弯曲": {
+          "gold": 30,
+          "pred": 0,
+          "matched": 0
+        },
+        "高温拉伸": {
+          "gold": 0,
+          "pred": 79,
+          "matched": 0
+        }
+      },
+      "heat_gold": 114,
+      "heat_pred": 116,
+      "heat_matched": 114,
+      "heat_f1": 0.9913
+    },
+    {
+      "doc_id": "gbt-3621-2022",
+      "standard_no": "GB/T 3621-2022",
+      "run_id": "0d7c1e8f-a2d5-4d55-9358-fa670a580076",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 160,
+      "gold": 273,
+      "gold_placeholder": 12,
+      "pred": 273,
+      "matched": 252,
+      "precision": 0.9231,
+      "recall": 0.9231,
+      "f1": 0.9231,
+      "pred_common": 252,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 252,
+      "unit_checked": 252,
+      "unit_accuracy": 1.0,
+      "condition_hits": 502,
+      "condition_checked": 756,
+      "condition_accuracy": 0.664,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 3,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "外观",
+        "尺寸",
+        "相变温度"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 0,
+      "inventory_items": 9,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 347,
+      "dictionary_items_matched": 324,
+      "dictionary_hit_rate": 0.9337,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 209,
+      "fill_total": 273,
+      "intelligence_error": "",
+      "table_gold": 14,
+      "table_pred": 14,
+      "table_matched": 14,
+      "table_profile_checked": 5,
+      "table_profile_hits": 5,
+      "table_header_hits": 36,
+      "table_header_total": 101,
+      "table_cell_hits": 968,
+      "table_cell_total": 1116,
+      "table_teds_sum": 9.0511,
+      "table_teds_count": 11,
+      "missing_top": [
+        {
+          "feature": "高温光滑持久",
+          "name": "初始应力",
+          "missing": 21
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "高温拉伸",
+          "name": "持久",
+          "extra": 21
+        }
+      ],
+      "features": {
+        "室温拉伸": {
+          "gold": 209,
+          "pred": 209,
+          "matched": 209
+        },
+        "高温拉伸": {
+          "gold": 22,
+          "pred": 43,
+          "matched": 22
+        },
+        "高温光滑持久": {
+          "gold": 42,
+          "pred": 21,
+          "matched": 21
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gbt-3623-2022",
+      "standard_no": "GB/T 3623-2022",
+      "run_id": "41e31b52-31cf-4972-80ed-aa04ee0fff76",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 49,
+      "gold": 258,
+      "gold_placeholder": 160,
+      "pred": 247,
+      "matched": 246,
+      "precision": 0.996,
+      "recall": 0.9535,
+      "f1": 0.9743,
+      "pred_common": 246,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 246,
+      "unit_checked": 246,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 300,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 3,
+      "qualitative_records_artifact": 3,
+      "qualitative_properties": 3,
+      "qualitative_items": 3,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 3,
+      "qualitative_pred_features": 3,
+      "qualitative_matched_features": 3,
+      "qualitative_feature_recall": 1.0,
+      "qualitative_requirement_hits": 3,
+      "qualitative_requirement_rate": 1.0,
+      "qualitative_missing_features": [],
+      "qualitative_extra_features": [],
+      "clauses": 46,
+      "inventory_items": 5,
+      "inventory_aligned_ratio": 1.0,
+      "references": 11,
+      "reference_resolution_rate": 0.9091,
+      "method_bindings": 3,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 268,
+      "dictionary_items_matched": 268,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 267,
+      "dictionary_method_matched": 266,
+      "dictionary_method_hit_rate": 0.9963,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 247,
+      "sampling_filled": 247,
+      "fill_total": 247,
+      "intelligence_error": "",
+      "table_gold": 5,
+      "table_pred": 4,
+      "table_matched": 4,
+      "table_profile_checked": 2,
+      "table_profile_hits": 2,
+      "table_header_hits": 25,
+      "table_header_total": 54,
+      "table_cell_hits": 212,
+      "table_cell_total": 607,
+      "table_teds_sum": 2.1845,
+      "table_teds_count": 3,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "Mn",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "Pd",
+          "missing": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "V",
+          "missing": 2
+        },
+        {
+          "feature": "化学成分",
+          "name": "Sn",
+          "missing": 1
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 204,
+          "pred": 193,
+          "matched": 192
+        },
+        "室温拉伸": {
+          "gold": 54,
+          "pred": 54,
+          "matched": 54
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gbt-3880-2-2024",
+      "standard_no": "GB/T 3880.2-2024",
+      "run_id": "9721c3d8-2cef-42df-81e0-58ba9744b8fd",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 1060,
+      "gold": 4919,
+      "gold_placeholder": 3301,
+      "pred": 3274,
+      "matched": 2891,
+      "precision": 0.883,
+      "recall": 0.5877,
+      "f1": 0.7057,
+      "pred_common": 3009,
+      "silent": 118,
+      "silent_rate": 0.0392,
+      "unit_hits": 2246,
+      "unit_checked": 2246,
+      "unit_accuracy": 1.0,
+      "condition_hits": 2647,
+      "condition_checked": 6427,
+      "condition_accuracy": 0.4119,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 0,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [],
+      "qualitative_extra_features": [],
+      "clauses": 4,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 0,
+      "reference_resolution_rate": 0.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 3284,
+      "dictionary_items_matched": 3284,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 2551,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 3272,
+      "sampling_filled": 3274,
+      "fill_total": 3274,
+      "intelligence_error": "",
+      "table_gold": 35,
+      "table_pred": 35,
+      "table_matched": 35,
+      "table_profile_checked": 35,
+      "table_profile_hits": 35,
+      "table_header_hits": 710,
+      "table_header_total": 1600,
+      "table_cell_hits": 10304,
+      "table_cell_total": 16806,
+      "table_teds_sum": 0.4771,
+      "table_teds_count": 1,
+      "missing_top": [
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 532
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 487
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 412
+        },
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "missing": 214
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "室温拉伸": {
+          "gold": 3974,
+          "pred": 2543,
+          "matched": 2246
+        },
+        "弯曲": {
+          "gold": 945,
+          "pred": 731,
+          "matched": 645
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gbt-5231-2022",
+      "standard_no": "GB/T 5231-2022",
+      "run_id": "119cac5c-f530-4979-afea-c8e14b79a367",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 345,
+      "gold": 2681,
+      "gold_placeholder": 2343,
+      "pred": 2050,
+      "matched": 1809,
+      "precision": 0.8824,
+      "recall": 0.6747,
+      "f1": 0.7647,
+      "pred_common": 1829,
+      "silent": 20,
+      "silent_rate": 0.0109,
+      "unit_hits": 1809,
+      "unit_checked": 1809,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 0,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 0,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [],
+      "qualitative_extra_features": [],
+      "clauses": 12,
+      "inventory_items": 1,
+      "inventory_aligned_ratio": 1.0,
+      "references": 2,
+      "reference_resolution_rate": 1.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 23,
+      "dictionary_items_checked": 2205,
+      "dictionary_items_matched": 2205,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 2050,
+      "intelligence_error": "",
+      "table_gold": 23,
+      "table_pred": 19,
+      "table_matched": 18,
+      "table_profile_checked": 18,
+      "table_profile_hits": 18,
+      "table_header_hits": 33,
+      "table_header_total": 644,
+      "table_cell_hits": 251,
+      "table_cell_total": 7227,
+      "table_teds_sum": 0,
+      "table_teds_count": 0,
+      "missing_top": [
+        {
+          "feature": "化学成分",
+          "name": "cu+所列元素总和",
+          "missing": 292
+        },
+        {
+          "feature": "化学成分",
+          "name": "Cu+Ag",
+          "missing": 52
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ni+Co",
+          "missing": 50
+        },
+        {
+          "feature": "化学成分",
+          "name": "Cu",
+          "missing": 45
+        },
+        {
+          "feature": "化学成分",
+          "name": "Fe",
+          "missing": 35
+        },
+        {
+          "feature": "化学成分",
+          "name": "Cd",
+          "missing": 21
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ni",
+          "missing": 20
+        },
+        {
+          "feature": "化学成分",
+          "name": "Be",
+          "missing": 18
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "化学成分",
+          "name": "Co",
+          "extra": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "B",
+          "extra": 1
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 2681,
+          "pred": 2050,
+          "matched": 1809
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gbt-6516-2025",
+      "standard_no": "GB/T 6516-2025",
+      "run_id": "c0337534-f5bb-465b-9bcb-138917bc93ad",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 7,
+      "gold": 92,
+      "gold_placeholder": 0,
+      "pred": 92,
+      "matched": 92,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "pred_common": 92,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 92,
+      "unit_checked": 92,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 92,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 1,
+      "qualitative_records_artifact": 1,
+      "qualitative_properties": 1,
+      "qualitative_items": 1,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 2,
+      "qualitative_pred_features": 1,
+      "qualitative_matched_features": 1,
+      "qualitative_feature_recall": 0.5,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "尺寸"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 31,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 3,
+      "reference_resolution_rate": 1.0,
+      "method_bindings": 1,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 94,
+      "dictionary_items_matched": 94,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 93,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 92,
+      "sampling_filled": 92,
+      "fill_total": 92,
+      "intelligence_error": "",
+      "table_gold": 1,
+      "table_pred": 1,
+      "table_matched": 1,
+      "table_profile_checked": 1,
+      "table_profile_hits": 1,
+      "table_header_hits": 7,
+      "table_header_total": 9,
+      "table_cell_hits": 120,
+      "table_cell_total": 189,
+      "table_teds_sum": 0,
+      "table_teds_count": 0,
+      "missing_top": [],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 92,
+          "pred": 92,
+          "matched": 92
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "gjb-5040-2001",
+      "standard_no": "GJB 5040-2001",
+      "run_id": "43d844fb-cf8a-4969-8b56-aa8be0846c3d",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 210,
+      "gold": 516,
+      "gold_placeholder": 70,
+      "pred": 330,
+      "matched": 280,
+      "precision": 0.8485,
+      "recall": 0.5426,
+      "f1": 0.6619,
+      "pred_common": 316,
+      "silent": 36,
+      "silent_rate": 0.1139,
+      "unit_hits": 227,
+      "unit_checked": 280,
+      "unit_accuracy": 0.8107,
+      "condition_hits": 0,
+      "condition_checked": 507,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 4,
+      "qualitative_records_artifact": 4,
+      "qualitative_properties": 4,
+      "qualitative_items": 4,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 8,
+      "qualitative_pred_features": 4,
+      "qualitative_matched_features": 3,
+      "qualitative_feature_recall": 0.375,
+      "qualitative_requirement_hits": 1,
+      "qualitative_requirement_rate": 0.3333,
+      "qualitative_missing_features": [
+        "断口",
+        "晶粒度",
+        "晶间腐蚀",
+        "超声波检测",
+        "非金属夹杂"
+      ],
+      "qualitative_extra_features": [
+        "高倍组织"
+      ],
+      "clauses": 97,
+      "inventory_items": 8,
+      "inventory_aligned_ratio": 1.0,
+      "references": 15,
+      "reference_resolution_rate": 0.8667,
+      "method_bindings": 7,
+      "methods_filled": 5,
+      "classifications": 0,
+      "dictionary_items_checked": 338,
+      "dictionary_items_matched": 338,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 335,
+      "dictionary_method_matched": 249,
+      "dictionary_method_hit_rate": 0.7433,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 330,
+      "sampling_filled": 330,
+      "fill_total": 330,
+      "intelligence_error": "",
+      "table_gold": 10,
+      "table_pred": 12,
+      "table_matched": 9,
+      "table_profile_checked": 8,
+      "table_profile_hits": 5,
+      "table_header_hits": 56,
+      "table_header_total": 248,
+      "table_cell_hits": 341,
+      "table_cell_total": 1919,
+      "table_teds_sum": 2.178,
+      "table_teds_count": 3,
+      "missing_top": [
+        {
+          "feature": "布氏硬度",
+          "name": "布氏硬度",
+          "missing": 41
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 32
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断面收缩率",
+          "missing": 32
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 30
+        },
+        {
+          "feature": "夏比冲击",
+          "name": "冲击吸收能量",
+          "missing": 26
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 25
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "室温拉伸": {
+          "gold": 323,
+          "pred": 204,
+          "matched": 190
+        },
+        "夏比冲击": {
+          "gold": 67,
+          "pred": 41,
+          "matched": 37
+        },
+        "布氏硬度": {
+          "gold": 126,
+          "pred": 85,
+          "matched": 53
+        }
+      },
+      "heat_gold": 66,
+      "heat_pred": 99,
+      "heat_matched": 53,
+      "heat_f1": 0.6424
+    },
+    {
+      "doc_id": "hb-20079-2012",
+      "standard_no": "HB 20079-2012",
+      "run_id": "e0f12c28-16ec-448e-b199-eefe5bd2d63e",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 47,
+      "gold": 236,
+      "gold_placeholder": 58,
+      "pred": 151,
+      "matched": 97,
+      "precision": 0.6424,
+      "recall": 0.411,
+      "f1": 0.5013,
+      "pred_common": 134,
+      "silent": 37,
+      "silent_rate": 0.2761,
+      "unit_hits": 92,
+      "unit_checked": 92,
+      "unit_accuracy": 1.0,
+      "condition_hits": 136,
+      "condition_checked": 138,
+      "condition_accuracy": 0.9855,
+      "qualitative_records": 5,
+      "qualitative_records_artifact": 5,
+      "qualitative_properties": 5,
+      "qualitative_items": 5,
+      "qualitative_coverage": 1.0,
+      "qualitative_gold_features": 6,
+      "qualitative_pred_features": 5,
+      "qualitative_matched_features": 5,
+      "qualitative_feature_recall": 0.8333,
+      "qualitative_requirement_hits": 1,
+      "qualitative_requirement_rate": 0.2,
+      "qualitative_missing_features": [
+        "晶粒度"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 64,
+      "inventory_items": 15,
+      "inventory_aligned_ratio": 1.0,
+      "references": 37,
+      "reference_resolution_rate": 0.8649,
+      "method_bindings": 10,
+      "methods_filled": 7,
+      "classifications": 8,
+      "dictionary_items_checked": 169,
+      "dictionary_items_matched": 166,
+      "dictionary_hit_rate": 0.9822,
+      "dictionary_method_checked": 163,
+      "dictionary_method_matched": 161,
+      "dictionary_method_hit_rate": 0.9877,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 151,
+      "sampling_filled": 151,
+      "fill_total": 151,
+      "intelligence_error": "",
+      "table_gold": 9,
+      "table_pred": 13,
+      "table_matched": 9,
+      "table_profile_checked": 5,
+      "table_profile_hits": 1,
+      "table_header_hits": 72,
+      "table_header_total": 261,
+      "table_cell_hits": 237,
+      "table_cell_total": 1434,
+      "table_teds_sum": 0.25,
+      "table_teds_count": 5,
+      "missing_top": [
+        {
+          "feature": "洛氏硬度",
+          "name": "洛氏硬度",
+          "missing": 13
+        },
+        {
+          "feature": "化学成分",
+          "name": "C",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "Mn",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "Si",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "S",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "P",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "Cr",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ni",
+          "missing": 6
+        }
+      ],
+      "extra_top": [
+        {
+          "feature": "布氏硬度",
+          "name": "布氏硬度",
+          "extra": 8
+        },
+        {
+          "feature": "高温拉伸",
+          "name": "断后伸长率",
+          "extra": 1
+        },
+        {
+          "feature": "高温拉伸",
+          "name": "抗拉强度",
+          "extra": 1
+        },
+        {
+          "feature": "高温拉伸",
+          "name": "规定塑性延伸强度",
+          "extra": 1
+        },
+        {
+          "feature": "高温拉伸",
+          "name": "断面收缩率",
+          "extra": 1
+        }
+      ],
+      "features": {
+        "化学成分": {
+          "gold": 117,
+          "pred": 57,
+          "matched": 57
+        },
+        "室温拉伸": {
+          "gold": 80,
+          "pred": 64,
+          "matched": 28
+        },
+        "夏比冲击": {
+          "gold": 14,
+          "pred": 12,
+          "matched": 7
+        },
+        "洛氏硬度": {
+          "gold": 19,
+          "pred": 6,
+          "matched": 5
+        },
+        "断裂韧度": {
+          "gold": 6,
+          "pred": 0,
+          "matched": 0
+        },
+        "布氏硬度": {
+          "gold": 0,
+          "pred": 8,
+          "matched": 0
+        },
+        "高温拉伸": {
+          "gold": 0,
+          "pred": 4,
+          "matched": 0
+        }
+      },
+      "heat_gold": 42,
+      "heat_pred": 8,
+      "heat_matched": 8,
+      "heat_f1": 0.32
+    },
+    {
+      "doc_id": "iso-5832-2-2018",
+      "standard_no": "ISO 5832-2:2018",
+      "run_id": "03cbcf2d-085f-4ebe-b993-b70d84db4b9f",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 17,
+      "gold": 64,
+      "gold_placeholder": 2,
+      "pred": 53,
+      "matched": 28,
+      "precision": 0.5283,
+      "recall": 0.4375,
+      "f1": 0.4786,
+      "pred_common": 28,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 28,
+      "unit_checked": 28,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 34,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 3,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "晶粒度",
+        "非金属夹杂",
+        "高倍组织"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 9,
+      "inventory_items": 3,
+      "inventory_aligned_ratio": 1.0,
+      "references": 4,
+      "reference_resolution_rate": 1.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 56,
+      "dictionary_items_matched": 56,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 53,
+      "intelligence_error": "",
+      "table_gold": 2,
+      "table_pred": 3,
+      "table_matched": 2,
+      "table_profile_checked": 2,
+      "table_profile_hits": 2,
+      "table_header_hits": 3,
+      "table_header_total": 45,
+      "table_cell_hits": 10,
+      "table_cell_total": 150,
+      "table_teds_sum": 0.7171,
+      "table_teds_count": 2,
+      "missing_top": [
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "missing": 6
+        },
+        {
+          "feature": "化学成分",
+          "name": "Ti",
+          "missing": 5
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 30,
+          "pred": 25,
+          "matched": 0
+        },
+        "室温拉伸": {
+          "gold": 22,
+          "pred": 22,
+          "matched": 22
+        },
+        "弯曲": {
+          "gold": 12,
+          "pred": 6,
+          "matched": 6
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    },
+    {
+      "doc_id": "iso-5832-3-2021",
+      "standard_no": "ISO 5832-3:2021",
+      "run_id": "9bd7af00-9498-4e77-a4fb-857377108f04",
+      "run_status": "HUMAN_REVIEW",
+      "source": "api",
+      "records": 21,
+      "gold": 78,
+      "gold_placeholder": 0,
+      "pred": 51,
+      "matched": 51,
+      "precision": 1.0,
+      "recall": 0.6538,
+      "f1": 0.7907,
+      "pred_common": 51,
+      "silent": 0,
+      "silent_rate": 0.0,
+      "unit_hits": 51,
+      "unit_checked": 51,
+      "unit_accuracy": 1.0,
+      "condition_hits": 0,
+      "condition_checked": 102,
+      "condition_accuracy": 0.0,
+      "qualitative_records": 0,
+      "qualitative_records_artifact": 0,
+      "qualitative_properties": 0,
+      "qualitative_items": 0,
+      "qualitative_coverage": 0.0,
+      "qualitative_gold_features": 1,
+      "qualitative_pred_features": 0,
+      "qualitative_matched_features": 0,
+      "qualitative_feature_recall": 0.0,
+      "qualitative_requirement_hits": 0,
+      "qualitative_requirement_rate": 0.0,
+      "qualitative_missing_features": [
+        "高倍组织"
+      ],
+      "qualitative_extra_features": [],
+      "clauses": 10,
+      "inventory_items": 2,
+      "inventory_aligned_ratio": 1.0,
+      "references": 3,
+      "reference_resolution_rate": 1.0,
+      "method_bindings": 0,
+      "methods_filled": 0,
+      "classifications": 0,
+      "dictionary_items_checked": 60,
+      "dictionary_items_matched": 60,
+      "dictionary_hit_rate": 1.0,
+      "dictionary_method_checked": 0,
+      "dictionary_method_matched": 0,
+      "dictionary_method_hit_rate": 0.0,
+      "dictionary_version": "hanson-ht-64c316a7",
+      "method_filled": 0,
+      "sampling_filled": 0,
+      "fill_total": 51,
+      "intelligence_error": "",
+      "table_gold": 4,
+      "table_pred": 5,
+      "table_matched": 4,
+      "table_profile_checked": 4,
+      "table_profile_hits": 4,
+      "table_header_hits": 17,
+      "table_header_total": 33,
+      "table_cell_hits": 114,
+      "table_cell_total": 220,
+      "table_teds_sum": 2.564,
+      "table_teds_count": 4,
+      "missing_top": [
+        {
+          "feature": "弯曲",
+          "name": "弯曲试验",
+          "missing": 7
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "抗拉强度",
+          "missing": 4
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "规定塑性延伸强度",
+          "missing": 4
+        },
+        {
+          "feature": "室温拉伸",
+          "name": "断后伸长率",
+          "missing": 3
+        },
+        {
+          "feature": "化学成分",
+          "name": "Al",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "V",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "Fe",
+          "missing": 1
+        },
+        {
+          "feature": "化学成分",
+          "name": "O",
+          "missing": 1
+        }
+      ],
+      "extra_top": [],
+      "features": {
+        "化学成分": {
+          "gold": 8,
+          "pred": 0,
+          "matched": 0
+        },
+        "室温拉伸": {
+          "gold": 63,
+          "pred": 51,
+          "matched": 51
+        },
+        "弯曲": {
+          "gold": 7,
+          "pred": 0,
+          "matched": 0
+        }
+      },
+      "heat_gold": 0,
+      "heat_pred": 0,
+      "heat_matched": 0,
+      "heat_f1": 0.0
+    }
+  ],
+  "failures": []
+}

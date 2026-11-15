@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     recipe_registry_url: str = Field(
         default="", validation_alias="RECIPE_REGISTRY_URL"
     )
+    # Versioned parser code bundle injected into /work/engine before each run.
+    parser_asset_id: str = "parser_core"
+    parser_channel: str = "stable"
+    parser_asset_required: bool = False
     max_input_bytes: int = 64 * 1024 * 1024
     max_output_bytes: int = 16 * 1024 * 1024
     max_output_files: int = 16

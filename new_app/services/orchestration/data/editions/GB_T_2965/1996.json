@@ -1,0 +1,157 @@
+{
+  "standard_id": "GB/T 2965",
+  "edition": "1996",
+  "document_sha256": "",
+  "page_count": 7,
+  "tables": [
+    {
+      "caption": "表1",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "制造方法",
+        "供应状态",
+        "直径或边长,mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "563"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2",
+      "profile": "admin",
+      "n_cols": 4,
+      "header_signature": [
+        "直径或边长",
+        "允许偏差/热锻棒",
+        "允许偏差/热挤棒",
+        "允许偏差/热轧棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "编号",
+        "名称"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "制造方法",
+        "直径或边长,mm",
+        "弯曲度,mm/m不大于"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "表5",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "室温力学性能,不小于/抗拉强度σbmpa",
+        "室温力学性能,不小于/规定残余伸长应力σr0.2mpa",
+        "室温力学性能,不小于/伸长率δb%",
+        "室温力学性能,不小于/断面收缩率ψ%",
+        "室温力学性能,不小于/备注"
+      ],
+      "measures": [
+        "抗拉强度",
+        "断面收缩率"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "565"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 (完)",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "室温力学性能,不小于/抗拉强度σbmpa",
+        "室温力学性能,不小于/规定残余伸长应力σr0.2mpa",
+        "室温力学性能,不小于/伸长率δb%",
+        "室温力学性能,不小于/断面收缩率ψ%",
+        "室温力学性能,不小于/备注"
+      ],
+      "measures": [
+        "抗拉强度",
+        "断面收缩率"
+      ]
+    },
+    {
+      "caption": "表6",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "牌号",
+        "试验温度°c",
+        "高温力学性能,不小于/抗拉强度σbmpa",
+        "高温力学性能,不小于/持久强度mpa/σ100h",
+        "高温力学性能,不小于/持久强度mpa/σ35h"
+      ],
+      "measures": [
+        "抗拉强度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "567"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "568"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "classification",
+      "n_cols": 2,
+      "header_signature": [
+        "牌号",
+        "加热温度,保温时间,冷却方式"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "mechanical_properties_v1": "1.6.51",
+    "classification_v1": "1.0.3"
+  },
+  "sample_doc_id": "aeb595ce-fdfd-4165-9d64-862810980e64",
+  "created_at": "2026-11-15T03:04:45+00:00"
+}

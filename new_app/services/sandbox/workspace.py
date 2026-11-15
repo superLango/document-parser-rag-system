@@ -4,16 +4,24 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import shutil
 import tempfile
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from hanson_contracts import ExecutionRequest, RecipeRef, TableAssignment, TemplateRef
+from hanson_contracts import (
+    ExecutionRequest,
+    ParserAssetRef,
+    RecipeRef,
+    TableAssignment,
+    TemplateRef,
+)
 
+from services.recipe_registry.assets import AssetManifest, compute_checksum
 from services.recipe_registry.package import (
     RecipeManifest,
     RecipePackageError,
@@ -23,6 +31,8 @@ from services.recipe_registry.package import (
 from services.shared.storage import ObjectStore
 
 from .config import Settings
+
+logger = logging.getLogger(__name__)
 
 
 class WorkspaceError(ValueError):
@@ -44,6 +54,7 @@ class Workspace:
     request: ExecutionRequest
     files: dict[str, bytes]
     input_hashes: dict[str, str]
+    assets: dict[str, Any] = field(default_factory=dict)
 
     def cleanup(self) -> None:
         for path in [self.root, *self.root.rglob("*")]:
@@ -194,6 +205,98 @@ def _resolve_template(ref: TemplateRef, settings: Settings) -> tuple[dict[str, A
     return payload, digest
 
 
+def _fetch_parser_asset(
+    settings: Settings,
+    override: ParserAssetRef | None = None,
+) -> tuple[dict[str, Any], dict[str, bytes]] | None:
+    """Fetch the active parser bundle; ``None`` means image fallback.
+
+    A per-run ``override`` mounts one exact immutable version so a candidate
+    bundle can be validated before the channel pointer moves.
+    """
+    if not settings.recipe_registry_url:
+        return None
+    base = settings.recipe_registry_url.rstrip("/")
+    asset_id = settings.parser_asset_id
+    version = ""
+    if override is not None:
+        asset_id = override.asset_id or asset_id
+        version = override.version
+    try:
+        if version:
+            with urllib.request.urlopen(
+                f"{base}/internal/assets/parser/{asset_id}/versions/{version}",
+                timeout=5,
+            ) as response:
+                detail = json.loads(response.read().decode("utf-8"))
+        else:
+            body = json.dumps(
+                {
+                    "kind": "parser",
+                    "asset_id": asset_id,
+                    "channel": settings.parser_channel,
+                }
+            ).encode("utf-8")
+            request = urllib.request.Request(
+                f"{base}/internal/assets/resolve",
+                data=body,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(request, timeout=5) as response:
+                ref = json.loads(response.read().decode("utf-8"))
+            version = str(ref.get("version") or "")
+            if not version:
+                return None
+            with urllib.request.urlopen(
+                f"{base}/internal/assets/parser/{asset_id}/versions/{version}",
+                timeout=5,
+            ) as response:
+                detail = json.loads(response.read().decode("utf-8"))
+    except (urllib.error.URLError, TimeoutError, ValueError, OSError) as exc:
+        logger.warning("parser asset unavailable: %s", exc)
+        return None
+
+    try:
+        manifest = AssetManifest.model_validate(detail.get("manifest") or {})
+    except ValueError as exc:
+        logger.warning("parser asset manifest invalid: %s", exc)
+        return None
+    if manifest.kind != "parser" or manifest.asset_id != asset_id:
+        logger.warning(
+            "parser asset mismatch: %s/%s", manifest.kind, manifest.asset_id
+        )
+        return None
+    files = {
+        str(path): str(content).encode("utf-8")
+        for path, content in (detail.get("files") or {}).items()
+    }
+    declared = {item.path: item.sha256 for item in manifest.files}
+    for path, content in files.items():
+        if hashlib.sha256(content).hexdigest() != declared.get(path):
+            raise WorkspaceError(
+                "SANDBOX_ASSET_DIGEST_MISMATCH", f"{path} does not match manifest"
+            )
+    expected = compute_checksum(manifest, files)
+    if manifest.checksum and manifest.checksum != expected:
+        raise WorkspaceError(
+            "SANDBOX_ASSET_DIGEST_MISMATCH", "parser bundle checksum mismatch"
+        )
+    if override is not None and override.digest and override.digest != expected:
+        raise WorkspaceError(
+            "SANDBOX_ASSET_DIGEST_MISMATCH", "pinned parser digest mismatch"
+        )
+    metadata = {
+        "asset_id": manifest.asset_id,
+        "version": manifest.version,
+        "digest": expected,
+        "entry_modules": list(manifest.entry_modules),
+        "source": "registry",
+        "pinned": override is not None,
+    }
+    return metadata, files
+
+
 def _write_tree(root: Path, files: dict[str, bytes]) -> None:
     for relative, data in sorted(files.items()):
         target = safe_join(root, relative)
@@ -275,6 +378,25 @@ async def prepare_workspace(
 
         template_payload, template_digest = _resolve_template(request.template, settings)
 
+        parser_asset = _fetch_parser_asset(settings, request.parser)
+        if parser_asset is None and settings.parser_asset_required:
+            raise WorkspaceError(
+                "SANDBOX_ASSET_UNAVAILABLE",
+                f"parser asset {settings.parser_asset_id} is required but unavailable",
+            )
+        if parser_asset is not None:
+            parser_meta, parser_files = parser_asset
+            for relative, content in sorted(parser_files.items()):
+                files[f"engine/{relative}"] = content
+            assets_meta: dict[str, Any] = {"parser": parser_meta}
+        else:
+            assets_meta = {
+                "parser": {
+                    "asset_id": settings.parser_asset_id,
+                    "source": "image",
+                }
+            }
+
         request.recipe.digest = primary.digest
         request.recipe.manifest = None
         request.recipe.files = {}
@@ -303,7 +425,8 @@ async def prepare_workspace(
             root,
             ["input"]
             + [f"recipes/{recipe_id}" for recipe_id in sorted(recipes)]
-            + [f"templates/{request.template.template_id}"],
+            + [f"templates/{request.template.template_id}"]
+            + (["engine"] if parser_asset is not None else []),
         )
         (root / "input").chmod(0o555)
         for recipe_id in recipes:
@@ -325,6 +448,7 @@ async def prepare_workspace(
                 "ocr": sha256(ocr_bytes),
                 "document": sha256(document_bytes),
             },
+            assets=assets_meta,
         )
     except Exception:
         shutil.rmtree(root, ignore_errors=True)

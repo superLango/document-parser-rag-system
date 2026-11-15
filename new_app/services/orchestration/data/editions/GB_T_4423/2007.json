@@ -1,0 +1,1275 @@
+{
+  "standard_id": "GB/T 4423",
+  "edition": "2007",
+  "document_sha256": "",
+  "page_count": 11,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "ics",
+        "77.150.30"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "h",
+        "62"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t",
+        "4423-2007"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "铜及铜合金拉制棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "material"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "日期",
+        "事件"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "代码",
+        "实施"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "前言"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "新增加了h90、qzr0.2、qzr0.4、qsi1.8四个牌号的硬状态和hpb61-1的半硬状态。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "--将力学性能中的长试样断后伸长率a11,3删除,保留短试样断后伸长率a。"
+      ],
+      "measures": [
+        "断后伸长率",
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "本标准主要起草人:白常厚、刘刚、王丽、刘关强、董艳霞、张云丽。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "gb/t4423~4426-1984、gb/t4427-1984、gb/t4429~4433-1984;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "gb/t4423-1992、gb/t13809-1992。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "i"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "铜及铜合金拉制棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "1",
+        "范围"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2",
+        "规范性引用文件"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t231.1",
+        "金属布氏硬度试验方法"
+      ],
+      "measures": [
+        "布氏硬度"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "gb/t228",
+        "金属材料",
+        "室温拉伸试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t351",
+        "金属材料电阻系数测量方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t3310",
+        "铜合金棒材超声波探伤方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t5121(所有部分)",
+        "铜及铜合金化学分析方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t5231",
+        "加工铜及铜合金化学成分和产品形状"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t8888",
+        "重有色金属加工产品的包装、标志、运输和贮存"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t10567(所有部分)",
+        "铜及铜合金加工材残余应力检验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "ys/t335",
+        "电真空器件用无氧铜含氧量金相检验法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "ys/t336",
+        "铜、镍及其合金管材和棒材断口检验法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3",
+        "要求"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.1产品分类"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 1,
+      "header_signature": [
+        "3.1.1牌号、状态和规格"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 1,
+      "header_signature": [
+        "棒材的牌号、状态和规格应符合表1的规定。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "表1",
+        "牌号、状态和规格"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "直径(或对边距离)/mm/圆形棒、方形棒、六角形棒",
+        "直径(或对边距离)/mm/矩形棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "表1(续)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 2 矩形棒截面的宽高比",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "直径(或对边距离)/mm/圆形棒、方形棒、六角形棒",
+        "直径(或对边距离)/mm/矩形棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 2 矩形棒截面的宽高比",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "高度/mm",
+        "宽度/高度,不大于"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 2 矩形棒截面的宽高比",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.1.2",
+        "棒材的不定尺长度规定如下:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "2"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "直径(或对边距离)为3mm~50mm,供应长度为1000mm~5000mm;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "直径(或对边距离)为",
+        "50mm~80mm",
+        "供应长度为",
+        "500mm~5000mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.1.4",
+        "标记示例"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "图形棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "方形棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "矩形棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "六角形棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.2",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "材料",
+        "化学成分应符合gb/t5231的规定。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 圆形棒、方形棒和六角形棒材的尺寸及其允许偏差",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "3.3尺寸及其允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 圆形棒、方形棒和六角形棒材的尺寸及其允许偏差",
+      "profile": "dimension",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 圆形棒、方形棒和六角形棒材的尺寸及其允许偏差",
+      "profile": "dimension",
+      "n_cols": 9,
+      "header_signature": [
+        "直径(或对边距)",
+        "圆形棒",
+        "圆形棒",
+        "圆形棒",
+        "圆形棒",
+        "方形棒或六角形棒",
+        "方形棒或六角形棒",
+        "方形棒或六角形棒",
+        "方形棒或六角形棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "3"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 4 矩形棒材的尺寸及其允许偏差",
+      "profile": "dimension",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表 4 矩形棒材的尺寸及其允许偏差",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "宽度或高度",
+        "紫黄铜类/高精级",
+        "紫黄铜类/普通级",
+        "青铜类/高精级",
+        "青铜类/普通级"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.3.4",
+        "扭拧度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 方形、矩形棒和六角形棒材的圆角半径",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.3.5",
+        "圆角半径"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 方形、矩形棒和六角形棒材的圆角半径",
+      "profile": "dimension",
+      "n_cols": 7,
+      "header_signature": [
+        "截面的名义宽度(对边距离)",
+        "3~6",
+        ">6~10",
+        ">10~18",
+        ">18~30",
+        ">30~50",
+        ">50~80"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.3.6",
+        "直度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "棒材的直度(软态棒材除外)",
+        "应符合表6的规定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "表6",
+        "棒材的直度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 7,
+      "header_signature": [
+        "长度",
+        "圆形棒",
+        "圆形棒",
+        "圆形棒",
+        "圆形棒",
+        "方形棒、六角形棒、矩形棒",
+        "方形棒、六角形棒、矩形棒"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.4",
+        "力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 1,
+      "header_signature": [
+        "棒材的力学性能应符合表7和表8的规定。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 圆形棒、方形棒和六角形棒材的力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "直径、对边距/mm",
+        "抗拉强度rm/(n/mm2)/不小于",
+        "断后伸长率a/%/不小于",
+        "布氏硬度hbw/不小于",
+        ""
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "a",
+        "布氏硬度",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "5"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 （续）",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "直径、对边距/mm",
+        "抗拉强度rm/(n/mm2)/不小于",
+        "断后伸长率a/%/不小于",
+        "布氏硬度hbw/不小于"
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "a",
+        "布氏硬度",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "6"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 （续）",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "直径、对边距/mm",
+        "抗拉强度rm/(n/mm2)/不小于",
+        "断后伸长率a/%/不小于",
+        "布氏硬度hbw/不小于"
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "a",
+        "布氏硬度",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表8",
+        "矩形棒材的力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "高度/mm",
+        "抗拉强度rm/(n/mm2)/不小于",
+        "断后伸长率a/%/不小于"
+      ],
+      "measures": [
+        "抗拉强度",
+        "rm",
+        "断后伸长率",
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.5",
+        "导电率"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "锆青铜导电率在20°c应不小于85%iacs(或电阻系数不大于0.0202835ω·mm2/m)(此数值为经淬火处理及冷加工时效后的性能参考值)。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.6",
+        "氧含量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.7",
+        "内部质量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "材料断口应致密、无缩尾。不允许有超出ys/t336中规定的气孔、分层和夹杂等缺陷。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "t2、t3、tp2、tu1、tu2、h96和qcr0.5棒不做断口检验。qcd1棒进行低倍检验。其他合金棒必须进行断口或超声波检验。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.8",
+        "内应力"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "7"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.9",
+        "表面质量"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4",
+        "试验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 1,
+      "header_signature": [
+        "4.1化学成分的仲裁分析方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2",
+        "尺寸测量方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2",
+        "尺寸测量方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "实验名称",
+        "实验内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "实验名称",
+        "实验内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "实验名称",
+        "实验内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "名称",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "实验名称"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "镭青铜断口也可用断口检验或超声波探伤代替低倍检验,但仲裁时以低倍检验法为准。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "项目",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "项目",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "项目",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5",
+        "检验规则"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "5.1",
+        "检查和验收"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.2",
+        "组批"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "棒材应成批提交,每批应由同一牌号、状态和规格组成。每批重量应不大于5000kg。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.3",
+        "检验项目"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.3.3",
+        "无氧铜棒材每批应进行氧含量的检验。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.3.4",
+        "3.5条规定要求导电率值的锆青铜和3.8条规定要消除内应力的棒材,供方可不检验,但必须保证,若有要求时,分别按4.4条和4.7条规定进行。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "5.4",
+        "取样"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "表9",
+        "产品取样的规定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "检验项目",
+        "取样规定",
+        "要求的章条号",
+        "试验方法的章条号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "5.5",
+        "检验结果的判定"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "5.5.1化学成分、氧含量、内应力检验不合格时,判该批产品不合格。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "5.5.2棒材外形尺寸偏差、表面质量、内部质量(低倍、断口、超声波)检验不合格时,判该根不合格。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "5.5.3当力学性能、导电率试验结果中有试样不合格时,应从该批产品中另取双倍数量的试样进行重复试验。重复试验结果全部合格,则判整批产品合格。若重复试验结果仍有试样不合格,则判该批产品不合格或逐根检验,合格者交货。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "7",
+        "订货单(或合同)内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "b)牌号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "e)重量或根数;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "f)",
+        "尺寸精度;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "g)",
+        "内应力检验;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "h)",
+        "本标准编号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "9"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "mechanical_properties_v1": "1.6.51",
+    "dimension_v1": "1.0.2",
+    "chemical_composition_v1": "1.1.217",
+    "hardness_v1": "1.2.0",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "f70f3e2a-76b0-4d6e-842a-0008f71f682e",
+  "created_at": "2026-11-15T04:16:28+00:00"
+}

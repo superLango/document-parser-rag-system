@@ -1,0 +1,83 @@
+{
+  "standard_id": "ISO 5832-3",
+  "edition": "2021",
+  "document_sha256": "",
+  "page_count": 16,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "element",
+        "compositionallimitsmassfraction%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "materialshape",
+        "tensilestrength/rm/mpa",
+        "proofstrengthoryieldstrength/rp0,2/mpa",
+        "percentageelongationafterfracturea/a/%",
+        "mandreldiameterforbendtest/mm"
+      ],
+      "measures": [
+        "rm",
+        "a"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "parameter",
+        "relevantclauseofthisdocument",
+        "testmethod"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "conformitytobothstandards",
+        "materialshape",
+        "materialsizemm",
+        "tensilestrengthrmmpa",
+        "proofstrengthoryieldstrengthrp0.2mpa",
+        "percentageelongationafterfracturea%",
+        "reductionofareaz%",
+        "mandreldiameterforbendtest"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "conformitytobothstandards",
+        "materialshape",
+        "materialsizemm",
+        "tensilestrengthrmmpa",
+        "proofstrengthoryieldstrengthrp0.2mpa",
+        "percentageelongationafterfracturea%",
+        "reductionofareaz%",
+        "mandreldiameterforbendtest"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "5bce310b-aaa7-45b8-8c00-76b7543c8642",
+  "created_at": "2026-11-14T16:27:48+00:00"
+}

@@ -16,7 +16,12 @@ from hanson_contracts import (
 )
 
 from .config import Settings
-from .rules import merge_findings, run_rules
+from .rules import (
+    merge_findings,
+    run_document_rules,
+    run_intelligence_rules,
+    run_rules,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +55,27 @@ class ReviewService:
 
     async def review(self, request: ReviewRequest) -> ReviewReport:
         deterministic = run_rules(request.records, request.evidence, request.tables)
+        document_findings = run_document_rules(
+            request.records,
+            request.tables,
+            request.diagnostics,
+            request.pages,
+            min_pages=self.settings.doc_min_pages,
+            unbound_ratio=self.settings.doc_unbound_ratio,
+            dup_key_limit=self.settings.doc_dup_key_limit,
+            unit_missing_ratio=self.settings.doc_unit_missing_ratio,
+            unit_min_samples=self.settings.doc_unit_min_samples,
+            low_coverage_ratio=self.settings.doc_low_coverage_ratio,
+            min_tables=self.settings.doc_min_tables,
+        )
+        deterministic.extend(document_findings)
+        deterministic.extend(
+            run_intelligence_rules(
+                request.document_intelligence,
+                request.inventory,
+                request.references,
+            )
+        )
         model_findings: list[ReviewFinding] = []
         degraded = False
         prompt_id = ""
@@ -93,6 +119,7 @@ class ReviewService:
                 "warnings": warnings,
                 "info": len(findings) - errors - warnings,
                 "deterministic": len(deterministic),
+                "document_findings": len(document_findings),
                 "model": len(model_findings),
             },
             ruleset_version=self.settings.ruleset_version,

@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { feedbackApi } from "../../api/feedback";
 import { Button } from "../ui/primitives";
 import { Dialog } from "../ui/dialog";
-import { Field, Input, Select, Textarea } from "../ui/form";
+import { Field, Select, Textarea } from "../ui/form";
 import { useToast } from "../ui/toast";
 
 const CATEGORIES = [
-  { value: "missing_measure", label: "字段缺失" },
-  { value: "wrong_value", label: "数值错误" },
-  { value: "wrong_unit", label: "单位错误" },
-  { value: "wrong_grade", label: "牌号错误" },
+  { value: "missing_measure", label: "内容缺失（漏抽）" },
+  { value: "wrong_value", label: "内容不正确" },
+  { value: "wrong_unit", label: "单位不正确" },
+  { value: "wrong_grade", label: "牌号/条件不正确" },
   { value: "other", label: "其他" }
 ];
 
@@ -34,9 +34,7 @@ export function FeedbackDialog({
   const { push } = useToast();
   const [category, setCategory] = useState("missing_measure");
   const [measure, setMeasure] = useState(initialMeasure);
-  const [unit, setUnit] = useState("");
   const [description, setDescription] = useState(initialDescription);
-  const [expected, setExpected] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -57,17 +55,13 @@ export function FeedbackDialog({
         category,
         target: {
           recipe_id: recipeId,
-          measure: measure.trim(),
-          unit: unit.trim()
+          measure: measure.trim()
         },
-        description: description.trim(),
-        expected_value: expected.trim() || undefined
+        description: description.trim()
       });
-      push("success", "反馈已创建", "可在反馈 Tab 中处理");
+      push("success", "反馈已记录", "可在问题台账中查看和导出");
       setMeasure("");
-      setUnit("");
       setDescription("");
-      setExpected("");
       onCreated();
       onClose();
     } catch (error) {
@@ -81,7 +75,7 @@ export function FeedbackDialog({
     <Dialog
       open={open}
       title="反馈解析问题"
-      description="Triage 会判断根因并尝试生成候选配方，验证通过后由人工决定是否晋升"
+      description="反馈只登记到问题台账，不会自动触发修复或重新解析"
       onClose={onClose}
       footer={
         <>
@@ -104,38 +98,18 @@ export function FeedbackDialog({
             ))}
           </Select>
         </Field>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="目标字段" hint="例如 Z、Rm、Rp0.2">
-            <Input
-              value={measure}
-              onChange={(event) => setMeasure(event.target.value)}
-              placeholder="Z"
-            />
-          </Field>
-          <Field label="期望单位" hint="可留空">
-            <Input
-              value={unit}
-              onChange={(event) => setUnit(event.target.value)}
-              placeholder="%"
-            />
-          </Field>
-        </div>
-        <Field label="问题描述">
+        <Field
+          label="问题描述"
+          hint="例如：室温拉伸标准要求抽取不正确、化学成分试验方法没有抽取出来、弯曲项目没有抽取"
+        >
           <Textarea
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            placeholder="断面收缩率 Z 未抽取"
-          />
-        </Field>
-        <Field label="期望值" hint="可选">
-          <Input
-            value={expected}
-            onChange={(event) => setExpected(event.target.value)}
-            placeholder="22"
+            placeholder="描述哪里不对或缺少什么，不需要填写表号、字段名或期望值"
           />
         </Field>
         <p className="text-[11px] text-muted-foreground">
-          目标配方：{recipeId || "未识别"}
+          目标配方：{recipeId || "未识别"}（系统会自动判断需要改表、改配方还是补规则）
         </p>
       </div>
     </Dialog>

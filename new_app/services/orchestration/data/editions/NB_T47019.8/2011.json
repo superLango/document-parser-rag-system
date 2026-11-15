@@ -1,0 +1,140 @@
+{
+  "standard_id": "NB T47019.8",
+  "edition": "2011",
+  "document_sha256": "",
+  "page_count": 10,
+  "tables": [
+    {
+      "caption": "表 1 夕|、径及允许偏差",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "外径",
+        "允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 切斜度",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "外径",
+        "切斜(不大于)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 弯曲度",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "外径",
+        "每米弯曲度,不大于"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "表4 钦及钦合金管的化学成分",
+      "profile": "chemical_composition",
+      "n_cols": 13,
+      "header_signature": [
+        "合金牌号",
+        "名义化学成分",
+        "化学成分,%/主要成分/ti",
+        "化学成分,%/主要成分/mo",
+        "化学成分,%/主要成分/pd",
+        "化学成分,%/主要成分/ni",
+        "化学成分,%/杂质,不大于/fe",
+        "化学成分,%/杂质,不大于/c",
+        "化学成分,%/杂质,不大于/n",
+        "化学成分,%/杂质,不大于/h",
+        "化学成分,%/杂质,不大于/o",
+        "化学成分,%/杂质,不大于/其他元素/单一",
+        "化学成分,%/杂质,不大于/其他元素/总和"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5 力学性能",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "牌号",
+        "状态",
+        "rmmpa",
+        "rp0.2mpa",
+        "a50mm%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "序号",
+        "内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6 扩口试验",
+      "profile": "classification",
+      "n_cols": 2,
+      "header_signature": [
+        "牌号",
+        "管内径扩大率,%,不小于"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 检验和试验项目、试验和取样方法、取样数量一览表",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "序号/规定的检验与试验项目",
+        "检验项目/规定的检验与试验项目",
+        "试验和取样方法/规定的检验与试验项目",
+        "取样数量/规定的检验与试验项目"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 (续〉",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "序号/约定的检验与试验项目",
+        "检验项目/约定的检验与试验项目",
+        "试验和取样方法/约定的检验与试验项目",
+        "取样数量/约定的检验与试验项目"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 5,
+      "header_signature": [
+        "序号",
+        "标准代号/页次",
+        "条款",
+        "原文",
+        "修改为"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2",
+    "chemical_composition_v1": "1.1.217",
+    "mechanical_properties_v1": "1.6.51",
+    "classification_v1": "1.0.3",
+    "inspection_rules_v1": "1.1.0"
+  },
+  "sample_doc_id": "b4117f7b-82bb-4e05-a884-199e4036bb50",
+  "created_at": "2026-11-15T06:43:00+00:00"
+}

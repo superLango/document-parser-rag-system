@@ -1,0 +1,43 @@
+{
+  "candidate_id": "GB/T 4423-2020-code-2026-11-15T06:13:52+00:00",
+  "standard_id": "GB/T 4423",
+  "edition": "2020",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "profile_changed: gb/t8170,数值修约规则与极限数值的表示和判定 profile inspection -> admin",
+    "profile_changed: 示例2:用h68(t26300)制造、供应状态为软化退火(o60)、高精级、对边距为10mm、长度为3000mm的方形铜棒标记为: profile admin -> dimension",
+    "profile_changed: 示例2:用h68(t26300)制造、供应状态为软化退火(o60)、高精级、对边距为10mm、长度为3000mm的方形铜棒标记为: profile dimension -> admin",
+    "missing_table: 表 4 铜及黄铜类棒材直径（或对边距）及其允许偏差 table expected by the edition profile was not found",
+    "profile_changed:  profile admin -> unknown",
+    "missing_table: 材料,表面应光亮、清洁,不应有影响使用的缺陷。 table expected by the edition profile was not found",
+    "missing_table: 8,订货单(或合同)内容 table expected by the edition profile was not found"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [
+      "表 4 铜及黄铜类棒材直径（或对边距）及其允许偏差",
+      "材料,表面应光亮、清洁,不应有影响使用的缺陷。",
+      "8,订货单(或合同)内容"
+    ],
+    "profile_changes": [
+      "gb/t8170,数值修约规则与极限数值的表示和判定: profile inspection -> admin",
+      "示例2:用h68(t26300)制造、供应状态为软化退火(o60)、高精级、对边距为10mm、长度为3000mm的方形铜棒标记为:: profile admin -> dimension",
+      "示例2:用h68(t26300)制造、供应状态为软化退火(o60)、高精级、对边距为10mm、长度为3000mm的方形铜棒标记为:: profile dimension -> admin",
+      ": profile admin -> unknown"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T06:13:52+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

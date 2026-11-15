@@ -8,15 +8,49 @@ export type DocumentItem = {
   created_at: string;
 };
 
+export type IssueFeedback = {
+  id: string;
+  created_at: string;
+  document_id: string;
+  document: string;
+  run_id: string;
+  category: string;
+  status: string;
+  description: string;
+  measure: string;
+  recipe_id: string;
+  reporter: string;
+};
+
+export type AbnormalDocument = {
+  document_id: string;
+  document: string;
+  run_id: string;
+  status: string;
+  stage: string;
+  error_code: string;
+  parsed_at: string;
+  recipe_channel: string;
+  parser_version: string;
+};
+
+export type IssueLedger = {
+  feedback: IssueFeedback[];
+  abnormal_documents: AbnormalDocument[];
+  summary: { feedback: number; open_feedback: number; abnormal_documents: number };
+};
+
 export type RunItem = {
   id: string;
   document_id: string;
   document_version: number;
   status: string;
   stage: string;
+  progress: number;
   trace_id: string;
   recipe_channel: string;
   engine_version: string;
+  parser_version?: string | null;
   result_key: string | null;
   error_code: string | null;
   created_at: string;
@@ -61,6 +95,22 @@ export type PropertyValue = {
   operator: string | null;
   unit: string;
   column: string;
+  meta?: Record<string, string>;
+  business_item?: string;
+  business_category?: string;
+  dictionary_status?: string;
+  feature?: string;
+  feature_in_dictionary?: boolean;
+  source?: {
+    kind?: string;
+    standard_no?: string;
+    edition?: string;
+    label?: string;
+    clause_id?: string;
+    table_id?: string;
+    page_no?: number;
+    quote?: string;
+  };
 };
 
 export type RecordItem = {
@@ -80,6 +130,63 @@ export type RecordItem = {
 export type RecordsPayload = {
   schema_version: string;
   records: RecordItem[];
+};
+
+export type InventoryItem = {
+  inventory_id: string;
+  item: string;
+  feature: string;
+  family: string;
+  sources: string[];
+  clause_id: string;
+  table_ids: string[];
+  requirement: string;
+  method: string;
+  status: string;
+  page_no: number;
+  conflicts: string[];
+  business_item?: string;
+  business_category?: string;
+  dictionary_status?: string;
+  sampling?: { quantity?: string; location?: string; note?: string };
+};
+
+export type ReferenceItem = {
+  standard_no: string;
+  title: string;
+  edition: string;
+  relation: string;
+  clause_id: string;
+  page_no: number;
+  resolved: boolean;
+};
+
+export type RunIntelligence = {
+  document_intelligence: {
+    stats?: {
+      clauses?: number;
+      inventory_items?: number;
+      qualitative_items?: number;
+      qualitative_records?: number;
+      classifications?: number;
+      methods_filled?: number;
+      coverage?: { aligned_ratio?: number };
+      references?: {
+        total?: number;
+        unresolved?: number;
+        resolution_rate?: number;
+      };
+      dictionary?: {
+        version?: string;
+        items_checked?: number;
+        hit_rate?: number;
+        method_hit_rate?: number;
+      };
+    };
+  };
+  inventory: { items?: InventoryItem[] };
+  references: { references?: ReferenceItem[]; stats?: Record<string, number> };
+  clauses: { clauses?: { clause_id?: string; title?: string; kind?: string }[] };
 };
 
 export type TableSummary = {
@@ -123,12 +230,21 @@ export type OcrPage = {
   layout_key?: string | null;
 };
 
+export type LayoutBlock = {
+  block_id: string;
+  page_no: number;
+  type: string;
+  bbox: number[];
+  text?: string;
+};
+
 export type OcrPayload = {
   document_id: string;
   backend: string;
   pages: OcrPage[];
   markdown: string;
   tables: TableSummary[];
+  layout?: LayoutBlock[];
   warnings: string[];
   quality: number;
 };
@@ -211,17 +327,53 @@ export type VerificationPackage = {
   passed: boolean;
 };
 
+export type FeedbackIntent = {
+  concept_id?: string | null;
+  concept?: string | null;
+  subject?: string | null;
+  field?: string | null;
+  measures?: string[];
+  category?: string;
+  verdict?: string;
+  scope?: string;
+  confidence?: number;
+  assumption?: string;
+  candidate_targets?: { table_id?: string; page_no?: number; confidence?: number }[];
+  clarifying_question?: string | null;
+};
+
 export type FeedbackDetail = {
   id: string;
   run_id: string;
   document_id: string;
   category: string;
-  target: { recipe_id?: string; measure?: string; unit?: string; family?: string; table_id?: string };
+  target: {
+    recipe_id?: string;
+    measure?: string;
+    unit?: string;
+    family?: string;
+    table_id?: string;
+    rule_id?: string;
+  };
   description: string;
   expected_value: string | null;
   source_quote: string | null;
   status: string;
   messages: FeedbackMessage[];
+  root_cause?: {
+    intent?: FeedbackIntent;
+    target?: { table_id?: string; page_no?: number };
+    repairability?: { decision?: string; reason?: string };
+    diagnosis?: { root_cause?: string; action?: string; scope?: string };
+    applied_run_id?: string;
+  };
+  suggestions?: {
+    action?: string;
+    table_id?: string;
+    page_no?: number;
+    reason?: string;
+    columns?: string[];
+  }[];
   triage: TriageDecision | null;
   proposal: RepairProposal | null;
   candidate: CandidateRef | null;
@@ -236,6 +388,64 @@ export type RecipeRef = {
   version: string;
   digest: string;
   channel?: string | null;
+};
+
+export type CrossStandardConflict = {
+  record_id: string;
+  measure: string;
+  current?: string;
+  imported?: string;
+};
+
+export type CrossStandardResolution = {
+  document_id: string;
+  standard_no: string;
+  edition: string;
+  title: string;
+  status: string;
+  page_count: number;
+  categories: string[];
+  grades: string[];
+  latest_run_id: string;
+};
+
+export type CrossStandardTask = {
+  task_id: string;
+  feature: string;
+  scope: "category" | "parameter";
+  parameter: string;
+  standard_no: string;
+  edition: string;
+  kind: string;
+  clause_id: string;
+  page_no: number;
+  quote: string;
+  title?: string;
+  status: string;
+  gap?: string;
+  resolution?: CrossStandardResolution;
+  expansion?: {
+    records_added?: number;
+    properties_added?: number;
+    conflicts?: CrossStandardConflict[];
+    agent?: boolean;
+  };
+  current_grades?: string[];
+};
+
+export type CrossStandardPayload = {
+  schema_version: string;
+  enabled?: boolean;
+  tasks: CrossStandardTask[];
+  stats: Record<string, number>;
+  agent?: {
+    status?: string;
+    accepted?: number;
+    imported?: number;
+    error?: string;
+    rejected?: unknown[];
+  };
+  imported?: { task_id: string; record_ids: string[] }[];
 };
 
 export type RecipeDetail = {
@@ -264,4 +474,13 @@ export type DictionaryPayload = {
   total: number;
   families: Record<string, number>;
   entries: DictionaryEntry[];
+};
+
+export type DictionaryImportResult = {
+  version: string;
+  total: number;
+  created: number;
+  updated: number;
+  skipped: number;
+  families: Record<string, number>;
 };

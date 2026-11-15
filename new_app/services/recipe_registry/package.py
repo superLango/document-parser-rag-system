@@ -11,6 +11,7 @@ SEMVER_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 RECIPE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_]*$")
 SUPPORTED_ENGINE_API = "recipe-engine/1"
 SCHEMA_VERSION = "2.0"
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 class RecipeSignature(BaseModel):
@@ -66,7 +67,51 @@ def canonical_payload(manifest: RecipeManifest) -> bytes:
 
 
 def compute_digest(manifest: RecipeManifest) -> str:
-    return hashlib.sha256(canonical_payload(manifest)).hexdigest()
+    """Digest covers manifest, referenced templates and test files.
+
+    测试/模板内容变化必须改变配方 digest，否则“一版一测试”只是空引用。
+    """
+    digest = hashlib.sha256(canonical_payload(manifest))
+    for ref, content in _referenced_file_contents(manifest).items():
+        digest.update(ref.encode("utf-8"))
+        digest.update(hashlib.sha256(content).digest())
+    return digest.hexdigest()
+
+
+def referenced_paths(manifest: RecipeManifest) -> list[str]:
+    paths: list[str] = []
+    paths.extend(manifest.templates)
+    paths.extend(manifest.tests)
+    entrypoint = manifest.entrypoint or {}
+    for key in ("module", "path", "file", "entry"):
+        value = entrypoint.get(key)
+        if isinstance(value, str) and value:
+            paths.append(value)
+    files = entrypoint.get("files")
+    if isinstance(files, list):
+        paths.extend(str(item) for item in files)
+    return sorted({path for path in paths if path})
+
+
+def _resolve_reference(ref: str) -> Path | None:
+    relative = ref.split("::", 1)[0]
+    candidate = (REPO_ROOT / relative).resolve()
+    if candidate.is_file():
+        return candidate
+    return None
+
+
+def _referenced_file_contents(manifest: RecipeManifest) -> dict[str, bytes]:
+    contents: dict[str, bytes] = {}
+    for ref in referenced_paths(manifest):
+        path = _resolve_reference(ref)
+        if path is not None:
+            contents[ref] = path.read_bytes()
+    return contents
+
+
+def missing_test_references(manifest: RecipeManifest) -> list[str]:
+    return [ref for ref in manifest.tests if _resolve_reference(ref) is None]
 
 
 def validate_manifest(manifest: RecipeManifest) -> RecipeManifest:

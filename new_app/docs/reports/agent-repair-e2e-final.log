@@ -1,0 +1,28 @@
+﻿[1/13] DOC-LOW-COVERAGE     status=verified scope=data passed=True decision=accept tier=auto 13.8s err=
+[2/13] DOC-LOW-COVERAGE     status=needs_more_info scope=data passed=False decision=rollback tier=auto 21.7s err=
+[3/13] DOC-LOW-COVERAGE     status=needs_more_info scope=data passed=False decision=rollback tier=auto 17.1s err=
+[4/13] DOC-NO-RECORDS       status=needs_more_info scope=data passed=False decision=rollback tier=auto 14.3s err=
+[5/13] DOC-NO-RECORDS       status=needs_more_info scope=data passed=False decision=rollback tier=auto 15.2s err=
+[6/13] DOC-NO-RECORDS       status=needs_more_info scope=data passed=False decision=rollback tier=auto 117.0s err=
+[7/13] DOC-UNBOUND-COLUMNS  status=needs_more_info scope=data passed=False decision=rollback tier=auto 13.7s err=
+[8/13] DOC-UNBOUND-COLUMNS  status=needs_more_info scope=data passed=False decision=rollback tier=auto 20.3s err=
+[9/13] DOC-UNBOUND-COLUMNS  status=needs_more_info scope=recipe passed=False decision= tier= 5.8s err=
+[10/13] DOC-DUP-KEYS         status=verified scope=recipe passed=True decision=accept tier=review 19.7s err=
+[11/13] DOC-DUP-KEYS         status=verified scope=recipe passed=True decision=accept tier=review 20.3s err=
+[12/13] DOC-DUP-KEYS         status=verified scope=recipe passed=True decision=accept tier=review 19.7s err=
+[13/13] DOC-NO-TABLES        status=needs_more_info scope=engine passed=None decision=None tier=None 3.6s err=
+{
+  "sampled": 13,
+  "processed_ok": 13,
+  "status_dist": {
+    "verified": 4,
+    "needs_more_info": 9
+  },
+  "verified": 4,
+  "auto_tier": 8,
+  "review_tier": 3,
+  "l1_attempts": 7,
+  "avg_ops": 4.31,
+  "latency_p50": 17.1,
+  "latency_p95": 21.7
+}

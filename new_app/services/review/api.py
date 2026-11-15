@@ -2,6 +2,7 @@
 from fastapi import APIRouter, HTTPException
 from hanson_contracts import ReviewReport, ReviewRequest
 
+from .rules import DOC_RULE_IDS
 from .service import ReviewService
 
 router = APIRouter(prefix="/internal")
@@ -45,5 +46,6 @@ async def rules() -> dict:
             "M5-UNIT-001",
             "M5-DUP-001",
             "M5-TABLE-001",
+            *DOC_RULE_IDS,
         ],
     }

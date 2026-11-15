@@ -1,0 +1,103 @@
+{
+  "standard_id": "YS/T 656",
+  "edition": "2015",
+  "document_sha256": "",
+  "page_count": 5,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "项目",
+        "得分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "gb/t15076(所有部分)",
+        "钽铌化学分析方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3",
+        "牌号和化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.1",
+        "牌号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.2",
+        "化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "3.3",
+        "其他元素"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "1"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表1 银及铝合金的化学成分",
+      "profile": "chemical_composition",
+      "n_cols": 13,
+      "header_signature": [
+        "化学成分",
+        "化学成分",
+        "牌号",
+        "牌号",
+        "牌号",
+        "牌号",
+        "牌号",
+        "牌号",
+        "牌号",
+        "牌号",
+        "牌号",
+        "牌号",
+        "牌号"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3"
+  },
+  "sample_doc_id": "702fbb32-0760-4150-99fb-6ef83af61364",
+  "created_at": "2026-11-15T06:44:56+00:00"
+}

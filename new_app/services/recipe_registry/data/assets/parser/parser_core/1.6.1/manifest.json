@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "kind": "parser",
+  "asset_id": "parser_core",
+  "version": "1.6.1",
+  "runtime_api": "sandbox-engine/1",
+  "python": "3.12",
+  "stdlib_only": true,
+  "entry_modules": [
+    "builtin",
+    "strategies",
+    "clauses",
+    "inventory",
+    "references",
+    "projection",
+    "dictionary"
+  ],
+  "files": [
+    {
+      "path": "builtin.py",
+      "sha256": "d6aca3ac4cc09e324829e3488dedf6cfb721ca7288464cee3370a5c288a42497"
+    },
+    {
+      "path": "strategies.py",
+      "sha256": "bb67a9cb582e5573e419945b1e0edc5c7e958092b0df447b14a642e2d0952acf"
+    },
+    {
+      "path": "clauses.py",
+      "sha256": "5a6f7f774443a5a621e613d39b50a31e16d47a5ac948beaab331c78189771091"
+    },
+    {
+      "path": "inventory.py",
+      "sha256": "72b1e30dfb960b59246622f54d94e983a26591579022f53b43f105104145d3d4"
+    },
+    {
+      "path": "references.py",
+      "sha256": "07fc6157de32000299d96ace7247e95725cbd88ff75d1282e956ea6cc6a1c6de"
+    },
+    {
+      "path": "projection.py",
+      "sha256": "2a46d6fd7174f54f4b33aa857d12dd388f8654eac292dbde053cab28b5504c8d"
+    },
+    {
+      "path": "dictionary.py",
+      "sha256": "105d03a6f0ae65a157ce906d7488ff669cb46ac20d00c5e214e9d0e26c008bde"
+    },
+    {
+      "path": "dictionary_data.json",
+      "sha256": "fd5bc0d97d624eb4e2ee23dad7d7da8d3635a2e932227d661736354ee0cd65d5"
+    }
+  ],
+  "tests": [],
+  "checksum": "53f84dfb532fc3ae4cc15fadf8af7893a6f672a76606048ff2cbcc30065afccb",
+  "created_at": "2026-11-14T22:53:49+00:00"
+}

@@ -1,0 +1,215 @@
+{
+  "standard_id": "GJB 5040",
+  "edition": "2001",
+  "document_sha256": "",
+  "page_count": 22,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "1."
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表1",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "序号",
+        "材料牌号",
+        "材料牌号",
+        "供应状态",
+        "推荐的热处理制度",
+        "布氏硬度值hbs"
+      ],
+      "measures": [
+        "布氏硬度"
+      ]
+    },
+    {
+      "caption": "表1 续",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "序号",
+        "材料牌号",
+        "材料牌号",
+        "供应状态",
+        "推荐的热处理制度",
+        "布氏硬度值hbs"
+      ],
+      "measures": [
+        "布氏硬度"
+      ]
+    },
+    {
+      "caption": "表2",
+      "profile": "mechanical_properties",
+      "n_cols": 13,
+      "header_signature": [
+        "序号",
+        "材料牌号",
+        "材料牌号",
+        "热处理制度/淬火",
+        "热处理制度/回火",
+        "力学性能/σb/mpa/不小于",
+        "力学性能/σ0.2/mpa/不小于",
+        "力学性能/δ5/%/不小于",
+        "力学性能/ψ/%/不小于",
+        "力学性能/aku2/j/不小于",
+        "力学性能/不小于",
+        "布氏硬度值hbs或hbw",
+        "热处理试样毛坯尺寸mm"
+      ],
+      "measures": [
+        "布氏硬度",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "表2 ( 续)",
+      "profile": "heat_treatment",
+      "n_cols": 12,
+      "header_signature": [
+        "序号",
+        "材料牌号",
+        "材料牌号",
+        "热处理制度/淬火",
+        "热处理制度/回火",
+        "力学性能/σb/mpa/不小于",
+        "力学性能/σ0.2/mpa/不小于",
+        "力学性能/δ5/%/不小于",
+        "力学性能/ψ/%/不小于",
+        "力学性能/akm2/j/不小于",
+        "力学性能/不小于",
+        "热处理试样毛坯尺寸mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "heat_treatment",
+      "n_cols": 12,
+      "header_signature": [
+        "序号",
+        "材料牌号",
+        "材料牌号",
+        "热处理制度/淬火",
+        "热处理制度/回火",
+        "力学性能/σb/mpa/不小于",
+        "力学性能/σ0.2/mpa/不小于",
+        "力学性能/δ5/%/不小于",
+        "力学性能/ψ/%/不小于",
+        "力学性能/a1n2/j/不小于",
+        "力学性能/不小于",
+        "热处理试样毛坯尺寸mm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表2 ( 续]",
+      "profile": "mechanical_properties",
+      "n_cols": 13,
+      "header_signature": [
+        "序号",
+        "材料牌号",
+        "材料牌号",
+        "热处理制度/淬火",
+        "热处理制度/回火",
+        "力学性能/σb/mpa/不小于",
+        "力学性能/σ0.2/mpa/不小于",
+        "力学性能/δ5/%/不小于",
+        "力学性能/ψ/%/不小于",
+        "力学性能/aku2/j/不小于",
+        "力学性能/不小于",
+        "布氏硬度值hbs或hbw",
+        "热处理试样毛坯尺寸mm"
+      ],
+      "measures": [
+        "布氏硬度",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "表3",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "力学性能",
+        "按纵向力学性能降低的比例,%,不大于/沿纤维横向切取试样",
+        "按纵向力学性能降低的比例,%,不大于/沿纤维弦向切取试样"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "材料牌号",
+        "取样方向",
+        "取样方向",
+        "不同方向力学性能,不小于/σb/mpa",
+        "不同方向力学性能,不小于/σ0.2/mpa",
+        "不同方向力学性能,不小于/δ5/%",
+        "不同方向力学性能,不小于/ψ/%",
+        "不同方向力学性能,不小于/aku2/j"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表5",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "级别",
+        "形貌",
+        "主要特征"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6",
+      "profile": "heat_treatment",
+      "n_cols": 6,
+      "header_signature": [
+        "级别",
+        "特征",
+        "热处理状态",
+        "热处理状态",
+        "调质",
+        "调质"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7",
+      "profile": "inspection",
+      "n_cols": 12,
+      "header_signature": [
+        "序号",
+        "锻件检验项目和取样数量/锻件类别/热处理状态",
+        "锻件检验项目和取样数量/i类/预备",
+        "锻件检验项目和取样数量/i类/最终",
+        "锻件检验项目和取样数量/ii类/预备",
+        "锻件检验项目和取样数量/ii类/最终",
+        "锻件检验项目和取样数量/iii类/预备",
+        "锻件检验项目和取样数量/iii类/最终",
+        "锻件检验项目和取样数量/iv类/预备",
+        "要求的章条号/iv类",
+        "检查或试验方法的章条号",
+        "最终"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "mechanical_properties_v1": "1.6.51",
+    "heat_treatment_v1": "1.0.0"
+  },
+  "sample_doc_id": "913ba8b1-30da-4a5f-a94f-e81851ed5e1a",
+  "created_at": "2026-11-14T11:10:37+00:00"
+}

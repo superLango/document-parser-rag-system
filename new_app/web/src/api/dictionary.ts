@@ -1,5 +1,5 @@
 import { apiRequest, toQuery } from "./client";
-import type { DictionaryPayload } from "./types";
+import type { DictionaryImportResult, DictionaryPayload } from "./types";
 
 export const dictionaryApi = {
   query: (
@@ -10,5 +10,11 @@ export const dictionaryApi = {
       status?: string;
       limit?: number;
     } = {}
-  ) => apiRequest<DictionaryPayload>(`/dictionary${toQuery(params)}`)
+  ) => apiRequest<DictionaryPayload>(`/dictionary${toQuery(params)}`),
+  import: (entries: Record<string, unknown>[], replace = false) =>
+    apiRequest<DictionaryImportResult>("/dictionary/import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entries, replace })
+    })
 };

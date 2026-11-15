@@ -1,0 +1,99 @@
+{
+  "standard_id": "AMS 4050",
+  "edition": "K",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "aerospacematerialspecification",
+        "ams4050tm",
+        "rev.k"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 3,
+      "header_signature": [
+        "element",
+        "min",
+        "max"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "nominalthicknessinches",
+        "specimenorientation",
+        "tensilestrengthksi",
+        "yieldstrengthat0.2%offsetksi",
+        "elongationin2inchesor4d%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "nominalthicknessmillimeters",
+        "nominalthicknessmillimeters",
+        "specimenorientation",
+        "tensilestrengthmpa",
+        "yieldstrengthat0.2%offsetmpa",
+        "elongationin50.8mmor4d%",
+        "elongationin5.65√aor5d%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "nominalthicknessinches",
+        "l-tksisqrtinch",
+        "t-lksisqrtinch",
+        "s-lksisqrtinch"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "nominalthicknessmillimeters",
+        "nominalthicknessmillimeters",
+        "l-tmpasqrtm",
+        "t-lmpasqrtm",
+        "s-lmpasqrtm"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "minimumcyclespertest",
+        "90000cycles"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "0a1e1b50-6c70-4f46-a356-e729904ecc00",
+  "created_at": "2026-11-14T10:58:52+00:00"
+}

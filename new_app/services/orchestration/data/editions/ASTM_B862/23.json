@@ -1,0 +1,188 @@
+{
+  "standard_id": "ASTM B862",
+  "edition": "23",
+  "document_sha256": "",
+  "page_count": 10,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 19,
+      "header_signature": [
+        "npsdesign.",
+        "nominalwallthickness/outsidedia./inmm",
+        "nominalwallthickness/outsidedia./inmm",
+        "nominalwallthickness/schedule10s/schedule5s",
+        "nominalwallthickness/schedule10s/schedule5s",
+        "nominalwallthickness/schedule10s/schedule5a",
+        "nominalwallthickness/schedule10s/schedule5a",
+        "nominalwallthickness/schedule10s",
+        "nominalwallthickness/schedule10s",
+        "nominalwallthickness/schedule10s/schedule10a",
+        "nominalwallthickness/schedule10s/schedule10a",
+        "nominalwallthickness/schedule10s/schedule40s",
+        "nominalwallthickness/schedule10s/schedule40s",
+        "nominalwallthickness/schedule10s/schedule80s",
+        "nominalwallthickness/schedule10s/schedule80s",
+        "schedule80in",
+        "schedule80in",
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 22,
+      "header_signature": [
+        "grade",
+        "unsnumber",
+        "carbon,max.",
+        "oxygenrangeormax.",
+        "nitrogen,max.",
+        "hydrogen,max.",
+        "ironrangeormax.",
+        "aluminum",
+        "vanadium",
+        "palladium",
+        "ruthenium",
+        "nickel",
+        "molybdenum",
+        "chromium",
+        "cobaltzirconium",
+        "niobium",
+        "tin",
+        "silicon",
+        "otherelements,max.each",
+        "otherelements,max.total",
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 20,
+      "header_signature": [
+        "",
+        "unsnumber",
+        "carbon,max.",
+        "oxygenrangeormax.",
+        "nitrogen,max.",
+        "hydrogen,max.",
+        "ironrangeormax.",
+        "aluminum",
+        "vanadium",
+        "palladium",
+        "ruthenium",
+        "nickel",
+        "molybdenum",
+        "chromium",
+        "cobaltzirconium",
+        "niobium",
+        "tin",
+        "silicon",
+        "otherelements,max.each",
+        "otherelements,max.total"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 21,
+      "header_signature": [
+        "grade",
+        "unsnumber",
+        "carbon,max.",
+        "oxygenrangeormax.",
+        "nitrogen,max.",
+        "hydrogen,max.",
+        "ironrangeormax.",
+        "aluminum",
+        "vanadium",
+        "palladium",
+        "ruthenium",
+        "nickel",
+        "molybdenum",
+        "chromium",
+        "cobaltzirconium",
+        "niobium",
+        "tin",
+        "silicon",
+        "otherelements,max.each",
+        "otherelements,max.total",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "element",
+        "productanalysislimits,maxorrange,%",
+        "permissiblevariationinproductanalysis"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 8,
+      "header_signature": [
+        "grade",
+        "tensilestrength,min/ksi",
+        "tensilestrength,min/(mpa)",
+        "yieldstrength(0.2%offset)/min/ksi",
+        "yieldstrength(0.2%offset)/min/(mpa)",
+        "yieldstrength(0.2%offset)/max/ksi",
+        "yieldstrength(0.2%offset)/max/(mpa)",
+        "elongation2in.or50mm,gaugelength,min%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "basemetal",
+        "fillermetal"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "nominaloutsidediameter(nps)4",
+        "permissiblevariationsinoutsidediameter/over",
+        "permissiblevariationsinoutsidediameter/under"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "actualmaterialthickness,in.",
+        "maximumreinforcement,in.(mm)/circumferentialjointsinpipe",
+        "maximumreinforcement,in.(mm)/otherwelds"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_composition_v1": "1.1.12",
+    "mechanical_properties_v1": "1.6.51",
+    "dimension_v1": "1.0.2"
+  },
+  "sample_doc_id": "94c2e07b-b72b-4cf5-9809-719ac2c50bab",
+  "created_at": "2026-11-14T17:05:48+00:00"
+}

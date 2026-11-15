@@ -1,0 +1,38 @@
+{
+  "parser_version": "1.0.21",
+  "results": [
+    {
+      "name": "GBT 14976-2025.pdf",
+      "run_id": "ee3c6d7e-13de-498f-ab42-d0fc14bf499a",
+      "previous_run_id": "fb7ae68a-154f-46e2-94b4-a5ca09a94ad1",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "records": 40,
+      "fields": 362,
+      "placeholder_grades": 0,
+      "elapsed_seconds": 110.8
+    },
+    {
+      "name": "GBT 1591-2018.pdf",
+      "run_id": "52bcc7e1-09bb-44d2-a736-b648121d8de8",
+      "previous_run_id": "c255e59d-c98e-4302-998e-d8d78b6a9047",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "records": 80,
+      "fields": 733,
+      "placeholder_grades": 0,
+      "elapsed_seconds": 114.9
+    },
+    {
+      "name": "ASME SB265-2025.pdf",
+      "run_id": "b960163e-3a69-4c37-a191-51b12b13b64b",
+      "previous_run_id": "2ae24794-4084-4498-a7bc-2e38dbf41c1d",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "records": 43,
+      "fields": 129,
+      "placeholder_grades": 0,
+      "elapsed_seconds": 151.1
+    }
+  ]
+}

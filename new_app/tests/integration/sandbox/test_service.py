@@ -78,6 +78,10 @@ class LocalRunnerExecutor:
                 "diagnostics.json",
                 "metrics.json",
                 "manifest.json",
+                "clauses.json",
+                "inventory.json",
+                "references.json",
+                "document_intelligence.json",
             )
             if (work / "output" / name).exists()
         }
@@ -163,12 +167,16 @@ def test_service_success_writes_six_artifacts(tmp_path: Path) -> None:
         "diagnostics",
         "metrics",
         "manifest",
+        "clauses",
+        "inventory",
+        "references",
+        "document_intelligence",
     }
     assert result.manifest.engine_image_digest == "sha256:test"
     assert result.manifest.outputs["result.json"] == result.outputs["result"].sha256
     assert result.metrics.duration_ms == 25
     uploaded = [key for key in store.data if key.startswith("runs/run-1/sandbox/")]
-    assert len(uploaded) == 6
+    assert len(uploaded) == 10
 
 
 def test_service_semantic_outputs_are_deterministic(tmp_path: Path) -> None:

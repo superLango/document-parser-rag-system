@@ -1,0 +1,121 @@
+﻿[1/50] GGX-FJLA-1-22.pdf
+Consider using the pymupdf_layout package for a greatly improved page layout analysis.
+[2/50] GGX-FJLA-46-22.pdf
+[3/50] GJB 1538A-2008过期.pdf
+[4/50] GJB 1538A-2021.pdf
+[5/50] GJB 1951-1994.pdf
+[6/50] GJB 2218A-2018.pdf
+[7/50] GJB 2351-95 航空航天用铝合金锻件规范.pdf
+[8/50] GJB 2351A-2021.pdf
+[9/50] GJB 3797A-2015.pdf
+[10/50] GJB 5040-2001 航空用钢锻件规范.pdf
+[11/50] GB 24627-2009过期.pdf
+[12/50] GBT 14976-2012过期.pdf
+[13/50] GBT 14976-2025.pdf
+[14/50] GBT 1591-2018.pdf
+[15/50] GBT 2054-2013过期.pdf
+[16/50] GBT 2965-2007过期.pdf
+[17/50] GBT 3274-2017.pdf
+[18/50] GBT 3621-1994 过期.pdf
+[19/50] GBT 3621-2022.pdf
+[20/50] GBT 3623-2022.pdf
+[21/50] GBT 3880.1-2012过期.pdf
+[22/50] GBT 3880.1-2023.pdf
+[23/50] GBT 3880.2-2012过期.pdf
+[24/50] GBT 3880.2-2024.pdf
+[25/50] GBT 5231-2022.pdf
+[26/50] ISO 5832-2-2018-过期.pdf
+[27/50] AMS-QQ-A250-4B.pdf
+[28/50] AMS4050K.pdf
+[29/50] AMS4108G--.pdf
+[30/50] AMS4911S-过期.pdf
+[31/50] AMS4943M.pdf
+[32/50] AMS4967N.pdf
+[33/50] AMS4981F-过期.pdf
+[34/50] AMS5663P.pdf
+[35/50] AS4076.pdf
+[36/50] ASME SA264-2023-过期.pdf
+[37/50] ASME SB265-2025.pdf
+[38/50] ASME SB338-2021-过期.pdf
+[39/50] ASME SB575-2023-过期.pdf
+[40/50] ASTM B338-17-过期.PDF
+[41/50] ASTM B348-13-过期.pdf
+[42/50] ASTM B708-25--+.pdf
+[43/50] ASTM B861-14-过期.pdf
+[44/50] ASTM B861-24.pdf
+[45/50] ASTM B862-23-过期.pdf
+[46/50] ASTM F136-26--.pdf
+[47/50] HB 20079-2012 航空用高强度沉淀硬化不锈钢锻件规范.pdf
+[48/50] NBT 47014-2011过期.pdf
+[49/50] YST 255-2009.pdf
+[50/50] YST 579-2014.pdf
+{
+  "documents": 50,
+  "structured_ready": 40,
+  "records": 3393,
+  "fields": 11636,
+  "source_data_rows": 1661,
+  "zero_record_documents": 0,
+  "table_not_parsed_documents": 0,
+  "text_layer_documents": 28,
+  "groundable_fields": 3484,
+  "unverifiable_fields": 8152,
+  "grade_grounded_rate": 0.7003,
+  "value_grounded_rate": 0.7078,
+  "unit_present_rate": 0.9997,
+  "implausible_values": 455,
+  "empty_record_rate": 0.0,
+  "duplicate_keys": 368,
+  "multi_condition_keys": 261,
+  "issue_counts": {
+    "value_out_of_range": 455,
+    "ocr_or_normalization": 10,
+    "grade_not_found": 1006,
+    "non_numeric_value": 1,
+    "range_or_limit_format": 1
+  },
+  "by_category": {
+    "企业标准": {
+      "documents": 2,
+      "records": 55,
+      "fields": 205,
+      "zero": 0,
+      "table_not_parsed": 0
+    },
+    "国军标": {
+      "documents": 8,
+      "records": 478,
+      "fields": 1619,
+      "zero": 0,
+      "table_not_parsed": 0
+    },
+    "国家标准": {
+      "documents": 15,
+      "records": 2236,
+      "fields": 7901,
+      "zero": 3,
+      "table_not_parsed": 0
+    },
+    "国际标准": {
+      "documents": 1,
+      "records": 12,
+      "fields": 22,
+      "zero": 0,
+      "table_not_parsed": 0
+    },
+    "美国标准": {
+      "documents": 20,
+      "records": 575,
+      "fields": 1723,
+      "zero": 5,
+      "table_not_parsed": 0
+    },
+    "行业标准": {
+      "documents": 4,
+      "records": 37,
+      "fields": 166,
+      "zero": 2,
+      "table_not_parsed": 0
+    }
+  }
+}

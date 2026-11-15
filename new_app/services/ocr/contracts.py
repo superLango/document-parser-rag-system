@@ -40,6 +40,9 @@ class TableBlock(BaseModel):
     header_rows: int = 1
     header_paths: list[list[str]] = Field(default_factory=list)
     rows: list[list[str]] = Field(default_factory=list)
+    column_units: list[str] = Field(default_factory=list)
+    column_conditions: list[str] = Field(default_factory=list)
+    column_elements: list[str] = Field(default_factory=list)
 
 
 class TableGrid(BaseModel):
@@ -54,6 +57,10 @@ class TableGrid(BaseModel):
     header_rows: int = 1
     header_paths: list[list[str]] = Field(default_factory=list)
     units: list[str] = Field(default_factory=list)
+    # 列级元数据：每列从 header_paths 逐级继承，供配方绑定单位/条件/元素。
+    column_units: list[str] = Field(default_factory=list)
+    column_conditions: list[str] = Field(default_factory=list)
+    column_elements: list[str] = Field(default_factory=list)
     rows: list[list[str]] = Field(default_factory=list)
     blocks: list[TableBlock] = Field(default_factory=list)
     bbox: list[float] | None = None
@@ -62,6 +69,9 @@ class TableGrid(BaseModel):
     raw_html: str = ""
     continuation_of: str | None = None
     merged_pages: list[int] = Field(default_factory=list)
+    # 表级质量分（0–1）与原因标记，供路由/人工复核拦截低质量表。
+    quality: float = 1.0
+    quality_flags: list[str] = Field(default_factory=list)
 
 
 class LayoutBlock(BaseModel):

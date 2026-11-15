@@ -1,0 +1,256 @@
+{
+  "documents": 39,
+  "structured_ready": 8,
+  "documents_with_strategy_hit": 3,
+  "documents_with_records": 8,
+  "hit_rate": 0.0769,
+  "record_recovery_rate": 0.2051,
+  "strategy_documents": {
+    "grade_property_matrix": 3
+  },
+  "strategy_records": {
+    "grade_property_matrix": 3
+  },
+  "runs": [
+    {
+      "doc_id": "008aa5b1f19a4264958dd2a07e0127181775526669960",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "05451a53a31244b3a77e612a22fc4e1f1783322712549",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "071540cf543a4f1090656463529770611778831166629",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "07a8e238779b4141baf54706b5e7b72c1776990092266",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "0844eef816384f8bb4891d91bb4020dc1774521713979",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "09341e3378654247bfeb24176db1698f1788848371240",
+      "status": "STRUCTURED_READY",
+      "records": 2,
+      "strategies": []
+    },
+    {
+      "doc_id": "09341e3378654247bfeb24176db1698f1788848371240__ddc45a0b",
+      "status": "STRUCTURED_READY",
+      "records": 2,
+      "strategies": []
+    },
+    {
+      "doc_id": "0b84cfe7a2c14255b19cc26a2be0a5c51778747059147",
+      "status": "STRUCTURED_READY",
+      "records": 1,
+      "strategies": [
+        "grade_property_matrix"
+      ]
+    },
+    {
+      "doc_id": "0bfefce8cf6246aa8e3bb9467009b4921783501158944",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "0d6b4856514d473ea41d203384b368471778746664140",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "1298ed8967a24cbfaef4edbd6814ea9b1778745951689",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "12a7043341464cd6bc5d2266263842801782891070950",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "19a36256471d46ec98a6efbd20c7682c1783501353109",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "1c8b8407d490405499fb4e926cbf0cab1778747087626",
+      "status": "STRUCTURED_READY",
+      "records": 1,
+      "strategies": [
+        "grade_property_matrix"
+      ]
+    },
+    {
+      "doc_id": "1e1cc21ac74f45a6afa8f0acd12c84d71775611827380",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "1ecb564191744b568e8dfe31e0aa5a441788329309833",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "1f66f1fa7d6744b2b3d8f6746992048d1778831210797",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "2150d5497c1b4af0b43a2db5974701021783590227271",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "22a7243e5f6145b892c2028b5f27c3731778551343621",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "23a386b1241b41188c0b2b8e45100e041702351441408",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "25769377d7084c0e9ead3ee99fa05cfc1791259582303",
+      "status": "STRUCTURED_READY",
+      "records": 18,
+      "strategies": []
+    },
+    {
+      "doc_id": "257f95e22120417a828d254d6f022d031788509883045",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "27ae382ff50044baa6ff3c47e2ea2d271788485058489",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "29626646547c48538c1d8c89de9473a6",
+      "status": "STRUCTURED_READY",
+      "records": 7,
+      "strategies": []
+    },
+    {
+      "doc_id": "29ace0d18d9c40ecb8fc1a9fe0dbe32c1786958354993",
+      "status": "STRUCTURED_READY",
+      "records": 5,
+      "strategies": []
+    },
+    {
+      "doc_id": "2a4cbee1118d4563b84141a1d7a8df7b1778747004444",
+      "status": "STRUCTURED_READY",
+      "records": 1,
+      "strategies": [
+        "grade_property_matrix"
+      ]
+    },
+    {
+      "doc_id": "2ac611a6a1214d83babfa1857ec46eca1777508819117",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "2e3584247099409ab9089d1288f28f291788142531937",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "2e3584247099409ab9089d1288f28f291788142531937__bd5faf79",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "357d1ef22fa0434689bc433584fe23c31777942576681",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "383efacd8cb84c27812f36bdd10a499f1785896753070",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "3856e1121bfb43fdb5655fed2cfc90441787044287842",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "3a2aabea78854031baad986f52ddb3631778746421936",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "3cff6a484d7c443ea253c6ee5dc64e241785318454871",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "3dc5d29b16814070bcc655afcc8c66471778579008666",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "3dc6dd0e3a5b452692d906ab252ee6a81785318960246",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "3ea180eeab03414bb126ed4accd862d11720487978191",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "45324002e5b441bf94494199b81944fb1783911360160",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    },
+    {
+      "doc_id": "47b937ff463444929ca6714f2466c59e1700617588090",
+      "status": "REVIEW_FAILED",
+      "records": 0,
+      "strategies": []
+    }
+  ]
+}

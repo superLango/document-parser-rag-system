@@ -1,7 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FileText, Plus, RefreshCcw, Trash2, UploadCloud } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  Download,
+  FileText,
+  Plus,
+  RefreshCcw,
+  Search,
+  ShieldCheck,
+  Trash2,
+  UploadCloud
+} from "lucide-react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { documentsApi } from "../api/documents";
 import { runsApi } from "../api/runs";
@@ -15,6 +24,8 @@ import {
   Skeleton
 } from "../components/ui/primitives";
 import { Dialog } from "../components/ui/dialog";
+import { Input, Select } from "../components/ui/form";
+import { Pagination } from "../components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -25,18 +36,62 @@ import {
 } from "../components/ui/table";
 import { useToast } from "../components/ui/toast";
 import { RUN_TERMINAL, runStatusMeta } from "../lib/status";
-import { formatBytes, formatDateTime } from "../lib/utils";
+import { formatBytes, formatDateTime, formatDuration } from "../lib/utils";
+import {
+  buildResultCsv,
+  downloadBlob,
+  fileTimestamp,
+  resultCsvFilename
+} from "../lib/resultExport";
+import { createZip } from "../lib/zip";
 
 const MAX_SIZE = 100 * 1024 * 1024;
 const ACCEPT = ".pdf,.md,.markdown,.txt";
+const PAGE_SIZE = 20;
+const UNPARSED = "UNPARSED";
+// 这些终态已经产出结构化结果，文档库直接提供「审核」入口。
+const REVIEWABLE = new Set([
+  "STRUCTURED_READY",
+  "REVIEW_FAILED",
+  "HUMAN_REVIEW",
+  "HUMAN_APPROVED",
+  "HUMAN_REJECTED"
+]);
+const STATUS_OPTIONS = [
+  "RECEIVED",
+  "OCR_RUNNING",
+  "ROUTING",
+  "SANDBOX_RUNNING",
+  "REVIEWING",
+  "REPAIRING",
+  "REPARSING",
+  "HUMAN_REVIEW",
+  "HUMAN_APPROVED",
+  "HUMAN_REJECTED",
+  "STRUCTURED_READY",
+  "REVIEW_FAILED",
+  "UNROUTED",
+  "FAILED",
+  "CANCELLED"
+];
 
 export default function DocumentsPage() {
   const { push } = useToast();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<DocumentItem | null>(null);
+  const [exportOpen, setExportOpen] = useState(false);
+  const [exportKeyword, setExportKeyword] = useState("");
+  const [exportSelected, setExportSelected] = useState<Set<string>>(new Set());
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState("");
+  const [keyword, setKeyword] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [page, setPage] = useState(1);
+  const deferredKeyword = useDeferredValue(keyword);
 
   const documentsQuery = useQuery({
     queryKey: ["documents"],
@@ -97,6 +152,124 @@ export default function DocumentsPage() {
   const activeCount =
     runsQuery.data?.filter((run) => !RUN_TERMINAL.has(run.status)).length ?? 0;
 
+  const exportCandidates = useMemo(() => {
+    const search = exportKeyword.trim().toLowerCase();
+    return documents.filter((document) => {
+      if (!search) return true;
+      return (
+        document.filename.toLowerCase().includes(search) ||
+        document.id.toLowerCase().includes(search)
+      );
+    });
+  }, [documents, exportKeyword]);
+
+  function toggleExportSelected(documentId: string) {
+    setExportSelected((previous) => {
+      const next = new Set(previous);
+      if (next.has(documentId)) {
+        next.delete(documentId);
+      } else {
+        next.add(documentId);
+      }
+      return next;
+    });
+  }
+
+  function toggleAllExport() {
+    const ids = exportCandidates
+      .map((document) => document.id)
+      .filter((documentId) => {
+        const run = latestRunByDocument.get(documentId);
+        return Boolean(run && RUN_TERMINAL.has(run.status));
+      });
+    const allSelected =
+      ids.length > 0 && ids.every((documentId) => exportSelected.has(documentId));
+    setExportSelected(allSelected ? new Set() : new Set(ids));
+  }
+
+  async function runBatchExport() {
+    const selected = documents.filter((document) =>
+      exportSelected.has(document.id)
+    );
+    if (selected.length === 0) {
+      push("error", "请选择要导出的文档");
+      return;
+    }
+    setExporting(true);
+    const at = new Date();
+    const files: { name: string; content: string }[] = [];
+    let skipped = 0;
+    for (let index = 0; index < selected.length; index += 1) {
+      const document = selected[index];
+      setExportProgress(`${index + 1}/${selected.length}`);
+      const run = latestRunByDocument.get(document.id);
+      if (!run || !RUN_TERMINAL.has(run.status)) {
+        skipped += 1;
+        continue;
+      }
+      try {
+        const payload = await runsApi.records(run.id);
+        const records = payload.records ?? [];
+        if (records.length === 0) {
+          skipped += 1;
+          continue;
+        }
+        files.push({
+          name: `${String(files.length + 1).padStart(3, "0")}-${resultCsvFilename(
+            document.filename,
+            at
+          )}`,
+          content: buildResultCsv(records, document.filename)
+        });
+      } catch {
+        skipped += 1;
+      }
+    }
+    setExportProgress("");
+    setExporting(false);
+    if (files.length === 0) {
+      push(
+        "error",
+        "没有可导出的结构化结果",
+        skipped ? `${skipped} 份文档无可导出记录` : undefined
+      );
+      return;
+    }
+    downloadBlob(createZip(files), `文档库导出-${fileTimestamp(at)}.zip`);
+    push(
+      "success",
+      "批量导出完成",
+      `${files.length} 份${skipped ? `，跳过 ${skipped} 份` : ""}`
+    );
+    setExportOpen(false);
+    setExportSelected(new Set());
+  }
+
+  const filtered = useMemo(() => {
+    const search = deferredKeyword.trim().toLowerCase();
+    return documents.filter((document) => {
+      const run = latestRunByDocument.get(document.id);
+      const runStatus = run?.status ?? UNPARSED;
+      if (statusFilter && runStatus !== statusFilter) return false;
+      if (!search) return true;
+      return (
+        document.filename.toLowerCase().includes(search) ||
+        document.id.toLowerCase().includes(search)
+      );
+    });
+  }, [documents, deferredKeyword, statusFilter, latestRunByDocument]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [deferredKeyword, statusFilter]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const pageItems = filtered.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
   function chooseFile(next: File | null | undefined) {
     if (!next) return;
     if (next.size > MAX_SIZE) {
@@ -126,6 +299,18 @@ export default function DocumentsPage() {
               刷新
             </Button>
             <Button
+              variant="secondary"
+              icon={<Download className="h-4 w-4" />}
+              disabled={documents.length === 0}
+              onClick={() => {
+                setExportKeyword("");
+                setExportSelected(new Set());
+                setExportOpen(true);
+              }}
+            >
+              导出
+            </Button>
+            <Button
               icon={<Plus className="h-4 w-4" />}
               onClick={() => {
                 setFile(null);
@@ -137,6 +322,35 @@ export default function DocumentsPage() {
           </>
         }
       />
+
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <div className="relative w-72">
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={keyword}
+            onChange={(event) => setKeyword(event.target.value)}
+            placeholder="搜索文件名 / 文档 ID"
+            className="pl-8"
+          />
+        </div>
+        <Select
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value)}
+          className="w-40"
+          aria-label="按最近运行状态筛选"
+        >
+          <option value="">全部状态</option>
+          <option value={UNPARSED}>未解析</option>
+          {STATUS_OPTIONS.map((value) => (
+            <option key={value} value={value}>
+              {runStatusMeta(value).label}
+            </option>
+          ))}
+        </Select>
+        <span className="text-xs text-muted-foreground">
+          匹配 {filtered.length} 份
+        </span>
+      </div>
 
       <Card>
         {documentsQuery.isLoading ? (
@@ -169,88 +383,165 @@ export default function DocumentsPage() {
               }
             />
           </div>
+        ) : filtered.length === 0 ? (
+          <div className="p-5">
+            <EmptyState
+              title="没有匹配的文档"
+              description="调整关键词或状态筛选"
+              action={
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setKeyword("");
+                    setStatusFilter("");
+                  }}
+                >
+                  清除筛选
+                </Button>
+              }
+            />
+          </div>
         ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableHeaderCell>文件</TableHeaderCell>
-                <TableHeaderCell>大小</TableHeaderCell>
-                <TableHeaderCell>上传时间</TableHeaderCell>
-                <TableHeaderCell>最近运行</TableHeaderCell>
-                <TableHeaderCell className="text-right">操作</TableHeaderCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {documents.map((document) => {
-                const run = latestRunByDocument.get(document.id);
-                const meta = run ? runStatusMeta(run.status) : null;
-                return (
-                  <TableRow key={document.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
-                          <FileText className="h-4 w-4" />
-                        </span>
-                        <div className="min-w-0">
-                          <Link
-                            to={`/documents/${document.id}${run ? `?run=${run.id}` : ""}`}
-                            className="block max-w-md truncate font-medium text-foreground hover:text-primary-strong"
-                          >
-                            {document.filename}
-                          </Link>
-                          <p className="text-[11px] text-muted-foreground">
-                            {document.content_type || "application/octet-stream"}
-                          </p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {formatBytes(document.size)}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {formatDateTime(document.created_at)}
-                    </TableCell>
-                    <TableCell>
-                      {run && meta ? (
-                        <div className="flex flex-col gap-1">
-                          <Badge tone={meta.tone} dot>
-                            {meta.label}
-                          </Badge>
-                          <span className="text-[11px] text-muted-foreground">
-                            {formatDateTime(run.created_at)}
+          <>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell>文件</TableHeaderCell>
+                  <TableHeaderCell>大小</TableHeaderCell>
+                  <TableHeaderCell>上传时间</TableHeaderCell>
+                  <TableHeaderCell>最近运行</TableHeaderCell>
+                  <TableHeaderCell>解析时长</TableHeaderCell>
+                  <TableHeaderCell className="text-right">操作</TableHeaderCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pageItems.map((document) => {
+                  const run = latestRunByDocument.get(document.id);
+                  const meta = run ? runStatusMeta(run.status) : null;
+                  const terminal = run ? RUN_TERMINAL.has(run.status) : false;
+                  const reviewable = run ? REVIEWABLE.has(run.status) : false;
+                  return (
+                    <TableRow key={document.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
+                            <FileText className="h-4 w-4" />
                           </span>
+                          <div className="min-w-0">
+                            <Link
+                              to={`/documents/${document.id}${run ? `?run=${run.id}` : ""}`}
+                              className="block max-w-md truncate font-medium text-foreground hover:text-primary-strong"
+                            >
+                              {document.filename}
+                            </Link>
+                            <p className="text-[11px] text-muted-foreground">
+                              {document.content_type || "application/octet-stream"}
+                            </p>
+                          </div>
                         </div>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">未解析</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-end gap-1.5">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          onClick={() => runMutation.mutate(document.id)}
-                          loading={
-                            runMutation.isPending &&
-                            runMutation.variables === document.id
-                          }
-                        >
-                          发起解析
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setDeleteTarget(document)}
-                          icon={<Trash2 className="h-3.5 w-3.5" />}
-                          aria-label={`删除 ${document.filename}`}
-                        />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {formatBytes(document.size)}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {formatDateTime(document.created_at)}
+                      </TableCell>
+                      <TableCell>
+                        {run && meta ? (
+                          <div className="flex flex-col gap-1">
+                            <Badge tone={meta.tone} dot>
+                              {meta.label}
+                            </Badge>
+                            <span className="text-[11px] text-muted-foreground">
+                              {formatDateTime(run.created_at)}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">未解析</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {run ? (
+                          run.finished_at ? (
+                            <span title={`${formatDateTime(run.started_at ?? run.created_at)} 至 ${formatDateTime(run.finished_at)}`}>
+                              {formatDuration(
+                                new Date(run.finished_at).getTime() -
+                                  new Date(run.started_at ?? run.created_at).getTime()
+                              )}
+                            </span>
+                          ) : (
+                            <span className="text-xs">解析中</span>
+                          )
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end gap-1.5">
+                          {!run ? (
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => runMutation.mutate(document.id)}
+                              loading={
+                                runMutation.isPending &&
+                                runMutation.variables === document.id
+                              }
+                            >
+                              发起解析
+                            </Button>
+                          ) : !terminal ? (
+                            <Button size="sm" variant="secondary" disabled>
+                              解析中
+                            </Button>
+                          ) : (
+                            <>
+                              {reviewable ? (
+                                <Button
+                                  size="sm"
+                                  icon={<ShieldCheck className="h-3.5 w-3.5" />}
+                                  onClick={() =>
+                                    navigate(`/documents/${document.id}?run=${run.id}`)
+                                  }
+                                >
+                                  审核
+                                </Button>
+                              ) : null}
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={() => runMutation.mutate(document.id)}
+                                loading={
+                                  runMutation.isPending &&
+                                  runMutation.variables === document.id
+                                }
+                              >
+                                重新解析
+                              </Button>
+                            </>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setDeleteTarget(document)}
+                            icon={<Trash2 className="h-3.5 w-3.5" />}
+                            aria-label={`删除 ${document.filename}`}
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            <Pagination
+              page={currentPage}
+              pageCount={pageCount}
+              total={filtered.length}
+              pageSize={PAGE_SIZE}
+              onPageChange={setPage}
+            />
+          </>
         )}
       </Card>
 
@@ -323,6 +614,115 @@ export default function DocumentsPage() {
         <p className="text-sm text-muted-foreground">
           确认删除「{deleteTarget?.filename}」？
         </p>
+      </Dialog>
+
+      <Dialog
+        open={exportOpen}
+        title="批量导出文档"
+        description="选择文档后，每个文档生成一份独立 CSV，并打包为 ZIP 下载"
+        onClose={() => {
+          if (!exporting) setExportOpen(false);
+        }}
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              disabled={exporting}
+              onClick={() => setExportOpen(false)}
+            >
+              取消
+            </Button>
+            <Button
+              loading={exporting}
+              disabled={exportSelected.size === 0}
+              onClick={() => void runBatchExport()}
+            >
+              导出 ZIP（{exportSelected.size} 份）
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <Input
+              value={exportKeyword}
+              onChange={(event) => setExportKeyword(event.target.value)}
+              placeholder="搜索文件名 / 文档 ID"
+              className="w-64"
+            />
+            <Button
+              size="sm"
+              variant="secondary"
+              disabled={exporting}
+              onClick={toggleAllExport}
+            >
+              全选当前
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={exporting}
+              onClick={() => setExportSelected(new Set())}
+            >
+              清空
+            </Button>
+            <span className="ml-auto text-xs text-muted-foreground">
+              已选 {exportSelected.size} 份
+            </span>
+          </div>
+          <div className="max-h-80 overflow-auto rounded-lg border border-border">
+            {exportCandidates.length === 0 ? (
+              <p className="px-3 py-6 text-center text-xs text-muted-foreground">
+                没有匹配的文档
+              </p>
+            ) : (
+              exportCandidates.map((document) => {
+                const run = latestRunByDocument.get(document.id);
+                const meta = run ? runStatusMeta(run.status) : null;
+                const disabled = !run || !RUN_TERMINAL.has(run.status);
+                const hint = disabled
+                  ? run
+                    ? "解析未完成"
+                    : "未解析"
+                  : meta?.label ?? "";
+                return (
+                  <label
+                    key={document.id}
+                    className={`flex items-center gap-3 border-b border-border px-3 py-2 text-sm last:border-b-0 ${
+                      disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-muted/50"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-border accent-emerald-600"
+                      checked={exportSelected.has(document.id)}
+                      disabled={disabled || exporting}
+                      onChange={() => toggleExportSelected(document.id)}
+                    />
+                    <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span className="min-w-0 flex-1">
+                      <span
+                        className="block truncate font-medium"
+                        title={document.filename}
+                      >
+                        {document.filename}
+                      </span>
+                      <span className="block text-[11px] text-muted-foreground">
+                        {hint}
+                        {disabled ? "" : " · 可导出"}
+                      </span>
+                    </span>
+                  </label>
+                );
+              })
+            )}
+          </div>
+          {exporting && exportProgress ? (
+            <p className="text-xs text-muted-foreground">
+              正在导出 {exportProgress}，请勿关闭页面…
+            </p>
+          ) : null}
+        </div>
       </Dialog>
     </div>
   );

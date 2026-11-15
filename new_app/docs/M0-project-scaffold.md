@@ -6,7 +6,7 @@
 > 主责角色：项目负责人（兼架构/DevOps）  
 > 协作角色：外部模型服务器管理员（按需）  
 > 上游依据：[架构重构方案](architecture-refactor-plan.md)、[项目需求文档](requirements.md)、[整体开发计划](development-plan.md)、[项目决策记录](decision-log.md)  
-> 当前状态：进行中（脚手架已落地，待验收）
+> 当前状态：已完成（受限，2026-11-12 复核）。脚手架、契约包、七服务 Compose、CI 已落地；WSL kind 集群可启动。遗留：K8s 七服务部署与远端 CI 验证未完成，已登记于全维度核查报告。
 
 ---
 

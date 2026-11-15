@@ -1,0 +1,78 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "dimension_v1",
+  "version": "1.0.10",
+  "engine_api": "recipe-engine/1",
+  "profile": "dimension",
+  "signature": {
+    "profile": "dimension",
+    "orientation": "grade_rows",
+    "n_cols": 4,
+    "blocks": 0,
+    "tokens": [
+      "尺寸",
+      "直径",
+      "厚度",
+      "偏差"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "规格",
+      "名称",
+      "公称尺寸",
+      "尺寸",
+      "外径",
+      "壁厚"
+    ],
+    "conditions": [
+      "包铝分类",
+      "试样状态",
+      "供应状态",
+      "试样状态",
+      "包铝分类",
+      "试样状态",
+      "供应状态",
+      "试样状态",
+      "厚度",
+      "直径",
+      "供应状态",
+      "试样状态",
+      "类型",
+      "产品形式",
+      "供应状态",
+      "试样状态",
+      "精度",
+      "交货状态"
+    ],
+    "measures": {
+      "尺寸偏差": {
+        "unit": "mm",
+        "family": "dimension"
+      },
+      "Rm": {
+        "family": "tensile",
+        "unit": "MPa"
+      }
+    }
+  },
+  "rules": {
+    "inherit_group_units": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": null
+  },
+  "checksum": "3438d96a34a8d5d95eda6da2bfc36cb99784363a418b0e0be687edcbf78773ea",
+  "created_at": "2026-11-13T17:12:21+00:00"
+}

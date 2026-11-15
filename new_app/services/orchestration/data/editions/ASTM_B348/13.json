@@ -1,0 +1,196 @@
+{
+  "standard_id": "ASTM B348",
+  "edition": "13",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 20,
+      "header_signature": [
+        "grade",
+        "unsnumber",
+        "carbon,max.",
+        "oxygenrangeormax.",
+        "nitrogen,hydrogen,max.",
+        "ironrangeormax.",
+        "aluminum",
+        "vanadium",
+        "palladium",
+        "ruthenium",
+        "nickel",
+        "molybdenum",
+        "chromium",
+        "cobalt",
+        "zirconium",
+        "niobium",
+        "tin",
+        "silicon",
+        "otherelements,max.each",
+        "otherelements,max.total"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 22,
+      "header_signature": [
+        "grade",
+        "composition,weightpercenta,b,c,d,e/unsnumber",
+        "composition,weightpercenta,b,c,d,e/carbon,max",
+        "composition,weightpercenta,b,c,d,e/oxygenrangeormax.",
+        "composition,weightpercenta,b,c,d,e/nitrogen,max.",
+        "composition,weightpercenta,b,c,d,e/hydrogen,max.",
+        "composition,weightpercenta,b,c,d,e/ironrangeormax.",
+        "composition,weightpercenta,b,c,d,e/aluminum",
+        "composition,weightpercenta,b,c,d,e/vanadium",
+        "composition,weightpercenta,b,c,d,e/palladium",
+        "composition,weightpercenta,b,c,d,e/ruthenium",
+        "composition,weightpercenta,b,c,d,e/nickel",
+        "composition,weightpercenta,b,c,d,e/molybdenum",
+        "composition,weightpercenta,b,c,d,e/chromium",
+        "composition,weightpercenta,b,c,d,e/cobalt",
+        "composition,weightpercenta,b,c,d,e/zirconium",
+        "composition,weightpercenta,b,c,d,e/niobium",
+        "tin",
+        "silicon",
+        "otherelements,elements,max.each",
+        "otherelements,elements,max.total",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "aatminimum,theanalysisofsamplesfromthetopandbottomoftheingotshallbecompletedandreportedforallelementslistedfortherespectivegradeinthistable."
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 7,
+      "header_signature": [
+        "grade",
+        "tensilestrength,min/ksi",
+        "tensilestrength,min/mpa",
+        "yieldstrength(0.2%offset)minorrange/ksi",
+        "yieldstrength(0.2%offset)minorrange/mpa",
+        "elongationin4d,min,%",
+        "reductionofarea,min%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "element",
+        "productanalysislimits,maxorrange,%",
+        "permissiblevariationinproductanalysis"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "specifiedsize,in.(mm)",
+        "sizevariations,in.(mm)",
+        "out-of-roundorout-of-square,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "specifiedsizesbetweenoppositesides,in.(mm)",
+        "sizevariation,in.(mm)",
+        "maximumdifference,3measurements,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "specifiedwidths,in.(mm)",
+        "thicknessvariationfromspecifiedthickness,in.(mm)",
+        "thicknessvariationfromspecifiedthickness,in.(mm)",
+        "thicknessvariationfromspecifiedthickness,in.(mm)",
+        "thicknessvariationfromspecifiedthickness,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "specifiedsize,in.(mm)",
+        "sizevariation,ain.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "specifiedsize,in.(mm)",
+        "sizevariation,in.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "sizewidthorthickness,in.(mm)",
+        "widthvariationsafromspecifiedthicknesses,in.(mm)",
+        "widthvariationsafromspecifiedthicknesses,in.(mm)",
+        "thicknessvariation,ain.(mm)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "specifiedsizes,allshapes,in.(mm)",
+        "lengthvariations,in.(mm)/to12ft(3.66m),incl",
+        "lengthvariations,in.(mm)/over12to25ft(3.66to7.62m),incl"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        "tolerance"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_composition_v1": "1.1.12",
+    "mechanical_properties_v1": "1.6.51",
+    "dimension_v1": "1.0.2"
+  },
+  "sample_doc_id": "c3954fc1-a590-4f7d-afe9-c2c2f9e98cc9",
+  "created_at": "2026-11-14T11:13:08+00:00"
+}

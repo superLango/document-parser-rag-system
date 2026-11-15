@@ -1,0 +1,139 @@
+{
+  "standard_id": "ASTM B898",
+  "edition": "20",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "项目",
+        "测试结果"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "toolsteeltestfixtures,1.0(25mm)minthick."
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 5,
+      "header_signature": [
+        "",
+        "in.",
+        "mm",
+        "other",
+        "comment"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "",
+        "whencladdingmetalthicknessisspecifiedminimum",
+        "whencladdingmetalthicknessisspecifiedminimum",
+        "whencladdingmetalthicknessisspecifiedminimum",
+        "whencladdingmetalthicknessisspecifiedminimum"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "",
+        "whencladdingmetalthicknessisspecifiedminimum",
+        "whencladdingmetalthicknessisspecifiedminimum",
+        "whencladdingmetalthicknessisspecifiedminimum",
+        "whencladdingmetalthicknessisspecifiedminimum"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "",
+        "whenbasemetalminimum",
+        "whenbasemetalminimum",
+        "thicknessisspecifiednominal",
+        "thicknessisspecifiednominal"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 5,
+      "header_signature": [
+        "",
+        "",
+        "whenbasemetalthicknessisspecifiedminimum",
+        "whenbasemetalthicknessisspecifiedminimum",
+        "nominal"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "totalthickness",
+        "permissiblevariationfromspecifiedlengthandwidthsordiameter"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "totalthickness",
+        "permissiblevariationfromspecifiedlengthandwidthsordiameter"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "totalthickness(in.)",
+        "maximumout-of-flatnessoverany36in.",
+        "maximumout-of-flatnessoverany72in."
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 3,
+      "header_signature": [
+        "totalthickness(mm)",
+        "maximumout-of-flatnessmmoverany915mm",
+        "maximumout-of-flatnessmmoverany1830mm"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "dimension_v1": "1.0.2"
+  },
+  "sample_doc_id": "741881f7-7d28-4069-b7f3-7d7e8151a2b7",
+  "created_at": "2026-11-15T06:39:01+00:00"
+}

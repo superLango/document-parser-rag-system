@@ -4,19 +4,23 @@ import App from "./App";
 import DictionaryPage from "./pages/DictionaryPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import ExtractionPage from "./pages/ExtractionPage";
+import IntegrationTaskPage from "./pages/IntegrationTaskPage";
+import IssuesPage from "./pages/IssuesPage";
 import RecipesPage from "./pages/RecipesPage";
-import RunsPage from "./pages/RunsPage";
-import ViewerPage from "./pages/ViewerPage";
 
 export const router = createBrowserRouter([
+  {
+    // 一站式解析：独立页面，不进入带侧边栏的工作区壳。
+    path: "/integration/task/:taskId",
+    element: <IntegrationTaskPage />
+  },
   {
     path: "/",
     element: <App />,
     children: [
       { index: true, element: <DocumentsPage /> },
       { path: "documents/:documentId", element: <ExtractionPage /> },
-      { path: "documents/:documentId/viewer", element: <ViewerPage /> },
-      { path: "runs", element: <RunsPage /> },
+      { path: "issues", element: <IssuesPage /> },
       { path: "dictionary", element: <DictionaryPage /> },
       { path: "recipes", element: <RecipesPage /> }
     ]

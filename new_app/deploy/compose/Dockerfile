@@ -11,6 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY services ./services
 COPY packages ./packages
+# 配方 manifest 的 tests 引用是仓库相对路径；digest 校验需要这些文件在镜像内可解析。
+COPY tests ./tests
 
 EXPOSE 8000
 

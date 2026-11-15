@@ -1,0 +1,43 @@
+{
+  "candidate_id": "GB/T 2524-2019-code-2026-11-15T05:35:24+00:00",
+  "standard_id": "GB/T 2524",
+  "edition": "2019",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "missing_table: 代替gb/t2524-2010 table expected by the edition profile was not found",
+    "missing_table: 2019-06-04发布 table expected by the edition profile was not found",
+    "profile_changed: 表2,海绵钛的粒度规格 profile dimension -> admin",
+    "profile_changed: 2 profile admin -> unknown",
+    "profile_changed: 表 3 检验项目及取样规定 profile inspection -> unknown",
+    "missing_table: 选用φ8textmmsimφ10textmm碳钢麻花钻,在台式钻床的主轴转速560r/min的条件下,在未熔自耗电极残端上,按其长度方向均匀钻取5个孔,去掉表面层3mm~5mm后,以不将电极钻穿、钻屑不变色为前提,钻取屑状试样20g,供分析氯元素使用。 table expected by the edition profile was not found",
+    "profile_changed: 图b.1,试样的制备 profile admin -> unknown"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [
+      "代替gb/t2524-2010",
+      "2019-06-04发布",
+      "选用φ8textmmsimφ10textmm碳钢麻花钻,在台式钻床的主轴转速560r/min的条件下,在未熔自耗电极残端上,按其长度方向均匀钻取5个孔,去掉表面层3mm~5mm后,以不将电极钻穿、钻屑不变色为前提,钻取屑状试样20g,供分析氯元素使用。"
+    ],
+    "profile_changes": [
+      "表2,海绵钛的粒度规格: profile dimension -> admin",
+      "2: profile admin -> unknown",
+      "表 3 检验项目及取样规定: profile inspection -> unknown",
+      "图b.1,试样的制备: profile admin -> unknown"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T05:35:24+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

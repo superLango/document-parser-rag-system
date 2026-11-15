@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import time
 from typing import Any
 
@@ -22,6 +23,8 @@ from .prompts import PromptLibrary, PromptRef
 from .schema import validate_json_schema
 from .session import SessionStore
 from .tools import ToolRegistry
+
+logger = logging.getLogger(__name__)
 
 
 class AgentHarness:
@@ -130,6 +133,12 @@ class AgentHarness:
                 )
             except ContextOverflow as exc:
                 return self._fail(session, task, "AGENT_CONTEXT_OVERFLOW", str(exc))
+            if state.compaction_level and not state.lossless.get("lossless", True):
+                logger.warning(
+                    "context compaction lost invariants level=%s detail=%s",
+                    state.compaction_level,
+                    state.lossless,
+                )
             messages = context_manager.render_messages(state)
             response = None
             try:

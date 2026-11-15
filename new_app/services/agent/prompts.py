@@ -13,6 +13,9 @@ DEFAULT_PROMPTS = {
     "review": "review.v1",
     "triage": "triage.v1",
     "repair": "repair.v1",
+    "intent_rerank": "intent_rerank.v1",
+    "diagnosis": "diagnosis.v1",
+    "cross_standard": "cross_standard.v1",
     "generic": "harness.v1",
 }
 

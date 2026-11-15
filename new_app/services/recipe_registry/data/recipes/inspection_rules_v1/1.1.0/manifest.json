@@ -1,0 +1,58 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "inspection_rules_v1",
+  "version": "1.1.0",
+  "engine_api": "recipe-engine/1",
+  "profile": "inspection",
+  "signature": {
+    "profile": "inspection",
+    "orientation": "grade_rows",
+    "n_cols": 5,
+    "blocks": 0,
+    "tokens": [
+      "检验项目",
+      "取样数量",
+      "取样部位",
+      "试验方法",
+      "判定"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "检验项目",
+      "项目",
+      "检验项目名称",
+      "试验项目",
+      "名称",
+      "item"
+    ],
+    "conditions": [
+      "取样数量",
+      "取样部位",
+      "检验方法",
+      "试验方法",
+      "技术要求"
+    ],
+    "methods": [
+      "试验方法"
+    ]
+  },
+  "rules": {
+    "row_is_item": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": "material_master_v1"
+  },
+  "checksum": "b3b81bc85b857770d436884c8ea1a8cbfe21c175c68db7b4135e5aebabf0f97f",
+  "created_at": "2026-11-13T03:10:29+00:00"
+}

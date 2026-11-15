@@ -1,0 +1,262 @@
+{
+  "schema_version": "2.0",
+  "recipe_id": "chemical_composition_v1",
+  "version": "1.1.6",
+  "engine_api": "recipe-engine/1",
+  "profile": "chemical_composition",
+  "signature": {
+    "profile": "chemical_composition",
+    "orientation": "grade_rows",
+    "n_cols": 8,
+    "blocks": 1,
+    "tokens": [
+      "牌号",
+      "化学成分",
+      "c",
+      "si",
+      "mn",
+      "p",
+      "s",
+      "Al",
+      "B",
+      "C",
+      "CEV",
+      "化学成分",
+      "c",
+      "si",
+      "mn",
+      "p",
+      "s",
+      "material",
+      "grade_name",
+      "composition",
+      "Al",
+      "B",
+      "C",
+      "Si",
+      "Mn",
+      "P",
+      "S",
+      "Rm",
+      "Rp0.2",
+      "A",
+      "Z",
+      "断面收缩率"
+    ],
+    "multi_header": false,
+    "unit_set": []
+  },
+  "bindings": {
+    "row_key": [
+      "牌号",
+      "钢号",
+      "grade",
+      "材料牌号",
+      "material",
+      "grade_name"
+    ],
+    "conditions": [
+      "规格",
+      "状态",
+      "厚度",
+      "尺寸",
+      "试样",
+      "分析"
+    ],
+    "measures": {
+      "C": {
+        "family": "chemical_composition",
+        "unit": "%"
+      },
+      "Si": {
+        "family": "chemical_composition",
+        "unit": "%"
+      },
+      "Mn": {
+        "family": "chemical_composition",
+        "unit": "%"
+      },
+      "P": {
+        "family": "chemical_composition",
+        "unit": "%"
+      },
+      "S": {
+        "family": "chemical_composition",
+        "unit": "%"
+      },
+      "Ni": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Cr": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Mo": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Cu": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Al": {
+        "family": "chemical_composition",
+        "unit": "%"
+      },
+      "Ti": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "V": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Nb": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "N": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "O": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "H": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "B": {
+        "family": "chemical_composition",
+        "unit": "%"
+      },
+      "W": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Co": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Zr": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ta": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Re": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Fe": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Sn": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "As": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Pb": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Sb": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Bi": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ca": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Mg": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Zn": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ce": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "La": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Y": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Nd": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Se": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Te": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Ag": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "CEV": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Pcm": {
+        "unit": "%",
+        "family": "chemical_composition"
+      },
+      "Rm": {
+        "unit": "MPa",
+        "family": "tensile"
+      },
+      "Rp0.2": {
+        "unit": "MPa",
+        "family": "tensile"
+      },
+      "A": {
+        "unit": "%",
+        "family": "tensile"
+      },
+      "Z": {
+        "unit": "%",
+        "family": "tensile"
+      }
+    }
+  },
+  "rules": {
+    "inherit_max_block": true,
+    "strip_footnote_marks": true
+  },
+  "entrypoint": null,
+  "templates": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
+  "compatibility": {
+    "legacy_status": "active",
+    "legacy_version": 1,
+    "coverage_template": "product_full",
+    "business_dictionary": "material_master_v1"
+  },
+  "checksum": "1fe6b9e7d032c5c3db9f837928df3bb419ad13dec848df16b049bda1e90ec2c2",
+  "created_at": "2026-11-12T17:10:39+00:00"
+}

@@ -38,13 +38,15 @@
   },
   "entrypoint": null,
   "templates": [],
-  "tests": [],
+  "tests": [
+    "tests/contract/recipes/test_recipe_contract.py::test_recipe_manifest_contract"
+  ],
   "compatibility": {
     "legacy_status": "active",
     "legacy_version": 1,
     "coverage_template": "product_full",
     "business_dictionary": null
   },
-  "checksum": "52f6569be075728a86a7517d79a01d3a17c0e78b1d2c2e3c0662c94b9a245b67",
+  "checksum": "2762522110e6670f9468cd20176388fbee7bac6500619cb368deb9cb189a4bdd",
   "created_at": "2026-11-11T13:47:54+00:00"
 }

@@ -1,0 +1,37 @@
+{
+  "candidate_id": "GB/T 3624-2023-code-2026-11-15T06:06:01+00:00",
+  "standard_id": "GB/T 3624",
+  "edition": "2023",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "profile_changed: gb/t246,金属材料,管 profile admin -> inspection",
+    "profile_changed: gb/t3620.1,钛及钛合金牌号和化学成分 profile admin -> chemical_composition",
+    "profile_changed: , profile admin -> unknown",
+    "missing_table: •其他; table expected by the edition profile was not found"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [
+      "•其他;"
+    ],
+    "profile_changes": [
+      "gb/t246,金属材料,管: profile admin -> inspection",
+      "gb/t3620.1,钛及钛合金牌号和化学成分: profile admin -> chemical_composition",
+      ",: profile admin -> unknown"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T06:06:01+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

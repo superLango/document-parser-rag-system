@@ -1,0 +1,1822 @@
+{
+  "generated_at": "2026-11-15T18:23:27.972813+08:00",
+  "api": "http://localhost:18000",
+  "summary": {
+    "documents": 30,
+    "records": 5114,
+    "fields": 11399,
+    "findings": 270,
+    "unitless_numeric": 54,
+    "english_leftover": 1,
+    "placeholder_grade_records": 70,
+    "values_missing": 4058
+  },
+  "documents": [
+    {
+      "document_id": "b9e9a1ef-3b88-4bdd-8e56-a0c0153ef7ef",
+      "filename": "AMS4911R-过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "e6986d98-f98b-420c-8eb5-2cf373ed0a0a",
+      "records": 27,
+      "fields": 54,
+      "profiles": {
+        "heat_treatment": 1,
+        "chemical_composition": 1,
+        "mechanical_properties": 12,
+        "qualitative": 13
+      },
+      "categories": {
+        "室温拉伸": 28,
+        "化学成分": 10,
+        "高倍": 5,
+        "外观质量": 4,
+        "弯曲": 2,
+        "尺寸": 2,
+        "热处理项目": 1,
+        "疲劳试验Fatigue Test": 1,
+        "超声波检验": 1
+      },
+      "grades": {
+        "R56400": 27
+      },
+      "grade_count": 1,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 2,
+      "values_missing": 13,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "~": 2,
+        "≤": 8,
+        "≥": 28
+      },
+      "review": {
+        "status": "warn",
+        "findings": 6,
+        "rules": [
+          "",
+          "DOC-INVENTORY-CONFLICT",
+          "M5-UNIT-001"
+        ]
+      },
+      "result": {
+        "tables": 5,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "63ea7b59-9a88-42c6-a84e-9e3c55f53485",
+      "filename": "AMS4911S-过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "3b30e80f-0ab6-4ab7-b3a6-bcb5e127d71b",
+      "records": 28,
+      "fields": 55,
+      "profiles": {
+        "heat_treatment": 1,
+        "chemical_composition": 1,
+        "mechanical_properties": 12,
+        "qualitative": 14
+      },
+      "categories": {
+        "室温拉伸": 28,
+        "化学成分": 10,
+        "高倍": 5,
+        "外观质量": 4,
+        "弯曲": 2,
+        "尺寸": 2,
+        "超声波检验": 2,
+        "热处理项目": 1,
+        "疲劳试验Fatigue Test": 1
+      },
+      "grades": {
+        "6Al-4V": 28
+      },
+      "grade_count": 1,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 2,
+      "values_missing": 14,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "~": 2,
+        "≤": 8,
+        "≥": 28
+      },
+      "review": {
+        "status": "warn",
+        "findings": 6,
+        "rules": [
+          "",
+          "DOC-INVENTORY-CONFLICT",
+          "M5-UNIT-001"
+        ]
+      },
+      "result": {
+        "tables": 5,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "f865cb22-f1a4-45c1-807b-70c026311ef7",
+      "filename": "AMS4928W-过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "62bf7462-f5b6-4dfb-beba-ad9a4953c2bc",
+      "records": 17,
+      "fields": 50,
+      "profiles": {
+        "heat_treatment": 2,
+        "chemical_composition": 1,
+        "mechanical_properties": 8,
+        "qualitative": 6
+      },
+      "categories": {
+        "室温拉伸": 32,
+        "化学成分": 10,
+        "外观质量": 3,
+        "热处理项目": 2,
+        "低倍": 2,
+        "尺寸": 1
+      },
+      "grades": {
+        "R56400": 17
+      },
+      "grade_count": 1,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 6,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "~": 2,
+        "≤": 8,
+        "≥": 16
+      },
+      "review": {
+        "status": "warn",
+        "findings": 9,
+        "rules": [
+          "",
+          "DOC-CLAUSE-UNMAPPED",
+          "DOC-REFERENCE-UNRESOLVED"
+        ]
+      },
+      "result": {
+        "tables": 167,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "756b3cdf-03a8-4804-b32d-0855ecd17557",
+      "filename": "AMS4931C-过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "353f59d3-5284-4b5a-8ff2-49da319804f3",
+      "records": 20,
+      "fields": 47,
+      "profiles": {
+        "heat_treatment": 1,
+        "chemical_composition": 1,
+        "mechanical_properties": 6,
+        "qualitative": 12
+      },
+      "categories": {
+        "室温拉伸": 24,
+        "化学成分": 10,
+        "外观质量": 3,
+        "平面应变断裂韧度": 3,
+        "高倍": 3,
+        "相变点": 2,
+        "热处理项目": 1,
+        "尺寸": 1
+      },
+      "grades": {
+        "R56400": 20
+      },
+      "grade_count": 1,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 12,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "~": 2,
+        "≤": 8,
+        "≥": 24
+      },
+      "review": {
+        "status": "warn",
+        "findings": 6,
+        "rules": [
+          "",
+          "DOC-REFERENCE-UNRESOLVED"
+        ]
+      },
+      "result": {
+        "tables": 4,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "9dc277d8-d362-4787-9826-8bc4df733b26",
+      "filename": "AMS4979H-过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "5d631969-76fc-45a7-9a21-d45ae5eae16b",
+      "records": 18,
+      "fields": 54,
+      "profiles": {
+        "heat_treatment": 1,
+        "chemical_composition": 1,
+        "mechanical_properties": 8,
+        "qualitative": 8
+      },
+      "categories": {
+        "室温拉伸": 32,
+        "化学成分": 12,
+        "外观质量": 3,
+        "高倍": 3,
+        "热处理项目": 2,
+        "低倍": 1,
+        "尺寸": 1
+      },
+      "grades": {
+        "R56620": 18
+      },
+      "grade_count": 1,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 8,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "~": 5,
+        "≤": 7,
+        "≥": 32
+      },
+      "review": {
+        "status": "warn",
+        "findings": 11,
+        "rules": [
+          "",
+          "DOC-INVENTORY-CONFLICT"
+        ]
+      },
+      "result": {
+        "tables": 4,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "210392d3-92c2-4f3a-b70c-2404152d5789",
+      "filename": "ASTM B265-25--.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "0d24d43b-0e14-4523-b758-bda3c54a85d4",
+      "records": 147,
+      "fields": 552,
+      "profiles": {
+        "mechanical_properties": 45,
+        "chemical_composition": 37,
+        "qualitative": 65
+      },
+      "categories": {
+        "化学成分": 319,
+        "室温拉伸": 127,
+        "尺寸": 52,
+        "弯曲": 41,
+        "外观质量": 13
+      },
+      "grades": {
+        "2HC,D": 6,
+        "7HC,D": 6,
+        "16HC,D": 6,
+        "19G,H": 6,
+        "20G,H": 6,
+        "21G,H": 6,
+        "26H,C,D": 6,
+        "2/2H": 6,
+        "7/7H": 6,
+        "16/16H": 6,
+        "26/26H": 6,
+        "16H": 6
+      },
+      "grade_count": 52,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 41,
+      "values_missing": 65,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 168,
+        "≤": 251,
+        "~": 68
+      },
+      "review": {
+        "status": "pass",
+        "findings": 1,
+        "rules": [
+          "DOC-REFERENCE-UNRESOLVED"
+        ]
+      },
+      "result": {
+        "tables": 17,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "ab590450-7a41-4470-8999-62726c28b073",
+      "filename": "ASTM B348-21-过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "642dfbd7-b1a4-4393-a806-d44cb1541d15",
+      "records": 158,
+      "fields": 650,
+      "profiles": {
+        "chemical_composition": 44,
+        "mechanical_properties": 51,
+        "qualitative": 63
+      },
+      "categories": {
+        "化学成分": 384,
+        "室温拉伸": 203,
+        "尺寸": 63
+      },
+      "grades": {
+        "2/2H": 4,
+        "7/7H": 4,
+        "16/16H": 4,
+        "26/26H": 4,
+        "2HB,C": 4,
+        "7HB,C": 4,
+        "16HB,C": 4,
+        "18D": 4,
+        "19E": 4,
+        "19F": 4,
+        "19G": 4,
+        "20E": 4
+      },
+      "grade_count": 58,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 63,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 298,
+        "~": 86,
+        "≥": 203
+      },
+      "review": {
+        "status": "pass",
+        "findings": 1,
+        "rules": [
+          "DOC-CLAUSE-UNMAPPED"
+        ]
+      },
+      "result": {
+        "tables": 14,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "41389cab-08b9-4ffa-8b93-fbb7c827b578",
+      "filename": "ASTM B348_B348M-25--.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "8547609b-44c4-4dc0-abad-bf363ba256c9",
+      "records": 150,
+      "fields": 572,
+      "profiles": {
+        "chemical_composition": 36,
+        "mechanical_properties": 51,
+        "qualitative": 63
+      },
+      "categories": {
+        "化学成分": 306,
+        "室温拉伸": 203,
+        "尺寸": 63
+      },
+      "grades": {
+        "2/2H": 4,
+        "7/7H": 4,
+        "16/16H": 4,
+        "26/26H": 4,
+        "2HB,C": 4,
+        "7HB,C": 4,
+        "16HB,C": 4,
+        "18D": 4,
+        "19E": 4,
+        "19F": 4,
+        "19G": 4,
+        "20E": 4
+      },
+      "grade_count": 58,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 63,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 232,
+        "~": 74,
+        "≥": 203
+      },
+      "review": {
+        "status": "pass",
+        "findings": 1,
+        "rules": [
+          "DOC-CLAUSE-UNMAPPED"
+        ]
+      },
+      "result": {
+        "tables": 13,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "e72e4175-a0fa-4bd5-a5bf-284e1ea89efe",
+      "filename": "ASTM B898-20(2026)---.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "e6729ff2-13ff-4a2c-b0c7-12d3487297f6",
+      "records": 24,
+      "fields": 24,
+      "profiles": {
+        "qualitative": 24
+      },
+      "categories": {
+        "尺寸": 10,
+        "外观质量": 5,
+        "超声波检验": 5,
+        "剪切试验": 4
+      },
+      "grades": {
+        "全部牌号": 24
+      },
+      "grade_count": 0,
+      "placeholder_grade_records": 24,
+      "unitless_numeric": 0,
+      "values_missing": 24,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {},
+      "review": {
+        "status": "warn",
+        "findings": 22,
+        "rules": [
+          "",
+          "DOC-CLAUSE-UNMAPPED"
+        ]
+      },
+      "result": {
+        "tables": 11,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "09ca2f99-73db-4e95-8f5e-937e27c29c4c",
+      "filename": "ASTM F136-13-过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "d80a79c8-11ce-4bdc-b2bf-6e1963d10384",
+      "records": 22,
+      "fields": 36,
+      "profiles": {
+        "mechanical_properties": 8,
+        "chemical_composition": 7,
+        "qualitative": 7
+      },
+      "categories": {
+        "室温拉伸": 22,
+        "化学成分": 7,
+        "外观质量": 2,
+        "尺寸": 2,
+        "相变点": 1,
+        "超声波检验": 1,
+        "高倍": 1
+      },
+      "grades": {
+        "R56401": 22
+      },
+      "grade_count": 1,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 7,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 22,
+        "~": 2
+      },
+      "review": {
+        "status": "warn",
+        "findings": 12,
+        "rules": [
+          "",
+          "DOC-CLAUSE-UNMAPPED",
+          "M5-TABLE-001"
+        ]
+      },
+      "result": {
+        "tables": 5,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "f14fbfc8-6a14-4400-b90e-11d764c23085",
+      "filename": "GBT 13810-2017.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "b902c647-b6e4-46ac-a8f9-b96a7564b56e",
+      "records": 168,
+      "fields": 273,
+      "profiles": {
+        "mechanical_properties": 30,
+        "qualitative": 130,
+        "chemical_composition": 8
+      },
+      "categories": {
+        "室温拉伸": 102,
+        "外观质量": 64,
+        "化学成分": 42,
+        "超声波检验": 16,
+        "晶粒度Average Grain Size": 15,
+        "低倍": 8,
+        "尺寸": 8,
+        "表面质量": 8,
+        "高倍": 6,
+        "相变点": 4
+      },
+      "grades": {
+        "TC4ELI": 24,
+        "TA4G": 22,
+        "TC20": 22,
+        "TA3G": 21,
+        "TA1G": 20,
+        "TA2G": 20,
+        "TA1GELI": 19,
+        "TC4": 19,
+        "全部牌号": 1
+      },
+      "grade_count": 8,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 0,
+      "values_missing": 138,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 102,
+        "≤": 29,
+        "~": 4
+      },
+      "review": {
+        "status": "warn",
+        "findings": 6,
+        "rules": [
+          "DOC-INVENTORY-CONFLICT",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001"
+        ]
+      },
+      "result": {
+        "tables": 146,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "b40f6a73-f4e9-4c3d-bc81-9145b5772369",
+      "filename": "GBT 16598-2013.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "5ce13842-1433-4d44-9c9f-0915c7dacb85",
+      "records": 132,
+      "fields": 286,
+      "profiles": {
+        "mechanical_properties": 24,
+        "chemical_composition": 14,
+        "qualitative": 94
+      },
+      "categories": {
+        "化学成分": 111,
+        "室温拉伸": 72,
+        "高倍": 31,
+        "低倍": 15,
+        "外观质量": 15,
+        "尺寸": 15,
+        "表面质量": 15,
+        "高温拉伸": 6,
+        "持久试验": 4,
+        "相变点": 2
+      },
+      "grades": {
+        "TA13": 10,
+        "TA1": 9,
+        "TA2": 9,
+        "TA3": 9,
+        "TA7": 9,
+        "TA10": 9,
+        "TA15": 9,
+        "TC1": 9,
+        "TC2": 9,
+        "TC4": 9,
+        "TC11": 9,
+        "TA4": 8
+      },
+      "grade_count": 15,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 0,
+      "values_missing": 108,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 82,
+        "≤": 73,
+        "~": 23
+      },
+      "review": {
+        "status": "warn",
+        "findings": 2,
+        "rules": [
+          "DOC-INVENTORY-CONFLICT",
+          "M5-TABLE-001"
+        ]
+      },
+      "result": {
+        "tables": 10,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "ff7c207b-252a-4845-a4e8-01ae7b4ecfd8",
+      "filename": "GBT 2524-2019.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "4847ea9c-04ee-4072-bd7c-125c2759c35e",
+      "records": 35,
+      "fields": 92,
+      "profiles": {
+        "mechanical_properties": 7,
+        "chemical_composition": 7,
+        "qualitative": 21
+      },
+      "categories": {
+        "化学成分": 64,
+        "外观质量": 21,
+        "硬度试验": 7
+      },
+      "grades": {
+        "MHT-95": 5,
+        "MHT-100": 5,
+        "MHT-110": 5,
+        "MHT-125": 5,
+        "MHT-140": 5,
+        "MHT-160": 5,
+        "MHT-200": 4,
+        "全部牌号": 1
+      },
+      "grade_count": 7,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 7,
+      "values_missing": 21,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 70
+      },
+      "review": {
+        "status": "warn",
+        "findings": 15,
+        "rules": [
+          "",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-UNIT-001"
+        ]
+      },
+      "result": {
+        "tables": 106,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "ca5ba5f9-b2ed-4372-802a-ed22432e7425",
+      "filename": "GBT 2965-2007过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "f67ae74c-e7c6-44a7-a268-5cde5868f21c",
+      "records": 288,
+      "fields": 548,
+      "profiles": {
+        "mechanical_properties": 40,
+        "chemical_composition": 22,
+        "qualitative": 226
+      },
+      "categories": {
+        "化学成分": 190,
+        "室温拉伸": 112,
+        "尺寸": 100,
+        "低倍": 25,
+        "外观质量": 25,
+        "相变点": 25,
+        "表面质量": 25,
+        "高倍": 25,
+        "高温拉伸": 12,
+        "持久试验": 9
+      },
+      "grades": {
+        "TA1": 12,
+        "TA2": 12,
+        "TA3": 12,
+        "TA6": 12,
+        "TA7": 12,
+        "TA15": 12,
+        "TA19": 12,
+        "TB2": 12,
+        "TC1": 12,
+        "TC2": 12,
+        "TC4": 12,
+        "TC6": 12
+      },
+      "grade_count": 25,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 0,
+      "values_missing": 248,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 132,
+        "≤": 113,
+        "~": 55
+      },
+      "review": {
+        "status": "warn",
+        "findings": 4,
+        "rules": [
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001"
+        ]
+      },
+      "result": {
+        "tables": 126,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "11b25a4b-5839-4757-9780-ed6b9ab6887a",
+      "filename": "GBT 2965-2023.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "40cb84d2-7a4a-47fa-9625-9d5f7125db82",
+      "records": 417,
+      "fields": 794,
+      "profiles": {
+        "mechanical_properties": 45,
+        "heat_treatment": 32,
+        "qualitative": 307,
+        "chemical_composition": 33
+      },
+      "categories": {
+        "化学成分": 261,
+        "室温拉伸": 115,
+        "热处理项目": 96,
+        "相变点": 68,
+        "超声波检验": 68,
+        "低倍": 34,
+        "外观质量": 34,
+        "尺寸": 34,
+        "表面质量": 34,
+        "高倍": 34,
+        "高温拉伸": 16
+      },
+      "grades": {
+        "TA18": 14,
+        "TA3": 13,
+        "TA6": 13,
+        "TA7": 13,
+        "TA15": 13,
+        "TA19": 13,
+        "TB2": 13,
+        "TC1": 13,
+        "TC2": 13,
+        "TC4": 13,
+        "TC9": 13,
+        "TC10": 13
+      },
+      "grade_count": 34,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 0,
+      "values_missing": 372,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 129,
+        "≤": 144,
+        "~": 85
+      },
+      "review": {
+        "status": "warn",
+        "findings": 40,
+        "rules": [
+          "DOC-CLAUSE-UNMAPPED",
+          "DOC-INVENTORY-CONFLICT",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 116,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "d969824a-b3ff-4b8b-a54c-51776727d344",
+      "filename": "GBT 3620.1-2007过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "d52c9a45-1c4a-4ed2-b162-6e79b661e118",
+      "records": 83,
+      "fields": 767,
+      "profiles": {
+        "chemical_composition": 83
+      },
+      "categories": {
+        "化学成分": 767
+      },
+      "grades": {
+        "TA8": 2,
+        "Titanium": 1,
+        "TA1ELI": 1,
+        "TA1": 1,
+        "TA1-1": 1,
+        "TA2ELI": 1,
+        "TA2": 1,
+        "TA3ELI": 1,
+        "TA3": 1,
+        "TA4ELI": 1,
+        "TA4": 1,
+        "TA5": 1
+      },
+      "grade_count": 82,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 82,
+      "english_leftover": 1,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 451,
+        "~": 234
+      },
+      "review": {
+        "status": "pass",
+        "findings": 1,
+        "rules": [
+          "DOC-REFERENCE-UNRESOLVED"
+        ]
+      },
+      "result": {
+        "tables": 84,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "79ec92be-f335-4a3d-b6a1-f3483a76d94e",
+      "filename": "GBT 3620.1-2016.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "61354097-2ece-4f7e-b3ad-32c7304070bc",
+      "records": 108,
+      "fields": 910,
+      "profiles": {
+        "chemical_composition": 107,
+        "qualitative": 1
+      },
+      "categories": {
+        "化学成分": 910
+      },
+      "grades": {
+        "TA24-1": 3,
+        "TA3": 2,
+        "TA4GELJ": 2,
+        "TA3G": 2,
+        "TA4G": 2,
+        "TA8": 2,
+        "TB8": 2,
+        "TA0": 1,
+        "TA1": 1,
+        "TA2": 1,
+        "TA4": 1,
+        "TA1G": 1
+      },
+      "grade_count": 99,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 1,
+      "values_missing": 108,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 483,
+        "~": 319
+      },
+      "review": {
+        "status": "warn",
+        "findings": 2,
+        "rules": [
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-UNIT-001"
+        ]
+      },
+      "result": {
+        "tables": 24,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "a7543d39-1864-4bd9-8a38-401151d5276e",
+      "filename": "GBT 3621-2007 过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "ad1b91fe-6534-4444-9335-86ff207e7bc8",
+      "records": 196,
+      "fields": 409,
+      "profiles": {
+        "mechanical_properties": 45,
+        "qualitative": 126,
+        "chemical_composition": 25
+      },
+      "categories": {
+        "化学成分": 187,
+        "尺寸": 100,
+        "室温拉伸": 60,
+        "外观质量": 25,
+        "高温拉伸": 19,
+        "持久试验": 18
+      },
+      "grades": {
+        "TA6": 9,
+        "TA7": 9,
+        "TA15": 9,
+        "TA17": 9,
+        "TA18": 9,
+        "TC1": 9,
+        "TC2": 9,
+        "TC3": 9,
+        "TC4": 9,
+        "TA3": 8,
+        "TA8": 8,
+        "TA11": 8
+      },
+      "grade_count": 25,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 0,
+      "values_missing": 151,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 78,
+        "~": 67,
+        "≤": 113
+      },
+      "review": {
+        "status": "warn",
+        "findings": 7,
+        "rules": [
+          "DOC-CLAUSE-UNMAPPED",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001"
+        ]
+      },
+      "result": {
+        "tables": 101,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "98d9a860-b0a8-4082-96c8-f5c265e04090",
+      "filename": "GBT 3621-2022.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "82f4214d-a44f-4244-844d-0e2fd7eb2e17",
+      "records": 578,
+      "fields": 985,
+      "profiles": {
+        "mechanical_properties": 160,
+        "qualitative": 381,
+        "chemical_composition": 37
+      },
+      "categories": {
+        "化学成分": 267,
+        "室温拉伸": 209,
+        "尺寸": 190,
+        "外观质量": 114,
+        "相变点": 76,
+        "弯曲": 65,
+        "持久试验": 42,
+        "高温拉伸": 22
+      },
+      "grades": {
+        "TA17": 21,
+        "TA15": 20,
+        "TA7": 19,
+        "TA18": 19,
+        "TC1": 19,
+        "TC2": 19,
+        "TC4": 19,
+        "TA3": 18,
+        "TA6": 18,
+        "TA2": 17,
+        "TC3": 17,
+        "TA1": 16
+      },
+      "grade_count": 38,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 0,
+      "values_missing": 418,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 212,
+        "~": 130,
+        "≤": 160
+      },
+      "review": {
+        "status": "warn",
+        "findings": 9,
+        "rules": [
+          "DOC-INVENTORY-CONFLICT",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001"
+        ]
+      },
+      "result": {
+        "tables": 126,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "fa844d55-b5e6-4285-87b5-3f83e10467a6",
+      "filename": "GJB 1538A-2008过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "d4396041-41b1-4326-bfb3-817ab07b0720",
+      "records": 53,
+      "fields": 98,
+      "profiles": {
+        "chemical_composition": 2,
+        "mechanical_properties": 11,
+        "qualitative": 40
+      },
+      "categories": {
+        "室温拉伸": 24,
+        "化学成分": 20,
+        "高温拉伸": 9,
+        "低倍": 9,
+        "尺寸": 9,
+        "相变点": 7,
+        "高倍": 6,
+        "持久试验": 3,
+        "外观质量": 3,
+        "表面质量": 3,
+        "超声波检验": 3,
+        "平面应变断裂韧度": 2
+      },
+      "grades": {
+        "TC4": 20,
+        "TB6": 18,
+        "TB6b": 15
+      },
+      "grade_count": 3,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 45,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "~": 5,
+        "≤": 12,
+        "≥": 38
+      },
+      "review": {
+        "status": "warn",
+        "findings": 12,
+        "rules": [
+          "",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 189,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "12d8c30a-2750-4722-9342-ba7c2ee94ece",
+      "filename": "GJB 2218A-2008过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "f7a0265e-4ef9-48db-92f1-02a021f391ea",
+      "records": 220,
+      "fields": 424,
+      "profiles": {
+        "mechanical_properties": 44,
+        "qualitative": 163,
+        "chemical_composition": 13
+      },
+      "categories": {
+        "室温拉伸": 127,
+        "化学成分": 109,
+        "高倍": 41,
+        "尺寸": 39,
+        "外观质量": 26,
+        "高温拉伸": 14,
+        "低倍": 14,
+        "超声波检验": 14,
+        "相变点": 13,
+        "表面质量": 13,
+        "剪切试验": 11,
+        "蠕变试验": 2,
+        "平面应变断裂韧度": 1
+      },
+      "grades": {
+        "TC4": 18,
+        "TC17": 18,
+        "TA15": 18,
+        "TA7": 17,
+        "TC11": 17,
+        "TA3": 16,
+        "TA19": 16,
+        "TC6": 16,
+        "TA2": 15,
+        "TA4": 15,
+        "TA15(A类)": 15,
+        "TC1": 15
+      },
+      "grade_count": 13,
+      "placeholder_grade_records": 9,
+      "unitless_numeric": 0,
+      "values_missing": 179,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 141,
+        "~": 43,
+        "≤": 61
+      },
+      "review": {
+        "status": "warn",
+        "findings": 8,
+        "rules": [
+          "DOC-INVENTORY-CONFLICT",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 128,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "64c33aaf-fe70-4c99-9c1c-205967882f90",
+      "filename": "GJB 2218A-2018.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "57bd9194-c8d0-45ef-bfb8-7010a2a23b05",
+      "records": 457,
+      "fields": 820,
+      "profiles": {
+        "chemical_composition": 20,
+        "mechanical_properties": 74,
+        "qualitative": 363
+      },
+      "categories": {
+        "室温拉伸": 211,
+        "化学成分": 180,
+        "高倍": 141,
+        "低倍": 58,
+        "外观质量": 54,
+        "尺寸": 54,
+        "相变点": 27,
+        "表面质量": 27,
+        "高温拉伸": 25,
+        "剪切试验": 19,
+        "平面应变断裂韧度": 12,
+        "冲击试验": 10,
+        "超声波检验": 2
+      },
+      "grades": {
+        "TA15(A类)": 20,
+        "TC4": 20,
+        "TA7": 19,
+        "TA32": 19,
+        "TA15(B类)": 19,
+        "TA15": 19,
+        "TC4ELI(B类)": 18,
+        "TA2": 17,
+        "TA19": 17,
+        "TA33": 17,
+        "TC1": 17,
+        "TC2": 17
+      },
+      "grade_count": 27,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 393,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 83,
+        "~": 88,
+        "≥": 266
+      },
+      "review": {
+        "status": "warn",
+        "findings": 12,
+        "rules": [
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 161,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "62b12e7b-acca-4bf9-977a-b78ac46fcc0e",
+      "filename": "GJB 2219-1994过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "8245a27c-e628-4e46-8289-96cc687d4571",
+      "records": 82,
+      "fields": 99,
+      "profiles": {
+        "mechanical_properties": 7,
+        "qualitative": 75
+      },
+      "categories": {
+        "高倍": 25,
+        "室温拉伸": 19,
+        "低倍": 15,
+        "尺寸": 15,
+        "剪切试验": 5,
+        "外观质量": 5,
+        "晶粒度Average Grain Size": 5,
+        "表面质量": 5,
+        "顶锻试验": 5
+      },
+      "grades": {
+        "TB2": 17,
+        "TB3": 17,
+        "TA1": 16,
+        "TA2": 16,
+        "TC4": 16
+      },
+      "grade_count": 5,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 75,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 22,
+        "~": 2
+      },
+      "review": {
+        "status": "warn",
+        "findings": 11,
+        "rules": [
+          "",
+          "DOC-INVENTORY-CONFLICT"
+        ]
+      },
+      "result": {
+        "tables": 57,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "b07a2243-4fe2-4652-9e8c-55660b172421",
+      "filename": "GJB 2219A-2015.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "93eae29f-1c56-4b0a-8d45-066df42acabb",
+      "records": 216,
+      "fields": 344,
+      "profiles": {
+        "chemical_composition": 10,
+        "heat_treatment": 10,
+        "mechanical_properties": 19,
+        "qualitative": 177
+      },
+      "categories": {
+        "化学成分": 84,
+        "室温拉伸": 55,
+        "高倍": 32,
+        "尺寸": 30,
+        "低倍": 21,
+        "超声波检验": 21,
+        "顶锻试验": 21,
+        "热处理项目": 20,
+        "晶粒度Average Grain Size": 20,
+        "外观质量": 10,
+        "涡流检测": 10,
+        "表面质量": 10,
+        "剪切试验": 9,
+        "相变点": 1
+      },
+      "grades": {
+        "TC16": 25,
+        "TB3": 23,
+        "TB8": 23,
+        "TC4": 23,
+        "TB2": 22,
+        "TC6": 22,
+        "TA10": 20,
+        "TA1": 19,
+        "TA2": 19,
+        "TA9": 19,
+        "全部牌号": 1
+      },
+      "grade_count": 10,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 0,
+      "values_missing": 197,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 48,
+        "≥": 57,
+        "~": 32
+      },
+      "review": {
+        "status": "warn",
+        "findings": 17,
+        "rules": [
+          "DOC-INVENTORY-CONFLICT",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 85,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "3517fa60-1376-4967-80dd-33545a45096e",
+      "filename": "GJB 2505A-2018.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "e28ee2f9-e725-46dd-9ead-7b1b98eb840f",
+      "records": 389,
+      "fields": 619,
+      "profiles": {
+        "chemical_composition": 14,
+        "mechanical_properties": 60,
+        "qualitative": 315
+      },
+      "categories": {
+        "尺寸": 136,
+        "室温拉伸": 134,
+        "化学成分": 133,
+        "低倍": 69,
+        "外观质量": 68,
+        "晶粒度Average Grain Size": 17,
+        "相变点": 17,
+        "高温拉伸": 16,
+        "剪切试验": 16,
+        "高倍": 5,
+        "平面应变断裂韧度": 4,
+        "冲击试验": 2,
+        "表面质量": 1,
+        "超声波检验": 1
+      },
+      "grades": {
+        "TA15(B类)": 28,
+        "TA7": 25,
+        "TC4": 25,
+        "TA6": 24,
+        "TC2": 24,
+        "TA2": 23,
+        "TA3": 23,
+        "TB5": 23,
+        "TC1": 23,
+        "TC3": 23,
+        "TA0": 22,
+        "TA1": 22
+      },
+      "grade_count": 17,
+      "placeholder_grade_records": 1,
+      "unitless_numeric": 0,
+      "values_missing": 330,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 91,
+        "~": 63,
+        "≥": 135
+      },
+      "review": {
+        "status": "warn",
+        "findings": 3,
+        "rules": [
+          "DOC-CLAUSE-UNMAPPED",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 220,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "8526582f-5f07-4ca8-8288-11e0e01e9c64",
+      "filename": "GJB 2744A-2007过期.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "75358311-ae12-4a91-842c-338331343201",
+      "records": 316,
+      "fields": 538,
+      "profiles": {
+        "chemical_composition": 13,
+        "mechanical_properties": 30,
+        "qualitative": 273
+      },
+      "categories": {
+        "化学成分": 136,
+        "室温拉伸": 103,
+        "高倍": 96,
+        "低倍": 65,
+        "外观质量": 39,
+        "超声波检验": 34,
+        "冲击试验": 20,
+        "尺寸": 13,
+        "相变点": 13,
+        "表面质量": 13,
+        "高温拉伸": 6
+      },
+      "grades": {
+        "TC11": 28,
+        "TA15": 27,
+        "TC6": 27,
+        "TC18": 27,
+        "TC4": 26,
+        "TA19": 25,
+        "TC2": 23,
+        "TB6": 23,
+        "TA1": 22,
+        "TA2": 22,
+        "TA3": 22,
+        "TA7": 22
+      },
+      "grade_count": 13,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 289,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 64,
+        "~": 44,
+        "≥": 118
+      },
+      "review": {
+        "status": "warn",
+        "findings": 4,
+        "rules": [
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 170,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "26ee29fe-52b1-49ea-a20f-f9621ebad05d",
+      "filename": "GJB 2744A-2019.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "1901c3e9-125c-486f-95ca-aaa383958945",
+      "records": 657,
+      "fields": 1009,
+      "profiles": {
+        "chemical_composition": 19,
+        "heat_treatment": 5,
+        "mechanical_properties": 94,
+        "qualitative": 539
+      },
+      "categories": {
+        "化学成分": 214,
+        "室温拉伸": 198,
+        "高倍": 170,
+        "低倍": 104,
+        "超声波检验": 81,
+        "外观质量": 78,
+        "尺寸": 54,
+        "高温拉伸": 32,
+        "相变点": 26,
+        "表面质量": 26,
+        "剪切试验": 16,
+        "热处理项目": 10
+      },
+      "grades": {
+        "TC4-DT": 43,
+        "TC21": 32,
+        "TC4": 28,
+        "TA32": 27,
+        "TC11": 27,
+        "TC25": 26,
+        "TA15": 25,
+        "TA19": 25,
+        "TA29": 25,
+        "TC17": 25,
+        "TC2": 24,
+        "TC18c": 24
+      },
+      "grade_count": 27,
+      "placeholder_grade_records": 15,
+      "unitless_numeric": 0,
+      "values_missing": 566,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 75,
+        "~": 71,
+        "≥": 244
+      },
+      "review": {
+        "status": "warn",
+        "findings": 9,
+        "rules": [
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 196,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "de2b0c73-09fe-4767-90cc-107d0eb57e8b",
+      "filename": "GJB 713A-2020航天用高温合金棒材规范.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "1bfeb873-ac38-47f0-ba6f-13b05e0a82b1",
+      "records": 71,
+      "fields": 192,
+      "profiles": {
+        "chemical_composition": 5,
+        "mechanical_properties": 24,
+        "heat_treatment": 6,
+        "qualitative": 36
+      },
+      "categories": {
+        "化学成分": 60,
+        "高温拉伸": 54,
+        "室温拉伸": 29,
+        "超声波检验": 10,
+        "冲击试验": 9,
+        "低倍": 6,
+        "外观质量": 5,
+        "尺寸": 5,
+        "晶粒度Average Grain Size": 5,
+        "表面质量": 5,
+        "硬度试验": 4
+      },
+      "grades": {
+        "GH1131": 13,
+        "GH1040": 12,
+        "GH2036": 12,
+        "全部牌号": 12,
+        "GH3600": 10,
+        "GH4169": 9,
+        "软": 1,
+        "中": 1,
+        "硬": 1
+      },
+      "grade_count": 8,
+      "placeholder_grade_records": 12,
+      "unitless_numeric": 0,
+      "values_missing": 50,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≤": 29,
+        "~": 26,
+        "≥": 74
+      },
+      "review": {
+        "status": "warn",
+        "findings": 15,
+        "rules": [
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 174,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "b6e74e65-c3ae-4fa4-972e-117ef7109a3d",
+      "filename": "ISO 5832-3-2021.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "a3f9c562-7ec8-4715-9ffa-52275bc88ca2",
+      "records": 23,
+      "fields": 60,
+      "profiles": {
+        "chemical_composition": 7,
+        "mechanical_properties": 14,
+        "qualitative": 2
+      },
+      "categories": {
+        "室温拉伸": 51,
+        "化学成分": 7,
+        "高倍": 2
+      },
+      "grades": {
+        "Ti-6Al-4V": 23
+      },
+      "grade_count": 1,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 0,
+      "values_missing": 2,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "≥": 51
+      },
+      "review": {
+        "status": "warn",
+        "findings": 14,
+        "rules": [
+          "",
+          "DOC-CLAUSE-UNMAPPED",
+          "DOC-REFERENCE-UNRESOLVED",
+          "M5-TABLE-001"
+        ]
+      },
+      "result": {
+        "tables": 8,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    },
+    {
+      "document_id": "96c0b713-532f-43ed-8a3b-dfd8f0858af6",
+      "filename": "YB 4069-91.pdf",
+      "status": "STRUCTURED_READY",
+      "parser_version": "1.7.40",
+      "run_id": "a9d5e543-33e2-42f0-b9dc-fe8153eb6605",
+      "records": 14,
+      "fields": 38,
+      "profiles": {
+        "chemical_composition": 3,
+        "mechanical_properties": 1,
+        "qualitative": 10
+      },
+      "categories": {
+        "化学成分": 21,
+        "室温拉伸": 4,
+        "低倍": 3,
+        "高倍": 3,
+        "持久试验": 2,
+        "硬度试验": 1,
+        "冲击试验": 1,
+        "外观质量": 1,
+        "尺寸": 1,
+        "超声波检验": 1
+      },
+      "grades": {
+        "1060": 14
+      },
+      "grade_count": 1,
+      "placeholder_grade_records": 0,
+      "unitless_numeric": 1,
+      "values_missing": 11,
+      "english_leftover": 0,
+      "evidence_missing": 0,
+      "operators": {
+        "~": 7,
+        "≤": 14,
+        "≥": 6
+      },
+      "review": {
+        "status": "warn",
+        "findings": 4,
+        "rules": [
+          "",
+          "M5-UNIT-001",
+          "M5-VALUE-002"
+        ]
+      },
+      "result": {
+        "tables": 53,
+        "clauses": 0,
+        "references": 0,
+        "inventory_items": 0,
+        "coverage_ratio": null
+      }
+    }
+  ]
+}

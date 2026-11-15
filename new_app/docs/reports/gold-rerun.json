@@ -1,0 +1,213 @@
+{
+  "generated_at": "2026-11-14T05:18:54+00:00",
+  "documents": [
+    {
+      "name": "GBT 3280-2015.pdf",
+      "document_id": "ab0587ef-45e5-4472-9f84-16a746bde543",
+      "run_id": "e6ce1a43-662f-4f84-aa97-85bf0733ca21",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.15,
+      "records": 82,
+      "fields": 82,
+      "tables": 55,
+      "review_status": "warn",
+      "findings": 88,
+      "artifacts": 62,
+      "stage_ms": {
+        "ocr": 343517,
+        "routing": 3858,
+        "sandbox": 1156,
+        "review": 6245
+      }
+    },
+    {
+      "name": "ISO 5832-3-2021.pdf",
+      "document_id": "45fa7253-edf4-49dd-b36b-2dd342551cdd",
+      "run_id": "68243a12-9f5d-46d9-a622-6c5cdfb5754a",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.1,
+      "records": 1,
+      "fields": 3,
+      "tables": 5,
+      "review_status": "warn",
+      "findings": 3,
+      "artifacts": 30,
+      "stage_ms": {
+        "ocr": 23443,
+        "routing": 606,
+        "sandbox": 972,
+        "review": 6237
+      }
+    },
+    {
+      "name": "GBT 6516-2025.pdf",
+      "document_id": "d7c1296f-e0d7-45bf-bacb-90996b08028d",
+      "run_id": "ea61c7d7-ee2c-418c-8401-f265b38bd607",
+      "status": "REVIEW_FAILED",
+      "error_code": "REVIEW_FAILED",
+      "elapsed_seconds": 0.13,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "",
+      "findings": 0,
+      "artifacts": 0,
+      "stage_ms": {
+        "ocr": 38813,
+        "routing": 300,
+        "sandbox": 1255,
+        "review": 6551
+      }
+    },
+    {
+      "name": "GBT 14845-2026.pdf",
+      "document_id": "62622b6e-c38b-4922-a6b4-7d30f71febd1",
+      "run_id": "23260d08-fb99-40e7-adc6-84ef8904ba7b",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.09,
+      "records": 6,
+      "fields": 27,
+      "tables": 7,
+      "review_status": "warn",
+      "findings": 7,
+      "artifacts": 25,
+      "stage_ms": {
+        "ocr": 48834,
+        "routing": 0,
+        "sandbox": 1012,
+        "review": 6146
+      }
+    },
+    {
+      "name": "GBT 24627-2023.pdf",
+      "document_id": "f307c88c-1a19-41c9-94ad-59a2bd9774d2",
+      "run_id": "36e3316a-0e34-4b9d-8354-e8d4aadc557f",
+      "status": "REVIEW_FAILED",
+      "error_code": "REVIEW_FAILED",
+      "elapsed_seconds": 0.13,
+      "records": 0,
+      "fields": 0,
+      "tables": 0,
+      "review_status": "",
+      "findings": 0,
+      "artifacts": 0,
+      "stage_ms": {
+        "ocr": 19961,
+        "routing": 408,
+        "sandbox": 941,
+        "review": 6604
+      }
+    },
+    {
+      "name": "GBT 3880.2-2024.pdf",
+      "document_id": "3b0c066c-3bf1-4576-91a7-4e9965d86b53",
+      "run_id": "9b6777d1-8f4e-430a-bf6b-67d6a154803e",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 0.13,
+      "records": 1601,
+      "fields": 3767,
+      "tables": 35,
+      "review_status": "warn",
+      "findings": 93,
+      "artifacts": 57,
+      "stage_ms": {
+        "ocr": 530105,
+        "routing": 2940,
+        "sandbox": 1520,
+        "review": 7195
+      }
+    },
+    {
+      "name": "AMS4108G--.pdf",
+      "document_id": "d362531c-757b-42d3-9de9-eb92fd17f8cd",
+      "run_id": "a2972be5-c3a9-47ff-b545-630e473f3471",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 286.26,
+      "records": 40,
+      "fields": 120,
+      "tables": 6,
+      "review_status": "warn",
+      "findings": 5,
+      "artifacts": 22,
+      "stage_ms": {
+        "ocr": 11498,
+        "routing": 723,
+        "sandbox": 1041,
+        "review": 87585
+      },
+      "path": "f:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS4108G--.pdf",
+      "doc_id": "ams-4108g"
+    },
+    {
+      "name": "GJB 5040-2001 航空用钢锻件规范.pdf",
+      "document_id": "8cc6fd82-e9db-4d29-9bcc-1390a01871cf",
+      "run_id": "f972f37b-c249-433e-b02d-0a597955c9df",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 584.22,
+      "records": 139,
+      "fields": 453,
+      "tables": 12,
+      "review_status": "warn",
+      "findings": 9,
+      "artifacts": 36,
+      "stage_ms": {
+        "ocr": 175253,
+        "routing": 879,
+        "sandbox": 1176,
+        "review": 182298
+      },
+      "path": "f:\\hanson\\hanson_doc_parse\\汉唐标准\\标准2\\国军标（33）\\GJB 5040-2001 航空用钢锻件规范.pdf",
+      "doc_id": "gjb-5040-2001"
+    },
+    {
+      "name": "AMS4050K.pdf",
+      "document_id": "f5443bab-cc5c-4911-8657-72f0e4027cf6",
+      "run_id": "bd1a953d-883c-4407-b774-b0d70b0fc38a",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 187.56,
+      "records": 38,
+      "fields": 96,
+      "tables": 7,
+      "review_status": "warn",
+      "findings": 41,
+      "artifacts": 22,
+      "stage_ms": {
+        "ocr": 13469,
+        "routing": 722,
+        "sandbox": 1011,
+        "review": 83820
+      },
+      "path": "f:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS4050K.pdf",
+      "doc_id": "ams-4050k"
+    },
+    {
+      "name": "AMS4911S-过期.pdf",
+      "document_id": "4ad59d51-eda1-427b-b7ca-e6509ec8c1ce",
+      "run_id": "1ee64b0c-3b0e-4975-be1e-fd4d43d0ede2",
+      "status": "STRUCTURED_READY",
+      "error_code": null,
+      "elapsed_seconds": 133.11,
+      "records": 10,
+      "fields": 28,
+      "tables": 5,
+      "review_status": "warn",
+      "findings": 5,
+      "artifacts": 22,
+      "stage_ms": {
+        "ocr": 7423,
+        "routing": 604,
+        "sandbox": 1179,
+        "review": 7328
+      },
+      "path": "f:\\hanson\\hanson_doc_parse\\汉唐标准\\标准3\\美国标准（83）\\AMS4911S-过期.pdf",
+      "doc_id": "ams-4911s"
+    }
+  ]
+}

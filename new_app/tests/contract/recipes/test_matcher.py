@@ -108,3 +108,59 @@ def test_hardness_table_still_routes_to_hardness() -> None:
     )
     result = match_table(table, manifests)
     assert result.recipe_id == "hardness_v1"
+
+
+def test_english_tensile_table_routes_to_mechanical() -> None:
+    """AMS/ASME headers must beat hardness, which shares the same profile."""
+    registry = RecipeRegistry()
+    manifests = registry.active_manifests("stable")
+    table = _table(
+        n_cols=5,
+        header_paths=[
+            ["Nominal Thickness at Time of Heat Treatment Millimeters"],
+            ["Specimen Orientation"],
+            ["Tensile Strength MPa"],
+            ["Yield Strength at 0.2% Offset MPa"],
+            ["Elongation in 4D %"],
+        ],
+        rows=[
+            [
+                "Nominal Thickness at Time of Heat Treatment Millimeters",
+                "Specimen Orientation",
+                "Tensile Strength MPa",
+                "Yield Strength at 0.2% Offset MPa",
+                "Elongation in 4D %",
+            ],
+            ["Up to 51, incl", "Longitudinal", "496", "434", "9"],
+        ],
+    )
+    result = match_table(table, manifests)
+    assert result.recipe_id == "mechanical_properties_v1"
+    # hardness_v1 shares the mechanical profile but prints no hardness measure,
+    # so it must be filtered out instead of ranking second.
+    assert result.runner_up != "hardness_v1"
+    assert result.margin > 0
+
+
+def test_concatenated_symbol_header_routes_to_mechanical() -> None:
+    """``抗拉强度RmMPa`` must expose the rm token and beat hardness."""
+    registry = RecipeRegistry()
+    manifests = registry.active_manifests("stable")
+    table = _table(
+        n_cols=3,
+        header_paths=[
+            ["直径或两平行表面间距mm"],
+            ["抗拉强度，RmMPa"],
+            ["延伸率，A，测量长度50mm或4D%"],
+        ],
+        rows=[
+            [
+                "直径或两平行表面间距mm",
+                "抗拉强度，RmMPa",
+                "延伸率，A，测量长度50mm或4D%",
+            ],
+            ["≤50", "≥551", "≥15"],
+        ],
+    )
+    result = match_table(table, manifests)
+    assert result.recipe_id == "mechanical_properties_v1"

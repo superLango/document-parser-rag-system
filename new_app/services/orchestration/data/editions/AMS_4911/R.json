@@ -1,0 +1,73 @@
+{
+  "standard_id": "AMS 4911",
+  "edition": "R",
+  "document_sha256": "",
+  "page_count": 7,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "aerospacematerialspecification",
+        "ams4911tm",
+        "rev.r"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 4,
+      "header_signature": [
+        "element",
+        "min",
+        "max",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "nominalthicknessinches",
+        "tensilestrengthksi",
+        "yieldstrengthat0.2%offsetksi",
+        "elongationin2inchesor4d%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 5,
+      "header_signature": [
+        "nominalthicknessmillimeters",
+        "nominalthicknessmillimeters",
+        "tensilestrengthmpa",
+        "yieldstrengthat0.2%offsetmpa",
+        "elongationin50.8mmor4d%"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "nominalthicknessinch",
+        "nominalthicknessmillimeters",
+        "bendfactor"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "b9e9a1ef-3b88-4bdd-8e56-a0c0153ef7ef",
+  "created_at": "2026-11-15T08:37:18+00:00"
+}

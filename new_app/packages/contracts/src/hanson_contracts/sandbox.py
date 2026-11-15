@@ -19,6 +19,10 @@ OUTPUT_ROLES = (
     "diagnostics",
     "metrics",
     "manifest",
+    "clauses",
+    "inventory",
+    "references",
+    "document_intelligence",
 )
 
 ENGINE_API = "sandbox-engine/1"
@@ -67,6 +71,8 @@ class RecipeRef(BaseModel):
     recipe_id: str
     version: str
     digest: str = ""
+    # 实际解析到的通道；pinned 版本由注册中心回填真实绑定。
+    channel: str = ""
     # Optional inline package; used for entrypoint recipes and tests. When present
     # the sandbox service validates it against ``digest`` before mounting.
     manifest: dict[str, Any] | None = None
@@ -96,6 +102,23 @@ class EngineRef(BaseModel):
     runtime: str = ""
 
 
+class ParserAssetRef(BaseModel):
+    """Pin one immutable parser bundle version (candidate validation runs)."""
+
+    asset_id: str = "parser_core"
+    version: str
+    digest: str = ""
+
+    @field_validator("version", "asset_id")
+    @classmethod
+    def _safe_ref(cls, value: str) -> str:
+        if not value or len(value) > 64:
+            raise ValueError("parser asset ref must be 1..64 characters")
+        if any(ch in value for ch in "/\\\x00"):
+            raise ValueError("parser asset ref must not contain path separators")
+        return value
+
+
 class ExecutionRequest(BaseModel):
     schema_version: str = SCHEMA_VERSION
     trace_id: str
@@ -106,6 +129,9 @@ class ExecutionRequest(BaseModel):
     recipe: RecipeRef
     template: TemplateRef
     engine: EngineRef = Field(default_factory=EngineRef)
+    # When set the sandbox mounts this exact parser version instead of the
+    # channel pointer, so a candidate can be replayed before promotion.
+    parser: ParserAssetRef | None = None
     limits: ResourceLimits = Field(default_factory=ResourceLimits)
     metadata: dict[str, Any] = Field(default_factory=dict)
 

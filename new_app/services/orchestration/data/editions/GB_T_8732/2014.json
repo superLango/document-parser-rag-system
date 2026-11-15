@@ -1,0 +1,266 @@
+{
+  "standard_id": "GB/T 8732",
+  "edition": "2014",
+  "document_sha256": "",
+  "page_count": 15,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "单位为毫米"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "表2",
+        "热轧扁钢的尺寸及允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 12,
+      "header_signature": [
+        "公称宽度",
+        "宽度允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差",
+        "厚度及其允许偏差"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表3 异型钢材型号和尺寸允许偏差",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "型号",
+        "允许偏差/公称宽度",
+        "允许偏差/公称厚度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表4 异型材的弯曲度",
+      "profile": "classification",
+      "n_cols": 3,
+      "header_signature": [
+        "组别",
+        "弯曲度,不大于/每米弯曲度",
+        "弯曲度,不大于/总弯曲度"
+      ],
+      "measures": [
+        "弯曲"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 19,
+      "header_signature": [
+        "序号",
+        "统一数字代号",
+        "新牌号",
+        "旧牌号",
+        "化学成分(质量分数)/%/c",
+        "化学成分(质量分数)/%/si",
+        "化学成分(质量分数)/%/mn",
+        "化学成分(质量分数)/%/p",
+        "化学成分(质量分数)/%/s",
+        "化学成分(质量分数)/%/ni",
+        "化学成分(质量分数)/%/cr",
+        "化学成分(质量分数)/%/mo",
+        "化学成分(质量分数)/%/w",
+        "化学成分(质量分数)/%/v",
+        "化学成分(质量分数)/%/cu",
+        "化学成分(质量分数)/%/al",
+        "化学成分(质量分数)/%/ti",
+        "化学成分(质量分数)/%/n",
+        "nb+ta"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表6 推荐的热处理制度及硬度",
+      "profile": "mechanical_properties",
+      "n_cols": 6,
+      "header_signature": [
+        "序号",
+        "牌号/新牌号",
+        "牌号/旧牌号",
+        "推荐的热处理制度/退火",
+        "推荐的热处理制度/高温回火",
+        "布氏硬度hbw不大于"
+      ],
+      "measures": [
+        "布氏硬度",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "heat_treatment",
+      "n_cols": 2,
+      "header_signature": [
+        "表7",
+        "热处理制度及力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 14,
+      "header_signature": [
+        "序号",
+        "牌号/新牌号",
+        "牌号/旧牌号",
+        "组别",
+        "热处理制度/淬火温度/°c",
+        "热处理制度/淬火温度/°c",
+        "热处理制度/回火温度/°c",
+        "热处理制度/回火温度/°c",
+        "力学性能/规定塑性延伸强度rm/mpa",
+        "力学性能/抗拉强度rm/mpa",
+        "力学性能/断后伸长率a/%",
+        "力学性能/断面收缩率z/%",
+        "力学性能/冲击吸收能量ky2/j",
+        "试样硬度hbw"
+      ],
+      "measures": [
+        "规定塑性延伸强度",
+        "rm",
+        "抗拉强度",
+        "断后伸长率",
+        "a",
+        "断面收缩率",
+        "z",
+        "冲击吸收能量",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表8 低倍缺陷",
+      "profile": "inspection",
+      "n_cols": 4,
+      "header_signature": [
+        "项目",
+        "一般疏松",
+        "中心疏松",
+        "锭型偏析"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表9 钢材发纹检验要求",
+      "profile": "dimension",
+      "n_cols": 6,
+      "header_signature": [
+        "项目",
+        "发纹总条数",
+        "单条最大长度",
+        "发纹总长度",
+        "每阶最多条数",
+        "每阶上发纹总长度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表10 异型钢材发纹检验要求",
+      "profile": "dimension",
+      "n_cols": 4,
+      "header_signature": [
+        "项目",
+        "发纹总条数",
+        "单条最大长度",
+        "发纹总长度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表11 非金属夹杂物及合格级别",
+      "profile": "inspection",
+      "n_cols": 9,
+      "header_signature": [
+        "分类",
+        "a/细",
+        "a/粗",
+        "b/细",
+        "b/粗",
+        "c/细",
+        "c/粗",
+        "d/细",
+        "d/粗"
+      ],
+      "measures": [
+        "a"
+      ]
+    },
+    {
+      "caption": "表12 钢材表面缺陷允许清理深度",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "公称直径或厚度",
+        "允许缺陷清除深度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 5,
+      "header_signature": [
+        "序号",
+        "检验项目",
+        "取样数量",
+        "取样部位",
+        "试验方法"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "classification_v1": "1.0.3",
+    "chemical_composition_v1": "1.1.217",
+    "hardness_v1": "1.2.0",
+    "heat_treatment_v1": "1.0.0",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0",
+    "dimension_v1": "1.0.2"
+  },
+  "sample_doc_id": "13b8fd38-1128-4b5d-b073-0fc6d8be8dcd",
+  "created_at": "2026-11-15T05:11:23+00:00"
+}

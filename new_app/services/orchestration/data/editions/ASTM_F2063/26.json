@@ -1,0 +1,56 @@
+{
+  "standard_id": "ASTM F2063",
+  "edition": "26",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "element",
+        "%(mass/mass)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "element",
+        "undertheminimumoroverthemaximum,%(mass/mass)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "dimension",
+      "n_cols": 2,
+      "header_signature": [
+        "aa(°c)",
+        "tolerancerange(°c)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 3,
+      "header_signature": [
+        "diameterordistancebetweenparallelsides,mm",
+        "ultimatetensilestrengthmpa,minimum",
+        "elongationin50.0mm[1.97in.]or4d,%minimum"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "dimension_v1": "1.0.2",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "44df96e9-0766-46f8-8436-69bb18692aa6",
+  "created_at": "2026-11-15T06:34:01+00:00"
+}

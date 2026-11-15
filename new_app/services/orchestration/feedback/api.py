@@ -1,16 +1,37 @@
 # ruff: noqa: B008
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Header, HTTPException, Query
 from hanson_contracts import (
+    CodeApprovalIn,
     FeedbackCreate,
     FeedbackDetail,
     FeedbackVerifyIn,
     VerificationPackage,
 )
 
+from ..config import settings
 from .service import FeedbackError, FeedbackService
 
 router = APIRouter(prefix="/internal/feedback")
 _service = FeedbackService()
+
+
+def _require_approval_token(token: str) -> None:
+    if not settings.internal_api_token:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "code": "APPROVAL_TOKEN_NOT_CONFIGURED",
+                "message": "INTERNAL_API_TOKEN is not configured",
+            },
+        )
+    if token != settings.internal_api_token:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "code": "APPROVAL_TOKEN_INVALID",
+                "message": "invalid approval token",
+            },
+        )
 
 
 def _error(exc: FeedbackError) -> HTTPException:
@@ -49,6 +70,19 @@ async def get_feedback(feedback_id: str) -> FeedbackDetail:
 async def process_feedback(feedback_id: str) -> FeedbackDetail:
     try:
         return await _service.process(feedback_id)
+    except FeedbackError as exc:
+        raise _error(exc) from exc
+
+
+@router.post("/{feedback_id}/approve-code", response_model=FeedbackDetail)
+async def approve_code(
+    feedback_id: str,
+    payload: CodeApprovalIn,
+    x_internal_token: str = Header(default=""),
+) -> FeedbackDetail:
+    _require_approval_token(x_internal_token)
+    try:
+        return await _service.approve_code(feedback_id, payload)
     except FeedbackError as exc:
         raise _error(exc) from exc
 

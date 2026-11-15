@@ -103,9 +103,58 @@ NON_ELEMENT_HEADER_RE = re.compile(
 
 def _is_element_header(text: str) -> bool:
     value = clean_text(text)
-    if not value or len(value) > 8 or not ELEMENT_HEADER_RE.fullmatch(value):
+    if not value:
+        return False
+    if NON_ELEMENT_HEADER_RE.search(value):
+        return False
+    # "Carbon, max." / "Oxygen range or max." / full English element names.
+    # ``canonical_element`` already understands symbols, names and "+" sums.
+    return canonical_element(value) is not None
+
+
+ELEMENT_CELL_RE = re.compile(r"^[A-Z][a-z]?$")
+
+
+def _is_element_cell(text: str) -> bool:
+    value = clean_text(text)
+    if ELEMENT_CELL_RE.fullmatch(value):
+        return canonical_element(value) is not None
+    # AMS composition tables label rows with full English names ("Silicon").
+    # Grade codes such as C45 / H14 / Co9998 must not look like elements.
+    if len(value) < 3 or any(char.isdigit() for char in value):
+        return False
+    if len(value.split()) != 1:
         return False
     return canonical_element(value) is not None
+
+
+def _has_element_rows(table: TableGrid) -> bool:
+    """Composition tables may keep elements in a data column, not in headers."""
+    data = table.rows[table.header_rows :]
+    if len(data) < 3:
+        return False
+    width = min(3, max((len(row) for row in data), default=0))
+    headers = [" ".join(path) for path in table.header_paths]
+    skip_tokens = (
+        "质量等级", "等级", "class", "类别",
+        "状态", "牌号", "厚度", "规格", "温度", "方向", "直径", "尺寸",
+    )
+    for col in range(width):
+        header = headers[col] if col < len(headers) else ""
+        if any(token in header for token in skip_tokens):
+            # Quality/temper columns contain B/C/F or "O" values but are not
+            # elements; a column of "O" (annealed temper) used to be mistaken
+            # for oxygen, turning every mechanical table into element_rows.
+            continue
+        hits = [
+            canonical_element(clean_text(row[col]))
+            for row in data[:20]
+            if col < len(row) and _is_element_cell(row[col])
+        ]
+        symbols = {symbol for symbol in hits if symbol}
+        if len(hits) >= 3 and len(symbols) >= 2:
+            return True
+    return False
 
 
 def _has_element_columns(table: TableGrid) -> bool:
@@ -133,6 +182,15 @@ INCLUSION_MARKERS = ("非金属夹杂", "夹杂物", "inclusion")
 MECHANICAL_CONCRETE = tuple(
     marker for marker in MECHANICAL_MARKERS if marker != "力学性能"
 )
+# Heat-treatment schedule tables (GB/T 3280 Annex C, GB/T 14976 Table 1) carry
+# "热处理温度及冷却方式" / "推荐热处理制度" columns but no performance measures.
+HEAT_HEADER_RE = re.compile(
+    r"热处理(?:温度|制度|工艺)?|固溶处理|淬火|回火|正火|退火处理|时效处理|沉淀硬化"
+)
+HEAT_MECHANICAL_EXCLUSION = (
+    "抗拉", "屈服", "伸长", "收缩", "冲击", "硬度",
+    "rm", "rp0.2", "kv2", "hb", "hrc", "hv",
+)
 
 
 def _strong_header_profile(table: TableGrid, text: str) -> str:
@@ -143,6 +201,25 @@ def _strong_header_profile(table: TableGrid, text: str) -> str:
         return "admin"
     if any(marker in text for marker in INCLUSION_MARKERS):
         return "inspection"
+    if ("sqrt" in text or "√" in text) and ("ksi" in text or "mpa" in text):
+        # Fracture-toughness tables (ksi√in / MPa√m) carry a "Thickness"
+        # column but are mechanical, not dimensional.
+        return "mechanical_properties"
+    if re.search(r"bend\s*(?:factor|test|radius)|弯曲(?:试验|性能|半径|压头)", text):
+        # Bend tables print a thickness column but the measure is mechanical
+        # (AMS "Bend Factor", GB/T "弯曲试验").
+        return "mechanical_properties"
+    if (
+        HEAT_HEADER_RE.search(text)
+        and "检验项目" not in text
+        and "试验项目" not in text
+        and not any(marker in text for marker in HEAT_MECHANICAL_EXCLUSION)
+        and not any(marker in text for marker in CHEMICAL_MARKERS)
+        and not _has_element_columns(table)
+    ):
+        # Schedule tables carry grade + temperature/cooling only; leaving them
+        # as ``classification`` drops every heat-treatment row.
+        return "heat_treatment"
     if (
         ("试验项目" in text or "检验项目" in text or "test item" in text)
         and ("试验方法" in text or "test method" in text)
@@ -212,6 +289,11 @@ def classify_profile(table: TableGrid) -> str:
     profile = _caption_profile(table.caption)
     if profile != "unknown":
         return profile
+    if _has_element_rows(table):
+        # Transposed chemistry tables (grades as columns, elements as rows)
+        # often keep "牌号" in the header and would otherwise fall through to
+        # classification.
+        return "chemical_composition"
     if any(marker in header for marker in DIMENSION_MARKERS):
         return "dimension"
     if any(marker in header for marker in CLASSIFICATION_MARKERS):
@@ -223,17 +305,19 @@ def detect_orientation(table: TableGrid) -> str:
     first_header = " ".join(table.header_paths[0]) if table.header_paths else ""
     if "元素" in first_header:
         return "element_rows"
+    if _has_element_rows(table):
+        return "element_rows"
     if "牌号" in first_header or "级别" in first_header:
         return "grade_rows"
 
     data_rows = table.rows[table.header_rows :]
     if data_rows:
         first_cells = [clean_text(row[0]) for row in data_rows if row]
-        element_hits = sum(1 for cell in first_cells if canonical_element(cell))
+        element_hits = sum(1 for cell in first_cells if _is_element_cell(cell))
         if first_cells and element_hits / len(first_cells) >= 0.6 and element_hits >= 3:
             return "element_rows"
         first_data = first_cells[0] if first_cells else ""
-        if canonical_element(first_data):
+        if _is_element_cell(first_data):
             grade_like = sum(
                 1
                 for path in table.header_paths[1:]

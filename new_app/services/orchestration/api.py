@@ -4,33 +4,64 @@ import hashlib
 import json
 import logging
 from collections.abc import AsyncIterator
+from urllib.parse import quote
 from uuid import uuid4
 
 from fastapi import APIRouter, File, HTTPException, Query, Response, UploadFile
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
+from . import shadow as shadow_service
 from .db import SessionLocal
-from .models import Artifact, Document, DocumentVersion, Finding, Run, RunEvent, RunStage
+from .idempotency import build_key
+from .models import Artifact, Document, DocumentVersion, Feedback, Finding, Run, RunEvent, RunStage
 from .models import ReviewReport as ReviewReportRow
+from .rundiff import diff_run_ids
 from .schemas import (
     CreateRunIn,
     DocumentOut,
+    ReparseIn,
     RunEventOut,
     RunOut,
     RunResultOut,
     RunStageOut,
     RunTimelineOut,
 )
-from .state import TERMINAL_STATES, is_terminal
-from .workflow import cancel, get_store, schedule
+from .shadow import ShadowError, add_document, remove_document
+from .snapshots import capture_run_snapshot, latest_snapshot
+from .state import TERMINAL_STATES, RunState, ensure_transition, is_terminal
+from .workflow import (
+    append_event,
+    cancel,
+    get_store,
+    now,
+    schedule,
+    validate_parser_version,
+)
 
 logger = logging.getLogger(__name__)
+
+OCR_ARTIFACT_ROLES = {"ocr", "markdown.md", "pages.json", "tables.json", "layout.json"}
+
+
+def _is_ocr_artifact(role: str) -> bool:
+    return role in OCR_ARTIFACT_ROLES or role.endswith(".png")
+
+
+def _ascii_filename(filename: str) -> str:
+    """Latin-1 fallback name for Content-Disposition; keeps the extension."""
+    name = str(filename or "document")
+    stem, dot, suffix = name.rpartition(".")
+    ascii_stem = stem.encode("ascii", "ignore").decode("ascii").strip() or "document"
+    ascii_suffix = suffix.encode("ascii", "ignore").decode("ascii")
+    return f"{ascii_stem}.{ascii_suffix}" if dot and ascii_suffix else ascii_stem
 
 router = APIRouter(prefix="/internal")
 
 # 阶段展示顺序固定为业务链路顺序，避免依赖时间戳（系统时钟回跳会把顺序打乱）。
-STAGE_ORDER = {"ocr": 1, "routing": 2, "sandbox": 3, "review": 4}
+STAGE_ORDER = {"ocr": 1, "routing": 2, "sandbox": 3, "cross_standard": 4, "review": 5}
 
 
 async def _get_document(document_id: str) -> Document:
@@ -47,6 +78,28 @@ async def _get_run(run_id: str) -> Run:
         if run is None:
             raise HTTPException(status_code=404, detail="run not found")
         return run
+
+
+def _idempotency_key(
+    document: Document,
+    channel: str,
+    parser_version: str | None,
+    *,
+    prefix: str,
+) -> str:
+    """同一文档/内容/通道/parser pin 的重复请求映射到同一个 run。"""
+    return build_key(
+        prefix=prefix,
+        document_id=document.id,
+        sha256=document.sha256,
+        channel=channel,
+        parser_version=parser_version,
+    )
+
+
+async def _find_run_by_key(session, key: str) -> Run | None:
+    result = await session.execute(select(Run).where(Run.idempotency_key == key))
+    return result.scalars().first()
 
 
 @router.post("/documents", response_model=DocumentOut, status_code=201)
@@ -100,6 +153,31 @@ async def get_document(document_id: str) -> DocumentOut:
     return DocumentOut.model_validate(await _get_document(document_id))
 
 
+@router.get("/documents/{document_id}/file")
+async def get_document_file(document_id: str) -> Response:
+    """返回原始文档字节，供前端内嵌 PDF/原文查看。"""
+    document = await _get_document(document_id)
+    try:
+        data = await get_store().get_bytes(document.storage_key)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=404, detail="document file missing") from exc
+    return Response(
+        content=data,
+        media_type=document.content_type or "application/pdf",
+        headers={
+            # HTTP 头只能是 latin-1；中文文件名必须走 RFC 5987，否则
+            # Starlette 编码失败会返回 500 Internal Server Error。
+            "Content-Disposition": (
+                f'inline; filename="{_ascii_filename(document.filename)}"; '
+                f"filename*=UTF-8''{quote(document.filename)}"
+            ),
+            "Cache-Control": "private, max-age=60",
+            # 前端结果页需要同源内嵌原文。
+            "X-Frame-Options": "SAMEORIGIN",
+        },
+    )
+
+
 @router.delete("/documents/{document_id}", status_code=204)
 async def delete_document(document_id: str) -> None:
     await _get_document(document_id)
@@ -144,8 +222,12 @@ async def delete_document(document_id: str) -> None:
 
 @router.post("/documents/{document_id}/runs", response_model=RunOut, status_code=201)
 async def create_run(document_id: str, payload: CreateRunIn) -> RunOut:
-    await _get_document(document_id)
+    document = await _get_document(document_id)
+    key = _idempotency_key(document, payload.recipe_channel, None, prefix="run")
     async with SessionLocal() as session:
+        run = await _find_run_by_key(session, key)
+        if run is not None:
+            return RunOut.model_validate(run)
         run = Run(
             document_id=document_id,
             document_version=1,
@@ -153,9 +235,32 @@ async def create_run(document_id: str, payload: CreateRunIn) -> RunOut:
             stage="RECEIVED",
             trace_id=str(uuid4()),
             recipe_channel=payload.recipe_channel,
+            idempotency_key=key,
         )
         session.add(run)
-        await session.commit()
+        await session.flush()
+        await append_event(
+            session,
+            run,
+            "run.created",
+            "RECEIVED",
+            "created",
+            {
+                "document_id": document_id,
+                "document_sha256": document.sha256,
+                "recipe_channel": payload.recipe_channel,
+                "parser_version": None,
+                "parse_profile": payload.parse_profile,
+            },
+        )
+        try:
+            await session.commit()
+        except IntegrityError:
+            await session.rollback()
+            run = await _find_run_by_key(session, key)
+            if run is None:
+                raise
+            return RunOut.model_validate(run)
         result = RunOut.model_validate(run)
     schedule(run.id)
     return result
@@ -293,6 +398,24 @@ async def get_records(run_id: str) -> dict:
     return payload
 
 
+@router.get("/runs/{run_id}/intelligence")
+async def get_intelligence(run_id: str) -> dict:
+    """Document-understanding artifacts for the trace panel."""
+    await _get_run(run_id)
+    intelligence = await _artifact_payload(run_id, "document_intelligence")
+    inventory = await _artifact_payload(run_id, "inventory")
+    references = await _artifact_payload(run_id, "references")
+    clauses = await _artifact_payload(run_id, "clauses")
+    if intelligence is None and inventory is None and references is None:
+        raise HTTPException(status_code=404, detail="document intelligence not ready")
+    return {
+        "document_intelligence": intelligence or {},
+        "inventory": inventory or {},
+        "references": references or {},
+        "clauses": clauses or {},
+    }
+
+
 @router.get("/runs/{run_id}/ocr")
 async def get_ocr(run_id: str) -> dict:
     await _get_run(run_id)
@@ -332,6 +455,8 @@ async def get_review(run_id: str) -> dict:
                     "category": item.category,
                     "severity": item.severity,
                     "target": item.target,
+                    "message": item.message or "",
+                    "rule_id": item.rule_id or "",
                     "observed": item.observed,
                     "expected": item.expected,
                     "evidence_refs": item.evidence_refs,
@@ -341,6 +466,261 @@ async def get_review(run_id: str) -> dict:
                 for item in findings.scalars()
             ],
         }
+
+
+@router.post("/runs/{run_id}/accept")
+async def accept_run(
+    run_id: str,
+    actor: str = Query("operator"),
+    note: str = Query(""),
+) -> dict:
+    """Human approval gate: accept a run and move it to STRUCTURED_READY."""
+    try:
+        snapshot = await capture_run_snapshot(run_id, actor)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=409, detail={"code": "RUN_NOT_READY", "message": str(exc)}
+        ) from exc
+    await _approve_run(run_id, actor, note)
+    payload = snapshot.model_dump(mode="json")
+    payload["run_status"] = RunState.STRUCTURED_READY.value
+    return payload
+
+
+@router.post("/runs/{run_id}/reject")
+async def reject_run(
+    run_id: str,
+    actor: str = Query("operator"),
+    reason: str = Query(""),
+) -> dict:
+    """Human rejection gate: keep the run out of the delivery path."""
+    async with SessionLocal() as session:
+        run = await session.get(Run, run_id)
+        if run is None:
+            raise HTTPException(status_code=404, detail="run not found")
+        if run.status == RunState.HUMAN_REJECTED.value:
+            return {"run_id": run.id, "status": run.status}
+        if run.status != RunState.HUMAN_REVIEW.value:
+            raise HTTPException(
+                status_code=409,
+                detail={
+                    "code": "RUN_NOT_IN_HUMAN_REVIEW",
+                    "message": f"run is {run.status}",
+                },
+            )
+        ensure_transition(run.status, RunState.HUMAN_REJECTED)
+        run.status = RunState.HUMAN_REJECTED.value
+        run.stage = RunState.HUMAN_REJECTED.value
+        run.progress = 100
+        run.finished_at = now()
+        await append_event(
+            session,
+            run,
+            "run.human_rejected",
+            RunState.HUMAN_REJECTED.value,
+            "rejected",
+            {"actor": actor, "reason": reason},
+        )
+        await session.commit()
+        return {"run_id": run.id, "status": run.status}
+
+
+async def _approve_run(run_id: str, actor: str, note: str) -> None:
+    async with SessionLocal() as session:
+        run = await session.get(Run, run_id)
+        if run is None:
+            raise HTTPException(status_code=404, detail="run not found")
+        if run.status == RunState.STRUCTURED_READY.value:
+            return
+        if run.status == RunState.REVIEW_PASSED.value:
+            ensure_transition(run.status, RunState.HUMAN_REVIEW)
+            run.status = RunState.HUMAN_REVIEW.value
+            run.stage = RunState.HUMAN_REVIEW.value
+            await append_event(
+                session,
+                run,
+                "run.human_review_required",
+                RunState.HUMAN_REVIEW.value,
+                "waiting",
+                {"actor": "system"},
+            )
+        if run.status != RunState.HUMAN_REVIEW.value:
+            raise HTTPException(
+                status_code=409,
+                detail={
+                    "code": "RUN_NOT_IN_HUMAN_REVIEW",
+                    "message": f"run is {run.status}",
+                },
+            )
+        ensure_transition(run.status, RunState.HUMAN_APPROVED)
+        run.status = RunState.HUMAN_APPROVED.value
+        run.stage = RunState.HUMAN_APPROVED.value
+        run.progress = max(int(run.progress or 0), 98)
+        await append_event(
+            session,
+            run,
+            "run.human_approved",
+            RunState.HUMAN_APPROVED.value,
+            "approved",
+            {"actor": actor, "note": note},
+        )
+        ensure_transition(run.status, RunState.STRUCTURED_READY)
+        run.status = RunState.STRUCTURED_READY.value
+        run.stage = RunState.STRUCTURED_READY.value
+        run.progress = 100
+        run.finished_at = now()
+        result = await session.execute(
+            select(Artifact)
+            .where(Artifact.run_id == run.id, Artifact.role == "result")
+            .order_by(Artifact.created_at.desc())
+        )
+        artifact = result.scalars().first()
+        run.result_key = artifact.storage_key if artifact else run.result_key
+        await append_event(
+            session,
+            run,
+            "run.completed",
+            RunState.STRUCTURED_READY.value,
+            "completed",
+            {"result_key": run.result_key, "actor": actor},
+        )
+        await session.commit()
+
+
+@router.post("/runs/{run_id}/reparse", response_model=RunOut, status_code=202)
+async def reparse_run(run_id: str, payload: ReparseIn | None = None) -> RunOut:
+    """Re-run the same document with stable recipes and an optional parser pin."""
+    parser_version = (payload.parser_version if payload else None) or None
+    reuse_ocr = bool(payload.reuse_ocr) if payload else False
+    if parser_version:
+        try:
+            await validate_parser_version(parser_version)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=400,
+                detail={"code": "PARSER_VERSION_UNKNOWN", "message": str(exc)},
+            ) from exc
+        except RuntimeError as exc:
+            raise HTTPException(
+                status_code=502,
+                detail={"code": "REGISTRY_UNAVAILABLE", "message": str(exc)},
+            ) from exc
+    async with SessionLocal() as session:
+        original = await session.get(Run, run_id)
+        if original is None:
+            raise HTTPException(status_code=404, detail="run not found")
+        document = await session.get(Document, original.document_id)
+        if document is None:
+            raise HTTPException(status_code=404, detail="document not found")
+        # HUMAN_REVIEW/HUMAN_APPROVED 是等待人工的驻留状态，允许基于其结果重解析。
+        repairable_states = {
+            RunState.HUMAN_REVIEW.value,
+            RunState.HUMAN_APPROVED.value,
+        }
+        if not is_terminal(original.status) and original.status not in repairable_states:
+            raise HTTPException(
+                status_code=409,
+                detail={"code": "RUN_NOT_READY", "message": "run is not finished"},
+            )
+        key = _idempotency_key(
+            document,
+            "stable",
+            parser_version,
+            prefix="reparse-ocr" if reuse_ocr else "reparse",
+        )
+        existing = await _find_run_by_key(session, key)
+        if existing is not None:
+            return RunOut.model_validate(existing)
+        run = Run(
+            document_id=original.document_id,
+            document_version=original.document_version,
+            status="RECEIVED",
+            stage="RECEIVED",
+            trace_id=str(uuid4()),
+            recipe_channel="stable",
+            parser_version=parser_version,
+            idempotency_key=key,
+        )
+        session.add(run)
+        await session.flush()
+        if reuse_ocr:
+            artifacts = (
+                await session.execute(
+                    select(Artifact).where(Artifact.run_id == run_id)
+                )
+            ).scalars().all()
+            for artifact in artifacts:
+                if not _is_ocr_artifact(artifact.role):
+                    continue
+                session.add(
+                    Artifact(
+                        run_id=run.id,
+                        role=artifact.role,
+                        storage_key=artifact.storage_key,
+                        sha256=artifact.sha256,
+                        bytes=artifact.bytes,
+                    )
+                )
+        await append_event(
+            session,
+            run,
+            "run.created",
+            "RECEIVED",
+            "created",
+            {
+                "document_id": original.document_id,
+                "document_sha256": document.sha256,
+                "recipe_channel": "stable",
+                "parser_version": parser_version,
+                "source_run_id": run_id,
+            },
+        )
+        try:
+            await session.commit()
+        except IntegrityError:
+            await session.rollback()
+            existing = await _find_run_by_key(session, key)
+            if existing is None:
+                raise
+            return RunOut.model_validate(existing)
+        created = RunOut.model_validate(run)
+    schedule(run.id, skip_ocr=reuse_ocr)
+    return created
+
+
+@router.get("/runs/{run_id}/diff")
+async def run_diff(run_id: str, against: str = Query(...)) -> dict:
+    async with SessionLocal() as session:
+        before = await session.get(Run, run_id)
+        after = await session.get(Run, against)
+    if before is None or after is None:
+        raise HTTPException(status_code=404, detail="run not found")
+    if before.document_id != after.document_id:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "code": "DOCUMENT_MISMATCH",
+                "message": "runs must belong to the same document",
+            },
+        )
+    if not is_terminal(before.status) or not is_terminal(after.status):
+        raise HTTPException(
+            status_code=409,
+            detail={"code": "RUN_NOT_READY", "message": "both runs must be finished"},
+        )
+    diff = await diff_run_ids(run_id, against)
+    return {"before_run": run_id, "after_run": against, "diff": diff}
+
+
+@router.get("/documents/{document_id}/snapshot")
+async def get_document_snapshot(document_id: str) -> dict:
+    snapshot = await latest_snapshot(document_id)
+    if snapshot is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"code": "SNAPSHOT_NOT_FOUND", "message": "accepted snapshot not found"},
+        )
+    return snapshot.model_dump(mode="json")
 
 
 @router.get("/runs/{run_id}/pages/{page_no}/image")
@@ -369,3 +749,219 @@ async def get_page_image(run_id: str, page_no: int) -> Response:
         media_type="image/png",
         headers={"Cache-Control": "private, max-age=300"},
     )
+
+
+class ShadowDocumentIn(BaseModel):
+    document_id: str
+    actor: str = "operator"
+    note: str = ""
+
+
+class ShadowBatchIn(BaseModel):
+    recipe_id: str
+    from_version: str
+    candidate_version: str
+    feedback_id: str | None = None
+    required_documents: int = 0
+    actor: str = "operator"
+    note: str = ""
+
+
+class RollbackIn(BaseModel):
+    channel: str = "stable"
+    actor: str = "operator"
+    note: str = ""
+
+
+class ShadowActionIn(BaseModel):
+    actor: str = "operator"
+    note: str = ""
+
+
+def _shadow_error(exc: ShadowError) -> HTTPException:
+    return HTTPException(
+        status_code=exc.status_code,
+        detail={"code": exc.code, "message": str(exc)},
+    )
+
+
+@router.get("/shadow/documents")
+async def list_shadow_documents() -> list[dict]:
+    return await shadow_service.list_documents()
+
+
+@router.post("/shadow/documents", status_code=201)
+async def add_shadow_document(payload: ShadowDocumentIn) -> dict:
+    try:
+        return await add_document(
+            payload.document_id, actor=payload.actor, note=payload.note
+        )
+    except ShadowError as exc:
+        raise _shadow_error(exc) from exc
+
+
+@router.delete("/shadow/documents/{document_id}", status_code=204)
+async def delete_shadow_document(document_id: str) -> Response:
+    if not await remove_document(document_id):
+        raise HTTPException(status_code=404, detail="shadow document not found")
+    return Response(status_code=204)
+
+
+@router.get("/shadow/batches")
+async def list_shadow_batches() -> list[dict]:
+    return await shadow_service.list_batches()
+
+
+@router.post("/shadow/batches", status_code=201)
+async def create_shadow_batch(payload: ShadowBatchIn) -> dict:
+    return await shadow_service.create_batch(
+        recipe_id=payload.recipe_id,
+        from_version=payload.from_version,
+        candidate_version=payload.candidate_version,
+        feedback_id=payload.feedback_id,
+        required_documents=payload.required_documents,
+        actor=payload.actor,
+        note=payload.note,
+    )
+
+
+@router.get("/shadow/batches/{batch_id}")
+async def get_shadow_batch(batch_id: str) -> dict:
+    try:
+        return await shadow_service.get_batch(batch_id)
+    except ShadowError as exc:
+        raise _shadow_error(exc) from exc
+
+
+@router.post("/shadow/batches/{batch_id}/run")
+async def run_shadow_batch(batch_id: str) -> dict:
+    try:
+        await shadow_service.get_batch(batch_id)
+        shadow_service.schedule(batch_id)
+        return await shadow_service.get_batch(batch_id)
+    except ShadowError as exc:
+        raise _shadow_error(exc) from exc
+
+
+@router.post("/shadow/batches/{batch_id}/promote")
+async def promote_shadow_batch(batch_id: str, payload: ShadowActionIn) -> dict:
+    try:
+        return await shadow_service.promote_batch(
+            batch_id, actor=payload.actor, note=payload.note
+        )
+    except ShadowError as exc:
+        raise _shadow_error(exc) from exc
+
+
+@router.post("/shadow/batches/{batch_id}/abandon")
+async def abandon_shadow_batch(batch_id: str, payload: ShadowActionIn) -> dict:
+    try:
+        return await shadow_service.abandon_batch(
+            batch_id, actor=payload.actor, note=payload.note
+        )
+    except ShadowError as exc:
+        raise _shadow_error(exc) from exc
+
+
+@router.post("/recipes/{recipe_id}/rollback")
+async def rollback_recipe(recipe_id: str, payload: RollbackIn) -> dict:
+    try:
+        return await shadow_service.rollback(
+            recipe_id,
+            channel=payload.channel,
+            actor=payload.actor,
+            note=payload.note,
+        )
+    except ShadowError as exc:
+        raise _shadow_error(exc) from exc
+
+
+ABNORMAL_RUN_STATUSES = {
+    "FAILED",
+    "REVIEW_FAILED",
+    "UNROUTED",
+    "CANCELLED",
+    "HUMAN_REJECTED",
+}
+
+
+@router.get("/issues/ledger")
+async def issue_ledger() -> dict:
+    """问题台账：问题反馈 + 异常文档，用于后续导出优化清单。"""
+    async with SessionLocal() as session:
+        documents = list((await session.execute(select(Document))).scalars())
+        runs = list(
+            (
+                await session.execute(
+                    select(Run).order_by(Run.created_at.desc())
+                )
+            ).scalars()
+        )
+        feedback = list(
+            (
+                await session.execute(
+                    select(Feedback).order_by(Feedback.created_at.desc())
+                )
+            ).scalars()
+        )
+
+    names = {document.id: document.filename for document in documents}
+    latest: dict[str, Run] = {}
+    for run in runs:
+        latest.setdefault(run.document_id, run)
+
+    feedback_rows = [
+        {
+            "id": item.id,
+            "created_at": item.created_at.isoformat() if item.created_at else "",
+            "document_id": item.document_id,
+            "document": names.get(item.document_id, item.document_id),
+            "run_id": item.run_id,
+            "category": item.category,
+            "status": item.status,
+            "description": item.description,
+            "measure": str((item.target or {}).get("measure") or ""),
+            "recipe_id": str((item.target or {}).get("recipe_id") or ""),
+            "reporter": str((item.target or {}).get("reporter") or ""),
+        }
+        for item in feedback
+        # 审核门自动生成的 DOC-* 反馈属于异常文档，不混进人工问题反馈台账。
+        if not str((item.target or {}).get("rule_id") or "").startswith("DOC-")
+    ]
+
+    abnormal_documents = []
+    for document in documents:
+        run = latest.get(document.id)
+        if run is None:
+            continue
+        if run.status not in ABNORMAL_RUN_STATUSES and not run.error_code:
+            continue
+        abnormal_documents.append(
+            {
+                "document_id": document.id,
+                "document": document.filename,
+                "run_id": run.id,
+                "status": run.status,
+                "stage": run.stage,
+                "error_code": run.error_code or "",
+                "parsed_at": (
+                    run.finished_at.isoformat()
+                    if run.finished_at
+                    else (run.created_at.isoformat() if run.created_at else "")
+                ),
+                "recipe_channel": run.recipe_channel,
+                "parser_version": run.parser_version or "",
+            }
+        )
+
+    return {
+        "feedback": feedback_rows,
+        "abnormal_documents": abnormal_documents,
+        "summary": {
+            "feedback": len(feedback_rows),
+            "open_feedback": sum(
+                1 for item in feedback_rows if item["status"] in {"open", "needs_more_info"}
+            ),
+            "abnormal_documents": len(abnormal_documents),
+        },
+    }

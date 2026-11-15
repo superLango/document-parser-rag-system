@@ -1,0 +1,814 @@
+{
+  "summary": {
+    "sampled": 13,
+    "processed_ok": 13,
+    "status_dist": {
+      "verified": 4,
+      "needs_more_info": 9
+    },
+    "verified": 4,
+    "auto_tier": 8,
+    "review_tier": 3,
+    "l1_attempts": 7,
+    "avg_ops": 4.31,
+    "latency_p50": 17.1,
+    "latency_p95": 21.7
+  },
+  "results": [
+    {
+      "feedback_id": "c3543554-f48e-4222-bc08-e694d5d92f4d",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 13.8,
+      "status": "verified",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "data",
+        "confidence": 0.8,
+        "summary": "Multiple tables failed to produce records due to structural misclassification (non-record tables) or header/row-key identification errors. Requires table-level "
+      },
+      "proposal": {
+        "scope": "data",
+        "needs_human": false,
+        "ops": 0,
+        "table_repair": true,
+        "summary": "Repair table T22 header structure to enable record extraction"
+      },
+      "verification": {
+        "passed": true,
+        "decision": "accept",
+        "action_tier": "auto",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": true,
+            "detail": "complete_items 已改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "required_no_loss",
+            "passed": true,
+            "detail": "必填字段未丢失"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "L1 table T22: fixed; new errors=0; gate=accept."
+      }
+    },
+    {
+      "feedback_id": "a79328ac-6ac0-4f55-aa23-614900929b4b",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 21.7,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "recipe",
+        "confidence": 0.85,
+        "summary": "The recipe's measure bindings include elements not present in the actual table T4 headers. The repair scope is 'recipe' because the table structure is stable an"
+      },
+      "proposal": {
+        "scope": "data",
+        "needs_human": false,
+        "ops": 0,
+        "table_repair": true,
+        "summary": "repair header row for the impact table"
+      },
+      "verification": {
+        "passed": false,
+        "decision": "rollback",
+        "action_tier": "auto",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": false,
+            "detail": "records 未改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "L1 table T4: not fixed; new errors=0; gate=rollback."
+      }
+    },
+    {
+      "feedback_id": "6fb9620f-7d40-46f1-aa7f-815a4246d7db",
+      "rule_id": "DOC-LOW-COVERAGE",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 17.1,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "data",
+        "confidence": 0.8,
+        "summary": "The low coverage is caused by tables having headers that do not match the recipe's row_key definitions or being classified as non-record tables. This requires t"
+      },
+      "proposal": {
+        "scope": "data",
+        "needs_human": false,
+        "ops": 0,
+        "table_repair": true,
+        "summary": "repair table T5 structure to enable record extraction"
+      },
+      "verification": {
+        "passed": false,
+        "decision": "rollback",
+        "action_tier": "auto",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": false,
+            "detail": "complete_items 未改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "required_no_loss",
+            "passed": true,
+            "detail": "必填字段未丢失"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "L1 table T5: not fixed; new errors=0; gate=rollback."
+      }
+    },
+    {
+      "feedback_id": "9f317d9f-c777-470c-89f0-01d64da55edb",
+      "rule_id": "DOC-NO-RECORDS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 14.3,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "data",
+        "confidence": 0.85,
+        "summary": "The tables contain data rows but the parser failed to identify row keys because the actual column headers (e.g., 'ICS', '77.150.40') do not match the expected r"
+      },
+      "proposal": {
+        "scope": "data",
+        "needs_human": false,
+        "ops": 0,
+        "table_repair": true,
+        "summary": "Repair table T1 by patching the header row to match expected recipe keys ('牌号', '规格') to enable record extraction."
+      },
+      "verification": {
+        "passed": false,
+        "decision": "rollback",
+        "action_tier": "auto",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": false,
+            "detail": "records 未改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "L1 table T1: not fixed; new errors=0; gate=rollback."
+      }
+    },
+    {
+      "feedback_id": "d4814744-5fb3-4d91-8c68-666db77b3fba",
+      "rule_id": "DOC-NO-RECORDS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 15.2,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "data",
+        "confidence": 0.8,
+        "summary": "The table T7 contains data but was not parsed into records because the parser failed to identify row keys or bind measures, likely due to a mismatch between the"
+      },
+      "proposal": {
+        "scope": "data",
+        "needs_human": false,
+        "ops": 0,
+        "table_repair": true,
+        "summary": "repair table T7 structure to enable record extraction"
+      },
+      "verification": {
+        "passed": false,
+        "decision": "rollback",
+        "action_tier": "auto",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": false,
+            "detail": "complete_items 未改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "required_no_loss",
+            "passed": true,
+            "detail": "必填字段未丢失"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "L1 table T7: not fixed; new errors=0; gate=rollback."
+      }
+    },
+    {
+      "feedback_id": "d727b890-5c4b-454c-ac18-b9246f5bc5ee",
+      "rule_id": "DOC-NO-RECORDS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 117.0,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "data",
+        "confidence": 0.85,
+        "summary": "The table structure does not match the recipe's expected measure columns. The table contains product grades as columns and chemical elements as rows, while the "
+      },
+      "proposal": {
+        "scope": "data",
+        "needs_human": true,
+        "ops": 0,
+        "table_repair": false,
+        "summary": "Repair scope requires human/other service handling."
+      },
+      "verification": {
+        "passed": false,
+        "decision": "rollback",
+        "action_tier": "auto",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": false,
+            "detail": "records 未改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "L1 table T1: not fixed; new errors=0; gate=rollback."
+      }
+    },
+    {
+      "feedback_id": "dae7cf9f-dc48-4cef-8d4d-7808115feb2c",
+      "rule_id": "DOC-UNBOUND-COLUMNS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 13.7,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "data",
+        "confidence": 0.85,
+        "summary": "The table structure (headers) does not match the recipe bindings, requiring a table-level repair (re-parsing with fixed headers)."
+      },
+      "proposal": {
+        "scope": "data",
+        "needs_human": false,
+        "ops": 0,
+        "table_repair": true,
+        "summary": "repair header row for the impact table"
+      },
+      "verification": {
+        "passed": false,
+        "decision": "rollback",
+        "action_tier": "auto",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": false,
+            "detail": "MEASURE_COLUMN_MISSING 未改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "L1 table T8: not fixed; new errors=0; gate=rollback."
+      }
+    },
+    {
+      "feedback_id": "ec54e5de-236f-49a6-a5ad-bec87349f3ce",
+      "rule_id": "DOC-UNBOUND-COLUMNS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 20.3,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "table_structure",
+        "repair_scope": "data",
+        "confidence": 0.85,
+        "summary": "The table structure (headers) does not align with the recipe's expected measure bindings for the targeted table, requiring a table-level repair (re-parsing/stru"
+      },
+      "proposal": {
+        "scope": "data",
+        "needs_human": false,
+        "ops": 0,
+        "table_repair": true,
+        "summary": "repair header row for the impact table"
+      },
+      "verification": {
+        "passed": false,
+        "decision": "rollback",
+        "action_tier": "auto",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": false,
+            "detail": "required_items 未改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "required_no_loss",
+            "passed": true,
+            "detail": "必填字段未丢失"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "L1 table T7: not fixed; new errors=0; gate=rollback."
+      }
+    },
+    {
+      "feedback_id": "98d2ce33-2b16-4795-96d9-b9dbf3e96546",
+      "rule_id": "DOC-UNBOUND-COLUMNS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 5.8,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.9,
+        "summary": "The recipe bindings for chemical composition measures are not successfully mapping to the columns in table T5. The recipe likely needs to be updated to correctl"
+      },
+      "proposal": {
+        "scope": "recipe",
+        "needs_human": false,
+        "ops": 5,
+        "table_repair": false,
+        "summary": "The feedback indicates that measure columns in table T5 could not be bound. The current recipe signature expects lowercase tokens ('c', 'si', 'mn', 'p', 's') and the measures are defined with uppercas"
+      },
+      "verification": {
+        "passed": false,
+        "decision": "",
+        "action_tier": "",
+        "checks": [],
+        "summary": "Target DOC-UNBOUND-COLUMNS: not fixed; new errors=0."
+      }
+    },
+    {
+      "feedback_id": "e161b236-974e-44e9-ab24-a3f2cfb2201e",
+      "rule_id": "DOC-DUP-KEYS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 19.7,
+      "status": "verified",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.85,
+        "summary": "Update recipe bindings.conditions to include missing distinguishing columns (e.g., state, direction) to prevent duplicate record generation for the same grade."
+      },
+      "proposal": {
+        "scope": "recipe",
+        "needs_human": false,
+        "ops": 17,
+        "table_repair": false,
+        "summary": "Add missing condition columns to bindings.conditions to prevent duplicate keys for the same grade/measure."
+      },
+      "verification": {
+        "passed": true,
+        "decision": "accept",
+        "action_tier": "review",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": true,
+            "detail": "duplicate_keys 已改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "required_no_loss",
+            "passed": true,
+            "detail": "必填字段未丢失"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "Target DOC-DUP-KEYS: fixed; new errors=0; gate=accept."
+      }
+    },
+    {
+      "feedback_id": "04b91599-41cc-402e-bbc7-4234112918fc",
+      "rule_id": "DOC-DUP-KEYS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 20.3,
+      "status": "verified",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.85,
+        "summary": "Update recipe bindings.conditions to include additional distinguishing columns (e.g., status, thickness, etc.) to ensure unique record keys and prevent duplicat"
+      },
+      "proposal": {
+        "scope": "recipe",
+        "needs_human": false,
+        "ops": 17,
+        "table_repair": false,
+        "summary": "Add missing condition columns to bindings.conditions to prevent duplicate keys for the same grade"
+      },
+      "verification": {
+        "passed": true,
+        "decision": "accept",
+        "action_tier": "review",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": true,
+            "detail": "duplicate_keys 已改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "required_no_loss",
+            "passed": true,
+            "detail": "必填字段未丢失"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "Target DOC-DUP-KEYS: fixed; new errors=0; gate=accept."
+      }
+    },
+    {
+      "feedback_id": "5e0dc3d9-1e69-47d7-85e7-698d6b9afe85",
+      "rule_id": "DOC-DUP-KEYS",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 19.7,
+      "status": "verified",
+      "triage": {
+        "root_cause": "recipe_binding",
+        "repair_scope": "recipe",
+        "confidence": 0.85,
+        "summary": "Update recipe bindings.conditions to include missing condition columns (e.g., temperature, direction, status) to ensure unique record identification."
+      },
+      "proposal": {
+        "scope": "recipe",
+        "needs_human": false,
+        "ops": 17,
+        "table_repair": false,
+        "summary": "Add missing condition columns to bindings.conditions to resolve duplicate key errors"
+      },
+      "verification": {
+        "passed": true,
+        "decision": "accept",
+        "action_tier": "review",
+        "checks": [
+          {
+            "name": "evidence_grounded",
+            "passed": true,
+            "detail": "证据可落到原文/单元格"
+          },
+          {
+            "name": "reproduction",
+            "passed": true,
+            "detail": "问题已复现"
+          },
+          {
+            "name": "target_metric",
+            "passed": true,
+            "detail": "duplicate_keys 已改善"
+          },
+          {
+            "name": "no_new_errors",
+            "passed": true,
+            "detail": "new_errors=0"
+          },
+          {
+            "name": "required_no_loss",
+            "passed": true,
+            "detail": "必填字段未丢失"
+          },
+          {
+            "name": "no_removed_records",
+            "passed": true,
+            "detail": "未删除既有记录"
+          },
+          {
+            "name": "iteration_limit",
+            "passed": true,
+            "detail": "1/3"
+          },
+          {
+            "name": "regression",
+            "passed": true,
+            "detail": "未配置回归集，跳过"
+          }
+        ],
+        "summary": "Target DOC-DUP-KEYS: fixed; new errors=0; gate=accept."
+      }
+    },
+    {
+      "feedback_id": "2d0884c6-e192-4e3d-9c8c-b9b01e635d6f",
+      "rule_id": "DOC-NO-TABLES",
+      "before_status": "needs_more_info",
+      "before_verified": null,
+      "elapsed": 3.6,
+      "status": "needs_more_info",
+      "triage": {
+        "root_cause": "ocr_error",
+        "repair_scope": "engine",
+        "confidence": 0.8,
+        "summary": "The document failed to detect any tables due to OCR or layout parsing issues. This requires engine-level tuning or model adjustment, not a recipe change."
+      },
+      "proposal": {
+        "scope": "engine",
+        "needs_human": true,
+        "ops": 0,
+        "table_repair": false,
+        "summary": "The triage indicates the root cause is 'ocr_error' and the repair scope is 'engine'. The feedback states 'no tables were detected', and diagnostics confirm 0 tables/records. This is a structural detec"
+      },
+      "verification": {
+        "passed": null,
+        "decision": null,
+        "action_tier": null,
+        "checks": [],
+        "summary": ""
+      }
+    }
+  ]
+}

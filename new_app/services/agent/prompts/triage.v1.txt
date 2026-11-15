@@ -5,7 +5,18 @@ feedback item.
 
 Input JSON fields:
 - feedback: category, target, description, expected_value, source_quote.
-- run: run status, recipe channel, tables, record count, diagnostics.
+- intent: resolved user intent for vague feedback (concept, scope, category,
+  candidate_targets with reason/confidence, assumption, clarifying_question).
+  Use it to decide whether the complaint is about a table, a clause or the whole
+  document; do not re-litigate the target unless the evidence contradicts it.
+- diagnosis: deterministic diagnosis computed before triage. Contains
+  root_cause/action/scope/expected/mechanism/first_divergence/rule_change/
+  checks/source/needs_model. If source="rule" and confidence >= 0.7, keep its
+  root_cause and action unless the evidence clearly contradicts it. If
+  diagnosis.needs_model is true, make your own judgement.
+- run: status, recipe channel, table summary, record count, diagnostics.
+  Diagnostics carry code + detail; detail.headers shows the real table headers
+  for MEASURE_COLUMN_MISSING / ROW_KEY_NOT_FOUND / ELEMENT_COLUMNS_NOT_FOUND.
 - recipe: the current recipe manifest (read-only).
 
 Rules:
@@ -15,8 +26,13 @@ Rules:
 3. Prefer the smallest scope: data < recipe < template < prompt < engine.
 4. A missing/unbound measure with a stable table structure is recipe_binding /
    recipe; do not propose engine code changes.
-5. If the evidence is insufficient, set needs_human=true and explain why.
-6. Return only one JSON object:
+5. MEASURE_COLUMN_MISSING where detail.headers has no column that can carry the
+   measure (and the measure is already in recipe.bindings.measures) is a
+   table_structure or ocr_error problem: do not classify it as recipe_binding.
+6. If the evidence is insufficient, set needs_human=true and explain why.
+7. Write every user-facing string (evidence, summary, explanation) in
+   Simplified Chinese.
+8. Return only one JSON object:
 {
   "root_cause": "recipe_binding",
   "repair_scope": "recipe",

@@ -20,6 +20,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -28,6 +29,7 @@ from pathlib import Path
 from typing import Any
 
 import httpx
+import pymupdf
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 NEW_APP = REPO_ROOT / "new_app"
@@ -35,7 +37,15 @@ DEFAULT_API = os.getenv("API_BASE", "http://localhost:18000")
 DEFAULT_OUT_JSON = NEW_APP / "docs" / "reports" / "closeout-e2e.json"
 DEFAULT_OUT_MD = NEW_APP / "docs" / "reports" / "closeout-e2e.md"
 FIXTURE = NEW_APP / "tests" / "fixtures" / "mechanical-z.md"
-TERMINAL = {"STRUCTURED_READY", "REVIEW_FAILED", "FAILED", "CANCELLED"}
+TERMINAL = {
+    "STRUCTURED_READY",
+    "REVIEW_FAILED",
+    "HUMAN_REJECTED",
+    "UNROUTED",
+    "FAILED",
+    "CANCELLED",
+}
+WAITING = {"HUMAN_REVIEW"}
 MAX_PDF_BYTES = 25 * 1024 * 1024
 
 STANDARD_DIRS = {
@@ -52,6 +62,14 @@ STANDARD_QUOTAS = {
     "美国标准": 8,
     "行业标准": 4,
     "企业标准": 2,
+    "国际标准": 2,
+}
+STANDARD_QUOTAS_50 = {
+    "国家标准": 15,
+    "国军标": 10,
+    "美国标准": 15,
+    "行业标准": 5,
+    "企业标准": 3,
     "国际标准": 2,
 }
 
@@ -81,6 +99,8 @@ def sha256_bytes(data: bytes) -> str:
 
 
 def pick_even(items: list[Path], count: int) -> list[Path]:
+    if count <= 0:
+        return []
     if len(items) <= count:
         return items
     step = len(items) / count
@@ -135,6 +155,126 @@ def select_pdfs(pdf_limit: int) -> list[dict[str, str]]:
     return selected[:pdf_limit] if pdf_limit else selected
 
 
+def pdf_has_text(path: Path) -> bool:
+    try:
+        document = pymupdf.open(path)
+    except Exception:
+        return False
+    try:
+        pages = list(document)
+        if not pages:
+            return False
+        readable = 0
+        total_chars = 0
+        for page in pages:
+            text = page.get_text("text").strip()
+            total_chars += len(text)
+            compact = re.sub(r"\s+", "", text)
+            if len(compact) < 40:
+                continue
+            cjk = len(re.findall(r"[\u4e00-\u9fff]", text))
+            letters = len(re.findall(r"[A-Za-z]", text))
+            punct = len(re.findall(r"[^\w\s\u4e00-\u9fff]", text))
+            if cjk / len(compact) >= 0.15:
+                readable += 1
+            elif (
+                letters / len(compact) >= 0.5
+                and text.count(" ") >= 5
+                and punct / len(compact) <= 0.2
+            ):
+                readable += 1
+        return readable / len(pages) >= 0.6 and total_chars / len(pages) >= 100
+    finally:
+        document.close()
+
+
+def select_standards(limit: int, *, include_scanned: bool = True) -> list[dict[str, str]]:
+    """Select a category-balanced set, preferring readable text-layer PDFs.
+
+    One scanned document per large category is kept so the vision OCR path is
+    still exercised without making the batch dominate the run time.
+    """
+    selected: list[dict[str, str]] = []
+    seen: set[str] = set()
+    total_quota = sum(STANDARD_QUOTAS_50.values())
+    scaled = {
+        category: max(1, round(quota / total_quota * limit))
+        for category, quota in STANDARD_QUOTAS_50.items()
+    }
+    for category, relative in STANDARD_DIRS.items():
+        root = REPO_ROOT / relative
+        files = [
+            path
+            for path in sorted(root.glob("*.pdf"))
+            if path.stat().st_size <= MAX_PDF_BYTES
+        ]
+        text_files = [path for path in files if pdf_has_text(path)]
+        scan_files = [path for path in files if path not in text_files]
+        quota = scaled[category]
+        scanned_quota = (
+            1 if include_scanned and scan_files and (quota >= 5 or not text_files) else 0
+        )
+        chosen = pick_even(text_files, quota - scanned_quota)
+        chosen += pick_even(scan_files, scanned_quota)
+        for path in chosen:
+            data = path.read_bytes()
+            digest = sha256_bytes(data)
+            if digest in seen:
+                continue
+            seen.add(digest)
+            selected.append(
+                {
+                    "path": str(path),
+                    "name": path.name,
+                    "category": category,
+                    "sha256": digest,
+                    "bytes": str(len(data)),
+                    "text_layer": str(pdf_has_text(path)),
+                }
+            )
+    if limit and len(selected) < limit:
+        remaining: list[tuple[bool, Path]] = []
+        for relative in STANDARD_DIRS.values():
+            root = REPO_ROOT / relative
+            for path in sorted(root.glob("*.pdf")):
+                if path.stat().st_size > MAX_PDF_BYTES:
+                    continue
+                digest = sha256_bytes(path.read_bytes())
+                if digest in seen:
+                    continue
+                if not include_scanned and not pdf_has_text(path):
+                    continue
+                remaining.append((not pdf_has_text(path), path))
+        remaining.sort(key=lambda item: (item[0], str(item[1])))
+        for _, path in remaining:
+            if len(selected) >= limit:
+                break
+            data = path.read_bytes()
+            digest = sha256_bytes(data)
+            if digest in seen:
+                continue
+            seen.add(digest)
+            category = next(
+                (
+                    name
+                    for name, relative in STANDARD_DIRS.items()
+                    if (REPO_ROOT / relative) in path.parents
+                ),
+                "补充标准",
+            )
+            selected.append(
+                {
+                    "path": str(path),
+                    "name": path.name,
+                    "category": category,
+                    "sha256": digest,
+                    "bytes": str(len(data)),
+                    "text_layer": str(pdf_has_text(path)),
+                }
+            )
+    return selected[:limit] if limit else selected
+
+
 def load_legacy_candidates(limit: int) -> list[dict[str, Any]]:
     from m8_effect_compare import load_candidates
 
@@ -152,6 +292,17 @@ def wait_run(
         response = client.get(f"{api}/v1/runs/{run_id}")
         response.raise_for_status()
         run = response.json()
+        if run.get("status") in WAITING:
+            accepted = client.post(
+                f"{api}/v1/runs/{run_id}/accept",
+                params={"actor": "regression", "note": "automated gate"},
+            )
+            if accepted.status_code == 200:
+                run = {
+                    **run,
+                    "status": accepted.json().get("run_status", "STRUCTURED_READY"),
+                }
+            break
         if run.get("status") in TERMINAL:
             break
         time.sleep(2)
@@ -638,6 +789,11 @@ def main() -> int:
     parser.add_argument("--legacy-limit", type=int, default=60)
     parser.add_argument("--pdf-concurrency", type=int, default=2)
     parser.add_argument("--legacy-concurrency", type=int, default=3)
+    parser.add_argument(
+        "--pdf-source",
+        choices=["mixed", "standards", "standards-readable"],
+        default="mixed",
+    )
     parser.add_argument("--pdf-only-file", type=Path, default=None)
     parser.add_argument("--suites", default="pdf,legacy,branches")
     parser.add_argument("--feedback", action="store_true")
@@ -657,7 +813,12 @@ def main() -> int:
     }
 
     if "pdf" in suites:
-        pdfs = select_pdfs(args.pdf_limit)
+        if args.pdf_source == "standards":
+            pdfs = select_standards(args.pdf_limit)
+        elif args.pdf_source == "standards-readable":
+            pdfs = select_standards(args.pdf_limit, include_scanned=False)
+        else:
+            pdfs = select_pdfs(args.pdf_limit)
         if args.pdf_only_file is not None:
             needles = [
                 line.strip()
@@ -683,6 +844,7 @@ def main() -> int:
                     content_type="application/pdf",
                 )
             result["category"] = item["category"]
+            result["path"] = item["path"]
             return result
 
         with ThreadPoolExecutor(max_workers=max(1, args.pdf_concurrency)) as pool:

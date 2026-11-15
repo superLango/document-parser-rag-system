@@ -1,0 +1,544 @@
+{
+  "standard_id": "GJB 713",
+  "edition": "A",
+  "document_sha256": "",
+  "page_count": 13,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "fl",
+        "6210"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gjb",
+        "713a",
+        "2020"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "代替",
+        "gjb713-1989和gjb1955-1994"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "航天用高温合金棒材规范"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "specification",
+        "forsuperalloybarsforaerospace"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2020-06-18",
+        "发布"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "2020-08-01",
+        "实施"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 2,
+      "header_signature": [
+        "表2",
+        "牌号及化学成分"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 21,
+      "header_signature": [
+        "合金牌号",
+        "化学成分(质量分数),%/c",
+        "化学成分(质量分数),%/mn",
+        "化学成分(质量分数),%/si",
+        "化学成分(质量分数),%/s",
+        "化学成分(质量分数),%/p",
+        "化学成分(质量分数),%/cr",
+        "化学成分(质量分数),%/ni",
+        "化学成分(质量分数),%/mo",
+        "化学成分(质量分数),%/fe",
+        "化学成分(质量分数),%/ti",
+        "化学成分(质量分数),%/al",
+        "化学成分(质量分数),%/co",
+        "化学成分(质量分数),%/ba",
+        "化学成分(质量分数),%/cu",
+        "化学成分(质量分数),%/nb",
+        "化学成分(质量分数),%/mg",
+        "n",
+        "其他",
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "3"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "表3",
+        "gh4169合金试样的纵向力学性能"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 13,
+      "header_signature": [
+        "组别",
+        "公称直径mm",
+        "试样热处理制度",
+        "试验温度°c",
+        "瞬时拉伸性能/抗拉强度rmmpa/不小于",
+        "瞬时拉伸性能/规定塑性延伸强度rp02mpa/不小于",
+        "瞬时拉伸性能/断后伸长率a%/不小于",
+        "瞬时拉伸性能/断面收缩率z%/不小于",
+        "冲击吸收能量ku2j/不小于",
+        "高温持久性能/应力σmpa/不小于",
+        "高温持久性能/时间τh/不小于",
+        "高温持久性能/断后伸长率a%/不小于",
+        "硬度hbw"
+      ],
+      "measures": [
+        "抗拉强度",
+        "规定塑性延伸强度",
+        "断后伸长率",
+        "a",
+        "断面收缩率",
+        "z",
+        "冲击吸收能量",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "4"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 4,
+      "header_signature": [
+        "表4",
+        "gh1040、gh1131、gh2036、gh3600",
+        "合金试样的纵向力学性能",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 14,
+      "header_signature": [
+        "合金牌号",
+        "公称直径mm",
+        "试样热处理制度",
+        "试验温度°c",
+        "瞬时拉伸性能/抗拉强度rmmpa/不小于",
+        "瞬时拉伸性能/规定塑性延伸强度rm2mpa/不小于",
+        "瞬时拉伸性能/断后伸长率a%/不小于",
+        "瞬时拉伸性能/断面收缩率z%/不小于",
+        "瞬时拉伸性能/应力σmpa/不小于",
+        "冲击吸收能量ku2j",
+        "高温持久性能/时间th",
+        "高温持久性能/不小于",
+        "硬度hbw",
+        ""
+      ],
+      "measures": [
+        "抗拉强度",
+        "规定塑性延伸强度",
+        "断后伸长率",
+        "a",
+        "断面收缩率",
+        "z",
+        "冲击吸收能量",
+        "hbw"
+      ]
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "5"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "表7 （续）",
+      "profile": "inspection",
+      "n_cols": 6,
+      "header_signature": [
+        "序号",
+        "检验项目",
+        "取样部位",
+        "取样数量",
+        "要求的章条号",
+        "检验方法的章条号"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "inspection",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.3",
+        "判定和复验规则"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.2.3.4",
+        "当晶粒度、一次碳化物检验不合格时,允许从原棒材上重新切取试样对不合格项目进行复验,复验结果仍不合格,则该批棒材判为不合格。laves相不允许复验。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3",
+        "检验方法"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.1",
+        "化学成分分析"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "化学成分分析按gb/t20123、gb/t20124、gjb8781.8或通用的方法进行,但仲裁时应按gb/t223.4、gb/t223.5、gb/t223.8、gb/t223.9、gb/t223.11、gb/t223.12、gb/t223.13、gb/t223.17、gb/t223.18、gb/t223.19、gb/t223.22、gb/t223.25、gb/t223.26、gb/t223.28、gb/t223.38、gb/t223.40、gb/t229.43、gb/t223.46、gb/t223.62、gb/t223.63、gb/t223.73、gb/t223.81、gb/t223.85、gb/t223.86、gjb8781.8的规定执行。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.2",
+        "室温拉伸"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "实验名称",
+        "实验内容"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.3",
+        "室温冲击"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.4",
+        "硬度"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 1,
+      "header_signature": [
+        "硬度试验按gb/t231.1的规定执行。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.5",
+        "高温拉伸"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "高温拉伸试验按gb/t228.2-2015中方法b的规定执行。"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "4.3.6",
+        "高温持久"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "8"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6",
+        "说明事项"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "6.1",
+        "预定用途"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "订购文件中应规定下列内容:"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "b)",
+        "合金牌号;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "c)",
+        "冶炼方法(见3.1);"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "e)",
+        "规格;"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "10"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 3,
+      "header_signature": [
+        "gjb",
+        "713a",
+        "2020"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "国家军用标准"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 1,
+      "header_signature": [
+        "国家军用标准出版发行部出版"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 1,
+      "header_signature": [
+        "(北京东外京顺路7号)"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "版权专有",
+        "不得翻印"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 5,
+      "header_signature": [
+        "开本",
+        "880×1230",
+        "1/16",
+        "印张",
+        "字数"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "admin",
+      "n_cols": 2,
+      "header_signature": [
+        "2020年7月第1版",
+        "2020年7月第1次印刷"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 2,
+      "header_signature": [
+        "军标出字第",
+        "12569号"
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_composition_v1": "1.1.217",
+    "mechanical_properties_v1": "1.6.51",
+    "inspection_rules_v1": "1.1.0",
+    "hardness_v1": "1.2.0"
+  },
+  "sample_doc_id": "d256e268-ca38-44c9-90c8-0e7bc4bdbe34",
+  "created_at": "2026-11-15T06:26:43+00:00"
+}

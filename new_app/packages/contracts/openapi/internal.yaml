@@ -1,32 +1,1948 @@
-openapi: 3.1.0
+components:
+  schemas:
+    Body_upload_document_internal_documents_post:
+      properties:
+        file:
+          contentMediaType: application/octet-stream
+          title: File
+          type: string
+      required:
+      - file
+      title: Body_upload_document_internal_documents_post
+      type: object
+    CandidateRef:
+      properties:
+        base_version:
+          title: Base Version
+          type: string
+        candidate_version:
+          title: Candidate Version
+          type: string
+        digest:
+          title: Digest
+          type: string
+        patch:
+          additionalProperties: true
+          title: Patch
+          type: object
+        patch_chain:
+          items:
+            type: string
+          title: Patch Chain
+          type: array
+        recipe_id:
+          title: Recipe Id
+          type: string
+      required:
+      - recipe_id
+      - base_version
+      - candidate_version
+      - digest
+      title: CandidateRef
+      type: object
+    CodeFile:
+      properties:
+        content:
+          title: Content
+          type: string
+        diff:
+          default: ''
+          title: Diff
+          type: string
+        path:
+          title: Path
+          type: string
+        status:
+          default: modified
+          enum:
+          - added
+          - modified
+          title: Status
+          type: string
+      required:
+      - path
+      - content
+      title: CodeFile
+      type: object
+    CodeGuardReport:
+      properties:
+        passed:
+          default: false
+          title: Passed
+          type: boolean
+        stats:
+          additionalProperties: true
+          title: Stats
+          type: object
+        violations:
+          items:
+            $ref: '#/components/schemas/CodeGuardViolation'
+          title: Violations
+          type: array
+      title: CodeGuardReport
+      type: object
+    CodeGuardViolation:
+      properties:
+        code:
+          title: Code
+          type: string
+        file:
+          default: ''
+          title: File
+          type: string
+        line:
+          default: 0
+          title: Line
+          type: integer
+        message:
+          title: Message
+          type: string
+      required:
+      - code
+      - message
+      title: CodeGuardViolation
+      type: object
+    CodePatch:
+      properties:
+        base_version:
+          default: ''
+          title: Base Version
+          type: string
+        files:
+          items:
+            $ref: '#/components/schemas/CodeFile'
+          title: Files
+          type: array
+      title: CodePatch
+      type: object
+    CreateRunIn:
+      properties:
+        parse_profile:
+          default: standard
+          title: Parse Profile
+          type: string
+        recipe_channel:
+          default: stable
+          enum:
+          - stable
+          - candidate
+          - shadow
+          title: Recipe Channel
+          type: string
+      title: CreateRunIn
+      type: object
+    DocumentOut:
+      properties:
+        content_type:
+          title: Content Type
+          type: string
+        created_at:
+          format: date-time
+          title: Created At
+          type: string
+        filename:
+          title: Filename
+          type: string
+        id:
+          title: Id
+          type: string
+        sha256:
+          title: Sha256
+          type: string
+        size:
+          title: Size
+          type: integer
+        status:
+          title: Status
+          type: string
+      required:
+      - id
+      - filename
+      - content_type
+      - size
+      - sha256
+      - status
+      - created_at
+      title: DocumentOut
+      type: object
+    FeedbackCreate:
+      properties:
+        category:
+          title: Category
+          type: string
+        description:
+          title: Description
+          type: string
+        expected_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Value
+        reporter:
+          default: operator
+          title: Reporter
+          type: string
+        run_id:
+          title: Run Id
+          type: string
+        source_quote:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Quote
+        target:
+          additionalProperties: true
+          title: Target
+          type: object
+      required:
+      - run_id
+      - category
+      - description
+      title: FeedbackCreate
+      type: object
+    FeedbackDetail:
+      properties:
+        candidate:
+          anyOf:
+          - $ref: '#/components/schemas/CandidateRef'
+          - type: 'null'
+        category:
+          title: Category
+          type: string
+        created_at:
+          default: ''
+          title: Created At
+          type: string
+        description:
+          title: Description
+          type: string
+        document_id:
+          title: Document Id
+          type: string
+        expected_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Value
+        id:
+          title: Id
+          type: string
+        messages:
+          items:
+            $ref: '#/components/schemas/FeedbackMessage'
+          title: Messages
+          type: array
+        proposal:
+          anyOf:
+          - $ref: '#/components/schemas/RepairProposal'
+          - type: 'null'
+        resolved_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resolved At
+        run_id:
+          title: Run Id
+          type: string
+        source_quote:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Quote
+        status:
+          default: open
+          enum:
+          - open
+          - processing
+          - proposed
+          - verifying
+          - verified
+          - shadow
+          - promoted
+          - discarded
+          - needs_more_info
+          title: Status
+          type: string
+        target:
+          additionalProperties: true
+          title: Target
+          type: object
+        triage:
+          anyOf:
+          - $ref: '#/components/schemas/TriageDecision'
+          - type: 'null'
+        updated_at:
+          default: ''
+          title: Updated At
+          type: string
+        verification:
+          anyOf:
+          - $ref: '#/components/schemas/VerificationPackage'
+          - type: 'null'
+      required:
+      - id
+      - run_id
+      - document_id
+      - category
+      - description
+      title: FeedbackDetail
+      type: object
+    FeedbackMessage:
+      properties:
+        at:
+          title: At
+          type: string
+        content:
+          title: Content
+          type: string
+        role:
+          enum:
+          - user
+          - agent
+          - system
+          title: Role
+          type: string
+      required:
+      - role
+      - content
+      - at
+      title: FeedbackMessage
+      type: object
+    FeedbackVerifyIn:
+      properties:
+        actor:
+          title: Actor
+          type: string
+        confirm_accepted_change:
+          default: false
+          title: Confirm Accepted Change
+          type: boolean
+        decision:
+          enum:
+          - approve
+          - reject
+          title: Decision
+          type: string
+        reason:
+          default: ''
+          title: Reason
+          type: string
+      required:
+      - decision
+      - actor
+      title: FeedbackVerifyIn
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    RegressionStats:
+      properties:
+        documents:
+          default: 0
+          title: Documents
+          type: integer
+        field_f1_delta:
+          default: 0.0
+          title: Field F1 Delta
+          type: number
+        new_errors:
+          default: 0
+          title: New Errors
+          type: integer
+      title: RegressionStats
+      type: object
+    RepairProposal:
+      properties:
+        code_patch:
+          anyOf:
+          - $ref: '#/components/schemas/CodePatch'
+          - type: 'null'
+        confidence:
+          default: 0.5
+          maximum: 1.0
+          minimum: 0.0
+          title: Confidence
+          type: number
+        guard:
+          anyOf:
+          - $ref: '#/components/schemas/CodeGuardReport'
+          - type: 'null'
+        needs_human:
+          default: false
+          title: Needs Human
+          type: boolean
+        patch:
+          additionalProperties: true
+          title: Patch
+          type: object
+        proposal_id:
+          default: ''
+          title: Proposal Id
+          type: string
+        risk:
+          default: low
+          enum:
+          - low
+          - medium
+          - high
+          title: Risk
+          type: string
+        root_cause:
+          default: unknown
+          enum:
+          - ocr_error
+          - table_structure
+          - recipe_binding
+          - template_schema
+          - model_extraction
+          - dictionary
+          - display
+          - unknown
+          title: Root Cause
+          type: string
+        scope:
+          default: none
+          enum:
+          - data
+          - recipe
+          - template
+          - prompt
+          - engine
+          - display
+          - none
+          title: Scope
+          type: string
+        summary:
+          default: ''
+          title: Summary
+          type: string
+        test_plan:
+          items:
+            type: string
+          title: Test Plan
+          type: array
+      title: RepairProposal
+      type: object
+    ReparseIn:
+      description: Optional parser bundle pin for candidate validation runs.
+      properties:
+        parser_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parser Version
+      title: ReparseIn
+      type: object
+    RollbackIn:
+      properties:
+        actor:
+          default: operator
+          title: Actor
+          type: string
+        channel:
+          default: stable
+          title: Channel
+          type: string
+        note:
+          default: ''
+          title: Note
+          type: string
+      title: RollbackIn
+      type: object
+    RunEventOut:
+      properties:
+        id:
+          title: Id
+          type: string
+        occurred_at:
+          format: date-time
+          title: Occurred At
+          type: string
+        payload:
+          additionalProperties: true
+          title: Payload
+          type: object
+        run_id:
+          title: Run Id
+          type: string
+        sequence:
+          title: Sequence
+          type: integer
+        stage:
+          title: Stage
+          type: string
+        status:
+          title: Status
+          type: string
+        type:
+          title: Type
+          type: string
+      required:
+      - id
+      - run_id
+      - sequence
+      - type
+      - stage
+      - status
+      - payload
+      - occurred_at
+      title: RunEventOut
+      type: object
+    RunOut:
+      properties:
+        created_at:
+          format: date-time
+          title: Created At
+          type: string
+        document_id:
+          title: Document Id
+          type: string
+        document_version:
+          title: Document Version
+          type: integer
+        engine_version:
+          title: Engine Version
+          type: string
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        finished_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          title: Finished At
+        id:
+          title: Id
+          type: string
+        parser_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parser Version
+        recipe_channel:
+          title: Recipe Channel
+          type: string
+        result_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Result Key
+        stage:
+          title: Stage
+          type: string
+        started_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          title: Started At
+        status:
+          title: Status
+          type: string
+        trace_id:
+          title: Trace Id
+          type: string
+      required:
+      - id
+      - document_id
+      - document_version
+      - status
+      - stage
+      - trace_id
+      - recipe_channel
+      - engine_version
+      - result_key
+      - error_code
+      - created_at
+      - started_at
+      - finished_at
+      title: RunOut
+      type: object
+    RunResultOut:
+      properties:
+        result:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Result
+        run_id:
+          title: Run Id
+          type: string
+        status:
+          title: Status
+          type: string
+      required:
+      - run_id
+      - status
+      title: RunResultOut
+      type: object
+    RunStageOut:
+      properties:
+        duration_ms:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Ms
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        finished_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          title: Finished At
+        id:
+          title: Id
+          type: string
+        input_refs:
+          additionalProperties: true
+          title: Input Refs
+          type: object
+        metrics:
+          additionalProperties: true
+          title: Metrics
+          type: object
+        output_refs:
+          additionalProperties: true
+          title: Output Refs
+          type: object
+        run_id:
+          title: Run Id
+          type: string
+        stage:
+          title: Stage
+          type: string
+        started_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          title: Started At
+        status:
+          title: Status
+          type: string
+      required:
+      - id
+      - run_id
+      - stage
+      - status
+      - input_refs
+      - output_refs
+      - metrics
+      - error_code
+      - started_at
+      - finished_at
+      - duration_ms
+      title: RunStageOut
+      type: object
+    RunTimelineOut:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/RunEventOut'
+          title: Events
+          type: array
+        run:
+          $ref: '#/components/schemas/RunOut'
+        stages:
+          items:
+            $ref: '#/components/schemas/RunStageOut'
+          title: Stages
+          type: array
+      required:
+      - run
+      - stages
+      - events
+      title: RunTimelineOut
+      type: object
+    ShadowActionIn:
+      properties:
+        actor:
+          default: operator
+          title: Actor
+          type: string
+        note:
+          default: ''
+          title: Note
+          type: string
+      title: ShadowActionIn
+      type: object
+    ShadowBatchIn:
+      properties:
+        actor:
+          default: operator
+          title: Actor
+          type: string
+        candidate_version:
+          title: Candidate Version
+          type: string
+        feedback_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Feedback Id
+        from_version:
+          title: From Version
+          type: string
+        note:
+          default: ''
+          title: Note
+          type: string
+        recipe_id:
+          title: Recipe Id
+          type: string
+        required_documents:
+          default: 0
+          title: Required Documents
+          type: integer
+      required:
+      - recipe_id
+      - from_version
+      - candidate_version
+      title: ShadowBatchIn
+      type: object
+    ShadowDocumentIn:
+      properties:
+        actor:
+          default: operator
+          title: Actor
+          type: string
+        document_id:
+          title: Document Id
+          type: string
+        note:
+          default: ''
+          title: Note
+          type: string
+      required:
+      - document_id
+      title: ShadowDocumentIn
+      type: object
+    TriageDecision:
+      properties:
+        confidence:
+          default: 0.5
+          maximum: 1.0
+          minimum: 0.0
+          title: Confidence
+          type: number
+        evidence:
+          items:
+            type: string
+          title: Evidence
+          type: array
+        needs_human:
+          default: false
+          title: Needs Human
+          type: boolean
+        repair_scope:
+          default: none
+          enum:
+          - data
+          - recipe
+          - template
+          - prompt
+          - engine
+          - display
+          - none
+          title: Repair Scope
+          type: string
+        root_cause:
+          default: unknown
+          enum:
+          - ocr_error
+          - table_structure
+          - recipe_binding
+          - template_schema
+          - model_extraction
+          - dictionary
+          - display
+          - unknown
+          title: Root Cause
+          type: string
+        summary:
+          default: ''
+          title: Summary
+          type: string
+      title: TriageDecision
+      type: object
+    ValidationError:
+      properties:
+        ctx:
+          title: Context
+          type: object
+        input:
+          title: Input
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    VerificationDiff:
+      properties:
+        added:
+          items:
+            additionalProperties: true
+            type: object
+          title: Added
+          type: array
+        changed:
+          items:
+            additionalProperties: true
+            type: object
+          title: Changed
+          type: array
+        removed:
+          items:
+            additionalProperties: true
+            type: object
+          title: Removed
+          type: array
+      title: VerificationDiff
+      type: object
+    VerificationPackage:
+      properties:
+        accepted_fields:
+          items:
+            type: string
+          title: Accepted Fields
+          type: array
+        accepted_tables:
+          items:
+            type: string
+          title: Accepted Tables
+          type: array
+        affected_targets:
+          items:
+            additionalProperties: true
+            type: object
+          title: Affected Targets
+          type: array
+        after_run:
+          default: ''
+          title: After Run
+          type: string
+        artifacts:
+          items:
+            type: string
+          title: Artifacts
+          type: array
+        before_run:
+          title: Before Run
+          type: string
+        changed_in_accepted:
+          items:
+            additionalProperties: true
+            type: object
+          title: Changed In Accepted
+          type: array
+        diff:
+          $ref: '#/components/schemas/VerificationDiff'
+        field_digests:
+          additionalProperties:
+            type: string
+          title: Field Digests
+          type: object
+        passed:
+          default: false
+          title: Passed
+          type: boolean
+        proposal_id:
+          title: Proposal Id
+          type: string
+        record_count:
+          default: 0
+          title: Record Count
+          type: integer
+        records_digest:
+          default: ''
+          title: Records Digest
+          type: string
+        regression:
+          $ref: '#/components/schemas/RegressionStats'
+        requires_confirmation:
+          default: false
+          title: Requires Confirmation
+          type: boolean
+        user_summary:
+          default: ''
+          title: User Summary
+          type: string
+      required:
+      - proposal_id
+      - before_run
+      title: VerificationPackage
+      type: object
 info:
-  title: Hanson Standard Split Internal API
+  title: Hanson orchestration
   version: 0.0.0
-  description: M0 skeleton. Internal APIs use the /internal prefix and are not public.
-servers:
-  - url: http://orchestration:8001
+openapi: 3.1.0
 paths:
-  /internal/health:
+  /healthz:
     get:
-      summary: Internal health check
-      operationId: getInternalHealth
+      operationId: healthz_healthz_get
       responses:
-        "200":
-          description: Service is healthy
+        '200':
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Health"
-components:
-  schemas:
-    Health:
-      type: object
-      required: [status, service, version]
-      properties:
-        status:
+                additionalProperties:
+                  type: string
+                title: Response Healthz Healthz Get
+                type: object
+          description: Successful Response
+      summary: Healthz
+  /internal/dictionary:
+    get:
+      operationId: list_entries_internal_dictionary_get
+      parameters:
+      - in: query
+        name: type
+        required: false
+        schema:
+          default: ''
+          title: Type
           type: string
-          const: ready
-        service:
+      - in: query
+        name: q
+        required: false
+        schema:
+          default: ''
+          title: Q
           type: string
-        version:
+      - in: query
+        name: family
+        required: false
+        schema:
+          default: ''
+          title: Family
           type: string
+      - in: query
+        name: status
+        required: false
+        schema:
+          default: ''
+          title: Status
+          type: string
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 500
+          maximum: 2000
+          minimum: 1
+          title: Limit
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response List Entries Internal Dictionary Get
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Entries
+  /internal/documents:
+    get:
+      operationId: list_documents_internal_documents_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DocumentOut'
+                title: Response List Documents Internal Documents Get
+                type: array
+          description: Successful Response
+      summary: List Documents
+    post:
+      operationId: upload_document_internal_documents_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_document_internal_documents_post'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOut'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Upload Document
+  /internal/documents/{document_id}:
+    delete:
+      operationId: delete_document_internal_documents__document_id__delete
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Document
+    get:
+      operationId: get_document_internal_documents__document_id__get
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOut'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Document
+  /internal/documents/{document_id}/runs:
+    post:
+      operationId: create_run_internal_documents__document_id__runs_post
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRunIn'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunOut'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Run
+  /internal/documents/{document_id}/snapshot:
+    get:
+      operationId: get_document_snapshot_internal_documents__document_id__snapshot_get
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Get Document Snapshot Internal Documents  Document Id  Snapshot Get
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Document Snapshot
+  /internal/feedback:
+    get:
+      operationId: list_feedback_internal_feedback_get
+      parameters:
+      - in: query
+        name: status
+        required: false
+        schema:
+          default: ''
+          title: Status
+          type: string
+      - in: query
+        name: document_id
+        required: false
+        schema:
+          default: ''
+          title: Document Id
+          type: string
+      - in: query
+        name: run_id
+        required: false
+        schema:
+          default: ''
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FeedbackDetail'
+                title: Response List Feedback Internal Feedback Get
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Feedback
+    post:
+      operationId: create_feedback_internal_feedback_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackCreate'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackDetail'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Feedback
+  /internal/feedback/{feedback_id}:
+    get:
+      operationId: get_feedback_internal_feedback__feedback_id__get
+      parameters:
+      - in: path
+        name: feedback_id
+        required: true
+        schema:
+          title: Feedback Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackDetail'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Feedback
+  /internal/feedback/{feedback_id}/process:
+    post:
+      operationId: process_feedback_internal_feedback__feedback_id__process_post
+      parameters:
+      - in: path
+        name: feedback_id
+        required: true
+        schema:
+          title: Feedback Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackDetail'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Process Feedback
+  /internal/feedback/{feedback_id}/verification:
+    get:
+      operationId: get_verification_internal_feedback__feedback_id__verification_get
+      parameters:
+      - in: path
+        name: feedback_id
+        required: true
+        schema:
+          title: Feedback Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationPackage'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Verification
+  /internal/feedback/{feedback_id}/verify:
+    post:
+      operationId: verify_feedback_internal_feedback__feedback_id__verify_post
+      parameters:
+      - in: path
+        name: feedback_id
+        required: true
+        schema:
+          title: Feedback Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackVerifyIn'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackDetail'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Verify Feedback
+  /internal/recipes/{recipe_id}/rollback:
+    post:
+      operationId: rollback_recipe_internal_recipes__recipe_id__rollback_post
+      parameters:
+      - in: path
+        name: recipe_id
+        required: true
+        schema:
+          title: Recipe Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RollbackIn'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Rollback Recipe Internal Recipes  Recipe Id  Rollback Post
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Rollback Recipe
+  /internal/runs:
+    get:
+      operationId: list_runs_internal_runs_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RunOut'
+                title: Response List Runs Internal Runs Get
+                type: array
+          description: Successful Response
+      summary: List Runs
+  /internal/runs/{run_id}:
+    get:
+      operationId: get_run_internal_runs__run_id__get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunOut'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Run
+  /internal/runs/{run_id}/accept:
+    post:
+      operationId: accept_run_internal_runs__run_id__accept_post
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: query
+        name: actor
+        required: false
+        schema:
+          default: operator
+          title: Actor
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Accept Run Internal Runs  Run Id  Accept Post
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Accept Run
+  /internal/runs/{run_id}/artifacts:
+    get:
+      operationId: list_artifacts_internal_runs__run_id__artifacts_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                title: Response List Artifacts Internal Runs  Run Id  Artifacts Get
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Artifacts
+  /internal/runs/{run_id}/cancel:
+    post:
+      operationId: cancel_run_internal_runs__run_id__cancel_post
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunOut'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Cancel Run
+  /internal/runs/{run_id}/diff:
+    get:
+      operationId: run_diff_internal_runs__run_id__diff_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: query
+        name: against
+        required: true
+        schema:
+          title: Against
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Run Diff Internal Runs  Run Id  Diff Get
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Run Diff
+  /internal/runs/{run_id}/events:
+    get:
+      operationId: list_events_internal_runs__run_id__events_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: query
+        name: after
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          title: After
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RunEventOut'
+                title: Response List Events Internal Runs  Run Id  Events Get
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Events
+  /internal/runs/{run_id}/events/stream:
+    get:
+      operationId: stream_events_internal_runs__run_id__events_stream_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: query
+        name: after
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          title: After
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Stream Events
+  /internal/runs/{run_id}/ocr:
+    get:
+      operationId: get_ocr_internal_runs__run_id__ocr_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Get Ocr Internal Runs  Run Id  Ocr Get
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Ocr
+  /internal/runs/{run_id}/pages/{page_no}/image:
+    get:
+      operationId: get_page_image_internal_runs__run_id__pages__page_no__image_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      - in: path
+        name: page_no
+        required: true
+        schema:
+          title: Page No
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Page Image
+  /internal/runs/{run_id}/records:
+    get:
+      operationId: get_records_internal_runs__run_id__records_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Get Records Internal Runs  Run Id  Records Get
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Records
+  /internal/runs/{run_id}/reparse:
+    post:
+      description: Re-run the same document with stable recipes and an optional parser pin.
+      operationId: reparse_run_internal_runs__run_id__reparse_post
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/ReparseIn'
+              - type: 'null'
+              title: Payload
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunOut'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Reparse Run
+  /internal/runs/{run_id}/result:
+    get:
+      operationId: get_result_internal_runs__run_id__result_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResultOut'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Result
+  /internal/runs/{run_id}/review:
+    get:
+      operationId: get_review_internal_runs__run_id__review_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Get Review Internal Runs  Run Id  Review Get
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Review
+  /internal/runs/{run_id}/timeline:
+    get:
+      operationId: get_timeline_internal_runs__run_id__timeline_get
+      parameters:
+      - in: path
+        name: run_id
+        required: true
+        schema:
+          title: Run Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunTimelineOut'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Timeline
+  /internal/shadow/batches:
+    get:
+      operationId: list_shadow_batches_internal_shadow_batches_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                title: Response List Shadow Batches Internal Shadow Batches Get
+                type: array
+          description: Successful Response
+      summary: List Shadow Batches
+    post:
+      operationId: create_shadow_batch_internal_shadow_batches_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShadowBatchIn'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Create Shadow Batch Internal Shadow Batches Post
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Shadow Batch
+  /internal/shadow/batches/{batch_id}:
+    get:
+      operationId: get_shadow_batch_internal_shadow_batches__batch_id__get
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        schema:
+          title: Batch Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Get Shadow Batch Internal Shadow Batches  Batch Id  Get
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Shadow Batch
+  /internal/shadow/batches/{batch_id}/abandon:
+    post:
+      operationId: abandon_shadow_batch_internal_shadow_batches__batch_id__abandon_post
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        schema:
+          title: Batch Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShadowActionIn'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Abandon Shadow Batch Internal Shadow Batches  Batch Id  Abandon Post
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Abandon Shadow Batch
+  /internal/shadow/batches/{batch_id}/promote:
+    post:
+      operationId: promote_shadow_batch_internal_shadow_batches__batch_id__promote_post
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        schema:
+          title: Batch Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShadowActionIn'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Promote Shadow Batch Internal Shadow Batches  Batch Id  Promote Post
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Promote Shadow Batch
+  /internal/shadow/batches/{batch_id}/run:
+    post:
+      operationId: run_shadow_batch_internal_shadow_batches__batch_id__run_post
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        schema:
+          title: Batch Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Run Shadow Batch Internal Shadow Batches  Batch Id  Run Post
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Run Shadow Batch
+  /internal/shadow/documents:
+    get:
+      operationId: list_shadow_documents_internal_shadow_documents_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties: true
+                  type: object
+                title: Response List Shadow Documents Internal Shadow Documents Get
+                type: array
+          description: Successful Response
+      summary: List Shadow Documents
+    post:
+      operationId: add_shadow_document_internal_shadow_documents_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShadowDocumentIn'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                title: Response Add Shadow Document Internal Shadow Documents Post
+                type: object
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Add Shadow Document
+  /internal/shadow/documents/{document_id}:
+    delete:
+      operationId: delete_shadow_document_internal_shadow_documents__document_id__delete
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          title: Document Id
+          type: string
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Shadow Document
+  /readyz:
+    get:
+      operationId: readyz_readyz_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                title: Response Readyz Readyz Get
+                type: object
+          description: Successful Response
+      summary: Readyz

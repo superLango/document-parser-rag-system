@@ -1,0 +1,34 @@
+{
+  "candidate_id": "GJB 713-A-code-2026-11-15T10:02:53+00:00",
+  "standard_id": "GJB 713",
+  "edition": "A",
+  "level": "L3",
+  "recipe_id": "",
+  "base_version": "",
+  "candidate_version": "",
+  "reasons": [
+    "profile_changed: 表2,牌号及化学成分 profile chemical_composition -> admin",
+    "profile_changed: 4.2.3,判定和复验规则 profile inspection -> admin",
+    "profile_changed: 4.3.4,硬度 profile mechanical_properties -> admin"
+  ],
+  "manifest": {},
+  "diff": {
+    "missing_tables": [],
+    "profile_changes": [
+      "表2,牌号及化学成分: profile chemical_composition -> admin",
+      "4.2.3,判定和复验规则: profile inspection -> admin",
+      "4.3.4,硬度: profile mechanical_properties -> admin"
+    ]
+  },
+  "unresolved": [],
+  "verification": [
+    "write a code patch against parser/OCR",
+    "sandbox replay on the new edition",
+    "regression run on the previous edition",
+    "human diff review before promotion"
+  ],
+  "status": "pending_sandbox",
+  "created_at": "2026-11-15T10:02:53+00:00",
+  "requires_sandbox": true,
+  "requires_human": true
+}

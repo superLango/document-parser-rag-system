@@ -45,9 +45,12 @@ GLM 未配置时 `auto` 不会选它；显式指定 `glm` 而未配置会返回 
 
 配置 `LAYOUT_BASE_URL`（默认 `http://192.168.1.35:9978`）后，每页页图会送 PP-DocLayoutV3 `/v1/layout`：
 
+- 模型服务器（192.168.1.35）当前部署的是 PP-DocLayoutV3-v2 微调权重（SHA-256 `5b76c1ff...`），官方权重为 `5ea422c6...`；两者均在引擎允许列表内。
+- 版面服务是独立 `/v1/layout` 包装服务，需在模型服务器启动并监听 9978；未启动时只追加 warning，不影响 OCR 与表格解析。
 - 返回块写入 `OcrResult.layout`（含 `page_no`、`type`、归一化 `bbox`）与 `layout/{n}.json`。
 - 版面服务不可达或返回异常时只追加 warning，不影响 OCR 与表格解析。
 - 仅对产生页图的 backend（`pdf`/`glm`）生效；`text` 无页图，跳过版面。
+- `OCR_LAYOUT_FIRST=true`（Phase-0 PoC）时改走 `LayoutFirstOcrAdapter`：版面块驱动分块 OCR，文本块优先复用可读文本层，表格块裁剪后送 GLM-OCR；GLM 不可用时表格块回退文本，版面全失败时回退 Hybrid。
 
 ## 错误码
 

@@ -2,17 +2,38 @@ import type { ReactNode, ThHTMLAttributes, TdHTMLAttributes } from "react";
 
 import { cn } from "../../lib/utils";
 
-export function Table({ children, className }: { children: ReactNode; className?: string }) {
+export function Table({
+  children,
+  className,
+  tableClassName
+}: {
+  children: ReactNode;
+  className?: string;
+  tableClassName?: string;
+}) {
   return (
     <div className={cn("w-full overflow-x-auto", className)}>
-      <table className="w-full border-collapse text-sm">{children}</table>
+      <table className={cn("w-full border-collapse text-sm", tableClassName)}>
+        {children}
+      </table>
     </div>
   );
 }
 
-export function TableHead({ children }: { children: ReactNode }) {
+export function TableHead({
+  children,
+  className
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <thead className="bg-background-soft text-left text-[11px] uppercase tracking-wide text-muted-foreground">
+    <thead
+      className={cn(
+        "bg-background-soft text-left text-[11px] uppercase tracking-wide text-muted-foreground",
+        className
+      )}
+    >
       {children}
     </thead>
   );

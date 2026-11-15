@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { BookOpen, Search } from "lucide-react";
-import { useDeferredValue, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { BookOpen, Search, Upload } from "lucide-react";
+import { useDeferredValue, useRef, useState } from "react";
 
 import { dictionaryApi } from "../api/dictionary";
 import {
@@ -12,8 +12,10 @@ import {
   PageHeader,
   Skeleton
 } from "../components/ui/primitives";
+import { Dialog } from "../components/ui/dialog";
 import { Input } from "../components/ui/form";
 import { Tabs } from "../components/ui/tabs";
+import { useToast } from "../components/ui/toast";
 import {
   Table,
   TableBody,
@@ -57,9 +59,16 @@ function familyLabel(name: string): string {
 }
 
 export default function DictionaryPage() {
+  const { push } = useToast();
+  const queryClient = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState("categories");
   const [keyword, setKeyword] = useState("");
   const [family, setFamily] = useState("");
+  const [importOpen, setImportOpen] = useState(false);
+  const [importName, setImportName] = useState("");
+  const [importLevel, setImportLevel] = useState<Record<string, unknown>[]>([]);
+  const [replace, setReplace] = useState(false);
   const deferredKeyword = useDeferredValue(keyword);
   const type =
     tab === "categories"
@@ -86,12 +95,60 @@ export default function DictionaryPage() {
     (a, b) => b[1] - a[1]
   );
 
+  const importMutation = useMutation({
+    mutationFn: () => dictionaryApi.import(importLevel, replace),
+    onSuccess: (result) => {
+      push(
+        "success",
+        "词典已导入",
+        `新增 ${result.created} · 更新 ${result.updated} · 跳过 ${result.skipped} · 共 ${result.total}`
+      );
+      setImportOpen(false);
+      setImportLevel([]);
+      setImportName("");
+      void queryClient.invalidateQueries({ queryKey: ["dictionary"] });
+    },
+    onError: (error: Error) => push("error", "导入失败", error.message)
+  });
+
+  async function chooseImportFile(file: File | null | undefined) {
+    if (!file) return;
+    try {
+      const parsed: unknown = JSON.parse(await file.text());
+      const list = Array.isArray(parsed)
+        ? parsed
+        : ((parsed as { entries?: unknown }).entries ?? null);
+      if (!Array.isArray(list)) {
+        throw new Error("文件需为条目数组，或包含 entries 数组的对象");
+      }
+      setImportLevel(list as Record<string, unknown>[]);
+      setImportName(file.name);
+    } catch (error) {
+      setImportLevel([]);
+      setImportName("");
+      push("error", "文件解析失败", (error as Error).message);
+    }
+  }
+
   return (
     <div className="animate-fade-up">
       <PageHeader
         eyebrow="数据"
         title="业务词典"
         description={`${query.data?.version ?? "—"} · 共 ${query.data?.total ?? 0} 条`}
+        actions={
+          <Button
+            icon={<Upload className="h-4 w-4" />}
+            onClick={() => {
+              setImportOpen(true);
+              setImportLevel([]);
+              setImportName("");
+              setReplace(false);
+            }}
+          >
+            导入词典
+          </Button>
+        }
       />
 
       <Card>
@@ -231,6 +288,59 @@ export default function DictionaryPage() {
           </Table>
         )}
       </Card>
+
+      <Dialog
+        open={importOpen}
+        title="导入词典"
+        description="支持条目数组或包含 entries 的 JSON；按 type + business_code 合并"
+        onClose={() => setImportOpen(false)}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setImportOpen(false)}>
+              取消
+            </Button>
+            <Button
+              disabled={importLevel.length === 0}
+              loading={importMutation.isPending}
+              onClick={() => importMutation.mutate()}
+            >
+              导入 {importLevel.length ? `(${importLevel.length})` : ""}
+            </Button>
+          </>
+        }
+      >
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".json,application/json"
+          className="hidden"
+          onChange={(event) => void chooseImportFile(event.target.files?.[0])}
+        />
+        <div className="space-y-4">
+          <div
+            className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed border-border bg-background-soft px-6 py-8 text-center transition-colors hover:border-primary/50"
+            onClick={() => fileRef.current?.click()}
+          >
+            <Upload className="h-7 w-7 text-primary" />
+            <p className="text-sm font-medium">
+              {importName ? importName : "点击选择 JSON 文件"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {importLevel.length
+                ? `已解析 ${importLevel.length} 条`
+                : "每个条目需包含 business_code、business_name、type"}
+            </p>
+          </div>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={replace}
+              onChange={(event) => setReplace(event.target.checked)}
+            />
+            覆盖导入（仅保留文件中的条目）
+          </label>
+        </div>
+      </Dialog>
     </div>
   );
 }

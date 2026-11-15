@@ -12,6 +12,8 @@ FeedbackStatus = Literal[
     "proposed",
     "verifying",
     "verified",
+    "applied",
+    "shadow",
     "promoted",
     "discarded",
     "needs_more_info",
@@ -20,6 +22,8 @@ RootCause = Literal[
     "ocr_error",
     "table_structure",
     "recipe_binding",
+    "extraction_rule",
+    "value_parsing",
     "template_schema",
     "model_extraction",
     "dictionary",
@@ -54,12 +58,39 @@ class TriageDecision(BaseModel):
     needs_human: bool = False
 
 
+class CodeFile(BaseModel):
+    path: str
+    content: str
+    status: Literal["added", "modified"] = "modified"
+    diff: str = ""
+
+
+class CodePatch(BaseModel):
+    base_version: str = ""
+    files: list[CodeFile] = Field(default_factory=list)
+
+
+class CodeGuardViolation(BaseModel):
+    code: str
+    message: str
+    file: str = ""
+    line: int = 0
+
+
+class CodeGuardReport(BaseModel):
+    passed: bool = False
+    violations: list[CodeGuardViolation] = Field(default_factory=list)
+    stats: dict[str, Any] = Field(default_factory=dict)
+
+
 class RepairProposal(BaseModel):
     proposal_id: str = ""
     root_cause: RootCause = "unknown"
     scope: RepairScope = "none"
     summary: str = ""
     patch: dict[str, Any] = Field(default_factory=dict)
+    code_patch: CodePatch | None = None
+    guard: CodeGuardReport | None = None
     test_plan: list[str] = Field(default_factory=list)
     risk: Literal["low", "medium", "high"] = "low"
     needs_human: bool = False
@@ -72,6 +103,7 @@ class CandidateRef(BaseModel):
     candidate_version: str
     digest: str
     patch: dict[str, Any] = Field(default_factory=dict)
+    patch_chain: list[str] = Field(default_factory=list)
 
 
 class VerificationDiff(BaseModel):
@@ -96,6 +128,33 @@ class VerificationPackage(BaseModel):
     user_summary: str = ""
     artifacts: list[str] = Field(default_factory=list)
     passed: bool = False
+    record_count: int = 0
+    records_digest: str = ""
+    accepted_tables: list[str] = Field(default_factory=list)
+    accepted_fields: list[str] = Field(default_factory=list)
+    field_digests: dict[str, str] = Field(default_factory=dict)
+    changed_in_accepted: list[dict[str, Any]] = Field(default_factory=list)
+    requires_confirmation: bool = False
+    checks: list[dict[str, Any]] = Field(default_factory=list)
+    decision: str = ""
+    action_tier: str = ""
+    coverage_before: dict[str, Any] = Field(default_factory=dict)
+    coverage_after: dict[str, Any] = Field(default_factory=dict)
+    after_diagnostics: dict[str, Any] = Field(default_factory=dict)
+
+
+class AcceptedSnapshot(BaseModel):
+    document_id: str
+    document_version: int = 1
+    run_id: str
+    feedback_id: str | None = None
+    records: int = 0
+    records_digest: str = ""
+    accepted_tables: list[str] = Field(default_factory=list)
+    accepted_fields: list[str] = Field(default_factory=list)
+    field_digests: dict[str, str] = Field(default_factory=dict)
+    actor: str = "operator"
+    created_at: str = ""
 
 
 class FeedbackDetail(BaseModel):
@@ -109,6 +168,8 @@ class FeedbackDetail(BaseModel):
     source_quote: str | None = None
     status: FeedbackStatus = "open"
     messages: list[FeedbackMessage] = Field(default_factory=list)
+    root_cause: dict[str, Any] = Field(default_factory=dict)
+    suggestions: list[dict[str, Any]] = Field(default_factory=list)
     triage: TriageDecision | None = None
     proposal: RepairProposal | None = None
     candidate: CandidateRef | None = None
@@ -122,11 +183,21 @@ class FeedbackVerifyIn(BaseModel):
     decision: Literal["approve", "reject"]
     reason: str = ""
     actor: str
+    confirm_accepted_change: bool = False
+
+
+class CodeApprovalIn(BaseModel):
+    """Human approval for an L3 engine proposal before bundle publish."""
+
+    actor: str
+    reason: str = ""
+    confirm: bool = False
+    verification_id: str = ""
 
 
 class PromotionRecord(BaseModel):
     id: str
-    feedback_id: str
+    feedback_id: str | None = None
     recipe_id: str
     from_version: str
     to_version: str

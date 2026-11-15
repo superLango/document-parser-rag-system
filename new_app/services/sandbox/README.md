@@ -31,7 +31,8 @@ services/sandbox/
 ├── runtime/
 │   ├── Dockerfile         # 引擎运行时镜像
 │   ├── runner.py          # 入口：内置解析或 entrypoint
-│   ├── builtin.py         # 确定性表格解析器
+│   ├── builtin.py         # 确定性表格解析器（绑定列）
+│   ├── strategies.py      # 矩阵策略链（property/grade-property/rows/hardness）
 │   └── prepare.py         # K8s init 容器：展开 ConfigMap 工作区
 └── README.md
 ```

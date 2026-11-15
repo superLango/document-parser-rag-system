@@ -1,0 +1,71 @@
+{
+  "standard_id": "AMS 4931",
+  "edition": "C",
+  "document_sha256": "",
+  "page_count": 8,
+  "tables": [
+    {
+      "caption": "",
+      "profile": "unknown",
+      "n_cols": 3,
+      "header_signature": [
+        "saeaerospaceansaeinternationalgroupaerospacematerialspecification",
+        "saeams4931c",
+        "saeams4931c"
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "chemical_composition",
+      "n_cols": 4,
+      "header_signature": [
+        "element",
+        "min",
+        "max",
+        ""
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 9,
+      "header_signature": [
+        "nominaldiameterordistancebetweenparallelsidesinches",
+        "tensilestrengthksi",
+        "yieldstrengthat0.2%offsetksi",
+        "elongationin4d%/long.",
+        "elongationin4d%/l.t.",
+        "elongationin4d%/s.t.",
+        "reductionofarea%/long.",
+        "reductionofarea%/l.t.",
+        "reductionofarea%/s.t."
+      ],
+      "measures": []
+    },
+    {
+      "caption": "",
+      "profile": "mechanical_properties",
+      "n_cols": 9,
+      "header_signature": [
+        "nominaldiameterordistancebetweenparallelsidesmillimeters",
+        "tensilestrengthmpa",
+        "yieldstrengthat0.2%offsetmpa",
+        "elongationin4d%/long.",
+        "elongationin4d%/l.t.",
+        "elongationin4d%/s.t.",
+        "reductionofarea%/long.",
+        "reductionofarea%/l.t.",
+        "reductionofarea%/s.t."
+      ],
+      "measures": []
+    }
+  ],
+  "recipe_pins": {
+    "chemical_element_rows_v1": "1.2.3",
+    "mechanical_properties_v1": "1.6.51"
+  },
+  "sample_doc_id": "756b3cdf-03a8-4804-b32d-0855ecd17557",
+  "created_at": "2026-11-15T08:37:46+00:00"
+}

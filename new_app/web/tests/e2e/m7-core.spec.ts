@@ -48,7 +48,29 @@ test("文档库展示上传入口与文档列表", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("h1")).toContainText("文档库");
   await expect(page.getByRole("button", { name: "上传文档" }).first()).toBeVisible();
+  await page.getByPlaceholder("搜索文件名 / 文档 ID").fill("mechanical-z");
   await expect(page.getByText("mechanical-z.md").first()).toBeVisible();
+});
+
+test("文档库搜索与筛选可清空", async ({ page }) => {
+  await page.goto("/");
+  const search = page.getByPlaceholder("搜索文件名 / 文档 ID");
+  await search.fill("mechanical-z");
+  await expect(page.getByText("mechanical-z.md").first()).toBeVisible();
+
+  await search.fill("__no_such_document__");
+  await expect(page.getByText("没有匹配的文档")).toBeVisible();
+  await page.getByRole("button", { name: "清除筛选" }).click();
+  await expect(search).toHaveValue("");
+  await search.fill("mechanical-z");
+  await expect(page.getByText("mechanical-z.md").first()).toBeVisible();
+});
+
+test("业务词典可打开导入对话框", async ({ page }) => {
+  await page.goto("/dictionary");
+  await page.getByRole("button", { name: "导入词典" }).click();
+  await expect(page.getByText("支持条目数组或包含 entries 的 JSON")).toBeVisible();
+  await expect(page.getByRole("button", { name: /导入/ }).last()).toBeDisabled();
 });
 
 test("解析详情六个 Tab 与结果表可用", async ({ page }) => {
@@ -80,10 +102,12 @@ test("解析详情六个 Tab 与结果表可用", async ({ page }) => {
   await expect(page.getByText(/第 \d+ 页/)).toBeVisible();
 });
 
-test("运行记录、业务词典与配方版本页面可用", async ({ page }) => {
-  await page.goto("/runs");
-  await expect(page.locator("h1")).toContainText("运行记录");
-  await expect(page.getByText(runId.slice(0, 8))).toBeVisible();
+test("问题台账、业务词典与配方版本页面可用", async ({ page }) => {
+  await page.goto("/issues");
+  await expect(page.locator("h1")).toContainText("问题台账");
+  await expect(page.getByRole("button", { name: "导出" })).toBeVisible();
+  await page.getByRole("tab", { name: /异常文档/ }).click();
+  await expect(page.getByRole("button", { name: "导出" })).toBeVisible();
 
   await page.goto("/dictionary");
   await expect(page.locator("h1")).toContainText("业务词典");
