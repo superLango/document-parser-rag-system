@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Download,
   FileText,
+  FolderDown,
   Plus,
   RefreshCcw,
   Search,
@@ -43,7 +44,34 @@ import {
   fileTimestamp,
   resultCsvFilename
 } from "../lib/resultExport";
-import { createZip } from "../lib/zip";
+import { createZip, type ZipFile } from "../lib/zip";
+import {
+  EXTRACT_DEFAULT,
+  EXTRACT_STATUSES,
+  fitFileName,
+  folderNumbers,
+  orMissing,
+  safeName,
+  stemOf,
+  uploadedWithin
+} from "../lib/extract";
+
+type DirectoryPicker = (options?: { mode?: "read" | "readwrite" }) => Promise<FileSystemDirectoryHandle>;
+
+// 浏览器仅在 HTTPS（或被设为可信的地址）下提供「选择文件夹」，否则退回 ZIP 下载。
+function directoryPicker(): DirectoryPicker | undefined {
+  return (window as unknown as { showDirectoryPicker?: DirectoryPicker }).showDirectoryPicker;
+}
+
+async function fileExists(dir: FileSystemDirectoryHandle, name: string): Promise<boolean> {
+  try {
+    await dir.getFileHandle(name);
+    return true;
+  } catch (error) {
+    if ((error as DOMException).name === "NotFoundError") return false;
+    throw error;
+  }
+}
 
 const MAX_SIZE = 100 * 1024 * 1024;
 const ACCEPT = ".pdf,.md,.markdown,.txt";
@@ -88,6 +116,12 @@ export default function DocumentsPage() {
   const [exportSelected, setExportSelected] = useState<Set<string>>(new Set());
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState("");
+  const [extractOpen, setExtractOpen] = useState(false);
+  const [extractFrom, setExtractFrom] = useState("");
+  const [extractTo, setExtractTo] = useState("");
+  const [extractStatuses, setExtractStatuses] = useState<Set<string>>(new Set(EXTRACT_DEFAULT));
+  const [extracting, setExtracting] = useState(false);
+  const [extractProgress, setExtractProgress] = useState("");
   const [keyword, setKeyword] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
@@ -245,6 +279,135 @@ export default function DocumentsPage() {
     setExportSelected(new Set());
   }
 
+  // 时间范围内各状态的文档数（按最近运行，与列表「最近运行」列一致）
+  const extractStatusCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const document of documents) {
+      const status = latestRunByDocument.get(document.id)?.status;
+      if (status && uploadedWithin(document, extractFrom, extractTo)) {
+        counts.set(status, (counts.get(status) ?? 0) + 1);
+      }
+    }
+    return counts;
+  }, [documents, latestRunByDocument, extractFrom, extractTo]);
+  const extractCandidates = useMemo(
+    () =>
+      documents.filter((document) => {
+        const run = latestRunByDocument.get(document.id);
+        return (
+          run !== undefined &&
+          extractStatuses.has(run.status) &&
+          uploadedWithin(document, extractFrom, extractTo)
+        );
+      }),
+    [documents, latestRunByDocument, extractStatuses, extractFrom, extractTo]
+  );
+
+  function toggleExtractStatus(status: string) {
+    setExtractStatuses((previous) => {
+      const next = new Set(previous);
+      if (next.has(status)) next.delete(status);
+      else next.add(status);
+      return next;
+    });
+  }
+
+  async function runExtract() {
+    const picker = directoryPicker();
+    let root: FileSystemDirectoryHandle | null = null;
+    if (picker) {
+      try {
+        // 必须在点击后第一时间调用，浏览器才允许弹出文件夹选择
+        root = await picker({ mode: "readwrite" });
+      } catch {
+        return; // 用户取消选择
+      }
+    }
+    const at = new Date();
+    const folders = folderNumbers(documents);
+    const zipFiles: ZipFile[] = [];
+    let written = 0;
+    let skipped = 0;
+    let missing = 0;
+    let failed = 0;
+    setExtracting(true);
+    for (let index = 0; index < extractCandidates.length; index += 1) {
+      const document = extractCandidates[index];
+      const run = latestRunByDocument.get(document.id)!;
+      const folder = folders.get(document.id)!;
+      const stem = stemOf(document.filename);
+      setExtractProgress(`${index + 1}/${extractCandidates.length}`);
+      // load 返回 null 表示该运行没有这项产物（未路由/失败等），跳过不算失败
+      const files: { name: string; load: () => Promise<string | Uint8Array<ArrayBuffer> | null> }[] = [
+        {
+          name: fitFileName(folder, safeName(document.filename)),
+          load: async () => {
+            const response = await fetch(documentsApi.fileUrl(document.id));
+            if (!response.ok) throw new Error(`PDF ${response.status}`);
+            return new Uint8Array(await response.arrayBuffer());
+          }
+        },
+        {
+          name: fitFileName(folder, `${stem}.md`),
+          load: async () => (await orMissing(runsApi.ocr(run.id)))?.markdown ?? null
+        },
+        {
+          name: fitFileName(folder, `${stem}.json`),
+          // 与结果页「JSON」视图一致
+          load: async () => {
+            const [result, records] = await Promise.all([
+              runsApi.result(run.id),
+              orMissing(runsApi.records(run.id))
+            ]);
+            if (!result.result && !records) return null;
+            return JSON.stringify(
+              { result: result.result ?? null, records: records?.records ?? [] },
+              null,
+              2
+            );
+          }
+        }
+      ];
+      try {
+        const dir = root ? await root.getDirectoryHandle(folder, { create: true }) : null;
+        for (const file of files) {
+          if (dir && (await fileExists(dir, file.name))) {
+            skipped += 1;
+            continue;
+          }
+          const content = await file.load();
+          if (content === null) {
+            missing += 1;
+            continue;
+          }
+          if (dir) {
+            const writable = await (await dir.getFileHandle(file.name, { create: true })).createWritable();
+            await writable.write(content);
+            await writable.close();
+          } else {
+            zipFiles.push({ name: `${folder}/${file.name}`, content });
+          }
+          written += 1;
+        }
+      } catch {
+        failed += 1;
+      }
+    }
+    setExtractProgress("");
+    setExtracting(false);
+    if (!root && zipFiles.length > 0) {
+      downloadBlob(createZip(zipFiles), `标准拆分提取-${fileTimestamp(at)}.zip`);
+    }
+    push(
+      failed ? "error" : "success",
+      "提取完成",
+      `写入 ${written} 个文件${skipped ? `，跳过已存在 ${skipped} 个` : ""}${
+        missing ? `，${missing} 个无产物（如未路由无 JSON）` : ""
+      }${failed ? `，${failed} 份文档失败` : ""}`
+    );
+    if (!failed) setExtractOpen(false);
+  }
+
   const filtered = useMemo(() => {
     const search = deferredKeyword.trim().toLowerCase();
     return documents.filter((document) => {
@@ -287,6 +450,14 @@ export default function DocumentsPage() {
         description={`共 ${documents.length} 份文档${activeCount ? ` · ${activeCount} 个运行进行中` : ""}`}
         actions={
           <>
+            <Button
+              variant="secondary"
+              icon={<FolderDown className="h-4 w-4" />}
+              disabled={documents.length === 0}
+              onClick={() => setExtractOpen(true)}
+            >
+              提取
+            </Button>
             <Button
               variant="secondary"
               icon={<RefreshCcw className="h-4 w-4" />}
@@ -614,6 +785,85 @@ export default function DocumentsPage() {
         <p className="text-sm text-muted-foreground">
           确认删除「{deleteTarget?.filename}」？
         </p>
+      </Dialog>
+
+      <Dialog
+        open={extractOpen}
+        title="提取解析结果"
+        description="每份文档一个文件夹（按上传先后编号 1、2、3…），内含 PDF 原件、OCR Markdown、抽取 JSON，文件保留原名；按文档最近一次运行的状态筛选，没有的产物（如未路由无 JSON）不生成"
+        onClose={() => {
+          if (!extracting) setExtractOpen(false);
+        }}
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              disabled={extracting}
+              onClick={() => setExtractOpen(false)}
+            >
+              取消
+            </Button>
+            <Button
+              loading={extracting}
+              disabled={extractCandidates.length === 0}
+              onClick={() => void runExtract()}
+            >
+              {directoryPicker() ? "选择文件夹并提取" : "打包下载"}（{extractCandidates.length} 份）
+              {extractProgress ? ` ${extractProgress}` : ""}
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-3 text-sm">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-muted-foreground">上传时间</span>
+            <Input
+              type="datetime-local"
+              value={extractFrom}
+              onChange={(event) => setExtractFrom(event.target.value)}
+              className="w-52"
+            />
+            <span className="text-muted-foreground">至</span>
+            <Input
+              type="datetime-local"
+              value={extractTo}
+              onChange={(event) => setExtractTo(event.target.value)}
+              className="w-52"
+            />
+            <span className="ml-auto text-xs text-muted-foreground">
+              符合条件 {extractCandidates.length} 份（留空表示不限）
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <span className="text-muted-foreground">运行状态</span>
+            {EXTRACT_STATUSES.map((status) => (
+              <label key={status} className="flex cursor-pointer items-center gap-1.5">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-border accent-emerald-600"
+                  checked={extractStatuses.has(status)}
+                  disabled={extracting}
+                  onChange={() => toggleExtractStatus(status)}
+                />
+                {runStatusMeta(status).label}
+                <span className="text-xs text-muted-foreground">
+                  {extractStatusCounts.get(status) ?? 0}
+                </span>
+              </label>
+            ))}
+          </div>
+          {directoryPicker() ? (
+            <p className="text-xs text-muted-foreground">
+              点击后选择本机文件夹，文件直接写入；文件夹内已存在的同名文件会自动跳过。
+            </p>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              当前浏览器不支持直接写入本机文件夹（仅 HTTPS 地址可用），将打包为 ZIP 下载，解压到目标文件夹时选择“跳过”重复文件。
+              如需直接写入文件夹：在 Chrome/Edge 打开 chrome://flags/#unsafely-treat-insecure-origin-as-secure，
+              填入 {window.location.origin} 并启用，重启浏览器后生效。
+            </p>
+          )}
+        </div>
       </Dialog>
 
       <Dialog
