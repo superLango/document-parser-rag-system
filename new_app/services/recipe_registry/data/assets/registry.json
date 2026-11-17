@@ -1,7 +1,7 @@
 {
   "channels": {
     "candidate": {
-      "parser:parser_core": "1.5.1"
+      "parser:parser_core": "1.7.41"
     },
     "deprecated": {},
     "shadow": {
@@ -1397,8 +1397,19 @@
       "kind": "promote",
       "note": "top30 audit: cross-standard records inherit document grade",
       "to_version": "1.7.40"
+    },
+    {
+      "actor": "algorithm-upgrade-round2",
+      "asset": "parser:parser_core",
+      "at": "2026-11-17T03:31:58+00:00",
+      "channel": "candidate",
+      "digest": "72726dbdf6518c2c5e06eb9f284345e97cd1ce4a81f3f9e4e9b29d403b83f9be",
+      "from_version": "1.7.40",
+      "kind": "promote",
+      "note": "round2 P3/P4: multi-condition columns, bending, misclassification guards",
+      "to_version": "1.7.41"
     }
   ],
   "schema_version": "1.0",
-  "updated_at": "2026-11-15T10:10:22+00:00"
+  "updated_at": "2026-11-17T04:01:26+00:00"
 }

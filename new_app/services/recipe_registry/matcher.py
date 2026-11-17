@@ -48,6 +48,16 @@ _EN_MEASURE_ALIASES = (
     ("rockwell", "hrc"),
     ("vickers", "hv"),
 )
+# 中文表头常写“延伸率/持久时间/屈服强度”，配方签名用“δs/持久/时间”。
+_CJK_MEASURE_ALIASES = (
+    ("持久时间", ("持久时间", "持久", "时间")),
+    ("持久强度", ("持久时间", "持久")),
+    ("延伸率", ("a", "断后伸长率", "δs")),
+    ("伸长率", ("a", "断后伸长率", "δs")),
+    ("断面收缩率", ("z", "断面收缩率")),
+    ("屈服强度", ("rp0.2", "σ0.2")),
+    ("抗拉强度", ("rm", "σb")),
+)
 
 
 class MatchResult(BaseModel):
@@ -90,6 +100,11 @@ def signature_tokens(table: TableGrid, limit: int = 40) -> list[str]:
         for part in path:
             token = normalize_token(part)
             add(token)
+            if _CJK_RE.search(token):
+                for phrase, aliases in _CJK_MEASURE_ALIASES:
+                    if phrase in token:
+                        for alias in aliases:
+                            add(alias)
             if not _CJK_RE.search(token):
                 # Latin headers: map known property phrases to the canonical
                 # measure token used by Chinese signatures.
@@ -151,6 +166,25 @@ HARDNESS_TOKENS = (
     "硬度", "布氏硬度", "洛氏硬度", "维氏硬度",
 )
 
+# 一张表同时出现拉伸/冲击/硬度列时，必须交给覆盖全部列的配方
+# （mechanical_properties_v1 已绑定 HB/HBW/HRC/HV），否则硬度配方会独占
+# 路由并把其余列判成 MEASURE_COLUMN_MISSING。
+MECHANICAL_MEASURE_TOKENS = {
+    "rm", "rp0.2", "rp1.0", "reh", "rel", "σb", "σ0.2",
+    "a", "z", "δs", "断后伸长率", "断面收缩率",
+    "kv2", "ku2", "ku5", "akv", "冲击", "冲击吸收能量",
+    "侧向膨胀值", "kic", "e", "持久时间", "持久强度",
+}
+HARDNESS_ONLY_MEASURES = {"hb", "hbw", "hbs", "hrc", "hrb", "hv"}
+
+
+def _is_hardness_only(manifest: RecipeManifest) -> bool:
+    measures = {
+        normalize_token(str(name))
+        for name in ((manifest.bindings or {}).get("measures") or {})
+    }
+    return bool(measures) and measures <= HARDNESS_ONLY_MEASURES
+
 
 def signature_score(table: TableGrid, signature: RecipeSignature) -> float:
     if table.profile != signature.profile:
@@ -190,8 +224,14 @@ def signature_score(table: TableGrid, signature: RecipeSignature) -> float:
 
 def match_table(table: TableGrid, recipes: list[RecipeManifest]) -> MatchResult:
     table_tokens = signature_tokens(table)
+    has_hardness = any(token in HARDNESS_TOKENS for token in table_tokens)
+    has_mechanical = any(token in MECHANICAL_MEASURE_TOKENS for token in table_tokens)
+    mixed = has_hardness and has_mechanical
     ranked: list[tuple[float, float, int, RecipeManifest]] = []
     for manifest in recipes:
+        # 混合性能表（拉伸/冲击 + 硬度）交给覆盖全部列的配方；纯硬度表不受影响。
+        if mixed and _is_hardness_only(manifest):
+            continue
         score = signature_score(table, manifest.signature)
         coverage = token_coverage(table_tokens, manifest.signature.tokens)
         specificity = len((manifest.bindings or {}).get("measures") or {})

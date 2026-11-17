@@ -60,33 +60,42 @@ def _table_heading_lines(table_html: str) -> list[str]:
 
 
 def _table_prose_lines(table_html: str) -> list[str]:
-    """Recover prose that OCR wrapped in a single-column table.
+    """Recover prose that OCR wrapped in table cells.
 
     Some standards put a whole requirement row inside ``<table><tr><td>…``.
     Dropping the table loses the clause body entirely (XX454 的低倍/显微组织).
+    A technical letter can put all of its numbered requirements in one merged
+    cell, so long cells are split into lines instead of being dropped.
     """
     rows = TABLE_ROW_RE.findall(table_html)
-    if not rows or len(rows) > 8:
+    if not rows or len(rows) > 60:
         return []
     lines: list[str] = []
     for row in rows:
         cells = [
-            re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", " ", cell))).strip()
+            re.sub(
+                r"[ \t\r\f\v]+",
+                " ",
+                unescape(re.sub(r"<[^>]+>", " ", cell)),
+            ).strip()
             for cell in TABLE_CELL_RE.findall(row)
         ]
         nonempty = [cell for cell in cells if cell]
-        if len(nonempty) != 1:
-            continue
-        text = nonempty[0]
-        if len(text) < 8:
-            continue
-        if re.fullmatch(r"[\d.,%≤≥~\-\s]+", text):
-            continue
-        lines.append(text)
+        if len(nonempty) > 1:
+            # 多列数据表不是正文；只保留明显是整段文字的长单元格。
+            nonempty = [cell for cell in nonempty if len(cell) >= 40]
+        for text in nonempty:
+            for part in text.splitlines():
+                part = part.strip()
+                if len(part) < 8:
+                    continue
+                if re.fullmatch(r"[\d.,%≤≥~\-\s]+", part):
+                    continue
+                lines.append(part)
     if not lines:
         return []
     combined = " ".join(lines)
-    if len(combined) > 1200 or not re.search(r"[\u4e00-\u9fffA-Za-z]", combined):
+    if len(combined) > 20000 or not re.search(r"[\u4e00-\u9fffA-Za-z]", combined):
         return []
     return lines
 
@@ -110,6 +119,15 @@ HEADING_RE = re.compile(
     r"|\d{1,2}\.(?=\s)"
     r"|\d{1,2}(?=\s))"
     r"\.?(?:\s+|(?=[\u4e00-\u9fff])|$)(?P<title>.*)$"
+)
+# 联络函/技术协议常把条款写成“1.材料铁素体含量……要求……。”：数字点号后
+# 直接跟正文，没有标题，也没有空格。这不是标题，但整行就是一条要求。
+INLINE_CLAUSE_RE = re.compile(
+    r"^\s*(?P<id>\d{1,2}(?:\.\s*\d{1,3}){0,4})\s*[.、．]\s*"
+    r"(?P<body>[\u4e00-\u9fff].*)$"
+)
+INLINE_CLAUSE_MARKER_RE = re.compile(
+    r"应|要求|按|依据|参照|不得|不允许|不小于|不大于|不低于|不超过|检验|试验|测定|检测"
 )
 # GJB 的 OCR 常把子条款写成“3.5 , 1 锻件流线……”。
 OCR_CLAUSE_COMMA_RE = re.compile(
@@ -254,6 +272,40 @@ def _document_pages(ocr: dict[str, Any]) -> list[tuple[int, str]]:
     return [(0, markdown)] if markdown.strip() else []
 
 
+def _join_split_clause_numbers(lines: list[str]) -> list[str]:
+    """Re-join headings whose dotted number was split across lines by OCR.
+
+    PDF text layers often print ``6.`` / ``6.`` / ``2 钢板和钢带表面质量``
+    on separate lines.  Without joining, the paragraph becomes clause ``2``
+    and inherits the kind of clause ``2`` (normative references), which then
+    blocks the whole section from the inventory.
+    """
+    joined: list[str] = []
+    pending: list[str] = []
+    for raw in lines:
+        line = unicodedata.normalize("NFKC", raw).strip()
+        if not line:
+            continue
+        if re.fullmatch(r"(?:[A-Z]|\d{1,3})\s*\.", line):
+            pending.append(re.sub(r"\s+", "", line))
+            continue
+        if pending:
+            match = re.match(
+                r"^(\d{1,3})(?:\s+|(?=[\u4e00-\u9fff]))(.*)$", line
+            )
+            if match:
+                number = "".join(pending) + match.group(1)
+                rest = match.group(2).strip()
+                joined.append(f"{number} {rest}".strip())
+            else:
+                joined.append(("".join(pending) + " " + line).strip())
+            pending = []
+            continue
+        joined.append(line)
+    joined.extend(pending)
+    return joined
+
+
 def _blocks(pages: list[tuple[int, str]]) -> list[dict[str, Any]]:
     """Split every page into heading-delimited blocks.
 
@@ -265,7 +317,7 @@ def _blocks(pages: list[tuple[int, str]]) -> list[dict[str, Any]]:
     current: dict[str, Any] | None = None
     for page_no, markdown in pages:
         text = TABLE_RE.sub(_table_to_text, markdown)
-        for raw_line in text.splitlines():
+        for raw_line in _join_split_clause_numbers(text.splitlines()):
             # OCR often prints full-width digits/punctuation (６．１).  NFKC
             # makes headings and standard numbers match the ASCII patterns.
             line = unicodedata.normalize("NFKC", raw_line).strip()
@@ -305,8 +357,23 @@ def _blocks(pages: list[tuple[int, str]]) -> list[dict[str, Any]]:
                 current["title"], inline_body = _split_inline_title(title)
                 if inline_body:
                     current["body"].append(inline_body)
-            elif current is not None:
-                current["body"].append(caption)
+            else:
+                inline = INLINE_CLAUSE_RE.match(line)
+                if (
+                    inline
+                    and len(inline.group("body")) >= 8
+                    and INLINE_CLAUSE_MARKER_RE.search(inline.group("body"))
+                ):
+                    if current is not None:
+                        blocks.append(current)
+                    current = {
+                        "clause_id": re.sub(r"\s+", "", inline.group("id")).rstrip("."),
+                        "title": "",
+                        "body": [inline.group("body").strip()],
+                        "page_no": page_no,
+                    }
+                elif current is not None:
+                    current["body"].append(caption)
     if current is not None:
         blocks.append(current)
     return blocks

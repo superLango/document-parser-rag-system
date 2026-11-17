@@ -73,6 +73,33 @@ QUALITATIVE_FEATURES = (
     "液压试验",
 )
 QUALITATIVE_SET = set(QUALITATIVE_FEATURES)
+# 这些项目通常以数值表/条款出现，但检验项目表或正文也可能只写“按 XX 标准
+# 进行室温拉伸”。当没有数值记录时，仍应生成一条文本要求记录，保证 FEATURE
+# 不丢；有数值时由数值记录负责。
+REQUIREMENT_FEATURES = {
+    "气体分析",
+    "化学成分",
+    "室温拉伸",
+    "高温拉伸",
+    "低温拉伸",
+    "室温缺口拉伸",
+    "夏比冲击",
+    "布氏硬度",
+    "洛氏硬度",
+    "维氏硬度",
+    "淬透性",
+    "弯曲",
+    "高温持久",
+    "热稳定",
+    "低周疲劳",
+    "疲劳试验",
+    "蠕变试验",
+    "持久试验",
+    "磁性能",
+    "表面粗糙度",
+    "液压试验",
+}
+
 # 新增的文字类项目只在“技术要求”章节里生效，且句子必须带验收/试验要求，
 # 避免把适用范围里的“适用于……盐雾环境”当成检验项目。
 EXTENDED_PROSE_FEATURES = {
@@ -102,13 +129,42 @@ EXTENDED_PROSE_FEATURES = {
 # Order matters: 高温拉伸 before 拉伸, 布氏 before generic 硬度, 晶粒度 before
 # 尺寸 ("grain size" must not become a dimension item).
 FEATURE_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "气体分析",
+        (
+            "气体分析",
+            "气体成分",
+            "气体含量",
+            "氢含量",
+            "氧含量",
+            "氮含量",
+            "hydrogen content",
+            "oxygen content",
+            "nitrogen content",
+            "gas analysis",
+        ),
+    ),
     ("化学成分", ("化学成分", "化学分析", "成分分析", "chemical composition")),
+    (
+        "低温拉伸",
+        (
+            "低温拉伸",
+            "低温力学",
+            "深冷拉伸",
+            "-196℃拉伸",
+            "10k拉伸",
+            "cryogenic tensile",
+            "low temperature tensile",
+        ),
+    ),
+    ("室温缺口拉伸", ("室温缺口拉伸", "缺口拉伸", "notch tensile")),
     ("高温拉伸", ("高温拉伸", "high temperature tensile", "elevated temperature tensile")),
     (
         "室温拉伸",
         ("室温拉伸", "拉伸试验", "拉伸", "tensile properties", "tension test", "tensile"),
     ),
     ("夏比冲击", ("夏比冲击", "冲击试验", "冲击", "charpy", "impact test", "impact")),
+    ("淬透性", ("淬透性", "末端淬透性", "端淬", "hardenability", "jominy")),
     ("布氏硬度", ("布氏硬度", "布氏", "brinell")),
     ("洛氏硬度", ("洛氏硬度", "洛氏", "rockwell")),
     ("维氏硬度", ("维氏硬度", "维氏", "vickers")),
@@ -168,7 +224,6 @@ FEATURE_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
             "超声波检验",
             "超声检测",
             "超声检验",
-            "无损检测",
             "ultrasonic inspection",
             "ultrasonic examination",
             "ultrasonic testing",
@@ -237,11 +292,13 @@ FEATURE_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("断口", ("断口", "fracture appearance", "fracture surface")),
     ("表面粗糙度", ("表面粗糙度", "粗糙度", "surface roughness", "roughness")),
     ("脱脂", ("脱脂", "degreasing", "degrease")),
+    ("热稳定", ("热稳定", "热稳定性", "thermal stability")),
     ("高温持久", ("持久", "蠕变", "creep", "stress rupture")),
     (
         "盐雾试验",
         ("盐雾", "salt spray", "salt-spray", "neutral salt spray"),
     ),
+    ("低周疲劳", ("低周疲劳", "low cycle fatigue", "low-cycle fatigue")),
     ("疲劳试验", ("疲劳试验", "疲劳寿命", "fatigue test", "fatigue life", "fatigue")),
     ("蠕变试验", ("蠕变试验", "蠕变", "creep test", "creep")),
     ("持久试验", ("持久试验", "持久强度", "stress rupture", "stress-rupture")),
@@ -255,6 +312,20 @@ FEATURE_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ),
     ("氢脆试验", ("氢脆", "hydrogen embrittlement", "hydrogen-embrittlement")),
     ("均匀腐蚀", ("均匀腐蚀", "uniform corrosion")),
+    (
+        "磁性能",
+        (
+            "磁性能",
+            "磁通密度",
+            "饱和磁通",
+            "矫顽力",
+            "磁导率",
+            "magnetic properties",
+            "magnetic flux density",
+            "coercivity",
+            "permeability",
+        ),
+    ),
     ("密度试验", ("密度试验", "密度测定", "density test", "density")),
     (
         "弹性模量",
@@ -275,10 +346,14 @@ FEATURE_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("液压试验", ("液压试验", "水压试验", "hydrostatic test", "pressure test")),
 )
 FAMILY_BY_FEATURE = {
+    "气体分析": "chemical",
     "化学成分": "chemical",
+    "低温拉伸": "mechanical",
+    "室温缺口拉伸": "mechanical",
     "室温拉伸": "mechanical",
     "高温拉伸": "mechanical",
     "夏比冲击": "mechanical",
+    "淬透性": "mechanical",
     "布氏硬度": "mechanical",
     "洛氏硬度": "mechanical",
     "维氏硬度": "mechanical",
@@ -300,7 +375,9 @@ FAMILY_BY_FEATURE = {
     "表面粗糙度": "surface",
     "脱脂": "surface",
     "盐雾试验": "corrosion",
+    "低周疲劳": "mechanical",
     "疲劳试验": "mechanical",
+    "热稳定": "mechanical",
     "蠕变试验": "mechanical",
     "持久试验": "mechanical",
     "应力腐蚀": "corrosion",
@@ -308,6 +385,7 @@ FAMILY_BY_FEATURE = {
     "氢脆试验": "corrosion",
     "均匀腐蚀": "corrosion",
     "密度试验": "physical",
+    "磁性能": "physical",
     "弹性模量": "physical",
     "熔点": "physical",
     "电学性能": "physical",
@@ -647,6 +725,25 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
         return "forging" in lowered and (
             "contour" in lowered or "follow" in lowered
         )
+    if feature == "低倍":
+        # 印记/标识/钢印里“注明流线方向”是标记内容，不是低倍组织检验；
+        # 但“锻件流线应符合图样、不应有穿流/涡流”是真实的低倍流线要求。
+        if re.search(r"印记|标识|标记|钢印|打字", lowered) and not re.search(
+            r"低倍|酸浸|宏观|macrostructure|macro", lowered
+        ):
+            return False
+        # 超声声束/探头垂直流线方向是检测方向说明，不是低倍组织。
+        if re.search(r"声束|直射波|探头|扫查|超声波", lowered) and "流线" in lowered:
+            if not re.search(r"低倍|酸浸|宏观|macrostructure|macro", lowered):
+                return False
+        # 试样开口/缺口方向与流线垂直是取样方向，不是低倍流线要求。
+        if (
+            re.search(r"试样|开口|缺口", lowered)
+            and "流线" in lowered
+            and re.search(r"垂直|平行|方向", lowered)
+            and not re.search(r"低倍|酸浸|宏观|macrostructure|macro", lowered)
+        ):
+            return False
     if feature == "铁素体":
         # “脱碳层深度（铁素体+过渡层）”说的是脱碳层，不是铁素体含量。
         if "脱碳" in lowered:
@@ -658,11 +755,20 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
             lowered,
         ) and not CRITERION_RE.search(lowered):
             return False
-        # “α相含量的测定可采用图片比较法……”只给试验方法。
-        if re.search(r"(?:测定|测量|观察)(?:方法|可采用|采用|按)", lowered):
+        # “α相含量的测定方法……”只给试验方法；但同一句带验收指标时
+        # （“铁素体含量不大于10%”）仍是要求。
+        if re.search(
+            r"(?:测定|测量|观察)(?:方法|可采用|采用|按)", lowered
+        ) and not CRITERION_RE.search(lowered):
             return False
         # “显微组织中δ-铁素体的含量应不超过2%”是铁素体要求；
         # 仅出现“奥氏体-铁素体”牌号说明时不算。
+        if re.search(
+            r"铁素体.{0,8}马氏体|马氏体.{0,8}铁素体|铁素体不锈钢|"
+            r"ferritic\s+stainless|ferrite\s*[-+]\s*martensite",
+            lowered,
+        ) and not re.search(r"含量|百分|%|不超过|不大于", lowered):
+            return False
         return bool(
             re.search(r"铁素体|α相|ferrite|alpha phase", lowered)
         ) and bool(
@@ -698,7 +804,20 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
         return True
     if feature == "非金属夹杂":
         # “表面不应有……非金属夹杂物等缺陷”是外观缺陷清单。
-        return not _defect_enumeration(lowered)
+        if _defect_enumeration(lowered):
+            return False
+        # 炼钢/冶金工艺描述不是夹杂物检验；但“锻坯需检测非金属夹杂物”
+        # 是明确的检验要求，不能因为同一段提到“精炼”就丢掉。
+        if re.search(r"炼钢|冶金|冶炼|浇注|精炼", lowered) and not re.search(
+            r"检验|检测|测定|复验|评级|级别|含量|不大于|不超过|应符合", lowered
+        ):
+            return False
+        # 目视表面缺陷（裂纹、结疤、折叠）不是夹杂物。
+        if "表面" in lowered and re.search(
+            r"缺陷|裂纹|结疤|折叠|目视", lowered
+        ) and not re.search(r"夹杂物.{0,8}(?:检验|评级|级别|含量)", lowered):
+            return False
+        return True
     if feature == "外观":
         # 弯曲/折弯试验的“试样表面不应开裂”属于弯曲性能，不是外观要求。
         if re.search(r"(?:弯曲|折弯).{0,8}(?:试验|性能|半径)", lowered) or re.search(
@@ -715,6 +834,11 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
         if re.search(
             r"metallurgical working|processed to the final|final thickness|dimensional sizing",
             lowered,
+        ):
+            return False
+        # 报告/清单/证书里的字段名不是外观验收要求。
+        if re.search(r"报告|清单|记录|证书|质量证明|report|checklist", lowered) and not re.search(
+            r"不应|不得|缺陷|裂纹|清洁|光滑|defect|crack|clean", lowered
         ):
             return False
         return bool(
@@ -804,6 +928,15 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
             r"尺寸|公差|偏差|允许偏差", lowered
         ):
             return False
+        # 组批、装炉、NDT 扫查间距、显示尺寸、测温点都不是产品尺寸。
+        if re.search(
+            r"组批|批次|炉批|装炉|装料|扫查间距|扫掠间距|声束|显示尺寸|"
+            r"缺陷尺寸|测温点|热电偶",
+            lowered,
+        ) and not re.search(
+            r"公差|偏差|允许偏差|外形尺寸|壁厚|外径|长度|宽度", lowered
+        ):
+            return False
         return bool(
             re.search(
                 r"尺寸|外形|厚度|壁厚|外径|直径|长度|宽度|不平度|弯曲度"
@@ -817,6 +950,9 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
             )
         )
     if feature == "超声波检测":
+        # 泛指“无损检测/NDT/渗透/磁粉/射线”不是超声；必须点名超声/UT。
+        if not re.search(r"超声|ultrasonic|\but\b", lowered):
+            return False
         # “可用超声检测代替液压试验”是替代方案说明，不是独立的超声检验项。
         if "代替" in lowered or "替代" in lowered:
             return False
@@ -872,6 +1008,13 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
             )
         )
     if feature == "相变温度":
+        # 固溶/淬火/回火/退火/时效温度是热处理制度，不是相变温度检验。
+        if re.search(
+            r"固溶|淬火|回火|退火|正火|时效|加热温度|保温温度", lowered
+        ) and not re.search(
+            r"相变|转变温度|β转变|transus|transformation", lowered
+        ):
+            return False
         # 订货要求（“应在订货单中规定相变温度参数”）不是验收指标。
         if re.search(r"purchase order|订货单", lowered) and re.search(
             r"specified|规定|required", lowered
@@ -912,6 +1055,29 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
         return bool(
             re.search(r"\bra\b|不大于|不超过|应符合|符合表", lowered)
         )
+    if feature == "晶粒度":
+        # 引用标准目录里的“晶粒度”不是本文件的检验要求。
+        if re.search(r"引用标准|引用文件|规范性引用|standards? referenced", lowered):
+            return False
+        # 低倍宏观晶粒评级属于低倍，不是晶粒度检验。
+        if (
+            "低倍" in lowered
+            and re.search(r"宏观晶粒|低倍晶粒|低倍组织.{0,4}晶粒", lowered)
+            and not re.search(r"晶粒度.{0,6}(?:检验|评定|级别|级)", lowered)
+        ):
+            return False
+    if feature == "断口":
+        # 冲击试样的断口/侧向膨胀/剪切面积属于冲击试验，不是断口组织项目。
+        if re.search(r"冲击|侧向膨胀|剪切面积|冲击试样", lowered) and not re.search(
+            r"断口组织|断口检验|fracture appearance", lowered
+        ):
+            return False
+    if feature == "剪切试验":
+        # τ(h) 是持久时间，不是剪切强度。
+        if re.search(r"持久|蠕变|持久时间|τ|tau", lowered) and not re.search(
+            r"剪切|shear", lowered
+        ):
+            return False
     return True
 
 
@@ -1188,6 +1354,19 @@ def _inspection_entries(
         note = _clean(item.get("note"))
         if note and note not in sampling["note"]:
             sampling["note"] = f"{sampling['note']}；{note}" if sampling["note"] else note
+        requirement_text = _clean(item.get("requirement"))
+        if requirement_text and not any(
+            row.get("text") == requirement_text for row in entry["requirements"]
+        ):
+            entry["requirements"].append(
+                {
+                    "text": requirement_text,
+                    "clause_id": _clean(item.get("clause")),
+                    "item": name,
+                    "page_no": 0,
+                    "sampling": dict(sampling),
+                }
+            )
         evidence_id = f"ev-inspection-{index}"
         quote = "；".join(
             part
@@ -1196,6 +1375,7 @@ def _inspection_entries(
                 _clean(item.get("quantity")),
                 _clean(item.get("location")),
                 _clean(item.get("method")),
+                _clean(item.get("requirement")),
                 _clean(item.get("note")),
             )
             if part
@@ -1327,6 +1507,9 @@ def _clause_entries(
         if not requirement and not title and not _clean(clause.get("text")):
             continue
         body_text = _clean(clause.get("text"))
+        if not requirement and not title and body_text:
+            # “1.材料铁素体含量……不大于10%。”这类无标题条款，整行就是要求。
+            requirement = body_text
         probe = f"{title} {body_text}".strip()
         top = clause_id.split(".")[0].split("-")[0]
         blocked_section = (
@@ -1386,7 +1569,7 @@ def _clause_entries(
             if specific:
                 explicit = specific
         extra_qualitative: list[str] = []
-        if not title_feature and explicit and not list_items:
+        if not title_feature and explicit and (not list_items or not title):
             primary = explicit[0]
             extra_qualitative = [
                 name for name in dict.fromkeys(explicit[1:]) if name != primary
@@ -1678,13 +1861,24 @@ def _clause_entries(
         if not entry["page_no"]:
             entry["page_no"] = int(clause.get("page_no") or 0)
         if requirement:
+            text = _clean(requirement)
+            # 条款字段可能只抽出“7.8.3”“晶粒度”这种标签；用条款正文补全，
+            # 避免生成只有编号/项目名的空记录。
+            if (
+                len(text) < 12
+                or text == feature
+                or re.fullmatch(r"\d+(?:\.\d+)+", text)
+            ):
+                body = _clean(clause.get("text"))
+                if body:
+                    text = body[:400]
             known = {
                 str(item.get("text") or "") for item in entry["requirements"]
             }
-            if requirement not in known:
+            if text and text not in known:
                 entry["requirements"].append(
                     {
-                        "text": requirement,
+                        "text": text,
                         "clause_id": clause_id,
                         "item": plan["item"],
                         "page_no": int(clause.get("page_no") or 0),

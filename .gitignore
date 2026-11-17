@@ -20,7 +20,11 @@ data/
 extracted_json/
 extracted_json.zip
 汉唐标准/
+汉唐标准_使用次数前30/
 标准文件/
+标准拆分提取-*/
+gold_standard_30/
+汉唐业务词典_导出_*.xlsx
 
 # Service data that ships with the code
 !new_app/services/ocr/data/

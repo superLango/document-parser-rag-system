@@ -18,8 +18,8 @@ SCHEMA_VERSION = "document-references/1"
 STANDARD_RE = re.compile(
     r"(?P<org>GB\s*/\s*T|GBIT|GB\s*厅|GBT|GB|GJB\s*/\s*Z|GJB|JB\s*/\s*T|JB|"
     r"YB\s*/\s*T|YB|YS\s*/\s*T|YST|YS|HB\s*/\s*Z|HB|ASTM|ASME|ISO|AMS(?:-STD)?|"
-    r"EN|DIN|QJ|NB\s*/\s*T|API|Q\s*/\s*[A-Za-z0-9]+)\s*"
-    r"(?P<num>[A-Z]?\s*\d+(?:\.\s*\d+)*(?:\s*[-—–:]\s*\d{4})?)"
+    r"EN|DIN|QJ|NB\s*/\s*T|API|Q\s*/\s*[A-Za-z]{1,4})\s*"
+    r"(?P<num>[A-Z]?\s*\d+(?:\.\s*\d+)*(?:\s*[-—–:]\s*\d{1,4})*)"
     r"(?:\s+(?P<year>\d{4}))?"
 )
 NORMATIVE_HEADING_RE = re.compile(
@@ -245,9 +245,10 @@ def _cross_candidates(clauses: list[dict[str, Any]], self_no: str) -> list[dict[
                     continue
                 subject = raw_subject if raw_subject not in CROSS_STOP_SUBJECTS else ""
                 tail = probe[match.end() : match.end() + 24]
-                if re.search(r"方法|测定|试验|检验|分析|检测", tail) and not re.search(
-                    r"应?符合|应?满足", probe[: match.start()]
-                ):
+                # “（试验条件：400℃）”不是“按某标准做试验”的方法引用。
+                if re.search(
+                    r"方法|测定|试验(?!条件)|检验|分析|检测", tail
+                ) and not re.search(r"应?符合|应?满足", probe[: match.start()]):
                     continue
                 feature = _cross_feature(subject, title, probe)
                 parameter = _cross_parameter(subject, feature)
@@ -456,12 +457,16 @@ def _table_entries(inspections: list[dict[str, str]]) -> list[dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     for item in inspections:
         method = _clean(item.get("method"))
-        if not method:
+        requirement = _clean(item.get("requirement"))
+        probe = " ".join(
+            part for part in (_clean(item.get("item")), method, requirement) if part
+        )
+        if not probe:
             continue
-        for match in STANDARD_RE.finditer(method):
+        for match in STANDARD_RE.finditer(probe):
             entry = _entry(
                 match,
-                f"{_clean(item.get('item'))} {method}".strip(),
+                probe,
                 relation="table_note",
                 title=_clean(item.get("item")),
             )
@@ -689,6 +694,32 @@ def extract_references(
     unresolved = [entry for entry in entries if not entry.get("resolved")]
     bindings = _bindings(entries, clauses, self_no)
     cross_candidates = _cross_candidates(clauses, self_no)
+    # 检验项目表的“验收指标”列也可能写“按 Q/S10-0533-2004”，这类引用
+    # 同样需要进入跨标准展开；否则表格型要求只能保留文本。
+    pseudo_clauses = [
+        {
+            "clause_id": str(item.get("clause") or ""),
+            "title": "",
+            "text": " ".join(
+                part
+                for part in (
+                    str(item.get("item") or ""),
+                    str(item.get("requirement") or item.get("method") or ""),
+                )
+                if part
+            ),
+            "kind": "technical_requirement",
+            "page_no": 0,
+        }
+        for item in inspections or []
+        if item.get("requirement") or item.get("method")
+    ]
+    if pseudo_clauses:
+        known_ids = {str(task.get("task_id") or "") for task in cross_candidates}
+        for task in _cross_candidates(pseudo_clauses, self_no):
+            if str(task.get("task_id") or "") not in known_ids:
+                cross_candidates.append(task)
+                known_ids.add(str(task.get("task_id") or ""))
     return {
         "schema_version": SCHEMA_VERSION,
         "self_standard": self_no,

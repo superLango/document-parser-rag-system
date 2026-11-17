@@ -1,0 +1,6847 @@
+[
+  {
+    "doc_id": "gbt-1591-2018",
+    "title": "低合金高强度结构钢",
+    "tables": 16,
+    "recipes": 13,
+    "records": 1570,
+    "props": 2516,
+    "features": {
+      "化学成分": 1012,
+      "室温拉伸": 815,
+      "夏比冲击": 530,
+      "外观": 53,
+      "尺寸": 53,
+      "弯曲": 53
+    },
+    "grades": [
+      "Q355B",
+      "Q355C",
+      "Q355D",
+      "Q355MB",
+      "Q355MC",
+      "Q355MD",
+      "Q355ME",
+      "Q355MF",
+      "Q355NB",
+      "Q355NC",
+      "Q355ND",
+      "Q355NE",
+      "Q355NF",
+      "Q390B",
+      "Q390C",
+      "Q390D",
+      "Q390MB",
+      "Q390MC",
+      "Q390MD",
+      "Q390ME",
+      "Q390NB",
+      "Q390NC",
+      "Q390ND",
+      "Q390NE",
+      "Q420B",
+      "Q420C",
+      "Q420MB",
+      "Q420MC",
+      "Q420MD",
+      "Q420ME",
+      "Q420NB",
+      "Q420NC",
+      "Q420ND",
+      "Q420NE",
+      "Q460C",
+      "Q460MC",
+      "Q460MD",
+      "Q460ME",
+      "Q460NC",
+      "Q460ND",
+      "Q460NE",
+      "Q500MC",
+      "Q500MD",
+      "Q500ME",
+      "Q550MC",
+      "Q550MD",
+      "Q550ME",
+      "Q620MC",
+      "Q620MD",
+      "Q620ME",
+      "Q690MC",
+      "Q690MD",
+      "Q690ME"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 11,
+        "cols": 17,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.781,
+        "records": 27,
+        "props": 135
+      },
+      {
+        "table_id": "T2",
+        "rows": 11,
+        "cols": 7,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.771,
+        "records": 45,
+        "props": 45
+      },
+      {
+        "table_id": "T3",
+        "rows": 18,
+        "cols": 16,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.781,
+        "records": 16,
+        "props": 208
+      },
+      {
+        "table_id": "T4",
+        "rows": 6,
+        "cols": 6,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.771,
+        "records": 64,
+        "props": 64
+      },
+      {
+        "table_id": "T5",
+        "rows": 11,
+        "cols": 17,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.781,
+        "records": 9,
+        "props": 126
+      },
+      {
+        "table_id": "T6",
+        "rows": 21,
+        "cols": 17,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.781,
+        "records": 19,
+        "props": 266
+      },
+      {
+        "table_id": "T7",
+        "rows": 10,
+        "cols": 8,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.819,
+        "records": 168,
+        "props": 168
+      },
+      {
+        "table_id": "T8",
+        "rows": 7,
+        "cols": 15,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.687,
+        "records": 117,
+        "props": 117
+      },
+      {
+        "table_id": "T9",
+        "rows": 8,
+        "cols": 9,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.786,
+        "records": 90,
+        "props": 90
+      },
+      {
+        "table_id": "T10",
+        "rows": 6,
+        "cols": 19,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.691,
+        "records": 272,
+        "props": 272
+      },
+      {
+        "table_id": "T11",
+        "rows": 10,
+        "cols": 14,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.691,
+        "records": 336,
+        "props": 336
+      },
+      {
+        "table_id": "T12",
+        "rows": 19,
+        "cols": 12,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 530,
+        "props": 530
+      },
+      {
+        "table_id": "T13",
+        "rows": 4,
+        "cols": 3,
+        "profile": "mechanical_properties",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.55,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T14",
+        "rows": 9,
+        "cols": 5,
+        "profile": "inspection",
+        "recipe": "inspection_rules_v1",
+        "status": "candidate",
+        "score": 0.853,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T15",
+        "rows": 29,
+        "cols": 7,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T16",
+        "rows": 26,
+        "cols": 7,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 888,
+        "室温拉伸": 317,
+        "夏比冲击": 530,
+        "尺寸": 284,
+        "外观": 284
+      },
+      "grades": [
+        "Q355",
+        "Q355B",
+        "Q355C",
+        "Q355D",
+        "Q355M",
+        "Q355MB",
+        "Q355MC",
+        "Q355MD",
+        "Q355ME",
+        "Q355MF",
+        "Q355N",
+        "Q355NB",
+        "Q355NC",
+        "Q355ND",
+        "Q355NE",
+        "Q355NF",
+        "Q390",
+        "Q390B",
+        "Q390C",
+        "Q390D",
+        "Q390M",
+        "Q390MB",
+        "Q390MC",
+        "Q390MD",
+        "Q390ME",
+        "Q390N",
+        "Q390NB",
+        "Q390NC",
+        "Q390ND",
+        "Q390NE",
+        "Q420",
+        "Q420B",
+        "Q420C",
+        "Q420M",
+        "Q420MB",
+        "Q420MC",
+        "Q420MD",
+        "Q420ME",
+        "Q420N",
+        "Q420NB",
+        "Q420NC",
+        "Q420ND",
+        "Q420NE",
+        "Q420b",
+        "Q460",
+        "Q460C",
+        "Q460M",
+        "Q460MC",
+        "Q460MD",
+        "Q460ME",
+        "Q460N",
+        "Q460NC",
+        "Q460ND",
+        "Q460NE",
+        "Q460b",
+        "Q500M",
+        "Q500MC",
+        "Q500MD",
+        "Q500ME",
+        "Q550M",
+        "Q550MC",
+        "Q550MD",
+        "Q550ME",
+        "Q620M",
+        "Q620MC",
+        "Q620MD",
+        "Q620ME",
+        "Q690M",
+        "Q690MC",
+        "Q690MD",
+        "Q690ME"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "尺寸": 231,
+      "外观": 231
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 888,
+        "replay": 1012
+      },
+      "夏比冲击": {
+        "gold": 530,
+        "replay": 530
+      },
+      "外观": {
+        "gold": 284,
+        "replay": 53
+      },
+      "室温拉伸": {
+        "gold": 317,
+        "replay": 815
+      },
+      "尺寸": {
+        "gold": 284,
+        "replay": 53
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "gbt-14976-2025",
+    "title": "流体输送用不锈钢无缝钢管",
+    "tables": 16,
+    "recipes": 14,
+    "records": 373,
+    "props": 725,
+    "features": {
+      "热处理项目": 64,
+      "化学成分": 352,
+      "室温拉伸": 141,
+      "夏比冲击": 40,
+      "压扁试验": 32,
+      "扩口试验": 32,
+      "涡流检测": 32,
+      "表面粗糙度": 32
+    },
+    "grades": [
+      "015Cr20Ni18Mo6CuN",
+      "015Cr21Ni26Mo5Cu2",
+      "019Cr19Mo2NbTi",
+      "022Cr17NbTi",
+      "022Cr17Ni12Mo2",
+      "022Cr17Ni12Mo2N",
+      "022Cr18Ni14Mo2Cu2",
+      "022Cr19Ni10",
+      "022Cr19Ni10N",
+      "022Cr19Ni13Mo3",
+      "06Cr13",
+      "06Cr13Al",
+      "06Cr17Ni12Mo2",
+      "06Cr17Ni12Mo2N",
+      "06Cr17Ni12Mo2Ti",
+      "06Cr18Ni11Nb",
+      "06Cr18Ni11Ti",
+      "06Cr18Ni12Mo2Cu2",
+      "06Cr19Ni10",
+      "06Cr19Ni10N",
+      "06Cr19Ni13Mo3",
+      "06Cr19Ni9NbN",
+      "06Cr23Ni13",
+      "06Cr25Ni20",
+      "07Cr17Ni12Mo2",
+      "07Cr18Ni11Nb",
+      "07Cr19Ni10",
+      "07Cr19Ni11Ti",
+      "10Cr15",
+      "10Cr17",
+      "12Cr13",
+      "12Cr18Ni9",
+      "全部牌号"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 18,
+        "cols": 6,
+        "profile": "heat_treatment",
+        "recipe": "heat_treatment_v1",
+        "status": "candidate",
+        "score": 0.79,
+        "records": 17,
+        "props": 34
+      },
+      {
+        "table_id": "T2",
+        "rows": 16,
+        "cols": 6,
+        "profile": "heat_treatment",
+        "recipe": "heat_treatment_v1",
+        "status": "candidate",
+        "score": 0.79,
+        "records": 15,
+        "props": 30
+      },
+      {
+        "table_id": "T3",
+        "rows": 12,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.781,
+        "records": 10,
+        "props": 110
+      },
+      {
+        "table_id": "T4",
+        "rows": 12,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.781,
+        "records": 10,
+        "props": 110
+      },
+      {
+        "table_id": "T5",
+        "rows": 10,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.781,
+        "records": 8,
+        "props": 88
+      },
+      {
+        "table_id": "T6",
+        "rows": 6,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.781,
+        "records": 4,
+        "props": 44
+      },
+      {
+        "table_id": "T7",
+        "rows": 27,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.735,
+        "records": 97,
+        "props": 97
+      },
+      {
+        "table_id": "T8",
+        "rows": 9,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.735,
+        "records": 28,
+        "props": 28
+      },
+      {
+        "table_id": "T9",
+        "rows": 10,
+        "cols": 6,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T10",
+        "rows": 5,
+        "cols": 4,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T11",
+        "rows": 16,
+        "cols": 6,
+        "profile": "inspection",
+        "recipe": "inspection_rules_v1",
+        "status": "candidate",
+        "score": 0.797,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T12",
+        "rows": 6,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.737,
+        "records": 16,
+        "props": 16
+      },
+      {
+        "table_id": "T13",
+        "rows": 4,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 8,
+        "props": 8
+      },
+      {
+        "table_id": "T14",
+        "rows": 5,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 12,
+        "props": 12
+      },
+      {
+        "table_id": "T15",
+        "rows": 7,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 20,
+        "props": 20
+      },
+      {
+        "table_id": "T16",
+        "rows": 4,
+        "cols": 3,
+        "profile": "unknown",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 32,
+        "化学成分": 352,
+        "室温拉伸": 144,
+        "夏比冲击": 50,
+        "尺寸": 64,
+        "外观": 64,
+        "超声波检测": 32,
+        "晶粒度": 32,
+        "非金属夹杂": 32
+      },
+      "grades": [
+        "015Cr20Ni18Mo6CuN",
+        "015Cr21Ni26Mo5Cu2",
+        "019Cr19Mo2NbTi",
+        "022Cr17NbTi",
+        "022Cr17Ni12Mo2",
+        "022Cr17Ni12Mo2N",
+        "022Cr18Ni14Mo2Cu2",
+        "022Cr19Ni10",
+        "022Cr19Ni10N",
+        "022Cr19Ni13Mo3",
+        "06Cr13",
+        "06Cr13Al",
+        "06Cr17Ni12Mo2",
+        "06Cr17Ni12Mo2N",
+        "06Cr17Ni12Mo2Ti",
+        "06Cr18Ni11Nb",
+        "06Cr18Ni11Ti",
+        "06Cr18Ni12Mo2Cu2",
+        "06Cr19Ni10",
+        "06Cr19Ni10N",
+        "06Cr19Ni13Mo3",
+        "06Cr19Ni9NbN",
+        "06Cr23Ni13",
+        "06Cr25Ni20",
+        "07Cr17Ni12Mo2",
+        "07Cr18Ni11Nb",
+        "07Cr19Ni10",
+        "07Cr19Ni11Ti",
+        "10Cr15",
+        "10Cr17",
+        "12Cr13",
+        "12Cr18Ni9"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 32,
+      "室温拉伸": 3,
+      "夏比冲击": 10,
+      "尺寸": 64,
+      "外观": 64,
+      "超声波检测": 32,
+      "晶粒度": 32,
+      "非金属夹杂": 32
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 352,
+        "replay": 352
+      },
+      "夏比冲击": {
+        "gold": 50,
+        "replay": 40
+      },
+      "外观": {
+        "gold": 64,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 144,
+        "replay": 141
+      },
+      "尺寸": {
+        "gold": 64,
+        "replay": 0
+      },
+      "晶粒度": {
+        "gold": 32,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "热处理制度": {
+        "gold": 32,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 32,
+        "replay": 0
+      },
+      "非金属夹杂": {
+        "gold": 32,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "gbt-3621-2022",
+    "title": "钛及钛合金板材",
+    "tables": 14,
+    "recipes": 11,
+    "records": 255,
+    "props": 348,
+    "features": {
+      "室温拉伸": 217,
+      "高温拉伸": 22,
+      "高温持久": 44,
+      "弯曲": 65
+    },
+    "grades": [
+      "TA0",
+      "TA1",
+      "TA10",
+      "TA10（A 类）",
+      "TA10（B 类）",
+      "TA11",
+      "TA13",
+      "TA15",
+      "TA17",
+      "TA18",
+      "TA1G",
+      "TA1GELI",
+      "TA2",
+      "TA22",
+      "TA23",
+      "TA24",
+      "TA2G",
+      "TA3",
+      "TA32",
+      "TA3G",
+      "TA4G",
+      "TA5",
+      "TA6",
+      "TA7",
+      "TA8",
+      "TA8-1",
+      "TA9",
+      "TA9-1",
+      "TB2",
+      "TB5",
+      "TB6",
+      "TB8",
+      "TC1",
+      "TC2",
+      "TC20",
+      "TC3",
+      "TC4",
+      "TC4ELI"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 6,
+        "cols": 5,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T2",
+        "rows": 9,
+        "cols": 4,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T3",
+        "rows": 13,
+        "cols": 4,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T4",
+        "rows": 4,
+        "cols": 4,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T5",
+        "rows": 7,
+        "cols": 4,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.65,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T6",
+        "rows": 30,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.731,
+        "records": 58,
+        "props": 87
+      },
+      {
+        "table_id": "T7",
+        "rows": 33,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.731,
+        "records": 64,
+        "props": 94
+      },
+      {
+        "table_id": "T8",
+        "rows": 13,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.731,
+        "records": 24,
+        "props": 36
+      },
+      {
+        "table_id": "T9",
+        "rows": 13,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 22,
+        "props": 33
+      },
+      {
+        "table_id": "T10",
+        "rows": 13,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 22,
+        "props": 33
+      },
+      {
+        "table_id": "T11",
+        "rows": 16,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.665,
+        "records": 15,
+        "props": 15
+      },
+      {
+        "table_id": "T12",
+        "rows": 33,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.665,
+        "records": 32,
+        "props": 32
+      },
+      {
+        "table_id": "T13",
+        "rows": 19,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.665,
+        "records": 18,
+        "props": 18
+      },
+      {
+        "table_id": "T14",
+        "rows": 9,
+        "cols": 4,
+        "profile": "inspection",
+        "recipe": "inspection_rules_v1",
+        "status": "candidate",
+        "score": 0.738,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "室温拉伸": 219,
+        "高温拉伸": 22,
+        "高温光滑持久": 44,
+        "尺寸": 148,
+        "相变温度": 37,
+        "外观": 111
+      },
+      "grades": [
+        "TA0",
+        "TA1",
+        "TA10（A 类）",
+        "TA10（B 类）",
+        "TA11",
+        "TA13",
+        "TA15",
+        "TA17",
+        "TA18",
+        "TA1G",
+        "TA1GELI",
+        "TA2",
+        "TA22",
+        "TA23",
+        "TA24",
+        "TA2G",
+        "TA3",
+        "TA32",
+        "TA3G",
+        "TA4G",
+        "TA5",
+        "TA6",
+        "TA7",
+        "TA8",
+        "TA8-1",
+        "TA9",
+        "TA9-1",
+        "TB2",
+        "TB5",
+        "TB6",
+        "TB8",
+        "TC1",
+        "TC2",
+        "TC20",
+        "TC3",
+        "TC4",
+        "TC4ELI"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "室温拉伸": 2,
+      "高温光滑持久": 44,
+      "尺寸": 148,
+      "相变温度": 37,
+      "外观": 111
+    },
+    "feature_rows": {
+      "外观": {
+        "gold": 111,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 219,
+        "replay": 217
+      },
+      "尺寸": {
+        "gold": 148,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "相变温度": {
+        "gold": 37,
+        "replay": 0
+      },
+      "高温光滑持久": {
+        "gold": 44,
+        "replay": 0
+      },
+      "高温拉伸": {
+        "gold": 22,
+        "replay": 22
+      }
+    }
+  },
+  {
+    "doc_id": "gbt-3623-2022",
+    "title": "钛及钛合金丝",
+    "tables": 5,
+    "recipes": 5,
+    "records": 64,
+    "props": 413,
+    "features": {
+      "化学成分": 359,
+      "室温拉伸": 54
+    },
+    "grades": [
+      "TA0",
+      "TA1",
+      "TA10",
+      "TA18",
+      "TA1G",
+      "TA1G-1",
+      "TA1GELI",
+      "TA2",
+      "TA22",
+      "TA23",
+      "TA24",
+      "TA28",
+      "TA2G",
+      "TA2GELI",
+      "TA3",
+      "TA31",
+      "TA36",
+      "TA3G",
+      "TA3GELI",
+      "TA4G",
+      "TA4GELI",
+      "TA7",
+      "TA8",
+      "TA8-1",
+      "TA9",
+      "TA9-1",
+      "TC1",
+      "TC2",
+      "TC3",
+      "TC4",
+      "TC4ELI"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 3,
+        "cols": 3,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.738,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T2",
+        "rows": 13,
+        "cols": 14,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.758,
+        "records": 10,
+        "props": 129
+      },
+      {
+        "table_id": "T3",
+        "rows": 21,
+        "cols": 14,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.758,
+        "records": 18,
+        "props": 230
+      },
+      {
+        "table_id": "T4",
+        "rows": 19,
+        "cols": 5,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.685,
+        "records": 36,
+        "props": 54
+      },
+      {
+        "table_id": "T5",
+        "rows": 6,
+        "cols": 4,
+        "profile": "inspection",
+        "recipe": "inspection_rules_v1",
+        "status": "candidate",
+        "score": 0.738,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 364,
+        "室温拉伸": 54,
+        "尺寸": 31,
+        "低倍": 31,
+        "外观": 62
+      },
+      "grades": [
+        "TA0",
+        "TA1",
+        "TA10",
+        "TA18",
+        "TA1G",
+        "TA1G-1",
+        "TA1GELI",
+        "TA2",
+        "TA22",
+        "TA23",
+        "TA24",
+        "TA28",
+        "TA2G",
+        "TA2GELI",
+        "TA3",
+        "TA31",
+        "TA36",
+        "TA3G",
+        "TA3GELI",
+        "TA4G",
+        "TA4GELI",
+        "TA7",
+        "TA8",
+        "TA8-1",
+        "TA9",
+        "TA9-1",
+        "TC1",
+        "TC2",
+        "TC3",
+        "TC4",
+        "TC4ELI"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 5,
+      "尺寸": 31,
+      "低倍": 31,
+      "外观": 62
+    },
+    "feature_rows": {
+      "低倍": {
+        "gold": 31,
+        "replay": 0
+      },
+      "化学成分": {
+        "gold": 364,
+        "replay": 359
+      },
+      "外观": {
+        "gold": 62,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 54,
+        "replay": 54
+      },
+      "尺寸": {
+        "gold": 31,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "",
+    "title": "",
+    "tables": 18,
+    "recipes": 18,
+    "records": 504,
+    "props": 1074,
+    "features": {
+      "室温拉伸": 372,
+      "布氏硬度": 110,
+      "洛氏硬度": 106,
+      "维氏硬度": 73,
+      "弯曲": 38,
+      "高温拉伸": 39,
+      "化学成分": 112,
+      "外观": 112,
+      "尺寸": 112
+    },
+    "grades": [
+      "015Cr20Ni18Mo6CuN",
+      "019Cr18CuNb",
+      "019Cr18MoTi",
+      "019Cr19Mo2NbTi",
+      "019Cr21CuTi",
+      "019Cr23Mo2Ti",
+      "022Cr11NbTi",
+      "022Cr11Ti",
+      "022Cr12",
+      "022Cr12Ni",
+      "022Cr12Ni9Cu2NbTi",
+      "022Cr15NbTi",
+      "022Cr17Ni12Mo2",
+      "022Cr17Ni12Mo2N",
+      "022Cr17Ni7",
+      "022Cr17Ni7N",
+      "022Cr17Ti",
+      "022Cr18Nb",
+      "022Cr18NbTi",
+      "022Cr18Ti",
+      "022Cr19Ni10",
+      "022Cr19Ni10N",
+      "022Cr19Ni5Mo3Si2N",
+      "022Cr21Mn3Ni3Mo2N",
+      "022Cr21Mn5Ni2N",
+      "022Cr21Ni3Mo2N",
+      "022Cr22Mn3Ni2MoN",
+      "022Cr22Ni5Mo3N",
+      "022Cr23Ni2N",
+      "022Cr23Ni5Mo3N",
+      "022Cr24Ni4Mn3Mo2CuN",
+      "022Cr25Ni22Mo2N",
+      "03Cr22Mn5Ni2MoCuN",
+      "04Cr13Ni8Mo2Al",
+      "05Cr19Ni10Si2CeN",
+      "06Cr13Al",
+      "06Cr17Ni12Mo2",
+      "06Cr17Ni12Mo2N",
+      "06Cr17Ni12Mo2Nb",
+      "06Cr17Ni12Mo2Ti",
+      "06Cr18Ni12Mo2Cu2",
+      "06Cr19Ni10",
+      "06Cr19Ni10N",
+      "06Cr19Ni9NbN",
+      "06Cr23Ni13",
+      "06Cr25Ni20",
+      "07Cr15Ni7Mo2Al",
+      "07Cr17Ni12Mo2",
+      "07Cr17Ni7Al",
+      "07Cr19Ni10",
+      "08Cr21Ni11Si2CeN",
+      "09Cr17Ni5Mo3N",
+      "10Cr15",
+      "10Cr17",
+      "10Cr17Mo",
+      "10Cr18Ni12",
+      "12Cr17Ni7",
+      "12Cr18Ni9",
+      "12Cr18Ni9Si3",
+      "12Cr21Ni5Ti",
+      "14Cr18Ni11Si4AlTi",
+      "None",
+      "S12362",
+      "S12763",
+      "S12791",
+      "S12963",
+      "S13091",
+      "S22553",
+      "S23043",
+      "S25073",
+      "S25554",
+      "S27603",
+      "S30103",
+      "S30110",
+      "S30153",
+      "S30210",
+      "S30403",
+      "S30408",
+      "S30453",
+      "S30458",
+      "S31603",
+      "S31608",
+      "S31658",
+      "S31703",
+      "S31708",
+      "S31723",
+      "S31753",
+      "S31782",
+      "S32168",
+      "S32169",
+      "S32652",
+      "S34553",
+      "S34778",
+      "S34779",
+      "S38367",
+      "S38926",
+      "S40310",
+      "S41008",
+      "S41010",
+      "S41595",
+      "S42020",
+      "S42030",
+      "S42040",
+      "S43120",
+      "S44070",
+      "S46050",
+      "S51290",
+      "S51380",
+      "S51570",
+      "S51750",
+      "S51770",
+      "S51778"
+    ],
+    "table_details": [
+      {
+        "table_id": "T21",
+        "rows": 29,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 26,
+        "props": 156
+      },
+      {
+        "table_id": "T21",
+        "rows": 17,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 13,
+        "props": 78
+      },
+      {
+        "table_id": "T22",
+        "rows": 12,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 18,
+        "props": 27
+      },
+      {
+        "table_id": "T22",
+        "rows": 6,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 4,
+        "props": 6
+      },
+      {
+        "table_id": "T23",
+        "rows": 15,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 22,
+        "props": 33
+      },
+      {
+        "table_id": "T24",
+        "rows": 6,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 4,
+        "props": 6
+      },
+      {
+        "table_id": "T25",
+        "rows": 6,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 4,
+        "props": 6
+      },
+      {
+        "table_id": "T26",
+        "rows": 5,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 2,
+        "props": 3
+      },
+      {
+        "table_id": "T27",
+        "rows": 15,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 12,
+        "props": 60
+      },
+      {
+        "table_id": "T27",
+        "rows": 9,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.727,
+        "records": 5,
+        "props": 25
+      },
+      {
+        "table_id": "T28",
+        "rows": 21,
+        "cols": 9,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.775,
+        "records": 18,
+        "props": 126
+      },
+      {
+        "table_id": "T28",
+        "rows": 10,
+        "cols": 9,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.775,
+        "records": 5,
+        "props": 34
+      },
+      {
+        "table_id": "T29",
+        "rows": 16,
+        "cols": 9,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.775,
+        "records": 11,
+        "props": 76
+      },
+      {
+        "table_id": "T30",
+        "rows": 10,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.725,
+        "records": 6,
+        "props": 28
+      },
+      {
+        "table_id": "T31",
+        "rows": 8,
+        "cols": 9,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.772,
+        "records": 5,
+        "props": 25
+      },
+      {
+        "table_id": "T31",
+        "rows": 13,
+        "cols": 9,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.772,
+        "records": 9,
+        "props": 45
+      },
+      {
+        "table_id": "T32",
+        "rows": 6,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.666,
+        "records": 4,
+        "props": 4
+      },
+      {
+        "table_id": "T38",
+        "rows": 8,
+        "cols": 5,
+        "profile": "inspection",
+        "recipe": "inspection_rules_v1",
+        "status": "candidate",
+        "score": 0.853,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 114,
+        "化学成分": 1,
+        "室温拉伸": 529,
+        "布氏硬度": 89,
+        "洛氏硬度": 123,
+        "维氏硬度": 69,
+        "弯曲": 30,
+        "尺寸": 1045,
+        "外观": 380,
+        "晶间腐蚀": 190,
+        "非金属夹杂": 95,
+        "超声波检测": 95,
+        "铁素体": 3
+      },
+      "grades": [
+        "008Cr27Mo",
+        "008Cr30Mo2",
+        "015Cr20Ni18Mo6CuN",
+        "015Cr20Ni25Mo7CuN",
+        "015Cr21Ni26Mo5Cu2",
+        "015Cr24Ni22Mo8Mn3CuN",
+        "019Cr18CuNb",
+        "019Cr18MoTi",
+        "019Cr19Mo2NbTi",
+        "019Cr21CuTi",
+        "019Cr23Mo2Ti",
+        "019Cr23MoTi",
+        "022Cr11NbTi",
+        "022Cr11Ti",
+        "022Cr12",
+        "022Cr12Ni",
+        "022Cr12Ni9Cu2NbTi",
+        "022Cr15NbTi",
+        "022Cr17NbTi",
+        "022Cr17Ni12Mo2",
+        "022Cr17Ni12Mo2N",
+        "022Cr17Ni7",
+        "022Cr17Ni7N",
+        "022Cr17Ti",
+        "022Cr18Nb",
+        "022Cr18NbTi",
+        "022Cr18Ti",
+        "022Cr19Ni10",
+        "022Cr19Ni10N",
+        "022Cr19Ni13Mo3",
+        "022Cr19Ni13Mo4N",
+        "022Cr19Ni16Mo5N",
+        "022Cr19Ni5Mo3Si2N",
+        "022Cr21Mn3Ni3Mo2N",
+        "022Cr21Mn5Ni2N",
+        "022Cr21Ni25Mo7N",
+        "022Cr21Ni3Mo2N",
+        "022Cr22Mn3Ni2MoN",
+        "022Cr22Mn3Ni2N",
+        "022Cr22Ni5Mo3N",
+        "022Cr23Ni2N",
+        "022Cr23Ni4MoCuN",
+        "022Cr23Ni5Mo3N",
+        "022Cr24Ni17Mo5Mn6NbN",
+        "022Cr24Ni4Mn3Mo2CuN",
+        "022Cr25Ni22Mo2N",
+        "022Cr25Ni6Mo2N",
+        "022Cr25Ni7Mo4N",
+        "022Cr25Ni7Mo4WCuN",
+        "022Cr27Ni2Mo4NbTi",
+        "022Cr29Mo4NbTi",
+        "03Cr22Mn5Ni2MoCuN",
+        "03Cr25Ni6Mo3Cu2N",
+        "04Cr13Ni5Mo",
+        "04Cr13Ni8Mo2Al",
+        "05Cr19Ni10Si2CeN",
+        "06Cr13",
+        "06Cr13Al",
+        "06Cr17Ni12Mo2",
+        "06Cr17Ni12Mo2N",
+        "06Cr17Ni12Mo2Nb",
+        "06Cr17Ni12Mo2Ti",
+        "06Cr17Ni7AlTi",
+        "06Cr18Ni11Nb",
+        "06Cr18Ni11Ti",
+        "06Cr18Ni12Mo2Cu2",
+        "06Cr19Ni10",
+        "06Cr19Ni10N",
+        "06Cr19Ni13Mo3",
+        "06Cr19Ni9NbN",
+        "06Cr23Ni13",
+        "06Cr25Ni20",
+        "07Cr15Ni7Mo2Al",
+        "07Cr17Ni12Mo2",
+        "07Cr17Ni7Al",
+        "07Cr18Ni11Nb",
+        "07Cr19Ni10",
+        "07Cr19Ni11Ti",
+        "08Cr21Ni11Si2CeN",
+        "09Cr17Ni5Mo3N",
+        "10Cr15",
+        "10Cr17",
+        "10Cr17Mo",
+        "10Cr18Ni12",
+        "12Cr12",
+        "12Cr13",
+        "12Cr17Ni7",
+        "12Cr18Ni9",
+        "12Cr18Ni9Si3",
+        "12Cr21Ni5Ti",
+        "14Cr18Ni11Si4AlTi",
+        "17Cr16Ni2",
+        "20Cr13",
+        "30Cr13",
+        "40Cr13",
+        "50Cr15MoV",
+        "68Cr17"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 114,
+      "室温拉伸": 157,
+      "洛氏硬度": 17,
+      "尺寸": 933,
+      "外观": 268,
+      "晶间腐蚀": 190,
+      "非金属夹杂": 95,
+      "超声波检测": 95,
+      "铁素体": 3
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 1,
+        "replay": 112
+      },
+      "外观": {
+        "gold": 380,
+        "replay": 112
+      },
+      "室温拉伸": {
+        "gold": 529,
+        "replay": 372
+      },
+      "尺寸": {
+        "gold": 1045,
+        "replay": 112
+      },
+      "布氏硬度": {
+        "gold": 89,
+        "replay": 110
+      },
+      "弯曲": {
+        "gold": 30,
+        "replay": 38
+      },
+      "晶间腐蚀": {
+        "gold": 190,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "洛氏硬度": {
+        "gold": 123,
+        "replay": 106
+      },
+      "热处理制度": {
+        "gold": 114,
+        "replay": 0
+      },
+      "维氏硬度": {
+        "gold": 69,
+        "replay": 73
+      },
+      "超声波检测": {
+        "gold": 95,
+        "replay": 0
+      },
+      "铁素体": {
+        "gold": 3,
+        "replay": 0
+      },
+      "非金属夹杂": {
+        "gold": 95,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "gbt-3880-2-2024",
+    "title": "一般工业用铝及铝合金板、带材 第2部分：力学性能",
+    "tables": 35,
+    "recipes": 35,
+    "records": 6850,
+    "props": 8220,
+    "features": {
+      "室温拉伸": 5480,
+      "弯曲": 2740
+    },
+    "grades": [
+      "1035",
+      "1050",
+      "1050A",
+      "1060",
+      "1070",
+      "1070A",
+      "1080A",
+      "1100",
+      "1145",
+      "1200",
+      "1235",
+      "1350",
+      "1A30",
+      "1A90",
+      "1A99",
+      "2014",
+      "2014A",
+      "2017",
+      "2017A",
+      "2024",
+      "2219",
+      "2A11",
+      "2A12",
+      "2A14",
+      "3003",
+      "3004",
+      "3005",
+      "3102",
+      "3104",
+      "3105",
+      "3105A",
+      "3A21",
+      "4007",
+      "5005",
+      "5005A",
+      "5042",
+      "5049",
+      "5050",
+      "5052",
+      "5059",
+      "5083",
+      "5086",
+      "5154",
+      "5182",
+      "5251",
+      "5252",
+      "5383",
+      "5454",
+      "5456",
+      "5754",
+      "5A02",
+      "5A03",
+      "5A05",
+      "5A06",
+      "5L52",
+      "6005A",
+      "6060",
+      "6061",
+      "6063",
+      "6082",
+      "6A02",
+      "7005",
+      "7020",
+      "7021",
+      "7050",
+      "7075",
+      "7475",
+      "7A04",
+      "7A09",
+      "7A52",
+      "8006",
+      "8011",
+      "8011A",
+      "8021",
+      "8079",
+      "8111",
+      "包铝2014",
+      "包铝2017",
+      "包铝2024",
+      "包铝2219",
+      "包铝2A11",
+      "包铝2A12",
+      "包铝7075",
+      "包铝7475",
+      "包铝7A04",
+      "包铝7A09"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 21,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 85,
+        "props": 102
+      },
+      {
+        "table_id": "T2",
+        "rows": 44,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 200,
+        "props": 240
+      },
+      {
+        "table_id": "T3",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T4",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T5",
+        "rows": 44,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 200,
+        "props": 240
+      },
+      {
+        "table_id": "T6",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T7",
+        "rows": 40,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 180,
+        "props": 216
+      },
+      {
+        "table_id": "T8",
+        "rows": 40,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 180,
+        "props": 216
+      },
+      {
+        "table_id": "T9",
+        "rows": 41,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 185,
+        "props": 222
+      },
+      {
+        "table_id": "T10",
+        "rows": 40,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 180,
+        "props": 216
+      },
+      {
+        "table_id": "T11",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T12",
+        "rows": 42,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 190,
+        "props": 228
+      },
+      {
+        "table_id": "T13",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T14",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T15",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T16",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T17",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T18",
+        "rows": 44,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 240,
+        "props": 288
+      },
+      {
+        "table_id": "T19",
+        "rows": 45,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 360,
+        "props": 432
+      },
+      {
+        "table_id": "T20",
+        "rows": 40,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 180,
+        "props": 216
+      },
+      {
+        "table_id": "T21",
+        "rows": 44,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 200,
+        "props": 240
+      },
+      {
+        "table_id": "T22",
+        "rows": 41,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 185,
+        "props": 222
+      },
+      {
+        "table_id": "T23",
+        "rows": 42,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 190,
+        "props": 228
+      },
+      {
+        "table_id": "T24",
+        "rows": 40,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 180,
+        "props": 216
+      },
+      {
+        "table_id": "T25",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 195,
+        "props": 234
+      },
+      {
+        "table_id": "T26",
+        "rows": 40,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 180,
+        "props": 216
+      },
+      {
+        "table_id": "T27",
+        "rows": 44,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 200,
+        "props": 240
+      },
+      {
+        "table_id": "T28",
+        "rows": 40,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 180,
+        "props": 216
+      },
+      {
+        "table_id": "T29",
+        "rows": 42,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 190,
+        "props": 228
+      },
+      {
+        "table_id": "T30",
+        "rows": 45,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 205,
+        "props": 246
+      },
+      {
+        "table_id": "T31",
+        "rows": 53,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 245,
+        "props": 294
+      },
+      {
+        "table_id": "T32",
+        "rows": 53,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 245,
+        "props": 294
+      },
+      {
+        "table_id": "T33",
+        "rows": 52,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 240,
+        "props": 288
+      },
+      {
+        "table_id": "T34",
+        "rows": 42,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 260,
+        "props": 312
+      },
+      {
+        "table_id": "T35",
+        "rows": 8,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.734,
+        "records": 20,
+        "props": 24
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "室温拉伸": 5480,
+        "弯曲": 2740
+      },
+      "grades": [
+        "1035",
+        "1050",
+        "1050A",
+        "1060",
+        "1070",
+        "1070A",
+        "1080A",
+        "1100",
+        "1145",
+        "1200",
+        "1235",
+        "1350",
+        "1A30",
+        "1A90",
+        "1A99",
+        "2014",
+        "2014A",
+        "2017",
+        "2017A",
+        "2024",
+        "2219",
+        "2A11",
+        "2A12",
+        "2A14",
+        "3003",
+        "3004",
+        "3005",
+        "3102",
+        "3104",
+        "3105",
+        "3105A",
+        "3A21",
+        "4007",
+        "5005",
+        "5005A",
+        "5042",
+        "5049",
+        "5050",
+        "5052",
+        "5059",
+        "5083",
+        "5086",
+        "5154",
+        "5182",
+        "5251",
+        "5252",
+        "5383",
+        "5454",
+        "5456",
+        "5754",
+        "5A02",
+        "5A03",
+        "5A05",
+        "5A06",
+        "5L52",
+        "6005A",
+        "6060",
+        "6061",
+        "6063",
+        "6082",
+        "6A02",
+        "7005",
+        "7020",
+        "7021",
+        "7050",
+        "7075",
+        "7475",
+        "7A04",
+        "7A09",
+        "7A52",
+        "8006",
+        "8011",
+        "8011A",
+        "8021",
+        "8079",
+        "8111",
+        "包铝2014",
+        "包铝2017",
+        "包铝2024",
+        "包铝2219",
+        "包铝2A11",
+        "包铝2A12",
+        "包铝7075",
+        "包铝7475",
+        "包铝7A04",
+        "包铝7A09"
+      ]
+    },
+    "missing": {
+      "标准信息": 1
+    },
+    "feature_rows": {
+      "室温拉伸": {
+        "gold": 5480,
+        "replay": 5480
+      },
+      "弯曲": {
+        "gold": 2740,
+        "replay": 2740
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "gbt-5231-2022",
+    "title": "加工铜及铜合金牌号和化学成分",
+    "tables": 23,
+    "recipes": 23,
+    "records": 640,
+    "props": 4840,
+    "features": {
+      "化学成分": 4840
+    },
+    "grades": [
+      "B0.6",
+      "B19b",
+      "B23",
+      "B25",
+      "B30",
+      "B5",
+      "BAl13-3",
+      "BAl6-1.5",
+      "BCo19-0.4",
+      "BFe10-1-1",
+      "BFe10-1.4-1",
+      "BFe10-1.5-1",
+      "BFe10-1.6-1",
+      "BFe16-1-1-0.5",
+      "BFe30-0.7",
+      "BFe30-1-1",
+      "BFe30-2-2",
+      "BFe5-1.5-0.5",
+      "BFe7-0.4-0.4",
+      "BMn3-12",
+      "BMn40-1.5",
+      "BMn43-0.5",
+      "BSi2-0.45",
+      "BSi2-0.8",
+      "BSi3.2-0.7",
+      "BSi7-2-1",
+      "BSn15-8",
+      "BSn9-6",
+      "BZn10-25",
+      "BZn10-41-2",
+      "BZn12-24-1.1",
+      "BZn12-24f",
+      "BZn12-26f",
+      "BZn12-29f",
+      "BZn12-37-1.5",
+      "BZn12-38-2",
+      "BZn14-24",
+      "BZn15-20",
+      "BZn15-21-1.8",
+      "BZn15-24-1.5",
+      "BZn18-10",
+      "BZn18-17",
+      "BZn18-18",
+      "BZn18-20f",
+      "BZn18-26",
+      "BZn22-16f",
+      "BZn25-18f",
+      "BZn40-20f",
+      "BZn8-26",
+      "BZn9-29f",
+      "H58",
+      "H59",
+      "H60",
+      "H62",
+      "H62.5",
+      "H63",
+      "H65",
+      "H66",
+      "H68",
+      "H70",
+      "H80",
+      "H85",
+      "H90",
+      "H95",
+      "H96",
+      "HAl58-1.2",
+      "HAl58-4-4-1",
+      "HAl59-3-2",
+      "HAl60-1-1",
+      "HAl60-4-3-1",
+      "HAl60-5-2-2",
+      "HAl61-1-1",
+      "HAl61-4-3-1",
+      "HAl61-4-3-1.5",
+      "HAl63-0.6-0.2",
+      "HAl64-5-4-2",
+      "HAl66-6-3-2",
+      "HAl67-2.5",
+      "HAl77-2",
+      "HAs62-0.04",
+      "HAs63-0.04",
+      "HAs63-0.1",
+      "HAs65-0.04",
+      "HAs68-0.04",
+      "HAs70-0.05",
+      "HAs85-0.05",
+      "HB90-0.1",
+      "HBi58-1.5",
+      "HBi59-1",
+      "HBi60-0.5-0.01",
+      "HBi60-0.8-0.01",
+      "HBi60-1.0-0.05",
+      "HBi60-1.1-0.01",
+      "HBi60-1.3",
+      "HBi60-2",
+      "HBi62-1",
+      "HBi62-1.4-1",
+      "HCr90-0.3",
+      "HFe58-1-1",
+      "HFe59-1-1",
+      "HMg60-1",
+      "HMn55-3-1",
+      "HMn57-2-1.7-0.5",
+      "HMn57-2-2-1",
+      "HMn57-3-1g",
+      "HMn58-2-1-0.5",
+      "HMn58-2-2-0.5",
+      "HMn58-2g",
+      "HMn58-3-1-1",
+      "HMn58-3-2-0.8",
+      "HMn59-2-15.-05.",
+      "HMn60-3-1.7-1",
+      "HMn61-2-1-0.5",
+      "HMn61-2-1-1",
+      "HMn61-3-1",
+      "HMn62-13",
+      "HMn62-3-3-0.7",
+      "HMn62-3-3-1",
+      "HMn64-8-5-1.5",
+      "HNi55-7-4-2",
+      "HNi56-3",
+      "HNi65-5",
+      "HPb57-3",
+      "HPb57-4",
+      "HPb58-2",
+      "HPb58-3",
+      "HPb59-1",
+      "HPb59-1.8",
+      "HPb59-2",
+      "HPb59-2.8",
+      "HPb59-3",
+      "HPb60-2",
+      "HPb60-3",
+      "HPb61-1",
+      "HPb61-1.5",
+      "HPb61-2-0.1",
+      "HPb61-2-1",
+      "HPb61-3",
+      "HPb62-0.8",
+      "HPb62-1-0.6",
+      "HPb62-2",
+      "HPb62-2-0.1",
+      "HPb62-3",
+      "HPb62-3.4",
+      "HPb63-0.1",
+      "HPb63-1-0.6",
+      "HPb63-1.5",
+      "HPb63-1.5-0.6",
+      "HPb63-3",
+      "HPb65-1.5",
+      "HPb66-0.5",
+      "HPb89-2",
+      "HSb60-0.9",
+      "HSb61-0.8-0.5",
+      "HSi58-1.2",
+      "HSi61-0.6",
+      "HSi62-0.6",
+      "HSi68-1",
+      "HSi68-1.5",
+      "HSi75-3",
+      "HSi76-3-0.06",
+      "HSi80-3",
+      "HSn60-0.4-0.2",
+      "HSn60-0.8",
+      "HSn60-1",
+      "HSn60-1-0.04",
+      "HSn61-0.8-1.8",
+      "HSn62-1",
+      "HSn65-0.03",
+      "HSn70-1",
+      "HSn70-1-0.01",
+      "HSn70-1-0.01-0.04",
+      "HSn71-1",
+      "HSn71-1-0.06",
+      "HSn72-1",
+      "HSn75-1",
+      "HSn88-0.7",
+      "HSn88-1",
+      "HSn88-2",
+      "HSn90-1",
+      "QAl10-3-1.5f",
+      "QAl10-4-4-1",
+      "QAl10-4-4g",
+      "QAl10-5-3",
+      "QAl10-5-5",
+      "QAl10-6-5",
+      "QAl11-3",
+      "QAl11-6-6",
+      "QAl13-4",
+      "QAl14-3",
+      "QAl5",
+      "QAl6",
+      "QAl6.5-2",
+      "QAl7",
+      "QAl7-2",
+      "QAl7-3-0.4",
+      "QAl9-2",
+      "QAl9-3",
+      "QAl9-4",
+      "QAl9-4-1-1",
+      "QAl9-4-4",
+      "QAl9-5-1-1",
+      "QCr45.-25.-06.",
+      "QMn1.5",
+      "QMn11-35.-15.",
+      "QMn2",
+      "QMn5",
+      "QSi0.6-2",
+      "QSi0.6-2.1",
+      "QSi1-3",
+      "QSi3-1a",
+      "QSi3.5-3-1.5",
+      "QSn0.4",
+      "QSn0.5-0.025",
+      "QSn0.6",
+      "QSn0.9",
+      "QSn1-0.5-0.5",
+      "QSn1.4",
+      "QSn1.5-0.2",
+      "QSn1.8",
+      "QSn10-0.2",
+      "QSn15-1-1",
+      "QSn2-0.1-0.03",
+      "QSn2-0.2",
+      "QSn4-0.15-0.10-0.03",
+      "QSn4-0.3",
+      "QSn4-3",
+      "QSn4-4-2.5",
+      "QSn4-4-4",
+      "QSn4.6-1-0.2",
+      "QSn5-0.2",
+      "QSn5-0.3",
+      "QSn6-0.05",
+      "QSn6-0.2",
+      "QSn6.5-0.1",
+      "QSn6.5-0.4",
+      "QSn7-0.2",
+      "QSn8-0.3",
+      "T1",
+      "T1.5",
+      "T2d",
+      "T3",
+      "TAg0.05",
+      "TAg0.08",
+      "TAg0.1",
+      "TAg0.15",
+      "TAg0.2",
+      "TAg01.-0.01",
+      "TBe0.3-0.5",
+      "TBe0.3-0.7",
+      "TBe0.3-1.2",
+      "TBe0.3-1.5",
+      "TBe0.4-1.8",
+      "TBe0.6-2.5",
+      "TBe1.7",
+      "TBe1.9",
+      "TBe1.9-0.1",
+      "TBe1.9-0.2",
+      "TBe1.9-0.4",
+      "TBe2",
+      "TBe2.4",
+      "TBe2.8",
+      "TCd1",
+      "TCr0.3-0.1-0.02",
+      "TCr0.3-0.1-0.02-0.03",
+      "TCr0.3-0.15-0.03",
+      "TCr0.3-0.2-0.05",
+      "TCr0.3-0.3",
+      "TCr0.5",
+      "TCr0.5-0.1",
+      "TCr0.5-0.15-0.1",
+      "TCr0.5-0.2-0.1",
+      "TCr0.6",
+      "TCr0.6-0.4-0.05",
+      "TCr0.7",
+      "TCr0.8",
+      "TCr0.9",
+      "TCr1",
+      "TCr1-0.15",
+      "TCr1-0.18",
+      "TFe0.1",
+      "TFe0.75",
+      "TFe1.0",
+      "TFe2.5",
+      "TFe5",
+      "TMg0.15",
+      "TMg0.2",
+      "TMg0.25",
+      "TMg0.3-0.2",
+      "TMg0.35",
+      "TMg0.4",
+      "TMg0.45",
+      "TMg0.5",
+      "TMg0.6-0.2",
+      "TMg0.8",
+      "TNi0.6-0.2",
+      "TNi1-1-0.25",
+      "TNi1.1-0.25",
+      "TNi1.3-0.25",
+      "TNi24.-06.-05.",
+      "TP1",
+      "TP2",
+      "TP3",
+      "TP4",
+      "TPb1",
+      "TS0.4",
+      "TSn0.12",
+      "TSn0.15",
+      "TSn0.3",
+      "TSn0.5",
+      "TSn01.5-0.01",
+      "TSn1.5-0.8-0.06",
+      "TSn2-0.2-0.06",
+      "TSn2-0.6-0.15",
+      "TTe0.3",
+      "TTe0.5",
+      "TTe0.5-0.02",
+      "TTe05.-0.008",
+      "TTi3.0",
+      "TTi3.0-0.2",
+      "TU0",
+      "TU00",
+      "TU00Ag0.06",
+      "TU1",
+      "TU2",
+      "TU3",
+      "TUAg0.03",
+      "TUAg0.05",
+      "TUAg0.08",
+      "TUAg0.1",
+      "TUAg0.2",
+      "TUAg0.3",
+      "TUAl0.12",
+      "TUAl0.15",
+      "TUAl0.25",
+      "TUAl0.35",
+      "TUAl0.60",
+      "TUP0.002",
+      "TUP0.003",
+      "TUP0.008",
+      "TUZr0.15",
+      "TZn0.9-0.5",
+      "TZr0.15h",
+      "TZr0.1h",
+      "TZr0.2",
+      "TZr0.4"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 17,
+        "cols": 17,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 16,
+        "props": 208
+      },
+      {
+        "table_id": "T2",
+        "rows": 20,
+        "cols": 17,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 19,
+        "props": 247
+      },
+      {
+        "table_id": "T3",
+        "rows": 18,
+        "cols": 17,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 17,
+        "props": 221
+      },
+      {
+        "table_id": "T4",
+        "rows": 16,
+        "cols": 20,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.737,
+        "records": 30,
+        "props": 240
+      },
+      {
+        "table_id": "T5",
+        "rows": 12,
+        "cols": 20,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.737,
+        "records": 22,
+        "props": 176
+      },
+      {
+        "table_id": "T6",
+        "rows": 12,
+        "cols": 20,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.737,
+        "records": 22,
+        "props": 176
+      },
+      {
+        "table_id": "T7",
+        "rows": 12,
+        "cols": 20,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.737,
+        "records": 22,
+        "props": 176
+      },
+      {
+        "table_id": "T8",
+        "rows": 9,
+        "cols": 20,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.737,
+        "records": 16,
+        "props": 128
+      },
+      {
+        "table_id": "T9",
+        "rows": 22,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.759,
+        "records": 42,
+        "props": 252
+      },
+      {
+        "table_id": "T10",
+        "rows": 19,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.759,
+        "records": 36,
+        "props": 216
+      },
+      {
+        "table_id": "T11",
+        "rows": 16,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.759,
+        "records": 30,
+        "props": 180
+      },
+      {
+        "table_id": "T12",
+        "rows": 23,
+        "cols": 18,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.757,
+        "records": 44,
+        "props": 308
+      },
+      {
+        "table_id": "T13",
+        "rows": 13,
+        "cols": 18,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.756,
+        "records": 24,
+        "props": 168
+      },
+      {
+        "table_id": "T14",
+        "rows": 13,
+        "cols": 18,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.756,
+        "records": 24,
+        "props": 168
+      },
+      {
+        "table_id": "T15",
+        "rows": 16,
+        "cols": 16,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.758,
+        "records": 30,
+        "props": 180
+      },
+      {
+        "table_id": "T16",
+        "rows": 12,
+        "cols": 16,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.758,
+        "records": 22,
+        "props": 132
+      },
+      {
+        "table_id": "T17",
+        "rows": 5,
+        "cols": 18,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.756,
+        "records": 8,
+        "props": 56
+      },
+      {
+        "table_id": "T18",
+        "rows": 27,
+        "cols": 16,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.759,
+        "records": 52,
+        "props": 338
+      },
+      {
+        "table_id": "T19",
+        "rows": 24,
+        "cols": 19,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.756,
+        "records": 46,
+        "props": 368
+      },
+      {
+        "table_id": "T20",
+        "rows": 10,
+        "cols": 19,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.756,
+        "records": 18,
+        "props": 144
+      },
+      {
+        "table_id": "T21",
+        "rows": 22,
+        "cols": 17,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.759,
+        "records": 42,
+        "props": 294
+      },
+      {
+        "table_id": "T22",
+        "rows": 19,
+        "cols": 19,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.757,
+        "records": 36,
+        "props": 288
+      },
+      {
+        "table_id": "T23",
+        "rows": 12,
+        "cols": 19,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.757,
+        "records": 22,
+        "props": 176
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 5024
+      },
+      "grades": [
+        "B0.6",
+        "B19b",
+        "B23",
+        "B25",
+        "B30",
+        "B5",
+        "BAl13-3",
+        "BAl6-1.5",
+        "BCo19-0.4",
+        "BFe10-1-1",
+        "BFe10-1.4-1",
+        "BFe10-1.5-1",
+        "BFe10-1.6-1",
+        "BFe16-1-1-0.5",
+        "BFe30-0.7",
+        "BFe30-1-1",
+        "BFe30-2-2",
+        "BFe5-1.5-0.5",
+        "BFe7-0.4-0.4",
+        "BMn3-12",
+        "BMn40-1.5",
+        "BMn43-0.5",
+        "BSi2-0.45",
+        "BSi2-0.8",
+        "BSi3.2-0.7",
+        "BSi7-2-1",
+        "BSn15-8",
+        "BSn9-6",
+        "BZn10-25",
+        "BZn10-41-2",
+        "BZn12-24-1.1",
+        "BZn12-24f",
+        "BZn12-26f",
+        "BZn12-29f",
+        "BZn12-37-1.5",
+        "BZn12-38-2",
+        "BZn14-24",
+        "BZn15-20",
+        "BZn15-21-1.8",
+        "BZn15-24-1.5",
+        "BZn18-10",
+        "BZn18-17",
+        "BZn18-18",
+        "BZn18-20f",
+        "BZn18-26",
+        "BZn22-16f",
+        "BZn25-18f",
+        "BZn40-20f",
+        "BZn8-26",
+        "BZn9-29f",
+        "H58",
+        "H59",
+        "H60",
+        "H62",
+        "H62.5",
+        "H63",
+        "H65",
+        "H66",
+        "H68",
+        "H70",
+        "H80",
+        "H85",
+        "H90",
+        "H95",
+        "H96",
+        "HAl58-1.2",
+        "HAl58-4-4-1",
+        "HAl59-3-2",
+        "HAl60-1-1",
+        "HAl60-4-3-1",
+        "HAl60-5-2-2",
+        "HAl61-1-1",
+        "HAl61-4-3-1",
+        "HAl61-4-3-1.5",
+        "HAl63-0.6-0.2",
+        "HAl64-5-4-2",
+        "HAl66-6-3-2",
+        "HAl67-2.5",
+        "HAl77-2",
+        "HAs62-0.04",
+        "HAs63-0.04",
+        "HAs63-0.1",
+        "HAs65-0.04",
+        "HAs68-0.04",
+        "HAs70-0.05",
+        "HAs85-0.05",
+        "HB90-0.1",
+        "HBi58-1.5",
+        "HBi59-1",
+        "HBi60-0.5-0.01",
+        "HBi60-0.8-0.01",
+        "HBi60-1.0-0.05",
+        "HBi60-1.1-0.01",
+        "HBi60-1.3",
+        "HBi60-2",
+        "HBi62-1",
+        "HBi62-1.4-1",
+        "HCr90-0.3",
+        "HFe58-1-1",
+        "HFe59-1-1",
+        "HMg60-1",
+        "HMn55-3-1",
+        "HMn57-2-1.7-0.5",
+        "HMn57-2-2-1",
+        "HMn57-3-1g",
+        "HMn58-2-1-0.5",
+        "HMn58-2-2-0.5",
+        "HMn58-2g",
+        "HMn58-3-1-1",
+        "HMn58-3-2-0.8",
+        "HMn59-2-15.-05.",
+        "HMn60-3-1.7-1",
+        "HMn61-2-1-0.5",
+        "HMn61-2-1-1",
+        "HMn61-3-1",
+        "HMn62-13",
+        "HMn62-3-3-0.7",
+        "HMn62-3-3-1",
+        "HMn64-8-5-1.5",
+        "HNi55-7-4-2",
+        "HNi56-3",
+        "HNi65-5",
+        "HPb57-3",
+        "HPb57-4",
+        "HPb58-2",
+        "HPb58-3",
+        "HPb59-1",
+        "HPb59-1.8",
+        "HPb59-2",
+        "HPb59-2.8",
+        "HPb59-3",
+        "HPb60-2",
+        "HPb60-3",
+        "HPb61-1",
+        "HPb61-1.5",
+        "HPb61-2-0.1",
+        "HPb61-2-1",
+        "HPb61-3",
+        "HPb62-0.8",
+        "HPb62-1-0.6",
+        "HPb62-2",
+        "HPb62-2-0.1",
+        "HPb62-3",
+        "HPb62-3.4",
+        "HPb63-0.1",
+        "HPb63-1-0.6",
+        "HPb63-1.5",
+        "HPb63-1.5-0.6",
+        "HPb63-3",
+        "HPb65-1.5",
+        "HPb66-0.5",
+        "HPb89-2",
+        "HSb60-0.9",
+        "HSb61-0.8-0.5",
+        "HSi58-1.2",
+        "HSi61-0.6",
+        "HSi62-0.6",
+        "HSi68-1",
+        "HSi68-1.5",
+        "HSi75-3",
+        "HSi76-3-0.06",
+        "HSi80-3",
+        "HSn60-0.4-0.2",
+        "HSn60-0.8",
+        "HSn60-1",
+        "HSn60-1-0.04",
+        "HSn61-0.8-1.8",
+        "HSn62-1",
+        "HSn65-0.03",
+        "HSn70-1",
+        "HSn70-1-0.01",
+        "HSn70-1-0.01-0.04",
+        "HSn71-1",
+        "HSn71-1-0.06",
+        "HSn72-1",
+        "HSn75-1",
+        "HSn88-0.7",
+        "HSn88-1",
+        "HSn88-2",
+        "HSn90-1",
+        "QAl10-3-1.5f",
+        "QAl10-4-4-1",
+        "QAl10-4-4g",
+        "QAl10-5-3",
+        "QAl10-5-5",
+        "QAl10-6-5",
+        "QAl11-3",
+        "QAl11-6-6",
+        "QAl13-4",
+        "QAl14-3",
+        "QAl5",
+        "QAl6",
+        "QAl6.5-2",
+        "QAl7",
+        "QAl7-2",
+        "QAl7-3-0.4",
+        "QAl9-2",
+        "QAl9-3",
+        "QAl9-4",
+        "QAl9-4-1-1",
+        "QAl9-4-4",
+        "QAl9-5-1-1",
+        "QCr45.-25.-06.",
+        "QMn1.5",
+        "QMn11-35.-15.",
+        "QMn2",
+        "QMn5",
+        "QSi0.6-2",
+        "QSi0.6-2.1",
+        "QSi1-3",
+        "QSi3-1a",
+        "QSi3.5-3-1.5",
+        "QSn0.4",
+        "QSn0.5-0.025",
+        "QSn0.6",
+        "QSn0.9",
+        "QSn1-0.5-0.5",
+        "QSn1.4",
+        "QSn1.5-0.2",
+        "QSn1.8",
+        "QSn10-0.2",
+        "QSn15-1-1",
+        "QSn2-0.1-0.03",
+        "QSn2-0.2",
+        "QSn4-0.15-0.10-0.03",
+        "QSn4-0.3",
+        "QSn4-3",
+        "QSn4-4-2.5",
+        "QSn4-4-4",
+        "QSn4.6-1-0.2",
+        "QSn5-0.2",
+        "QSn5-0.3",
+        "QSn6-0.05",
+        "QSn6-0.2",
+        "QSn6.5-0.1",
+        "QSn6.5-0.4",
+        "QSn7-0.2",
+        "QSn8-0.3",
+        "T1",
+        "T1.5",
+        "T2d",
+        "T3",
+        "TAg0.05",
+        "TAg0.08",
+        "TAg0.1",
+        "TAg0.15",
+        "TAg0.2",
+        "TAg01.-0.01",
+        "TBe0.3-0.5",
+        "TBe0.3-0.7",
+        "TBe0.3-1.2",
+        "TBe0.3-1.5",
+        "TBe0.4-1.8",
+        "TBe0.6-2.5",
+        "TBe1.7",
+        "TBe1.9",
+        "TBe1.9-0.1",
+        "TBe1.9-0.2",
+        "TBe1.9-0.4",
+        "TBe2",
+        "TBe2.4",
+        "TBe2.8",
+        "TCd1",
+        "TCr0.3-0.1-0.02",
+        "TCr0.3-0.1-0.02-0.03",
+        "TCr0.3-0.15-0.03",
+        "TCr0.3-0.2-0.05",
+        "TCr0.3-0.3",
+        "TCr0.5",
+        "TCr0.5-0.1",
+        "TCr0.5-0.15-0.1",
+        "TCr0.5-0.2-0.1",
+        "TCr0.6",
+        "TCr0.6-0.4-0.05",
+        "TCr0.7",
+        "TCr0.8",
+        "TCr0.9",
+        "TCr1",
+        "TCr1-0.15",
+        "TCr1-0.18",
+        "TFe0.1",
+        "TFe0.75",
+        "TFe1.0",
+        "TFe2.5",
+        "TFe5",
+        "TMg0.15",
+        "TMg0.2",
+        "TMg0.25",
+        "TMg0.3-0.2",
+        "TMg0.35",
+        "TMg0.4",
+        "TMg0.45",
+        "TMg0.5",
+        "TMg0.6-0.2",
+        "TMg0.8",
+        "TNi0.6-0.2",
+        "TNi1-1-0.25",
+        "TNi1.1-0.25",
+        "TNi1.3-0.25",
+        "TNi24.-06.-05.",
+        "TP1",
+        "TP2",
+        "TP3",
+        "TP4",
+        "TPb1",
+        "TS0.4",
+        "TSn0.12",
+        "TSn0.15",
+        "TSn0.3",
+        "TSn0.5",
+        "TSn01.5-0.01",
+        "TSn1.5-0.8-0.06",
+        "TSn2-0.2-0.06",
+        "TSn2-0.6-0.15",
+        "TTe0.3",
+        "TTe0.5",
+        "TTe0.5-0.02",
+        "TTe05.-0.008",
+        "TTi3.0",
+        "TTi3.0-0.2",
+        "TU0",
+        "TU00",
+        "TU00Ag0.06",
+        "TU1",
+        "TU2",
+        "TU3",
+        "TUAg0.03",
+        "TUAg0.05",
+        "TUAg0.08",
+        "TUAg0.1",
+        "TUAg0.2",
+        "TUAg0.3",
+        "TUAl0.12",
+        "TUAl0.15",
+        "TUAl0.25",
+        "TUAl0.35",
+        "TUAl0.60",
+        "TUP0.002",
+        "TUP0.003",
+        "TUP0.008",
+        "TUZr0.15",
+        "TZn0.9-0.5",
+        "TZr0.15h",
+        "TZr0.1h",
+        "TZr0.2",
+        "TZr0.4"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 184
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 5024,
+        "replay": 4840
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "gjb-5040-2001",
+    "title": "航空用钢锻件规范",
+    "tables": 10,
+    "recipes": 10,
+    "records": 230,
+    "props": 718,
+    "features": {
+      "布氏硬度": 146,
+      "硬度试验": 138,
+      "室温拉伸": 346,
+      "夏比冲击": 88
+    },
+    "grades": [
+      "0Cr17Ni4Cu4Nb",
+      "10A",
+      "12Cr2Ni4A",
+      "12CrNi3A",
+      "13Ni5A",
+      "14CrMnSiNi2MoA",
+      "15A",
+      "15Cr2MnNi2TiA",
+      "15CrA",
+      "16Cr2MnTiA",
+      "18Cr2Ni4WA",
+      "1Cr11Ni2W2MoV",
+      "1Cr12MoV",
+      "1Cr12Ni2WMoVNb",
+      "1Cr13",
+      "1Cr14Ni3W2VB",
+      "1Cr17Ni2",
+      "1Cr18Mn8Ni5N",
+      "1Cr18Ni11Si4AlTi",
+      "1Cr18Ni9",
+      "1Cr18Ni9Ti",
+      "1Cr21Ni5Ti",
+      "1Cr23Ni18",
+      "20A",
+      "20CrA",
+      "20CrMnA",
+      "20CrMoA",
+      "20CrNi3A",
+      "21Ni5A",
+      "25A",
+      "25CrMnNiTiA",
+      "2Cr13",
+      "2Cr13Mn9Ni4",
+      "2Cr13Ni2",
+      "2Cr18Ni8W2",
+      "2Cr18Ni9",
+      "2Cr3WMoV",
+      "30Cr2Ni2WA",
+      "30Cr2Ni2WVA",
+      "30CrMnSiA",
+      "30CrMnSiNi2A",
+      "37CrNi3A",
+      "38CrA",
+      "38CrMoAlA",
+      "3Cr13",
+      "3Cr13Ni7Si2",
+      "40CrA",
+      "40CrMnSiMoVA",
+      "40CrNiMoA",
+      "40CrNiWA",
+      "40CrVA",
+      "45A",
+      "4Cr10Si2Mo",
+      "4Cr13",
+      "4Cr14Ni14W2Mo",
+      "50A",
+      "50CrVA",
+      "9Cr18"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 28,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 54,
+        "props": 81
+      },
+      {
+        "table_id": "T2",
+        "rows": 32,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 62,
+        "props": 97
+      },
+      {
+        "table_id": "T3",
+        "rows": 9,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 16,
+        "props": 26
+      },
+      {
+        "table_id": "T4",
+        "rows": 21,
+        "cols": 12,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.736,
+        "records": 18,
+        "props": 108
+      },
+      {
+        "table_id": "T5",
+        "rows": 22,
+        "cols": 12,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.736,
+        "records": 19,
+        "props": 114
+      },
+      {
+        "table_id": "T6",
+        "rows": 21,
+        "cols": 12,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.736,
+        "records": 18,
+        "props": 108
+      },
+      {
+        "table_id": "T7",
+        "rows": 18,
+        "cols": 12,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.736,
+        "records": 15,
+        "props": 90
+      },
+      {
+        "table_id": "T8",
+        "rows": 13,
+        "cols": 12,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.736,
+        "records": 10,
+        "props": 60
+      },
+      {
+        "table_id": "T9",
+        "rows": 7,
+        "cols": 3,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.669,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T10",
+        "rows": 10,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.756,
+        "records": 22,
+        "props": 38
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 66,
+        "室温拉伸": 352,
+        "夏比冲击": 88,
+        "布氏硬度": 146,
+        "低倍": 291,
+        "断口": 81,
+        "晶粒度": 27,
+        "非金属夹杂": 58,
+        "晶间腐蚀": 58,
+        "超声波检测": 58,
+        "外观": 348,
+        "尺寸": 116
+      },
+      "grades": [
+        "0Cr17Ni4Cu4Nb",
+        "10A",
+        "12Cr2Ni4A",
+        "12CrNi3A",
+        "13Ni5A",
+        "14CrMnSiNi2MoA",
+        "15A",
+        "15Cr2MnNi2TiA",
+        "15CrA",
+        "16Cr2MnTiA",
+        "18Cr2Ni4WA",
+        "1Cr11Ni2W2MoV",
+        "1Cr12MoV",
+        "1Cr12Ni2WMoVNb",
+        "1Cr13",
+        "1Cr14Ni3W2VB",
+        "1Cr17Ni2",
+        "1Cr18Mn8Ni5N",
+        "1Cr18Ni11Si4AlTi",
+        "1Cr18Ni9",
+        "1Cr18Ni9Ti",
+        "1Cr21Ni5Ti",
+        "1Cr23Ni18",
+        "20A",
+        "20CrA",
+        "20CrMnA",
+        "20CrMoA",
+        "20CrNi3A",
+        "21Ni5A",
+        "25A",
+        "25CrMnNiTiA",
+        "2Cr13",
+        "2Cr13Mn9Ni4",
+        "2Cr13Ni2",
+        "2Cr18Ni8W2",
+        "2Cr18Ni9",
+        "2Cr3WMoV",
+        "30Cr2Ni2WA",
+        "30Cr2Ni2WVA",
+        "30CrMnSiA",
+        "30CrMnSiNi2A",
+        "37CrNi3A",
+        "38CrA",
+        "38CrMoAlA",
+        "3Cr13",
+        "3Cr13Ni7Si2",
+        "40CrA",
+        "40CrMnSiMoVA",
+        "40CrNiMoA",
+        "40CrNiWA",
+        "40CrVA",
+        "45A",
+        "4Cr10Si2Mo",
+        "4Cr13",
+        "4Cr14Ni14W2Mo",
+        "50A",
+        "50CrVA",
+        "9Cr18"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 66,
+      "室温拉伸": 6,
+      "低倍": 291,
+      "断口": 81,
+      "晶粒度": 27,
+      "非金属夹杂": 58,
+      "晶间腐蚀": 58,
+      "超声波检测": 58,
+      "外观": 348,
+      "尺寸": 116
+    },
+    "feature_rows": {
+      "低倍": {
+        "gold": 291,
+        "replay": 0
+      },
+      "夏比冲击": {
+        "gold": 88,
+        "replay": 88
+      },
+      "外观": {
+        "gold": 348,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 352,
+        "replay": 346
+      },
+      "尺寸": {
+        "gold": 116,
+        "replay": 0
+      },
+      "布氏硬度": {
+        "gold": 146,
+        "replay": 146
+      },
+      "断口": {
+        "gold": 81,
+        "replay": 0
+      },
+      "晶粒度": {
+        "gold": 27,
+        "replay": 0
+      },
+      "晶间腐蚀": {
+        "gold": 58,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "热处理制度": {
+        "gold": 66,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 58,
+        "replay": 0
+      },
+      "非金属夹杂": {
+        "gold": 58,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "hb-20079-2012",
+    "title": "航空用高强度沉淀硬化不锈钢锻件规范",
+    "tables": 9,
+    "recipes": 9,
+    "records": 42,
+    "props": 241,
+    "features": {
+      "化学成分": 78,
+      "布氏硬度": 8,
+      "硬度试验": 23,
+      "室温拉伸": 76,
+      "洛氏硬度": 13,
+      "断裂韧度": 19,
+      "夏比冲击": 20,
+      "高温拉伸": 4
+    },
+    "grades": [
+      "0Cr12Mn5Ni4Mo3Al",
+      "0Cr13Ni8Mo2Al",
+      "0Cr15Ni5Cu2Ti",
+      "0Cr15Ni5Cu4Nb",
+      "0Cr16Ni6",
+      "1Cr15Ni4Mo3N"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 7,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.763,
+        "records": 6,
+        "props": 78
+      },
+      {
+        "table_id": "T2",
+        "rows": 7,
+        "cols": 15,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.763,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T3",
+        "rows": 9,
+        "cols": 5,
+        "profile": "mechanical_properties",
+        "recipe": "hardness_v1",
+        "status": "candidate",
+        "score": 0.743,
+        "records": 16,
+        "props": 31
+      },
+      {
+        "table_id": "T4",
+        "rows": 16,
+        "cols": 4,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.65,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T5",
+        "rows": 5,
+        "cols": 4,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.65,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T6",
+        "rows": 20,
+        "cols": 14,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.683,
+        "records": 17,
+        "props": 113
+      },
+      {
+        "table_id": "T7",
+        "rows": 5,
+        "cols": 14,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.683,
+        "records": 2,
+        "props": 14
+      },
+      {
+        "table_id": "T8",
+        "rows": 4,
+        "cols": 12,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.731,
+        "records": 1,
+        "props": 5
+      },
+      {
+        "table_id": "T9",
+        "rows": 8,
+        "cols": 6,
+        "profile": "inspection",
+        "recipe": "inspection_rules_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 42,
+        "化学成分": 156,
+        "室温拉伸": 80,
+        "夏比冲击": 20,
+        "洛氏硬度": 19,
+        "断裂韧度": 19,
+        "低倍": 6,
+        "晶粒度": 2,
+        "铁素体": 2,
+        "超声波检测": 6,
+        "外观": 12,
+        "尺寸": 12
+      },
+      "grades": [
+        "0Cr12Mn5Ni4Mo3Al",
+        "0Cr13Ni8Mo2Al",
+        "0Cr15Ni5Cu2Ti",
+        "0Cr15Ni5Cu4Nb",
+        "0Cr16Ni6",
+        "1Cr15Ni4Mo3N"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 42,
+      "化学成分": 78,
+      "室温拉伸": 4,
+      "洛氏硬度": 6,
+      "低倍": 6,
+      "晶粒度": 2,
+      "铁素体": 2,
+      "超声波检测": 6,
+      "外观": 12,
+      "尺寸": 12
+    },
+    "feature_rows": {
+      "低倍": {
+        "gold": 6,
+        "replay": 0
+      },
+      "化学成分": {
+        "gold": 156,
+        "replay": 78
+      },
+      "夏比冲击": {
+        "gold": 20,
+        "replay": 20
+      },
+      "外观": {
+        "gold": 12,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 80,
+        "replay": 76
+      },
+      "尺寸": {
+        "gold": 12,
+        "replay": 0
+      },
+      "断裂韧度": {
+        "gold": 19,
+        "replay": 19
+      },
+      "晶粒度": {
+        "gold": 2,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "洛氏硬度": {
+        "gold": 19,
+        "replay": 13
+      },
+      "热处理制度": {
+        "gold": 42,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 6,
+        "replay": 0
+      },
+      "铁素体": {
+        "gold": 2,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "",
+    "title": "",
+    "tables": 4,
+    "recipes": 4,
+    "records": 32,
+    "props": 85,
+    "features": {
+      "化学成分": 5,
+      "室温拉伸": 63,
+      "弯曲": 17
+    },
+    "grades": [
+      "3,5 to 4,5",
+      "Barc",
+      "None",
+      "Sheet and stripc",
+      "a Material diameter or thickness limit defined in this document."
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 10,
+        "cols": 2,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.786,
+        "records": 1,
+        "props": 5
+      },
+      {
+        "table_id": "T2",
+        "rows": 4,
+        "cols": 5,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.671,
+        "records": 4,
+        "props": 8
+      },
+      {
+        "table_id": "TB1",
+        "rows": 11,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.716,
+        "records": 18,
+        "props": 45
+      },
+      {
+        "table_id": "TB2",
+        "rows": 9,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.716,
+        "records": 14,
+        "props": 35
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 8,
+        "室温拉伸": 63,
+        "弯曲": 7,
+        "高倍组织": 2
+      },
+      "grades": [
+        "Ti-6Al-4V"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 3,
+      "高倍组织": 2
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 8,
+        "replay": 5
+      },
+      "室温拉伸": {
+        "gold": 63,
+        "replay": 63
+      },
+      "弯曲": {
+        "gold": 7,
+        "replay": 17
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "高倍组织": {
+        "gold": 2,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "ams-qq-a250-4b",
+    "title": "Aluminum Alloy 2024, Plate and Sheet",
+    "tables": 5,
+    "recipes": 5,
+    "records": 39,
+    "props": 116,
+    "features": {
+      "化学成分": 11,
+      "室温拉伸": 105
+    },
+    "grades": [
+      "F",
+      "O",
+      "T3",
+      "T351",
+      "T361",
+      "T4",
+      "T42",
+      "T62",
+      "T72",
+      "T81",
+      "T851",
+      "T861",
+      "全部牌号"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 14,
+        "cols": 3,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.778,
+        "records": 1,
+        "props": 11
+      },
+      {
+        "table_id": "T2",
+        "rows": 28,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.715,
+        "records": 26,
+        "props": 73
+      },
+      {
+        "table_id": "T3",
+        "rows": 14,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.715,
+        "records": 12,
+        "props": 32
+      },
+      {
+        "table_id": "T4",
+        "rows": 11,
+        "cols": 5,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T5",
+        "rows": 5,
+        "cols": 3,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 12,
+        "室温拉伸": 144,
+        "弯曲": 32,
+        "超声波检测": 1
+      },
+      "grades": [
+        "2024",
+        "F",
+        "O",
+        "T3",
+        "T351",
+        "T361",
+        "T4",
+        "T42",
+        "T62",
+        "T72",
+        "T81",
+        "T851",
+        "T861"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 1,
+      "室温拉伸": 39,
+      "弯曲": 32,
+      "超声波检测": 1
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 12,
+        "replay": 11
+      },
+      "室温拉伸": {
+        "gold": 144,
+        "replay": 105
+      },
+      "弯曲": {
+        "gold": 32,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "ams-4050k",
+    "title": "Aluminum Alloy, Plate 6.2Zn - 2.3Cu - 2.2Mg - 0.12Zr (7050-T7451)",
+    "tables": 6,
+    "recipes": 5,
+    "records": 56,
+    "props": 174,
+    "features": {
+      "化学成分": 11,
+      "室温拉伸": 121,
+      "断裂韧度": 42
+    },
+    "grades": [
+      "7050-T7451"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 13,
+        "cols": 3,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.786,
+        "records": 1,
+        "props": 11
+      },
+      {
+        "table_id": "T2",
+        "rows": 22,
+        "cols": 5,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.672,
+        "records": 20,
+        "props": 60
+      },
+      {
+        "table_id": "T3",
+        "rows": 22,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.721,
+        "records": 21,
+        "props": 61
+      },
+      {
+        "table_id": "T4",
+        "rows": 9,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.707,
+        "records": 7,
+        "props": 21
+      },
+      {
+        "table_id": "T5",
+        "rows": 9,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.7,
+        "records": 7,
+        "props": 21
+      },
+      {
+        "table_id": "T6",
+        "rows": 3,
+        "cols": 2,
+        "profile": "unknown",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 1,
+        "化学成分": 12,
+        "室温拉伸": 140,
+        "断裂韧度": 42,
+        "外观": 1,
+        "超声波检测": 1,
+        "尺寸": 1
+      },
+      "grades": [
+        "7050-T7451"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 1,
+      "化学成分": 1,
+      "室温拉伸": 19,
+      "外观": 1,
+      "超声波检测": 1,
+      "尺寸": 1
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 12,
+        "replay": 11
+      },
+      "外观": {
+        "gold": 1,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 140,
+        "replay": 121
+      },
+      "尺寸": {
+        "gold": 1,
+        "replay": 0
+      },
+      "断裂韧度": {
+        "gold": 42,
+        "replay": 42
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "热处理制度": {
+        "gold": 1,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "ams-4108g",
+    "title": "Aluminum Alloy, Hand Forgings, 6.2Zn - 2.3Cu - 2.2Mg - 0.12Zr (7050-T7452)",
+    "tables": 5,
+    "recipes": 3,
+    "records": 41,
+    "props": 131,
+    "features": {
+      "化学成分": 11,
+      "室温拉伸": 120
+    },
+    "grades": [
+      "7050-T7452"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 13,
+        "cols": 3,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.786,
+        "records": 1,
+        "props": 11
+      },
+      {
+        "table_id": "T2",
+        "rows": 22,
+        "cols": 5,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.672,
+        "records": 20,
+        "props": 60
+      },
+      {
+        "table_id": "T3",
+        "rows": 22,
+        "cols": 5,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.672,
+        "records": 20,
+        "props": 60
+      },
+      {
+        "table_id": "T4",
+        "rows": 5,
+        "cols": 3,
+        "profile": "mechanical_properties",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.55,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T5",
+        "rows": 5,
+        "cols": 3,
+        "profile": "mechanical_properties",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.55,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 1,
+        "化学成分": 12,
+        "室温拉伸": 120,
+        "断裂韧度": 6,
+        "外观": 1,
+        "超声波检测": 1
+      },
+      "grades": [
+        "7050-T7452"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 1,
+      "化学成分": 1,
+      "断裂韧度": 6,
+      "外观": 1,
+      "超声波检测": 1
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 12,
+        "replay": 11
+      },
+      "外观": {
+        "gold": 1,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 120,
+        "replay": 120
+      },
+      "断裂韧度": {
+        "gold": 6,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "热处理制度": {
+        "gold": 1,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "ams-4911s",
+    "title": "Titanium Alloy, Sheet, Strip, and Plate, 6Al - 4V, Annealed",
+    "tables": 4,
+    "recipes": 3,
+    "records": 11,
+    "props": 40,
+    "features": {
+      "化学成分": 10,
+      "室温拉伸": 30
+    },
+    "grades": [
+      "全部牌号"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 12,
+        "cols": 3,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.786,
+        "records": 1,
+        "props": 10
+      },
+      {
+        "table_id": "T2",
+        "rows": 7,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.674,
+        "records": 5,
+        "props": 15
+      },
+      {
+        "table_id": "T3",
+        "rows": 7,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.674,
+        "records": 5,
+        "props": 15
+      },
+      {
+        "table_id": "T4",
+        "rows": 4,
+        "cols": 3,
+        "profile": "mechanical_properties",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.55,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 1,
+        "化学成分": 11,
+        "室温拉伸": 30,
+        "弯曲": 2,
+        "外观": 4,
+        "高倍组织": 1,
+        "超声波检测": 1,
+        "尺寸": 1
+      },
+      "grades": [
+        "6Al-4V"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 1,
+      "化学成分": 1,
+      "弯曲": 2,
+      "外观": 4,
+      "高倍组织": 1,
+      "超声波检测": 1,
+      "尺寸": 1
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 11,
+        "replay": 10
+      },
+      "外观": {
+        "gold": 4,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 30,
+        "replay": 30
+      },
+      "尺寸": {
+        "gold": 1,
+        "replay": 0
+      },
+      "弯曲": {
+        "gold": 2,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "热处理制度": {
+        "gold": 1,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 1,
+        "replay": 0
+      },
+      "高倍组织": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "",
+    "title": "",
+    "tables": 1,
+    "recipes": 1,
+    "records": 6,
+    "props": 80,
+    "features": {
+      "化学成分": 80
+    },
+    "grades": [
+      "Ni9920",
+      "Ni9950",
+      "Ni9990",
+      "Ni9996",
+      "Ni9997",
+      "Ni9999"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 21,
+        "cols": 9,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.715,
+        "records": 6,
+        "props": 80
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 92,
+        "外观": 22,
+        "尺寸": 4
+      },
+      "grades": [
+        "Ni9920",
+        "Ni9950",
+        "Ni9990",
+        "Ni9996",
+        "Ni9997",
+        "Ni9999"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 12,
+      "外观": 22,
+      "尺寸": 4
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 92,
+        "replay": 80
+      },
+      "外观": {
+        "gold": 22,
+        "replay": 0
+      },
+      "尺寸": {
+        "gold": 4,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "ams-4967n",
+    "title": "Titanium Alloy, Bars, Wire, Forgings, and Rings 6.0Al - 4.0V, Annealed, Heat Treatable",
+    "tables": 5,
+    "recipes": 5,
+    "records": 25,
+    "props": 106,
+    "features": {
+      "化学成分": 10,
+      "室温拉伸": 96
+    },
+    "grades": [
+      "全部牌号"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 12,
+        "cols": 3,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.786,
+        "records": 1,
+        "props": 10
+      },
+      {
+        "table_id": "T2A",
+        "rows": 10,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.715,
+        "records": 6,
+        "props": 24
+      },
+      {
+        "table_id": "T2B",
+        "rows": 13,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 6,
+        "props": 24
+      },
+      {
+        "table_id": "T2C",
+        "rows": 10,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.715,
+        "records": 6,
+        "props": 24
+      },
+      {
+        "table_id": "T2D",
+        "rows": 13,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 6,
+        "props": 24
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 2,
+        "化学成分": 11,
+        "室温拉伸": 142,
+        "高倍组织": 1,
+        "外观": 2,
+        "低倍": 1,
+        "尺寸": 1
+      },
+      "grades": [
+        "UNS R56400"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 2,
+      "化学成分": 1,
+      "室温拉伸": 46,
+      "高倍组织": 1,
+      "外观": 2,
+      "低倍": 1,
+      "尺寸": 1
+    },
+    "feature_rows": {
+      "低倍": {
+        "gold": 1,
+        "replay": 0
+      },
+      "化学成分": {
+        "gold": 11,
+        "replay": 10
+      },
+      "外观": {
+        "gold": 2,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 142,
+        "replay": 96
+      },
+      "尺寸": {
+        "gold": 1,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "热处理制度": {
+        "gold": 2,
+        "replay": 0
+      },
+      "高倍组织": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "ams-5663p",
+    "title": "Nickel Alloy, Corrosion- and Heat-Resistant, Bars, Forgings, Rings, and Stock for Forgings and Rings 52.5Ni - 19Cr - 3.0Mo - 5.1Cb (Nb) - 0.90Ti - 0.50Al - 18Fe",
+    "tables": 5,
+    "recipes": 5,
+    "records": 23,
+    "props": 104,
+    "features": {
+      "化学成分": 16,
+      "室温拉伸": 88
+    },
+    "grades": [
+      "全部牌号"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 19,
+        "cols": 3,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.786,
+        "records": 1,
+        "props": 16
+      },
+      {
+        "table_id": "T2A",
+        "rows": 7,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.721,
+        "records": 5,
+        "props": 20
+      },
+      {
+        "table_id": "T2B",
+        "rows": 7,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.721,
+        "records": 5,
+        "props": 20
+      },
+      {
+        "table_id": "T3A",
+        "rows": 8,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.721,
+        "records": 6,
+        "props": 24
+      },
+      {
+        "table_id": "T3B",
+        "rows": 8,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.721,
+        "records": 6,
+        "props": 24
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 1,
+        "化学成分": 18,
+        "室温拉伸": 40,
+        "高温拉伸": 48,
+        "晶粒度": 2,
+        "高倍组织": 1,
+        "外观": 1,
+        "低倍": 1,
+        "尺寸": 1
+      },
+      "grades": [
+        "UNS N07718"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 1,
+      "化学成分": 2,
+      "高温拉伸": 48,
+      "晶粒度": 2,
+      "高倍组织": 1,
+      "外观": 1,
+      "低倍": 1,
+      "尺寸": 1
+    },
+    "feature_rows": {
+      "低倍": {
+        "gold": 1,
+        "replay": 0
+      },
+      "化学成分": {
+        "gold": 18,
+        "replay": 16
+      },
+      "外观": {
+        "gold": 1,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 40,
+        "replay": 88
+      },
+      "尺寸": {
+        "gold": 1,
+        "replay": 0
+      },
+      "晶粒度": {
+        "gold": 2,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "热处理制度": {
+        "gold": 1,
+        "replay": 0
+      },
+      "高倍组织": {
+        "gold": 1,
+        "replay": 0
+      },
+      "高温拉伸": {
+        "gold": 48,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "astm-b861-14",
+    "title": "Standard Specification for Titanium and Titanium Alloy Seamless Pipe (B861-14)",
+    "tables": 3,
+    "recipes": 3,
+    "records": 81,
+    "props": 691,
+    "features": {
+      "化学成分": 544,
+      "室温拉伸": 147
+    },
+    "grades": [
+      "1",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "16/16H",
+      "16H",
+      "17",
+      "18",
+      "18E",
+      "18F",
+      "19",
+      "19D",
+      "19G",
+      "19H",
+      "2",
+      "2/2H",
+      "20",
+      "20D",
+      "20G",
+      "20H",
+      "21",
+      "21D",
+      "21G",
+      "21H",
+      "23",
+      "23E",
+      "24",
+      "25",
+      "26",
+      "26/26H",
+      "26H",
+      "27",
+      "28",
+      "28E",
+      "28F",
+      "29",
+      "29E",
+      "2H",
+      "3",
+      "32",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "4",
+      "5",
+      "5D",
+      "7",
+      "7/7H",
+      "7H",
+      "9",
+      "9E",
+      "9F"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 28,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 27,
+        "props": 459
+      },
+      {
+        "table_id": "T1B",
+        "rows": 6,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 5,
+        "props": 85
+      },
+      {
+        "table_id": "T2",
+        "rows": 52,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.718,
+        "records": 49,
+        "props": 147
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 328,
+        "室温拉伸": 291,
+        "尺寸": 108,
+        "外观": 54
+      },
+      "grades": [
+        "1",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "16H",
+        "17",
+        "18",
+        "18E",
+        "18F",
+        "19",
+        "19D",
+        "19G",
+        "19H",
+        "2",
+        "20",
+        "20D",
+        "20G",
+        "20H",
+        "21",
+        "21D",
+        "21G",
+        "21H",
+        "23",
+        "23E",
+        "24",
+        "25",
+        "26",
+        "26H",
+        "27",
+        "28",
+        "28E",
+        "28F",
+        "29",
+        "29E",
+        "2H",
+        "3",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "4",
+        "5",
+        "5D",
+        "7",
+        "7H",
+        "9",
+        "9E",
+        "9F"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "室温拉伸": 144,
+      "尺寸": 108,
+      "外观": 54
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 328,
+        "replay": 544
+      },
+      "外观": {
+        "gold": 54,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 291,
+        "replay": 147
+      },
+      "尺寸": {
+        "gold": 108,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "astm-b861-24",
+    "title": "Standard Specification for Titanium and Titanium Alloy Seamless Pipe (B861-24)",
+    "tables": 3,
+    "recipes": 3,
+    "records": 81,
+    "props": 691,
+    "features": {
+      "化学成分": 544,
+      "室温拉伸": 147
+    },
+    "grades": [
+      "1",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "16/16H",
+      "16H",
+      "17",
+      "18",
+      "18E",
+      "18F",
+      "19",
+      "19D",
+      "19G",
+      "19H",
+      "2",
+      "2/2H",
+      "20",
+      "20D",
+      "20G",
+      "20H",
+      "21",
+      "21D",
+      "21G",
+      "21H",
+      "23",
+      "23E",
+      "24",
+      "25",
+      "26",
+      "26/26H",
+      "26H",
+      "27",
+      "28",
+      "28E",
+      "28F",
+      "29",
+      "29E",
+      "2H",
+      "3",
+      "32",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "4",
+      "5",
+      "5D",
+      "7",
+      "7/7H",
+      "7H",
+      "9",
+      "9E",
+      "9F"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 28,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 27,
+        "props": 459
+      },
+      {
+        "table_id": "T1B",
+        "rows": 6,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 5,
+        "props": 85
+      },
+      {
+        "table_id": "T2",
+        "rows": 52,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.718,
+        "records": 49,
+        "props": 147
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 328,
+        "室温拉伸": 291,
+        "尺寸": 108,
+        "外观": 54
+      },
+      "grades": [
+        "1",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "16H",
+        "17",
+        "18",
+        "18E",
+        "18F",
+        "19",
+        "19D",
+        "19G",
+        "19H",
+        "2",
+        "20",
+        "20D",
+        "20G",
+        "20H",
+        "21",
+        "21D",
+        "21G",
+        "21H",
+        "23",
+        "23E",
+        "24",
+        "25",
+        "26",
+        "26H",
+        "27",
+        "28",
+        "28E",
+        "28F",
+        "29",
+        "29E",
+        "2H",
+        "3",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "4",
+        "5",
+        "5D",
+        "7",
+        "7H",
+        "9",
+        "9E",
+        "9F"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "室温拉伸": 144,
+      "尺寸": 108,
+      "外观": 54
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 328,
+        "replay": 544
+      },
+      "外观": {
+        "gold": 54,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 291,
+        "replay": 147
+      },
+      "尺寸": {
+        "gold": 108,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "astm-b348-13",
+    "title": "Standard Specification for Titanium and Titanium Alloy Bars and Billets",
+    "tables": 3,
+    "recipes": 3,
+    "records": 135,
+    "props": 794,
+    "features": {
+      "化学成分": 595,
+      "室温拉伸": 199
+    },
+    "grades": [
+      "1",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "16/16H",
+      "16H",
+      "17",
+      "18",
+      "18D",
+      "19",
+      "19E",
+      "19F",
+      "19G",
+      "2",
+      "2/2H",
+      "20",
+      "20E",
+      "20F",
+      "20G",
+      "21",
+      "21E",
+      "21F",
+      "21G",
+      "23",
+      "23D",
+      "24",
+      "25",
+      "26",
+      "26/26H",
+      "26H",
+      "27",
+      "28",
+      "28D",
+      "29",
+      "29D",
+      "2H",
+      "3",
+      "30",
+      "31",
+      "32",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "4",
+      "5",
+      "6",
+      "7",
+      "7/7H",
+      "7H",
+      "9",
+      "9D"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 30,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 28,
+        "props": 476
+      },
+      {
+        "table_id": "T2",
+        "rows": 9,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 7,
+        "props": 119
+      },
+      {
+        "table_id": "T3",
+        "rows": 52,
+        "cols": 7,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.716,
+        "records": 100,
+        "props": 199
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 741,
+        "室温拉伸": 300,
+        "尺寸": 53,
+        "外观": 53
+      },
+      "grades": [
+        "1",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "16H",
+        "17",
+        "18",
+        "18D",
+        "19",
+        "19E",
+        "19F",
+        "19G",
+        "2",
+        "20",
+        "20E",
+        "20F",
+        "20G",
+        "21",
+        "21E",
+        "21F",
+        "21G",
+        "23",
+        "23D",
+        "24",
+        "25",
+        "26",
+        "26H",
+        "27",
+        "28",
+        "28D",
+        "29",
+        "29D",
+        "2H",
+        "3",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "4",
+        "5",
+        "6",
+        "7",
+        "7H",
+        "9",
+        "9D"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 146,
+      "室温拉伸": 101,
+      "尺寸": 53,
+      "外观": 53
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 741,
+        "replay": 595
+      },
+      "外观": {
+        "gold": 53,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 300,
+        "replay": 199
+      },
+      "尺寸": {
+        "gold": 53,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "astm-b708-25",
+    "title": "Standard Specification for Tantalum and Tantalum Alloy Plate, Sheet, and Strip",
+    "tables": 3,
+    "recipes": 3,
+    "records": 30,
+    "props": 95,
+    "features": {
+      "化学成分": 75,
+      "室温拉伸": 20
+    },
+    "grades": [
+      "R05200",
+      "R05200/R05400",
+      "R05240",
+      "R05252",
+      "R05255",
+      "R05400"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 7,
+        "cols": 13,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 5,
+        "props": 55
+      },
+      {
+        "table_id": "T2",
+        "rows": 7,
+        "cols": 5,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.65,
+        "records": 5,
+        "props": 20
+      },
+      {
+        "table_id": "T3",
+        "rows": 9,
+        "cols": 5,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.669,
+        "records": 24,
+        "props": 24
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 80,
+        "室温拉伸": 50,
+        "尺寸": 10,
+        "外观": 10,
+        "高倍组织": 5,
+        "晶粒度": 2
+      },
+      "grades": [
+        "R05200",
+        "R05240",
+        "R05252",
+        "R05255",
+        "R05400"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 5,
+      "室温拉伸": 30,
+      "尺寸": 10,
+      "外观": 10,
+      "高倍组织": 5,
+      "晶粒度": 2
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 80,
+        "replay": 75
+      },
+      "外观": {
+        "gold": 10,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 50,
+        "replay": 20
+      },
+      "尺寸": {
+        "gold": 10,
+        "replay": 0
+      },
+      "晶粒度": {
+        "gold": 2,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "高倍组织": {
+        "gold": 5,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "astm-f136-26",
+    "title": "Standard Specification for Wrought Titanium-6Aluminum-4Vanadium ELI (Extra Low Interstitial) Alloy for Surgical Implant Applications (UNS R56401)",
+    "tables": 3,
+    "recipes": 3,
+    "records": 18,
+    "props": 39,
+    "features": {
+      "化学成分": 8,
+      "室温拉伸": 30,
+      "弯曲": 1
+    },
+    "grades": [
+      "R56401"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 2,
+        "cols": 10,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.65,
+        "records": 1,
+        "props": 8
+      },
+      {
+        "table_id": "T2",
+        "rows": 6,
+        "cols": 9,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.765,
+        "records": 8,
+        "props": 15
+      },
+      {
+        "table_id": "T3",
+        "rows": 6,
+        "cols": 11,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.712,
+        "records": 9,
+        "props": 16
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 9,
+        "室温拉伸": 80,
+        "弯曲": 8,
+        "高倍组织": 1,
+        "相变温度": 1,
+        "超声波检测": 1,
+        "外观": 2
+      },
+      "grades": [
+        "R56401"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 1,
+      "室温拉伸": 50,
+      "弯曲": 7,
+      "高倍组织": 1,
+      "相变温度": 1,
+      "超声波检测": 1,
+      "外观": 2
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 9,
+        "replay": 8
+      },
+      "外观": {
+        "gold": 2,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 80,
+        "replay": 30
+      },
+      "弯曲": {
+        "gold": 8,
+        "replay": 1
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "相变温度": {
+        "gold": 1,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 1,
+        "replay": 0
+      },
+      "高倍组织": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "astm-b338-17",
+    "title": "Standard Specification for Seamless and Welded Titanium and Titanium Alloy Tubes for Condensers and Heat Exchangers",
+    "tables": 4,
+    "recipes": 4,
+    "records": 86,
+    "props": 501,
+    "features": {
+      "化学成分": 408,
+      "室温拉伸": 93
+    },
+    "grades": [
+      "1",
+      "11",
+      "11A",
+      "12",
+      "12A",
+      "13",
+      "13A",
+      "14",
+      "14A",
+      "15",
+      "15A",
+      "16/16H",
+      "16A",
+      "16H",
+      "17",
+      "17A",
+      "18",
+      "18A",
+      "18D",
+      "1A",
+      "2/2H",
+      "26",
+      "26/26H",
+      "26H",
+      "27",
+      "28",
+      "2A",
+      "2H",
+      "3",
+      "30",
+      "31",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "39",
+      "3A",
+      "7/7H",
+      "7A",
+      "7H",
+      "9",
+      "9A",
+      "9D"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 24,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 22,
+        "props": 374
+      },
+      {
+        "table_id": "T2",
+        "rows": 4,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 2,
+        "props": 34
+      },
+      {
+        "table_id": "T3",
+        "rows": 33,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.713,
+        "records": 62,
+        "props": 93
+      },
+      {
+        "table_id": "T4",
+        "rows": 25,
+        "cols": 2,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 532,
+        "室温拉伸": 217,
+        "超声波检测": 132,
+        "涡流检测": 44,
+        "外观": 44,
+        "尺寸": 220
+      },
+      "grades": [
+        "1",
+        "11",
+        "11A",
+        "12",
+        "12A",
+        "13",
+        "13A",
+        "14",
+        "14A",
+        "15",
+        "15A",
+        "16",
+        "16A",
+        "16H",
+        "17",
+        "17A",
+        "18",
+        "18A",
+        "18D",
+        "1A",
+        "2",
+        "26",
+        "26H",
+        "27",
+        "28",
+        "2A",
+        "2H",
+        "3",
+        "30",
+        "31",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "3A",
+        "7",
+        "7A",
+        "7H",
+        "9",
+        "9A",
+        "9D"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 124,
+      "室温拉伸": 124,
+      "超声波检测": 132,
+      "涡流检测": 44,
+      "外观": 44,
+      "尺寸": 220
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 532,
+        "replay": 408
+      },
+      "外观": {
+        "gold": 44,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 217,
+        "replay": 93
+      },
+      "尺寸": {
+        "gold": 220,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "涡流检测": {
+        "gold": 44,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 132,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "asme-sb265-2025",
+    "title": "Standard Specification for Titanium and Titanium Alloy Strip, Sheet, and Plate",
+    "tables": 4,
+    "recipes": 3,
+    "records": 160,
+    "props": 793,
+    "features": {
+      "室温拉伸": 123,
+      "弯曲": 41,
+      "化学成分": 629
+    },
+    "grades": [
+      "1",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "16/16H",
+      "16H",
+      "17",
+      "18",
+      "19",
+      "2",
+      "2/2H",
+      "20",
+      "21",
+      "23",
+      "24",
+      "25",
+      "26",
+      "26/26H",
+      "26H",
+      "27",
+      "28",
+      "29",
+      "2H",
+      "3",
+      "30",
+      "31",
+      "32",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "39",
+      "4",
+      "40",
+      "5",
+      "6",
+      "7",
+      "7/7H",
+      "7H",
+      "9"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 43,
+        "cols": 10,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.718,
+        "records": 123,
+        "props": 164
+      },
+      {
+        "table_id": "T2",
+        "rows": 30,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 28,
+        "props": 476
+      },
+      {
+        "table_id": "T3",
+        "rows": 11,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 9,
+        "props": 153
+      },
+      {
+        "table_id": "T4",
+        "rows": 7,
+        "cols": 3,
+        "profile": "mechanical_properties",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.55,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 779,
+        "室温拉伸": 287,
+        "弯曲": 82,
+        "尺寸": 49,
+        "外观": 41
+      },
+      "grades": [
+        "1",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "16H",
+        "17",
+        "18",
+        "19",
+        "2",
+        "20",
+        "21",
+        "23",
+        "24",
+        "25",
+        "26",
+        "26H",
+        "27",
+        "28",
+        "29",
+        "2H",
+        "3",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "4",
+        "40",
+        "5",
+        "6",
+        "7",
+        "7H",
+        "9"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 150,
+      "室温拉伸": 164,
+      "弯曲": 41,
+      "尺寸": 49,
+      "外观": 41
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 779,
+        "replay": 629
+      },
+      "外观": {
+        "gold": 41,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 287,
+        "replay": 123
+      },
+      "尺寸": {
+        "gold": 49,
+        "replay": 0
+      },
+      "弯曲": {
+        "gold": 82,
+        "replay": 41
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "asme-sb338-2021",
+    "title": "Standard Specification for Seamless and Welded Titanium and Titanium Alloy Tubes for Condensers and Heat Exchangers",
+    "tables": 4,
+    "recipes": 4,
+    "records": 55,
+    "props": 501,
+    "features": {
+      "化学成分": 408,
+      "室温拉伸": 93
+    },
+    "grades": [
+      "1",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "16/16H",
+      "16H",
+      "17",
+      "18",
+      "2",
+      "2/2H",
+      "26",
+      "26/26H",
+      "26H",
+      "27",
+      "28",
+      "2H",
+      "3",
+      "30",
+      "31",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "39",
+      "7",
+      "7/7H",
+      "7H",
+      "9"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 24,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 22,
+        "props": 374
+      },
+      {
+        "table_id": "T2",
+        "rows": 4,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 2,
+        "props": 34
+      },
+      {
+        "table_id": "T3",
+        "rows": 33,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.713,
+        "records": 31,
+        "props": 93
+      },
+      {
+        "table_id": "T4",
+        "rows": 25,
+        "cols": 2,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 532,
+        "室温拉伸": 217,
+        "超声波检测": 87,
+        "涡流检测": 29,
+        "外观": 29,
+        "尺寸": 145
+      },
+      "grades": [
+        "1",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "16H",
+        "17",
+        "18",
+        "2",
+        "26",
+        "26H",
+        "27",
+        "28",
+        "2H",
+        "3",
+        "30",
+        "31",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "7",
+        "7H",
+        "9"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 124,
+      "室温拉伸": 124,
+      "超声波检测": 87,
+      "涡流检测": 29,
+      "外观": 29,
+      "尺寸": 145
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 532,
+        "replay": 408
+      },
+      "外观": {
+        "gold": 29,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 217,
+        "replay": 93
+      },
+      "尺寸": {
+        "gold": 145,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "涡流检测": {
+        "gold": 29,
+        "replay": 0
+      },
+      "超声波检测": {
+        "gold": 87,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "asme-sb575-2023",
+    "title": "Standard Specification for Low-Carbon Nickel-Chromium-Molybdenum, Low-Carbon Nickel-Chromium-Molybdenum-Copper, Low-Carbon Nickel-Chromium-Molybdenum-Tantalum, Low-Carbon Nickel-Chromium-Molybdenum-Tungsten, and Low-Carbon Nickel-Chromium-Molybdenum-Tungsten Alloy Plate, Sheet, and Strip",
+    "tables": 3,
+    "recipes": 2,
+    "records": 44,
+    "props": 150,
+    "features": {
+      "化学成分": 117,
+      "室温拉伸": 33
+    },
+    "grades": [
+      "N06022",
+      "N06035",
+      "N06044",
+      "N06058",
+      "N06059",
+      "N06200",
+      "N06210",
+      "N06455",
+      "N06686",
+      "N10276",
+      "N10362",
+      "全部牌号"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 12,
+        "cols": 18,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 11,
+        "props": 117
+      },
+      {
+        "table_id": "T2",
+        "rows": 12,
+        "cols": 5,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.666,
+        "records": 33,
+        "props": 33
+      },
+      {
+        "table_id": "T3",
+        "rows": 12,
+        "cols": 3,
+        "profile": "unknown",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 187,
+        "室温拉伸": 33,
+        "洛氏硬度": 11,
+        "晶粒度": 11,
+        "尺寸": 55
+      },
+      "grades": [
+        "N06022",
+        "N06035",
+        "N06044",
+        "N06058",
+        "N06059",
+        "N06200",
+        "N06210",
+        "N06455",
+        "N06686",
+        "N10276",
+        "N10362"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 70,
+      "洛氏硬度": 11,
+      "晶粒度": 11,
+      "尺寸": 55
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 187,
+        "replay": 117
+      },
+      "室温拉伸": {
+        "gold": 33,
+        "replay": 33
+      },
+      "尺寸": {
+        "gold": 55,
+        "replay": 0
+      },
+      "晶粒度": {
+        "gold": 11,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "洛氏硬度": {
+        "gold": 11,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "iso-5832-2-2018",
+    "title": "Implants for surgery — Metallic materials — Part 2: Unalloyed titanium",
+    "tables": 2,
+    "recipes": 2,
+    "records": 24,
+    "props": 60,
+    "features": {
+      "化学成分": 30,
+      "室温拉伸": 24,
+      "弯曲": 6
+    },
+    "grades": [
+      "1",
+      "1 ELI",
+      "2",
+      "3",
+      "4A",
+      "4B"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 6,
+        "cols": 7,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.65,
+        "records": 6,
+        "props": 30
+      },
+      {
+        "table_id": "T2",
+        "rows": 7,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.711,
+        "records": 18,
+        "props": 30
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 30,
+        "室温拉伸": 24,
+        "弯曲": 12,
+        "高倍组织": 6,
+        "晶粒度": 6,
+        "非金属夹杂": 6
+      },
+      "grades": [
+        "1",
+        "1 ELI",
+        "2",
+        "3",
+        "4A",
+        "4A and 4B",
+        "4B"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "弯曲": 6,
+      "高倍组织": 6,
+      "晶粒度": 6,
+      "非金属夹杂": 6
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 30,
+        "replay": 30
+      },
+      "室温拉伸": {
+        "gold": 24,
+        "replay": 24
+      },
+      "弯曲": {
+        "gold": 12,
+        "replay": 6
+      },
+      "晶粒度": {
+        "gold": 6,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "非金属夹杂": {
+        "gold": 6,
+        "replay": 0
+      },
+      "高倍组织": {
+        "gold": 6,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "astm-b862-23",
+    "title": "Standard Specification for Titanium and Titanium Alloy Welded Pipe",
+    "tables": 3,
+    "recipes": 3,
+    "records": 112,
+    "props": 633,
+    "features": {
+      "化学成分": 510,
+      "室温拉伸": 123
+    },
+    "grades": [
+      "1",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "16/16H",
+      "16H",
+      "17",
+      "18",
+      "19",
+      "19D",
+      "19E",
+      "2",
+      "2/2H",
+      "20",
+      "20D",
+      "20E",
+      "21",
+      "21D",
+      "21E",
+      "23",
+      "24",
+      "25",
+      "26",
+      "26/26H",
+      "26H",
+      "27",
+      "28",
+      "29",
+      "2H",
+      "3",
+      "33",
+      "34",
+      "35",
+      "37",
+      "38",
+      "39",
+      "5",
+      "5D",
+      "7",
+      "7/7H",
+      "7H",
+      "9"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 27,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 25,
+        "props": 425
+      },
+      {
+        "table_id": "T2",
+        "rows": 7,
+        "cols": 21,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.6,
+        "records": 5,
+        "props": 85
+      },
+      {
+        "table_id": "T3",
+        "rows": 43,
+        "cols": 8,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.719,
+        "records": 82,
+        "props": 123
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 646,
+        "室温拉伸": 287,
+        "尺寸": 123,
+        "外观": 41
+      },
+      "grades": [
+        "1",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "16H",
+        "17",
+        "18",
+        "19",
+        "19D",
+        "19E",
+        "2",
+        "20",
+        "20D",
+        "20E",
+        "21",
+        "21D",
+        "21E",
+        "23",
+        "24",
+        "25",
+        "26",
+        "26H",
+        "27",
+        "28",
+        "29",
+        "2H",
+        "3",
+        "33",
+        "34",
+        "35",
+        "37",
+        "38",
+        "39",
+        "5",
+        "5D",
+        "7",
+        "7H",
+        "9"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 136,
+      "室温拉伸": 164,
+      "尺寸": 123,
+      "外观": 41
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 646,
+        "replay": 510
+      },
+      "外观": {
+        "gold": 41,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 287,
+        "replay": 123
+      },
+      "尺寸": {
+        "gold": 123,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "",
+    "title": "",
+    "tables": 7,
+    "recipes": 6,
+    "records": 15,
+    "props": 39,
+    "features": {
+      "化学成分": 24,
+      "室温拉伸": 9,
+      "弯曲": 3,
+      "气体分析": 3
+    },
+    "grades": [
+      "TA1G",
+      "TA8-1",
+      "TA9-1"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 3,
+        "cols": 5,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.733,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T2",
+        "rows": 6,
+        "cols": 10,
+        "profile": "chemical_composition",
+        "recipe": "chemical_composition_v1",
+        "status": "candidate",
+        "score": 0.77,
+        "records": 3,
+        "props": 24
+      },
+      {
+        "table_id": "T3",
+        "rows": 6,
+        "cols": 6,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T4",
+        "rows": 3,
+        "cols": 3,
+        "profile": "dimension",
+        "recipe": "dimension_v1",
+        "status": "candidate",
+        "score": 0.736,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T5",
+        "rows": 4,
+        "cols": 6,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.737,
+        "records": 6,
+        "props": 9
+      },
+      {
+        "table_id": "T6",
+        "rows": 3,
+        "cols": 4,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.666,
+        "records": 3,
+        "props": 3
+      },
+      {
+        "table_id": "T7",
+        "rows": 9,
+        "cols": 4,
+        "profile": "inspection",
+        "recipe": "inspection_rules_v1",
+        "status": "candidate",
+        "score": 0.779,
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "化学成分": 27,
+        "室温拉伸": 9,
+        "弯曲": 3,
+        "尺寸": 12,
+        "晶粒度": 3,
+        "外观": 12
+      },
+      "grades": [
+        "TA1G",
+        "TA8-1",
+        "TA9-1"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "化学成分": 3,
+      "尺寸": 12,
+      "晶粒度": 3,
+      "外观": 12
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 27,
+        "replay": 24
+      },
+      "外观": {
+        "gold": 12,
+        "replay": 0
+      },
+      "室温拉伸": {
+        "gold": 9,
+        "replay": 9
+      },
+      "尺寸": {
+        "gold": 12,
+        "replay": 0
+      },
+      "弯曲": {
+        "gold": 3,
+        "replay": 3
+      },
+      "晶粒度": {
+        "gold": 3,
+        "replay": 0
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  },
+  {
+    "doc_id": "",
+    "title": "",
+    "tables": 4,
+    "recipes": 2,
+    "records": 5,
+    "props": 15,
+    "features": {
+      "化学成分": 11,
+      "室温拉伸": 4
+    },
+    "grades": [
+      "全部牌号"
+    ],
+    "table_details": [
+      {
+        "table_id": "T1",
+        "rows": 13,
+        "cols": 2,
+        "profile": "chemical_composition",
+        "recipe": "chemical_element_rows_v1",
+        "status": "candidate",
+        "score": 0.786,
+        "records": 1,
+        "props": 11
+      },
+      {
+        "table_id": "T2",
+        "rows": 12,
+        "cols": 2,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T3",
+        "rows": 4,
+        "cols": 2,
+        "profile": "admin",
+        "recipe": null,
+        "status": "unknown",
+        "score": 0.0,
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "T4",
+        "rows": 4,
+        "cols": 3,
+        "profile": "mechanical_properties",
+        "recipe": "mechanical_properties_v1",
+        "status": "candidate",
+        "score": 0.684,
+        "records": 4,
+        "props": 4
+      }
+    ],
+    "gold": {
+      "features": {
+        "标准信息": 1,
+        "热处理制度": 1,
+        "化学成分": 11,
+        "室温拉伸": 4,
+        "相变温度": 1,
+        "高倍组织": 1,
+        "非金属夹杂": 1
+      },
+      "grades": [
+        "NiTi"
+      ]
+    },
+    "missing": {
+      "标准信息": 1,
+      "热处理制度": 1,
+      "相变温度": 1,
+      "高倍组织": 1,
+      "非金属夹杂": 1
+    },
+    "feature_rows": {
+      "化学成分": {
+        "gold": 11,
+        "replay": 11
+      },
+      "室温拉伸": {
+        "gold": 4,
+        "replay": 4
+      },
+      "标准信息": {
+        "gold": 1,
+        "replay": 0
+      },
+      "热处理制度": {
+        "gold": 1,
+        "replay": 0
+      },
+      "相变温度": {
+        "gold": 1,
+        "replay": 0
+      },
+      "非金属夹杂": {
+        "gold": 1,
+        "replay": 0
+      },
+      "高倍组织": {
+        "gold": 1,
+        "replay": 0
+      }
+    }
+  }
+]
