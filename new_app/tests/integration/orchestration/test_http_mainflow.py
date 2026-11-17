@@ -62,6 +62,9 @@ def test_upload_create_run_idempotency_and_cancel() -> None:
         assert current["id"] == run_id
         assert is_terminal(current["status"])
 
+        listed = next(r for r in client.get("/internal/runs").json() if r["id"] == run_id)
+        assert "parsed_at" in listed
+
         timeline = client.get(f"/internal/runs/{run_id}/timeline")
         assert timeline.status_code == 200
         assert timeline.json()["run"]["id"] == run_id

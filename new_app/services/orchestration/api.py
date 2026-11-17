@@ -10,7 +10,7 @@ from uuid import uuid4
 from fastapi import APIRouter, File, HTTPException, Query, Response, UploadFile
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 
 from . import shadow as shadow_service
@@ -270,7 +270,17 @@ async def create_run(document_id: str, payload: CreateRunIn) -> RunOut:
 async def list_runs() -> list[RunOut]:
     async with SessionLocal() as session:
         result = await session.execute(select(Run).order_by(Run.created_at.desc()))
-        return [RunOut.model_validate(item) for item in result.scalars()]
+        runs = list(result.scalars())
+        # 机器解析结束时间 = 最后一个阶段结束时间。待人工审核时 finished_at 为空、审核后才写入，
+        # 文档库「解析时长」用它才不会显示“解析中”或把等待人工的时间算进去。
+        last_stage_end = select(RunStage.run_id, func.max(RunStage.finished_at)).group_by(
+            RunStage.run_id
+        )
+        ends = dict((await session.execute(last_stage_end)).all())
+        return [
+            RunOut.model_validate(item).model_copy(update={"parsed_at": ends.get(item.id)})
+            for item in runs
+        ]
 
 
 @router.get("/runs/{run_id}", response_model=RunOut)

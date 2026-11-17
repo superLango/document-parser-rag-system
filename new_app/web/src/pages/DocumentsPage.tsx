@@ -420,6 +420,8 @@ export default function DocumentsPage() {
                   const meta = run ? runStatusMeta(run.status) : null;
                   const terminal = run ? RUN_TERMINAL.has(run.status) : false;
                   const reviewable = run ? REVIEWABLE.has(run.status) : false;
+                  // 机器解析结束时间；待人工审核时 finished_at 为空，人工审核后又会包含等待时间
+                  const parsedAt = run?.parsed_at ?? run?.finished_at;
                   return (
                     <TableRow key={document.id}>
                       <TableCell>
@@ -462,15 +464,17 @@ export default function DocumentsPage() {
                       </TableCell>
                       <TableCell className="text-muted-foreground">
                         {run ? (
-                          run.finished_at ? (
-                            <span title={`${formatDateTime(run.started_at ?? run.created_at)} 至 ${formatDateTime(run.finished_at)}`}>
+                          !terminal ? (
+                            <span className="text-xs">解析中</span>
+                          ) : parsedAt ? (
+                            <span title={`${formatDateTime(run.started_at ?? run.created_at)} 至 ${formatDateTime(parsedAt)}`}>
                               {formatDuration(
-                                new Date(run.finished_at).getTime() -
+                                new Date(parsedAt).getTime() -
                                   new Date(run.started_at ?? run.created_at).getTime()
                               )}
                             </span>
                           ) : (
-                            <span className="text-xs">解析中</span>
+                            "—"
                           )
                         ) : (
                           "—"
