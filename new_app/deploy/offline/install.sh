@@ -80,7 +80,7 @@ do_install() {
     docker image inspect "$BASE" >/dev/null 2>&1 || docker tag "$IMAGE" "$BASE"
     mkdir "$tmp/app"
     tar xzf "$tmp/app-src.tgz" -C "$tmp/app"
-    docker run --rm --entrypoint cat "$BASE" /app/requirements.txt | diff -q - "$tmp/app/requirements.txt" >/dev/null ||
+    docker run --rm --entrypoint cat "$BASE" /app/requirements.txt | diff -q --strip-trailing-cr - "$tmp/app/requirements.txt" >/dev/null ||
       die "requirements.txt 与镜像内不同（新增/变更了 Python 依赖），离线覆盖代码装不了依赖，见 PAIKE.md「新增依赖」"
   fi
 

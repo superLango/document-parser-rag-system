@@ -37,7 +37,7 @@ fail=0
 check() { if eval "$2"; then echo "  ok   $1"; else echo "  FAIL $1"; fail=1; fi; }
 reset() {
   rm -rf "$HOME/hanson-deploy/backups" "$D/web-dist"; mkdir -p "$D/web-dist"; echo old > "$D/web-dist/index.html"
-  : > "$LOG"; cp "$APP/requirements.txt" "$REQ"; ls "$APP/services/orchestration/migrations/versions" > "$MIG"
+  : > "$LOG"; tr -d '\r' < "$APP/requirements.txt" > "$REQ"; ls "$APP/services/orchestration/migrations/versions" > "$MIG"
   echo '[{"status":"HUMAN_REVIEW"}]' > "$T/srv/v1/runs"
 }
 bk() { ls -d "$HOME"/hanson-deploy/backups/2* 2>/dev/null | head -1; }

@@ -32,9 +32,14 @@ fi
 
 if [ "$PART" != web ]; then
   echo "==> 打包后端代码"
-  # 与 deploy/compose/Dockerfile 拷进镜像的内容一致；只取纳入 git 的和未被忽略的新文件
-  (cd "$APP" && git ls-files -z -co --exclude-standard -- services packages tests requirements.txt |
-    tar czf "$WORK/app-src.tgz" --null -T -)
+  # 与 deploy/compose/Dockerfile 拷进镜像的内容一致。取 git 里存的内容（LF）而不是 Windows 工作区副本：
+  # 工作区是 CRLF，会破坏解析内核资产的 sha256 校验。未提交的修改经 stash create 一并带上（不改动工作区）。
+  NEW=$(git -C "$APP" ls-files -o --exclude-standard -- services packages tests)
+  [ -z "$NEW" ] || { echo "有未纳入 git 的新文件，先 git add：" >&2; echo "$NEW" >&2; exit 1; }
+  REV=$(git -C "$APP" stash create)
+  PREFIX=$(git -C "$APP" rev-parse --show-prefix)
+  git -C "$(git -C "$APP" rev-parse --show-toplevel)" -c core.autocrlf=false archive --format=tar.gz -o "$WORK/app-src.tgz" \
+    "${REV:-HEAD}:${PREFIX%/}" services packages tests requirements.txt
 fi
 
 printf 'commit=%s%s\nbranch=%s\npart=%s\nbuilt=%s\n' \

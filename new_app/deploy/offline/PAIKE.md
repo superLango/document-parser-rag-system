@@ -172,7 +172,7 @@ bash ~/<包名>.run rollback     # 出问题就回滚（任意一个 .run 文件
 
 ### 6.2 词典 / 解析内核
 
-- 派克词典来源：LIMS 导出的 `业务词表new.txt` → 转换脚本 `F:\work\汉唐标准拆分\派克词典转换\build_paike_dictionary.py` → `business_dictionary.paike.json`、`dictionary_data.json`（parser 资产内的词典用 `new_app/scripts/assets/build_dictionary_asset.py` 生成）。
+- 两家的词典都维护在仓库 `dict/`（`ht/` 汉唐、`pk/` 派克），含源文件、转换脚本、产物和重新生成的命令，见 `dict/README.md`。
 - 资产版本不可变：每次发布新版本号（1.7.901 → 1.7.902…），通过 recipe-registry `:8005` 的 `/internal/assets` 发布、`/internal/assets/parser/parser_core/versions/{v}/promote` 晋级到 stable。
 - 改了 parser 代码后，派克要基于新代码**重新发一版带派克词典的内核**，否则派克仍用旧代码。
 - 这一步建议让 AI 做（需要盒子在线或 AI 生成一个专用 .run 脚本）。
@@ -225,5 +225,5 @@ pip download -r new_app/requirements.txt --platform manylinux2014_aarch64 --pyth
 
 - 派克 OAPI 替换脚本：`F:\work\汉唐标准拆分\OAPI替换脚本_派克新系统\`
 - 清理旧 AI 表 SQL：`F:\work\汉唐标准拆分\拆分自动化_派克\清理AI表并导入新建标准.sql`
-- 词典转换：`F:\work\汉唐标准拆分\派克词典转换\`（`歧义别名清单.csv` 中 80 个歧义别名待业务确认）
+- 词典：仓库 `dict/`（`dict/pk/歧义别名清单.csv` 中 80 个歧义别名待业务确认）
 - 一站式对接接口：`new_app/services/api_gateway/main.py`（`/api/v1/integration/upload`、`tasks/{id}/status|result|retrigger`）
