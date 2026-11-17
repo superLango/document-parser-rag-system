@@ -118,7 +118,15 @@ bash ~/hansonDoc_RAG/scripts/stop_all.sh      # 停容器，数据保留；--wit
 git switch wjh-pr
 git pull origin new_doc_parse          &rem 先同步团队最新代码
 ... 改代码、git commit ...
-git push origin wjh-pr                 &rem 然后在 GitHub 上从 wjh-pr 向 new_doc_parse 提 PR（已有未合并的 PR 会自动更新）
+git push origin wjh-pr
+
+:: 提 PR（先看有没有未合并的：有就不用再建，push 后新提交会自动进去）
+E:\codex_home\tools\gh-cli\bin\gh.exe pr list --repo superLango/document-parser-rag-system --head wjh-pr --state open
+E:\codex_home\tools\gh-cli\bin\gh.exe pr create --repo superLango/document-parser-rag-system --base new_doc_parse --head wjh-pr --title "<标题>" --body "<说明>"
+
+:: PR 被合并后同步
+git switch wjh-pr
+git pull origin new_doc_parse
 
 :: 部署前
 git switch wjh-doc_parse
@@ -127,7 +135,8 @@ new_app\deploy\offline\make_bundle.cmd <web|app|all>
 git push origin wjh-doc_parse
 ```
 
-只改部署脚本、词典、skill 时直接在 `wjh-doc_parse` 上提交，**不要**合到 `wjh-pr`。
+只改部署脚本、词典、skill 时直接在 `wjh-doc_parse` 上提交，**不要**合到 `wjh-pr`，也永远不要把 `wjh-doc_parse` 合进 `wjh-pr`。
+挂着未合并 PR 的远程分支不要删，删了 PR 会被自动关闭。
 `new_doc_parse` 带来新的解析内核版本（如 lango 的 1.7.41）时：汉唐直接用；派克要基于新代码换上 `dict/pk/dictionary_data.json` 另发一版（见 `dict/README.md`）。
 
 ### 5.1 本地打包
