@@ -49,7 +49,7 @@ import {
   EXTRACT_DEFAULT,
   EXTRACT_STATUSES,
   fitFileName,
-  folderNumbers,
+  folderOf,
   orMissing,
   safeName,
   stemOf,
@@ -324,7 +324,6 @@ export default function DocumentsPage() {
       }
     }
     const at = new Date();
-    const folders = folderNumbers(documents);
     const zipFiles: ZipFile[] = [];
     let written = 0;
     let skipped = 0;
@@ -334,7 +333,7 @@ export default function DocumentsPage() {
     for (let index = 0; index < extractCandidates.length; index += 1) {
       const document = extractCandidates[index];
       const run = latestRunByDocument.get(document.id)!;
-      const folder = folders.get(document.id)!;
+      const folder = folderOf(document);
       const stem = stemOf(document.filename);
       setExtractProgress(`${index + 1}/${extractCandidates.length}`);
       // load 返回 null 表示该运行没有这项产物（未路由/失败等），跳过不算失败
@@ -794,7 +793,7 @@ export default function DocumentsPage() {
       <Dialog
         open={extractOpen}
         title="提取解析结果"
-        description="每份文档一个文件夹（按上传先后编号 1、2、3…），内含 PDF 原件、OCR Markdown、抽取 JSON，文件保留原名；按文档最近一次运行的状态筛选，没有的产物（如未路由无 JSON）不生成"
+        description="每份文档一个文件夹（以 LIMS 对接的 task_id 命名，页面手动上传的用文档 ID），内含 PDF 原件、OCR Markdown、抽取 JSON，文件保留原名；按文档最近一次运行的状态筛选，没有的产物（如未路由无 JSON）不生成"
         onClose={() => {
           if (!extracting) setExtractOpen(false);
         }}

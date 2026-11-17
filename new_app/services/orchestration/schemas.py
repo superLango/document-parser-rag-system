@@ -14,6 +14,8 @@ class DocumentOut(BaseModel):
     sha256: str
     status: str
     created_at: datetime
+    # 仅 /documents 列表填充：最近一次 LIMS 对接任务的 task_id（非对接上传为空）
+    task_id: str | None = None
 
 
 class CreateRunIn(BaseModel):

@@ -16,7 +16,17 @@ from sqlalchemy.exc import IntegrityError
 from . import shadow as shadow_service
 from .db import SessionLocal
 from .idempotency import build_key
-from .models import Artifact, Document, DocumentVersion, Feedback, Finding, Run, RunEvent, RunStage
+from .models import (
+    Artifact,
+    Document,
+    DocumentVersion,
+    Feedback,
+    Finding,
+    IntegrationTask,
+    Run,
+    RunEvent,
+    RunStage,
+)
 from .models import ReviewReport as ReviewReportRow
 from .rundiff import diff_run_ids
 from .schemas import (
@@ -145,7 +155,21 @@ async def upload_document(file: UploadFile = File(...)) -> DocumentOut:
 async def list_documents() -> list[DocumentOut]:
     async with SessionLocal() as session:
         result = await session.execute(select(Document).order_by(Document.created_at.desc()))
-        return [DocumentOut.model_validate(item) for item in result.scalars()]
+        documents = list(result.scalars())
+        # 按创建时间升序写入，同一文档以最新的对接任务为准
+        tasks = dict(
+            (
+                await session.execute(
+                    select(IntegrationTask.document_id, IntegrationTask.task_id).order_by(
+                        IntegrationTask.created_at
+                    )
+                )
+            ).all()
+        )
+        return [
+            DocumentOut.model_validate(item).model_copy(update={"task_id": tasks.get(item.id)})
+            for item in documents
+        ]
 
 
 @router.get("/documents/{document_id}", response_model=DocumentOut)
