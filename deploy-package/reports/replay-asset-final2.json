@@ -1,0 +1,207 @@
+[
+  {
+    "folder": "24",
+    "name": "1DFHM-QCD-0706-000907 冷泉项目用20MnNiMo钢锻件采购规范B",
+    "tables": 1,
+    "records": 5,
+    "categories": {
+      "晶粒度Average Grain Size": 2,
+      "高倍": 3
+    },
+    "table_details": [
+      {
+        "table_id": "24-T1",
+        "profile": "admin",
+        "rows": 5,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {}
+  },
+  {
+    "folder": "280",
+    "name": "DFWH-LYS-SP0509_Rev.0_CFC_奥氏体不锈钢锻件无损检测技术条件",
+    "tables": 2,
+    "records": 4,
+    "categories": {
+      "外观质量": 2,
+      "超声波检验": 2
+    },
+    "table_details": [
+      {
+        "table_id": "280-T1",
+        "profile": "admin",
+        "rows": 7,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "280-T2",
+        "profile": "admin",
+        "rows": 4,
+        "cols": 5,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {}
+  },
+  {
+    "folder": "207",
+    "name": "关于某型机增加西工钛供货三炉三批验证工作安排",
+    "tables": 10,
+    "records": 13,
+    "categories": {
+      "低倍": 1,
+      "冲击试验": 1,
+      "室温拉伸": 3,
+      "热稳定": 1,
+      "高温拉伸": 2,
+      "持久试验": 5
+    },
+    "table_details": [
+      {
+        "table_id": "207-T1",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T2",
+        "profile": "inspection",
+        "rows": 6,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": "inspection_rules_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T3",
+        "profile": "unknown",
+        "rows": 4,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T4",
+        "profile": "inspection",
+        "rows": 12,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": "inspection_rules_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T5",
+        "profile": "inspection",
+        "rows": 2,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": "inspection_rules_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T6",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T7",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T8",
+        "profile": "mechanical_properties",
+        "rows": 8,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": "mechanical_properties_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T9",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T10",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 53,
+    "prod": {
+      "records": 0,
+      "categories": {}
+    }
+  }
+]

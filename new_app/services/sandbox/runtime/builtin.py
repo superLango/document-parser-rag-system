@@ -163,6 +163,17 @@ def _document_grade_hint(text: str) -> str:
         r"6\s*Al\s*-\s*4\s*V", head, re.IGNORECASE
     ):
         return "6Al-4V"
+    # 中国高温合金/钛合金/铝合金牌号常只印在标题里
+    # （“叶片用GH4720Li合金锻件”），表内没有牌号列。
+    for pattern in (
+        r"(?<![A-Za-z0-9])(GH\d{3,5}[A-Za-z]{0,2})(?![A-Za-z0-9])",
+        r"(?<![A-Za-z0-9])(K\d{3})(?![A-Za-z0-9])",
+        r"(?<![A-Za-z0-9])(TC\d{1,2})(?![A-Za-z0-9])",
+        r"(?<![A-Za-z0-9])(TA\d{1,2})(?![A-Za-z0-9])",
+    ):
+        match = re.search(pattern, head[:800], re.IGNORECASE)
+        if match:
+            return match.group(1)
     temper = re.search(r"\b(\d{4}-[TTH]\d{2,4})\b", head, re.IGNORECASE)
     if temper:
         return temper.group(1)
@@ -734,7 +745,15 @@ def _group_label(header: str) -> str:
     text = str(header or "")
     if " / " not in text:
         return ""
-    return strip_footnote(text.rsplit(" / ", 1)[0]).strip()
+    parts = [part.strip() for part in text.split(" / ") if part.strip()]
+    if not parts:
+        return ""
+    for index, part in enumerate(parts):
+        if _header_measure_start([part]) is not None:
+            if index > 0 and _header_measure_start([parts[index - 1]]) is None:
+                return parts[index - 1]
+            return part
+    return parts[0]
 
 MEASURE_ALIASES: dict[str, list[str]] = {
     "Rm": ["抗拉强度", "拉伸强度", "σb", "tensile strength", "tensile"],
@@ -778,7 +797,15 @@ MEASURE_ALIASES: dict[str, list[str]] = {
         "young's modulus",
     ],
     "侧向膨胀值": ["侧向膨胀值", "侧向膨胀", "lateral expansion"],
-    "持久时间": ["持久时间", "断裂时间", "stress rupture", "rupture life", "time to rupture"],
+    "持久时间": [
+        "持久时间",
+        "断裂时间",
+        "stress rupture",
+        "rupture life",
+        "time to rupture",
+        "τh",
+        "tau",
+    ],
     "持久应力": [
         "持久应力",
         "持久强度",
@@ -793,7 +820,7 @@ MEASURE_ALIASES: dict[str, list[str]] = {
     "断裂韧度L-T": ["l-t", "l-t ksi", "l-t mpa"],
     "断裂韧度T-L": ["t-l", "t-l ksi", "t-l mpa"],
     "断裂韧度S-L": ["s-l", "s-l ksi", "s-l mpa"],
-    "剪切强度": ["剪切强度", "抗剪强度", "shear strength", "tau", "τ"],
+    "剪切强度": ["剪切强度", "抗剪强度", "shear strength"],
     "弯曲压头直径": [
         "弯心直径",
         "弯曲压头",
@@ -1104,6 +1131,127 @@ def _repair_chemical_header_rows(
     return repaired, comparator_row + 1
 
 
+def _is_extra_header_row(row: list[str]) -> bool:
+    """True for a sub-header row that the OCR grid left in the data body.
+
+    Examples: ``A50mm | A5.65 | 90° | 180°`` and ``不小于``.  Real data rows
+    carry numeric ranges or many values and are rejected.
+    """
+    nonempty = [str(cell or "").strip() for cell in row if str(cell or "").strip()]
+    if not nonempty:
+        return False
+    # 宽表（Q355 的 9 个厚度列 / KV2 的 5 温度 × 2 方向）会有一整行
+    # “≤16 | ＞16~40 | …”子表头；前两列（牌号/等级）为空是关键信号。
+    first_two_empty = len(row) >= 2 and not str(row[0] or "").strip() and not str(
+        row[1] or ""
+    ).strip()
+    if first_two_empty and (
+        (
+            len(nonempty) <= 15
+            and all(len(cell) <= 12 for cell in nonempty)
+        )
+        or (
+            # 19 列宽表（Q355 的 ReH 9 + Rm 3 + A 6）子表头超过 15 个单元格，
+            # 但每个单元格都是厚度/温度条件，仍需按子表头吸收。
+            len(nonempty) >= 6
+            and all(len(cell) <= 12 for cell in nonempty)
+            and all(
+                _is_condition_header(cell)
+                or re.fullmatch(r"[-+]?\s*\d+(?:\.\d+)?\s*(?:℃|°C)", cell)
+                for cell in nonempty
+            )
+        )
+    ):
+        return True
+    if len(nonempty) > 4:
+        return False
+    if any(_numeric_cell(cell) for cell in nonempty):
+        return False
+    if any(
+        cell in SKIP_CELL_VALUES and cell not in {"不小于", "不大于", "≥", "≤"}
+        for cell in nonempty
+    ):
+        return False
+    if any(len(cell) > 12 for cell in nonempty):
+        return False
+    return True
+
+
+def _absorb_extra_header_rows(
+    headers: list[str], data: list[list[str]]
+) -> tuple[list[str], list[list[str]]]:
+    absorbed = 0
+    while data and absorbed < 2 and _is_extra_header_row(data[0]):
+        row = list(data[0])
+        # 合并单元格在 OCR 里只保留首列（“20 ℃”跨纵向/横向两列）；
+        # 向右补齐到下一个非空标签，恢复 colspan 语义。
+        last = ""
+        for col, value in enumerate(row):
+            text = str(value or "").strip()
+            if text:
+                last = text
+            elif last:
+                row[col] = last
+        for col, value in enumerate(row):
+            text = str(value or "").strip()
+            if not text or col >= len(headers):
+                continue
+            if text not in headers[col]:
+                headers[col] = f"{headers[col]} / {text}".strip(" /")
+        data = data[1:]
+        absorbed += 1
+    return headers, data
+
+
+def _is_condition_header(header: str) -> bool:
+    text = str(header or "").strip()
+    if not text:
+        return False
+    if _header_measure_start([text]) is not None:
+        return False
+    parts = [part.strip() for part in text.split(" / ") if part.strip()]
+    if not parts:
+        return False
+    for part in parts:
+        if part in {"不小于", "不大于", "≥", "≤"}:
+            continue
+        if re.fullmatch(
+            r"[-+]?\s*[<>≤≥＞＜]?\s*\d+(?:\.\d+)?"
+            r"(?:\s*[~～\-–]\s*[<>≤≥＞＜]?\s*\d+(?:\.\d+)?)?\s*(?:mm|℃|°C)?[a-z]?\s*",
+            part,
+        ):
+            continue
+        if part in DIRECTION_LABELS or normalize(part) in {
+            normalize(label) for label in DIRECTION_LABELS
+        }:
+            continue
+        if part in {"室温", "高温", "低温", "常温"}:
+            continue
+        return False
+    return True
+
+
+def _propagate_group_headers(headers: list[str]) -> list[str]:
+    """Carry a merged group header across its condition sub-columns.
+
+    ``上屈服强度 ReH`` + 9 个厚度列在 OCR 表头里只标了第一列；把组名补到
+    后续“≤16 / ＞16~40…”列，配方才能为每个厚度列生成记录。
+    """
+    result = list(headers)
+    current = ""
+    for index, header in enumerate(result):
+        text = str(header or "").strip()
+        if text and _header_measure_start([text]) is not None:
+            current = _group_label(text) or text
+            continue
+        if current and (not text or _is_condition_header(text)):
+            if not result[index].startswith(current):
+                result[index] = f"{current} / {text}".strip(" /")
+        elif text:
+            current = ""
+    return result
+
+
 def _header_columns(table: dict[str, Any]) -> tuple[list[str], list[list[str]]]:
     rows = table.get("rows") or []
     header_rows = int(table.get("header_rows") or 1)
@@ -1117,10 +1265,14 @@ def _header_columns(table: dict[str, Any]) -> tuple[list[str], list[list[str]]]:
         if repaired is not paths:
             headers = [" / ".join(part for part in p if part) for p in repaired]
             data = rows[repaired_rows:] if repaired_rows > 0 else rows
+            headers, data = _absorb_extra_header_rows(headers, data)
+            headers = _propagate_group_headers(headers)
             return _collapse_duplicate_columns(headers, data)
         headers = [" / ".join(part for part in p if part) for p in paths]
         # TableGrid.rows keeps the header rows; header_paths describes them.
         data = rows[header_rows:] if header_rows > 0 else rows
+        headers, data = _absorb_extra_header_rows(headers, data)
+        headers = _propagate_group_headers(headers)
         return _collapse_duplicate_columns(headers, data)
     if not rows:
         return [], []
@@ -1134,6 +1286,8 @@ def _header_columns(table: dict[str, Any]) -> tuple[list[str], list[list[str]]]:
                 parts.append(row[col])
         headers.append(" / ".join(parts))
     data = rows[header_rows:]
+    headers, data = _absorb_extra_header_rows(headers, data)
+    headers = _propagate_group_headers(headers)
     return _collapse_duplicate_columns(headers, data)
 
 
@@ -1404,11 +1558,95 @@ def _table_layout(
     return _repair_shifted_header(headers, data, meta)
 
 
+def _numeric_cell(cell: Any) -> bool:
+    return bool(
+        re.fullmatch(
+            r"\s*(?:[<>≤≥]\s*)?\d+(?:\.\d+)?"
+            r"(?:\s*[~～\-–]\s*(?:[<>≤≥]\s*)?\d+(?:\.\d+)?)?\s*",
+            str(cell or ""),
+        )
+    )
+
+
+def _header_measure_start(headers: list[str]) -> int | None:
+    for index, header in enumerate(headers):
+        # “材料牌号 / C”是 OCR 把牌号列和第一个元素列合并了，不是 measure 列。
+        if re.search(
+            r"牌号|钢号|钢级|grade|数字代号|序号|材料名称|名称$",
+            header,
+            re.IGNORECASE,
+        ):
+            continue
+        if _element_symbol(header):
+            return index
+        measure = _detect_measure(header, "")
+        if measure:
+            return index
+        if re.search(
+            r"(?<![A-Za-z])(?:Rm|ReH|ReL|Rp0\.2|Rp1\.0|KV2|KU2|KU5|"
+            r"HBW|HBS|HRC|HRB|HV)(?![A-Za-z0-9])",
+            header,
+        ):
+            return index
+        # 只有中文名、没有可识别符号的性能列（断后伸长率 A、碳当量 CEV、
+        # 断面收缩率 Z）：宽表靠这些列名识别组标题并把厚度/温度子表头
+        # 传播到后续列，否则每一列都被当成独立表头而丢失条件。
+        if re.search(
+            r"断后伸长率|伸长率|延伸率|断面收缩率|碳当量|焊接裂纹敏感性|"
+            r"冲击吸收能量|冲击功|抗拉强度|上屈服强度|下屈服强度|屈服强度|"
+            r"布氏硬度|洛氏硬度|维氏硬度",
+            header,
+        ):
+            return index
+    return None
+
+
+def _align_header_with_data(
+    headers: list[str], data_rows: list[list[str]]
+) -> list[str]:
+    """Repair a header that lost a key column (OCR dropped ``旧牌号``).
+
+    When the first measure column contains a grade/code and the next column is
+    numeric, the data rows have one more leading key column than the header.
+    Insert empty header cells so chemical/property columns bind to real values.
+    """
+    start = _header_measure_start(headers)
+    if start is None or not data_rows:
+        return headers
+    for row in data_rows[:5]:
+        if not row or start >= len(row):
+            continue
+        first = str(row[start] or "").strip()
+        if not first or first in SKIP_CELL_VALUES:
+            # 空值/“—”不能证明列错位；继续看下一行，避免把正常表头右移。
+            continue
+        if _numeric_cell(first):
+            return headers
+        if re.fullmatch(r"[A-Za-zσδψτ]{1,6}(?:\s*[/%].*)?", first):
+            # 竖排表：第一列是“Rp0.2/A/Z”等项目名，不是漏掉的牌号列。
+            return headers
+        for offset in (1, 2, 3):
+            probe = start + offset
+            if probe >= len(row):
+                break
+            value = str(row[probe] or "").strip()
+            if not value:
+                continue
+            if _numeric_cell(value):
+                aligned = list(headers)
+                for _ in range(offset):
+                    aligned.insert(start, "")
+                return aligned
+            break
+        return headers
+    return headers
+
+
 def _iter_blocks(table: dict[str, Any]):
     """Yield (block_id, headers, data_rows, meta) for a table or its blocks."""
     headers, data, meta = _table_layout(table)
     if headers and data:
-        yield table.get("block_id") or "", headers, data, meta
+        yield table.get("block_id") or "", _align_header_with_data(headers, data), data, meta
         return
     for block in table.get("blocks") or []:
         block_table = {
@@ -1905,20 +2143,48 @@ def _prose_methods(norm: str) -> dict[str, str]:
     return found
 
 
+INSPECTION_ITEM_HEADERS = (
+    "检验项目",
+    "检验试验项目",
+    "检验试验项目名称",
+    "理化项目",
+    "理化检验项目",
+    "检测项目",
+    "试验项目",
+    "测试项目",
+    "项目名称",
+)
+INSPECTION_CONTEXT_HEADERS = (
+    "试验方法",
+    "检验方法",
+    "取样",
+    "数量",
+    "测试条件",
+    "试验条件",
+    "验收指标",
+    "技术要求",
+    "判定",
+)
+
+
 def _inspection_items(ocr: dict[str, Any]) -> list[dict[str, str]]:
     items: list[dict[str, str]] = []
     for table in ocr.get("tables") or []:
         headers = _flatten_headers(table)
         joined = " ".join(headers)
-        if "检验项目" not in joined:
+        if not any(token in joined for token in INSPECTION_ITEM_HEADERS):
             continue
-        if not any(token in joined for token in ("试验方法", "检验方法", "取样", "数量")):
+        if not any(token in joined for token in INSPECTION_CONTEXT_HEADERS):
             continue
         item_col = next(
             (
                 index
                 for index, header in enumerate(headers)
-                if "检验项目" in header and "数量" not in header
+                if any(token in header for token in INSPECTION_ITEM_HEADERS)
+                and not any(
+                    token in header
+                    for token in ("数量", "方法", "条件", "指标", "标准", "章条", "条款")
+                )
             ),
             None,
         )
@@ -1974,6 +2240,18 @@ def _inspection_items(ocr: dict[str, Any]) -> list[dict[str, str]]:
             index
             for index, header in enumerate(headers)
             if any(token in header for token in ("备注", "说明"))
+        ]
+        condition_cols = [
+            index
+            for index, header in enumerate(headers)
+            if index != item_col
+            and any(token in header for token in ("测试条件", "试验条件", "试验温度"))
+        ]
+        acceptance_cols = [
+            index
+            for index, header in enumerate(headers)
+            if index != item_col
+            and any(token in header for token in ("验收指标", "技术要求", "判定标准"))
         ]
         combined_quantity_location = any(
             "数量" in headers[index] and "部位" in headers[index]
@@ -2051,6 +2329,22 @@ def _inspection_items(ocr: dict[str, Any]) -> list[dict[str, str]]:
                 for index in note_cols
                 if index < len(row) and _clean_cell(row[index])
             )
+            condition = " ".join(
+                _clean_cell(row[index])
+                for index in condition_cols
+                if index < len(row) and _clean_cell(row[index])
+            )
+            requirement = " ".join(
+                _clean_cell(row[index])
+                for index in acceptance_cols
+                if index < len(row) and _clean_cell(row[index])
+            )
+            if condition and condition not in requirement:
+                requirement = (
+                    f"{requirement}（试验条件：{condition}）"
+                    if requirement
+                    else condition
+                )
             if sampling_text and sampling_text not in note:
                 note = f"{note}；{sampling_text}" if note else sampling_text
             direction = _sample_direction(sampling_text) or _sample_direction(quantity)
@@ -2063,6 +2357,8 @@ def _inspection_items(ocr: dict[str, Any]) -> list[dict[str, str]]:
                     "method": method,
                     "clause": clause,
                     "note": note,
+                    "condition": condition,
+                    "requirement": requirement,
                     "combined": "1" if combined_quantity_location else "",
                 }
             )
@@ -2601,6 +2897,16 @@ def _alias_matches(header: str, token: str) -> bool:
     if len(token) <= 8:
         if token in _header_parts(header):
             return True
+        # 中文限定词直接粘符号（"室温冲击AKv"、"硬度HB"）：按 ASCII 词边界匹配，
+        # 既避免 hb 命中 hbw，也避免漏掉紧贴中文的 akv/rm/hb。
+        # 单字母（A/C）必须与中文隔开："试样状态a" 的脚注 a 不是伸长率 A。
+        prefix = r"(?<![a-z0-9\u4e00-\u9fff])" if len(token) == 1 else r"(?<![a-z0-9])"
+        # 符号后常粘脚注字母："ReH a/MPa" -> "reha/mpa"，允许一个 a-f 脚注。
+        suffix = r"[a-f]?" if len(token) > 1 else ""
+        if re.search(
+            rf"{prefix}{re.escape(token)}{suffix}(?![a-z0-9])", header
+        ):
+            return True
     else:
         return token in header
     if token in SPACED_SYMBOLS:
@@ -2630,6 +2936,21 @@ def _same_measure_family(printed: str, measure: str) -> bool:
 def _printed_measure(header: str) -> str:
     """First known measure symbol printed in a normalized header."""
     text = re.sub(r"(?:n/mm2|n/mm²|j/cm2|j/cm²|mpa|gpa)", "", header)
+    direct = re.search(
+        r"(?<![a-z0-9])(Rp0\.2|Rp1\.0|ReH|ReL|Rm|KV2|KU2|KU5|"
+        r"HBW|HBS|HRC|HRB|HV)[a-f]?(?![a-z0-9])",
+        text,
+        re.IGNORECASE,
+    )
+    if direct:
+        symbol = direct.group(1).upper()
+        return {
+            "RP0.2": "Rp0.2",
+            "RP1.0": "Rp1.0",
+            "REH": "ReH",
+            "REL": "ReL",
+            "RM": "Rm",
+        }.get(symbol, symbol)
     has_cjk = bool(CJK_RE.search(text))
     parts = set(_header_parts(text))
     for symbol in SYMBOL_RE.findall(text):
@@ -2658,6 +2979,16 @@ def _find_column(
         if skip_group and " / " in header:
             head, rest = header.split(" / ", 1)
             if CJK_RE.search(head) and rest.strip() and not UNIT_RE.match(rest.strip()):
+                # 组标题本身已经点名了具体性能（上屈服强度 ReH、
+                # 冲击吸收能量 KV2）时，它就是 measure 列，不能剥掉。
+                if re.search(
+                    r"Rm|ReH|ReL|Rp0\.2|Rp1\.0|KV2|KU2|KU5|HBW|HBS|HRC|HRB|HV|"
+                    r"抗拉强度|屈服强度|断后伸长率|断面收缩率|冲击吸收能量|"
+                    r"碳当量|焊接裂纹敏感性|\bCEV\b|\bPcm\b|伸长率|延伸率",
+                    head,
+                    re.IGNORECASE,
+                ):
+                    return header
                 return rest
         return header
 
@@ -2674,15 +3005,15 @@ def _find_column(
                 continue
             if measure:
                 printed = _printed_measure(header)
-                if (
-                    printed
-                    and not _same_measure_family(printed, measure)
-                    and (bound_measures is None or printed in bound_measures)
-                ):
-                    # "冲击吸收能量" aliases are shared by KU2/KV2; the printed
-                    # symbol decides which measure a column belongs to when that
-                    # measure is also bound by the recipe.
-                    continue
+                if printed and printed != measure:
+                    if bound_measures is not None and printed in bound_measures:
+                        # 同一张表同时绑定 ReH/ReL/Rp0.2 时，列头印的是哪个
+                        # 就只能绑定哪个，不能把 9 个厚度列都当成 ReL。
+                        continue
+                    if not _same_measure_family(printed, measure):
+                        # "冲击吸收能量" aliases are shared by KU2/KV2; the
+                        # printed symbol decides which measure a column belongs.
+                        continue
             if _alias_matches(header, token) or _alias_matches(spaced[idx], token):
                 return idx
     return None
@@ -2945,6 +3276,12 @@ def _measure_aliases(measure: str) -> list[str]:
     aliases = list(MEASURE_ALIASES.get(measure, []))
     # Single-letter element symbols (C, P, S, N, ...) must be searchable too.
     aliases.insert(0, measure)
+    if measure == "A":
+        # 铝材/板材常并列 A50mm 与 A5.65 两个标距的断后伸长率。
+        aliases.extend(["A50mm", "A50", "A5.65", "A5D", "A10", "δ5", "δ10"])
+    if measure.startswith("其他元素"):
+        # 国标成分表常只写“其他元素”，不区分单一/总和。
+        aliases.append("其他元素")
     return list(dict.fromkeys(aliases))
 
 
@@ -2955,6 +3292,83 @@ def _binding_measure_aliases(
     return list(
         dict.fromkeys([*_measure_aliases(measure), *binding_aliases.get(measure, [])])
     )
+
+
+def _header_binds_measure(header: str, bindings: dict[str, Any]) -> bool:
+    """表头能否直接绑定到配方中的某个 measure。
+
+    无牌号表会把“室温冲击AKv”“硬度HB”这类性能列误判成条件列（室温/硬度），
+    一旦占用该列，measure 绑定就会失败。这里先判断它是不是性能列。
+    """
+    measures = list(bindings.get("measures") or {})
+    if not measures:
+        return False
+    bound = {_canonical_measure(str(name)) for name in measures}
+    for measure in measures:
+        col = _find_column(
+            [header],
+            _binding_measure_aliases(str(measure), {}),
+            set(),
+            skip_group=True,
+            measure=str(measure),
+            bound_measures=bound,
+        )
+        if col == 0:
+            return True
+    return False
+
+
+BENDING_HEADER_RE = re.compile(r"弯曲|弯折|\bbend", re.IGNORECASE)
+BENDING_ANGLE_RE = re.compile(r"(45|90|120|180)\s*°")
+
+
+def _bending_angle(header: str) -> str:
+    """Return the bending angle for a ``弯曲半径 90°/180°`` column."""
+    if not BENDING_HEADER_RE.search(header or ""):
+        return ""
+    match = BENDING_ANGLE_RE.search(header)
+    return match.group(1) if match else ""
+
+
+def _column_sub_condition(header: str, group_label: str) -> dict[str, str]:
+    """Conditions carried by one column inside a repeated-measure group.
+
+    ``上屈服强度… / ≤16`` -> 尺寸厚度=≤16; ``KV2/J / 20 ℃ / 纵向`` ->
+    试验温度=20 ℃, 方向=纵向.
+    """
+    text = header or ""
+    if group_label and group_label in text:
+        text = text.split(group_label, 1)[1]
+    parts = [part.strip() for part in re.split(r"\s*/\s*", text) if part.strip()]
+    condition: dict[str, str] = {}
+    temperature = next(
+        (part for part in parts if re.search(r"℃|°C|温度", part)), ""
+    )
+    direction = next(
+        (
+            part
+            for part in parts
+            if part in DIRECTION_LABELS
+            or normalize(part) in {normalize(label) for label in DIRECTION_LABELS}
+        ),
+        "",
+    )
+    used = {temperature, direction}
+    thickness = next(
+        (
+            part
+            for part in parts
+            if part not in used and re.search(r"\d", part)
+        ),
+        "",
+    )
+    if temperature:
+        condition["试验温度"] = temperature
+    if direction:
+        condition["方向"] = direction
+    if thickness:
+        condition["尺寸厚度"] = thickness
+    return condition
 
 
 def _grade_valid(grade: str, *, allow_numeric: bool = False) -> bool:
@@ -3024,6 +3438,49 @@ def _condition_key(conditions: dict[str, str]) -> str:
     return "|".join(sorted(normalize(value) for value in conditions.values() if value))
 
 
+# 牌号末尾的小写 a-f 多是脚注标记（Q420c、Q460b），不是牌号本身。
+GRADE_FOOTNOTE_LETTER_RE = re.compile(r"(?<=[0-9])[a-f]$")
+GRADE_CLASS_TOKEN_RE = re.compile(r"[A-Za-z]{1,3}|\d{1,2}[A-Za-z]?")
+
+
+def _strip_grade_footnote(text: str) -> str:
+    value = strip_footnote(str(text or "")).strip()
+    return GRADE_FOOTNOTE_LETTER_RE.sub("", value)
+
+
+def _grade_class_combine(base: str, klass: str) -> list[str]:
+    """Combine a 牌号 cell with a 质量等级 cell into full grade designations.
+
+    ``Q355`` + ``B、C`` -> ``Q355B``/``Q355C``; ``Q355、Q390`` + ``D`` ->
+    ``Q355D``/``Q390D``.  The class cell is only accepted when every token is
+    a short letter/digit code, so ordinary condition text is never appended.
+    """
+    bases = [part for part in GRADE_SPLIT_RE.split(str(base or "").strip()) if part]
+    classes = [part for part in GRADE_SPLIT_RE.split(str(klass or "").strip()) if part]
+    if not bases or not classes:
+        return []
+    if any(not GRADE_CLASS_TOKEN_RE.fullmatch(token) for token in classes):
+        return []
+    combined: list[str] = []
+    changed = False
+    for item in bases:
+        name = _strip_grade_footnote(item)
+        if not name:
+            continue
+        for token in classes:
+            candidate = (
+                name
+                if name.upper().endswith(token.upper())
+                else f"{name}{token}"
+            )
+            if len(classes) > 1 or candidate != name:
+                changed = True
+            if candidate not in combined:
+                combined.append(candidate)
+    return combined if changed else []
+
+
+
 def _is_footnote_row(cells: list[str]) -> bool:
     text = "".join(cells).strip()
     if not text:
@@ -3081,6 +3538,28 @@ def _element_symbol(text: str) -> str:
         if all(token in ELEMENT_SYMBOLS for token in tokens):
             return "+".join(tokens)
     return ""
+
+
+def _element_column_condition(header: str) -> dict[str, str]:
+    """Condition carried by an element column header.
+
+    ``C（＞40 mm）`` / ``C（≤40 mm）b`` are two composition limits for
+    different product thicknesses and must not overwrite each other.
+    """
+    text = strip_footnote(str(header or ""))
+    match = re.search(r"[（(]([^）)]*)[）)]", text)
+    if not match:
+        return {}
+    inner = match.group(1).strip()
+    if not inner:
+        return {}
+    if re.search(r"mm|厚度|尺寸|直径", inner, re.IGNORECASE):
+        return {"尺寸厚度": inner}
+    if "℃" in inner or "温度" in inner:
+        return {"试验温度": inner}
+    if normalize(inner) in {normalize(label) for label in DIRECTION_LABELS}:
+        return {"方向": inner}
+    return {}
 
 
 def _nonvalue_label(raw: str) -> bool:
@@ -3559,6 +4038,23 @@ def _parse_element_table(
                 }
             )
             continue
+        # 牌号/质量等级两列在成分表里同样常见（Q355 + B/C/D）；等级只拼到
+        # 牌号上，且允许一格多个等级。
+        class_col: int | None = None
+        if grade_col is not None and grade_col + 1 < len(headers):
+            grade_header = normalize(headers[grade_col])
+            class_header = normalize(headers[grade_col + 1])
+            if (
+                "牌号" in grade_header
+                or "钢级" in grade_header
+                or "钢号" in grade_header
+                or "grade" in grade_header
+            ) and (
+                "质量等级" in class_header
+                or "等级" in class_header
+                or "class" in class_header
+            ):
+                class_col = grade_col + 1
         for row_index, row in enumerate(data_rows):
             if _is_footnote_row(row):
                 continue
@@ -3570,8 +4066,19 @@ def _parse_element_table(
                 continue
             grade = label if grade_col is not None else "~"
             conditions = {} if grade_col is not None else {"依据": label}
+            grades = [grade]
+            if class_col is not None and class_col < len(row):
+                combined = _grade_class_combine(
+                    label, strip_footnote(row[class_col])
+                )
+                if combined:
+                    grades = combined
             properties = {}
             cells = {}
+            # 同一元素按厚度分列（C（＞40 mm）/ C（≤40 mm））时，两个值不能
+            # 互相覆盖；按列头括号条件拆成独立记录，条件写入 conditions。
+            column_properties: dict[tuple[tuple[str, str], ...], dict[str, Any]] = {}
+            column_cells: dict[tuple[tuple[str, str], ...], dict[str, str]] = {}
             for col, symbol in element_cols:
                 if col >= len(row):
                     continue
@@ -3596,45 +4103,97 @@ def _parse_element_table(
                     unit = "%"
                 parsed["unit"] = unit
                 parsed["column"] = headers[col]
-                properties[symbol] = parsed
-                cells[symbol] = row[col]
-            if not properties:
+                column_condition = _element_column_condition(headers[col])
+                if column_condition:
+                    key = tuple(sorted(column_condition.items()))
+                    column_properties.setdefault(key, {})[symbol] = parsed
+                    column_cells.setdefault(key, {})[symbol] = row[col]
+                else:
+                    if symbol in properties:
+                        continue
+                    properties[symbol] = parsed
+                    cells[symbol] = row[col]
+            if not properties and not column_properties:
                 continue
-            record_id = f"{table_id}-R{row_index + 1}"
-            records.append(
-                {
-                    "record_id": record_id,
-                    "table_id": table_id,
-                    "block_id": block_id,
-                    "page_no": page_no,
-                    "row_index": row_index,
-                    "recipe_id": recipe_id,
-                    "recipe_version": recipe_version,
-                    "profile": profile,
-                    "grade": grade,
-                    "conditions": conditions,
-                    "condition_key": _condition_key(conditions),
-                    "properties": properties,
-                    "evidence_refs": [record_id],
-                    "source": {
-                        "table_id": table_id,
-                        "block_id": block_id,
-                        "page_no": page_no,
-                        "row_index": row_index,
-                    },
-                }
-            )
-            evidence.append(
-                {
-                    "evidence_id": record_id,
-                    "table_id": table_id,
-                    "block_id": block_id,
-                    "page_no": page_no,
-                    "row_index": row_index,
-                    "raw_row": list(row),
-                    "cells": cells,
-                }
-            )
+            for split_grade in grades:
+                record_id = f"{table_id}-R{row_index + 1}"
+                if len(grades) > 1:
+                    record_id = f"{record_id}-G{grades.index(split_grade) + 1}"
+                if properties:
+                    records.append(
+                        {
+                            "record_id": record_id,
+                            "table_id": table_id,
+                            "block_id": block_id,
+                            "page_no": page_no,
+                            "row_index": row_index,
+                            "recipe_id": recipe_id,
+                            "recipe_version": recipe_version,
+                            "profile": profile,
+                            "grade": split_grade,
+                            "conditions": conditions,
+                            "condition_key": _condition_key(conditions),
+                            "properties": properties,
+                            "evidence_refs": [record_id],
+                            "source": {
+                                "table_id": table_id,
+                                "block_id": block_id,
+                                "page_no": page_no,
+                                "row_index": row_index,
+                            },
+                        }
+                    )
+                    evidence.append(
+                        {
+                            "evidence_id": record_id,
+                            "table_id": table_id,
+                            "block_id": block_id,
+                            "page_no": page_no,
+                            "row_index": row_index,
+                            "raw_row": list(row),
+                            "cells": cells,
+                        }
+                    )
+                for sequence, (condition_key, props) in enumerate(
+                    column_properties.items(), start=1
+                ):
+                    condition = dict(conditions)
+                    condition.update(dict(condition_key))
+                    extra_id = f"{record_id}-X{sequence}"
+                    records.append(
+                        {
+                            "record_id": extra_id,
+                            "table_id": table_id,
+                            "block_id": block_id,
+                            "page_no": page_no,
+                            "row_index": row_index,
+                            "recipe_id": recipe_id,
+                            "recipe_version": recipe_version,
+                            "profile": profile,
+                            "grade": split_grade,
+                            "conditions": condition,
+                            "condition_key": _condition_key(condition),
+                            "properties": props,
+                            "evidence_refs": [extra_id],
+                            "source": {
+                                "table_id": table_id,
+                                "block_id": block_id,
+                                "page_no": page_no,
+                                "row_index": row_index,
+                            },
+                        }
+                    )
+                    evidence.append(
+                        {
+                            "evidence_id": extra_id,
+                            "table_id": table_id,
+                            "block_id": block_id,
+                            "page_no": page_no,
+                            "row_index": row_index,
+                            "raw_row": list(row),
+                            "cells": column_cells.get(condition_key, {}),
+                        }
+                    )
 
     if not records:
         diagnostics.append(
@@ -4191,6 +4750,9 @@ def parse_table(
             used.add(key_col)
         else:
             for index, header in enumerate(headers):
+                # 性能列（室温冲击AKv、硬度HB…）优先归 measure，不能被当成条件列占用。
+                if _header_binds_measure(header, bindings):
+                    continue
                 name = _condition_name(header)
                 if name:
                     no_key_conditions.setdefault(name, []).append(index)
@@ -4198,6 +4760,8 @@ def parse_table(
             # W3：表头没有条件关键词、但列级继承出条件（纵向/≤16/室温）的列。
             for index, name in enumerate(meta_conditions):
                 if not name or index >= len(headers) or index in used:
+                    continue
+                if _header_binds_measure(headers[index], bindings):
                     continue
                 if index < len(_meta_elements) and _meta_elements[index]:
                     continue
@@ -4333,8 +4897,23 @@ def parse_table(
                     # Repeated measure columns without a group heading are
                     # distinguished by their direction row.
                     label = f"{headers[col]}|{direction}"
-                if label and label not in primary_labels:
-                    extra_groups.setdefault(label, []).append(
+                elif not label:
+                    # 同一属性多列但组标题缺失（A50mm / A5.65）：用列名本身
+                    # 作为分组，避免第二列被静默丢弃。
+                    label = headers[col]
+                sub_condition = _column_sub_condition(headers[col], label)
+                if sub_condition:
+                    # 同一组下按厚度/温度/方向分列：每一列都是独立记录。
+                    group_key = (
+                        f"{label}#"
+                        + ";".join(f"{k}={v}" for k, v in sorted(sub_condition.items()))
+                    )
+                else:
+                    group_key = label
+                if group_key and (
+                    sub_condition or group_key not in primary_labels
+                ):
+                    extra_groups.setdefault(group_key, []).append(
                         (measure, col, direction)
                     )
 
@@ -4357,6 +4936,17 @@ def parse_table(
                 used.add(col)
                 condition_cols[str(token)] = col
 
+        # 无牌号要求表：表头是性能项、只有 1-2 行数值（如 900~1100 | ≥780 | ≥15）。
+        # 这类表没有牌号列，应产出“全部牌号”的一条多属性记录，而不是把首个
+        # 数值当牌号、把其余性能列丢弃。
+        requirement_row = (
+            not key_found
+            and not no_key_conditions
+            and not condition_cols
+            and len(measure_cols) >= 2
+            and 0 < len(data_rows) <= 2
+        )
+
         # 合并单元格：牌号列纵向合并时，续行的牌号单元格为空，应沿用上一行牌号。
         last_grade_cell = ""
         merged_grade_fills = 0
@@ -4366,6 +4956,9 @@ def parse_table(
         merged_condition_fills = 0
 
         previous_row: list[str] | None = None
+        previous_measure_row: list[str] | None = None
+        previous_base_grade = ""
+        last_class_cell = ""
         for row_index, row in enumerate(data_rows):
             row_total += 1
             row = _repair_row_missing_leading(row, previous_row, headers)
@@ -4374,18 +4967,54 @@ def parse_table(
             if _is_footnote_row(row) or _is_limit_row(row):
                 continue
             grade_cell = row[key_col] if key_col < len(row) else ""
+            class_cell = ""
             if class_col is not None and class_col < len(row):
                 class_cell = strip_footnote(row[class_col])
                 # OCR 会把 C 值塞进“质量等级”列（B0.24），等级只保留字母。
                 contaminated = re.fullmatch(r"([A-Z])\s*\d+(?:\.\d+)?", class_cell)
                 if contaminated:
                     class_cell = contaminated.group(1)
-                if class_cell and class_cell not in grade_cell:
-                    grade_cell = f"{grade_cell}{class_cell}"
-            raw_grade = strip_footnote(grade_cell) if strip_marks else (grade_cell or "").strip()
-            if key_found and not raw_grade and last_grade_cell:
-                raw_grade = last_grade_cell
+                # 方向/厚度续行的牌号与等级都是纵向合并单元格：两列都空时
+                # 沿用上一行的等级（Q355 纵向/横向两行共享 B、C、D）。
+                if not class_cell and not str(grade_cell or "").strip():
+                    class_cell = last_class_cell
+                elif class_cell:
+                    last_class_cell = class_cell
+            base_grade = (
+                strip_footnote(grade_cell) if strip_marks else (grade_cell or "").strip()
+            )
+            if key_found and not base_grade and last_grade_cell:
+                base_grade = last_grade_cell
                 merged_grade_fills += 1
+            # PDF 纵向合并单元格：同一牌号的不同质量等级（Q355 B/C/D）只在
+            # 第一行印数值，后续等级行留空表示沿用。等级行整行空值时按上一
+            # 行补齐，避免 Q355D 只剩一个厚度值。
+            if (
+                class_col is not None
+                and base_grade
+                and base_grade == previous_base_grade
+                and previous_measure_row is not None
+            ):
+                row = [
+                    cell
+                    if str(cell or "").strip()
+                    else (
+                        previous_measure_row[column]
+                        if column < len(previous_measure_row)
+                        else ""
+                    )
+                    for column, cell in enumerate(row)
+                ]
+                previous_row = row
+            previous_measure_row = list(row)
+            previous_base_grade = base_grade or previous_base_grade
+            # 质量等级列常常是合并单元格的续行（牌号空、等级 D/E）：等级只
+            # 能拼到上一行牌号上，不能单独成为牌号 "D"。
+            raw_grade = base_grade
+            if class_cell and key_found:
+                combined = _grade_class_combine(base_grade, class_cell)
+                if combined:
+                    raw_grade = "、".join(combined)
             # 跨页续行常把残余的“横向 45 - - …”当成新牌号“45”；牌号是纯
             # 数字且行内出现方向词时，说明这是上一行的续行而不是新材料。
             if (
@@ -4417,7 +5046,9 @@ def parse_table(
                 )
                 continue
             dimension_condition = None
-            if no_key_conditions:
+            if requirement_row:
+                grades = ["全部牌号"]
+            elif no_key_conditions:
                 grades = ["~"]
             elif not key_found and _is_dimension_header(headers[key_col]):
                 # A dimension/size column is a condition, not a grade.  This
@@ -4442,8 +5073,9 @@ def parse_table(
                     }
                 )
                 continue
-            if key_found and raw_grade:
-                last_grade_cell = raw_grade
+            if key_found and base_grade:
+                # 保存未拼等级的牌号，下一行若只给新等级（D/E），仍能正确组合。
+                last_grade_cell = base_grade
 
             conditions: dict[str, str] = {}
             for name, col in sorted(condition_cols.items()):
@@ -4494,13 +5126,32 @@ def parse_table(
                 )
                 continue
             properties: dict[str, Any] = {}
+            primary_sub_conditions: dict[str, dict[str, str]] = {}
             for measure, col in sorted(measure_cols.items()):
                 cell = row[col] if col < len(row) else ""
                 parsed = _parse_value(cell, strip_marks)
                 if parsed is None:
                     continue
                 raw_value = str(parsed.get("raw") or "").strip()
-                if raw_value in SKIP_CELL_VALUES or _prose_cell(raw_value, parsed):
+                if raw_value in SKIP_CELL_VALUES:
+                    # 成分/力学表中的“-”表示该项不作规定，仍保留为 na 字段，
+                    # 与金标/业务导出口径一致；其他表的空值不建属性。
+                    if profile in {
+                        "chemical_composition",
+                        "mechanical_properties",
+                    } and raw_value in {
+                        "-",
+                        "--",
+                        "—",
+                        "–",
+                        "－",
+                        "―",
+                    }:
+                        parsed["operator"] = "na"
+                        parsed["value"] = None
+                    else:
+                        continue
+                if _prose_cell(raw_value, parsed):
                     continue
                 if (
                     profile == "chemical_composition"
@@ -4562,8 +5213,59 @@ def parse_table(
                     )
                     continue
                 properties[measure_key] = parsed
+                # 主测量列本身也可能带子条件（ReH 的 ≤16、A 的 ≤40、
+                # KV2 的 20℃/纵向）。不能因为它是主列就丢掉厚度/温度。
+                sub_condition = _column_sub_condition(
+                    headers[col], _group_label(headers[col])
+                )
+                if sub_condition:
+                    primary_sub_conditions[measure_key] = sub_condition
 
-            if not properties:
+            # 弯曲半径 90°/180° 列没有对应的配方 measure；作为附加属性
+            # 挂在同一牌号/厚度记录上，归入“弯曲”类别。
+            if profile == "mechanical_properties":
+                for col, header in enumerate(headers):
+                    if col in used:
+                        continue
+                    angle = _bending_angle(header)
+                    if not angle:
+                        continue
+                    cell = row[col] if col < len(row) else ""
+                    parsed = _parse_value(cell, strip_marks)
+                    if parsed is None:
+                        continue
+                    raw_value = str(parsed.get("raw") or "").strip()
+                    if raw_value in SKIP_CELL_VALUES:
+                        if raw_value in {"-", "--", "—", "–", "－", "―"}:
+                            parsed["operator"] = "na"
+                            parsed["value"] = None
+                        else:
+                            continue
+                    parsed["unit"] = ""
+                    parsed["column"] = header
+                    properties[f"弯曲半径{angle}°"] = parsed
+
+            # 主测量列本身也可能按厚度/温度分列（ReH 的 9 个厚度列、
+            # A 的 6 个厚度列、KV2 的 5 温度 × 2 方向）。主列的子条件
+            # 若互不相同，必须拆成独立记录，不能塞进同一条无条件记录。
+            primary_split: list[tuple[dict[str, Any], dict[str, str]]] = []
+            conditioned = {
+                measure: sub
+                for measure, sub in primary_sub_conditions.items()
+                if measure in properties
+            }
+            if conditioned:
+                distinct = {
+                    tuple(sorted(sub.items())) for sub in conditioned.values()
+                }
+                if len(conditioned) == len(properties) and len(distinct) == 1:
+                    conditions.update(next(iter(conditioned.values())))
+                else:
+                    for measure, sub in conditioned.items():
+                        primary_split.append(
+                            ({measure: properties.pop(measure)}, sub)
+                        )
+            if not properties and not primary_split:
                 diagnostics.append(
                     {
                         "code": "EMPTY_RECORD_SKIPPED",
@@ -4589,6 +5291,8 @@ def parse_table(
                     }
                 )
             for grade_index, split_grade in enumerate(grades):
+                if not properties:
+                    break
                 record_count += 1
                 record_id = f"{table_id}-R{row_index + 1}"
                 if len(grades) > 1:
@@ -4632,122 +5336,196 @@ def parse_table(
                     }
                 )
 
-            for extra_index, (label, columns) in enumerate(extra_groups.items(), start=1):
-                extra_properties: dict[str, Any] = {}
-                for measure, col, _ in columns:
-                    cell = row[col] if col < len(row) else ""
-                    parsed = _parse_value(cell, strip_marks)
-                    if parsed is None:
-                        continue
-                    raw_value = str(parsed.get("raw") or "").strip()
-                    if raw_value in SKIP_CELL_VALUES:
-                        continue
-                    if _prose_cell(raw_value, parsed):
-                        continue
-                    if (
-                        profile == "chemical_composition"
-                        and parsed.get("value") is not None
-                        and float(parsed["value"]) < 0
-                    ):
-                        continue
-                    if not parsed.get("operator"):
-                        header_operator = _header_operator(headers[col])
-                        if header_operator:
-                            parsed["operator"] = header_operator
-                    parsed["unit"] = (
-                        column_units.get(col)
-                        or _extract_unit(headers[col], explicit_unit)
-                        or binding_units.get(measure, "")
-                    )
-                    parsed["column"] = headers[col]
-                    measure_key = _detect_measure(headers[col], measure)
-                    parsed["unit"] = _unit_for_measure(
-                        measure_key, headers[col], parsed.get("unit") or ""
-                    )
-                    if not _plausible_measure(
-                        measure_key, parsed.get("value"), parsed.get("unit") or ""
-                    ):
-                        diagnostics.append(
-                            {
-                                "code": "VALUE_OUT_OF_RANGE",
-                                "message": (
-                                    f"{measure_key} value {parsed.get('value')} "
-                                    "outside plausible range"
-                                ),
-                                "severity": "warning",
-                                "detail": {
-                                    "table_id": table_id,
-                                    "row_index": row_index,
-                                    "measure": measure_key,
-                                    "raw": raw_value,
-                                },
-                            }
-                        )
-                        continue
-                    extra_properties[measure_key] = parsed
-                if not extra_properties:
-                    continue
-                extra_conditions = dict(conditions)
-                directions = {direction for _, _, direction in columns if direction}
-                if directions:
-                    extra_conditions["方向"] = "、".join(sorted(directions))
-                display_label = label.split("|", 1)[0]
-                # Room-temperature duplicates belong to the primary record; no
-                # extra condition keeps both values under the same field key.
-                room_only = ("室温" in display_label or "常温" in display_label) and not re.search(
-                    r"\d", re.sub(r"室温|常温", "", display_label)
-                )
-                if "|" not in label and not room_only:
-                    if "冲击吸收能量" in display_label:
-                        # “3个试样平均 / 单个试样” is carried by the measure
-                        # column itself; it is not a test condition.
-                        pass
-                    elif "℃" in display_label or "温度" in display_label:
-                        extra_conditions["温度"] = display_label
-                    elif "mm" in display_label or "厚" in display_label or "尺寸" in display_label:
-                        extra_conditions["规格"] = display_label
-                    else:
-                        extra_conditions["状态"] = display_label
-                extra_id = f"{table_id}-R{row_index + 1}-X{extra_index}"
-                records.append(
-                    {
-                        "record_id": extra_id,
-                        "table_id": table_id,
-                        "block_id": block_id,
-                        "page_no": page_no,
-                        "row_index": row_index,
-                        "recipe_id": recipe_id,
-                        "recipe_version": recipe_version,
-                        "profile": profile,
-                        "grade": grades[0],
-                        "grade_raw": raw_grade if len(grades) > 1 else None,
-                        "conditions": extra_conditions,
-                        "condition_key": _condition_key(extra_conditions),
-                        "properties": extra_properties,
-                        "evidence_refs": [extra_id],
-                        "source": {
+            extra_seq = 0
+            for split_properties, split_condition in primary_split:
+                for split_grade in grades:
+                    extra_seq += 1
+                    extra_conditions = dict(conditions)
+                    extra_conditions.update(split_condition)
+                    extra_id = f"{table_id}-R{row_index + 1}-X{extra_seq}"
+                    records.append(
+                        {
+                            "record_id": extra_id,
                             "table_id": table_id,
                             "block_id": block_id,
                             "page_no": page_no,
                             "row_index": row_index,
-                        },
-                    }
-                )
-                evidence.append(
-                    {
-                        "evidence_id": extra_id,
-                        "table_id": table_id,
-                        "block_id": block_id,
-                        "page_no": page_no,
-                        "row_index": row_index,
-                        "raw_row": list(row),
-                        "cells": {
-                            headers[col]: row[col]
-                            for _, col, _ in columns
-                            if col < len(row) and row[col]
-                        },
-                    }
-                )
+                            "recipe_id": recipe_id,
+                            "recipe_version": recipe_version,
+                            "profile": profile,
+                            "grade": split_grade,
+                            "grade_raw": raw_grade if len(grades) > 1 else None,
+                            "conditions": extra_conditions,
+                            "condition_key": _condition_key(extra_conditions),
+                            "properties": split_properties,
+                            "evidence_refs": [extra_id],
+                            "source": {
+                                "table_id": table_id,
+                                "block_id": block_id,
+                                "page_no": page_no,
+                                "row_index": row_index,
+                            },
+                        }
+                    )
+                    evidence.append(
+                        {
+                            "evidence_id": extra_id,
+                            "table_id": table_id,
+                            "block_id": block_id,
+                            "page_no": page_no,
+                            "row_index": row_index,
+                            "raw_row": list(row),
+                            "cells": {
+                                headers[idx]: row[idx]
+                                for idx in range(min(len(headers), len(row)))
+                                if row[idx]
+                            },
+                        }
+                    )
+            for group_key, columns in extra_groups.items():
+                label = group_key.split("#", 1)[0]
+                # 同一 measure 组内可能再按厚度/温度/方向分列（Q355 的 9 个
+                # ReH 厚度列、KV2 的 5 个温度 × 2 个方向）。每个子条件单独
+                # 成记录，不能把 9 列合并成一个属性字典。
+                buckets: dict[tuple[tuple[str, str], ...], list[tuple[str, int, str]]] = {}
+                for measure, col, direction in columns:
+                    condition = _column_sub_condition(headers[col], label)
+                    key = tuple(sorted(condition.items()))
+                    buckets.setdefault(key, []).append((measure, col, direction))
+                for condition_key, items in buckets.items():
+                    extra_properties: dict[str, Any] = {}
+                    for measure, col, _ in items:
+                        cell = row[col] if col < len(row) else ""
+                        parsed = _parse_value(cell, strip_marks)
+                        if parsed is None:
+                            continue
+                        raw_value = str(parsed.get("raw") or "").strip()
+                        if raw_value in SKIP_CELL_VALUES:
+                            if profile in {
+                                "chemical_composition",
+                                "mechanical_properties",
+                            } and raw_value in {"-", "--", "—", "–", "－", "―"}:
+                                parsed["operator"] = "na"
+                                parsed["value"] = None
+                            else:
+                                continue
+                        if _prose_cell(raw_value, parsed):
+                            continue
+                        if (
+                            profile == "chemical_composition"
+                            and parsed.get("value") is not None
+                            and float(parsed["value"]) < 0
+                        ):
+                            continue
+                        if not parsed.get("operator"):
+                            header_operator = _header_operator(headers[col])
+                            if header_operator:
+                                parsed["operator"] = header_operator
+                        parsed["unit"] = (
+                            column_units.get(col)
+                            or _extract_unit(headers[col], explicit_unit)
+                            or binding_units.get(measure, "")
+                        )
+                        parsed["column"] = headers[col]
+                        measure_key = _detect_measure(headers[col], measure)
+                        parsed["unit"] = _unit_for_measure(
+                            measure_key, headers[col], parsed.get("unit") or ""
+                        )
+                        if not _plausible_measure(
+                            measure_key, parsed.get("value"), parsed.get("unit") or ""
+                        ):
+                            diagnostics.append(
+                                {
+                                    "code": "VALUE_OUT_OF_RANGE",
+                                    "message": (
+                                        f"{measure_key} value {parsed.get('value')} "
+                                        "outside plausible range"
+                                    ),
+                                    "severity": "warning",
+                                    "detail": {
+                                        "table_id": table_id,
+                                        "row_index": row_index,
+                                        "measure": measure_key,
+                                        "raw": raw_value,
+                                    },
+                                }
+                            )
+                            continue
+                        extra_properties[measure_key] = parsed
+                    if not extra_properties:
+                        continue
+                    extra_conditions = dict(conditions)
+                    extra_conditions.update(dict(condition_key))
+                    directions = {direction for _, _, direction in items if direction}
+                    if directions:
+                        extra_conditions["方向"] = "、".join(sorted(directions))
+                    display_label = label.split("|", 1)[0]
+                    # Room-temperature duplicates belong to the primary record; no
+                    # extra condition keeps both values under the same field key.
+                    room_only = (
+                        "室温" in display_label or "常温" in display_label
+                    ) and not re.search(
+                        r"\d", re.sub(r"室温|常温", "", display_label)
+                    )
+                    if not condition_key and "|" not in label and not room_only:
+                        if "冲击吸收能量" in display_label:
+                            # “3个试样平均 / 单个试样” is carried by the measure
+                            # column itself; it is not a test condition.
+                            pass
+                        elif "℃" in display_label or "温度" in display_label:
+                            extra_conditions["温度"] = display_label
+                        elif (
+                            "mm" in display_label
+                            or "厚" in display_label
+                            or "尺寸" in display_label
+                        ):
+                            extra_conditions["规格"] = display_label
+                        else:
+                            extra_conditions["状态"] = display_label
+                    # 合并牌号（Q355、Q390、Q420）的附加列必须逐牌号展开，
+                    # 否则只有第一个牌号拿到该厚度/温度的数据。
+                    for split_grade in grades:
+                        extra_seq += 1
+                        extra_id = f"{table_id}-R{row_index + 1}-X{extra_seq}"
+                        records.append(
+                            {
+                                "record_id": extra_id,
+                                "table_id": table_id,
+                                "block_id": block_id,
+                                "page_no": page_no,
+                                "row_index": row_index,
+                                "recipe_id": recipe_id,
+                                "recipe_version": recipe_version,
+                                "profile": profile,
+                                "grade": split_grade,
+                                "grade_raw": raw_grade if len(grades) > 1 else None,
+                                "conditions": extra_conditions,
+                                "condition_key": _condition_key(extra_conditions),
+                                "properties": extra_properties,
+                                "evidence_refs": [extra_id],
+                                "source": {
+                                    "table_id": table_id,
+                                    "block_id": block_id,
+                                    "page_no": page_no,
+                                    "row_index": row_index,
+                                },
+                            }
+                        )
+                        evidence.append(
+                            {
+                                "evidence_id": extra_id,
+                                "table_id": table_id,
+                                "block_id": block_id,
+                                "page_no": page_no,
+                                "row_index": row_index,
+                                "raw_row": list(row),
+                                "cells": {
+                                    headers[col]: row[col]
+                                    for _, col, _ in items
+                                    if col < len(row) and row[col]
+                                },
+                            }
+                        )
 
         if merged_grade_fills or merged_condition_fills:
             diagnostics.append(

@@ -42,6 +42,57 @@ def _clean(value: Any) -> str:
     return re.sub(r"\s+", " ", builtin_module._normalize_doc_text(value)).strip()
 
 
+_UNIT = r"(?:%|MPa|GPa|J|HBW|HBS|HRC|HRB|HV|级|ppm|h|℃)"
+_LIMIT_RE = re.compile(
+    r"(?:≥|≤|＞|＜|>=|<=|>|<|不小于|不大于|不低于|不超过)\s*"
+    r"(?P<num>\d+(?:\.\d+)?)\s*(?P<unit>" + _UNIT + r")?",
+    re.IGNORECASE,
+)
+_RANGE_RE = re.compile(
+    r"(?P<low>\d+(?:\.\d+)?)\s*(?:[~～]|[－—–]|(?<=\d)-(?=\s*\d))\s*"
+    r"(?P<high>\d+(?:\.\d+)?)\s*(?P<unit>" + _UNIT + r")?",
+    re.IGNORECASE,
+)
+
+
+def _requirement_value(text: str) -> dict[str, Any] | None:
+    """Parse a numeric limit out of one requirement sentence.
+
+    Only single, unambiguous limits are parsed; a bare number without a
+    comparator/unit (dates, clause numbers, standard editions) is ignored so
+    the record falls back to ``comparator=text``.
+    """
+    value = _clean(text)
+    if not value:
+        return None
+    limit = _LIMIT_RE.search(value)
+    if limit:
+        operator = limit.group(0).strip()
+        comparator = (
+            "≥"
+            if operator.startswith(("≥", ">", "不小于", "不低于"))
+            else "≤"
+        )
+        unit = limit.group("unit") or ""
+        return {
+            "comparator": comparator,
+            "value": float(limit.group("num")),
+            "lower": float(limit.group("num")) if comparator == "≥" else None,
+            "upper": float(limit.group("num")) if comparator == "≤" else None,
+            "unit": unit,
+        }
+    span = _RANGE_RE.search(value)
+    if span and (span.group("unit") or "~" in span.group(0) or "～" in span.group(0)):
+        return {
+            "comparator": "range",
+            "value": None,
+            "lower": float(span.group("low")),
+            "upper": float(span.group("high")),
+            "unit": span.group("unit") or "",
+        }
+    return None
+
+
 def _sanitize(value: Any) -> Any:
     """Recursively remove table markup that OCR may leak into a field."""
     if isinstance(value, dict):
@@ -348,9 +399,13 @@ def _qualitative_records(
     created: list[dict[str, Any]] = []
     items: list[dict[str, Any]] = []
     used_ids: set[str] = set()
+    seen_global: set[tuple[str, str]] = set()
     for index, entry in enumerate(inventory_payload.get("items") or [], start=1):
         feature = str(entry.get("feature") or "")
-        if feature not in inventory_module.QUALITATIVE_SET:
+        if (
+            feature not in inventory_module.QUALITATIVE_SET
+            and feature not in inventory_module.REQUIREMENT_FEATURES
+        ):
             continue
         if feature in existing:
             continue
@@ -385,14 +440,28 @@ def _qualitative_records(
         seen_texts: set[str] = set()
         for row in rows:
             requirement = _clean(row.get("text"))
+            if re.fullmatch(r"\d+(?:\.\d+)+", requirement):
+                continue
             minimum = 2 if placeholder else REQUIREMENT_MIN_LEN
             if len(requirement) < minimum:
                 continue
             if requirement in seen_texts:
                 continue
             seen_texts.add(requirement)
+            dedupe_key = (
+                feature,
+                re.sub(r"[\s,，。；;：:、]", "", requirement),
+            )
+            if dedupe_key in seen_global:
+                continue
+            seen_global.add(dedupe_key)
             translated = translate_module.translate_requirement(requirement)
             displayed = translated or requirement
+            parsed = (
+                _requirement_value(requirement)
+                if feature in inventory_module.REQUIREMENT_FEATURES
+                else None
+            )
             clause_id = str(row.get("clause_id") or entry.get("clause_id") or "")
             page_no = int(row.get("page_no") or entry.get("page_no") or 0)
             record_id = _record_id(feature, clause_id, index)
@@ -443,12 +512,21 @@ def _qualitative_records(
                             if displayed != requirement
                             else {}
                         ),
-                        "value": None,
-                        "unit": "",
-                        "comparator": "text",
+                        "value": parsed.get("value") if parsed else None,
+                        "lower": parsed.get("lower") if parsed else None,
+                        "upper": parsed.get("upper") if parsed else None,
+                        "unit": (parsed.get("unit") if parsed else "") or "",
+                        "comparator": (
+                            parsed.get("comparator") if parsed else "text"
+                        ),
                         "column": "正文",
                         "meta": meta,
                         "profile": "qualitative",
+                        **(
+                            {"feature_kind": "requirement"}
+                            if feature in inventory_module.REQUIREMENT_FEATURES
+                            else {}
+                        ),
                         "source": {
                             "clause_id": clause_id,
                             "page_no": page_no,

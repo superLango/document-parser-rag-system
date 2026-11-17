@@ -17,6 +17,39 @@ jobs:
     defaults:
       run:
         working-directory: new_app
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: hanson
+          POSTGRES_PASSWORD: hanson
+          POSTGRES_DB: hanson
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U hanson"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      minio:
+        image: minio/minio:RELEASE.2024-10-13T13-34-11Z
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+        ports:
+          - 9000:9000
+        options: >-
+          --health-cmd "curl -f http://localhost:9000/minio/health/live || exit 1"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+asyncpg://hanson:hanson@localhost:5432/hanson
+      OBJECT_STORAGE_ENDPOINT: http://localhost:9000
+      OBJECT_STORAGE_ACCESS_KEY: minioadmin
+      OBJECT_STORAGE_SECRET_KEY: minioadmin
+      HANSON_INTEGRATION: "1"
+      MOCK_STAGE_DELAY_SECONDS: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -25,11 +58,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Lint
-        run: ruff check services packages tests
+        run: ruff check services packages tests --exclude services/recipe_registry/data/assets
       - name: Compile
         run: python -m compileall -q services packages tests
+      - name: Migrations
+        run: alembic -c services/orchestration/alembic.ini upgrade head
       - name: Tests
         run: pytest
+      - name: Gold registry contract
+        run: python scripts/benchmark/gold_registry.py --check
+      - name: Contract spec check
+        run: python scripts/contracts/export_openapi.py --check
       - name: Forbid legacy imports
         run: |
           if grep -R -n -E "import (metal_doc_agent|hanson_api)|from (metal_doc_agent|hanson_api)" services packages tests; then

@@ -1,0 +1,6927 @@
+[
+  {
+    "folder": "4",
+    "name": "JX-26-082",
+    "tables": 3,
+    "records": 4,
+    "categories": {
+      "低倍": 1,
+      "化学成分": 1,
+      "尺寸": 1,
+      "晶粒度Average Grain Size": 1
+    },
+    "table_details": [
+      {
+        "table_id": "4-T1",
+        "profile": "admin",
+        "rows": 13,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "4-T2",
+        "profile": "admin",
+        "rows": 4,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "4-T3",
+        "profile": "unknown",
+        "rows": 7,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "低倍"
+        ],
+        "values": {
+          "低倍": {
+            "raw": "低倍",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "低倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "化学成分"
+        ],
+        "values": {
+          "化学成分": {
+            "raw": "化学成分:允许转抄原材料入厂复验报告。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "化学成分"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "尺寸"
+        ],
+        "values": {
+          "尺寸": {
+            "raw": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "尺寸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "晶粒度"
+        ],
+        "values": {
+          "晶粒度": {
+            "raw": "晶粒度",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "晶粒度Average Grain Size"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 28,
+        "clause_kinds": {
+          "other": 21,
+          "sampling": 3,
+          "technical_requirement": 4
+        },
+        "clause_fields": {
+          "requirement": 4,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 3,
+          "method_standard": 1,
+          "test_temperature": 0
+        },
+        "inventory_items": 5,
+        "inspection_items": 0,
+        "qualitative_items": 4,
+        "qualitative_records": 4,
+        "grades_filled": 4,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "低倍",
+            "化学成分",
+            "外观",
+            "尺寸",
+            "晶粒度"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 5,
+          "ambiguous": 0,
+          "clause_only": 5
+        },
+        "references": {
+          "total": 2,
+          "normative": 0,
+          "citations": 2,
+          "unresolved": 2,
+          "resolution_rate": 0.0,
+          "bindings": 1,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 1,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 5,
+          "features_matched": 5,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 5,
+          "items_matched": 5,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "低倍",
+          "requirement": "低倍",
+          "clause_id": "2.4.3",
+          "clause_ids": [
+            "2.4.3"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "低倍:按理化取样图要求位置处切取低倍试样,检查低倍组织",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "低倍",
+          "business_category": "低倍",
+          "evidence": [
+            "ev-qualitative-CL-2.4.3"
+          ]
+        },
+        {
+          "feature": "化学成分",
+          "requirement": "化学成分:允许转抄原材料入厂复验报告。",
+          "clause_id": "2.4.7",
+          "clause_ids": [
+            "2.4.7"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "化学成分",
+          "evidence": [
+            "ev-qualitative-CL-2.4.7"
+          ]
+        },
+        {
+          "feature": "尺寸",
+          "requirement": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+          "clause_id": "2.3.2",
+          "clause_ids": [
+            "2.3.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "尺寸",
+          "business_category": "尺寸",
+          "evidence": [
+            "ev-qualitative-CL-2.3.2"
+          ]
+        },
+        {
+          "feature": "晶粒度",
+          "requirement": "晶粒度",
+          "clause_id": "2.4.4",
+          "clause_ids": [
+            "2.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "晶粒度:按理化取样图要求位置处切取试样,检查晶粒度",
+            "note": ""
+          },
+          "inventory_id": "inv-005",
+          "business_item": "晶粒度",
+          "business_category": "晶粒度Average Grain Size",
+          "evidence": [
+            "ev-qualitative-CL-2.4.4"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "低倍",
+        "item": "低倍",
+        "clause_id": "2.4.3",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "化学成分",
+        "item": "化学成分",
+        "clause_id": "2.4.7",
+        "requirement": "化学成分:允许转抄原材料入厂复验报告。",
+        "requirements": [
+          {
+            "text": "化学成分:允许转抄原材料入厂复验报告。",
+            "clause_id": "2.4.7"
+          }
+        ]
+      },
+      {
+        "feature": "外观",
+        "item": "外观",
+        "clause_id": "2.4.2",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "尺寸",
+        "item": "尺寸",
+        "clause_id": "2.3.2",
+        "requirement": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+        "requirements": [
+          {
+            "text": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+            "clause_id": "2.3.2"
+          }
+        ]
+      },
+      {
+        "feature": "晶粒度",
+        "item": "晶粒度",
+        "clause_id": "2.4.4",
+        "requirement": "",
+        "requirements": []
+      }
+    ]
+  },
+  {
+    "folder": "24",
+    "name": "1DFHM-QCD-0706-000907 冷泉项目用20MnNiMo钢锻件采购规范B",
+    "tables": 1,
+    "records": 5,
+    "categories": {
+      "晶粒度Average Grain Size": 2,
+      "高倍": 3
+    },
+    "table_details": [
+      {
+        "table_id": "24-T1",
+        "profile": "admin",
+        "rows": 5,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "晶粒度"
+        ],
+        "values": {
+          "晶粒度": {
+            "raw": "锻件应进行金相检验(检验项目包含显微组织、晶粒度、非金属夹杂物),试验方法、取样等应满足标准NB/T 47008 的要求。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "晶粒度Average Grain Size"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "晶粒度"
+        ],
+        "values": {
+          "晶粒度": {
+            "raw": "锻件的实际晶粒度评定结果应为5 级或更细。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "晶粒度Average Grain Size"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "非金属夹杂"
+        ],
+        "values": {
+          "非金属夹杂": {
+            "raw": "锻件应进行金相检验(检验项目包含显微组织、晶粒度、非金属夹杂物),试验方法、取样等应满足标准NB/T 47008 的要求。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "非金属夹杂"
+        ],
+        "values": {
+          "非金属夹杂": {
+            "raw": "非金属夹杂物规定值:A、B、C、D(粗系和细系)及Ds 类夹杂物均不大于1.5 级,A+C 类夹杂物不大于2.5 级,B+D 类夹杂物不大于2.5 级,且总和不大于4.5 级。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高倍组织"
+        ],
+        "values": {
+          "高倍组织": {
+            "raw": "显微组织观察应在放大200 倍的情况下进行,组织应正常,无异常组织,并拍摄金相照片。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 26,
+        "clause_kinds": {
+          "delivery": 1,
+          "normative_reference": 1,
+          "other": 19,
+          "sampling": 1,
+          "scope": 1,
+          "technical_requirement": 3
+        },
+        "clause_fields": {
+          "requirement": 15,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 1,
+          "method_standard": 0,
+          "test_temperature": 0
+        },
+        "inventory_items": 3,
+        "inspection_items": 0,
+        "qualitative_items": 5,
+        "qualitative_records": 5,
+        "grades_filled": 5,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "晶粒度",
+            "非金属夹杂",
+            "高倍组织"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 3,
+          "ambiguous": 0,
+          "clause_only": 3
+        },
+        "references": {
+          "total": 4,
+          "normative": 3,
+          "citations": 1,
+          "unresolved": 1,
+          "resolution_rate": 0.75,
+          "bindings": 0,
+          "cross_standard_candidates": 1
+        },
+        "method_bindings": 0,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 3,
+          "features_matched": 3,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 3,
+          "items_matched": 3,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "晶粒度",
+          "requirement": "锻件应进行金相检验(检验项目包含显微组织、晶粒度、非金属夹杂物),试验方法、取样等应满足标准NB/T 47008 的要求。",
+          "clause_id": "4.6.1",
+          "clause_ids": [
+            "4.6.1",
+            "4.6.3"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "晶粒度",
+          "business_category": "晶粒度Average Grain Size",
+          "evidence": [
+            "ev-qualitative-CL-4.6.1"
+          ]
+        },
+        {
+          "feature": "晶粒度",
+          "requirement": "锻件的实际晶粒度评定结果应为5 级或更细。",
+          "clause_id": "4.6.3",
+          "clause_ids": [
+            "4.6.1",
+            "4.6.3"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "晶粒度",
+          "business_category": "晶粒度Average Grain Size",
+          "evidence": [
+            "ev-qualitative-CL-4.6.3"
+          ]
+        },
+        {
+          "feature": "非金属夹杂",
+          "requirement": "锻件应进行金相检验(检验项目包含显微组织、晶粒度、非金属夹杂物),试验方法、取样等应满足标准NB/T 47008 的要求。",
+          "clause_id": "4.6.1",
+          "clause_ids": [
+            "4.6.1",
+            "4.6.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-4.6.1-2"
+          ]
+        },
+        {
+          "feature": "非金属夹杂",
+          "requirement": "非金属夹杂物规定值:A、B、C、D(粗系和细系)及Ds 类夹杂物均不大于1.5 级,A+C 类夹杂物不大于2.5 级,B+D 类夹杂物不大于2.5 级,且总和不大于4.5 级。",
+          "clause_id": "4.6.4",
+          "clause_ids": [
+            "4.6.1",
+            "4.6.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-4.6.4"
+          ]
+        },
+        {
+          "feature": "高倍组织",
+          "requirement": "显微组织观察应在放大200 倍的情况下进行,组织应正常,无异常组织,并拍摄金相照片。",
+          "clause_id": "4.6.2",
+          "clause_ids": [
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-003",
+          "business_item": "高倍组织",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-4.6.2"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "晶粒度",
+        "item": "晶粒度",
+        "clause_id": "4.6.1",
+        "requirement": "锻件应进行金相检验(检验项目包含显微组织、晶粒度、非金属夹杂物),试验方法、取样等应满足标准NB/T 47008 的要求。",
+        "requirements": [
+          {
+            "text": "锻件应进行金相检验(检验项目包含显微组织、晶粒度、非金属夹杂物),试验方法、取样等应满足标准NB/T 47008 的要求。",
+            "clause_id": "4.6.1"
+          },
+          {
+            "text": "锻件的实际晶粒度评定结果应为5 级或更细。",
+            "clause_id": "4.6.3"
+          }
+        ]
+      },
+      {
+        "feature": "非金属夹杂",
+        "item": "非金属夹杂",
+        "clause_id": "4.6.1",
+        "requirement": "锻件应进行金相检验(检验项目包含显微组织、晶粒度、非金属夹杂物),试验方法、取样等应满足标准NB/T 47008 的要求。",
+        "requirements": [
+          {
+            "text": "锻件应进行金相检验(检验项目包含显微组织、晶粒度、非金属夹杂物),试验方法、取样等应满足标准NB/T 47008 的要求。",
+            "clause_id": "4.6.1"
+          },
+          {
+            "text": "非金属夹杂物规定值:A、B、C、D(粗系和细系)及Ds 类夹杂物均不大于1.5 级,A+C 类夹杂物不大于2.5 级,B+D 类夹杂物不大于2.5 级,且总和不大于4.5 级。",
+            "clause_id": "4.6.4"
+          }
+        ]
+      },
+      {
+        "feature": "高倍组织",
+        "item": "高倍组织",
+        "clause_id": "4.6.2",
+        "requirement": "显微组织观察应在放大200 倍的情况下进行,组织应正常,无异常组织,并拍摄金相照片。",
+        "requirements": [
+          {
+            "text": "显微组织观察应在放大200 倍的情况下进行,组织应正常,无异常组织,并拍摄金相照片。",
+            "clause_id": "4.6.2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "25",
+    "name": "2、DFHM-QCD-0706-000914 冷泉项目用S222053钢锻件采购规范B",
+    "tables": 1,
+    "records": 4,
+    "categories": {
+      "低倍": 1,
+      "冲击试验": 1,
+      "高倍": 2
+    },
+    "table_details": [
+      {
+        "table_id": "25-T1",
+        "profile": "admin",
+        "rows": 5,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "S22053",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "低倍"
+        ],
+        "values": {
+          "低倍": {
+            "raw": "低倍组织缺陷的评定,按GB/T 1979 中的评级图评级: (1)一般疏松、中心疏松、偏析应不大于评级图二的1.5 级。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "低倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "S22053",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "夏比冲击"
+        ],
+        "values": {
+          "夏比冲击": {
+            "raw": "夏比冲击",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "冲击试验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "S22053",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "铁素体"
+        ],
+        "values": {
+          "铁素体": {
+            "raw": "Ds 类夹杂物均不大于1.5 级铁素体含量应按GB/T 13305 中规定测定,经协商也可以采用更加精确的方法测定, 金相组织应为奥氏体-铁素体,要求固溶热处理后的奥氏体含量在40%~60%(铁素体应在60%~40%)。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "S22053",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "非金属夹杂"
+        ],
+        "values": {
+          "非金属夹杂": {
+            "raw": "按照GB/T 10561 中的ISO 评级图进行评级。 A 类(硫化物类)粗系、细系均不大于1.5 级。 B 类(氧化铝类)粗系不大于1.5 级,细系不大于2.0 级。 C 类(硅酸盐类)粗系、细系均不大于1.5 级。 D 类(球状氧化物类)粗系不大于1.5 级,细系不大于2.5 级。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 22,
+        "clause_kinds": {
+          "normative_reference": 1,
+          "other": 16,
+          "sampling": 1,
+          "scope": 1,
+          "technical_requirement": 3
+        },
+        "clause_fields": {
+          "requirement": 15,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 1,
+          "method_standard": 3,
+          "test_temperature": 0
+        },
+        "inventory_items": 4,
+        "inspection_items": 0,
+        "qualitative_items": 4,
+        "qualitative_records": 4,
+        "grades_filled": 4,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "低倍",
+            "夏比冲击",
+            "铁素体",
+            "非金属夹杂"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 4,
+          "ambiguous": 0,
+          "clause_only": 4
+        },
+        "references": {
+          "total": 7,
+          "normative": 3,
+          "citations": 4,
+          "unresolved": 4,
+          "resolution_rate": 0.4286,
+          "bindings": 3,
+          "cross_standard_candidates": 1
+        },
+        "method_bindings": 3,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 4,
+          "features_matched": 4,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 4,
+          "items_matched": 4,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 3,
+          "methods_matched": 3,
+          "methods_normalized": 3,
+          "method_hit_rate": 1.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "低倍",
+          "requirement": "低倍组织缺陷的评定,按GB/T 1979 中的评级图评级: (1)一般疏松、中心疏松、偏析应不大于评级图二的1.5 级。",
+          "clause_id": "4.6.2",
+          "clause_ids": [
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "GB/T 1979-2025",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "低倍",
+          "business_category": "低倍",
+          "evidence": [
+            "ev-qualitative-CL-4.6.2"
+          ]
+        },
+        {
+          "feature": "夏比冲击",
+          "requirement": "夏比冲击",
+          "clause_id": "4.5.1",
+          "clause_ids": [
+            "4.5.1"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "冲击试验",
+          "evidence": [
+            "ev-qualitative-CL-4.5.1"
+          ]
+        },
+        {
+          "feature": "铁素体",
+          "requirement": "Ds 类夹杂物均不大于1.5 级铁素体含量应按GB/T 13305 中规定测定,经协商也可以采用更加精确的方法测定, 金相组织应为奥氏体-铁素体,要求固溶热处理后的奥氏体含量在40%~60%(铁素体应在60%~40%)。",
+          "clause_id": "4.6.4",
+          "clause_ids": [
+            "4.6.4"
+          ],
+          "page_no": 0,
+          "method": "GB/T 13305-2024",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-003",
+          "business_item": "铁素体",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-4.6.4"
+          ]
+        },
+        {
+          "feature": "非金属夹杂",
+          "requirement": "按照GB/T 10561 中的ISO 评级图进行评级。 A 类(硫化物类)粗系、细系均不大于1.5 级。 B 类(氧化铝类)粗系不大于1.5 级,细系不大于2.0 级。 C 类(硅酸盐类)粗系、细系均不大于1.5 级。 D 类(球状氧化物类)粗系不大于1.5 级,细系不大于2.5 级。",
+          "clause_id": "4.6.3",
+          "clause_ids": [
+            "4.6.3"
+          ],
+          "page_no": 0,
+          "method": "GB/T 10561-2023",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-4.6.3"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "低倍",
+        "item": "低倍",
+        "clause_id": "4.6.2",
+        "requirement": "低倍组织缺陷的评定,按GB/T 1979 中的评级图评级: (1)一般疏松、中心疏松、偏析应不大于评级图二的1.5 级。",
+        "requirements": [
+          {
+            "text": "低倍组织缺陷的评定,按GB/T 1979 中的评级图评级: (1)一般疏松、中心疏松、偏析应不大于评级图二的1.5 级。",
+            "clause_id": "4.6.2"
+          }
+        ]
+      },
+      {
+        "feature": "夏比冲击",
+        "item": "夏比冲击",
+        "clause_id": "4.5.1",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "铁素体",
+        "item": "铁素体",
+        "clause_id": "4.6.4",
+        "requirement": "Ds 类夹杂物均不大于1.5 级铁素体含量应按GB/T 13305 中规定测定,经协商也可以采用更加精确的方法测定, 金相组织应为奥氏体-铁素体,要求固溶热处理后的奥氏体含量在40%~60%(铁素体应在60%~40%)。",
+        "requirements": [
+          {
+            "text": "Ds 类夹杂物均不大于1.5 级铁素体含量应按GB/T 13305 中规定测定,经协商也可以采用更加精确的方法测定, 金相组织应为奥氏体-铁素体,要求固溶热处理后的奥氏体含量在40%~60%(铁素体应在60%~40%)。",
+            "clause_id": "4.6.4"
+          }
+        ]
+      },
+      {
+        "feature": "非金属夹杂",
+        "item": "非金属夹杂",
+        "clause_id": "4.6.3",
+        "requirement": "按照GB/T 10561 中的ISO 评级图进行评级。 A 类(硫化物类)粗系、细系均不大于1.5 级。 B 类(氧化铝类)粗系不大于1.5 级,细系不大于2.0 级。 C 类(硅酸盐类)粗系、细系均不大于1.5 级。 D 类(球状氧化物类)粗系不大于1.5 级,细系不大于2.5 级。",
+        "requirements": [
+          {
+            "text": "按照GB/T 10561 中的ISO 评级图进行评级。 A 类(硫化物类)粗系、细系均不大于1.5 级。 B 类(氧化铝类)粗系不大于1.5 级,细系不大于2.0 级。 C 类(硅酸盐类)粗系、细系均不大于1.5 级。 D 类(球状氧化物类)粗系不大于1.5 级,细系不大于2.5 级。",
+            "clause_id": "4.6.3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "66",
+    "name": "2605163--更新技术（一级再热器管板锻件订货技术协议",
+    "tables": 6,
+    "records": 1,
+    "categories": {
+      "化学成分": 1
+    },
+    "table_details": [
+      {
+        "table_id": "66-T1",
+        "profile": "admin",
+        "rows": 3,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "66-T2",
+        "profile": "admin",
+        "rows": 3,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "66-T3",
+        "profile": "admin",
+        "rows": 6,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "66-T4",
+        "profile": "unknown",
+        "rows": 3,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "66-T5",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "66-T6",
+        "profile": "unknown",
+        "rows": 4,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "化学成分"
+        ],
+        "values": {
+          "化学成分": {
+            "raw": "供方应在锻件的首件检查试料区每隔120°各取一组试样进行检查,共取三组,每组试样包括1 个化学成分、1 个拉伸试样、3 个冲击试样、1 个低倍检验试样,结果需满足标准要求。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "化学成分"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 45,
+        "clause_kinds": {
+          "other": 36,
+          "sampling": 2,
+          "scope": 1,
+          "technical_requirement": 6
+        },
+        "clause_fields": {
+          "requirement": 16,
+          "direction": 0,
+          "sample_quantity": 1,
+          "sample_location": 0,
+          "method_standard": 1,
+          "test_temperature": 0
+        },
+        "inventory_items": 1,
+        "inspection_items": 0,
+        "qualitative_items": 1,
+        "qualitative_records": 1,
+        "grades_filled": 1,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "化学成分"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 1,
+          "ambiguous": 0,
+          "clause_only": 1
+        },
+        "references": {
+          "total": 2,
+          "normative": 0,
+          "citations": 2,
+          "unresolved": 2,
+          "resolution_rate": 0.0,
+          "bindings": 1,
+          "cross_standard_candidates": 1
+        },
+        "method_bindings": 1,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 1,
+          "features_matched": 1,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 1,
+          "items_matched": 1,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "化学成分",
+          "requirement": "供方应在锻件的首件检查试料区每隔120°各取一组试样进行检查,共取三组,每组试样包括1 个化学成分、1 个拉伸试样、3 个冲击试样、1 个低倍检验试样,结果需满足标准要求。",
+          "clause_id": "4-3",
+          "clause_ids": [
+            "4-3"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "",
+          "business_category": "化学成分",
+          "evidence": [
+            "ev-qualitative-CL-4-3"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "化学成分",
+        "item": "化学成分",
+        "clause_id": "4-3",
+        "requirement": "供方应在锻件的首件检查试料区每隔120°各取一组试样进行检查,共取三组,每组试样包括1 个化学成分、1 个拉伸试样、3 个冲击试样、1 个低倍检验试样,结果需满足标准要求。",
+        "requirements": [
+          {
+            "text": "供方应在锻件的首件检查试料区每隔120°各取一组试样进行检查,共取三组,每组试样包括1 个化学成分、1 个拉伸试样、3 个冲击试样、1 个低倍检验试样,结果需满足标准要求。",
+            "clause_id": "4-3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "100",
+    "name": "铁素体、晶粒度",
+    "tables": 2,
+    "records": 4,
+    "categories": {
+      "低倍": 1,
+      "晶粒度Average Grain Size": 1,
+      "高倍": 2
+    },
+    "table_details": [
+      {
+        "table_id": "100-T1",
+        "profile": "admin",
+        "rows": 9,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "100-T2",
+        "profile": "inspection",
+        "rows": 11,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": "inspection_rules_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 4,
+    "prod": {
+      "records": 0,
+      "categories": {}
+    },
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "低倍"
+        ],
+        "values": {
+          "低倍": {
+            "raw": "低倍",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "低倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "晶粒度"
+        ],
+        "values": {
+          "晶粒度": {
+            "raw": "参照《金属平均晶粒度测定方法》(GB/T6394-2017)评定晶粒度,晶粒度验收等级如下表所示: 技术工作联络函 TZ260128-1-4 TZ260128-2-1 TZ260128-3-1 TZ260128-4-1 其他缺陷:500倍放大显微照片下可见的不完全再结晶痕迹或铸造组织,应判定为不合格。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "晶粒度Average Grain Size"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "铁素体"
+        ],
+        "values": {
+          "铁素体": {
+            "raw": "材料铁素体含量检测参照《奥氏体不锈钢铸件中铁素体含量测定方法》(GB/T38223-2019)测定,要求最终固溶态板材的铁素体体积含量不大于10%。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "非金属夹杂"
+        ],
+        "values": {
+          "非金属夹杂": {
+            "raw": "A、B、C、D各类夹杂物的细系级别和粗系级别均应不大于2.5级,DS类夹杂物的细系级别和粗系级别均应不大于6.5级。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 6,
+        "clause_kinds": {
+          "other": 6
+        },
+        "clause_fields": {
+          "requirement": 4,
+          "direction": 1,
+          "sample_quantity": 1,
+          "sample_location": 0,
+          "method_standard": 2,
+          "test_temperature": 0
+        },
+        "inventory_items": 4,
+        "inspection_items": 0,
+        "qualitative_items": 4,
+        "qualitative_records": 4,
+        "grades_filled": 4,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "低倍",
+            "晶粒度",
+            "铁素体",
+            "非金属夹杂"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 4,
+          "ambiguous": 0,
+          "clause_only": 4
+        },
+        "references": {
+          "total": 2,
+          "normative": 0,
+          "citations": 2,
+          "unresolved": 2,
+          "resolution_rate": 0.0,
+          "bindings": 2,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 2,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 4,
+          "features_matched": 4,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 4,
+          "items_matched": 4,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 2,
+          "methods_matched": 2,
+          "methods_normalized": 1,
+          "method_hit_rate": 1.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "低倍",
+          "requirement": "低倍",
+          "clause_id": "6",
+          "clause_ids": [
+            "6"
+          ],
+          "page_no": 0,
+          "method": "GB/T 4297-2004",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "低倍",
+          "business_category": "低倍",
+          "evidence": [
+            "ev-qualitative-CL-6"
+          ]
+        },
+        {
+          "feature": "晶粒度",
+          "requirement": "参照《金属平均晶粒度测定方法》(GB/T6394-2017)评定晶粒度,晶粒度验收等级如下表所示: 技术工作联络函 TZ260128-1-4 TZ260128-2-1 TZ260128-3-1 TZ260128-4-1 其他缺陷:500倍放大显微照片下可见的不完全再结晶痕迹或铸造组织,应判定为不合格。",
+          "clause_id": "4",
+          "clause_ids": [
+            "4"
+          ],
+          "page_no": 0,
+          "method": "GB/T 6394-2017",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "晶粒度",
+          "business_category": "晶粒度Average Grain Size",
+          "evidence": [
+            "ev-qualitative-CL-4"
+          ]
+        },
+        {
+          "feature": "铁素体",
+          "requirement": "材料铁素体含量检测参照《奥氏体不锈钢铸件中铁素体含量测定方法》(GB/T38223-2019)测定,要求最终固溶态板材的铁素体体积含量不大于10%。",
+          "clause_id": "1",
+          "clause_ids": [
+            "1"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-003",
+          "business_item": "铁素体",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-1"
+          ]
+        },
+        {
+          "feature": "非金属夹杂",
+          "requirement": "A、B、C、D各类夹杂物的细系级别和粗系级别均应不大于2.5级,DS类夹杂物的细系级别和粗系级别均应不大于6.5级。",
+          "clause_id": "2",
+          "clause_ids": [
+            "2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-2"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "低倍",
+        "item": "低倍",
+        "clause_id": "6",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "晶粒度",
+        "item": "晶粒度",
+        "clause_id": "4",
+        "requirement": "参照《金属平均晶粒度测定方法》(GB/T6394-2017)评定晶粒度,晶粒度验收等级如下表所示: 技术工作联络函 TZ260128-1-4 TZ260128-2-1 TZ260128-3-1 TZ260128-4-1 其他缺陷:500倍放大显微照片下可见的不完全再结晶痕迹或铸造组织,应判定为不合格。",
+        "requirements": [
+          {
+            "text": "参照《金属平均晶粒度测定方法》(GB/T6394-2017)评定晶粒度,晶粒度验收等级如下表所示: 技术工作联络函 TZ260128-1-4 TZ260128-2-1 TZ260128-3-1 TZ260128-4-1 其他缺陷:500倍放大显微照片下可见的不完全再结晶痕迹或铸造组织,应判定为不合格。",
+            "clause_id": "4"
+          }
+        ]
+      },
+      {
+        "feature": "铁素体",
+        "item": "铁素体",
+        "clause_id": "1",
+        "requirement": "材料铁素体含量检测参照《奥氏体不锈钢铸件中铁素体含量测定方法》(GB/T38223-2019)测定,要求最终固溶态板材的铁素体体积含量不大于10%。",
+        "requirements": [
+          {
+            "text": "材料铁素体含量检测参照《奥氏体不锈钢铸件中铁素体含量测定方法》(GB/T38223-2019)测定,要求最终固溶态板材的铁素体体积含量不大于10%。",
+            "clause_id": "1"
+          }
+        ]
+      },
+      {
+        "feature": "非金属夹杂",
+        "item": "非金属夹杂",
+        "clause_id": "2",
+        "requirement": "A、B、C、D各类夹杂物的细系级别和粗系级别均应不大于2.5级,DS类夹杂物的细系级别和粗系级别均应不大于6.5级。",
+        "requirements": [
+          {
+            "text": "A、B、C、D各类夹杂物的细系级别和粗系级别均应不大于2.5级,DS类夹杂物的细系级别和粗系级别均应不大于6.5级。",
+            "clause_id": "2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "133",
+    "name": "H035H036  PD-DAN-071锻件化学成分澄清回复",
+    "tables": 2,
+    "records": 0,
+    "categories": {},
+    "table_details": [
+      {
+        "table_id": "133-T1",
+        "profile": "unknown",
+        "rows": 13,
+        "cols": 9,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "133-T2",
+        "profile": "admin",
+        "rows": 9,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 0,
+        "clause_kinds": {},
+        "clause_fields": {
+          "requirement": 0,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 0,
+          "method_standard": 0,
+          "test_temperature": 0
+        },
+        "inventory_items": 0,
+        "inspection_items": 0,
+        "qualitative_items": 0,
+        "qualitative_records": 0,
+        "grades_filled": 0,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 0,
+          "ambiguous": 0,
+          "clause_only": 0
+        },
+        "references": {
+          "total": 0,
+          "normative": 0,
+          "citations": 0,
+          "unresolved": 0,
+          "resolution_rate": 0.0,
+          "bindings": 0,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 0,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 0,
+          "features_matched": 0,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 0,
+          "items_matched": 0,
+          "items_ambiguous": 0,
+          "hit_rate": 0.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [],
+      "classifications": []
+    },
+    "inventory_items": []
+  },
+  {
+    "folder": "144",
+    "name": "JX-174-014-2025",
+    "tables": 29,
+    "records": 4,
+    "categories": {
+      "低倍": 1,
+      "化学成分": 1,
+      "尺寸": 1,
+      "高倍": 1
+    },
+    "table_details": [
+      {
+        "table_id": "144-T1",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T2",
+        "profile": "admin",
+        "rows": 3,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T3",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T4",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T5",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T6",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T7",
+        "profile": "admin",
+        "rows": 3,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T8",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T9",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T10",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T11",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T12",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T13",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T14",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T15",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T16",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T17",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T18",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T19",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T20",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T21",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T22",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T23",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T24",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T25",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T26",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T27",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T28",
+        "profile": "unknown",
+        "rows": 7,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "144-T29",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "低倍"
+        ],
+        "values": {
+          "低倍": {
+            "raw": "低倍",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "低倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "化学成分"
+        ],
+        "values": {
+          "化学成分": {
+            "raw": "化学成分:允许转抄原材料入厂复验报告(H含量除外)。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "化学成分"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "尺寸"
+        ],
+        "values": {
+          "尺寸": {
+            "raw": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "尺寸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高倍组织"
+        ],
+        "values": {
+          "高倍组织": {
+            "raw": "高倍组织",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 25,
+        "clause_kinds": {
+          "other": 17,
+          "sampling": 3,
+          "technical_requirement": 5
+        },
+        "clause_fields": {
+          "requirement": 4,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 3,
+          "method_standard": 2,
+          "test_temperature": 0
+        },
+        "inventory_items": 5,
+        "inspection_items": 0,
+        "qualitative_items": 4,
+        "qualitative_records": 4,
+        "grades_filled": 4,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "低倍",
+            "化学成分",
+            "外观",
+            "尺寸",
+            "高倍组织"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 5,
+          "ambiguous": 0,
+          "clause_only": 5
+        },
+        "references": {
+          "total": 3,
+          "normative": 0,
+          "citations": 3,
+          "unresolved": 3,
+          "resolution_rate": 0.0,
+          "bindings": 1,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 1,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 5,
+          "features_matched": 5,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 5,
+          "items_matched": 5,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "低倍",
+          "requirement": "低倍",
+          "clause_id": "2.4.3",
+          "clause_ids": [
+            "2.4.3"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "低倍:按理化取样图要求位置处切取低倍试样,检查低倍组织",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "低倍",
+          "business_category": "低倍",
+          "evidence": [
+            "ev-qualitative-CL-2.4.3"
+          ]
+        },
+        {
+          "feature": "化学成分",
+          "requirement": "化学成分:允许转抄原材料入厂复验报告(H含量除外)。",
+          "clause_id": "2.4.7",
+          "clause_ids": [
+            "2.4.7"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "化学成分",
+          "evidence": [
+            "ev-qualitative-CL-2.4.7"
+          ]
+        },
+        {
+          "feature": "尺寸",
+          "requirement": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+          "clause_id": "2.3.2",
+          "clause_ids": [
+            "2.3.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "尺寸",
+          "business_category": "尺寸",
+          "evidence": [
+            "ev-qualitative-CL-2.3.2"
+          ]
+        },
+        {
+          "feature": "高倍组织",
+          "requirement": "高倍组织",
+          "clause_id": "2.4.4",
+          "clause_ids": [
+            "2.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "显微组织:按理化取样图要求位置处切取试样,检查显微组织",
+            "note": ""
+          },
+          "inventory_id": "inv-005",
+          "business_item": "高倍组织",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-2.4.4"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "低倍",
+        "item": "低倍",
+        "clause_id": "2.4.3",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "化学成分",
+        "item": "化学成分",
+        "clause_id": "2.4.7",
+        "requirement": "化学成分:允许转抄原材料入厂复验报告(H含量除外)。",
+        "requirements": [
+          {
+            "text": "化学成分:允许转抄原材料入厂复验报告(H含量除外)。",
+            "clause_id": "2.4.7"
+          }
+        ]
+      },
+      {
+        "feature": "外观",
+        "item": "外观",
+        "clause_id": "2.4.2",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "尺寸",
+        "item": "尺寸",
+        "clause_id": "2.3.2",
+        "requirement": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+        "requirements": [
+          {
+            "text": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+            "clause_id": "2.3.2"
+          }
+        ]
+      },
+      {
+        "feature": "高倍组织",
+        "item": "高倍组织",
+        "clause_id": "2.4.4",
+        "requirement": "",
+        "requirements": []
+      }
+    ]
+  },
+  {
+    "folder": "154",
+    "name": "JX-26-059  锻件技术质量协议",
+    "tables": 35,
+    "records": 2,
+    "categories": {
+      "化学成分": 1,
+      "晶粒度Average Grain Size": 1
+    },
+    "table_details": [
+      {
+        "table_id": "154-T1",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T2",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T3",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T4",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T5",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T6",
+        "profile": "admin",
+        "rows": 14,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T7",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T8",
+        "profile": "admin",
+        "rows": 9,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T9",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T10",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T11",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T12",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T13",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T14",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T15",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T16",
+        "profile": "admin",
+        "rows": 5,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T17",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T18",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T19",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 3,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T20",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T21",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T22",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T23",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T24",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T25",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T26",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T27",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T28",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T29",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T30",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T31",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T32",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T33",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T34",
+        "profile": "unknown",
+        "rows": 7,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "154-T35",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "化学成分"
+        ],
+        "values": {
+          "化学成分": {
+            "raw": "化学成分:允许转抄原材料入厂复验报告。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "化学成分"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "晶粒度"
+        ],
+        "values": {
+          "晶粒度": {
+            "raw": "晶粒度",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "晶粒度Average Grain Size"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 26,
+        "clause_kinds": {
+          "other": 19,
+          "sampling": 3,
+          "technical_requirement": 4
+        },
+        "clause_fields": {
+          "requirement": 3,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 2,
+          "method_standard": 4,
+          "test_temperature": 0
+        },
+        "inventory_items": 4,
+        "inspection_items": 0,
+        "qualitative_items": 2,
+        "qualitative_records": 2,
+        "grades_filled": 2,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "低倍",
+            "化学成分",
+            "外观",
+            "晶粒度"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 4,
+          "ambiguous": 0,
+          "clause_only": 4
+        },
+        "references": {
+          "total": 6,
+          "normative": 0,
+          "citations": 6,
+          "unresolved": 6,
+          "resolution_rate": 0.0,
+          "bindings": 1,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 1,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 4,
+          "features_matched": 4,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 4,
+          "items_matched": 4,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "化学成分",
+          "requirement": "化学成分:允许转抄原材料入厂复验报告。",
+          "clause_id": "2.4.7",
+          "clause_ids": [
+            "2.4.7"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "化学成分",
+          "evidence": [
+            "ev-qualitative-CL-2.4.7"
+          ]
+        },
+        {
+          "feature": "晶粒度",
+          "requirement": "晶粒度",
+          "clause_id": "2.4.4",
+          "clause_ids": [
+            "2.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "晶粒度:按理化取样图要求位置处切取试样,检查晶粒度",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "晶粒度",
+          "business_category": "晶粒度Average Grain Size",
+          "evidence": [
+            "ev-qualitative-CL-2.4.4"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "低倍",
+        "item": "低倍",
+        "clause_id": "2.4.3",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "化学成分",
+        "item": "化学成分",
+        "clause_id": "2.4.7",
+        "requirement": "化学成分:允许转抄原材料入厂复验报告。",
+        "requirements": [
+          {
+            "text": "化学成分:允许转抄原材料入厂复验报告。",
+            "clause_id": "2.4.7"
+          }
+        ]
+      },
+      {
+        "feature": "外观",
+        "item": "外观",
+        "clause_id": "2.4.2",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "晶粒度",
+        "item": "晶粒度",
+        "clause_id": "2.4.4",
+        "requirement": "",
+        "requirements": []
+      }
+    ]
+  },
+  {
+    "folder": "174",
+    "name": "JX-174-018-2026",
+    "tables": 26,
+    "records": 4,
+    "categories": {
+      "低倍": 1,
+      "化学成分": 1,
+      "尺寸": 1,
+      "高倍": 1
+    },
+    "table_details": [
+      {
+        "table_id": "174-T1",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T2",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T3",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T4",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T5",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T6",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T7",
+        "profile": "admin",
+        "rows": 4,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T8",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T9",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T10",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T11",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T12",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T13",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T14",
+        "profile": "admin",
+        "rows": 5,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T15",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T16",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T17",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T18",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T19",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T20",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T21",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T22",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T23",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T24",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T25",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "174-T26",
+        "profile": "unknown",
+        "rows": 7,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "TC18",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "低倍"
+        ],
+        "values": {
+          "低倍": {
+            "raw": "低倍",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "低倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC18",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "化学成分"
+        ],
+        "values": {
+          "化学成分": {
+            "raw": "化学成分:允许转抄原材料入厂复验报告(H含量除外)。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "化学成分"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC18",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "尺寸"
+        ],
+        "values": {
+          "尺寸": {
+            "raw": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "尺寸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC18",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高倍组织"
+        ],
+        "values": {
+          "高倍组织": {
+            "raw": "高倍组织",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高倍"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 25,
+        "clause_kinds": {
+          "other": 18,
+          "sampling": 3,
+          "technical_requirement": 4
+        },
+        "clause_fields": {
+          "requirement": 4,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 3,
+          "method_standard": 3,
+          "test_temperature": 0
+        },
+        "inventory_items": 5,
+        "inspection_items": 0,
+        "qualitative_items": 4,
+        "qualitative_records": 4,
+        "grades_filled": 4,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "低倍",
+            "化学成分",
+            "外观",
+            "尺寸",
+            "高倍组织"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 5,
+          "ambiguous": 0,
+          "clause_only": 5
+        },
+        "references": {
+          "total": 5,
+          "normative": 0,
+          "citations": 5,
+          "unresolved": 5,
+          "resolution_rate": 0.0,
+          "bindings": 1,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 1,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 5,
+          "features_matched": 5,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 5,
+          "items_matched": 5,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "低倍",
+          "requirement": "低倍",
+          "clause_id": "2.4.3",
+          "clause_ids": [
+            "2.4.3"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "低倍:按理化取样图要求位置处切取低倍试样,检查低倍组织",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "低倍",
+          "business_category": "低倍",
+          "evidence": [
+            "ev-qualitative-CL-2.4.3"
+          ]
+        },
+        {
+          "feature": "化学成分",
+          "requirement": "化学成分:允许转抄原材料入厂复验报告(H含量除外)。",
+          "clause_id": "2.4.7",
+          "clause_ids": [
+            "2.4.7"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "化学成分",
+          "evidence": [
+            "ev-qualitative-CL-2.4.7"
+          ]
+        },
+        {
+          "feature": "尺寸",
+          "requirement": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+          "clause_id": "2.3.2",
+          "clause_ids": [
+            "2.3.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "尺寸",
+          "business_category": "尺寸",
+          "evidence": [
+            "ev-qualitative-CL-2.3.2"
+          ]
+        },
+        {
+          "feature": "高倍组织",
+          "requirement": "高倍组织",
+          "clause_id": "2.4.4",
+          "clause_ids": [
+            "2.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "显微组织:按理化取样图要求位置处切取试样,检查显微组织",
+            "note": ""
+          },
+          "inventory_id": "inv-005",
+          "business_item": "高倍组织",
+          "business_category": "高倍",
+          "evidence": [
+            "ev-qualitative-CL-2.4.4"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "低倍",
+        "item": "低倍",
+        "clause_id": "2.4.3",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "化学成分",
+        "item": "化学成分",
+        "clause_id": "2.4.7",
+        "requirement": "化学成分:允许转抄原材料入厂复验报告(H含量除外)。",
+        "requirements": [
+          {
+            "text": "化学成分:允许转抄原材料入厂复验报告(H含量除外)。",
+            "clause_id": "2.4.7"
+          }
+        ]
+      },
+      {
+        "feature": "外观",
+        "item": "外观",
+        "clause_id": "2.4.2",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "尺寸",
+        "item": "尺寸",
+        "clause_id": "2.3.2",
+        "requirement": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+        "requirements": [
+          {
+            "text": "锻件尺寸公差、加工余量等应符合供需双方会签的锻件图要求。",
+            "clause_id": "2.3.2"
+          }
+        ]
+      },
+      {
+        "feature": "高倍组织",
+        "item": "高倍组织",
+        "clause_id": "2.4.4",
+        "requirement": "",
+        "requirements": []
+      }
+    ]
+  },
+  {
+    "folder": "184",
+    "name": "11AixJC900XY001-001",
+    "tables": 40,
+    "records": 2,
+    "categories": {
+      "化学成分": 1,
+      "尺寸": 1
+    },
+    "table_details": [
+      {
+        "table_id": "184-T1",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T2",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T3",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T4",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T5",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T6",
+        "profile": "admin",
+        "rows": 10,
+        "cols": 5,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T7",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T8",
+        "profile": "unknown",
+        "rows": 10,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T9",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T10",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T11",
+        "profile": "classification",
+        "rows": 5,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": "classification_v1",
+        "score": 0.733,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T12",
+        "profile": "unknown",
+        "rows": 3,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T13",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T14",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T15",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T16",
+        "profile": "unknown",
+        "rows": 8,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T17",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T18",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T19",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T20",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T21",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T22",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T23",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T24",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T25",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T26",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T27",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T28",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T29",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T30",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T31",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T32",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T33",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T34",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T35",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T36",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T37",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T38",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T39",
+        "profile": "admin",
+        "rows": 10,
+        "cols": 9,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "184-T40",
+        "profile": "unknown",
+        "rows": 6,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 3,
+    "prod": {
+      "records": 0,
+      "categories": {}
+    },
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "7050-T7452",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "化学成分"
+        ],
+        "values": {
+          "化学成分": {
+            "raw": "锻件加工所需要的材料由乙方购买,化学成分允许偏差应符合GB/T222的规定,原材料入厂应逐件100%进行超声波检查,按A级验收,乙方应妥善保存探伤原始记录。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "化学成分"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "7050-T7452",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "尺寸"
+        ],
+        "values": {
+          "尺寸": {
+            "raw": "原材料及锻件技术条件的要求见表2,外形尺寸公差按图纸要求控制。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "尺寸"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 8,
+        "clause_kinds": {
+          "other": 6,
+          "technical_requirement": 2
+        },
+        "clause_fields": {
+          "requirement": 3,
+          "direction": 0,
+          "sample_quantity": 2,
+          "sample_location": 0,
+          "method_standard": 2,
+          "test_temperature": 0
+        },
+        "inventory_items": 2,
+        "inspection_items": 0,
+        "qualitative_items": 2,
+        "qualitative_records": 2,
+        "grades_filled": 2,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "化学成分",
+            "尺寸"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 2,
+          "ambiguous": 0,
+          "clause_only": 2
+        },
+        "references": {
+          "total": 1,
+          "normative": 0,
+          "citations": 1,
+          "unresolved": 1,
+          "resolution_rate": 0.0,
+          "bindings": 0,
+          "cross_standard_candidates": 1
+        },
+        "method_bindings": 0,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 2,
+          "features_matched": 2,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 2,
+          "items_matched": 2,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 1,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "化学成分",
+          "requirement": "锻件加工所需要的材料由乙方购买,化学成分允许偏差应符合GB/T222的规定,原材料入厂应逐件100%进行超声波检查,按A级验收,乙方应妥善保存探伤原始记录。",
+          "clause_id": "2",
+          "clause_ids": [
+            "2"
+          ],
+          "page_no": 0,
+          "method": "GB/T 222",
+          "sampling": {
+            "quantity": "逐件",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "",
+          "business_category": "化学成分",
+          "evidence": [
+            "ev-qualitative-CL-2"
+          ]
+        },
+        {
+          "feature": "尺寸",
+          "requirement": "原材料及锻件技术条件的要求见表2,外形尺寸公差按图纸要求控制。",
+          "clause_id": "3",
+          "clause_ids": [
+            "3"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "逐件",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "尺寸",
+          "business_category": "尺寸",
+          "evidence": [
+            "ev-qualitative-CL-3"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "化学成分",
+        "item": "化学成分",
+        "clause_id": "2",
+        "requirement": "锻件加工所需要的材料由乙方购买,化学成分允许偏差应符合GB/T222的规定,原材料入厂应逐件100%进行超声波检查,按A级验收,乙方应妥善保存探伤原始记录。",
+        "requirements": [
+          {
+            "text": "锻件加工所需要的材料由乙方购买,化学成分允许偏差应符合GB/T222的规定,原材料入厂应逐件100%进行超声波检查,按A级验收,乙方应妥善保存探伤原始记录。",
+            "clause_id": "2"
+          }
+        ]
+      },
+      {
+        "feature": "尺寸",
+        "item": "尺寸",
+        "clause_id": "3",
+        "requirement": "原材料及锻件技术条件的要求见表2,外形尺寸公差按图纸要求控制。",
+        "requirements": [
+          {
+            "text": "原材料及锻件技术条件的要求见表2,外形尺寸公差按图纸要求控制。",
+            "clause_id": "3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "207",
+    "name": "关于某型机增加西工钛供货三炉三批验证工作安排",
+    "tables": 10,
+    "records": 13,
+    "categories": {
+      "低倍": 1,
+      "冲击试验": 1,
+      "室温拉伸": 3,
+      "热稳定": 1,
+      "高温拉伸": 2,
+      "持久试验": 5
+    },
+    "table_details": [
+      {
+        "table_id": "207-T1",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T2",
+        "profile": "inspection",
+        "rows": 6,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": "inspection_rules_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T3",
+        "profile": "unknown",
+        "rows": 4,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T4",
+        "profile": "inspection",
+        "rows": 12,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": "inspection_rules_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T5",
+        "profile": "inspection",
+        "rows": 2,
+        "cols": 6,
+        "measure_cols": 0,
+        "recipe": "inspection_rules_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T6",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T7",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T8",
+        "profile": "mechanical_properties",
+        "rows": 8,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": "mechanical_properties_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T9",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "207-T10",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 52,
+    "prod": {
+      "records": 0,
+      "categories": {}
+    },
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "低倍"
+        ],
+        "values": {
+          "低倍": {
+            "raw": "按Q/S10-0534-2004进行低倍检查,附照(试验条件:室温)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "低倍"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "夏比冲击"
+        ],
+        "values": {
+          "夏比冲击": {
+            "raw": "按Q/S10-0534-2004(试验条件:室温)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "冲击试验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "室温拉伸"
+        ],
+        "values": {
+          "室温拉伸": {
+            "raw": "按Q/S10-0533-2004(试验条件:室温)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "室温拉伸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "室温拉伸"
+        ],
+        "values": {
+          "室温拉伸": {
+            "raw": "按Q/S10-0534-2004(试验条件:室温)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "室温拉伸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "室温拉伸"
+        ],
+        "values": {
+          "室温拉伸": {
+            "raw": "按Q/S10-0537-2004(试验条件:室温)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "室温拉伸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "热稳定"
+        ],
+        "values": {
+          "热稳定": {
+            "raw": "按Q/S10-0534-2004(试验条件:500°C×100h)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "热稳定"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高温拉伸"
+        ],
+        "values": {
+          "高温拉伸": {
+            "raw": "按Q/S10-0533-2004(试验条件:400°C)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高温拉伸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高温拉伸"
+        ],
+        "values": {
+          "高温拉伸": {
+            "raw": "按Q/S10-0534-2004(试验条件:500°C)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "高温拉伸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高温持久"
+        ],
+        "values": {
+          "高温持久": {
+            "raw": "按Q/S10-0533-2004(试验条件:400°C×570MPa)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "持久试验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高温持久"
+        ],
+        "values": {
+          "高温持久": {
+            "raw": "实测,如果100h内残余应变达到0.2%记录相应时间(试验条件:400°C×100h×250MPa)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "持久试验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高温持久"
+        ],
+        "values": {
+          "高温持久": {
+            "raw": "按Q/S10-0534-2004(试验条件:500°C×640MPa)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "持久试验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高温持久"
+        ],
+        "values": {
+          "高温持久": {
+            "raw": "按Q/S10-0534-2004(试验条件:500°C×560MPa)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "持久试验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "TC4",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "高温持久"
+        ],
+        "values": {
+          "高温持久": {
+            "raw": "实测,如果100h内残余应变达到0.2%记录相应时间(试验条件:500°C×100h×400MPa)",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "持久试验"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 0,
+        "clause_kinds": {},
+        "clause_fields": {
+          "requirement": 0,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 0,
+          "method_standard": 0,
+          "test_temperature": 0
+        },
+        "inventory_items": 9,
+        "inspection_items": 17,
+        "qualitative_items": 13,
+        "qualitative_records": 13,
+        "grades_filled": 13,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "低倍",
+            "夏比冲击",
+            "室温拉伸",
+            "热稳定",
+            "高温拉伸",
+            "高温持久"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 9,
+          "ambiguous": 0,
+          "clause_only": 0
+        },
+        "references": {
+          "total": 2,
+          "normative": 0,
+          "citations": 2,
+          "unresolved": 2,
+          "resolution_rate": 0.0,
+          "bindings": 1,
+          "cross_standard_candidates": 5
+        },
+        "method_bindings": 1,
+        "methods_filled": 1,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 6,
+          "features_matched": 6,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 9,
+          "items_matched": 7,
+          "items_ambiguous": 1,
+          "hit_rate": 0.7778,
+          "methods_checked": 1,
+          "methods_matched": 0,
+          "methods_normalized": 1,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "低倍",
+          "requirement": "按Q/S10-0534-2004进行低倍检查,附照(试验条件:室温)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "径轴面、对称各1 径轴面、对称各1",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "低倍",
+          "business_category": "低倍",
+          "evidence": [
+            "ev-qualitative-CL-1"
+          ]
+        },
+        {
+          "feature": "夏比冲击",
+          "requirement": "按Q/S10-0534-2004(试验条件:室温)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-003",
+          "business_item": "冲击",
+          "business_category": "冲击试验",
+          "evidence": [
+            "ev-qualitative-CL-3"
+          ]
+        },
+        {
+          "feature": "室温拉伸",
+          "requirement": "按Q/S10-0533-2004(试验条件:室温)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "Q/S 10",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "",
+          "business_category": "室温拉伸",
+          "evidence": [
+            "ev-qualitative-CL-4"
+          ]
+        },
+        {
+          "feature": "室温拉伸",
+          "requirement": "按Q/S10-0534-2004(试验条件:室温)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "Q/S 10",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "",
+          "business_category": "室温拉伸",
+          "evidence": [
+            "ev-qualitative-CL-4-2"
+          ]
+        },
+        {
+          "feature": "室温拉伸",
+          "requirement": "按Q/S10-0537-2004(试验条件:室温)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "Q/S 10",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "",
+          "business_category": "室温拉伸",
+          "evidence": [
+            "ev-qualitative-CL-4-3"
+          ]
+        },
+        {
+          "feature": "热稳定",
+          "requirement": "按Q/S10-0534-2004(试验条件:500°C×100h)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-005",
+          "business_item": "",
+          "business_category": "热稳定",
+          "evidence": [
+            "ev-qualitative-CL-5"
+          ]
+        },
+        {
+          "feature": "高温拉伸",
+          "requirement": "按Q/S10-0533-2004(试验条件:400°C)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-008",
+          "business_item": "",
+          "business_category": "高温拉伸",
+          "evidence": [
+            "ev-qualitative-CL-8"
+          ]
+        },
+        {
+          "feature": "高温拉伸",
+          "requirement": "按Q/S10-0534-2004(试验条件:500°C)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-008",
+          "business_item": "",
+          "business_category": "高温拉伸",
+          "evidence": [
+            "ev-qualitative-CL-8-2"
+          ]
+        },
+        {
+          "feature": "高温持久",
+          "requirement": "按Q/S10-0533-2004(试验条件:400°C×570MPa)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-009",
+          "business_item": "",
+          "business_category": "持久试验",
+          "evidence": [
+            "ev-qualitative-CL-9"
+          ]
+        },
+        {
+          "feature": "高温持久",
+          "requirement": "实测,如果100h内残余应变达到0.2%记录相应时间(试验条件:400°C×100h×250MPa)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-009",
+          "business_item": "",
+          "business_category": "持久试验",
+          "evidence": [
+            "ev-qualitative-CL-9-2"
+          ]
+        },
+        {
+          "feature": "高温持久",
+          "requirement": "按Q/S10-0534-2004(试验条件:500°C×640MPa)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-009",
+          "business_item": "",
+          "business_category": "持久试验",
+          "evidence": [
+            "ev-qualitative-CL-9-3"
+          ]
+        },
+        {
+          "feature": "高温持久",
+          "requirement": "按Q/S10-0534-2004(试验条件:500°C×560MPa)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-009",
+          "business_item": "",
+          "business_category": "持久试验",
+          "evidence": [
+            "ev-qualitative-CL-9-4"
+          ]
+        },
+        {
+          "feature": "高温持久",
+          "requirement": "实测,如果100h内残余应变达到0.2%记录相应时间(试验条件:500°C×100h×400MPa)",
+          "clause_id": "",
+          "clause_ids": [],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "2",
+            "location": "圆周对称位置各1弦向",
+            "note": ""
+          },
+          "inventory_id": "inv-009",
+          "business_item": "",
+          "business_category": "持久试验",
+          "evidence": [
+            "ev-qualitative-CL-9-5"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "低倍",
+        "item": "低倍",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "按Q/S10-0534-2004进行低倍检查,附照(试验条件:室温)",
+            "clause_id": ""
+          }
+        ]
+      },
+      {
+        "feature": "",
+        "item": "光滑高周疲劳",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "轴向加载,应力控制,Kr=1,应力比R=0.1,频率为100-140Hz,最大应力为540MPa,测试只(试验条件:室温)",
+            "clause_id": ""
+          },
+          {
+            "text": "轴向加载,应力控制,Kr=1,应力比R=0.1,频率为100-140Hz,最大应力为800MPa,测试只试样断裂或1×107次循环停止,报实测值(试验条件:室温)",
+            "clause_id": ""
+          }
+        ]
+      },
+      {
+        "feature": "夏比冲击",
+        "item": "冲击",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "按Q/S10-0534-2004(试验条件:室温)",
+            "clause_id": ""
+          }
+        ]
+      },
+      {
+        "feature": "室温拉伸",
+        "item": "室温拉伸",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "按Q/S10-0533-2004(试验条件:室温)",
+            "clause_id": ""
+          },
+          {
+            "text": "按Q/S10-0534-2004(试验条件:室温)",
+            "clause_id": ""
+          },
+          {
+            "text": "按Q/S10-0537-2004(试验条件:室温)",
+            "clause_id": ""
+          }
+        ]
+      },
+      {
+        "feature": "热稳定",
+        "item": "热稳定",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "按Q/S10-0534-2004(试验条件:500°C×100h)",
+            "clause_id": ""
+          }
+        ]
+      },
+      {
+        "feature": "",
+        "item": "硬度",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "按Q/S10-0534-2004进行硬度检查(试验条件:室温)",
+            "clause_id": ""
+          }
+        ]
+      },
+      {
+        "feature": "",
+        "item": "高倍",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "按Q/S10-0534-2004进行高倍检查,附照(试验条件:室温)",
+            "clause_id": ""
+          }
+        ]
+      },
+      {
+        "feature": "高温拉伸",
+        "item": "高温拉伸",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "按Q/S10-0533-2004(试验条件:400°C)",
+            "clause_id": ""
+          },
+          {
+            "text": "按Q/S10-0534-2004(试验条件:500°C)",
+            "clause_id": ""
+          }
+        ]
+      },
+      {
+        "feature": "高温持久",
+        "item": "蠕变",
+        "clause_id": "",
+        "requirement": "",
+        "requirements": [
+          {
+            "text": "按Q/S10-0533-2004(试验条件:400°C×570MPa)",
+            "clause_id": ""
+          },
+          {
+            "text": "实测,如果100h内残余应变达到0.2%记录相应时间(试验条件:400°C×100h×250MPa)",
+            "clause_id": ""
+          },
+          {
+            "text": "按Q/S10-0534-2004(试验条件:500°C×640MPa)",
+            "clause_id": ""
+          },
+          {
+            "text": "按Q/S10-0534-2004(试验条件:500°C×560MPa)",
+            "clause_id": ""
+          },
+          {
+            "text": "实测,如果100h内残余应变达到0.2%记录相应时间(试验条件:500°C×100h×400MPa)",
+            "clause_id": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "252",
+    "name": "MF2025492-126项目中间封严体锻件技术协议.无锡派鑫（双章）",
+    "tables": 35,
+    "records": 0,
+    "categories": {},
+    "table_details": [
+      {
+        "table_id": "252-T1",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T2",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T3",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T4",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T5",
+        "profile": "unknown",
+        "rows": 12,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T6",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T7",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T8",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T9",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T10",
+        "profile": "admin",
+        "rows": 3,
+        "cols": 4,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T11",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T12",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T13",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T14",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T15",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T16",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T17",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T18",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T19",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T20",
+        "profile": "admin",
+        "rows": 23,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T21",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T22",
+        "profile": "inspection",
+        "rows": 7,
+        "cols": 3,
+        "measure_cols": 1,
+        "recipe": "inspection_rules_v1",
+        "score": 0.6,
+        "status": "candidate",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T23",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T24",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T25",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T26",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T27",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 1,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T28",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T29",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T30",
+        "profile": "admin",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T31",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T32",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T33",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T34",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "252-T35",
+        "profile": "unknown",
+        "rows": 4,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 3,
+    "prod": {
+      "records": 0,
+      "categories": {}
+    },
+    "record_list": [],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 9,
+        "clause_kinds": {
+          "delivery": 1,
+          "normative_reference": 1,
+          "other": 2,
+          "packaging": 1,
+          "scope": 1,
+          "technical_requirement": 3
+        },
+        "clause_fields": {
+          "requirement": 5,
+          "direction": 0,
+          "sample_quantity": 0,
+          "sample_location": 0,
+          "method_standard": 0,
+          "test_temperature": 0
+        },
+        "inventory_items": 0,
+        "inspection_items": 0,
+        "qualitative_items": 0,
+        "qualitative_records": 0,
+        "grades_filled": 0,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 0,
+          "ambiguous": 0,
+          "clause_only": 0
+        },
+        "references": {
+          "total": 0,
+          "normative": 0,
+          "citations": 0,
+          "unresolved": 0,
+          "resolution_rate": 0.0,
+          "bindings": 0,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 0,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 0,
+          "features_matched": 0,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 0,
+          "items_matched": 0,
+          "items_ambiguous": 0,
+          "hit_rate": 0.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [],
+      "classifications": []
+    },
+    "inventory_items": []
+  },
+  {
+    "folder": "280",
+    "name": "DFWH-LYS-SP0509_Rev.0_CFC_奥氏体不锈钢锻件无损检测技术条件",
+    "tables": 2,
+    "records": 7,
+    "categories": {
+      "外观质量": 2,
+      "尺寸": 3,
+      "超声波检验": 2
+    },
+    "table_details": [
+      {
+        "table_id": "280-T1",
+        "profile": "admin",
+        "rows": 7,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "280-T2",
+        "profile": "admin",
+        "rows": 4,
+        "cols": 5,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "被检锻件的表面粗糙度应不大于6.3μm,表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "尺寸"
+        ],
+        "values": {
+          "尺寸": {
+            "raw": "探头可以采用单晶片或双晶片。 为保证探头与曲面工件获得满意的耦合效果 ,探头前可加楔块。 直探头的晶片边长或直径最小为13mm, 最大为30mm。 斜探头的晶片尺寸边长最小为13mm, 最大为25mm。 探头不应有明显的双峰,声束轴线偏离角以及斜探头的折射角偏差不大于2°,否则应作修正。 一般应选用频率为2MHz的探头。 如果需要采用1MHz以下频率的探头时,需征得采购方同意。 斜探头的角度一般采用45°,但考虑到锻件外形等因素,为确保斜射波能有效覆盖锻件的全体积,可采用其他角度的斜射波检查。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "尺寸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "尺寸"
+        ],
+        "values": {
+          "尺寸": {
+            "raw": "斜射波检测用参考试块应带有内外表面参考切槽,切槽形状为60o~70oV型槽或宽深比小于2的矩形槽(在锻件上的位置应不致产生相互干扰),槽的长度最大为 30mm,深度为锻件厚度的3%。 对于厚度小于等于75mm的锻件",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "尺寸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "尺寸"
+        ],
+        "values": {
+          "尺寸": {
+            "raw": "除其他设计文件和图纸有规定外,应按下述要求验收: a) 凡主要尺寸大于1.5mm的相关显示均应记录。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "尺寸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "超声波检测"
+        ],
+        "values": {
+          "超声波检测": {
+            "raw": "除其他设计文件中有规定外,超声检测一般应在最终热处理之后,精加工之前进行。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "超声波检验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "超声波检测"
+        ],
+        "values": {
+          "超声波检测": {
+            "raw": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "超声波检验"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 57,
+        "clause_kinds": {
+          "normative_reference": 1,
+          "other": 46,
+          "scope": 2,
+          "technical_requirement": 8
+        },
+        "clause_fields": {
+          "requirement": 28,
+          "direction": 1,
+          "sample_quantity": 1,
+          "sample_location": 0,
+          "method_standard": 1,
+          "test_temperature": 0
+        },
+        "inventory_items": 4,
+        "inspection_items": 0,
+        "qualitative_items": 7,
+        "qualitative_records": 7,
+        "grades_filled": 7,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "外观",
+            "尺寸",
+            "晶粒度",
+            "超声波检测"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 4,
+          "ambiguous": 0,
+          "clause_only": 4
+        },
+        "references": {
+          "total": 2,
+          "normative": 0,
+          "citations": 2,
+          "unresolved": 2,
+          "resolution_rate": 0.0,
+          "bindings": 0,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 0,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 4,
+          "features_matched": 4,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 4,
+          "items_matched": 4,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "外观",
+          "requirement": "被检锻件的表面粗糙度应不大于6.3μm,表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+          "clause_id": "4.2",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-4.2"
+          ]
+        },
+        {
+          "feature": "外观",
+          "requirement": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+          "clause_id": "5.2",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-5.2"
+          ]
+        },
+        {
+          "feature": "尺寸",
+          "requirement": "探头可以采用单晶片或双晶片。 为保证探头与曲面工件获得满意的耦合效果 ,探头前可加楔块。 直探头的晶片边长或直径最小为13mm, 最大为30mm。 斜探头的晶片尺寸边长最小为13mm, 最大为25mm。 探头不应有明显的双峰,声束轴线偏离角以及斜探头的折射角偏差不大于2°,否则应作修正。 一般应选用频率为2MHz的探头。 如果需要采用1MHz以下频率的探头时,需征得采购方同意。 斜探头的角度一般采用45°,但考虑到锻件外形等因素,为确保斜射波能有效覆盖锻件的全体积,可采用其他角度的斜射波检查。",
+          "clause_id": "4.4.2",
+          "clause_ids": [
+            "4.4.2",
+            "4.4.4.5",
+            "5.8.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "尺寸",
+          "business_category": "尺寸",
+          "evidence": [
+            "ev-qualitative-CL-4.4.2"
+          ]
+        },
+        {
+          "feature": "尺寸",
+          "requirement": "斜射波检测用参考试块应带有内外表面参考切槽,切槽形状为60o~70oV型槽或宽深比小于2的矩形槽(在锻件上的位置应不致产生相互干扰),槽的长度最大为 30mm,深度为锻件厚度的3%。 对于厚度小于等于75mm的锻件",
+          "clause_id": "4.4.4.5",
+          "clause_ids": [
+            "4.4.2",
+            "4.4.4.5",
+            "5.8.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "尺寸",
+          "business_category": "尺寸",
+          "evidence": [
+            "ev-qualitative-CL-4.4.4.5"
+          ]
+        },
+        {
+          "feature": "尺寸",
+          "requirement": "除其他设计文件和图纸有规定外,应按下述要求验收: a) 凡主要尺寸大于1.5mm的相关显示均应记录。",
+          "clause_id": "5.8.2",
+          "clause_ids": [
+            "4.4.2",
+            "4.4.4.5",
+            "5.8.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "尺寸",
+          "business_category": "尺寸",
+          "evidence": [
+            "ev-qualitative-CL-5.8.2"
+          ]
+        },
+        {
+          "feature": "超声波检测",
+          "requirement": "除其他设计文件中有规定外,超声检测一般应在最终热处理之后,精加工之前进行。",
+          "clause_id": "4.3",
+          "clause_ids": [
+            "4",
+            "4.1",
+            "4.3",
+            "4.4",
+            "4.4.1",
+            "4.4.3",
+            "4.4.4",
+            "4.4.4.1",
+            "4.4.4.2",
+            "4.4.4.5",
+            "4.4.5",
+            "4.5",
+            "4.5.1",
+            "4.5.2",
+            "4.5.3",
+            "4.5.4",
+            "4.6",
+            "4.6.1",
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "",
+          "business_category": "超声波检验",
+          "evidence": [
+            "ev-qualitative-CL-4.3"
+          ]
+        },
+        {
+          "feature": "超声波检测",
+          "requirement": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+          "clause_id": "4.5.1",
+          "clause_ids": [
+            "4",
+            "4.1",
+            "4.3",
+            "4.4",
+            "4.4.1",
+            "4.4.3",
+            "4.4.4",
+            "4.4.4.1",
+            "4.4.4.2",
+            "4.4.4.5",
+            "4.4.5",
+            "4.5",
+            "4.5.1",
+            "4.5.2",
+            "4.5.3",
+            "4.5.4",
+            "4.6",
+            "4.6.1",
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-004",
+          "business_item": "",
+          "business_category": "超声波检验",
+          "evidence": [
+            "ev-qualitative-CL-4.5.1"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "外观",
+        "item": "外观",
+        "clause_id": "4.2",
+        "requirement": "被检锻件的表面粗糙度应不大于6.3μm,表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。；检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+        "requirements": [
+          {
+            "text": "被检锻件的表面粗糙度应不大于6.3μm,表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+            "clause_id": "4.2"
+          },
+          {
+            "text": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+            "clause_id": "5.2"
+          }
+        ]
+      },
+      {
+        "feature": "尺寸",
+        "item": "尺寸",
+        "clause_id": "4.4.2",
+        "requirement": "探头可以采用单晶片或双晶片。 为保证探头与曲面工件获得满意的耦合效果 ,探头前可加楔块。 直探头的晶片边长或直径最小为13mm, 最大为30mm。 斜探头的晶片尺寸边长最小为13mm, 最大为25mm。 探头不应有明显的双峰,声束轴线偏离角以及斜探头的折射角偏差不大于2°,否则应作修正。 一般应选用频率为2MHz的探头。 如果需要采用1MHz以下频率的探头时,需征得采购方同意。 斜探头的角度一般采",
+        "requirements": [
+          {
+            "text": "探头可以采用单晶片或双晶片。 为保证探头与曲面工件获得满意的耦合效果 ,探头前可加楔块。 直探头的晶片边长或直径最小为13mm, 最大为30mm。 斜探头的晶片尺寸边长最小为13mm, 最大为25mm。 探头不应有明显的双峰,声束轴线偏离角以及斜探头的折射角偏差不大于2°,否则应作修正。 一般应选用频率为2MHz的探头。 如果需要采用1MHz以下频率的探头时,需征得采购方同意。 斜探头的角度一般采",
+            "clause_id": "4.4.2"
+          },
+          {
+            "text": "斜射波检测用参考试块应带有内外表面参考切槽,切槽形状为60o~70oV型槽或宽深比小于2的矩形槽(在锻件上的位置应不致产生相互干扰),槽的长度最大为 30mm,深度为锻件厚度的3%。 对于厚度小于等于75mm的锻件",
+            "clause_id": "4.4.4.5"
+          },
+          {
+            "text": "除其他设计文件和图纸有规定外,应按下述要求验收: a) 凡主要尺寸大于1.5mm的相关显示均应记录。",
+            "clause_id": "5.8.2"
+          }
+        ]
+      },
+      {
+        "feature": "晶粒度",
+        "item": "晶粒度",
+        "clause_id": "4.4.4.4",
+        "requirement": "",
+        "requirements": []
+      },
+      {
+        "feature": "超声波检测",
+        "item": "超声波检测",
+        "clause_id": "4",
+        "requirement": "除其他设计文件中有规定外,超声检测一般应在最终热处理之后,精加工之前进行。",
+        "requirements": [
+          {
+            "text": "除其他设计文件中有规定外,超声检测一般应在最终热处理之后,精加工之前进行。",
+            "clause_id": "4.3"
+          },
+          {
+            "text": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+            "clause_id": "4.5.1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "281",
+    "name": "DFWH-LYS-SP0508_Rev.0_CFC_马氏体不锈钢锻件无损检测技术条件",
+    "tables": 31,
+    "records": 6,
+    "categories": {
+      "外观质量": 3,
+      "尺寸": 1,
+      "超声波检验": 2
+    },
+    "table_details": [
+      {
+        "table_id": "281-T1",
+        "profile": "admin",
+        "rows": 7,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T2",
+        "profile": "admin",
+        "rows": 4,
+        "cols": 5,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T3",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T4",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T5",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T6",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T7",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T8",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T9",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T10",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T11",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T12",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T13",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T14",
+        "profile": "unknown",
+        "rows": 10,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T15",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T16",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T17",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T18",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T19",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T20",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T21",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T22",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T23",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T24",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T25",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T26",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T27",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T28",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T29",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T30",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T31",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "被检锻件的表面粗糙度应不大于6.3μm , 表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "直射波检测用的参考试块为一系列具有不同声程的平底孔试块,参考试块上的平底孔直径分别为4mm和2mm。 斜射波检测用参考试块上应带有内外表面参考切槽,切槽的深度应为锻件最终订货要求的最小壁厚的3%或6mm(取较小者),槽长大约为25mm,槽的宽深比一般不大于2。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "尺寸"
+        ],
+        "values": {
+          "尺寸": {
+            "raw": "除其他设计文件和图纸有规定外,应按下述要求验收: a) 凡主要尺寸大于1.5mm的相关显示均应记录。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "尺寸"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "超声波检测"
+        ],
+        "values": {
+          "超声波检测": {
+            "raw": "除其他设计文件中有规定外,超声检测一般应在改善机械性能的热处理(不包括消除应力的处理)之后,精加工之前进行。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "超声波检验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "超声波检测"
+        ],
+        "values": {
+          "超声波检测": {
+            "raw": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "超声波检验"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 56,
+        "clause_kinds": {
+          "normative_reference": 1,
+          "other": 46,
+          "scope": 2,
+          "technical_requirement": 7
+        },
+        "clause_fields": {
+          "requirement": 24,
+          "direction": 1,
+          "sample_quantity": 1,
+          "sample_location": 0,
+          "method_standard": 1,
+          "test_temperature": 0
+        },
+        "inventory_items": 3,
+        "inspection_items": 0,
+        "qualitative_items": 6,
+        "qualitative_records": 6,
+        "grades_filled": 6,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "外观",
+            "尺寸",
+            "超声波检测"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 3,
+          "ambiguous": 0,
+          "clause_only": 3
+        },
+        "references": {
+          "total": 2,
+          "normative": 0,
+          "citations": 2,
+          "unresolved": 2,
+          "resolution_rate": 0.0,
+          "bindings": 0,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 0,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 3,
+          "features_matched": 3,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 3,
+          "items_matched": 3,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "外观",
+          "requirement": "被检锻件的表面粗糙度应不大于6.3μm , 表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+          "clause_id": "4.2",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2",
+            "4.4.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-4.2"
+          ]
+        },
+        {
+          "feature": "外观",
+          "requirement": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+          "clause_id": "5.2",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2",
+            "4.4.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-5.2"
+          ]
+        },
+        {
+          "feature": "外观",
+          "requirement": "直射波检测用的参考试块为一系列具有不同声程的平底孔试块,参考试块上的平底孔直径分别为4mm和2mm。 斜射波检测用参考试块上应带有内外表面参考切槽,切槽的深度应为锻件最终订货要求的最小壁厚的3%或6mm(取较小者),槽长大约为25mm,槽的宽深比一般不大于2。",
+          "clause_id": "4.4.4.4",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2",
+            "4.4.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-4.4.4.4"
+          ]
+        },
+        {
+          "feature": "尺寸",
+          "requirement": "除其他设计文件和图纸有规定外,应按下述要求验收: a) 凡主要尺寸大于1.5mm的相关显示均应记录。",
+          "clause_id": "5.8.2",
+          "clause_ids": [
+            "5.8.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "尺寸",
+          "business_category": "尺寸",
+          "evidence": [
+            "ev-qualitative-CL-5.8.2"
+          ]
+        },
+        {
+          "feature": "超声波检测",
+          "requirement": "除其他设计文件中有规定外,超声检测一般应在改善机械性能的热处理(不包括消除应力的处理)之后,精加工之前进行。",
+          "clause_id": "4.3",
+          "clause_ids": [
+            "4",
+            "4.1",
+            "4.3",
+            "4.4",
+            "4.4.1",
+            "4.4.2",
+            "4.4.3",
+            "4.4.4",
+            "4.4.4.1",
+            "4.4.4.2",
+            "4.4.5",
+            "4.5",
+            "4.5.1",
+            "4.5.2",
+            "4.5.3",
+            "4.5.4",
+            "4.6",
+            "4.6.1",
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-003",
+          "business_item": "",
+          "business_category": "超声波检验",
+          "evidence": [
+            "ev-qualitative-CL-4.3"
+          ]
+        },
+        {
+          "feature": "超声波检测",
+          "requirement": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+          "clause_id": "4.5.1",
+          "clause_ids": [
+            "4",
+            "4.1",
+            "4.3",
+            "4.4",
+            "4.4.1",
+            "4.4.2",
+            "4.4.3",
+            "4.4.4",
+            "4.4.4.1",
+            "4.4.4.2",
+            "4.4.5",
+            "4.5",
+            "4.5.1",
+            "4.5.2",
+            "4.5.3",
+            "4.5.4",
+            "4.6",
+            "4.6.1",
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-003",
+          "business_item": "",
+          "business_category": "超声波检验",
+          "evidence": [
+            "ev-qualitative-CL-4.5.1"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "外观",
+        "item": "外观",
+        "clause_id": "4.2",
+        "requirement": "被检锻件的表面粗糙度应不大于6.3μm , 表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。；检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+        "requirements": [
+          {
+            "text": "被检锻件的表面粗糙度应不大于6.3μm , 表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+            "clause_id": "4.2"
+          },
+          {
+            "text": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+            "clause_id": "5.2"
+          },
+          {
+            "text": "直射波检测用的参考试块为一系列具有不同声程的平底孔试块,参考试块上的平底孔直径分别为4mm和2mm。 斜射波检测用参考试块上应带有内外表面参考切槽,切槽的深度应为锻件最终订货要求的最小壁厚的3%或6mm(取较小者),槽长大约为25mm,槽的宽深比一般不大于2。",
+            "clause_id": "4.4.4.4"
+          }
+        ]
+      },
+      {
+        "feature": "尺寸",
+        "item": "尺寸",
+        "clause_id": "5.8.2",
+        "requirement": "除其他设计文件和图纸有规定外,应按下述要求验收: a) 凡主要尺寸大于1.5mm的相关显示均应记录。",
+        "requirements": [
+          {
+            "text": "除其他设计文件和图纸有规定外,应按下述要求验收: a) 凡主要尺寸大于1.5mm的相关显示均应记录。",
+            "clause_id": "5.8.2"
+          }
+        ]
+      },
+      {
+        "feature": "超声波检测",
+        "item": "超声波检测",
+        "clause_id": "4",
+        "requirement": "除其他设计文件中有规定外,超声检测一般应在改善机械性能的热处理(不包括消除应力的处理)之后,精加工之前进行。",
+        "requirements": [
+          {
+            "text": "除其他设计文件中有规定外,超声检测一般应在改善机械性能的热处理(不包括消除应力的处理)之后,精加工之前进行。",
+            "clause_id": "4.3"
+          },
+          {
+            "text": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+            "clause_id": "4.5.1"
+          }
+        ]
+      }
+    ]
+  }
+]
