@@ -594,6 +594,45 @@ def _is_method_standard(ocr: dict[str, Any] | None) -> bool:
     return False
 
 
+def _is_ndt_method_standard(ocr: dict[str, Any] | None) -> bool:
+    """True for NDT procedure standards (``……无损检测技术条件``).
+
+    Their clauses describe probes, reference blocks and scanning parameters;
+    only NDT-related/surface-preparation items are product requirements.
+    """
+    if not ocr:
+        return False
+    pages = ocr.get("pages") or []
+    cover = pages[0] if pages and isinstance(pages[0], dict) else {}
+    text = re.sub(r"<[^>]+>", "\n", str(cover.get("markdown") or ""))
+    if not text.strip():
+        text = re.sub(r"<[^>]+>", "\n", str(ocr.get("markdown") or "")[:4000])
+    head = "\n".join(line for line in text.splitlines() if line.strip())[:2000]
+    lines = [
+        line.strip()
+        for line in head.splitlines()
+        if line.strip()
+        and not re.search(r"\.{3,}|…{2,}", line)
+        and not re.match(r"^\d", line)
+    ]
+    for line in lines[:15]:
+        if re.search(
+            r"无损检测|超声检测|超声波检测|渗透检测|磁粉检测|射线检测|涡流检测",
+            line,
+        ) and re.search(r"技术条件|规程|作业指导书|检测方法|检测工艺", line):
+            return True
+    return False
+
+
+NDT_RESULT_FEATURES = {
+    "超声波检测",
+    "涡流检测",
+    "表面粗糙度",
+    "脱脂",
+    "外观",
+}
+
+
 def feature_from_text(text: Any) -> str:
     value = _clean(text)
     if not value:
@@ -623,6 +662,29 @@ def _defect_enumeration(text: str) -> bool:
 def _weak_feature_ok(feature: str, sentence: str) -> bool:
     """Reject incidental mentions of a keyword (cleaning vs. NDT, duplex steel)."""
     lowered = _clean(sentence).lower()
+    # 证据/资料交付要求不是检验项目：“应提供……报告/数据/资料”只说明
+    # 供方要交文件，不代表该文件对应的项目需要检验。
+    if (
+        re.search(
+            r"(?:提供|提交|出具|转抄).{0,24}(?:报告|数据|资料|证明|记录)",
+            lowered,
+        )
+        and not re.search(
+            r"不应|不得|不大于|不小于|不超过|不低于|应符合|符合表|级别|等级|≤|≥",
+            lowered,
+        )
+        and feature not in {"化学成分"}
+    ):
+        return False
+    # 探头/晶片/参考试块/检测规程参数不是产品尺寸、外观或组织要求。
+    if (
+        feature not in {"超声波检测", "涡流检测", "表面粗糙度"}
+        and re.search(
+            r"参考试块|探头|晶片|声束|扫查|耦合剂|检测规程", lowered
+        )
+        and not CRITERION_SENTENCE_RE.search(lowered)
+    ):
+        return False
     # 纯引导句和报告字段表头不是验收指标。
     if re.match(r"^(?:shall|should|must)\s+be\s+as\s+follows\b", lowered):
         return False
@@ -887,6 +949,11 @@ def _weak_feature_ok(feature: str, sentence: str) -> bool:
             r"metallurgical working|processed to the final|final thickness|dimensional sizing",
             lowered,
         ):
+            return False
+        # 锻造比/锻造温度/变形量是锻造工艺参数，不是产品尺寸公差。
+        if re.search(
+            r"锻造比|锻比|锻造温度|终锻温度|加热温度|变形量", lowered
+        ) and not re.search(r"公差|偏差|允许偏差", lowered):
             return False
         # 显微组织/晶粒度条款里的“直径、厚度……”不是尺寸检验项。
         if re.search(r"显微组织|晶粒度|非金属夹杂|相变|铁素体", lowered) and not re.search(
@@ -2184,6 +2251,15 @@ def build_inventory(
         if ocr:
             _footnote_entries(ocr, entries, evidence_sink)
             _apply_table_requirements(ocr, entries)
+    if _is_ndt_method_standard(ocr):
+        # 无损检测规程里的“尺寸”是探头/晶片/试块参数，“晶粒度/低倍”是
+        # 参考试块说明，不是产品检验项；只保留 NDT/表面准备类项目。
+        entries = {
+            key: entry
+            for key, entry in entries.items()
+            if entry.get("status") == "confirmed"
+            or str(entry.get("feature") or "") in NDT_RESULT_FEATURES
+        }
 
     items: list[dict[str, Any]] = []
     for entry in entries.values():

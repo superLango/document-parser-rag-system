@@ -1,0 +1,1105 @@
+[
+  {
+    "folder": "280",
+    "name": "DFWH-LYS-SP0509_Rev.0_CFC_奥氏体不锈钢锻件无损检测技术条件",
+    "tables": 2,
+    "records": 4,
+    "categories": {
+      "外观质量": 2,
+      "超声波检验": 2
+    },
+    "table_details": [
+      {
+        "table_id": "280-T1",
+        "profile": "admin",
+        "rows": 7,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "280-T2",
+        "profile": "admin",
+        "rows": 4,
+        "cols": 5,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "被检锻件的表面粗糙度应不大于6.3μm,表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "超声波检测"
+        ],
+        "values": {
+          "超声波检测": {
+            "raw": "除其他设计文件中有规定外,超声检测一般应在最终热处理之后,精加工之前进行。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "超声波检验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "超声波检测"
+        ],
+        "values": {
+          "超声波检测": {
+            "raw": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "超声波检验"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 57,
+        "clause_kinds": {
+          "normative_reference": 1,
+          "other": 46,
+          "scope": 2,
+          "technical_requirement": 8
+        },
+        "clause_fields": {
+          "requirement": 28,
+          "direction": 1,
+          "sample_quantity": 1,
+          "sample_location": 0,
+          "method_standard": 1,
+          "test_temperature": 0
+        },
+        "inventory_items": 2,
+        "inspection_items": 0,
+        "qualitative_items": 4,
+        "qualitative_records": 4,
+        "grades_filled": 4,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "外观",
+            "超声波检测"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 2,
+          "ambiguous": 0,
+          "clause_only": 2
+        },
+        "references": {
+          "total": 2,
+          "normative": 0,
+          "citations": 2,
+          "unresolved": 2,
+          "resolution_rate": 0.0,
+          "bindings": 0,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 0,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 2,
+          "features_matched": 2,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 2,
+          "items_matched": 2,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "外观",
+          "requirement": "被检锻件的表面粗糙度应不大于6.3μm,表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+          "clause_id": "4.2",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-4.2"
+          ]
+        },
+        {
+          "feature": "外观",
+          "requirement": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+          "clause_id": "5.2",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-5.2"
+          ]
+        },
+        {
+          "feature": "超声波检测",
+          "requirement": "除其他设计文件中有规定外,超声检测一般应在最终热处理之后,精加工之前进行。",
+          "clause_id": "4.3",
+          "clause_ids": [
+            "4",
+            "4.1",
+            "4.3",
+            "4.4",
+            "4.4.1",
+            "4.4.3",
+            "4.4.4",
+            "4.4.4.1",
+            "4.4.4.2",
+            "4.4.4.5",
+            "4.4.5",
+            "4.5",
+            "4.5.1",
+            "4.5.2",
+            "4.5.3",
+            "4.5.4",
+            "4.6",
+            "4.6.1",
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "超声波检验",
+          "evidence": [
+            "ev-qualitative-CL-4.3"
+          ]
+        },
+        {
+          "feature": "超声波检测",
+          "requirement": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+          "clause_id": "4.5.1",
+          "clause_ids": [
+            "4",
+            "4.1",
+            "4.3",
+            "4.4",
+            "4.4.1",
+            "4.4.3",
+            "4.4.4",
+            "4.4.4.1",
+            "4.4.4.2",
+            "4.4.4.5",
+            "4.4.5",
+            "4.5",
+            "4.5.1",
+            "4.5.2",
+            "4.5.3",
+            "4.5.4",
+            "4.6",
+            "4.6.1",
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "超声波检验",
+          "evidence": [
+            "ev-qualitative-CL-4.5.1"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "外观",
+        "item": "外观",
+        "clause_id": "4.2",
+        "requirement": "被检锻件的表面粗糙度应不大于6.3μm,表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。；检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+        "requirements": [
+          {
+            "text": "被检锻件的表面粗糙度应不大于6.3μm,表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+            "clause_id": "4.2"
+          },
+          {
+            "text": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+            "clause_id": "5.2"
+          }
+        ]
+      },
+      {
+        "feature": "超声波检测",
+        "item": "超声波检测",
+        "clause_id": "4",
+        "requirement": "除其他设计文件中有规定外,超声检测一般应在最终热处理之后,精加工之前进行。",
+        "requirements": [
+          {
+            "text": "除其他设计文件中有规定外,超声检测一般应在最终热处理之后,精加工之前进行。",
+            "clause_id": "4.3"
+          },
+          {
+            "text": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+            "clause_id": "4.5.1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "281",
+    "name": "DFWH-LYS-SP0508_Rev.0_CFC_马氏体不锈钢锻件无损检测技术条件",
+    "tables": 31,
+    "records": 5,
+    "categories": {
+      "外观质量": 3,
+      "超声波检验": 2
+    },
+    "table_details": [
+      {
+        "table_id": "281-T1",
+        "profile": "admin",
+        "rows": 7,
+        "cols": 7,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T2",
+        "profile": "admin",
+        "rows": 4,
+        "cols": 5,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T3",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T4",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T5",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T6",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T7",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 3,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T8",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T9",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T10",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T11",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T12",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T13",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T14",
+        "profile": "unknown",
+        "rows": 10,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T15",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T16",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T17",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T18",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T19",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T20",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T21",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T22",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T23",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T24",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T25",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 2,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T26",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T27",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T28",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T29",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T30",
+        "profile": "admin",
+        "rows": 1,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      },
+      {
+        "table_id": "281-T31",
+        "profile": "unknown",
+        "rows": 2,
+        "cols": 1,
+        "measure_cols": 0,
+        "recipe": null,
+        "score": 0.0,
+        "status": "unknown",
+        "records": 0,
+        "props": 0
+      }
+    ],
+    "diagnostics": 2,
+    "prod": {},
+    "record_list": [
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "被检锻件的表面粗糙度应不大于6.3μm , 表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "外观"
+        ],
+        "values": {
+          "外观": {
+            "raw": "直射波检测用的参考试块为一系列具有不同声程的平底孔试块,参考试块上的平底孔直径分别为4mm和2mm。 斜射波检测用参考试块上应带有内外表面参考切槽,切槽的深度应为锻件最终订货要求的最小壁厚的3%或6mm(取较小者),槽长大约为25mm,槽的宽深比一般不大于2。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "外观质量"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "超声波检测"
+        ],
+        "values": {
+          "超声波检测": {
+            "raw": "除其他设计文件中有规定外,超声检测一般应在改善机械性能的热处理(不包括消除应力的处理)之后,精加工之前进行。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "超声波检验"
+        ]
+      },
+      {
+        "page": 0,
+        "grade": "全部牌号",
+        "cond": "",
+        "profile": "qualitative",
+        "props": [
+          "超声波检测"
+        ],
+        "values": {
+          "超声波检测": {
+            "raw": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+            "comparator": "text",
+            "lower": null,
+            "upper": null,
+            "unit": ""
+          }
+        },
+        "cats": [
+          "超声波检验"
+        ]
+      }
+    ],
+    "intelligence": {
+      "schema_version": "document-intelligence/1",
+      "stats": {
+        "metadata_applied": 0,
+        "clauses": 56,
+        "clause_kinds": {
+          "normative_reference": 1,
+          "other": 46,
+          "scope": 2,
+          "technical_requirement": 7
+        },
+        "clause_fields": {
+          "requirement": 24,
+          "direction": 1,
+          "sample_quantity": 1,
+          "sample_location": 0,
+          "method_standard": 1,
+          "test_temperature": 0
+        },
+        "inventory_items": 2,
+        "inspection_items": 0,
+        "qualitative_items": 5,
+        "qualitative_records": 5,
+        "grades_filled": 5,
+        "coverage": {
+          "record_features": [],
+          "inventory_features": [
+            "外观",
+            "超声波检测"
+          ],
+          "aligned": [],
+          "aligned_ratio": 0.0,
+          "confirmed": 0,
+          "probable": 2,
+          "ambiguous": 0,
+          "clause_only": 2
+        },
+        "references": {
+          "total": 2,
+          "normative": 0,
+          "citations": 2,
+          "unresolved": 2,
+          "resolution_rate": 0.0,
+          "bindings": 0,
+          "cross_standard_candidates": 0
+        },
+        "method_bindings": 0,
+        "methods_filled": 0,
+        "classifications": 0,
+        "classification_kinds": {},
+        "dictionary": {
+          "version": "hanson-ht-xlsx-28b8a8c5",
+          "features_checked": 2,
+          "features_matched": 2,
+          "features_unmatched": [],
+          "features_unmatched_count": 0,
+          "items_checked": 2,
+          "items_matched": 2,
+          "items_ambiguous": 0,
+          "hit_rate": 1.0,
+          "methods_checked": 0,
+          "methods_matched": 0,
+          "methods_normalized": 0,
+          "method_hit_rate": 0.0
+        }
+      },
+      "qualitative_items": [
+        {
+          "feature": "外观",
+          "requirement": "被检锻件的表面粗糙度应不大于6.3μm , 表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+          "clause_id": "4.2",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2",
+            "4.4.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-4.2"
+          ]
+        },
+        {
+          "feature": "外观",
+          "requirement": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+          "clause_id": "5.2",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2",
+            "4.4.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-5.2"
+          ]
+        },
+        {
+          "feature": "外观",
+          "requirement": "直射波检测用的参考试块为一系列具有不同声程的平底孔试块,参考试块上的平底孔直径分别为4mm和2mm。 斜射波检测用参考试块上应带有内外表面参考切槽,切槽的深度应为锻件最终订货要求的最小壁厚的3%或6mm(取较小者),槽长大约为25mm,槽的宽深比一般不大于2。",
+          "clause_id": "4.4.4.4",
+          "clause_ids": [
+            "4.2",
+            "4.4.4.3",
+            "5.2",
+            "4.4.4.4"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-001",
+          "business_item": "外观",
+          "business_category": "外观质量",
+          "evidence": [
+            "ev-qualitative-CL-4.4.4.4"
+          ]
+        },
+        {
+          "feature": "超声波检测",
+          "requirement": "除其他设计文件中有规定外,超声检测一般应在改善机械性能的热处理(不包括消除应力的处理)之后,精加工之前进行。",
+          "clause_id": "4.3",
+          "clause_ids": [
+            "4",
+            "4.1",
+            "4.3",
+            "4.4",
+            "4.4.1",
+            "4.4.2",
+            "4.4.3",
+            "4.4.4",
+            "4.4.4.1",
+            "4.4.4.2",
+            "4.4.5",
+            "4.5",
+            "4.5.1",
+            "4.5.2",
+            "4.5.3",
+            "4.5.4",
+            "4.6",
+            "4.6.1",
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "超声波检验",
+          "evidence": [
+            "ev-qualitative-CL-4.3"
+          ]
+        },
+        {
+          "feature": "超声波检测",
+          "requirement": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+          "clause_id": "4.5.1",
+          "clause_ids": [
+            "4",
+            "4.1",
+            "4.3",
+            "4.4",
+            "4.4.1",
+            "4.4.2",
+            "4.4.3",
+            "4.4.4",
+            "4.4.4.1",
+            "4.4.4.2",
+            "4.4.5",
+            "4.5",
+            "4.5.1",
+            "4.5.2",
+            "4.5.3",
+            "4.5.4",
+            "4.6",
+            "4.6.1",
+            "4.6.2"
+          ],
+          "page_no": 0,
+          "method": "",
+          "sampling": {
+            "quantity": "",
+            "location": "",
+            "note": ""
+          },
+          "inventory_id": "inv-002",
+          "business_item": "",
+          "business_category": "超声波检验",
+          "evidence": [
+            "ev-qualitative-CL-4.5.1"
+          ]
+        }
+      ],
+      "classifications": []
+    },
+    "inventory_items": [
+      {
+        "feature": "外观",
+        "item": "外观",
+        "clause_id": "4.2",
+        "requirement": "被检锻件的表面粗糙度应不大于6.3μm , 表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。；检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+        "requirements": [
+          {
+            "text": "被检锻件的表面粗糙度应不大于6.3μm , 表面不应存在可能干扰检测实施或检测结果解释的松散氧化皮、油漆或污物等。",
+            "clause_id": "4.2"
+          },
+          {
+            "text": "检测前,检测人员应对被检表面作外观检查,被检表面及相邻至少25mm范围的区域不应有任何污垢、油脂、纤维屑、锈皮、焊渣、焊接飞溅物、油或其他有碍检测的物质。",
+            "clause_id": "5.2"
+          },
+          {
+            "text": "直射波检测用的参考试块为一系列具有不同声程的平底孔试块,参考试块上的平底孔直径分别为4mm和2mm。 斜射波检测用参考试块上应带有内外表面参考切槽,切槽的深度应为锻件最终订货要求的最小壁厚的3%或6mm(取较小者),槽长大约为25mm,槽的宽深比一般不大于2。",
+            "clause_id": "4.4.4.4"
+          }
+        ]
+      },
+      {
+        "feature": "超声波检测",
+        "item": "超声波检测",
+        "clause_id": "4",
+        "requirement": "除其他设计文件中有规定外,超声检测一般应在改善机械性能的热处理(不包括消除应力的处理)之后,精加工之前进行。",
+        "requirements": [
+          {
+            "text": "除其他设计文件中有规定外,超声检测一般应在改善机械性能的热处理(不包括消除应力的处理)之后,精加工之前进行。",
+            "clause_id": "4.3"
+          },
+          {
+            "text": "锻件的超声检测方法可以是接触法或液浸法。 采用接触法检测时,校验试块和被检面的温度差不得超过14°C。 采用水浸法检测时,校验时的耦合剂与检验时的耦合剂温度差不得超过14°C。",
+            "clause_id": "4.5.1"
+          }
+        ]
+      }
+    ]
+  }
+]
