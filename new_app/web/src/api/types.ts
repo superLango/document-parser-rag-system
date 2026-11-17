@@ -56,6 +56,8 @@ export type RunItem = {
   created_at: string;
   started_at: string | null;
   finished_at: string | null;
+  /** 仅 /runs 列表返回：最后一个阶段结束时间（机器解析结束） */
+  parsed_at?: string | null;
 };
 
 export type RunStage = {

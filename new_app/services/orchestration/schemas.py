@@ -46,6 +46,8 @@ class RunOut(BaseModel):
     created_at: datetime
     started_at: datetime | None
     finished_at: datetime | None
+    # 仅 /runs 列表填充：最后一个阶段的结束时间（机器解析结束）
+    parsed_at: datetime | None = None
 
 
 class RunStageOut(BaseModel):
