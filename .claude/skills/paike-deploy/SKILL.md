@@ -11,6 +11,7 @@ description: 派克（Paike）客户盒子的架构与离线部署。用户说�
 
 用户的习惯：**AI 只给出要运行的指令，用户自己插上内网网线去执行**。不要自己去连盒子部署，除非用户明确要求。
 
+0. 分支约定（PAIKE.md 5.0）：功能在 `wjh-pr` 开发并向 `new_doc_parse` 提 PR；打包在 `wjh-doc_parse`，先 `git merge wjh-pr`。指令里要包含切分支和合并这两步。
 1. 在本地仓库 `F:\work\RAG_doc_parse` 看状态：`git status --short new_app`、`git log --oneline origin/new_doc_parse..HEAD`，以及上次部署的提交（PAIKE.md / 记忆里有记录则用，没有就问用户或按“上次部署之后的所有提交”估算）。
    有未提交改动 → 先问用户是否提交（包名会带 `-dirty`）。
 2. 按改动的文件决定打包类型：只有 `new_app/web/**` → `web`；只有 `services|packages|tests` → `app`；都有 → `all`。

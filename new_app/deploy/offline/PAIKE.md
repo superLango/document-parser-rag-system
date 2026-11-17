@@ -106,9 +106,33 @@ bash ~/hansonDoc_RAG/scripts/stop_all.sh      # 停容器，数据保留；--wit
 
 ## 5. 日常更新流程（开发者照做）
 
-### 5.1 本地
+### 5.0 两个分支
 
-先把改动提交到 `wjh-doc_parse`，然后在 **cmd / PowerShell** 里（也可以双击 `make_bundle.cmd`，默认打 all）：
+| 分支 | 放什么 | 用来 |
+|---|---|---|
+| `wjh-pr` | 要给团队的功能 / 修复（= `new_doc_parse` + 自己的改动）| 日常开发、push、向 `new_doc_parse` 提 PR |
+| `wjh-doc_parse` | `wjh-pr` 的全部 + 个人内容（`new_app/deploy/offline/`、`dict/`、`.claude/skills/`）| 打离线部署包 |
+
+```bat
+:: 开发（功能 / 修复）
+git switch wjh-pr
+git pull origin new_doc_parse          &rem 先同步团队最新代码
+... 改代码、git commit ...
+git push origin wjh-pr                 &rem 然后在 GitHub 上从 wjh-pr 向 new_doc_parse 提 PR（已有未合并的 PR 会自动更新）
+
+:: 部署前
+git switch wjh-doc_parse
+git merge wjh-pr                       &rem 把功能带进个人分支
+new_app\deploy\offline\make_bundle.cmd <web|app|all>
+git push origin wjh-doc_parse
+```
+
+只改部署脚本、词典、skill 时直接在 `wjh-doc_parse` 上提交，**不要**合到 `wjh-pr`。
+`new_doc_parse` 带来新的解析内核版本（如 lango 的 1.7.41）时：汉唐直接用；派克要基于新代码换上 `dict/pk/dictionary_data.json` 另发一版（见 `dict/README.md`）。
+
+### 5.1 本地打包
+
+在 `wjh-doc_parse` 上，用 **cmd / PowerShell**（也可以双击 `make_bundle.cmd`，默认打 all）：
 
 ```bat
 cd /d F:\work\RAG_doc_parse
