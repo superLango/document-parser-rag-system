@@ -1,4 +1,4 @@
-/** 文档库「提取」：每份文档一个文件夹（以 PDF 文件名命名），内含 PDF、OCR Markdown、抽取 JSON。 */
+/** 文档库「提取」：每份文档一个文件夹（以 LIMS task_id 命名），内含 PDF、OCR Markdown、抽取 JSON。 */
 
 import { ApiError } from "../api/client";
 import type { DocumentItem } from "../api/types";
@@ -46,7 +46,7 @@ export function uploadedWithin(document: DocumentItem, from: string, to: string)
 }
 
 // Windows 资源管理器按字节限制 ZIP 条目路径（约 260 字节，实测中文 125 字符即整包无法识别）；
-// 文件夹用编号后「编号/原文件名」基本都在限制内，超长的原文件名再截短兜底。
+// 文件夹用 task_id 后「task_id/原文件名」基本都在限制内，超长的原文件名再截短兜底。
 export const MAX_ENTRY_BYTES = 240;
 const encoder = new TextEncoder();
 const byteLength = (text: string) => encoder.encode(text).length;
@@ -66,13 +66,5 @@ export function fitFileName(folder: string, name: string): string {
   return truncateBytes(name.slice(0, name.length - ext.length), budget - byteLength(ext)) + ext;
 }
 
-/**
- * 文件夹编号：按上传时间在整个文档库中的先后顺序，从 1 开始。
- * 传入全部文档（不是筛选后的），同一份文档每次提取编号不变，跳过重复文件才对得上。
- */
-export function folderNumbers(allDocuments: DocumentItem[]): Map<string, string> {
-  const ordered = [...allDocuments].sort(
-    (a, b) => a.created_at.localeCompare(b.created_at) || a.id.localeCompare(b.id)
-  );
-  return new Map(ordered.map((document, index) => [document.id, String(index + 1)]));
-}
+/** 文件夹名：LIMS 对接任务的 task_id，与 LIMS 记录一一对应；页面手动上传的文档没有 task_id，用文档 ID。 */
+export const folderOf = (document: DocumentItem): string => safeName(document.task_id || document.id);

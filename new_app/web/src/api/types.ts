@@ -6,6 +6,8 @@ export type DocumentItem = {
   sha256: string;
   status: string;
   created_at: string;
+  /** 仅 /documents 列表返回：最近一次 LIMS 对接任务的 task_id */
+  task_id?: string | null;
 };
 
 export type IssueFeedback = {
