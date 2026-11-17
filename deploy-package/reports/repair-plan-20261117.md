@@ -434,7 +434,7 @@ inventory → projection，与 `supplements/prose_items.json` 对照。
 | 80 份 112824 回放 | **88 条、21 份有记录**（材料/技术协议类 13/15 份出记录；133/252 为澄清函/纯引用） |
 | 30 份金标表级 | GB/T 1591 2,516/2,304；GB/T 3880.2 8,220/8,221；GB/T 5231 4,840/5,025 |
 | 30 份金标正文 | 3280/GJB5040/HB20079/14976 的正文型缺失清零（NDT 泛化项除外） |
-| parser_core 1.7.41 | 资产仍为上一次重建版本（checksum `ab0d726f…`）；本次最后三条精度护栏尚未写入资产，需重建 1.7.41 后才随 candidate 生效 |
+| parser_core 1.7.41 | 已用最终 runtime 重建并晋升 stable，checksum `dddf39d5c17108bb97330d812a0b3e65d42b84794e87fab142ed1e26b1b5d5f5`；新部署重启 registry 后即按 1.7.41 运行 |
 | lint / pytest | ruff 全通过；algorithm + contract/recipes 78 项通过 |
 
 
