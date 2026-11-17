@@ -104,13 +104,17 @@ bash ~/hansonDoc_RAG/scripts/stop_all.sh      # 停容器，数据保留；--wit
 
 ### 5.1 本地
 
-```bash
-cd /f/work/RAG_doc_parse
-git status                                   # 先把改动提交到 wjh-doc_parse
-bash new_app/deploy/offline/make_bundle.sh web    # 只改了前端
-bash new_app/deploy/offline/make_bundle.sh app    # 只改了后端 Python
-bash new_app/deploy/offline/make_bundle.sh        # 都改了（all）
+先把改动提交到 `wjh-doc_parse`，然后在 **cmd / PowerShell** 里（也可以双击 `make_bundle.cmd`，默认打 all）：
+
+```bat
+cd /d F:\work\RAG_doc_parse
+new_app\deploy\offline\make_bundle.cmd web     &rem 只改了前端
+new_app\deploy\offline\make_bundle.cmd app     &rem 只改了后端 Python
+new_app\deploy\offline\make_bundle.cmd         &rem 都改了（all）
 ```
+
+在 cmd 里**不要直接敲 `bash ...`**：那会调用 WSL 的 bash（报 `execvpe(/bin/bash) failed`），`make_bundle.cmd` 会自己找 Git Bash。
+在 Git Bash 终端里则可以直接 `bash new_app/deploy/offline/make_bundle.sh web`（路径写 `/f/work/...`）。
 
 产物在 `new_app/deploy/offline/out/hanson-update-<时间>-<提交>-<web|app|all>.run`，一个文件，约 0.2MB（web）到 10MB（all）。
 包名带 `-dirty` 表示打包时有未提交的改动 —— 能用，但盒子上就对不上 git 提交了，尽量先提交。
@@ -185,7 +189,7 @@ pip download -r new_app/requirements.txt --platform manylinux2014_aarch64 --pyth
 
 | 文件 | 运行位置 | 作用 |
 |---|---|---|
-| `make_bundle.sh` | 本地 Git Bash | 构建前端、打包后端代码，把 `install.sh` + 负载拼成一个 `.run` |
+| `make_bundle.sh` + `make_bundle.cmd` | 本地（cmd 用 .cmd，Git Bash 用 .sh）| 构建前端、打包后端代码，把 `install.sh` + 负载拼成一个 `.run` |
 | `install.sh` | 盒子 | `.run` 的头部：检查 → 备份 → 更新 → 验证；`rollback` 回滚 |
 | `selftest.sh` | 本地 Git Bash | 假 docker + 假服务，跑部署 / 回滚 / 各项拦截，**改完脚本必须跑通** |
 
