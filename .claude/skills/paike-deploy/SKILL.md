@@ -15,7 +15,8 @@ description: 派克（Paike）客户盒子的架构与离线部署。用户说�
 1. 在本地仓库 `F:\work\RAG_doc_parse` 看状态：`git status --short new_app`、`git log --oneline origin/new_doc_parse..HEAD`，以及上次部署的提交（PAIKE.md / 记忆里有记录则用，没有就问用户或按“上次部署之后的所有提交”估算）。
    有未提交改动 → 先问用户是否提交（包名会带 `-dirty`）。
 2. 按改动的文件决定打包类型：只有 `new_app/web/**` → `web`；只有 `services|packages|tests` → `app`；都有 → `all`。
-   改了 `requirements.txt`、`deploy/compose/nginx.conf`、compose、`.env`、词典 / 解析内核 → 脚本不覆盖，按 PAIKE.md 第 6 节单独给出步骤。
+   解析内核有变化（`services/sandbox/runtime/**` 或 lango 发了新 parser_core 版本、或 `dict/pk/dictionary_data.json` 变了）→ 加 `--parser <派克新版本> --dict pk`（版本表见 PAIKE.md 6.2，先查盒子当前 stable，按 1.7.9xx 递增）。只重启 recipe-registry 不会换版本。
+   改了 `requirements.txt`、`deploy/compose/nginx.conf`、compose、`.env`、编排侧 `business_dictionary.json` → 脚本不覆盖，按 PAIKE.md 第 6 节单独给出步骤。
 3. 可以由 AI 先在本地打好包（`new_app\deploy\offline\make_bundle.cmd <类型>`，或 Git Bash 下 `bash new_app/deploy/offline/make_bundle.sh <类型>`），确认产物文件名后再给指令；也可以把打包命令一并交给用户。
 4. 按下面的模板回复，命令里填好真实的包名，每条命令单独一个代码块：
 

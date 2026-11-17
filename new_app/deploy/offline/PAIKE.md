@@ -179,7 +179,8 @@ bash ~/<包名>.run rollback     # 出问题就回滚（任意一个 .run 文件
 | `new_app/services/**`、`packages/**`、`tests/**` | `make_bundle.sh app`（解析任务空闲时做）|
 | `deploy/compose/nginx.conf` | 脚本不管。盒子用的是 `deploy-package/web-nginx.conf`，手工对比合并后 `docker restart hanson-web-1` |
 | `.env`、`docker-compose.yml` | 脚本不管。手工改，先 `cp x x.before-<改动名>` 备份，再 `docker compose -p hanson --env-file .env -f docker-compose.yml up -d --no-build --pull never` |
-| 业务词典 / 解析内核（parser_core）| 走 recipe-registry 的发布接口，发**新的 semver 版本**再 promote 到 stable，见 6.2 |
+| 解析内核（parser_core，含 lango 发的新版本、改了 `dict/pk/dictionary_data.json`）| `make_bundle.sh all --parser <新版本> --dict pk`，见 6.2 |
+| 业务词典（编排侧 `business_dictionary.json`）| 脚本不管。替换 `data/orchestration/dictionary/business_dictionary.json` 后重启 orchestration |
 | `requirements.txt`（新增依赖）| 见 6.3 |
 | 模型参数 | 改 `~/hansonDoc_RAG/scripts/start_*.sh`，在盒子桌面终端重启模型 |
 
@@ -197,9 +198,18 @@ bash ~/<包名>.run rollback     # 出问题就回滚（任意一个 .run 文件
 ### 6.2 词典 / 解析内核
 
 - 两家的词典都维护在仓库 `dict/`（`ht/` 汉唐、`pk/` 派克），含源文件、转换脚本、产物和重新生成的命令，见 `dict/README.md`。
-- 资产版本不可变：每次发布新版本号（1.7.901 → 1.7.902…），通过 recipe-registry `:8005` 的 `/internal/assets` 发布、`/internal/assets/parser/parser_core/versions/{v}/promote` 晋级到 stable。
-- 改了 parser 代码后，派克要基于新代码**重新发一版带派克词典的内核**，否则派克仍用旧代码。
-- 这一步建议让 AI 做（需要盒子在线或 AI 生成一个专用 .run 脚本）。
+- 盒子上 recipe-registry 挂载的是 `data/recipe_registry`，**镜像里的内核版本和仓库里的 stable 指针都不生效**。新内核必须在盒子上“发布 + 设为 stable”，只重启没用。
+- 解析时跑的是 registry 里 stable 版本的代码（沙箱热加载，覆盖 runtime 镜像自带的一份），所以不需要重建 `hanson-sandbox-runtime` 镜像。
+- 版本不可变，每次用新版本号。派克 = 某版代码 + 派克词典：
+
+| 派克版本 | 代码 | 说明 |
+|---|---|---|
+| 1.7.900 | 1.7.40 | 首次换派克词典 |
+| 1.7.901 | 1.7.40 | 一个检测项目多个大类拆成多条 |
+| 1.7.902 | 1.7.41（lango `9a10777`）| 宽表条件归属、正文条款还原、误抽收紧 |
+
+- 打包：`make_bundle.cmd all --parser 1.7.902 --dict pk`。`.run` 会：核对包里的词典与本机业务词典是同一家（`pk` 只能装到 `paike-...`，`ht` 只能装到 `hanson-...`）→ 备份 `data/recipe_registry` 和原 stable → 发布 → 设为 stable → 重启 recipe-registry → 核对 stable。回滚把 stable 切回原版本（新版本保留）。
+- 汉唐直接用 lango 发的版本号，但也必须在盒子上发布：`--parser 1.7.41 --dict ht`。
 
 ### 6.3 新增 Python 依赖
 

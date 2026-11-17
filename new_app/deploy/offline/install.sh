@@ -6,7 +6,8 @@
 #   bash hanson-update-*.run rollback     回滚最近一次部署（再执行一次回滚更早的一次）
 #   FORCE=1 bash hanson-update-*.run      有解析任务进行中也强制部署（会中断这些任务）
 #
-# 不会动: .env、data/、数据库与对象存储、模型服务、hanson-layout 容器。
+# 不会动: .env、业务数据、数据库与对象存储、模型服务、hanson-layout 容器。
+# 包内带解析内核时会在 recipe-registry 新增一个版本并设为 stable（先备份 data/recipe_registry）。
 set -euo pipefail
 
 DEPLOY=${HANSON_DEPLOY:-$HOME/hanson-deploy/deploy-package}
@@ -15,6 +16,9 @@ PROJECT=${HANSON_PROJECT:-hanson}
 IMAGE=hanson-new-app:local
 BASE=hanson-new-app:base # 首次部署时的原始镜像；每次只在它上面叠一层新代码，镜像不会越叠越大
 WEB="$PROJECT-web-1"
+ORCH="$PROJECT-orchestration-1"
+REG="$PROJECT-recipe-registry-1"
+BOX_DICT="$DEPLOY/data/orchestration/dictionary/business_dictionary.json"
 SELF=$0
 
 say() { printf '\n==> %s\n' "$*"; }
@@ -34,6 +38,42 @@ busy_runs() {
 import json, sys
 done = {"STRUCTURED_READY","REVIEW_FAILED","HUMAN_REVIEW","HUMAN_APPROVED","HUMAN_REJECTED","UNROUTED","FAILED","CANCELLED"}
 print(sum(r.get("status") not in done for r in json.load(sys.stdin)))' 2>/dev/null || echo 0
+}
+
+# recipe-registry 的端口不对宿主开放，经 orchestration 容器调用。
+#   registry state            -> "<stable> <全部版本...>"
+#   registry promote <v> <备注> -> 把 <v> 设为 stable
+registry() {
+  docker exec -i "$ORCH" python - "$@" <<'PY'
+import json, sys, urllib.request
+api = "http://recipe-registry:8005/internal/assets/parser/parser_core"
+if sys.argv[1] == "state":
+    d = json.load(urllib.request.urlopen(api, timeout=10))
+    versions = [v.get("version") if isinstance(v, dict) else v for v in d.get("versions", [])]
+    print(d["channels"].get("stable", ""), *versions)
+elif sys.argv[1] == "promote":
+    body = {"channel": "stable", "actor": "offline-install", "note": sys.argv[3]}
+    req = urllib.request.Request(
+        f"{api}/versions/{sys.argv[2]}/promote",
+        data=json.dumps(body).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    print(json.load(urllib.request.urlopen(req, timeout=20))["version"])
+PY
+}
+
+wait_healthy() {
+  for _ in $(seq 60); do
+    [ "$(docker inspect -f '{{.State.Health.Status}}' "$1" 2>/dev/null)" = healthy ] && return 0
+    sleep 3
+  done
+  die "$1 未就绪：docker logs --tail 50 $1"
+}
+
+# 本机业务词典的版本标识：派克 paike-...，汉唐 hanson-...
+box_dict() {
+  python3 -c 'import json, sys; print(json.load(open(sys.argv[1], encoding="utf-8")).get("version", ""))' "$BOX_DICT" 2>/dev/null || true
 }
 
 verify() {
@@ -83,6 +123,29 @@ do_install() {
     docker run --rm --entrypoint cat "$BASE" /app/requirements.txt | diff -q --strip-trailing-cr - "$tmp/app/requirements.txt" >/dev/null ||
       die "requirements.txt 与镜像内不同（新增/变更了 Python 依赖），离线覆盖代码装不了依赖，见 PAIKE.md「新增依赖」"
   fi
+  local pver="" pdict="" pstable="" pversions="" pmode=""
+  if [ -f "$tmp/parser.tgz" ]; then
+    mkdir "$tmp/parser"
+    tar xzf "$tmp/parser.tgz" -C "$tmp/parser"
+    pver=$(sed -n 's/^version=//p' "$tmp/parser/PARSER_INFO")
+    pdict=$(sed -n 's/^dict=//p' "$tmp/parser/PARSER_INFO")
+    local bdict
+    bdict=$(box_dict)
+    # 防止把汉唐词典的内核发到派克（或反过来）
+    case "$pdict:$bdict" in
+      pk:paike* | ht:hanson*) ;;
+      *) die "包里的解析内核用的是 $pdict 词典，但本机业务词典是「${bdict:-读不到}」。派克用 --dict pk，汉唐用 --dict ht" ;;
+    esac
+    read -r pstable pversions <<<"$(registry state)" || true
+    [ -n "$pstable" ] || die "读不到 recipe-registry 的解析内核状态（docker logs --tail 50 $REG）"
+    if [ "$pstable" = "$pver" ]; then
+      pmode=skip
+    elif [[ " $pversions " == *" $pver "* ]]; then
+      pmode=promote # 之前发布过（版本不可变），只切换 stable
+    else
+      pmode=publish
+    fi
+  fi
 
   stamp=$(date +%Y%m%d-%H%M%S)
   bk="$BACKUPS/$stamp"
@@ -108,6 +171,26 @@ do_install() {
     compose up -d --no-build --pull never
   fi
 
+  if [ "$pmode" = skip ]; then
+    say "解析内核 $pver 已是 stable，跳过发布"
+  elif [ -n "$pmode" ]; then
+    say "解析内核：$pstable → $pver（词典 $pdict），原数据备份到 $bk/recipe_registry.tgz"
+    tar czf "$bk/recipe_registry.tgz" -C "$DEPLOY/data" recipe_registry
+    echo "$pstable" > "$bk/parser-stable"
+    wait_healthy "$ORCH"
+    wait_healthy "$REG"
+    if [ "$pmode" = publish ]; then
+      docker exec "$ORCH" rm -rf /tmp/parser-pub
+      docker cp "$tmp/parser" "$ORCH:/tmp/parser-pub"
+      docker exec "$ORCH" python /tmp/parser-pub/scripts/assets/publish_parser_asset.py \
+        --api http://recipe-registry:8005 --version "$pver" --actor offline-install --note "offline install $stamp ($pdict)"
+      docker exec "$ORCH" rm -rf /tmp/parser-pub
+    fi
+    registry promote "$pver" "offline install $stamp" >/dev/null
+    docker restart "$REG" >/dev/null
+    wait_healthy "$REG"
+  fi
+
   if [ -f "$tmp/web-dist.tgz" ]; then
     say "更新前端"
     if [ -d "$DEPLOY/web-dist" ]; then mv "$DEPLOY/web-dist" "$bk/web-dist"; fi
@@ -118,6 +201,11 @@ do_install() {
 
   echo "$stamp install $(tr '\n' ' ' < "$tmp/BUNDLE_INFO")" >> "$BACKUPS/history.log"
   verify
+  if [ -n "$pver" ]; then
+    pstable=$(registry state | cut -d' ' -f1) || true
+    echo "  解析内核 stable: $pstable"
+    [ "$pstable" = "$pver" ] || die "解析内核 stable 是 $pstable，不是 $pver。需要回滚: bash $SELF rollback"
+  fi
   say "部署完成。备份在 $bk ；回滚: bash $SELF rollback"
 }
 
@@ -131,6 +219,15 @@ do_rollback() {
   if [ -f "$bk/app-image" ]; then
     docker tag "$(cat "$bk/app-image")" "$IMAGE"
     compose up -d --no-build --pull never
+  fi
+  if [ -f "$bk/parser-stable" ]; then
+    # 新发布的版本保留在 registry 里（版本不可变），只把 stable 指回去
+    wait_healthy "$ORCH"
+    wait_healthy "$REG"
+    registry promote "$(cat "$bk/parser-stable")" "rollback $(basename "$bk")" >/dev/null
+    docker restart "$REG" >/dev/null
+    wait_healthy "$REG"
+    echo "  解析内核 stable 已切回 $(cat "$bk/parser-stable")"
   fi
   if [ -d "$bk/web-dist" ]; then
     rm -rf "$DEPLOY/web-dist"

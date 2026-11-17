@@ -40,9 +40,9 @@ python new_app/scripts/assets/build_dictionary_asset.py --source dict/pk/busines
 ```
 
 2. 提交 `dict/pk/`。
-3. 上盒子需要做两件事，让 AI 按 `new_app/deploy/offline/PAIKE.md` 第 6.2 节完成：
-   - 替换 `business_dictionary.json`；
-   - 基于当前代码发布一个**新的** parser_core 版本（如 1.7.902），其中带 `pk/dictionary_data.json`，再提升（promote）为 stable。
+3. 上盒子需要做两件事：
+   - 解析内核：`new_app\deploy\offline\make_bundle.cmd all --parser <新版本> --dict pk` 打包，盒子上执行 `.run`。它会发布新版本并设为 stable，详见 `new_app/deploy/offline/PAIKE.md` 6.2 节；
+   - 编排侧词典：把 `pk/business_dictionary.json` 替换到盒子的 `data/orchestration/dictionary/business_dictionary.json`，再重启 orchestration。这一步脚本不做。
 
 2026-11-17 已验证：用本目录的文件运行上面的命令，生成的结果与 `pk/` 里的产物逐条一致。
 
