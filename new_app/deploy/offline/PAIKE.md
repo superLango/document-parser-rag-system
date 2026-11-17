@@ -93,12 +93,16 @@ bash ~/hansonDoc_RAG/scripts/stop_all.sh      # 停容器，数据保留；--wit
 
 | 项 | 仓库 `new_app/deploy/compose` | 汉唐 01 | 派克 |
 |---|---|---|---|
-| compose | 带 build，web 端口 15173 | deploy-package，18000/18080 | 同 01，另加：`extra_hosts: host.docker.internal:host-gateway`、`./web-nginx.conf` 挂载、`./web-dist` 挂载 |
-| 前端 | 打进 `hanson-web` 镜像 | 打进镜像（未挂载 web-dist）| **挂载 `./web-dist`**，替换文件即可 |
+| compose | 带 build，web 端口 15173 | deploy-package，18000/18080，挂载 `./web-nginx.conf`、`./web-dist` | 同 01，另加 `extra_hosts: host.docker.internal:host-gateway` |
+| 前端 | 打进 `hanson-web` 镜像 | 挂载 `./web-dist`（2026-11-17 起）| 挂载 `./web-dist` |
+| GLM-OCR 并发 | — | `GLM_OCR_MAX_CONCURRENCY=10`，vLLM max-num-seqs 16 | 2 / 2 |
 | 模型 | — | 01 跑 GLM/版面（systemd），02 跑 Qwen | 全在本机，手动起 |
 | 词典 / 解析内核 | 汉唐 | 汉唐，parser 1.7.40 | **派克词典**，parser 1.7.900 → **1.7.901**（多大类拆条）|
 
-派克 compose 改动前的备份：`docker-compose.yml.from-01`、`docker-compose.yml.before-extract`。
+派克 compose 改动前的备份：`docker-compose.yml.from-01`、`docker-compose.yml.before-extract`；01 的：`docker-compose.yml.before-web-dist`。
+
+**同一个 `.run` 包也能部署汉唐 01**（`htjiance8@193.168.2.201`，部署目录、端口相同，一直在内网可直连）。
+2026-11-17 已用 `hanson-update-20261117-1108-06ed082-web.run` 在 01 上部署「提取」按钮，这是该脚本第一次在真盒子上运行，成功。
 
 ## 5. 日常更新流程（开发者照做）
 
