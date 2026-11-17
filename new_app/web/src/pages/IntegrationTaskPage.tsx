@@ -35,7 +35,8 @@ export default function IntegrationTaskPage() {
   const meta = task ? statusLabel(task) : null;
 
   return (
-    <div className="min-h-dvh bg-background-soft">
+    // LIMS 用 scrolling="no" 的 iframe 嵌入本页，视口滚动被禁用，必须在自有容器内滚动。
+    <div className="h-dvh overflow-y-auto bg-background-soft">
       <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-4 border-b border-border/80 bg-card/90 px-4 backdrop-blur-md sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-soft">

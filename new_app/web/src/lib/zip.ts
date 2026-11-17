@@ -1,8 +1,9 @@
 /** Minimal ZIP writer (store method, UTF-8 names) for batch CSV export. */
 
-type ZipFile = {
+export type ZipFile = {
   name: string;
-  content: string;
+  // 文本按 UTF-8 写入；二进制（如 PDF）原样写入
+  content: string | Uint8Array;
 };
 
 const CRC_TABLE = (() => {
@@ -57,7 +58,8 @@ export function createZip(files: ZipFile[]): Blob {
 
   for (const file of files) {
     const name = encoder.encode(file.name);
-    const data = encoder.encode(file.content);
+    const data =
+      typeof file.content === "string" ? encoder.encode(file.content) : file.content;
     const checksum = crc32(data);
     const local = concat([
       u32(0x04034b50),
