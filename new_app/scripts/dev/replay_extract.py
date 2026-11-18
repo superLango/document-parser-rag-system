@@ -28,6 +28,7 @@ from services.ocr.algorithms.repairs import apply_repairs, load_rules  # noqa: E
 from services.ocr.algorithms.table_grid import extract_tables  # noqa: E402
 from services.ocr.contracts import DocumentMeta, Page  # noqa: E402
 from services.orchestration.workflow import (  # noqa: E402
+    ROUTE_AGENT_MIN_CONFIDENCE,
     ROUTE_LOW_CONFIDENCE,
     apply_sibling_fallback,
     select_agent_tables,
@@ -45,6 +46,43 @@ def stable_recipes() -> dict[str, dict]:
         rid: json.loads((RECIPES / rid / ver / "manifest.json").read_text(encoding="utf-8"))
         for rid, ver in pointers.items()
     }
+
+
+AGENT_URL = ""
+
+
+def route_with_agent(pending: list[tuple[dict, dict]], manifests: dict[str, dict]) -> None:
+    """与 orchestration._route_with_agent 相同的请求：真实 RouterAgent 给低置信表选配方。"""
+    import httpx
+
+    task = {
+        "task_id": f"route-replay-{pending[0][1]['table_id']}",
+        "trace_id": "replay",
+        "role": "router",
+        "objective": "Assign every table to exactly one recipe from the catalog.",
+        "inputs": {
+            "tables": [table for table, _ in pending],
+            "catalog": [{"recipe_id": rid, "version": m["version"]} for rid, m in manifests.items()],
+            "deterministic": [item for _, item in pending],
+        },
+        "budget": {"max_steps": 1, "max_tool_calls": 0, "max_tokens": 32000, "wall_time_seconds": 90},
+    }
+    try:
+        response = httpx.post(f"{AGENT_URL.rstrip('/')}/internal/agent:run", json=task, timeout=180)
+        payload = response.json()
+    except (httpx.HTTPError, ValueError) as exc:
+        print(f"  agent error: {exc}", file=sys.stderr)
+        return
+    if response.status_code != 200 or payload.get("degraded"):
+        print(f"  agent degraded: {response.status_code} {str(payload)[:200]}", file=sys.stderr)
+        return
+    chosen = {str(a.get("table_id")): a for a in (payload.get("output") or {}).get("assignments") or []}
+    for table, item in pending:
+        pick = chosen.get(str(table.get("table_id")))
+        if pick and float(pick.get("confidence") or 0) >= ROUTE_AGENT_MIN_CONFIDENCE:
+            item.update(recipe_id=pick.get("recipe_id"), version=pick.get("version"), status="agent",
+                        score=float(pick["confidence"]), confidence=float(pick["confidence"]))
+        print(f"  agent {table.get('table_id')}: {pick and (pick.get('recipe_id'), pick.get('confidence'))}")
 
 
 def route(markdown: str, name: str, manifests: dict[str, dict]) -> tuple[list[dict], list[dict]]:
@@ -70,15 +108,19 @@ def route(markdown: str, name: str, manifests: dict[str, dict]) -> tuple[list[di
                 "margin": m.margin,
             }
         )
-    apply_sibling_fallback(assignments, {t["table_id"]: t for t in dumped})
-    # shortcut: 生产里 RouterAgent（LLM）会接住低置信的性能/成分表；这里按表画像直接给同名配方，
-    # 结果可能与生产略有出入。
     by_id = {t["table_id"]: t for t in dumped}
-    for item in select_agent_tables([(by_id[a["table_id"]], a) for a in assignments if float(a.get("score") or 0) < ROUTE_LOW_CONFIDENCE]):
-        table, entry = item
-        recipe_id = f"{table['profile']}_v1"
-        if recipe_id in manifests:
-            entry.update(recipe_id=recipe_id, version=manifests[recipe_id]["version"], score=0.7, status="agent")
+    pending = select_agent_tables(
+        [(by_id[a["table_id"]], a) for a in assignments if not a.get("recipe_id") or float(a.get("score") or 0) < ROUTE_LOW_CONFIDENCE]
+    )
+    if pending and AGENT_URL:
+        route_with_agent(pending, manifests)
+    else:
+        # shortcut: 没有 --agent-url 时，按表画像直接给同名配方模拟 RouterAgent，结果可能与生产有出入。
+        for table, entry in pending:
+            recipe_id = f"{table['profile']}_v1"
+            if recipe_id in manifests:
+                entry.update(recipe_id=recipe_id, version=manifests[recipe_id]["version"], score=0.7, status="agent")
+    apply_sibling_fallback(assignments, by_id)
     routed = [a for a in assignments if a.get("recipe_id") and float(a.get("score") or 0) >= ROUTE_LOW_CONFIDENCE]
     return dumped, routed
 
@@ -136,7 +178,10 @@ def main() -> int:
     ap.add_argument("--engine", default=str(ROOT / "services/sandbox/runtime"))
     ap.add_argument("--dict", default="", help="替换 dictionary_data.json（如派克词典）")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--agent-url", default="", help="agent 服务地址；给了就用真实 RouterAgent 路由低置信表")
     args = ap.parse_args()
+    global AGENT_URL
+    AGENT_URL = args.agent_url
     engine = Path(args.engine).resolve()
     if args.dict:
         copy = Path(tempfile.mkdtemp()) / "engine"
