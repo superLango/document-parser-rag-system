@@ -3,6 +3,7 @@ import { Download, FileWarning, MessageSquareWarning, RefreshCcw } from "lucide-
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
+import { documentsApi } from "../api/documents";
 import { issuesApi } from "../api/issues";
 import type { AbnormalDocument, IssueFeedback } from "../api/types";
 import {
@@ -24,6 +25,7 @@ import {
   TableRow
 } from "../components/ui/table";
 import { Tabs } from "../components/ui/tabs";
+import { folderOf } from "../lib/extract";
 import { FEEDBACK_STATUS, runStatusMeta } from "../lib/status";
 import { formatDateTime } from "../lib/utils";
 
@@ -89,6 +91,16 @@ export default function IssuesPage() {
     queryFn: issuesApi.ledger
   });
 
+  const documentsQuery = useQuery({
+    queryKey: ["documents"],
+    queryFn: documentsApi.list
+  });
+  // 与文档库「提取」的文件夹名同一规则（最新 LIMS task_id，手动上传为文档 ID），导出可直接对上文件夹
+  const taskIdOf = useMemo(() => {
+    const byId = new Map((documentsQuery.data ?? []).map((document) => [document.id, folderOf(document)]));
+    return (documentId: string) => byId.get(documentId) ?? documentId;
+  }, [documentsQuery.data]);
+
   const feedback = query.data?.feedback ?? [];
   const abnormal = query.data?.abnormal_documents ?? [];
 
@@ -134,7 +146,7 @@ export default function IssuesPage() {
   function exportFeedback() {
     downloadCsv(
       `问题反馈-${rangeLabel(feedbackStart, feedbackEnd)}.csv`,
-      ["反馈时间", "反馈文档", "反馈内容", "问题类型", "状态", "字段", "运行ID"],
+      ["反馈时间", "反馈文档", "反馈内容", "问题类型", "状态", "字段", "任务ID"],
       filteredFeedback.map((item) => [
         item.created_at,
         item.document,
@@ -142,7 +154,7 @@ export default function IssuesPage() {
         item.category,
         item.status,
         item.measure,
-        item.run_id
+        taskIdOf(item.document_id)
       ])
     );
   }
@@ -150,7 +162,7 @@ export default function IssuesPage() {
   function exportAbnormal() {
     downloadCsv(
       `异常文档-${rangeLabel(abnormalStart, abnormalEnd)}.csv`,
-      ["解析时间", "文档", "状态", "错误码", "阶段", "解析版本", "运行ID"],
+      ["解析时间", "文档", "状态", "错误码", "阶段", "解析版本", "任务ID"],
       filteredAbnormal.map((item) => [
         item.parsed_at,
         item.document,
@@ -158,7 +170,7 @@ export default function IssuesPage() {
         item.error_code,
         item.stage,
         item.parser_version,
-        item.run_id
+        taskIdOf(item.document_id)
       ])
     );
   }
@@ -229,7 +241,7 @@ export default function IssuesPage() {
               <Button
                 size="sm"
                 icon={<Download className="h-3.5 w-3.5" />}
-                disabled={filteredFeedback.length === 0}
+                disabled={filteredFeedback.length === 0 || !documentsQuery.data}
                 onClick={exportFeedback}
               >
                 导出
@@ -340,7 +352,7 @@ export default function IssuesPage() {
               <Button
                 size="sm"
                 icon={<Download className="h-3.5 w-3.5" />}
-                disabled={filteredAbnormal.length === 0}
+                disabled={filteredAbnormal.length === 0 || !documentsQuery.data}
                 onClick={exportAbnormal}
               >
                 导出
