@@ -2934,7 +2934,8 @@ def _metadata_for(
     quantity_text = str((item or {}).get("quantity") or "").strip()
     count = _sample_count(quantity_text) if quantity_text else None
     prose_count = (prose_sampling.get(feature) or {}).get("取样数量")
-    if prose_count and not re.search(r"\d", _cn_counts(quantity_text)):
+    # “每批抽检……一件”是抽几件锻件，不是试样数；只有“N个/组/根”才算检验表给了试样数。
+    if prose_count and not re.search(r"\d+\s*(?:个|组|根|支|块|次|点)", _cn_counts(quantity_text)):
         # 检验表只写“逐件检验/每批抽一件”时，正文“1个室温拉伸、3个冲击”更具体。
         count = int(prose_count)
     if count is not None:
