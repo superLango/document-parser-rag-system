@@ -282,7 +282,7 @@ FEATURE_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
         (
             "相变温度",
             "β转变温度",
-            "转变温度",
+            "α+β转变温度",
             "transformation temperature",
             "beta transus",
             "transus",
@@ -459,7 +459,7 @@ LIST_CRITERION_RE = re.compile(
 # 方法句后面如果还有这些指标，说明句子不只是“按某标准进行”。
 METHOD_KEEP_RE = re.compile(
     r"应符合|不应|不得|不允许|不小于|不大于|不超过|不低于|级别|等级"
-    r"|验收|合格|允许偏差|表\s*\d|±|\bRa\b"
+    r"|验收|合格|允许偏差|表\s*\d|±|\bRa\b|\d\s*级|更细|更粗"
 )
 # 方法标准的封面标题（“钛合金β转变温度测定方法”）不应产生产品检验项。
 METHOD_TITLE_CN_RE = re.compile(r"(?:测定方法|试验方法|检验方法|测试方法|分析方法)$")
@@ -559,6 +559,17 @@ def _clean(value: Any) -> str:
     # OCR 常在句末多识别一个“口”（“应不低于表8 的要求口”）。
     text = re.sub(r"(?<=[求定级])口$", "", text)
     return text.strip(" ，,、;；")
+
+
+SUPPLEMENTARY_ANNEX_RE = re.compile(
+    r"附\s*录\s*([A-Z])\s*[（(][^）)]{0,12}[）)]\s*(?:附加要求|补充要求)"
+)
+
+
+def _supplementary_annexes(ocr: dict[str, Any] | None) -> set[str]:
+    """附录标题是“附加要求/补充要求”的附录字母（如 NB/T 47009 附录A）。"""
+    text = str((ocr or {}).get("markdown") or "")
+    return set(SUPPLEMENTARY_ANNEX_RE.findall(re.sub(r"<[^>]+>", " ", text)))
 
 
 def _is_method_standard(ocr: dict[str, Any] | None) -> bool:
@@ -2247,7 +2258,15 @@ def build_inventory(
     # 检验项目，不能生成金相等定性要求。
     if not _is_method_standard(ocr):
         _inspection_entries(inspections, entries, evidence_sink)
-        _clause_entries(clauses_payload.get("clauses") or [], entries, evidence_sink)
+        supplementary = _supplementary_annexes(ocr)
+        # 附录“附加要求”是订货时另行约定的选项，不是本标准的必检项目。
+        clause_list = [
+            clause
+            for clause in clauses_payload.get("clauses") or []
+            if str(clause.get("clause_id") or "")[:2]
+            not in {f"{letter}." for letter in supplementary}
+        ]
+        _clause_entries(clause_list, entries, evidence_sink)
         if ocr:
             _footnote_entries(ocr, entries, evidence_sink)
             _apply_table_requirements(ocr, entries)

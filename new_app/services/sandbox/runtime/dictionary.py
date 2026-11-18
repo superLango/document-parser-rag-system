@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import re
 import unicodedata
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -139,7 +140,13 @@ def _indexes() -> dict[str, Any]:
     # Newest edition wins when several editions share a base number.
     for bucket in method_bases.values():
         bucket.sort(key=lambda item: (-_edition_year(item), str(item.get("name") or "")))
+    series = {
+        base.split(".", 1)[0]
+        for base in method_bases
+        if re.fullmatch(r"[a-z/]+\d+\.\d+", base)
+    }
     _index_cache = {
+        "method_series": series,
         "version": str(payload.get("version") or ""),
         "item_exact": item_exact,
         "item_aliases": item_aliases,
@@ -162,7 +169,8 @@ def _edition_year(entry: dict) -> int:
     year = int(match.group(1))
     if len(match.group(1)) == 2:
         year += 1900 if year >= 70 else 2000
-    return year
+    # 词典里有把“GB/T226-63”误转成“GB/T 226-2063”的条目；未来年份不能当最新版。
+    return -1 if year > date.today().year + 1 else year
 
 
 def _base_variants(number: str) -> list[str]:
@@ -196,6 +204,14 @@ def _match(
     hit = exact.get(key)
     if hit is not None:
         return hit, "exact"
+    # 名称比别名可信：“非金属夹杂”应落到“非金属夹杂物”，而不是把它列为别名的“NbC类”。
+    near = {
+        str(entry.get("name") or ""): entry
+        for name, entry in exact.items()
+        if len(key) >= 2 and name.startswith(key) and len(name) - len(key) == 1
+    }
+    if len(near) == 1:
+        return next(iter(near.values())), "alias"
     for alias, entries in aliases:
         if len(alias) < min_contained:
             continue
@@ -265,6 +281,10 @@ def _match_number(raw_number: str) -> tuple[dict | None, str]:
     key = _normalize_standard(raw_number)
     if not key:
         return None, "miss"
+    if key in indexes["method_series"]:
+        # “GB/T 223”是分部分的系列标准，没有单一版本号，不能补成“GB/T 223-2018”。
+        entry = indexes["method_numbers"].get(key)
+        return (entry, "standard_no") if entry is not None else (None, "series")
     candidates: list[dict] = []
     for base in _base_variants(key):
         candidates.extend(indexes["method_bases"].get(base) or [])

@@ -85,6 +85,30 @@ METHOD_FAMILIES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("高温持久", ("持久", "蠕变", "creep", "stress rupture")),
 )
 SKIP_CLAUSE_KINDS = {"scope", "normative_reference", "terms"}
+# 标准号本身就说明是哪项试验（GB/T 231.1 只能是布氏硬度），比所在条款标题可靠：
+# OCR 丢了“6.4 硬度试验”标题时，231.1 会落进“冲击试验”条款里。
+NUMBER_FAMILIES: tuple[tuple[str, str], ...] = (
+    (r"^GB/T (?:228\.2|4338)\b", "高温拉伸"),
+    (r"^GB/T 228(?:\.1)?$", "室温拉伸"),
+    (r"^GB/T 229$", "夏比冲击"),
+    (r"^GB/T 231(?:\.\d)?$", "布氏硬度"),
+    (r"^GB/T 230(?:\.\d)?$", "洛氏硬度"),
+    (r"^GB/T 4340(?:\.\d)?$", "维氏硬度"),
+    (r"^GB/T 232$", "弯曲"),
+    (r"^GB/T 226$", "低倍"),
+    (r"^GB/T 6394$", "晶粒度"),
+    (r"^GB/T 10561$", "非金属夹杂"),
+    (r"^GB/T 13298$", "高倍组织"),
+    (r"^GB/T 4334$", "晶间腐蚀"),
+)
+
+
+PRODUCT_TITLE_RE = re.compile(r"锻件|钢板|钢管|钢棒|钢带|型材|铸件|技术条件|通用要求")
+METHOD_TITLE_RE = re.compile(r"方法|分析|测定|试验|检验|检测|评级|评定")
+
+
+def _number_family(number: str) -> str:
+    return next((family for pattern, family in NUMBER_FAMILIES if re.match(pattern, number)), "")
 
 # -- cross-standard content requirements -----------------------------------
 # A *content* reference defers the acceptance values of a category/parameter
@@ -560,9 +584,18 @@ def _bindings(
     self_no: str = "",
 ) -> dict[str, dict[str, Any]]:
     best: dict[str, tuple[int, dict[str, Any]]] = {}
+    # 规范性引用文件里标题是产品标准（“NB/T 47010 承压设备用不锈钢耐热钢锻件”）的，
+    # “按 NB/T 47010 进行化学成分分析”只是转引，不是试验方法。
+    products = {
+        str(entry.get("standard_no") or "")
+        for entry in references
+        if entry.get("relation") == "normative"
+        and PRODUCT_TITLE_RE.search(str(entry.get("title") or ""))
+        and not METHOD_TITLE_RE.search(str(entry.get("title") or ""))
+    }
 
     def offer(family: str, score: int, payload: dict[str, Any]) -> None:
-        if not family:
+        if not family or str(payload.get("method") or "") in products:
             return
         current = best.get(family)
         if current is None or score > current[0]:
@@ -582,19 +615,25 @@ def _bindings(
             if not probe or not CUE_RE.search(probe):
                 continue
             family = title_family or _family(probe)
-            if not family:
-                continue
+            previous_end = 0
             for match in STANDARD_RE.finditer(probe):
+                # “晶粒度按GB/T 6394，非金属夹杂物按GB/T 10561”：每个标准号归属
+                # 紧挨在它前面点名的项目，而不是整句的第一个项目。
+                local = _family(probe[previous_end : match.start()])
+                previous_end = match.end()
                 number, _ = _standard(
                     match.group("org"), match.group("num"), match.group("year") or ""
                 )
+                local = _number_family(number) or local
+                if not (local or family):
+                    continue
                 if not number or number == self_no:
                     continue
                 if not _is_method_standard(number, probe):
                     continue
                 offer(
-                    family,
-                    40 if title_family else 20,
+                    local or family,
+                    40 if title_family or local else 20,
                     {
                         "method": number,
                         "source": "clause",
@@ -633,7 +672,7 @@ def _bindings(
         title = reference.get("title") or ""
         if not _is_method_standard(reference["standard_no"], title):
             continue
-        family = _family(title)
+        family = _number_family(reference["standard_no"]) or _family(title)
         if not family:
             continue
         score = 30 if reference.get("relation") == "normative" else 10
