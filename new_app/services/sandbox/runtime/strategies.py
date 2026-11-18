@@ -630,6 +630,14 @@ def nonrecord_reason(table: dict[str, Any]) -> str:
         return f"table_profile:{table_profile}"
     headers, _ = _headers(table)
     caption = str(table.get("caption") or "")
+    # OCR 把“表1 钢的化学成分”包进单元格时，标题会错取成表后的“表2 成品化学成分允许偏差”；
+    # 表前最近的表号与标题表号不一致时，标题不属于本表。
+    before = re.findall(
+        r"表\s*([A-Z]?\.?\s*\d+)", re.sub(r"<[^>]+>", " ", str(table.get("context") or ""))
+    )
+    own = re.match(r"表\s*([A-Z]?\.?\s*\d+)", caption)
+    if before and own and re.sub(r"\s", "", before[-1]) != re.sub(r"\s", "", own.group(1)):
+        caption = ""
     probe = " ".join([caption, *headers])
     if NONRECORD_RE.search(probe):
         return "tolerance_or_analysis"

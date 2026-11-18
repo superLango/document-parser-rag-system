@@ -6,6 +6,7 @@ sandbox runtime image and executed with a read-only root filesystem.
 
 from __future__ import annotations
 
+import functools
 import html
 import json
 import os
@@ -16,7 +17,7 @@ from typing import Any
 
 FOOTNOTE_RE = re.compile(r"[①-⑳]|\[\d+\]|\(\d+\)|（\d+）|\*+$")
 HTML_TAG_RE = re.compile(r"</?[A-Za-z][A-Za-z0-9]*(?:\s[^<>]*)?/?>")
-TABLE_BLOCK_RE = re.compile(r"<table\b.*?</table>", re.IGNORECASE | re.DOTALL)
+TABLE_BLOCK_RE = re.compile(r"<table(?=[\s>]).*?</table>", re.IGNORECASE | re.DOTALL)
 
 
 def _strip_html(value: Any) -> str:
@@ -177,6 +178,15 @@ def _document_grade_hint(text: str) -> str:
     temper = re.search(r"\b(\d{4}-[TTH]\d{2,4})\b", head, re.IGNORECASE)
     if temper:
         return temper.group(1)
+    # 钢号只印在标题里（“42CrMo4+QT Acc. To EN 10083-3”“支承用 42CrMo4 锻件”）。
+    steels = set(
+        re.findall(
+            r"(?<![A-Za-z0-9])(\d{2,3}(?:Cr|Mn|Ni|Mo|Si|V|W|Al|Ti|Nb)[A-Za-z0-9]*)(?:\+[A-Z]{1,3})?(?![A-Za-z0-9])",
+            head,
+        )
+    )
+    if len(steels) == 1:
+        return steels.pop()
     uns = []
     # Do not read a UNS number out of a standard code such as "GB/T 24627".
     for match in re.findall(r"(?<![A-Za-z/])([A-Z]\d{5})\b", head):
@@ -214,7 +224,8 @@ def _apply_document_grade(
     filled = 0
     for record in records:
         grade = str(record.get("grade") or "").strip()
-        if grade in {"", "~"}:
+        # 标题里写明了唯一牌号（“…用 S31608 锻件采购技术规范”）时，无牌号表就是该牌号。
+        if grade in {"", "~"} or (grade == "全部牌号" and hint != "全部牌号"):
             record["grade"] = hint
             filled += 1
             continue
@@ -780,7 +791,7 @@ MEASURE_ALIASES: dict[str, list[str]] = {
         "elongation",
         "extension",
     ],
-    "Z": ["断面收缩率", "收缩率", "ψ", "reduction of area"],
+    "Z": ["断面收缩率", "收缩率", "ψ", "reduction of area", "reduction in area", "reduction in cross section"],
     "KU2": ["冲击吸收能量", "冲击功", "kv2", "kuj", "akuj", "impact energy", "charpy"],
     "KV2": ["冲击吸收能量", "冲击功", "ku2", "akv", "impact energy", "charpy"],
     "KU5": ["冲击吸收能量", "冲击功", "impact energy", "charpy"],
@@ -1007,6 +1018,9 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", "", text or "").lower()
 
 
+LATEX_SIM_RE = re.compile(r"(?<=\d)\s*\\?sim\s*(?=[-+]?\d)")
+
+
 def strip_footnote(text: str) -> str:
     return FOOTNOTE_RE.sub("", (text or "").strip()).strip()
 
@@ -1181,7 +1195,13 @@ def _absorb_extra_header_rows(
     headers: list[str], data: list[list[str]]
 ) -> tuple[list[str], list[list[str]]]:
     absorbed = 0
-    while data and absorbed < 2 and _is_extra_header_row(data[0]):
+
+    def repeats_spanned_label(row: list[str]) -> bool:
+        # 纵向合并的首列表头（“试样方向”跨 3 行）在漏识别的表头行里原样重复。
+        first = str(row[0] if row else "").strip()
+        return bool(first) and bool(headers) and first == str(headers[0]).split(" / ")[0].strip()
+
+    while data and absorbed < 2 and (_is_extra_header_row(data[0]) or repeats_spanned_label(data[0])):
         row = list(data[0])
         # 合并单元格在 OCR 里只保留首列（“20 ℃”跨纵向/横向两列）；
         # 向右补齐到下一个非空标签，恢复 colspan 语义。
@@ -1625,6 +1645,11 @@ def _align_header_with_data(
         if re.fullmatch(r"[A-Za-zσδψτ]{1,6}(?:\s*[/%].*)?", first):
             # 竖排表：第一列是“Rp0.2/A/Z”等项目名，不是漏掉的牌号列。
             return headers
+        if normalize(first) in {normalize(label) for label in DIRECTION_LABELS} or re.search(
+            r"方向|状态", headers[start]
+        ):
+            # “试样方向 | ≤40 | …”：方向列本身就是条件列，表头没有错位。
+            return headers
         for offset in (1, 2, 3):
             probe = start + offset
             if probe >= len(row):
@@ -1850,17 +1875,34 @@ DRAWN_COUNT_RE = re.compile(
 )
 UNIT_COUNT_RE = re.compile(r"(\d+)\s*(?:个|件|支|根|组|块|张|卷|盘|份|套)")
 DIRECTION_RE = re.compile(
-    r"(纵向|横向|轧制方向|轴向|径向|弦向|周向|L方向|T方向|S方向|longitudinal|transverse)",
+    r"(纵向|横向|切向|轧制方向|轴向|径向|弦向|周向|L方向|T方向|S方向|longitudinal|transverse|tangential)",
     re.IGNORECASE,
 )
 DIRECTION_ALIASES = {
     "longitudinal": "纵向",
     "transverse": "横向",
+    "tangential": "切向",
     "l方向": "纵向",
     "t方向": "横向",
     "s方向": "横向",
     "轧制方向": "纵向",
 }
+
+
+def _specimen_direction(text: Any) -> str:
+    """正文里与试样相连的方向（“取切向试样”），不是“轴向长度”这类尺寸描述。"""
+    # OCR 会把行号插进词里：“取纵 5 向试样”。
+    text = re.sub(r"(纵|横|切|径|轴|弦)\s*\d{0,2}\s*向", r"\1向", str(text or ""))
+    found = {
+        DIRECTION_ALIASES.get(match.group(1).lower(), match.group(1))
+        for match in re.finditer(
+            DIRECTION_RE.pattern + r"\s*的?\s*(?:试样|试环|拉伸|冲击|弯曲|取样|力学性能)",
+            text,
+            re.IGNORECASE,
+        )
+    }
+    # “宽度≥600mm 取横向试样；其他取纵向试样”是按产品分情况，不能定成某一个方向。
+    return found.pop() if len(found) == 1 else ""
 
 
 def _sample_direction(text: Any) -> str:
@@ -1886,6 +1928,8 @@ PROSE_FAMILIES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("高倍组织", ("高倍组织", "显微组织")),
     ("非金属夹杂", ("非金属夹杂", "夹杂物")),
     ("化学成分", ("化学成分试验", "化学成分分析", "化学分析")),
+    # “硬度试验按GB/T 231.1进行”没写布氏/洛氏：作为各硬度项的兜底方法。
+    ("硬度", ("硬度试验", "硬度检验")),
 )
 FEATURE_METHOD_KEYS = {
     "室温拉伸": ("室温拉伸", "拉伸"),
@@ -2094,6 +2138,11 @@ def _english_chemical_methods(norm: str) -> str:
             continue
         if not EN_CHEMICAL_CUE_RE.search(sentence):
             continue
+        if re.search(r"comply with|conform to", sentence, re.I) and not re.search(
+            r"method|analy[sz]", sentence, re.I
+        ):
+            # “composition should comply with EN 10083-3”是成分限值引用，不是分析方法。
+            continue
         methods = [
             f"ASTM E{code}" for code in BARE_ASTM_METHOD_RE.findall(sentence)
         ]
@@ -2117,11 +2166,20 @@ def _prose_methods(norm: str) -> dict[str, str]:
         numbers = _standard_numbers(sentence)
         if not numbers:
             continue
+        if len(numbers) >= 2 and not METHOD_VERB_RE.search(sentence):
+            # 规范性引用文件清单（标准号+标题罗列）不是“按某标准试验”的规定。
+            continue
         for family, keywords in PROSE_FAMILIES:
             if family in found:
                 continue
             if any(keyword in sentence for keyword in keywords):
-                found[family] = "、".join(numbers[:6])
+                picked = (
+                    [n for n in numbers if not CHEM_NON_METHOD_RE.match(n)]
+                    if family == "化学成分"
+                    else numbers
+                )
+                if picked:
+                    found[family] = "、".join(picked[:6])
     for raw in norm.splitlines():
         line = raw.strip().lstrip("-•· ").strip()
         if len(line) < 8 or len(line) > 200:
@@ -2431,6 +2489,10 @@ def _feature_for_measure(record: dict[str, Any], measure: str) -> str:
         numeric = re.search(r"(\d{2,4})", temperature)
         if numeric and int(numeric.group(1)) >= 100:
             return "高温拉伸"
+        prop = (record.get("properties") or {}).get(name)
+        if isinstance(prop, dict) and "下列温度" in str(prop.get("column") or ""):
+            # “在下列温度下的Rp0.2”是高温性能表，20℃ 那一列也属于高温拉伸表。
+            return "高温拉伸"
         return "室温拉伸"
     return ""
 
@@ -2477,17 +2539,37 @@ def _match_inspection(feature: str, items: list[dict[str, str]]) -> dict[str, st
     return scored[0][2]
 
 
+PRODUCT_TITLE_RE = re.compile(r"锻件|钢板|钢管|钢棒|钢带|型材|铸件|技术条件|通用要求|产品")
+METHOD_TITLE_RE = re.compile(r"方法|分析|测定|试验|检验|检测|评级|评定")
+
+
+@functools.lru_cache(maxsize=8)
+def _product_standards(norm: str) -> frozenset[str]:
+    """规范性引用文件里标题是产品/通用要求（不是方法）的标准号。"""
+    found: set[str] = set()
+    for line in norm.splitlines():
+        numbers = _standard_numbers(line)
+        if len(numbers) != 1:
+            continue
+        title = line.split(numbers[0].split()[-1], 1)[-1]
+        if PRODUCT_TITLE_RE.search(title) and not METHOD_TITLE_RE.search(title):
+            found.add(re.sub(r"-\d{4}$", "", numbers[0]))
+    return frozenset(found)
+
+
+METHOD_VERB_RE = re.compile(r"按|采用|依据|根据|执行|进行|符合|according|per\s|in accordance", re.I)
+# 质量体系/实验室认可标准不是试验方法。
+SYSTEM_STANDARD_RE = re.compile(r"(?:ISO|GB/T)\s*(?:9001|17025|14001|19001|27025)\b|IATF\s*16949")
+CHEM_NON_METHOD_RE = re.compile(r"GB/T\s*(?:20066|2975|222|17505)\b(?!\.)")
+
+
 def _select_method(feature: str, numbers: list[str]) -> str:
     if not numbers:
         return ""
     if feature == "化学成分":
-        # 取样标准不是分析方法，不能混进“试验方法”。
-        methods = [
-            number
-            for number in numbers
-            if not re.match(r"GB/T\s*(?:20066|2975)\b", number)
-        ]
-        return "、".join(methods or numbers)
+        # 取样标准、成品分析允许偏差标准不是分析方法，不能混进“试验方法”。
+        methods = [number for number in numbers if not CHEM_NON_METHOD_RE.match(number)]
+        return "、".join(methods)
     chosen = ""
     for pattern in FEATURE_METHOD_PATTERNS.get(feature, ()):
         for number in numbers:
@@ -2507,8 +2589,17 @@ def _select_method(feature: str, numbers: list[str]) -> str:
     return part_defaults.get(feature, {}).get(chosen, chosen)
 
 
+def _cn_counts(text: str) -> str:
+    """“取两个试样”“四个”→阿拉伯数字，数量规则只认数字。"""
+    return re.sub(
+        r"([一二两三四五六七八九十])(?=\s*(?:个|件|组|根|支|块|次|点))",
+        lambda m: str(CN_DIGITS.get(m.group(1), {"七": 7, "八": 8, "九": 9, "十": 10}.get(m.group(1), 0))),
+        str(text or ""),
+    )
+
+
 def _sample_count(text: str) -> int | None:
-    value = str(text or "").strip()
+    value = _cn_counts(text).strip()
     if not value:
         return None
     if re.search(r"表\s*[A-Za-z]?\s*\.?\s*\d+", value):
@@ -2551,7 +2642,9 @@ def _document_position_rule(norm: str) -> str:
             continue
         if not any(token in sentence for token in ("按", "规定")):
             continue
-        if any(token in sentence for token in ("如下", "型钢", "圆钢", "方钢", "钢板")):
+        if any(token in sentence for token in ("如下", "型钢", "圆钢", "方钢", "钢板", "示意图")):
+            continue
+        if RETEST_RE.search(sentence) or "不合格" in sentence:
             continue
         return sentence
     return ""
@@ -2567,9 +2660,85 @@ PROSE_SAMPLING_HINTS = (
 )
 
 
+CN_DIGITS = {"一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6}
+# “1 个切向拉伸试样、1 个硬度试样和3 个切向冲击试样”：一句话里逐项给出的试样数。
+# “共取两个直径12.5 mm、原始标距50 mm的圆形横截面非比例拉伸试样”：数量与试样名之间夹着规格描述。
+SPECIMEN_DESCRIBED_RE = re.compile(
+    r"(\d+|[一二两三四五六])\s*(?:个|根|件|支|块)[^，,。；;和]{1,40}?"
+    r"(拉伸|冲击|硬度|弯曲)\s*试样"
+)
+SPECIMEN_RE = re.compile(
+    r"(\d+|[一二两三四五六])\s*(?:个|根|件|支|块)\s*[)）]?\s*"
+    r"(纵向|横向|切向|径向|轴向|弦向|周向)?\s*的?\s*"
+    r"(室温拉伸|高温拉伸|拉伸|夏比冲击|冲击|布氏硬度|洛氏硬度|维氏硬度|硬度|弯曲|晶间腐蚀"
+    r"|晶粒度|非金属夹杂物?|低倍)\s*(?:试样)?"
+)
+# “硬度试验的三次测定值”：测定次数就是取样数量。
+MEASURE_TIMES_RE = re.compile(
+    r"(布氏硬度|洛氏硬度|维氏硬度|硬度)试验的?(\d+|[一二两三四五六])\s*(?:次|点)测定"
+)
+SPECIMEN_FEATURES = {
+    "室温拉伸": ("室温拉伸",),
+    "拉伸": ("室温拉伸",),
+    "高温拉伸": ("高温拉伸",),
+    "夏比冲击": ("夏比冲击",),
+    "冲击": ("夏比冲击",),
+    "布氏硬度": ("布氏硬度",),
+    "洛氏硬度": ("洛氏硬度",),
+    "维氏硬度": ("维氏硬度",),
+    "硬度": ("布氏硬度", "洛氏硬度", "维氏硬度"),
+    "弯曲": ("弯曲",),
+    "晶间腐蚀": ("晶间腐蚀",),
+    "晶粒度": ("晶粒度",),
+    "非金属夹杂": ("非金属夹杂",),
+    "非金属夹杂物": ("非金属夹杂",),
+    "低倍": ("低倍",),
+}
+RETEST_RE = re.compile(r"复试|复验|重新取样|重新热处理")
+
+
+def _sentence_position(sentence: str) -> str:
+    if RETEST_RE.search(sentence) or "不合格" in sentence:
+        return ""
+    spaced = re.search(r"[^，,。；;]*间隔\s*\d+\s*°", sentence)
+    if spaced:
+        # “两组试样位置间隔180°”本身就是取样位置要求。
+        return spaced.group(0).strip()
+    # “等于/大于/小于”里的“于”不是介词。
+    located = re.search(
+        r"(?:从|在|(?<![等大小高低不])于)([^，,。；;]{1,24}?)(?:取样|切取|截取)", sentence
+    )
+    if located and not re.match(r"[图表]|.*示意", located.group(1)):
+        return located.group(1).strip()
+    return "铸锭取样" if "铸锭" in sentence and "取样" in sentence else ""
+
+
+def _specimen_counts(sentence: str) -> dict[str, tuple[int, str]]:
+    """Per-feature specimen count/direction listed inside one sentence."""
+    found: dict[str, tuple[int, str]] = {}
+    if RETEST_RE.search(sentence):
+        return found
+    for number, direction, kind in SPECIMEN_RE.findall(sentence):
+        count = int(number) if number.isdigit() else CN_DIGITS[number]
+        for feature in SPECIMEN_FEATURES[kind]:
+            found.setdefault(feature, (count, direction))
+    for number, kind in SPECIMEN_DESCRIBED_RE.findall(sentence):
+        count = int(number) if number.isdigit() else CN_DIGITS[number]
+        for feature in SPECIMEN_FEATURES[kind]:
+            found.setdefault(feature, (count, ""))
+    for kind, number in MEASURE_TIMES_RE.findall(sentence):
+        count = int(number) if number.isdigit() else CN_DIGITS[number]
+        for feature in SPECIMEN_FEATURES[kind]:
+            found.setdefault(feature, (count, ""))
+    return found
+
+
 def _feature_from_sentence(sentence: str) -> str:
     text = _normalize_doc_text(sentence)
-    if any(token in text for token in ("化学成分", "化学分析", "成分分析")):
+    if any(
+        token in text
+        for token in ("化学成分", "化学分析", "成分分析", "成品分析", "熔炼分析")
+    ):
         return "化学成分"
     if "高温拉伸" in text:
         return "高温拉伸"
@@ -2595,6 +2764,8 @@ def _feature_from_sentence(sentence: str) -> str:
         return "高倍组织"
     if "非金属夹杂" in text or "夹杂物" in text:
         return "非金属夹杂"
+    if "金相" in text:
+        return "金相"
     if "超声" in text:
         return "超声波检测"
     if "铁素体" in text:
@@ -2616,9 +2787,29 @@ def _prose_sampling(norm: str) -> dict[str, dict[str, str]]:
             continue
         if any(token in sentence for token in ("报告", "质量证明书")):
             continue
+        if len(_standard_numbers(sentence)) >= 2 and "按" not in sentence:
+            # 规范性引用文件清单（“GB/T 10561 …… GB/T 20066 ……取样和制样方法”）不是取样规定。
+            continue
         sentence = re.sub(r"^\d+(?:\.\s*\d+)*\s*", "", sentence).strip()
         if len(sentence) < 8:
             continue
+        for named, (count, direction) in _specimen_counts(sentence).items():
+            entry = collected.setdefault(named, {"sentences": [], "position": ""})
+            entry.setdefault("count", count)
+            if direction:
+                entry.setdefault("direction", direction)
+            if sentence not in entry["sentences"]:
+                entry["sentences"].append(sentence)
+            if not entry["position"]:
+                entry["position"] = _sentence_position(sentence)
+        oriented = re.search(DIRECTION_RE.pattern + r"\s*的?\s*力学性能", sentence)
+        if oriented and not RETEST_RE.search(sentence):
+            # “锻件的切向力学性能应不低于表3”：拉伸、冲击都按这个方向取样。
+            value = DIRECTION_ALIASES.get(oriented.group(1).lower(), oriented.group(1))
+            for named in ("室温拉伸", "高温拉伸", "夏比冲击"):
+                collected.setdefault(named, {"sentences": [], "position": ""}).setdefault(
+                    "direction", value
+                )
         feature = _feature_from_sentence(sentence)
         if feature:
             current_feature = feature
@@ -2631,26 +2822,29 @@ def _prose_sampling(norm: str) -> dict[str, dict[str, str]]:
         if not any(hint in sentence for hint in PROSE_SAMPLING_HINTS):
             continue
         entry = collected.setdefault(feature, {"sentences": [], "position": ""})
-        if sentence not in entry["sentences"] and len(entry["sentences"]) < 3:
+        if sentence not in entry["sentences"]:
             entry["sentences"].append(sentence)
         if not entry["position"]:
-            located = re.search(
-                r"(?:从|在|于)([^，,。；;]{1,24}?)(?:取样|切取|截取)", sentence
-            )
-            if located:
-                entry["position"] = located.group(1).strip()
-            elif "铸锭" in sentence and "取样" in sentence:
-                entry["position"] = "铸锭取样"
+            entry["position"] = _sentence_position(sentence)
+    # “金相检验按每批取1个试样”同时约束晶粒度、非金属夹杂和显微组织。
+    metallography = collected.pop("金相", None)
+    if metallography:
+        for name in ("晶粒度", "非金属夹杂", "高倍组织"):
+            collected.setdefault(name, metallography)
     result: dict[str, dict[str, str]] = {}
     for feature, entry in collected.items():
-        text = "；".join(entry["sentences"])[:400]
+        text = "；".join(entry["sentences"][:3])[:400]
         item = {"取样说明": text}
         if entry["position"]:
             item["位置"] = entry["position"]
-        count = _sample_count(text)
+        # 正文里的第一个数字常是条款号（5.2.1）或标准号（GB/T 10561），
+        # 只认“N 个/抽取 N 件”这类明确的数量，复试句不算。
+        counted = "；".join(s for s in entry["sentences"] if not RETEST_RE.search(s))
+        drawn = DRAWN_COUNT_RE.search(counted) or UNIT_COUNT_RE.search(counted)
+        count = entry.get("count") or (int(drawn.group(1)) if drawn else None)
         if count is not None:
             item["取样数量"] = str(count)
-        direction = _sample_direction(text)
+        direction = entry.get("direction") or _specimen_direction(text)
         if direction:
             item["方向"] = direction
         result[feature] = item
@@ -2683,6 +2877,14 @@ def _metadata_for(
                 method = _select_method(feature, numbers) if numbers else text
                 if method:
                     break
+    if method:
+        products = _product_standards(norm)
+        # “锻件应按NB/T 47010 进行化学成分分析”：产品标准不是试验方法。
+        method = "、".join(
+            part
+            for part in method.split("、")
+            if re.sub(r"-\d{4}$", "", part) not in products and not SYSTEM_STANDARD_RE.search(part)
+        )
     if method:
         meta["试验方法"] = method
 
@@ -2731,6 +2933,11 @@ def _metadata_for(
 
     quantity_text = str((item or {}).get("quantity") or "").strip()
     count = _sample_count(quantity_text) if quantity_text else None
+    prose_count = (prose_sampling.get(feature) or {}).get("取样数量")
+    # “每批抽检……一件”是抽几件锻件，不是试样数；只有“N个/组/根”才算检验表给了试样数。
+    if prose_count and not re.search(r"\d+\s*(?:个|组|根|支|块|次|点)", _cn_counts(quantity_text)):
+        # 检验表只写“逐件检验/每批抽一件”时，正文“1个室温拉伸、3个冲击”更具体。
+        count = int(prose_count)
     if count is not None:
         meta["取样数量"] = str(count)
     note = quantity_text
@@ -2752,11 +2959,39 @@ def _metadata_for(
     for key in ("试验方法", "位置", "取样数量", "取样说明", "方向"):
         if not meta.get(key) and fallback.get(key):
             meta[key] = fallback[key]
+    if feature == "化学成分":
+        # 化学成分不按方向取样，正文里的方向都是别的试验的。
+        meta.pop("方向", None)
     if feature == "室温拉伸" and not meta.get("试验温度"):
         # 室温拉伸的试验温度在标准里通常不写，默认按“室温”记录。
         meta["试验温度"] = "室温"
     cleaned = {key: _strip_html(value) for key, value in meta.items()}
     return {key: value for key, value in cleaned.items() if value}
+
+
+def _prose_text(norm: str) -> str:
+    """数据表不进正文，但 OCR 包进单元格的整句（“化学分析按每冶炼炉号取1个试样”）要保留。"""
+    # clauses 反向依赖 builtin，只能延迟导入
+    try:  # imported as a package (tests)
+        from . import clauses as clauses_module
+    except ImportError:  # flat runtime image (/engine)
+        import clauses as clauses_module
+
+    def as_text(match: re.Match[str]) -> str:
+        text = clauses_module._table_to_text(match).strip()
+        # 以句号收尾，表格文字不能和后面的正文句子粘成一句。
+        return f"\n{text}。\n" if text else "\n"
+
+    return TABLE_BLOCK_RE.sub(as_text, norm)
+
+
+def document_prose_sampling(ocr: dict[str, Any]) -> dict[str, dict[str, str]]:
+    """正文取样规定（按项目），供定性记录补取样数量。"""
+    markdown = str(ocr.get("markdown") or "") or "\n".join(
+        str(page.get("markdown") or "") for page in (ocr.get("pages") or [])
+    )
+    norm = _normalize_doc_text(markdown)
+    return _prose_sampling(_prose_text(norm)) if norm else {}
 
 
 def apply_document_metadata(
@@ -2777,8 +3012,7 @@ def apply_document_metadata(
     norm = _normalize_doc_text(markdown)
     if not norm:
         return 0
-    # Table HTML is parsed separately; it must not leak into prose sampling.
-    prose_norm = TABLE_BLOCK_RE.sub("\n", norm)
+    prose_norm = _prose_text(norm)
     items = _inspection_items(ocr)
     prose = _prose_methods(prose_norm)
     prose_sampling = _prose_sampling(prose_norm)
@@ -2786,7 +3020,7 @@ def apply_document_metadata(
     applied = 0
     for record in records:
         conditions = record.setdefault("conditions", {})
-        primary: dict[str, str] = {}
+        metas: list[dict[str, str]] = []
         for measure, prop in (record.get("properties") or {}).items():
             if not isinstance(prop, dict):
                 continue
@@ -2796,16 +3030,18 @@ def apply_document_metadata(
             meta = _metadata_for(
                 feature, items, prose, prose_sampling, position_rule, prose_norm
             )
+            metas.append(meta)
             if not meta:
                 continue
             existing = prop.get("meta") if isinstance(prop.get("meta"), dict) else {}
             prop["meta"] = {**meta, **existing}
             applied += 1
-            for key, value in meta.items():
-                primary.setdefault(key, value)
-        for key, value in primary.items():
-            if not str(conditions.get(key) or "").strip():
-                conditions[key] = value
+        # 记录级条件只放所有测量项一致的元数据：同一行的拉伸/冲击/硬度方法、
+        # 数量、温度各不相同，不能让第一个测量项的值盖到其它项上。
+        for key in {key for meta in metas for key in meta}:
+            values = {meta.get(key) for meta in metas}
+            if len(values) == 1 and not str(conditions.get(key) or "").strip():
+                conditions[key] = values.pop()
     diagnostics.append(
         {
             "code": "DOCUMENT_METADATA_APPLIED",
@@ -2901,11 +3137,12 @@ def _alias_matches(header: str, token: str) -> bool:
         # 既避免 hb 命中 hbw，也避免漏掉紧贴中文的 akv/rm/hb。
         # 单字母（A/C）必须与中文隔开："试样状态a" 的脚注 a 不是伸长率 A。
         prefix = r"(?<![a-z0-9\u4e00-\u9fff])" if len(token) == 1 else r"(?<![a-z0-9])"
-        # 符号后常粘脚注字母："ReH a/MPa" -> "reha/mpa"，允许一个 a-f 脚注。
-        suffix = r"[a-f]?" if len(token) > 1 else ""
-        if re.search(
-            rf"{prefix}{re.escape(token)}{suffix}(?![a-z0-9])", header
-        ):
+        # 符号后常粘脚注字母："ReH a/MPa" -> "reha/mpa"，允许一个 a-f 脚注；
+        # 也常直接粘单位："RmMPa"、"KV2J"。
+        suffix = r"(?:[a-f]|mpa|gpa|ksi|j)?" if len(token) > 1 else ""
+        # 单字母（A）后面紧跟“--/—/=”是公式说明（“a--试样厚度”“D=2a”），不是伸长率。
+        tail = r"(?![a-z0-9\-—–=])" if len(token) == 1 else r"(?![a-z0-9])"
+        if re.search(rf"{prefix}{re.escape(token)}{suffix}{tail}", header):
             return True
     else:
         return token in header
@@ -3086,6 +3323,13 @@ def _unit_for_measure(measure: str, header: str, unit: str) -> str:
         text = normalize(header)
         if unit == "%" and "%" not in text:
             return ""
+    if (name in {"CEV", "Pcm", "CET", "CE"} or name in ELEMENT_SYMBOLS) and unit.lower() == "mm":
+        # “碳当量CEV(质量分数)/% / 公称厚度或直径/mm”：mm 属于厚度子表头。
+        return "%"
+    if name in {"Rm", "ReH", "ReL", "Rp0.2", "Rp1.0"} and unit.lower() in {"mm", "℃", "%"}:
+        # “公称厚度或直径/mm”子表头的 mm 不是强度单位。
+        text = normalize(header)
+        return "ksi" if "ksi" in text else "MPa"
     return unit
 
 
@@ -3094,6 +3338,12 @@ def _detect_measure(header: str, bound: str) -> str:
     text = normalize(header)
     # Drop unit tails so ``抗拉强度/N/mm2`` is not mistaken for nitrogen.
     text = re.sub(r"(?:n/mm2|n/mm²|j/cm2|j/cm²|mpa|gpa)", "", text)
+    if not re.search(r"p0[.,]2|p1[.,]0|re[hl]|rm(?![a-z])", text):
+        # “Upper Yield Strength(MPa)”没有印符号，但上/下屈服不是 Rp0.2。
+        if re.search(r"upper\s*yield|上屈服", text):
+            return "ReH"
+        if re.search(r"lower\s*yield|下屈服", text):
+            return "ReL"
     if re.search(r"p0[.,]2(?!\d)", text):
         # 兼容 ISO 写法 Rp0,2（逗号）以及 “Tensile strength / Rp0,2” 组合表头。
         return "Rp0.2"
@@ -3320,6 +3570,12 @@ def _header_binds_measure(header: str, bindings: dict[str, Any]) -> bool:
 
 BENDING_HEADER_RE = re.compile(r"弯曲|弯折|\bbend", re.IGNORECASE)
 BENDING_ANGLE_RE = re.compile(r"(45|90|120|180)\s*°")
+VALUE_TEMP_SUFFIX_RE = re.compile(
+    r"^(.*?\d)\s*[（(]\s*([-+−–]?\s*\d+(?:\.\d+)?)\s*(?:℃|°C)\s*[)）]\s*$"
+)
+SIZE_PART_RE = re.compile(
+    r"^(?:[≤≥<>＜＞~～]|\d|[tTδSsDd]\s*[≤≥<>＜＞]|(?:公称)?(?:厚度|直径|尺寸|壁厚|截面|规格|边长)|[ΦφØ])"
+)
 
 
 def _bending_angle(header: str) -> str:
@@ -3328,6 +3584,135 @@ def _bending_angle(header: str) -> str:
         return ""
     match = BENDING_ANGLE_RE.search(header)
     return match.group(1) if match else ""
+
+
+def _repair_impact_temperature(
+    headers: list[str], data_rows: list[list[str]]
+) -> tuple[list[str], list[list[str]]]:
+    """冲击组里的试验温度列并进能量单元格（“34(0℃)”），交给单元格温度括注的通用逻辑拆条件。
+
+    两种版式：冲击组下明写“试验温度℃”列；或 OCR 丢了这个小标题，KV2 列里其实是
+    0/20/-20、能量在右侧无名列。温度列是纵向合并单元格时续行为空，沿用上一行。
+    """
+    for col in range(len(headers) - 1):
+        header, right = headers[col], headers[col + 1]
+        if right.split(" / ")[0] != header.split(" / ")[0]:
+            continue
+        # 明写的温度列：叶子表头是“试验温度℃”，且本列不是能量列。
+        labeled = (
+            "温度" in header.split(" / ")[-1]
+            and not re.search(r"KV2|KU2|KV8|KU8", header, re.I)
+            and bool(re.search(r"KV2|KU2|KV8|KU8", right, re.I))
+        )
+        if labeled:
+            energy_header = right
+        else:
+            if not re.search(r"KV2|KU2|KV8|KU8", header, re.IGNORECASE):
+                continue
+            if "温度" in header or "℃" in header or "温度" in right:
+                continue
+            if _printed_measure(normalize(right)):
+                continue
+            energy_header = header
+        temps: list[int] = []
+        for row in data_rows:
+            if _is_footnote_row(row):
+                continue
+            left = strip_footnote(row[col] if col < len(row) else "").replace("−", "-")
+            value = strip_footnote(row[col + 1] if col + 1 < len(row) else "")
+            if not left or left in SKIP_CELL_VALUES:
+                continue
+            if not re.fullmatch(r"[-+]?\d{1,3}", left) or not NUMBER_RE.search(value):
+                return headers, data_rows
+            temps.append(int(left))
+        if not temps or any(not -200 <= t <= 100 for t in temps):
+            continue
+        if not labeled and (min(temps) > 0 or any(t % 10 for t in temps)):
+            continue
+        repaired = []
+        last = ""
+        for row in data_rows:
+            row = list(row)
+            left = strip_footnote(row[col] if col < len(row) else "").replace("−", "-")
+            if re.fullmatch(r"[-+]?\d{1,3}", left):
+                last = left
+            elif left and left not in SKIP_CELL_VALUES:
+                last = ""
+            value = row[col + 1] if col + 1 < len(row) else ""
+            if last and NUMBER_RE.search(strip_footnote(value)):
+                row[col + 1] = f"{value}({last}℃)"
+            if col < len(row):
+                row[col] = ""
+            repaired.append(row)
+        headers = list(headers)
+        headers[col + 1] = energy_header
+        headers[col] = ""
+        return headers, repaired
+    return headers, data_rows
+
+
+def _unfold_element_pairs(table: dict[str, Any]) -> dict[str, Any]:
+    """“C | 0.38-0.45 | Cr | 0.9-1.2”：元素/数值成对并排的成分表，改成一行元素表头 + 一行数值。"""
+    rows = [list(row) for row in table.get("rows") or []]
+    pairs: list[tuple[str, str]] = []
+    pair_rows = 0
+    for row in rows:
+        cells = [str(cell or "").strip() for cell in row]
+        if len(cells) < 4 or len(cells) % 2:
+            continue
+        symbols = [_element_symbol(cells[i]) for i in range(0, len(cells), 2)]
+        values = cells[1::2]
+        if all(symbols) and all(NUMBER_RE.search(v) for v in values if v):
+            pair_rows += 1
+            pairs.extend((sym, val) for sym, val in zip(symbols, values) if val)
+    if pair_rows < 2 or len(pairs) < 4:
+        return table
+    symbols = [sym for sym, _ in pairs]
+    return {
+        **table,
+        "header_rows": 1,
+        # 没有牌号列：走“无牌号要求表”分支，记为全部牌号（标题有唯一牌号时再替换）。
+        "header_paths": [[sym] for sym in symbols],
+        "rows": [symbols, [val for _, val in pairs]],
+        "n_cols": len(symbols),
+        "unfolded_pairs": True,
+    }
+
+
+def _repair_temperature_header_row(table: dict[str, Any]) -> dict[str, Any]:
+    """“在下列温度(℃)下的Rp0.2”表：OCR 合并单元格跨度错位时，温度行(20/100/…/600)
+    被当成数据行，所有数值都会落成室温。把它还原成每列的温度子表头。"""
+    rows = table.get("rows") or []
+    paths = [list(path) for path in (table.get("header_paths") or [])]
+    header_rows = int(table.get("header_rows") or 1)
+    if not paths or len(rows) <= header_rows + 1:
+        return table
+    start = next(
+        (i for i, path in enumerate(paths) if any("温度" in p or "℃" in p for p in path)),
+        None,
+    )
+    if start is None:
+        return table
+    temps = [str(cell).strip() for cell in rows[header_rows] if str(cell).strip()]
+    if len(temps) < 3 or not all(re.fullmatch(r"-?\d{2,4}", t) for t in temps):
+        return table
+    values = [int(t) for t in temps]
+    if values != sorted(values) or len(set(values)) != len(values) or max(values) < 100:
+        return table
+    width = max(len(row) for row in rows)
+    if start + len(values) > width:
+        return table
+    group = next(p for p in paths[start] if p)
+    # 跨度错位时表头比数据行少列，按数据行宽度补齐。
+    paths += [[""] for _ in range(width - len(paths))]
+    for offset, temp in enumerate(values):
+        paths[start + offset] = [group, f"{temp}℃"]
+    return {
+        **table,
+        "header_paths": paths,
+        "rows": rows[:header_rows] + rows[header_rows + 1 :],
+        "n_cols": width,
+    }
 
 
 def _column_sub_condition(header: str, group_label: str) -> dict[str, str]:
@@ -3344,26 +3729,42 @@ def _column_sub_condition(header: str, group_label: str) -> dict[str, str]:
     temperature = next(
         (part for part in parts if re.search(r"℃|°C|温度", part)), ""
     )
-    direction = next(
+    labels = {normalize(label) for label in DIRECTION_LABELS}
+    direction_part = next(
         (
             part
             for part in parts
             if part in DIRECTION_LABELS
-            or normalize(part) in {normalize(label) for label in DIRECTION_LABELS}
+            or normalize(part) in labels
+            # 表头方向常带脚注字母：“横向c”。
+            or (re.search(r"[一-鿿][a-z]$", part) and normalize(part[:-1]) in labels)
         ),
         "",
     )
-    used = {temperature, direction}
+    direction = (
+        direction_part[:-1]
+        if direction_part and normalize(direction_part) not in labels
+        and direction_part not in DIRECTION_LABELS
+        else direction_part
+    )
+    used = {temperature, direction_part}
+    # 只有像尺寸的片段才是厚度；“Rp0.2MPa”“KV2J”“180°弯曲”“A50mm”是性能列名本身。
     thickness = next(
         (
             part
             for part in parts
-            if part not in used and re.search(r"\d", part)
+            if part not in used
+            and re.search(r"\d", part)
+            and SIZE_PART_RE.match(part)
+            and _header_measure_start([part]) is None
+            and not BENDING_ANGLE_RE.search(part)
         ),
         "",
     )
     if temperature:
-        condition["试验温度"] = temperature
+        # “350℃拉伸试验b”只取温度本身。
+        degrees = re.search(r"[-+−]?\d+(?:\.\d+)?\s*(?:℃|°C)", temperature)
+        condition["试验温度"] = degrees.group(0) if degrees else temperature
     if direction:
         condition["方向"] = direction
     if thickness:
@@ -4450,6 +4851,7 @@ def _parse_chemical_columns(
 
 ORPHAN_MEASURES = {"KV2", "KU2", "KU5", "KV8"}
 TEMPERATURE_CONDITIONS = {"温度", "试验温度"}
+HEAT_TREAT_TEMP_RE = re.compile(r"回火|淬火|正火|退火|固溶|时效|热处理|加热|保温|奥氏体化")
 
 
 def _merge_signature(item: Any) -> tuple:
@@ -4616,6 +5018,16 @@ def parse_table(
             "records": 0,
         }
     _table_fingerprints.add(fingerprint)
+    # 旧版 OCR 把 LaTeX “0.17\sim 0.23” 清洗成 “0.17sim 0.23”，范围值会被当成上限。
+    table = {
+        **table,
+        "rows": [
+            [LATEX_SIM_RE.sub("~", str(cell)) for cell in row]
+            for row in (table.get("rows") or [])
+        ],
+    }
+    table = _repair_temperature_header_row(table)
+    table = _unfold_element_pairs(table)
     if not _revision_reported:
         diagnostics.append(
             {
@@ -4675,7 +5087,7 @@ def parse_table(
         )
         _apply_document_grade(heat_records, diagnostics, table_id)
         return heat_records, heat_evidence, heat_summary
-    if rules.get("transposed"):
+    if rules.get("transposed") and not table.get("unfolded_pairs"):
         element_records, element_evidence, element_summary = _parse_element_table(
             table,
             table_id=table_id,
@@ -4706,6 +5118,7 @@ def parse_table(
             if unit and index < len(headers)
         }
         data_rows = _strip_unit_rows(data_rows, column_units)
+        headers, data_rows = _repair_impact_temperature(list(headers), data_rows)
         # OCR sometimes keeps the direction sub-header as the first data row
         # (冲击表“纵向 | 横向”): it carries the direction per column.
         direction_map: dict[int, str] = {}
@@ -4725,6 +5138,13 @@ def parse_table(
                 direction_map = direction_hits
                 data_rows = data_rows[1:]
         used: set[int] = set()
+        # 叶子表头就是“试样方向”的列是方向条件，不能被“断后伸长率A”这类组标题当成测量列。
+        direction_cols = [
+            index
+            for index, header in enumerate(headers)
+            if re.fullmatch(r"(?:试样|取样)?方向", header.split(" / ")[-1].strip())
+        ]
+        used.update(direction_cols)
         row_key_tokens = list(
             dict.fromkeys([*(bindings.get("row_key") or []), *DEFAULT_ROW_KEY])
         )
@@ -4751,7 +5171,7 @@ def parse_table(
         else:
             for index, header in enumerate(headers):
                 # 性能列（室温冲击AKv、硬度HB…）优先归 measure，不能被当成条件列占用。
-                if _header_binds_measure(header, bindings):
+                if _header_binds_measure(header, bindings) or _bending_angle(header):
                     continue
                 name = _condition_name(header)
                 if name:
@@ -4761,7 +5181,7 @@ def parse_table(
             for index, name in enumerate(meta_conditions):
                 if not name or index >= len(headers) or index in used:
                     continue
-                if _header_binds_measure(headers[index], bindings):
+                if _header_binds_measure(headers[index], bindings) or _bending_angle(headers[index]):
                     continue
                 if index < len(_meta_elements) and _meta_elements[index]:
                     continue
@@ -4918,6 +5338,8 @@ def parse_table(
                     )
 
         condition_cols: dict[str, int] = {}
+        if direction_cols:
+            condition_cols["方向"] = direction_cols[0]
         # Longest label wins so "交货状态" is not reduced to "状态".
         condition_tokens = sorted(
             dict.fromkeys([*(bindings.get("conditions") or []), *CONDITION_TOKENS]),
@@ -4932,6 +5354,12 @@ def parse_table(
                     for marker in ("冲击吸收能量", "侧膨胀", "侧向膨胀")
                 ):
                     # “3个试样平均冲击吸收能量”里的“试样”不是条件列。
+                    continue
+                if _bending_angle(headers[col]):
+                    # “180°弯曲试验 / 公称厚度或直径/mm / ≤16”是弯曲值列，不是条件列。
+                    continue
+                if str(token) in TEMPERATURE_CONDITIONS and HEAT_TREAT_TEMP_RE.search(header):
+                    # “回火温度℃”是热处理工艺参数，不是试验温度；交给“回火”等条件词。
                     continue
                 used.add(col)
                 condition_cols[str(token)] = col
@@ -5046,7 +5474,21 @@ def parse_table(
                 )
                 continue
             dimension_condition = None
+            level_condition = ""
+            location_condition = ""
             if requirement_row:
+                grades = ["全部牌号"]
+            elif re.fullmatch(r"(?:锻件)?(?:级别|等级)", normalize(headers[key_col])) and re.fullmatch(
+                r"\d{1,2}|[IVX]{1,4}|[Ⅰ-Ⅻ]", str(raw_grade or "").strip()
+            ):
+                # “锻件级别 1…8”是检验级别，不是牌号：按全部牌号记录，级别作条件。
+                level_condition = str(raw_grade).strip()
+                grades = ["全部牌号"]
+            elif re.fullmatch(
+                r"(?:test\s*)?location|取样位置|取样部位|试样位置|部位", normalize(headers[key_col]), re.I
+            ) and str(raw_grade or "").strip():
+                # “Test Location: Core / Non-Core”是取样位置，不是牌号。
+                location_condition = str(raw_grade).strip()
                 grades = ["全部牌号"]
             elif no_key_conditions:
                 grades = ["~"]
@@ -5083,6 +5525,13 @@ def parse_table(
                 # 条件单元格里出现表头原文或“元素”提示语，不是真实条件值。
                 # 注意不能用 _nonvalue_label：它会把 H14/H24 这类铝合金状态
                 # 误判成元素符号而丢弃，导致同一牌号的行变成重复键。
+                if value and name == "方向" and normalize(value) not in {
+                    normalize(label) for label in DIRECTION_LABELS
+                } and len(value) > 8:
+                    # 方向列里写的是规则句（“宽度≥600mm 取横向，其他取纵向”），只认唯一方向。
+                    value = _specimen_direction(value)
+                    if not value:
+                        continue
                 if value:
                     if normalize(value) == normalize(headers[col]) or "元素" in value:
                         continue
@@ -5095,10 +5544,23 @@ def parse_table(
                 conditions[name] = value
             if dimension_condition:
                 conditions["规格"] = dimension_condition
+            if level_condition:
+                conditions["锻件级别"] = level_condition
+            if location_condition:
+                conditions["位置"] = location_condition
+            if requirement_row:
+                # 无牌号要求表的行标签“室温 / 550℃”是试验温度，不能都记成室温。
+                label = strip_footnote(row[0]) if row else ""
+                if re.fullmatch(r"室温|常温|-?\d{2,4}\s*(?:℃|°C)", label):
+                    conditions["试验温度"] = label
             for name, cols in no_key_conditions.items():
                 parts = []
                 for col in cols:
                     value = strip_footnote(row[col]) if col < len(row) else ""
+                    if name == "方向" and len(value) > 8 and normalize(value) not in {
+                        normalize(label) for label in DIRECTION_LABELS
+                    }:
+                        value = _specimen_direction(value)
                     if value and value not in SKIP_CELL_VALUES:
                         parts.append(value)
                 # A split thickness column ("Over" | "2.000 to 3.000") must stay
@@ -5192,6 +5654,8 @@ def parse_table(
                 parsed["unit"] = _unit_for_measure(
                     measure_key, headers[col], parsed.get("unit") or ""
                 )
+                if "ppm" in raw_value.lower():
+                    parsed["unit"] = "ppm"
                 if not _plausible_measure(
                     measure_key, parsed.get("value"), parsed.get("unit") or ""
                 ):
@@ -5218,11 +5682,17 @@ def parse_table(
                 sub_condition = _column_sub_condition(
                     headers[col], _group_label(headers[col])
                 )
+                # 单元格里括注的试验温度（“≥90(0℃)”）是条件，不是标准要求。
+                temp_match = VALUE_TEMP_SUFFIX_RE.match(str(parsed.get("raw") or ""))
+                if temp_match:
+                    parsed["raw"] = temp_match.group(1).strip()
+                    sub_condition = {"试验温度": f"{temp_match.group(2)}℃", **sub_condition}
                 if sub_condition:
                     primary_sub_conditions[measure_key] = sub_condition
 
             # 弯曲半径 90°/180° 列没有对应的配方 measure；作为附加属性
             # 挂在同一牌号/厚度记录上，归入“弯曲”类别。
+            bending_split: list[tuple[dict[str, Any], dict[str, str]]] = []
             if profile == "mechanical_properties":
                 for col, header in enumerate(headers):
                     if col in used:
@@ -5243,12 +5713,17 @@ def parse_table(
                             continue
                     parsed["unit"] = ""
                     parsed["column"] = header
-                    properties[f"弯曲半径{angle}°"] = parsed
+                    sub = _column_sub_condition(header, _group_label(header))
+                    if sub:
+                        # 按厚度分列的弯曲要求（≤16: D=2a，>16~100: D=3a）各成一条记录。
+                        bending_split.append(({f"弯曲半径{angle}°": parsed}, sub))
+                    else:
+                        properties[f"弯曲半径{angle}°"] = parsed
 
             # 主测量列本身也可能按厚度/温度分列（ReH 的 9 个厚度列、
             # A 的 6 个厚度列、KV2 的 5 温度 × 2 方向）。主列的子条件
             # 若互不相同，必须拆成独立记录，不能塞进同一条无条件记录。
-            primary_split: list[tuple[dict[str, Any], dict[str, str]]] = []
+            primary_split: list[tuple[dict[str, Any], dict[str, str]]] = list(bending_split)
             conditioned = {
                 measure: sub
                 for measure, sub in primary_sub_conditions.items()
@@ -5473,7 +5948,9 @@ def parse_table(
                             # column itself; it is not a test condition.
                             pass
                         elif "℃" in display_label or "温度" in display_label:
-                            extra_conditions["温度"] = display_label
+                            # “350℃拉伸试验b”只取温度本身。
+                            degrees = re.search(r"[-+]?\d+(?:\.\d+)?\s*(?:℃|°C)", display_label)
+                            extra_conditions["温度"] = degrees.group(0) if degrees else display_label
                         elif (
                             "mm" in display_label
                             or "厚" in display_label

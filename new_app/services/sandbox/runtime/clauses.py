@@ -21,7 +21,7 @@ except ImportError:  # flat runtime image (/engine)
     from builtin import _normalize_doc_text, _standard_numbers
 
 SCHEMA_VERSION = "document-clauses/1"
-TABLE_RE = re.compile(r"<table\b.*?</table>", re.IGNORECASE | re.DOTALL)
+TABLE_RE = re.compile(r"<table(?=[\s>]).*?</table>", re.IGNORECASE | re.DOTALL)
 TABLE_ROW_RE = re.compile(r"<tr[^>]*>(.*?)</tr>", re.IGNORECASE | re.DOTALL)
 TABLE_CELL_RE = re.compile(r"<t[dh][^>]*>(.*?)</t[dh]>", re.IGNORECASE | re.DOTALL)
 TABLE_HEADING_ID_RE = re.compile(

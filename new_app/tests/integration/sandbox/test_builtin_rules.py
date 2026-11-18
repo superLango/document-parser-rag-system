@@ -692,7 +692,36 @@ def test_repeated_measure_groups_become_extra_records() -> None:
     values = {record["properties"]["Rm"]["value"] for record in records}
     assert values == {520.0, 394.0}
     extra = [record for record in records if record["conditions"].get("温度")]
-    assert extra and extra[0]["conditions"]["温度"] == "350℃拉伸试验"
+    assert extra and extra[0]["conditions"]["温度"] == "350℃"
+
+
+def test_measure_header_is_not_thickness() -> None:
+    from services.sandbox.runtime.builtin import _column_sub_condition
+
+    for header in ("Rp0.2MPa", "KV2J", "180°弯曲", "A50mm"):
+        assert _column_sub_condition(f"力学性能 / {header}", "力学性能") == {}
+    assert _column_sub_condition("力学性能 / >16~40", "力学性能") == {"尺寸厚度": ">16~40"}
+    assert _column_sub_condition("冲击 / KV2/J / 横向c", "冲击") == {"方向": "横向"}
+
+
+def test_specimen_counts_per_test() -> None:
+    from services.sandbox.runtime.builtin import _sample_count, _specimen_counts
+
+    counts = _specimen_counts("在试环上各取1 个切向拉伸试样、1 个硬度试样和3 个切向冲击试样")
+    assert counts["室温拉伸"] == (1, "切向") and counts["夏比冲击"] == (3, "切向")
+    assert _specimen_counts("取1组试样(1个室温拉伸、3个冲击)")["夏比冲击"][0] == 3
+    assert _specimen_counts("可在原试样相邻部位再取一组三个试样进行复试") == {}
+    assert _sample_count("每个锻件取四个试样") == 4
+
+
+def test_impact_temperature_column_folds_into_energy() -> None:
+    from services.sandbox.runtime.builtin import _repair_impact_temperature
+
+    headers = ["牌号", "冲击吸收能量 / KV2/J", "冲击吸收能量"]
+    rows = [["20", "0", "34"], ["35", "", "41"], ["40", "-20", "47"]]
+    fixed_headers, fixed_rows = _repair_impact_temperature(headers, rows)
+    assert fixed_headers[2] == "冲击吸收能量 / KV2/J"
+    assert [row[2] for row in fixed_rows] == ["34(0℃)", "41(0℃)", "47(-20℃)"]
 
 
 TRANSPOSED_CHEMICAL = {
@@ -1521,3 +1550,24 @@ def test_ocr_multiline_chemical_header_is_repaired() -> None:
     properties = {record["grade"]: record["properties"] for record in records}
     assert properties["JCr99.4"]["Cr"]["operator"] == "≥"
     assert properties["JCr99.4"]["Fe"]["operator"] == "≤"
+
+
+def test_element_value_pairs_unfold_into_one_row() -> None:
+    from services.sandbox.runtime.builtin import _unfold_element_pairs
+
+    table = {
+        "rows": [
+            ["Element", "Element", "Element", "Element"],
+            ["C", "0.38-0.45", "Cr", "0.9-1.2"],
+            ["Si", "0.4 max.", "Oxygen", "20 ppm max."],
+        ]
+    }
+    unfolded = _unfold_element_pairs(table)
+    assert unfolded["rows"] == [["C", "Cr", "Si", "O"], ["0.38-0.45", "0.9-1.2", "0.4 max.", "20 ppm max."]]
+
+
+def test_angle_bracket_caption_is_not_a_table() -> None:
+    from services.sandbox.runtime.clauses import TABLE_RE
+
+    text = "<Table.1 - Chemical Composition>\n\n2.3.5 Tensile test - Shall be per ISO 6892-1.\n<table><tr><td>x</td></tr></table>"
+    assert [m.group(0) for m in TABLE_RE.finditer(text)] == ["<table><tr><td>x</td></tr></table>"]
