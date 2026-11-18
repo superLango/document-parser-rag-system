@@ -1630,6 +1630,11 @@ def _align_header_with_data(
         if re.fullmatch(r"[A-Za-zσδψτ]{1,6}(?:\s*[/%].*)?", first):
             # 竖排表：第一列是“Rp0.2/A/Z”等项目名，不是漏掉的牌号列。
             return headers
+        if normalize(first) in {normalize(label) for label in DIRECTION_LABELS} or re.search(
+            r"方向|状态", headers[start]
+        ):
+            # “试样方向 | ≤40 | …”：方向列本身就是条件列，表头没有错位。
+            return headers
         for offset in (1, 2, 3):
             probe = start + offset
             if probe >= len(row):
@@ -1871,14 +1876,18 @@ DIRECTION_ALIASES = {
 
 def _specimen_direction(text: Any) -> str:
     """正文里与试样相连的方向（“取切向试样”），不是“轴向长度”这类尺寸描述。"""
-    match = re.search(
-        DIRECTION_RE.pattern + r"\s*的?\s*(?:试样|试环|拉伸|冲击|弯曲|取样|力学性能)",
-        str(text or ""),
-        re.IGNORECASE,
-    )
-    if match is None:
-        return ""
-    return DIRECTION_ALIASES.get(match.group(1).lower(), match.group(1))
+    # OCR 会把行号插进词里：“取纵 5 向试样”。
+    text = re.sub(r"(纵|横|切|径|轴|弦)\s*\d{0,2}\s*向", r"\1向", str(text or ""))
+    found = {
+        DIRECTION_ALIASES.get(match.group(1).lower(), match.group(1))
+        for match in re.finditer(
+            DIRECTION_RE.pattern + r"\s*的?\s*(?:试样|试环|拉伸|冲击|弯曲|取样|力学性能)",
+            text,
+            re.IGNORECASE,
+        )
+    }
+    # “宽度≥600mm 取横向试样；其他取纵向试样”是按产品分情况，不能定成某一个方向。
+    return found.pop() if len(found) == 1 else ""
 
 
 def _sample_direction(text: Any) -> str:
@@ -3289,6 +3298,9 @@ def _unit_for_measure(measure: str, header: str, unit: str) -> str:
         text = normalize(header)
         if unit == "%" and "%" not in text:
             return ""
+    if (name in {"CEV", "Pcm", "CET", "CE"} or name in ELEMENT_SYMBOLS) and unit.lower() == "mm":
+        # “碳当量CEV(质量分数)/% / 公称厚度或直径/mm”：mm 属于厚度子表头。
+        return "%"
     if name in {"Rm", "ReH", "ReL", "Rp0.2", "Rp1.0"} and unit.lower() in {"mm", "℃", "%"}:
         # “公称厚度或直径/mm”子表头的 mm 不是强度单位。
         text = normalize(header)
@@ -5061,6 +5073,13 @@ def parse_table(
                 direction_map = direction_hits
                 data_rows = data_rows[1:]
         used: set[int] = set()
+        # 叶子表头就是“试样方向”的列是方向条件，不能被“断后伸长率A”这类组标题当成测量列。
+        direction_cols = [
+            index
+            for index, header in enumerate(headers)
+            if re.fullmatch(r"(?:试样|取样)?方向", header.split(" / ")[-1].strip())
+        ]
+        used.update(direction_cols)
         row_key_tokens = list(
             dict.fromkeys([*(bindings.get("row_key") or []), *DEFAULT_ROW_KEY])
         )
@@ -5254,6 +5273,8 @@ def parse_table(
                     )
 
         condition_cols: dict[str, int] = {}
+        if direction_cols:
+            condition_cols["方向"] = direction_cols[0]
         # Longest label wins so "交货状态" is not reduced to "状态".
         condition_tokens = sorted(
             dict.fromkeys([*(bindings.get("conditions") or []), *CONDITION_TOKENS]),
