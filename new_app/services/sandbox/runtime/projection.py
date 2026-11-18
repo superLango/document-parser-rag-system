@@ -431,6 +431,12 @@ def _acceptance_text(text: str) -> str:
         and not re.match(r"[(（]表\s*[A-Z]?\d", sentence)
         and not (SAMPLING_ONLY_RE.search(sentence) and not ACCEPT_CUE_RE.search(sentence))
         and not (METHOD_ONLY_EN_RE.search(sentence) and not ACCEPT_CUE_RE.search(sentence))
+        # 引用文件清单（“Standards ASTM E 112 Standard Test Methods… DIN EN 10204 …”）。
+        and not re.search(
+            r"standard test methods? for .{0,80}(?:metallic products|steel -)|types of inspection documents",
+            sentence,
+            re.I,
+        )
     ]
     if not kept:
         return ""
