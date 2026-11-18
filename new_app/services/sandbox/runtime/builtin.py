@@ -2937,9 +2937,18 @@ def _metadata_for(
 
 def _prose_text(norm: str) -> str:
     """数据表不进正文，但 OCR 包进单元格的整句（“化学分析按每冶炼炉号取1个试样”）要保留。"""
-    import clauses as clauses_module  # clauses 反向依赖 builtin，只能延迟导入
+    # clauses 反向依赖 builtin，只能延迟导入
+    try:  # imported as a package (tests)
+        from . import clauses as clauses_module
+    except ImportError:  # flat runtime image (/engine)
+        import clauses as clauses_module
 
-    return TABLE_BLOCK_RE.sub(clauses_module._table_to_text, norm)
+    def as_text(match: re.Match[str]) -> str:
+        text = clauses_module._table_to_text(match).strip()
+        # 以句号收尾，表格文字不能和后面的正文句子粘成一句。
+        return f"\n{text}。\n" if text else "\n"
+
+    return TABLE_BLOCK_RE.sub(as_text, norm)
 
 
 def document_prose_sampling(ocr: dict[str, Any]) -> dict[str, dict[str, str]]:
