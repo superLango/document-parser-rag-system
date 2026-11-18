@@ -1195,7 +1195,13 @@ def _absorb_extra_header_rows(
     headers: list[str], data: list[list[str]]
 ) -> tuple[list[str], list[list[str]]]:
     absorbed = 0
-    while data and absorbed < 2 and _is_extra_header_row(data[0]):
+
+    def repeats_spanned_label(row: list[str]) -> bool:
+        # 纵向合并的首列表头（“试样方向”跨 3 行）在漏识别的表头行里原样重复。
+        first = str(row[0] if row else "").strip()
+        return bool(first) and bool(headers) and first == str(headers[0]).split(" / ")[0].strip()
+
+    while data and absorbed < 2 and (_is_extra_header_row(data[0]) or repeats_spanned_label(data[0])):
         row = list(data[0])
         # 合并单元格在 OCR 里只保留首列（“20 ℃”跨纵向/横向两列）；
         # 向右补齐到下一个非空标签，恢复 colspan 语义。
@@ -3133,9 +3139,9 @@ def _alias_matches(header: str, token: str) -> bool:
         # 符号后常粘脚注字母："ReH a/MPa" -> "reha/mpa"，允许一个 a-f 脚注；
         # 也常直接粘单位："RmMPa"、"KV2J"。
         suffix = r"(?:[a-f]|mpa|gpa|ksi|j)?" if len(token) > 1 else ""
-        if re.search(
-            rf"{prefix}{re.escape(token)}{suffix}(?![a-z0-9])", header
-        ):
+        # 单字母（A）后面紧跟“--/—/=”是公式说明（“a--试样厚度”“D=2a”），不是伸长率。
+        tail = r"(?![a-z0-9\-—–=])" if len(token) == 1 else r"(?![a-z0-9])"
+        if re.search(rf"{prefix}{re.escape(token)}{suffix}{tail}", header):
             return True
     else:
         return token in header
@@ -5164,7 +5170,7 @@ def parse_table(
         else:
             for index, header in enumerate(headers):
                 # 性能列（室温冲击AKv、硬度HB…）优先归 measure，不能被当成条件列占用。
-                if _header_binds_measure(header, bindings):
+                if _header_binds_measure(header, bindings) or _bending_angle(header):
                     continue
                 name = _condition_name(header)
                 if name:
@@ -5174,7 +5180,7 @@ def parse_table(
             for index, name in enumerate(meta_conditions):
                 if not name or index >= len(headers) or index in used:
                     continue
-                if _header_binds_measure(headers[index], bindings):
+                if _header_binds_measure(headers[index], bindings) or _bending_angle(headers[index]):
                     continue
                 if index < len(_meta_elements) and _meta_elements[index]:
                     continue
@@ -5348,6 +5354,9 @@ def parse_table(
                 ):
                     # “3个试样平均冲击吸收能量”里的“试样”不是条件列。
                     continue
+                if _bending_angle(headers[col]):
+                    # “180°弯曲试验 / 公称厚度或直径/mm / ≤16”是弯曲值列，不是条件列。
+                    continue
                 if str(token) in TEMPERATURE_CONDITIONS and HEAT_TREAT_TEMP_RE.search(header):
                     # “回火温度℃”是热处理工艺参数，不是试验温度；交给“回火”等条件词。
                     continue
@@ -5515,6 +5524,13 @@ def parse_table(
                 # 条件单元格里出现表头原文或“元素”提示语，不是真实条件值。
                 # 注意不能用 _nonvalue_label：它会把 H14/H24 这类铝合金状态
                 # 误判成元素符号而丢弃，导致同一牌号的行变成重复键。
+                if value and name == "方向" and normalize(value) not in {
+                    normalize(label) for label in DIRECTION_LABELS
+                } and len(value) > 8:
+                    # 方向列里写的是规则句（“宽度≥600mm 取横向，其他取纵向”），只认唯一方向。
+                    value = _specimen_direction(value)
+                    if not value:
+                        continue
                 if value:
                     if normalize(value) == normalize(headers[col]) or "元素" in value:
                         continue
@@ -5540,6 +5556,10 @@ def parse_table(
                 parts = []
                 for col in cols:
                     value = strip_footnote(row[col]) if col < len(row) else ""
+                    if name == "方向" and len(value) > 8 and normalize(value) not in {
+                        normalize(label) for label in DIRECTION_LABELS
+                    }:
+                        value = _specimen_direction(value)
                     if value and value not in SKIP_CELL_VALUES:
                         parts.append(value)
                 # A split thickness column ("Over" | "2.000 to 3.000") must stay
@@ -5671,6 +5691,7 @@ def parse_table(
 
             # 弯曲半径 90°/180° 列没有对应的配方 measure；作为附加属性
             # 挂在同一牌号/厚度记录上，归入“弯曲”类别。
+            bending_split: list[tuple[dict[str, Any], dict[str, str]]] = []
             if profile == "mechanical_properties":
                 for col, header in enumerate(headers):
                     if col in used:
@@ -5691,12 +5712,17 @@ def parse_table(
                             continue
                     parsed["unit"] = ""
                     parsed["column"] = header
-                    properties[f"弯曲半径{angle}°"] = parsed
+                    sub = _column_sub_condition(header, _group_label(header))
+                    if sub:
+                        # 按厚度分列的弯曲要求（≤16: D=2a，>16~100: D=3a）各成一条记录。
+                        bending_split.append(({f"弯曲半径{angle}°": parsed}, sub))
+                    else:
+                        properties[f"弯曲半径{angle}°"] = parsed
 
             # 主测量列本身也可能按厚度/温度分列（ReH 的 9 个厚度列、
             # A 的 6 个厚度列、KV2 的 5 温度 × 2 方向）。主列的子条件
             # 若互不相同，必须拆成独立记录，不能塞进同一条无条件记录。
-            primary_split: list[tuple[dict[str, Any], dict[str, str]]] = []
+            primary_split: list[tuple[dict[str, Any], dict[str, str]]] = list(bending_split)
             conditioned = {
                 measure: sub
                 for measure, sub in primary_sub_conditions.items()
