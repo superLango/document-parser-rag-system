@@ -1397,3 +1397,15 @@ def test_missing_leading_category_cell_is_restored() -> None:
     assert repaired[3] == "07Cr18Ni11Nb"
 
 
+
+
+def test_english_max_min_marks_become_operators() -> None:
+    from services.sandbox.runtime.projection import _normalize_value_marks
+
+    records = [{"properties": {
+        "H": {"raw": "2 ppm max.", "value": 2.0, "operator": None, "unit": "%"},
+        "Rm": {"raw": "800 Min.", "value": 800.0, "operator": None, "unit": "MPa"},
+    }}]
+    _normalize_value_marks(records)
+    props = records[0]["properties"]
+    assert (props["H"]["raw"], props["H"]["unit"], props["Rm"]["raw"]) == ("≤2", "ppm", "≥800")

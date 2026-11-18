@@ -21,7 +21,7 @@ from .normalize import (
 )
 from .profile import annotate_table
 
-TABLE_RE = re.compile(r"<table\b.*?</table>", re.IGNORECASE | re.DOTALL)
+TABLE_RE = re.compile(r"<table(?=[\s>]).*?</table>", re.IGNORECASE | re.DOTALL)
 CAPTION_RE = re.compile(r"(?:^|\n)\s*#{0,6}\s*(表\s*[A-Za-z]?\.?\s*\d+(?:\.\d+)?)\s*([^\n]*)")
 TABLE_NUMBER_RE = re.compile(r"表\s*([A-Za-z]?\.?\s*\d+(?:\.\d+)?)")
 # W3：列级元数据。表头路径里出现这些词时，该列（或该列的值域）受对应条件约束。

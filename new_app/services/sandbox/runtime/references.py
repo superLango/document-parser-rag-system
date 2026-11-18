@@ -43,7 +43,7 @@ SKIP_LINE_RE = re.compile(r"代替|历次版本|起草|编制|归口|提出|发�
 RELATION_PRIORITY = {"normative": 3, "table_note": 2, "method": 2, "clause": 1, "other": 0}
 # Sampling/preparation/packaging standards are not test methods.
 NON_METHOD_RE = re.compile(
-    r"^(?:GB/T\s*(?:20066|2975|222|8170|247|2101|1\.1))\b"
+    r"^(?:GB/T\s*(?:20066|2975|222|8170|247|2101|1\.1)\b|(?:ISO|GB/T)\s*(?:9001|17025|14001|19001)\b|IATF)"
 )
 NON_METHOD_TITLE_MARKERS = (
     "取样",
@@ -594,6 +594,8 @@ def _bindings(
         and not METHOD_TITLE_RE.search(str(entry.get("title") or ""))
     }
 
+    content_refs: set[str] = set()
+
     def offer(family: str, score: int, payload: dict[str, Any]) -> None:
         if not family or str(payload.get("method") or "") in products:
             return
@@ -627,6 +629,13 @@ def _bindings(
                 local = _number_family(number) or local
                 if not (local or family):
                     continue
+                if re.search(
+                    r"(?:comply\s+with|conform\s+to|符合|满足)[^.。;；]{0,30}$",
+                    probe[: match.start()],
+                    re.I,
+                ):
+                    # “应符合 EN 10083-3 的要求”是内容要求（跨标准），不是试验方法。
+                    continue
                 if not number or number == self_no:
                     continue
                 if not _is_method_standard(number, probe):
@@ -651,10 +660,20 @@ def _bindings(
                     match.group("org"), match.group("num"), match.group("year") or ""
                 )
                 family = title_family or _family(text)
+                # “should comply with the requirement of EN 10083-3”：内容引用，不是方法。
+                content_ref = bool(number) and re.search(
+                    r"(?:comply\s+with|conform\s+to|符合|满足)[^.。;；]{0,40}"
+                    + re.escape(number.split()[-1]),
+                    f"{text} {_clean((fields.get("requirement") or {}).get("raw"))}",
+                    re.I,
+                )
+                if content_ref:
+                    content_refs.add(number)
                 if (
                     number
                     and number != self_no
                     and family
+                    and not content_ref
                     and _is_method_standard(number, f"{title} {method}")
                 ):
                     offer(
@@ -671,6 +690,8 @@ def _bindings(
     for reference in references:
         title = reference.get("title") or ""
         if not _is_method_standard(reference["standard_no"], title):
+            continue
+        if reference["standard_no"] in content_refs:
             continue
         family = _number_family(reference["standard_no"]) or _family(title)
         if not family:

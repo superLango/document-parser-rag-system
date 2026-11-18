@@ -17,7 +17,7 @@ from typing import Any
 
 FOOTNOTE_RE = re.compile(r"[①-⑳]|\[\d+\]|\(\d+\)|（\d+）|\*+$")
 HTML_TAG_RE = re.compile(r"</?[A-Za-z][A-Za-z0-9]*(?:\s[^<>]*)?/?>")
-TABLE_BLOCK_RE = re.compile(r"<table\b.*?</table>", re.IGNORECASE | re.DOTALL)
+TABLE_BLOCK_RE = re.compile(r"<table(?=[\s>]).*?</table>", re.IGNORECASE | re.DOTALL)
 
 
 def _strip_html(value: Any) -> str:
@@ -178,6 +178,15 @@ def _document_grade_hint(text: str) -> str:
     temper = re.search(r"\b(\d{4}-[TTH]\d{2,4})\b", head, re.IGNORECASE)
     if temper:
         return temper.group(1)
+    # 钢号只印在标题里（“42CrMo4+QT Acc. To EN 10083-3”“支承用 42CrMo4 锻件”）。
+    steels = set(
+        re.findall(
+            r"(?<![A-Za-z0-9])(\d{2,3}(?:Cr|Mn|Ni|Mo|Si|V|W|Al|Ti|Nb)[A-Za-z0-9]*)(?:\+[A-Z]{1,3})?(?![A-Za-z0-9])",
+            head,
+        )
+    )
+    if len(steels) == 1:
+        return steels.pop()
     uns = []
     # Do not read a UNS number out of a standard code such as "GB/T 24627".
     for match in re.findall(r"(?<![A-Za-z/])([A-Z]\d{5})\b", head):
@@ -782,7 +791,7 @@ MEASURE_ALIASES: dict[str, list[str]] = {
         "elongation",
         "extension",
     ],
-    "Z": ["断面收缩率", "收缩率", "ψ", "reduction of area"],
+    "Z": ["断面收缩率", "收缩率", "ψ", "reduction of area", "reduction in area", "reduction in cross section"],
     "KU2": ["冲击吸收能量", "冲击功", "kv2", "kuj", "akuj", "impact energy", "charpy"],
     "KV2": ["冲击吸收能量", "冲击功", "ku2", "akv", "impact energy", "charpy"],
     "KU5": ["冲击吸收能量", "冲击功", "impact energy", "charpy"],
@@ -2123,6 +2132,11 @@ def _english_chemical_methods(norm: str) -> str:
             continue
         if not EN_CHEMICAL_CUE_RE.search(sentence):
             continue
+        if re.search(r"comply with|conform to", sentence, re.I) and not re.search(
+            r"method|analy[sz]", sentence, re.I
+        ):
+            # “composition should comply with EN 10083-3”是成分限值引用，不是分析方法。
+            continue
         methods = [
             f"ASTM E{code}" for code in BARE_ASTM_METHOD_RE.findall(sentence)
         ]
@@ -2538,6 +2552,8 @@ def _product_standards(norm: str) -> frozenset[str]:
 
 
 METHOD_VERB_RE = re.compile(r"按|采用|依据|根据|执行|进行|符合|according|per\s|in accordance", re.I)
+# 质量体系/实验室认可标准不是试验方法。
+SYSTEM_STANDARD_RE = re.compile(r"(?:ISO|GB/T)\s*(?:9001|17025|14001|19001|27025)\b|IATF\s*16949")
 CHEM_NON_METHOD_RE = re.compile(r"GB/T\s*(?:20066|2975|222|17505)\b(?!\.)")
 
 
@@ -2859,7 +2875,9 @@ def _metadata_for(
         products = _product_standards(norm)
         # “锻件应按NB/T 47010 进行化学成分分析”：产品标准不是试验方法。
         method = "、".join(
-            part for part in method.split("、") if re.sub(r"-\d{4}$", "", part) not in products
+            part
+            for part in method.split("、")
+            if re.sub(r"-\d{4}$", "", part) not in products and not SYSTEM_STANDARD_RE.search(part)
         )
     if method:
         meta["试验方法"] = method
@@ -3313,6 +3331,12 @@ def _detect_measure(header: str, bound: str) -> str:
     text = normalize(header)
     # Drop unit tails so ``抗拉强度/N/mm2`` is not mistaken for nitrogen.
     text = re.sub(r"(?:n/mm2|n/mm²|j/cm2|j/cm²|mpa|gpa)", "", text)
+    if not re.search(r"p0[.,]2|p1[.,]0|re[hl]|rm(?![a-z])", text):
+        # “Upper Yield Strength(MPa)”没有印符号，但上/下屈服不是 Rp0.2。
+        if re.search(r"upper\s*yield|上屈服", text):
+            return "ReH"
+        if re.search(r"lower\s*yield|下屈服", text):
+            return "ReL"
     if re.search(r"p0[.,]2(?!\d)", text):
         # 兼容 ISO 写法 Rp0,2（逗号）以及 “Tensile strength / Rp0,2” 组合表头。
         return "Rp0.2"
@@ -3567,7 +3591,12 @@ def _repair_impact_temperature(
         header, right = headers[col], headers[col + 1]
         if right.split(" / ")[0] != header.split(" / ")[0]:
             continue
-        labeled = "温度" in header and bool(re.search(r"KV2|KU2|KV8|KU8", right, re.I))
+        # 明写的温度列：叶子表头是“试验温度℃”，且本列不是能量列。
+        labeled = (
+            "温度" in header.split(" / ")[-1]
+            and not re.search(r"KV2|KU2|KV8|KU8", header, re.I)
+            and bool(re.search(r"KV2|KU2|KV8|KU8", right, re.I))
+        )
         if labeled:
             energy_header = right
         else:
@@ -3613,6 +3642,34 @@ def _repair_impact_temperature(
         headers[col] = ""
         return headers, repaired
     return headers, data_rows
+
+
+def _unfold_element_pairs(table: dict[str, Any]) -> dict[str, Any]:
+    """“C | 0.38-0.45 | Cr | 0.9-1.2”：元素/数值成对并排的成分表，改成一行元素表头 + 一行数值。"""
+    rows = [list(row) for row in table.get("rows") or []]
+    pairs: list[tuple[str, str]] = []
+    pair_rows = 0
+    for row in rows:
+        cells = [str(cell or "").strip() for cell in row]
+        if len(cells) < 4 or len(cells) % 2:
+            continue
+        symbols = [_element_symbol(cells[i]) for i in range(0, len(cells), 2)]
+        values = cells[1::2]
+        if all(symbols) and all(NUMBER_RE.search(v) for v in values if v):
+            pair_rows += 1
+            pairs.extend((sym, val) for sym, val in zip(symbols, values) if val)
+    if pair_rows < 2 or len(pairs) < 4:
+        return table
+    symbols = [sym for sym, _ in pairs]
+    return {
+        **table,
+        "header_rows": 1,
+        # 没有牌号列：走“无牌号要求表”分支，记为全部牌号（标题有唯一牌号时再替换）。
+        "header_paths": [[sym] for sym in symbols],
+        "rows": [symbols, [val for _, val in pairs]],
+        "n_cols": len(symbols),
+        "unfolded_pairs": True,
+    }
 
 
 def _repair_temperature_header_row(table: dict[str, Any]) -> dict[str, Any]:
@@ -4963,6 +5020,7 @@ def parse_table(
         ],
     }
     table = _repair_temperature_header_row(table)
+    table = _unfold_element_pairs(table)
     if not _revision_reported:
         diagnostics.append(
             {
@@ -5022,7 +5080,7 @@ def parse_table(
         )
         _apply_document_grade(heat_records, diagnostics, table_id)
         return heat_records, heat_evidence, heat_summary
-    if rules.get("transposed"):
+    if rules.get("transposed") and not table.get("unfolded_pairs"):
         element_records, element_evidence, element_summary = _parse_element_table(
             table,
             table_id=table_id,
@@ -5407,6 +5465,7 @@ def parse_table(
                 continue
             dimension_condition = None
             level_condition = ""
+            location_condition = ""
             if requirement_row:
                 grades = ["全部牌号"]
             elif re.fullmatch(r"(?:锻件)?(?:级别|等级)", normalize(headers[key_col])) and re.fullmatch(
@@ -5414,6 +5473,12 @@ def parse_table(
             ):
                 # “锻件级别 1…8”是检验级别，不是牌号：按全部牌号记录，级别作条件。
                 level_condition = str(raw_grade).strip()
+                grades = ["全部牌号"]
+            elif re.fullmatch(
+                r"(?:test\s*)?location|取样位置|取样部位|试样位置|部位", normalize(headers[key_col]), re.I
+            ) and str(raw_grade or "").strip():
+                # “Test Location: Core / Non-Core”是取样位置，不是牌号。
+                location_condition = str(raw_grade).strip()
                 grades = ["全部牌号"]
             elif no_key_conditions:
                 grades = ["~"]
@@ -5464,6 +5529,8 @@ def parse_table(
                 conditions["规格"] = dimension_condition
             if level_condition:
                 conditions["锻件级别"] = level_condition
+            if location_condition:
+                conditions["位置"] = location_condition
             if requirement_row:
                 # 无牌号要求表的行标签“室温 / 550℃”是试验温度，不能都记成室温。
                 label = strip_footnote(row[0]) if row else ""
@@ -5566,6 +5633,8 @@ def parse_table(
                 parsed["unit"] = _unit_for_measure(
                     measure_key, headers[col], parsed.get("unit") or ""
                 )
+                if "ppm" in raw_value.lower():
+                    parsed["unit"] = "ppm"
                 if not _plausible_measure(
                     measure_key, parsed.get("value"), parsed.get("unit") or ""
                 ):

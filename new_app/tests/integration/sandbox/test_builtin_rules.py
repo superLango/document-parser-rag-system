@@ -1550,3 +1550,24 @@ def test_ocr_multiline_chemical_header_is_repaired() -> None:
     properties = {record["grade"]: record["properties"] for record in records}
     assert properties["JCr99.4"]["Cr"]["operator"] == "≥"
     assert properties["JCr99.4"]["Fe"]["operator"] == "≤"
+
+
+def test_element_value_pairs_unfold_into_one_row() -> None:
+    from services.sandbox.runtime.builtin import _unfold_element_pairs
+
+    table = {
+        "rows": [
+            ["Element", "Element", "Element", "Element"],
+            ["C", "0.38-0.45", "Cr", "0.9-1.2"],
+            ["Si", "0.4 max.", "Oxygen", "20 ppm max."],
+        ]
+    }
+    unfolded = _unfold_element_pairs(table)
+    assert unfolded["rows"] == [["C", "Cr", "Si", "O"], ["0.38-0.45", "0.9-1.2", "0.4 max.", "20 ppm max."]]
+
+
+def test_angle_bracket_caption_is_not_a_table() -> None:
+    from services.sandbox.runtime.clauses import TABLE_RE
+
+    text = "<Table.1 - Chemical Composition>\n\n2.3.5 Tensile test - Shall be per ISO 6892-1.\n<table><tr><td>x</td></tr></table>"
+    assert [m.group(0) for m in TABLE_RE.finditer(text)] == ["<table><tr><td>x</td></tr></table>"]

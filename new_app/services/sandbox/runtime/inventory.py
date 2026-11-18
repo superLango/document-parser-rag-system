@@ -2010,7 +2010,7 @@ def _clause_entries(
             )
 
 
-TABLE_BLOCK_RE = re.compile(r"<table\b.*?</table>", re.IGNORECASE | re.DOTALL)
+TABLE_BLOCK_RE = re.compile(r"<table(?=[\s>]).*?</table>", re.IGNORECASE | re.DOTALL)
 FOOTNOTE_RE = re.compile(r"^(?:[A-Z]|注\s*\d*|NOTE\s*\d*)\s*[:：.]?\s+")
 
 

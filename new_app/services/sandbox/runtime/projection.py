@@ -401,8 +401,19 @@ def _align_dictionary(
 ACCEPT_CUE_RE = re.compile(
     r"不得|不允许|不应|应无|无[^，,。]{0,16}(?:裂纹|缺陷)|\d\s*级|不大于|不小于|不超过|≤|≥"
     r"|合格|应符合|应满足|应为|应达到|要求如下|更细|更粗|要求同|要求见|见附录|符合附录"
+    r"|or finer|or coarser|shall not|free (?:of|from)|\bmax\b|\bmin\b|shall (?:meet|be within|have a)|<|>",
+    re.I,
 )
-SAMPLING_ONLY_RE = re.compile(r"取\s*\S{0,6}\s*(?:个|组|件)\S{0,12}试样|试样应取自|试料上截取|加工两组")
+SAMPLING_ONLY_RE = re.compile(
+    r"取\s*\S{0,6}\s*(?:个|组|件)\S{0,12}试样|试样应取自|试料上截取|加工两组"
+    r"|(?:specimens?|samples?)\s+(?:shall|should|must)\s+be\s+taken",
+    re.I,
+)
+# “Grain Size - Shall be per ASTM E112 or ISO 643.”：只给方法，不是验收要求。
+METHOD_ONLY_EN_RE = re.compile(
+    r"^[A-Za-z /]{3,40}[-–:]\s*(?:shall|should)\s+be\s+(?:per|in accordance with|according to)\b",
+    re.I,
+)
 
 
 def _acceptance_text(text: str) -> str:
@@ -410,13 +421,16 @@ def _acceptance_text(text: str) -> str:
 
     返回空串表示整段都不是验收要求（“每个锻件应取2个晶粒度试样……”）。
     """
-    sentences = [part.strip() for part in re.split(r"(?<=[。])\s*", text) if part.strip()]
+    sentences = [
+        part.strip() for part in re.split(r"(?<=[。])\s*|(?<=[.!?])\s+(?=[A-Z])", text) if part.strip()
+    ]
     kept = [
         sentence
         for sentence in sentences
         if not builtin_module.RETEST_RE.search(sentence)
         and not re.match(r"[(（]表\s*[A-Z]?\d", sentence)
         and not (SAMPLING_ONLY_RE.search(sentence) and not ACCEPT_CUE_RE.search(sentence))
+        and not (METHOD_ONLY_EN_RE.search(sentence) and not ACCEPT_CUE_RE.search(sentence))
     ]
     if not kept:
         return ""
@@ -500,6 +514,9 @@ def _qualitative_records(
                 continue
             seen_global.add(dedupe_key)
             translated = translate_module.translate_requirement(requirement)
+            # 词级翻译只译出零星词时（“Forged rings 应具有 a 晶粒度的 5”）不如保留原文。
+            if translated and len(re.findall(r"[A-Za-z]{3,}", translated)) > 3:
+                translated = ""
             displayed = translated or requirement
             parsed = (
                 _requirement_value(requirement)
@@ -625,6 +642,24 @@ def _qualitative_records(
     return created, items
 
 
+def _normalize_value_marks(records: list[dict[str, Any]]) -> None:
+    """英文规范的“0.025 max.”“650 Min.”“2 ppm max.”：补上限/下限符号与 ppm 单位。"""
+    for record in records:
+        for prop in (record.get("properties") or {}).values():
+            if not isinstance(prop, dict):
+                continue
+            raw = str(prop.get("raw") or "")
+            if re.search(r"\bppm\b", raw, re.I):
+                prop["unit"] = "ppm"
+            if prop.get("operator") or prop.get("value") is None:
+                continue
+            mark = re.search(r"\b(max|min)(?:imum)?\b\.?", raw, re.I)
+            if mark:
+                prop["operator"] = "≤" if mark.group(1).lower() == "max" else "≥"
+                bare = re.sub(r"\s*\bppm\b", "", raw[: mark.start()] + raw[mark.end() :], flags=re.I)
+                prop["raw"] = prop["operator"] + re.sub(r"\s+", " ", bare).strip()
+
+
 def apply_document_intelligence(
     records: list[dict[str, Any]],
     evidence: list[dict[str, Any]],
@@ -634,6 +669,7 @@ def apply_document_intelligence(
     """Run the document-understanding layer and return the new artifacts."""
     records[:] = _sanitize(records)
     evidence[:] = _sanitize(evidence)
+    _normalize_value_marks(records)
     applied = builtin_module.apply_document_metadata(records, ocr, diagnostics)
     clauses_payload = clauses_module.extract_clauses(ocr)
     inspections = builtin_module._inspection_items(ocr)
