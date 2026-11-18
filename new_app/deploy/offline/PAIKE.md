@@ -216,6 +216,7 @@ bash ~/<包名>.run rollback     # 出问题就回滚（任意一个 .run 文件
 | 1.7.900 | 1.7.40 | 首次换派克词典 |
 | 1.7.901 | 1.7.40 | 一个检测项目多个大类拆成多条 |
 | 1.7.902 | 1.7.41（lango `9a10777`）| 宽表条件归属、正文条款还原、误抽收紧 |
+| 1.7.903 | wjh-pr `14a45bc`（1.7.41 + 台账优化）| 按问题台账修取样数量/方向/试验方法、冲击温度、高温表、显微组织、英文规范等；`make_bundle all --parser 1.7.903 --dict pk` |
 
 - 打包：`make_bundle.cmd all --parser 1.7.902 --dict pk`。`.run` 会：核对包里的词典与本机业务词典是同一家（`pk` 只能装到 `paike-...`，`ht` 只能装到 `hanson-...`）→ 备份 `data/recipe_registry` 和原 stable → 发布 → 设为 stable → 重启 recipe-registry → 核对 stable。回滚把 stable 切回原版本（新版本保留）。
 - 汉唐直接用 lango 发的版本号，但也必须在盒子上发布：`--parser 1.7.41 --dict ht`。
