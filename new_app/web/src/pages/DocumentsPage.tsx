@@ -10,7 +10,7 @@ import {
   Trash2,
   UploadCloud
 } from "lucide-react";
-import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { useDeferredValue, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { documentsApi } from "../api/documents";
@@ -37,6 +37,7 @@ import {
 } from "../components/ui/table";
 import { useToast } from "../components/ui/toast";
 import { RUN_TERMINAL, runStatusMeta } from "../lib/status";
+import { useSessionState } from "../lib/useSessionState";
 import { formatBytes, formatDateTime, formatDuration } from "../lib/utils";
 import {
   buildResultCsv,
@@ -122,9 +123,9 @@ export default function DocumentsPage() {
   const [extractStatuses, setExtractStatuses] = useState<Set<string>>(new Set(EXTRACT_DEFAULT));
   const [extracting, setExtracting] = useState(false);
   const [extractProgress, setExtractProgress] = useState("");
-  const [keyword, setKeyword] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useSessionState("documents.keyword", "");
+  const [statusFilter, setStatusFilter] = useSessionState("documents.status", "");
+  const [page, setPage] = useSessionState("documents.page", 1);
   const deferredKeyword = useDeferredValue(keyword);
 
   const documentsQuery = useQuery({
@@ -421,10 +422,6 @@ export default function DocumentsPage() {
     });
   }, [documents, deferredKeyword, statusFilter, latestRunByDocument]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [deferredKeyword, statusFilter]);
-
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageItems = filtered.slice(
@@ -498,14 +495,20 @@ export default function DocumentsPage() {
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={keyword}
-            onChange={(event) => setKeyword(event.target.value)}
+            onChange={(event) => {
+              setKeyword(event.target.value);
+              setPage(1);
+            }}
             placeholder="搜索文件名 / 文档 ID"
             className="pl-8"
           />
         </div>
         <Select
           value={statusFilter}
-          onChange={(event) => setStatusFilter(event.target.value)}
+          onChange={(event) => {
+            setStatusFilter(event.target.value);
+            setPage(1);
+          }}
           className="w-40"
           aria-label="按最近运行状态筛选"
         >
@@ -564,6 +567,7 @@ export default function DocumentsPage() {
                   onClick={() => {
                     setKeyword("");
                     setStatusFilter("");
+                    setPage(1);
                   }}
                 >
                   清除筛选

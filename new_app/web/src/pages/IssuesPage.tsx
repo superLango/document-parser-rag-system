@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Download, FileWarning, MessageSquareWarning, RefreshCcw } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { documentsApi } from "../api/documents";
@@ -28,6 +28,7 @@ import { Tabs } from "../components/ui/tabs";
 import { folderOf } from "../lib/extract";
 import { FEEDBACK_STATUS, runStatusMeta } from "../lib/status";
 import { formatDateTime } from "../lib/utils";
+import { useSessionState } from "../lib/useSessionState";
 
 const PAGE_SIZE = 10;
 const TABS = [
@@ -79,13 +80,13 @@ function rangeLabel(start: string, end: string): string {
 }
 
 export default function IssuesPage() {
-  const [tab, setTab] = useState<TabId>("feedback");
-  const [feedbackPage, setFeedbackPage] = useState(1);
-  const [abnormalPage, setAbnormalPage] = useState(1);
-  const [feedbackStart, setFeedbackStart] = useState("");
-  const [feedbackEnd, setFeedbackEnd] = useState("");
-  const [abnormalStart, setAbnormalStart] = useState("");
-  const [abnormalEnd, setAbnormalEnd] = useState("");
+  const [tab, setTab] = useSessionState<TabId>("issues.tab", "feedback");
+  const [feedbackPage, setFeedbackPage] = useSessionState("issues.feedbackPage", 1);
+  const [abnormalPage, setAbnormalPage] = useSessionState("issues.abnormalPage", 1);
+  const [feedbackStart, setFeedbackStart] = useSessionState("issues.feedbackStart", "");
+  const [feedbackEnd, setFeedbackEnd] = useSessionState("issues.feedbackEnd", "");
+  const [abnormalStart, setAbnormalStart] = useSessionState("issues.abnormalStart", "");
+  const [abnormalEnd, setAbnormalEnd] = useSessionState("issues.abnormalEnd", "");
   const query = useQuery({
     queryKey: ["issues", "ledger"],
     queryFn: issuesApi.ledger
@@ -119,12 +120,6 @@ export default function IssuesPage() {
     [abnormal, abnormalStart, abnormalEnd]
   );
 
-  useEffect(() => {
-    setFeedbackPage(1);
-  }, [feedbackStart, feedbackEnd]);
-  useEffect(() => {
-    setAbnormalPage(1);
-  }, [abnormalStart, abnormalEnd]);
 
   const feedbackPageCount = Math.max(
     1,
@@ -226,7 +221,10 @@ export default function IssuesPage() {
               <Input
                 type="date"
                 value={feedbackStart}
-                onChange={(event) => setFeedbackStart(event.target.value)}
+                onChange={(event) => {
+                  setFeedbackStart(event.target.value);
+                  setFeedbackPage(1);
+                }}
                 className="h-8 w-36"
                 aria-label="反馈开始日期"
               />
@@ -234,7 +232,10 @@ export default function IssuesPage() {
               <Input
                 type="date"
                 value={feedbackEnd}
-                onChange={(event) => setFeedbackEnd(event.target.value)}
+                onChange={(event) => {
+                  setFeedbackEnd(event.target.value);
+                  setFeedbackPage(1);
+                }}
                 className="h-8 w-36"
                 aria-label="反馈结束日期"
               />
@@ -337,7 +338,10 @@ export default function IssuesPage() {
               <Input
                 type="date"
                 value={abnormalStart}
-                onChange={(event) => setAbnormalStart(event.target.value)}
+                onChange={(event) => {
+                  setAbnormalStart(event.target.value);
+                  setAbnormalPage(1);
+                }}
                 className="h-8 w-36"
                 aria-label="异常文档开始日期"
               />
@@ -345,7 +349,10 @@ export default function IssuesPage() {
               <Input
                 type="date"
                 value={abnormalEnd}
-                onChange={(event) => setAbnormalEnd(event.target.value)}
+                onChange={(event) => {
+                  setAbnormalEnd(event.target.value);
+                  setAbnormalPage(1);
+                }}
                 className="h-8 w-36"
                 aria-label="异常文档结束日期"
               />
