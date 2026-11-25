@@ -1,41 +1,55 @@
 # CHANGELOG
 
+## [S7] 2026-11-25
+
+### Added
+- `analyze/grade_cleanup.py`：牌号脚注清理（`BZn9-29f → BZn9-29`）
+- `scripts/s7_demo.py`：S7 清理+验证演示
+- `tests/test_grade_cleanup.py`
+- `docs/S7-report.md`
+
+### Results
+- 清理牌号 1083 条
+- 评测：6700/9724、一致率 0.7943、覆盖率 68.90%（+2 匹配）
+- 负向实验：类别室温默认无变化；跳过表恢复宽松 +3/+65 多余、严格 0 条
+- 测试：49 passed
+
 ## [S6] 2026-11-25
 
 ### Added
 - `table_program/engine.py`：DSL 执行器（explode/melt/pivot/filter）
-- `table_program/replay.py`：回放校验（值覆盖/缺失/多余）
+- `table_program/replay.py`：回放校验
 - `verify/audit.py`：未解决队列审计
 - `scripts/s6_audit.py`、`scripts/s6_dsl_demo.py`
 - `tests/test_table_program.py`
-- `eval/blind_manifest.json`：盲测清单占位
+- `eval/blind_manifest.json`
 - `docs/S6-report.md`、`docs/S6-audit.md`
 
 ### Results
-- 真实表 gbt-2054 T9：DSL 产出 209 条，回放 coverage=1.0
-- 队列审计：2161 条；missing_temperature 1323、value_conflict 820、same_row 558
-- 评测与 S5 一致：6698/9724、0.7944、68.88%
+- 真实表 gbt-2054 T9：209 条，回放 coverage=1.0
+- 队列 2161；missing_temperature 1323、value_conflict 820
+- 评测：6698/9724、0.7944、68.88%
 - 测试：47 passed
 
 ## [S5] 2026-11-25
 
 ### Added
 - `verify/conflicts.py`：证据感知冲突分级
-- `table_program/ir.py`：表格 IR v1
-- `table_program/DSL.md`：DSL v1 规范（草案）
+- `table_program/ir.py`：TableIR v1
+- `table_program/DSL.md`：DSL v1 规范
 - `scripts/s5_demo.py`
 - `tests/test_table_ir.py`；更新 `tests/test_verify.py`
 - `docs/S5-report.md`
 
 ### Results
-- verify unresolved 1370→820（同表同行冲突 558 降为 warn）
-- 评测与 S4 一致：6698/9724、0.7944、68.88%
+- unresolved 1370→820；same-row 558 降级
+- 评测：6698/9724、0.7944、68.88%
 - 测试：43 passed
 
 ## [S4] 2026-11-25
 
 ### Added
-- `normalize/grade.py`：数值 Grade 与 UNS 牌号归一
+- `normalize/grade.py`：数值 Grade 与 UNS 归一
 - `analyze/grade_columns.py`：Grade 列推断
 - `scripts/s4_demo.py`、`tests/test_s4_grade_columns.py`
 - `eval/splits.json`

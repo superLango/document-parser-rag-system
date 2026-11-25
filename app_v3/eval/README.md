@@ -11,6 +11,9 @@
 - `s3-eval.json`：S3 条件补全后的评测（6698/9724、0.7952、68.88%）
 - `s3-repair-verify-report.json`：S3 修复+验证汇总
 - `s4-eval.json`：S4 牌号修复后的评测（6698/9724、0.7944、68.88%）
+- `s7-eval.json`：S7 牌号脚注清理后的评测（6700/9724、0.7943、68.90%）
+- `s7-grade-cleanup-report.json`：S7 清理+验证汇总
+- `s7-temp-default-eval.json` / `s7-recover-test-eval.json` / `s7-recover-strict-eval.json`：S7 负向/探索实验
 - `s6-audit.json`：S6 未解决队列审计（原因/类别/文档分布）
 - `s6-dsl-demo.json`：S6 DSL 真实表执行/回放结果（gbt-2054 T9，coverage=1.0）
 - `blind_manifest.json`：真正盲测清单（待新增未见文档）
