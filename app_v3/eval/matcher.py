@@ -67,6 +67,8 @@ def numbers(text: str) -> tuple[str, ...]:
 def grade_match(gold: str, ours: str) -> bool:
     if not gold or not ours:
         return True
+    if gold in {"全部牌号", "所有牌号", "各牌号", "任意牌号", "通用"}:
+        return True
     if gold == ours:
         return True
     return gold in ours or ours in gold

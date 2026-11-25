@@ -1,0 +1,995 @@
+{
+ "total": {
+  "records": 9256,
+  "cleaned": 1083,
+  "recovered": 71,
+  "verify_status": {
+   "warn": 1412,
+   "ok": 7014,
+   "unresolved": 830
+  },
+  "queue": 2242
+ },
+ "documents": [
+  {
+   "doc": "ams-4928x",
+   "cleanup": {
+    "total": 71,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 71,
+    "status": {
+     "warn": 70,
+     "ok": 1
+    },
+    "diagnostics": {
+     "same_row_value_conflict": 52,
+     "missing_temperature": 50
+    },
+    "queue": 70,
+    "conflicts": 24,
+    "tables": 4
+   }
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "cleanup": {
+    "total": 597,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 597,
+    "status": {
+     "warn": 183,
+     "ok": 392,
+     "unresolved": 22
+    },
+    "diagnostics": {
+     "missing_temperature": 205,
+     "same_row_value_conflict": 155,
+     "value_conflict": 22
+    },
+    "queue": 205,
+    "conflicts": 60,
+    "tables": 11
+   }
+  },
+  {
+   "doc": "astm-b348-25",
+   "cleanup": {
+    "total": 348,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 348,
+    "status": {
+     "ok": 60,
+     "warn": 218,
+     "unresolved": 70
+    },
+    "diagnostics": {
+     "metadata_evidence_missing": 5,
+     "same_row_value_conflict": 152,
+     "missing_temperature": 283,
+     "value_conflict": 70
+    },
+    "queue": 288,
+    "conflicts": 97,
+    "tables": 12
+   }
+  },
+  {
+   "doc": "gbt-14976-2025",
+   "cleanup": {
+    "total": 507,
+    "cleaned": 111,
+    "examples": [
+     {
+      "record_id": "T10-R19-C4",
+      "from": "06Cr17Ni12Mo2Ti",
+      "to": "06Cr17Ni12Mo2T"
+     },
+     {
+      "record_id": "T10-R19-C6",
+      "from": "06Cr17Ni12Mo2Ti",
+      "to": "06Cr17Ni12Mo2T"
+     },
+     {
+      "record_id": "T10-R19-C7",
+      "from": "06Cr17Ni12Mo2Ti",
+      "to": "06Cr17Ni12Mo2T"
+     },
+     {
+      "record_id": "T10-R19-C8",
+      "from": "06Cr17Ni12Mo2Ti",
+      "to": "06Cr17Ni12Mo2T"
+     },
+     {
+      "record_id": "T10-R24-C4",
+      "from": "06Cr18Ni11Ti",
+      "to": "06Cr18Ni11T"
+     },
+     {
+      "record_id": "T10-R24-C5",
+      "from": "06Cr18Ni11Ti",
+      "to": "06Cr18Ni11T"
+     },
+     {
+      "record_id": "T10-R24-C6",
+      "from": "06Cr18Ni11Ti",
+      "to": "06Cr18Ni11T"
+     },
+     {
+      "record_id": "T10-R24-C7",
+      "from": "06Cr18Ni11Ti",
+      "to": "06Cr18Ni11T"
+     },
+     {
+      "record_id": "T10-R24-C8",
+      "from": "06Cr18Ni11Ti",
+      "to": "06Cr18Ni11T"
+     },
+     {
+      "record_id": "T10-R25-C4",
+      "from": "06Cr18Ni11Ti",
+      "to": "06Cr18Ni11T"
+     }
+    ]
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 507,
+    "status": {
+     "ok": 415,
+     "unresolved": 72,
+     "warn": 20
+    },
+    "diagnostics": {
+     "value_conflict": 72,
+     "same_row_value_conflict": 4,
+     "missing_temperature": 56
+    },
+    "queue": 92,
+    "conflicts": 40,
+    "tables": 25
+   }
+  },
+  {
+   "doc": "gbt-2054-2023",
+   "cleanup": {
+    "total": 202,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 202,
+    "status": {
+     "warn": 7,
+     "ok": 195
+    },
+    "diagnostics": {
+     "missing_temperature": 7
+    },
+    "queue": 7,
+    "conflicts": 0,
+    "tables": 14
+   }
+  },
+  {
+   "doc": "gbt-2965-2023",
+   "cleanup": {
+    "total": 189,
+    "cleaned": 7,
+    "examples": [
+     {
+      "record_id": "T56-R23-C1",
+      "from": "TC6a",
+      "to": "TC6"
+     },
+     {
+      "record_id": "T56-R23-C2",
+      "from": "TC6a",
+      "to": "TC6"
+     },
+     {
+      "record_id": "T56-R23-C3",
+      "from": "TC6a",
+      "to": "TC6"
+     },
+     {
+      "record_id": "T56-R23-C4",
+      "from": "TC6a",
+      "to": "TC6"
+     },
+     {
+      "record_id": "T59-R15-C2",
+      "from": "TC11a",
+      "to": "TC11"
+     },
+     {
+      "record_id": "T59-R15-C3",
+      "from": "TC11a",
+      "to": "TC11"
+     },
+     {
+      "record_id": "T59-R15-C4",
+      "from": "TC11a",
+      "to": "TC11"
+     }
+    ]
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 189,
+    "status": {
+     "ok": 181,
+     "unresolved": 8
+    },
+    "diagnostics": {
+     "value_conflict": 8
+    },
+    "queue": 8,
+    "conflicts": 4,
+    "tables": 115
+   }
+  },
+  {
+   "doc": "gbt-3077-2015",
+   "cleanup": {
+    "total": 1321,
+    "cleaned": 631,
+    "examples": [
+     {
+      "record_id": "T1-R9-C4",
+      "from": "27SiMn",
+      "to": "27SiM"
+     },
+     {
+      "record_id": "T1-R9-C5",
+      "from": "27SiMn",
+      "to": "27SiM"
+     },
+     {
+      "record_id": "T1-R9-C6",
+      "from": "27SiMn",
+      "to": "27SiM"
+     },
+     {
+      "record_id": "T1-R10-C4",
+      "from": "35SiMn",
+      "to": "35SiM"
+     },
+     {
+      "record_id": "T1-R10-C5",
+      "from": "35SiMn",
+      "to": "35SiM"
+     },
+     {
+      "record_id": "T1-R10-C6",
+      "from": "35SiMn",
+      "to": "35SiM"
+     },
+     {
+      "record_id": "T1-R11-C4",
+      "from": "42SiMn",
+      "to": "42SiM"
+     },
+     {
+      "record_id": "T1-R11-C5",
+      "from": "42SiMn",
+      "to": "42SiM"
+     },
+     {
+      "record_id": "T1-R11-C6",
+      "from": "42SiMn",
+      "to": "42SiM"
+     },
+     {
+      "record_id": "T10-R14-C10",
+      "from": "15Cr",
+      "to": "15C"
+     }
+    ]
+   },
+   "recover": {
+    "tables": 2,
+    "records": 13,
+    "categories": {
+     "硬度试验": 1,
+     "高倍": 12
+    },
+    "examples": [
+     {
+      "table_id": "T15",
+      "records": 1
+     },
+     {
+      "table_id": "T17",
+      "records": 12
+     }
+    ]
+   },
+   "verify": {
+    "total": 1334,
+    "status": {
+     "ok": 865,
+     "warn": 410,
+     "unresolved": 59
+    },
+    "diagnostics": {
+     "missing_temperature": 293,
+     "value_conflict": 59,
+     "same_row_value_conflict": 123,
+     "missing_unit": 1,
+     "value_conflict_insufficient_conditions": 12
+    },
+    "queue": 469,
+    "conflicts": 118,
+    "tables": 24
+   }
+  },
+  {
+   "doc": "gbt-3620-1-2016",
+   "cleanup": {
+    "total": 907,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 907,
+    "status": {
+     "ok": 833,
+     "warn": 8,
+     "unresolved": 66
+    },
+    "diagnostics": {
+     "same_row_value_conflict": 8,
+     "value_conflict": 66
+    },
+    "queue": 74,
+    "conflicts": 34,
+    "tables": 22
+   }
+  },
+  {
+   "doc": "gbt-3623-2022",
+   "cleanup": {
+    "total": 266,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 266,
+    "status": {
+     "ok": 266
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 12
+   }
+  },
+  {
+   "doc": "gbt-5231-2022",
+   "cleanup": {
+    "total": 2703,
+    "cleaned": 144,
+    "examples": [
+     {
+      "record_id": "T18-R4-C3",
+      "from": "T2a",
+      "to": "T2"
+     },
+     {
+      "record_id": "T18-R4-C6",
+      "from": "T2a",
+      "to": "T2"
+     },
+     {
+      "record_id": "T18-R4-C7",
+      "from": "T2a",
+      "to": "T2"
+     },
+     {
+      "record_id": "T18-R4-C8",
+      "from": "T2a",
+      "to": "T2"
+     },
+     {
+      "record_id": "T18-R4-C9",
+      "from": "T2a",
+      "to": "T2"
+     },
+     {
+      "record_id": "T18-R4-C11",
+      "from": "T2a",
+      "to": "T2"
+     },
+     {
+      "record_id": "T18-R4-C13",
+      "from": "T2a",
+      "to": "T2"
+     },
+     {
+      "record_id": "T20-R7-C3",
+      "from": "TZr0.15h",
+      "to": "TZr0.15"
+     },
+     {
+      "record_id": "T20-R7-C5",
+      "from": "TZr0.15h",
+      "to": "TZr0.15"
+     },
+     {
+      "record_id": "T20-R8-C3",
+      "from": "TZr0.1h",
+      "to": "TZr0.1"
+     }
+    ]
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 2703,
+    "status": {
+     "ok": 2573,
+     "unresolved": 130
+    },
+    "diagnostics": {
+     "value_conflict": 130
+    },
+    "queue": 130,
+    "conflicts": 58,
+    "tables": 83
+   }
+  },
+  {
+   "doc": "gbt-8547-2019",
+   "cleanup": {
+    "total": 1,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 1,
+    "records": 4,
+    "categories": {
+     "弯曲试验": 4
+    },
+    "examples": [
+     {
+      "table_id": "T17",
+      "records": 4
+     }
+    ]
+   },
+   "verify": {
+    "total": 5,
+    "status": {
+     "ok": 1,
+     "warn": 4
+    },
+    "diagnostics": {
+     "missing_temperature": 4,
+     "value_conflict_insufficient_conditions": 4
+    },
+    "queue": 4,
+    "conflicts": 1,
+    "tables": 22
+   }
+  },
+  {
+   "doc": "gjb-1951a-2020",
+   "cleanup": {
+    "total": 573,
+    "cleaned": 48,
+    "examples": [
+     {
+      "record_id": "T92-R12-C11",
+      "from": "12Cr2Ni4Ab",
+      "to": "12Cr2Ni4A"
+     },
+     {
+      "record_id": "T92-R12-C12",
+      "from": "12Cr2Ni4Ab",
+      "to": "12Cr2Ni4A"
+     },
+     {
+      "record_id": "T92-R12-C13",
+      "from": "12Cr2Ni4Ab",
+      "to": "12Cr2Ni4A"
+     },
+     {
+      "record_id": "T92-R12-C14",
+      "from": "12Cr2Ni4Ab",
+      "to": "12Cr2Ni4A"
+     },
+     {
+      "record_id": "T92-R12-C15",
+      "from": "12Cr2Ni4Ab",
+      "to": "12Cr2Ni4A"
+     },
+     {
+      "record_id": "T92-R15-C11",
+      "from": "15Cr2MnNi2TiAb",
+      "to": "15Cr2MnNi2TiA"
+     },
+     {
+      "record_id": "T92-R15-C12",
+      "from": "15Cr2MnNi2TiAb",
+      "to": "15Cr2MnNi2TiA"
+     },
+     {
+      "record_id": "T92-R15-C13",
+      "from": "15Cr2MnNi2TiAb",
+      "to": "15Cr2MnNi2TiA"
+     },
+     {
+      "record_id": "T92-R15-C14",
+      "from": "15Cr2MnNi2TiAb",
+      "to": "15Cr2MnNi2TiA"
+     },
+     {
+      "record_id": "T92-R15-C15",
+      "from": "15Cr2MnNi2TiAb",
+      "to": "15Cr2MnNi2TiA"
+     }
+    ]
+   },
+   "recover": {
+    "tables": 5,
+    "records": 24,
+    "categories": {
+     "硬度试验": 1,
+     "高倍": 23
+    },
+    "examples": [
+     {
+      "table_id": "T98",
+      "records": 1
+     },
+     {
+      "table_id": "T107",
+      "records": 2
+     },
+     {
+      "table_id": "T118",
+      "records": 10
+     },
+     {
+      "table_id": "T122",
+      "records": 8
+     },
+     {
+      "table_id": "T129",
+      "records": 3
+     }
+    ]
+   },
+   "verify": {
+    "total": 597,
+    "status": {
+     "warn": 307,
+     "unresolved": 42,
+     "ok": 248
+    },
+    "diagnostics": {
+     "missing_temperature": 327,
+     "value_conflict": 42,
+     "value_conflict_insufficient_conditions": 17,
+     "same_row_value_conflict": 2,
+     "missing_unit": 1
+    },
+    "queue": 349,
+    "conflicts": 27,
+    "tables": 229
+   }
+  },
+  {
+   "doc": "gjb-2296a-2005",
+   "cleanup": {
+    "total": 30,
+    "cleaned": 20,
+    "examples": [
+     {
+      "record_id": "T33-R3-C2",
+      "from": "0Cr18Ni10Ti",
+      "to": "0Cr18Ni10T"
+     },
+     {
+      "record_id": "T33-R3-C3",
+      "from": "0Cr18Ni10Ti",
+      "to": "0Cr18Ni10T"
+     },
+     {
+      "record_id": "T33-R3-C4",
+      "from": "0Cr18Ni10Ti",
+      "to": "0Cr18Ni10T"
+     },
+     {
+      "record_id": "T33-R3-C5",
+      "from": "0Cr18Ni10Ti",
+      "to": "0Cr18Ni10T"
+     },
+     {
+      "record_id": "T33-R3-C6",
+      "from": "0Cr18Ni10Ti",
+      "to": "0Cr18Ni10T"
+     },
+     {
+      "record_id": "T33-R3-C7",
+      "from": "0Cr18Ni10Ti",
+      "to": "0Cr18Ni10T"
+     },
+     {
+      "record_id": "T33-R3-C8",
+      "from": "0Cr18Ni10Ti",
+      "to": "0Cr18Ni10T"
+     },
+     {
+      "record_id": "T33-R3-C9",
+      "from": "0Cr18Ni10Ti",
+      "to": "0Cr18Ni10T"
+     },
+     {
+      "record_id": "T33-R4-C2",
+      "from": "1Cr18Ni9Ti",
+      "to": "1Cr18Ni9T"
+     },
+     {
+      "record_id": "T33-R4-C3",
+      "from": "1Cr18Ni9Ti",
+      "to": "1Cr18Ni9T"
+     }
+    ]
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 30,
+    "status": {
+     "ok": 24,
+     "warn": 6
+    },
+    "diagnostics": {
+     "missing_temperature": 6
+    },
+    "queue": 6,
+    "conflicts": 0,
+    "tables": 95
+   }
+  },
+  {
+   "doc": "gjb-2351a-2021",
+   "cleanup": {
+    "total": 782,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 3,
+    "records": 25,
+    "categories": {
+     "高倍": 25
+    },
+    "examples": [
+     {
+      "table_id": "T109",
+      "records": 12
+     },
+     {
+      "table_id": "T111",
+      "records": 12
+     },
+     {
+      "table_id": "T113",
+      "records": 1
+     }
+    ]
+   },
+   "verify": {
+    "total": 807,
+    "status": {
+     "ok": 420,
+     "unresolved": 252,
+     "warn": 135
+    },
+    "diagnostics": {
+     "value_conflict": 252,
+     "same_row_value_conflict": 62,
+     "missing_unit": 4,
+     "missing_temperature": 87,
+     "value_conflict_insufficient_conditions": 24
+    },
+    "queue": 387,
+    "conflicts": 136,
+    "tables": 250
+   }
+  },
+  {
+   "doc": "gjb-9581-2018",
+   "cleanup": {
+    "total": 280,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 280,
+    "status": {
+     "ok": 280
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 115
+   }
+  },
+  {
+   "doc": "hb-20079-2012",
+   "cleanup": {
+    "total": 166,
+    "cleaned": 122,
+    "examples": [
+     {
+      "record_id": "T10-R2-C8",
+      "from": "0Cr12Mn5Ni4Mo3Al",
+      "to": "0Cr12Mn5Ni4Mo3A"
+     },
+     {
+      "record_id": "T10-R2-C9",
+      "from": "0Cr12Mn5Ni4Mo3Al",
+      "to": "0Cr12Mn5Ni4Mo3A"
+     },
+     {
+      "record_id": "T10-R2-C10",
+      "from": "0Cr12Mn5Ni4Mo3Al",
+      "to": "0Cr12Mn5Ni4Mo3A"
+     },
+     {
+      "record_id": "T10-R2-C11",
+      "from": "0Cr12Mn5Ni4Mo3Al",
+      "to": "0Cr12Mn5Ni4Mo3A"
+     },
+     {
+      "record_id": "T10-R2-C13",
+      "from": "0Cr12Mn5Ni4Mo3Al",
+      "to": "0Cr12Mn5Ni4Mo3A"
+     },
+     {
+      "record_id": "T10-R3-C8",
+      "from": "0Cr13Ni8Mo2Al",
+      "to": "0Cr13Ni8Mo2A"
+     },
+     {
+      "record_id": "T10-R3-C9",
+      "from": "0Cr13Ni8Mo2Al",
+      "to": "0Cr13Ni8Mo2A"
+     },
+     {
+      "record_id": "T10-R3-C10",
+      "from": "0Cr13Ni8Mo2Al",
+      "to": "0Cr13Ni8Mo2A"
+     },
+     {
+      "record_id": "T10-R3-C11",
+      "from": "0Cr13Ni8Mo2Al",
+      "to": "0Cr13Ni8Mo2A"
+     },
+     {
+      "record_id": "T10-R3-C12",
+      "from": "0Cr13Ni8Mo2Al",
+      "to": "0Cr13Ni8Mo2A"
+     }
+    ]
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 166,
+    "status": {
+     "ok": 86,
+     "unresolved": 56,
+     "warn": 24
+    },
+    "diagnostics": {
+     "value_conflict": 56,
+     "missing_temperature": 30
+    },
+    "queue": 80,
+    "conflicts": 22,
+    "tables": 15
+   }
+  },
+  {
+   "doc": "iso-5832-3-2021",
+   "cleanup": {
+    "total": 34,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 34,
+    "status": {
+     "unresolved": 33,
+     "ok": 1
+    },
+    "diagnostics": {
+     "value_conflict": 33,
+     "missing_temperature": 26
+    },
+    "queue": 33,
+    "conflicts": 5,
+    "tables": 8
+   }
+  },
+  {
+   "doc": "nbt-47019-8-2011",
+   "cleanup": {
+    "total": 59,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 1,
+    "records": 2,
+    "categories": {
+     "弯曲试验": 2
+    },
+    "examples": [
+     {
+      "table_id": "T3",
+      "records": 2
+     }
+    ]
+   },
+   "verify": {
+    "total": 61,
+    "status": {
+     "ok": 44,
+     "warn": 17
+    },
+    "diagnostics": {
+     "missing_temperature": 17,
+     "value_conflict_insufficient_conditions": 2
+    },
+    "queue": 17,
+    "conflicts": 1,
+    "tables": 10
+   }
+  },
+  {
+   "doc": "xx454-2022",
+   "cleanup": {
+    "total": 23,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 1,
+    "records": 3,
+    "categories": {
+     "室温拉伸": 3
+    },
+    "examples": [
+     {
+      "table_id": "T32",
+      "records": 3
+     }
+    ]
+   },
+   "verify": {
+    "total": 26,
+    "status": {
+     "unresolved": 20,
+     "ok": 3,
+     "warn": 3
+    },
+    "diagnostics": {
+     "value_conflict": 20,
+     "missing_temperature": 3
+    },
+    "queue": 23,
+    "conflicts": 11,
+    "tables": 93
+   }
+  },
+  {
+   "doc": "yst-656-2015",
+   "cleanup": {
+    "total": 126,
+    "cleaned": 0,
+    "examples": []
+   },
+   "recover": {
+    "tables": 0,
+    "records": 0,
+    "categories": {},
+    "examples": []
+   },
+   "verify": {
+    "total": 126,
+    "status": {
+     "ok": 126
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 8
+   }
+  }
+ ]
+}

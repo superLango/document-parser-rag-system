@@ -11,6 +11,9 @@
 - `s3-eval.json`：S3 条件补全后的评测（6698/9724、0.7952、68.88%）
 - `s3-repair-verify-report.json`：S3 修复+验证汇总
 - `s4-eval.json`：S4 牌号修复后的评测（6698/9724、0.7944、68.88%）
+- `s8-eval.json`：S8 结果（6745/9724、0.7930、69.36%）
+- `s8-wild-raw-baseline.json`：原始 v2 + 修正 matcher 的同口径基线（6713/9724、69.04%）
+- `s8-recover-report.json`：S8 恢复+验证汇总
 - `s7-eval.json`：S7 牌号脚注清理后的评测（6700/9724、0.7943、68.90%）
 - `s7-grade-cleanup-report.json`：S7 清理+验证汇总
 - `s7-temp-default-eval.json` / `s7-recover-test-eval.json` / `s7-recover-strict-eval.json`：S7 负向/探索实验
