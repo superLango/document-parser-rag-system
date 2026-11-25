@@ -11,6 +11,7 @@
 - `s3-eval.json`：S3 条件补全后的评测（6698/9724、0.7952、68.88%）
 - `s3-repair-verify-report.json`：S3 修复+验证汇总
 - `s4-eval.json`：S4 牌号修复后的评测（6698/9724、0.7944、68.88%）
+- `s12-full-eval.json`：S12 冻结文档全链路试点（gbt-8547/xx454/hb-20079，139/287）
 - `s11-pilot-eval.json` / `s11-selected4-eval.json`：S11 全表重绑定试点（4 份小文档，不采用）
 - `s10-collapse-test-eval.json`：S10 选择性替换实验（不采用，6752/69.44%）
 - `s10-syn-eval.json`：S10 同义词实验（无变化，6760/69.52%）

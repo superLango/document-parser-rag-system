@@ -1,0 +1,79 @@
+{
+ "docs": 3,
+ "gold": 287,
+ "ours": 235,
+ "matched": 139,
+ "value_exact": 91,
+ "consistency": 0.6547,
+ "coverage": 0.4843,
+ "missing": 148,
+ "extra": 96,
+ "rows": [
+  {
+   "doc": "gbt-8547-2019",
+   "gold": 9,
+   "ours": 8,
+   "matched": 4,
+   "value_exact": 4,
+   "consistency": 1.0,
+   "coverage": 0.4444,
+   "missing": 5,
+   "extra": 4,
+   "missing_by_category": {
+    "热处理制度": 1,
+    "室温拉伸": 2,
+    "弯曲试验": 2
+   },
+   "extra_by_category": {
+    "弯曲试验": 4
+   }
+  },
+  {
+   "doc": "xx454-2022",
+   "gold": 22,
+   "ours": 23,
+   "matched": 12,
+   "value_exact": 12,
+   "consistency": 1.0,
+   "coverage": 0.5455,
+   "missing": 10,
+   "extra": 11,
+   "missing_by_category": {
+    "室温拉伸": 4,
+    "高倍": 6
+   },
+   "extra_by_category": {
+    "化学成分": 11
+   }
+  },
+  {
+   "doc": "hb-20079-2012",
+   "gold": 256,
+   "ours": 204,
+   "matched": 123,
+   "value_exact": 75,
+   "consistency": 0.6098,
+   "coverage": 0.4805,
+   "missing": 133,
+   "extra": 81,
+   "missing_by_category": {
+    "热处理制度": 49,
+    "化学成分": 2,
+    "室温拉伸": 28,
+    "冲击试验": 14,
+    "硬度试验": 9,
+    "高倍": 29,
+    "高温拉伸": 2
+   },
+   "extra_by_category": {
+    "室温拉伸": 12,
+    "冲击试验": 9,
+    "硬度试验": 1,
+    "高温拉伸": 3,
+    "高倍": 16,
+    "化学成分": 2,
+    "热处理制度": 38
+   }
+  }
+ ]
+}
