@@ -1,0 +1,53 @@
+{
+ "docs": 2,
+ "gold": 220,
+ "ours": 196,
+ "matched": 150,
+ "value_exact": 137,
+ "consistency": 0.9133,
+ "coverage": 0.6818,
+ "missing": 70,
+ "extra": 46,
+ "rows": [
+  {
+   "doc": "gbt-2965-2023",
+   "gold": 211,
+   "ours": 189,
+   "matched": 147,
+   "value_exact": 134,
+   "consistency": 0.9116,
+   "coverage": 0.6967,
+   "missing": 64,
+   "extra": 42,
+   "missing_by_category": {
+    "标准信息": 1,
+    "热处理制度": 45,
+    "高倍": 2,
+    "高温拉伸": 16
+   },
+   "extra_by_category": {
+    "室温拉伸": 10,
+    "高温拉伸": 32
+   }
+  },
+  {
+   "doc": "gbt-8547-2019",
+   "gold": 9,
+   "ours": 7,
+   "matched": 3,
+   "value_exact": 3,
+   "consistency": 1.0,
+   "coverage": 0.3333,
+   "missing": 6,
+   "extra": 4,
+   "missing_by_category": {
+    "热处理制度": 1,
+    "室温拉伸": 3,
+    "弯曲试验": 2
+   },
+   "extra_by_category": {
+    "弯曲试验": 4
+   }
+  }
+ ]
+}
