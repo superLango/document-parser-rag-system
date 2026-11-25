@@ -1,61 +1,64 @@
 # CHANGELOG
 
+## [S10] 2026-11-25
+
+### Added
+- `docs/S10-report.md`：后处理天花板评估
+- `eval/s10-collapse-test-eval.json`：选择性替换实验（不采用）
+- `eval/s10-syn-eval.json`：高倍同义词实验（无变化）
+
+### Findings
+- 后处理层已接近天花板：条件/牌号/名称归一到位后，增量规则收益趋近 0
+- S9 仍为最佳：6760/9724、0.7917、69.52%
+- 决策：S11 转"全表重绑定 + 条款通道 + 盲测"，停止后处理增量修补
+
 ## [S9] 2026-11-25
 
 ### Added
-- `channels/table_recover.py`：度量标签修复（跳过条件段/脚注，取有意义标签）
+- `channels/table_recover.py`：度量标签修复（跳过条件段/脚注）
 - `tests/test_table_recover.py` 更新
 - `docs/S9-report.md`
 
 ### Results
-- 恢复记录 36 条（高精度）
-- 修正 matcher 后：6760/9724、一致率 0.7917、覆盖率 69.52%（较 S8 +15 匹配）
-- 同口径原始 v2：6713/9724、69.04%
+- 恢复记录 36 条
+- 修正 matcher 后：6760/9724、0.7917、69.52%（较 S8 +15）
 - 测试：52 passed
 
 ## [S8] 2026-11-25
 
 ### Added
 - `channels/table_recover.py`：缺失度量列恢复
-- `eval/matcher.py`：`全部牌号` 通配语义
-- `scripts/s8_demo.py`
-- `tests/test_table_recover.py`、`tests/test_matcher.py`
+- `eval/matcher.py`：`全部牌号` 通配
+- `scripts/s8_demo.py`、tests
 - `docs/S8-report.md`
 
 ### Results
-- 恢复记录 71 条
 - 修正 matcher 后：6745/9724、0.7930、69.36%
-- 同口径原始 v2：6713/9724、0.7886、69.04%
+- 同口径原始 v2：6713/9724、69.04%
 - 测试：52 passed
 
 ## [S7] 2026-11-25
 
 ### Added
-- `analyze/grade_cleanup.py`：牌号脚注清理
-- `scripts/s7_demo.py`、`tests/test_grade_cleanup.py`
-- `docs/S7-report.md`
+- `analyze/grade_cleanup.py`、`scripts/s7_demo.py`、tests、报告
 
 ### Results
-- 清理牌号 1083 条
-- 评测：6700/9724、0.7943、68.90%
+- 清理牌号 1083 条；评测 6700/9724、0.7943、68.90%
 - 测试：49 passed
 
 ## [S6] 2026-11-25
 
 ### Added
-- DSL 执行器/回放校验/队列审计/盲测占位
-- `docs/S6-report.md`、`docs/S6-audit.md`
+- DSL 执行器/回放/队列审计/盲测占位
 
 ### Results
-- 真实表 gbt-2054 T9：209 条，回放 coverage=1.0
-- 评测：6698/9724、0.7944、68.88%
+- gbt-2054 T9：209 条，回放 coverage=1.0；评测 6698/9724、0.7944、68.88%
 - 测试：47 passed
 
 ## [S5] 2026-11-25
 
 ### Added
-- 证据感知冲突分级、TableIR v1、DSL 规范
-- `docs/S5-report.md`
+- 证据感知冲突分级、TableIR、DSL 规范
 
 ### Results
 - unresolved 1370→820；评测 6698/9724、0.7944、68.88%
@@ -64,19 +67,16 @@
 ## [S4] 2026-11-25
 
 ### Added
-- 数值 Grade/UNS、Grade 列推断、表格牌号修复、评测划分
-- `docs/S4-report.md`
+- 数值 Grade/UNS、Grade 列推断、评测划分
 
 ### Results
-- 牌号解析率 85.65%→91.67%
-- 评测 6698/9724、0.7944、68.88%
+- 牌号解析率 85.65%→91.67%；评测 6698/9724、0.7944、68.88%
 - 测试：39 passed
 
 ## [S3] 2026-11-25
 
 ### Added
 - 条件补全、冲突分级
-- `docs/S3-report.md`
 
 ### Results
 - unresolved 1544→1370；评测 6698/9724、0.7952、68.88%
@@ -86,10 +86,9 @@
 
 ### Added
 - 验证器、牌号修复、评测 matcher/run_eval
-- `docs/S2-report.md`
 
 ### Results
-- 评测器校准 6672/9724、0.7899、68.61%
+- 校准 6672/9724、0.7899、68.61%
 - 保守修复 6698/9724、0.7890、68.88%
 - 测试：34 passed
 
