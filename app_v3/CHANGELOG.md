@@ -1,13 +1,29 @@
 # CHANGELOG
 
+## [S4] 2026-11-25
+
+### Added
+- `normalize/grade.py`：数值 Grade（`32`→`Grade 32`）与 UNS 牌号归一
+- `analyze/grade_columns.py`：无显式 Grade 列时从 UNS 列向左推断 Grade 列
+- `scripts/s4_demo.py`：表格+文档牌号修复演示
+- `tests/test_s4_grade_columns.py`
+- `eval/splits.json`：回归 20 份 / 历史 holdout 6 份
+- `docs/S4-report.md`
+
+### Results
+- 牌号解析率 85.65% → **91.67%**；grade_rejected 1319 → 766
+- 表格牌号修复 520 条；文档级 33 条
+- 评测：6698/9724、一致率 0.7944、覆盖率 68.88%（覆盖率未提升）
+- 测试：39 passed
+
 ## [S3] 2026-11-25
 
 ### Added
-- nalyze/condition_repair.py：从表标题/表头路径/行键补全温度、状态、尺寸、方向
-- erify/conflicts.py：冲突分级（条件不足时 alue_conflict_insufficient_conditions warn）
-- scripts/s3_demo.py：条件补全 + 验证演示
-- 	ests/test_condition_repair.py
-- docs/S3-report.md
+- `analyze/condition_repair.py`：从表标题/表头路径/行键补全温度、状态、尺寸、方向
+- `verify/conflicts.py`：冲突分级（条件不足时 `value_conflict_insufficient_conditions` warn）
+- `scripts/s3_demo.py`：条件补全 + 验证演示
+- `tests/test_condition_repair.py`
+- `docs/S3-report.md`
 
 ### Results
 - 条件修复记录 2281 条；verify unresolved 1544→1370，队列 2356→2161

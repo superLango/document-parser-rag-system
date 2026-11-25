@@ -1,0 +1,1374 @@
+{
+ "total": {
+  "records": 9185,
+  "grade_table": 520,
+  "grade_document": 33,
+  "condition_repaired": 2281,
+  "verify_status": {
+   "unresolved": 1370,
+   "ok": 7024,
+   "warn": 791
+  },
+  "verify_diagnostics": {
+   "value_conflict": 1370,
+   "missing_temperature": 1323,
+   "metadata_evidence_missing": 5,
+   "value_conflict_insufficient_conditions": 11,
+   "missing_unit": 4
+  },
+  "queue": 2161
+ },
+ "documents": [
+  {
+   "doc": "ams-4928x",
+   "grade": {
+    "total": 71,
+    "already_ok": 2,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 69,
+    "document_grades": [],
+    "examples": [
+     {
+      "record_id": "T2-R1-C1",
+      "from": "Aluminum",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C2",
+      "from": "Aluminum",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R2-C1",
+      "from": "Vanadium",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R2-C2",
+      "from": "Vanadium",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R4-C1",
+      "from": "Oxygen",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R4-C2",
+      "from": "Oxygen",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R5-C1",
+      "from": "Carbon",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R5-C2",
+      "from": "Carbon",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R6-C1",
+      "from": "Nitrogen",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R6-C2",
+      "from": "Nitrogen",
+      "to": "",
+      "source": "unresolved"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 71,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 50,
+    "normalized": 50
+   },
+   "verify": {
+    "total": 71,
+    "status": {
+     "unresolved": 52,
+     "ok": 1,
+     "warn": 18
+    },
+    "diagnostics": {
+     "value_conflict": 52,
+     "missing_temperature": 50
+    },
+    "queue": 70,
+    "conflicts": 24,
+    "tables": 4
+   }
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "grade": {
+    "total": 597,
+    "already_ok": 100,
+    "repaired_from_table": 201,
+    "repaired_from_document": 0,
+    "unresolved": 296,
+    "document_grades": [
+     {
+      "grade": "Grade 2",
+      "aliases": [],
+      "count": 7
+     },
+     {
+      "grade": "Grade 2H",
+      "aliases": [],
+      "count": 5
+     },
+     {
+      "grade": "Grade 16",
+      "aliases": [],
+      "count": 5
+     },
+     {
+      "grade": "Grade 7",
+      "aliases": [],
+      "count": 4
+     },
+     {
+      "grade": "Grade 3",
+      "aliases": [],
+      "count": 3
+     }
+    ],
+    "examples": [
+     {
+      "record_id": "T11-R4-C1",
+      "from": "Over 10 (3.05)",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C2",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C3",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C4",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C6",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C7",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C8",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C9",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C10",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T2-R1-C11",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 597,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 204,
+    "normalized": 204
+   },
+   "verify": {
+    "total": 597,
+    "status": {
+     "warn": 28,
+     "ok": 392,
+     "unresolved": 177
+    },
+    "diagnostics": {
+     "missing_temperature": 205,
+     "value_conflict": 177
+    },
+    "queue": 205,
+    "conflicts": 60,
+    "tables": 11
+   }
+  },
+  {
+   "doc": "astm-b348-25",
+   "grade": {
+    "total": 348,
+    "already_ok": 24,
+    "repaired_from_table": 319,
+    "repaired_from_document": 0,
+    "unresolved": 5,
+    "document_grades": [
+     {
+      "grade": "Grade 2",
+      "aliases": [],
+      "count": 7
+     },
+     {
+      "grade": "Grade 2H",
+      "aliases": [],
+      "count": 7
+     },
+     {
+      "grade": "Grade 7",
+      "aliases": [],
+      "count": 2
+     },
+     {
+      "grade": "Grade 16",
+      "aliases": [],
+      "count": 2
+     },
+     {
+      "grade": "Grade 26",
+      "aliases": [],
+      "count": 2
+     }
+    ],
+    "examples": [
+     {
+      "record_id": "T1-R1-C2",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C3",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C4",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C6",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C7",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C8",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C12",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C15",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C17",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     },
+     {
+      "record_id": "T1-R1-C18",
+      "from": "32",
+      "to": "Grade 32",
+      "source": "table:T1:row1"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 348,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 283,
+    "normalized": 283
+   },
+   "verify": {
+    "total": 348,
+    "status": {
+     "ok": 60,
+     "unresolved": 222,
+     "warn": 66
+    },
+    "diagnostics": {
+     "metadata_evidence_missing": 5,
+     "value_conflict": 222,
+     "missing_temperature": 283
+    },
+    "queue": 288,
+    "conflicts": 97,
+    "tables": 12
+   }
+  },
+  {
+   "doc": "gbt-14976-2025",
+   "grade": {
+    "total": 507,
+    "already_ok": 353,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 154,
+    "document_grades": [],
+    "examples": [
+     {
+      "record_id": "T18-R2-C1",
+      "from": "试样尺寸(宽度×厚度)mm×mm",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R2-C2",
+      "from": "试样尺寸(宽度×厚度)mm×mm",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R2-C5",
+      "from": "试样尺寸(宽度×厚度)mm×mm",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R3-C1",
+      "from": "10×10",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R3-C2",
+      "from": "10×10",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R3-C3",
+      "from": "10×10",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R3-C4",
+      "from": "10×10",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R3-C5",
+      "from": "10×10",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R4-C1",
+      "from": "10×7.5",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T18-R4-C2",
+      "from": "10×7.5",
+      "to": "",
+      "source": "unresolved"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 507,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 93,
+    "normalized": 93
+   },
+   "verify": {
+    "total": 507,
+    "status": {
+     "ok": 415,
+     "unresolved": 76,
+     "warn": 16
+    },
+    "diagnostics": {
+     "value_conflict": 76,
+     "missing_temperature": 56
+    },
+    "queue": 92,
+    "conflicts": 40,
+    "tables": 25
+   }
+  },
+  {
+   "doc": "gbt-2054-2023",
+   "grade": {
+    "total": 202,
+    "already_ok": 201,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 202,
+    "temperature": 0,
+    "state": 7,
+    "size": 0,
+    "direction": 0,
+    "normalized": 7
+   },
+   "verify": {
+    "total": 202,
+    "status": {
+     "warn": 7,
+     "ok": 195
+    },
+    "diagnostics": {
+     "missing_temperature": 7
+    },
+    "queue": 7,
+    "conflicts": 0,
+    "tables": 14
+   }
+  },
+  {
+   "doc": "gbt-2965-2023",
+   "grade": {
+    "total": 189,
+    "already_ok": 179,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 10,
+    "document_grades": [],
+    "examples": [
+     {
+      "record_id": "T52-R1-C1",
+      "from": "1",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R2-C1",
+      "from": "2",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R3-C1",
+      "from": "3",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R4-C1",
+      "from": "4",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R5-C1",
+      "from": "5",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R6-C1",
+      "from": "6",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R7-C1",
+      "from": "7",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R8-C1",
+      "from": "8",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R9-C1",
+      "from": "9",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T52-R10-C1",
+      "from": "10",
+      "to": "",
+      "source": "unresolved"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 189,
+    "temperature": 48,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 48
+   },
+   "verify": {
+    "total": 189,
+    "status": {
+     "ok": 181,
+     "unresolved": 8
+    },
+    "diagnostics": {
+     "value_conflict": 8
+    },
+    "queue": 8,
+    "conflicts": 4,
+    "tables": 115
+   }
+  },
+  {
+   "doc": "gbt-3077-2015",
+   "grade": {
+    "total": 1321,
+    "already_ok": 1213,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 108,
+    "document_grades": [],
+    "examples": [
+     {
+      "record_id": "T10-R20-C10",
+      "from": "33",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R20-C11",
+      "from": "33",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R20-C12",
+      "from": "33",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R20-C13",
+      "from": "33",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R20-C14",
+      "from": "33",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R20-C15",
+      "from": "33",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R20-HEAT4",
+      "from": "33",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R20-HEAT5",
+      "from": "33",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T11-R13-C4",
+      "from": "43",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T11-R13-C5",
+      "from": "43",
+      "to": "",
+      "source": "unresolved"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 1321,
+    "temperature": 367,
+    "state": 889,
+    "size": 0,
+    "direction": 0,
+    "normalized": 889
+   },
+   "verify": {
+    "total": 1321,
+    "status": {
+     "ok": 875,
+     "warn": 280,
+     "unresolved": 166
+    },
+    "diagnostics": {
+     "missing_temperature": 280,
+     "value_conflict": 166,
+     "value_conflict_insufficient_conditions": 6
+    },
+    "queue": 446,
+    "conflicts": 106,
+    "tables": 24
+   }
+  },
+  {
+   "doc": "gbt-3620-1-2016",
+   "grade": {
+    "total": 907,
+    "already_ok": 906,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [
+     {
+      "grade": "6Al-4V",
+      "aliases": [
+       "Ti-6Al-4V"
+      ],
+      "count": 2
+     },
+     {
+      "grade": "Ti-5Al-4V",
+      "aliases": [
+       "5Al-4V"
+      ],
+      "count": 1
+     },
+     {
+      "grade": "Ti-6Al-4V",
+      "aliases": [
+       "6Al-4V"
+      ],
+      "count": 1
+     },
+     {
+      "grade": "Ti-6Al-6V",
+      "aliases": [
+       "6Al-6V"
+      ],
+      "count": 1
+     },
+     {
+      "grade": "5Al-3V",
+      "aliases": [
+       "Ti-5Al-3V"
+      ],
+      "count": 1
+     }
+    ],
+    "examples": []
+   },
+   "conditions": {
+    "total": 907,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 907,
+    "status": {
+     "ok": 833,
+     "unresolved": 74
+    },
+    "diagnostics": {
+     "value_conflict": 74
+    },
+    "queue": 74,
+    "conflicts": 34,
+    "tables": 22
+   }
+  },
+  {
+   "doc": "gbt-3623-2022",
+   "grade": {
+    "total": 266,
+    "already_ok": 265,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 266,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 266,
+    "status": {
+     "ok": 266
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 12
+   }
+  },
+  {
+   "doc": "gbt-5231-2022",
+   "grade": {
+    "total": 2703,
+    "already_ok": 2610,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 93,
+    "document_grades": [],
+    "examples": [
+     {
+      "record_id": "T16-R150-C2",
+      "from": "分类",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R150-C3",
+      "from": "分类",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R150-C4",
+      "from": "分类",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R150-C5",
+      "from": "分类",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R151-C3",
+      "from": "分类",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R151-C4",
+      "from": "分类",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R151-C5",
+      "from": "分类",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R152-C2",
+      "from": "无氧铜",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R152-C3",
+      "from": "无氧铜",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T16-R152-C4",
+      "from": "无氧铜",
+      "to": "",
+      "source": "unresolved"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 2703,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 2703,
+    "status": {
+     "ok": 2573,
+     "unresolved": 130
+    },
+    "diagnostics": {
+     "value_conflict": 130
+    },
+    "queue": 130,
+    "conflicts": 58,
+    "tables": 83
+   }
+  },
+  {
+   "doc": "gbt-8547-2019",
+   "grade": {
+    "total": 1,
+    "already_ok": 0,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 1,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 1,
+    "status": {
+     "ok": 1
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 22
+   }
+  },
+  {
+   "doc": "gjb-1951a-2020",
+   "grade": {
+    "total": 573,
+    "already_ok": 545,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 28,
+    "document_grades": [],
+    "examples": [
+     {
+      "record_id": "T107-R2-C1",
+      "from": "电弧炉+真空精炼",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T122-R4-C2",
+      "from": "电弧炉+真空精炼",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T122-R4-C6",
+      "from": "电弧炉+真空精炼",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T122-R5-C1",
+      "from": "电弧炉+电渣重熔 电弧炉+真空精炼+电渣重熔 非真空感应炉+电渣重熔",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T122-R5-C5",
+      "from": "电弧炉+电渣重熔 电弧炉+真空精炼+电渣重熔 非真空感应炉+电渣重熔",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T78-R2-C1",
+      "from": "电弧炉加真空精炼",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T78-R2-C2",
+      "from": "电弧炉加真空精炼",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T78-R2-C3",
+      "from": "电弧炉加真空精炼",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T78-R2-C4",
+      "from": "电弧炉加真空精炼",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T78-R2-C5",
+      "from": "电弧炉加真空精炼",
+      "to": "",
+      "source": "unresolved"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 573,
+    "temperature": 0,
+    "state": 362,
+    "size": 0,
+    "direction": 0,
+    "normalized": 362
+   },
+   "verify": {
+    "total": 573,
+    "status": {
+     "warn": 283,
+     "unresolved": 42,
+     "ok": 248
+    },
+    "diagnostics": {
+     "missing_temperature": 303,
+     "value_conflict": 42,
+     "value_conflict_insufficient_conditions": 5
+    },
+    "queue": 325,
+    "conflicts": 21,
+    "tables": 229
+   }
+  },
+  {
+   "doc": "gjb-2296a-2005",
+   "grade": {
+    "total": 30,
+    "already_ok": 29,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 30,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 30,
+    "status": {
+     "ok": 24,
+     "warn": 6
+    },
+    "diagnostics": {
+     "missing_temperature": 6
+    },
+    "queue": 6,
+    "conflicts": 0,
+    "tables": 95
+   }
+  },
+  {
+   "doc": "gjb-2351a-2021",
+   "grade": {
+    "total": 782,
+    "already_ok": 777,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 5,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 782,
+    "temperature": 0,
+    "state": 11,
+    "size": 0,
+    "direction": 219,
+    "normalized": 219
+   },
+   "verify": {
+    "total": 782,
+    "status": {
+     "ok": 420,
+     "unresolved": 314,
+     "warn": 48
+    },
+    "diagnostics": {
+     "value_conflict": 314,
+     "missing_unit": 4,
+     "missing_temperature": 62
+    },
+    "queue": 362,
+    "conflicts": 130,
+    "tables": 250
+   }
+  },
+  {
+   "doc": "gjb-9581-2018",
+   "grade": {
+    "total": 280,
+    "already_ok": 279,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 280,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 280,
+    "status": {
+     "ok": 280
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 115
+   }
+  },
+  {
+   "doc": "hb-20079-2012",
+   "grade": {
+    "total": 166,
+    "already_ok": 159,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 7,
+    "document_grades": [],
+    "examples": [
+     {
+      "record_id": "T10-R10-C8",
+      "from": "45",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R10-C9",
+      "from": "45",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R10-C10",
+      "from": "45",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R10-C14",
+      "from": "45",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R17-C9",
+      "from": "11",
+      "to": "",
+      "source": "unresolved"
+     },
+     {
+      "record_id": "T10-R17-C10",
+      "from": "11",
+      "to": "",
+      "source": "unresolved"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 166,
+    "temperature": 5,
+    "state": 90,
+    "size": 0,
+    "direction": 10,
+    "normalized": 100
+   },
+   "verify": {
+    "total": 166,
+    "status": {
+     "ok": 86,
+     "unresolved": 56,
+     "warn": 24
+    },
+    "diagnostics": {
+     "value_conflict": 56,
+     "missing_temperature": 30
+    },
+    "queue": 80,
+    "conflicts": 22,
+    "tables": 15
+   }
+  },
+  {
+   "doc": "iso-5832-3-2021",
+   "grade": {
+    "total": 34,
+    "already_ok": 1,
+    "repaired_from_table": 0,
+    "repaired_from_document": 33,
+    "unresolved": 0,
+    "document_grades": [
+     {
+      "grade": "Ti-6Al-4V",
+      "aliases": [
+       "6Al-4V"
+      ],
+      "count": 2
+     }
+    ],
+    "examples": [
+     {
+      "record_id": "T4-R1-C1",
+      "from": "Aluminium",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T4-R2-C1",
+      "from": "Vanadium",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T4-R4-C1",
+      "from": "Oxygen",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T4-R5-C1",
+      "from": "Carbon",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T4-R6-C1",
+      "from": "Nitrogen",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T4-R7-C1",
+      "from": "Hydrogen",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T4-R8-C1",
+      "from": "Titanium",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T5-R3-C1",
+      "from": "Sheet and stripc",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T5-R3-C2",
+      "from": "Sheet and stripc",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     },
+     {
+      "record_id": "T5-R3-C3",
+      "from": "Sheet and stripc",
+      "to": "Ti-6Al-4V",
+      "source": "document_grade"
+     }
+    ]
+   },
+   "conditions": {
+    "total": 34,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 26,
+    "normalized": 26
+   },
+   "verify": {
+    "total": 34,
+    "status": {
+     "unresolved": 33,
+     "ok": 1
+    },
+    "diagnostics": {
+     "value_conflict": 33,
+     "missing_temperature": 26
+    },
+    "queue": 33,
+    "conflicts": 5,
+    "tables": 8
+   }
+  },
+  {
+   "doc": "nbt-47019-8-2011",
+   "grade": {
+    "total": 59,
+    "already_ok": 58,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 59,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 59,
+    "status": {
+     "ok": 44,
+     "warn": 15
+    },
+    "diagnostics": {
+     "missing_temperature": 15
+    },
+    "queue": 15,
+    "conflicts": 0,
+    "tables": 10
+   }
+  },
+  {
+   "doc": "xx454-2022",
+   "grade": {
+    "total": 23,
+    "already_ok": 22,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 23,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 23,
+    "status": {
+     "unresolved": 20,
+     "ok": 3
+    },
+    "diagnostics": {
+     "value_conflict": 20
+    },
+    "queue": 20,
+    "conflicts": 11,
+    "tables": 93
+   }
+  },
+  {
+   "doc": "yst-656-2015",
+   "grade": {
+    "total": 126,
+    "already_ok": 125,
+    "repaired_from_table": 0,
+    "repaired_from_document": 0,
+    "unresolved": 1,
+    "document_grades": [],
+    "examples": []
+   },
+   "conditions": {
+    "total": 126,
+    "temperature": 0,
+    "state": 0,
+    "size": 0,
+    "direction": 0,
+    "normalized": 0
+   },
+   "verify": {
+    "total": 126,
+    "status": {
+     "ok": 126
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 8
+   }
+  }
+ ]
+}

@@ -1,6 +1,7 @@
 """表格牌号列分析：识别牌号列并解析行内牌号。"""
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from app_v3.normalize.grade import header_is_grade_column, parse_grade_cell
@@ -28,7 +29,22 @@ def table_headers(table: dict[str, Any]) -> list[str]:
 def analyze_table_grades(table: dict[str, Any]) -> dict[str, Any]:
     headers = table_headers(table)
     grade_columns = [index for index, header in enumerate(headers) if header_is_grade_column(header)]
+    if grade_columns and all("uns" in headers[index].lower() for index in grade_columns):
+        grade_columns = []
     rows = table.get("rows") or []
+    header_rows = int(table.get("header_rows") or 1)
+    inferred_headers: dict[int, str] = {}
+    if not grade_columns:
+        uns_columns = [index for index, header in enumerate(headers) if "uns" in header.lower()]
+        for uns in uns_columns:
+            for column in range(uns - 1, -1, -1):
+                values = [str(row[column]).strip() for row in rows[header_rows:]
+                          if column < len(row) and str(row[column]).strip()]
+                numeric = [value for value in values if re.fullmatch(r"\d{1,3}[A-Za-z]?", value)]
+                if values and len(numeric) >= max(2, int(len(values) * 0.6)):
+                    grade_columns.append(column)
+                    inferred_headers[column] = "Grade (inferred)"
+                    break
     header_rows = int(table.get("header_rows") or 1)
     row_grades: dict[int, list[dict[str, Any]]] = {}
     rejected: list[dict[str, Any]] = []
@@ -38,7 +54,8 @@ def analyze_table_grades(table: dict[str, Any]) -> dict[str, Any]:
         for column in grade_columns:
             if column >= len(row):
                 continue
-            parsed = parse_grade_cell(row[column], header=headers[column] if column < len(headers) else "牌号")
+            header_text = inferred_headers.get(column) or (headers[column] if column < len(headers) else "牌号")
+            parsed = parse_grade_cell(row[column], header=header_text)
             grades.extend(parsed.get("grades") or [])
             for value in parsed.get("rejected") or []:
                 rejected.append({"row": row_index, "column": column, "value": value})

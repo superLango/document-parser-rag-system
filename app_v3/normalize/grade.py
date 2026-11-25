@@ -129,6 +129,12 @@ def parse_grade_cell(value: Any, header: str = "") -> dict[str, list[Any]]:
         if is_header_phrase(stripped):
             rejected.append(candidate)
             continue
+        if in_grade_column and "grade" in header.lower() and re.fullmatch(r"\d{1,3}[A-Za-z]?", stripped):
+            result.append(normalize_grade(f"Grade {stripped}"))
+            continue
+        if in_grade_column and "uns" in header.lower() and re.fullmatch(r"[A-Z]\d{5}", stripped):
+            result.append({"grade": f"UNS {stripped}", "aliases": [stripped]})
+            continue
         if is_state_code(stripped) and not in_grade_column:
             rejected.append(candidate)
             continue
