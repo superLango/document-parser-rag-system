@@ -10,6 +10,10 @@
 - `s2-repair-verify-report.json`：S2 修复+验证汇总
 - `s3-eval.json`：S3 条件补全后的评测（6698/9724、0.7952、68.88%）
 - `s3-repair-verify-report.json`：S3 修复+验证汇总
+- `s4-eval.json`：S4 牌号修复后的评测（6698/9724、0.7944、68.88%）
+- `s4-repair-verify-report.json`：S4 修复+验证汇总
+- `s4-normalization-report.json`：S4 后牌号解析率（91.67%）
+- `splits.json`：回归 20 份 / 历史 holdout 6 份划分
 - `run_eval.py`（在 `eval/run_eval.py`）：固定评测入口
 
 ## 评测口径（固定）
