@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [S3] 2026-11-25
+
+### Added
+- nalyze/condition_repair.py：从表标题/表头路径/行键补全温度、状态、尺寸、方向
+- erify/conflicts.py：冲突分级（条件不足时 alue_conflict_insufficient_conditions warn）
+- scripts/s3_demo.py：条件补全 + 验证演示
+- 	ests/test_condition_repair.py
+- docs/S3-report.md
+
+### Results
+- 条件修复记录 2281 条；verify unresolved 1544→1370，队列 2356→2161
+- 评测：6698/9724，一致率 0.7952（+0.62pp），覆盖率 68.88%
+
 ## [S2] 2026-11-25
 
 ### Added
