@@ -1,0 +1,35 @@
+{
+ "docs": 1,
+ "gold": 1168,
+ "ours": 772,
+ "matched": 255,
+ "value_exact": 226,
+ "consistency": 0.8863,
+ "coverage": 0.2183,
+ "missing": 913,
+ "extra": 517,
+ "rows": [
+  {
+   "doc": "gbt-3077-2015",
+   "gold": 1168,
+   "ours": 772,
+   "matched": 255,
+   "value_exact": 226,
+   "consistency": 0.8863,
+   "coverage": 0.2183,
+   "missing": 913,
+   "extra": 517,
+   "missing_by_category": {
+    "标准信息": 1,
+    "化学成分": 359,
+    "室温拉伸": 344,
+    "冲击试验": 85,
+    "硬度试验": 86,
+    "高倍": 38
+   },
+   "extra_by_category": {
+    "热处理制度": 517
+   }
+  }
+ ]
+}
