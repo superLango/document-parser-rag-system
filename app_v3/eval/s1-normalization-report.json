@@ -1,0 +1,597 @@
+{
+ "total": 9185,
+ "status": {
+  "warn": 1323,
+  "ok": 7862
+ },
+ "categories": {
+  "化学成分": 5742,
+  "室温拉伸": 2354,
+  "弯曲试验": 1,
+  "标准信息": 19,
+  "热处理制度": 571,
+  "冲击试验": 186,
+  "高倍": 34,
+  "硬度试验": 153,
+  "高温拉伸": 105,
+  "持久试验": 18,
+  "其他": 2
+ },
+ "diagnostics": {
+  "grade_rejected": 1319,
+  "missing_grade": 4
+ },
+ "grade_resolved": 7867,
+ "grade_resolved_rate": 0.8565,
+ "documents": 20,
+ "grade_rejected_examples": [
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Aluminum",
+   "item": "Al",
+   "requirement": "≤5.50"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Aluminum",
+   "item": "Al",
+   "requirement": "≤6.75"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Vanadium",
+   "item": "Al",
+   "requirement": "≤3.50"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Vanadium",
+   "item": "Al",
+   "requirement": "≤4.50"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Oxygen",
+   "item": "Al",
+   "requirement": "≤--"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Oxygen",
+   "item": "Al",
+   "requirement": "≤0.20"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Carbon",
+   "item": "Al",
+   "requirement": "≤--"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Carbon",
+   "item": "Al",
+   "requirement": "≤0.08"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Nitrogen",
+   "item": "Al",
+   "requirement": "≤--"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Nitrogen",
+   "item": "Al",
+   "requirement": "≤0.05"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Hydrogen(see 3.1.1)",
+   "item": "Al",
+   "requirement": "≤--"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Hydrogen(see 3.1.1)",
+   "item": "Al",
+   "requirement": "≤0.0125"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Yttrium(see 3.1.2)",
+   "item": "Al",
+   "requirement": "≤--"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Yttrium(see 3.1.2)",
+   "item": "Al",
+   "requirement": "≤0.005"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Other Elements,each(see 3.1.2)",
+   "item": "Al",
+   "requirement": "≤--"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Other Elements,each(see 3.1.2)",
+   "item": "Al",
+   "requirement": "≤0.10"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Other Elements,total(see 3.1.2)",
+   "item": "Al",
+   "requirement": "≤--"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Other Elements,total(see 3.1.2)",
+   "item": "Al",
+   "requirement": "≤0.40"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Titanium",
+   "item": "Al",
+   "requirement": "≤remainder"
+  },
+  {
+   "doc": "ams-4928x",
+   "raw_grade": "Up to 2.000,incl(1)",
+   "item": "抗拉强度(Rm)",
+   "requirement": "135"
+  }
+ ],
+ "item_normalized_examples": [
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（单一）",
+   "normalized": "其他元素(单一)"
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "raw": "其他元素（总和）",
+   "normalized": "其他元素(总和)"
+  }
+ ],
+ "per_document": [
+  {
+   "doc": "ams-4928x",
+   "total": 71,
+   "status": {
+    "warn": 69,
+    "ok": 2
+   },
+   "categories": {
+    "化学成分": 21,
+    "室温拉伸": 50
+   },
+   "diagnostics": {
+    "grade_rejected": 69
+   },
+   "grade_resolved": 2,
+   "grade_resolved_rate": 0.0282
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "total": 597,
+   "status": {
+    "warn": 497,
+    "ok": 100
+   },
+   "categories": {
+    "弯曲试验": 1,
+    "化学成分": 392,
+    "室温拉伸": 204
+   },
+   "diagnostics": {
+    "grade_rejected": 497
+   },
+   "grade_resolved": 100,
+   "grade_resolved_rate": 0.1675
+  },
+  {
+   "doc": "astm-b348-25",
+   "total": 348,
+   "status": {
+    "warn": 324,
+    "ok": 24
+   },
+   "categories": {
+    "化学成分": 60,
+    "标准信息": 5,
+    "室温拉伸": 283
+   },
+   "diagnostics": {
+    "grade_rejected": 324
+   },
+   "grade_resolved": 29,
+   "grade_resolved_rate": 0.0833
+  },
+  {
+   "doc": "gbt-14976-2025",
+   "total": 507,
+   "status": {
+    "ok": 354,
+    "warn": 153
+   },
+   "categories": {
+    "热处理制度": 22,
+    "室温拉伸": 147,
+    "冲击试验": 56,
+    "化学成分": 281,
+    "标准信息": 1
+   },
+   "diagnostics": {
+    "grade_rejected": 153
+   },
+   "grade_resolved": 354,
+   "grade_resolved_rate": 0.6982
+  },
+  {
+   "doc": "gbt-2054-2023",
+   "total": 202,
+   "status": {
+    "ok": 202
+   },
+   "categories": {
+    "高倍": 7,
+    "室温拉伸": 177,
+    "硬度试验": 17,
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 202,
+   "grade_resolved_rate": 1.0
+  },
+  {
+   "doc": "gbt-2965-2023",
+   "total": 189,
+   "status": {
+    "warn": 10,
+    "ok": 179
+   },
+   "categories": {
+    "室温拉伸": 141,
+    "高温拉伸": 32,
+    "持久试验": 16
+   },
+   "diagnostics": {
+    "grade_rejected": 10
+   },
+   "grade_resolved": 179,
+   "grade_resolved_rate": 0.9471
+  },
+  {
+   "doc": "gbt-3077-2015",
+   "total": 1321,
+   "status": {
+    "ok": 1213,
+    "warn": 108
+   },
+   "categories": {
+    "化学成分": 426,
+    "室温拉伸": 342,
+    "冲击试验": 86,
+    "硬度试验": 8,
+    "热处理制度": 453,
+    "高倍": 6
+   },
+   "diagnostics": {
+    "grade_rejected": 108
+   },
+   "grade_resolved": 1213,
+   "grade_resolved_rate": 0.9182
+  },
+  {
+   "doc": "gbt-3620-1-2016",
+   "total": 907,
+   "status": {
+    "ok": 907
+   },
+   "categories": {
+    "化学成分": 906,
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 907,
+   "grade_resolved_rate": 1.0
+  },
+  {
+   "doc": "gbt-3623-2022",
+   "total": 266,
+   "status": {
+    "ok": 266
+   },
+   "categories": {
+    "化学成分": 211,
+    "室温拉伸": 54,
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 266,
+   "grade_resolved_rate": 1.0
+  },
+  {
+   "doc": "gbt-5231-2022",
+   "total": 2703,
+   "status": {
+    "warn": 92,
+    "ok": 2611
+   },
+   "categories": {
+    "化学成分": 2702,
+    "标准信息": 1
+   },
+   "diagnostics": {
+    "grade_rejected": 92
+   },
+   "grade_resolved": 2611,
+   "grade_resolved_rate": 0.966
+  },
+  {
+   "doc": "gbt-8547-2019",
+   "total": 1,
+   "status": {
+    "ok": 1
+   },
+   "categories": {
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 1,
+   "grade_resolved_rate": 1.0
+  },
+  {
+   "doc": "gjb-1951a-2020",
+   "total": 573,
+   "status": {
+    "ok": 546,
+    "warn": 27
+   },
+   "categories": {
+    "室温拉伸": 193,
+    "冲击试验": 35,
+    "硬度试验": 70,
+    "热处理制度": 81,
+    "高倍": 5,
+    "化学成分": 188,
+    "标准信息": 1
+   },
+   "diagnostics": {
+    "grade_rejected": 27
+   },
+   "grade_resolved": 546,
+   "grade_resolved_rate": 0.9529
+  },
+  {
+   "doc": "gjb-2296a-2005",
+   "total": 30,
+   "status": {
+    "ok": 30
+   },
+   "categories": {
+    "化学成分": 23,
+    "室温拉伸": 6,
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 30,
+   "grade_resolved_rate": 1.0
+  },
+  {
+   "doc": "gjb-2351a-2021",
+   "total": 782,
+   "status": {
+    "ok": 778,
+    "warn": 4
+   },
+   "categories": {
+    "热处理制度": 15,
+    "化学成分": 4,
+    "室温拉伸": 650,
+    "硬度试验": 48,
+    "高温拉伸": 60,
+    "其他": 2,
+    "持久试验": 2,
+    "标准信息": 1
+   },
+   "diagnostics": {
+    "missing_grade": 4
+   },
+   "grade_resolved": 778,
+   "grade_resolved_rate": 0.9949
+  },
+  {
+   "doc": "gjb-9581-2018",
+   "total": 280,
+   "status": {
+    "ok": 280
+   },
+   "categories": {
+    "化学成分": 271,
+    "室温拉伸": 8,
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 280,
+   "grade_resolved_rate": 1.0
+  },
+  {
+   "doc": "hb-20079-2012",
+   "total": 166,
+   "status": {
+    "ok": 160,
+    "warn": 6
+   },
+   "categories": {
+    "室温拉伸": 58,
+    "冲击试验": 9,
+    "硬度试验": 10,
+    "高温拉伸": 13,
+    "高倍": 16,
+    "化学成分": 59,
+    "标准信息": 1
+   },
+   "diagnostics": {
+    "grade_rejected": 6
+   },
+   "grade_resolved": 160,
+   "grade_resolved_rate": 0.9639
+  },
+  {
+   "doc": "iso-5832-3-2021",
+   "total": 34,
+   "status": {
+    "warn": 33,
+    "ok": 1
+   },
+   "categories": {
+    "化学成分": 8,
+    "室温拉伸": 26
+   },
+   "diagnostics": {
+    "grade_rejected": 33
+   },
+   "grade_resolved": 1,
+   "grade_resolved_rate": 0.0294
+  },
+  {
+   "doc": "nbt-47019-8-2011",
+   "total": 59,
+   "status": {
+    "ok": 59
+   },
+   "categories": {
+    "化学成分": 43,
+    "室温拉伸": 15,
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 59,
+   "grade_resolved_rate": 1.0
+  },
+  {
+   "doc": "xx454-2022",
+   "total": 23,
+   "status": {
+    "ok": 23
+   },
+   "categories": {
+    "化学成分": 22,
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 23,
+   "grade_resolved_rate": 1.0
+  },
+  {
+   "doc": "yst-656-2015",
+   "total": 126,
+   "status": {
+    "ok": 126
+   },
+   "categories": {
+    "化学成分": 125,
+    "标准信息": 1
+   },
+   "diagnostics": {},
+   "grade_resolved": 126,
+   "grade_resolved_rate": 1.0
+  }
+ ]
+}

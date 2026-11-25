@@ -1,0 +1,46 @@
+{
+  "schema_version": "conditions.v1",
+  "description": "规范条件维度与取值约定（app_v3）",
+  "dimensions": {
+    "试验温度": {
+      "description": "室温/高温/低温；无单位时统一加 ℃",
+      "room_values": ["室温", "常温", "RT", "room", "ambient"],
+      "high_threshold_c": 50,
+      "examples": ["室温", "100℃", "-196℃"]
+    },
+    "试样状态": {
+      "description": "材料状态；优先保留文档原文全称，同时给代号",
+      "examples": ["软态(M)", "冷加工态(Y)", "半硬态(Y2)", "固溶退火态(ST)", "退火"]
+    },
+    "尺寸厚度": {
+      "description": "尺寸/厚度范围，统一 mm",
+      "unit": "mm",
+      "examples": ["≤1.5mm", ">1.5~4.0mm", "所有厚度"]
+    },
+    "方向": {
+      "description": "取样/试验方向",
+      "examples": ["纵向", "横向", "短横向", "轴向", "径向"]
+    },
+    "位置": {
+      "description": "取样位置/部位",
+      "examples": ["任一张或卷", "低倍试片", "按 GB/T 2975"]
+    },
+    "试验方法": {
+      "description": "引用标准/方法编号",
+      "examples": ["GB/T 228.1-2021", "ASTM E8/E8M"]
+    },
+    "取样数量": {
+      "description": "取样数量/批次要求",
+      "examples": ["1个/批", "3个/批"]
+    },
+    "取样说明": {
+      "description": "取样/复验说明（长文本）"
+    },
+    "锻件类型": {
+      "description": "产品/锻件/型材类型"
+    },
+    "其他": {
+      "description": "其他类型条件（显式保留，不丢弃）"
+    }
+  }
+}

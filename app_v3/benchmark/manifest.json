@@ -1,0 +1,484 @@
+{
+ "schema_version": "benchmark.v1",
+ "created_at": "2026-11-25 22:04:57",
+ "description": "app_v3 基准数据：20 份批量测试 + 6 份早期文档（共 26 份 PDF + 对照 JSON）",
+ "notes": [
+  "PDF 为本地备份（体积较大，默认不入 git）；gold JSON 与 manifest 入库。",
+  "baseline_v2 为冻结版 v2 路线的历史指标，仅作对照，不用于调参。",
+  "评测时必须使用固定 gold 与盲测集；不得用 gold 反推规则。"
+ ],
+ "counts": {
+  "documents": 26,
+  "gold": 26
+ },
+ "documents": [
+  {
+   "id": "asme-sb338-2025",
+   "pdf": "docs\\asme-sb338-2025.pdf",
+   "gold": "gold\\asme-sb338-2025.json",
+   "pdf_sha256": "559259f41c886c9ce407a7d458573250c9c7d137b05796ed047e8c1d6ce7a0a0",
+   "gold_sha256": "2d6ea1ba89649245af5c13332ad33f2f5ac9151dc7f9ad5a8b4d659c798ba447",
+   "pdf_bytes": 156020,
+   "gold_bytes": 260697,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 219,
+    "value_exact": null,
+    "consistency": 0.6073,
+    "coverage": null,
+    "seconds": 131.1,
+    "gold_total": 337
+   }
+  },
+  {
+   "id": "ams-4928x",
+   "pdf": "docs\\ams-4928x.pdf",
+   "gold": "gold\\ams-4928x.json",
+   "pdf_sha256": "345d8fb562e81318a581d2592add9eb7e9106f9838755d8b5ea5b92e63059b59",
+   "gold_sha256": "f7f8100e5b83ad5db35853286fad4a5f5ca7ef6ecb53ae3ed60813bef217c724",
+   "pdf_bytes": 198333,
+   "gold_bytes": 62588,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 0,
+    "value_exact": null,
+    "consistency": 0.0,
+    "coverage": null,
+    "seconds": 39.1,
+    "gold_total": 52
+   }
+  },
+  {
+   "id": "iso-5832-3-2021",
+   "pdf": "docs\\iso-5832-3-2021.pdf",
+   "gold": "gold\\iso-5832-3-2021.json",
+   "pdf_sha256": "daaf65893851ff2a95b06552b6c41dc3b36ee88ca0f52829d37094b5c63b1261",
+   "gold_sha256": "4fa0a37b91a9371faf46fc691360db4ef59d377f10968ac01c0882f90ccb834f",
+   "pdf_bytes": 993509,
+   "gold_bytes": 64042,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 0,
+    "value_exact": null,
+    "consistency": 0.0,
+    "coverage": null,
+    "seconds": 80.8,
+    "gold_total": 76
+   }
+  },
+  {
+   "id": "hb-20079-2012",
+   "pdf": "docs\\hb-20079-2012.pdf",
+   "gold": "gold\\hb-20079-2012.json",
+   "pdf_sha256": "f5f7880582162ac00a44e0db03ed9834a88c06c21ac5c9c01ea6bcd0c7cd9d05",
+   "gold_sha256": "61de93b8f5f80253234eae7be2c48e0a4be26a63ad7f26647c155f6ee0028844",
+   "pdf_bytes": 2713679,
+   "gold_bytes": 225610,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 117,
+    "value_exact": null,
+    "consistency": 0.5897,
+    "coverage": null,
+    "seconds": 105.0,
+    "gold_total": 256
+   }
+  },
+  {
+   "id": "gjb-9581-2018",
+   "pdf": "docs\\gjb-9581-2018.pdf",
+   "gold": "gold\\gjb-9581-2018.json",
+   "pdf_sha256": "82549c7df88f71e392fedf8fc8f38f465c7ddcf99a74752980120c2d01ffe56e",
+   "gold_sha256": "c932733201d603c87e6db112db41bc190138a5c207643c600fcde86a294006e1",
+   "pdf_bytes": 1050469,
+   "gold_bytes": 189207,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 213,
+    "value_exact": null,
+    "consistency": 0.9953,
+    "coverage": null,
+    "seconds": 74.6,
+    "gold_total": 275
+   }
+  },
+  {
+   "id": "gjb-2351a-2021",
+   "pdf": "docs\\gjb-2351a-2021.pdf",
+   "gold": "gold\\gjb-2351a-2021.json",
+   "pdf_sha256": "f835e4f04e802125a5af562315f1024c78bdc3190adf118dc32cf4ae39282661",
+   "gold_sha256": "21ec5fc0449beeaa9c0703a51264fc36b5084584a71d02873224668e9797e97e",
+   "pdf_bytes": 3216527,
+   "gold_bytes": 950320,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 656,
+    "value_exact": null,
+    "consistency": 0.5137,
+    "coverage": null,
+    "seconds": 330.4,
+    "gold_total": 1041
+   }
+  },
+  {
+   "id": "gjb-2296a-2005",
+   "pdf": "docs\\gjb-2296a-2005.pdf",
+   "gold": "gold\\gjb-2296a-2005.json",
+   "pdf_sha256": "a13179a652ae08e42d1b50c9f5a372a06a6800b8ecf4687258c1069fa54b0356",
+   "gold_sha256": "09d24d0bf8d0e909a773a1836f6f23dba9bbf9fe57571503b81b0ddf588d3d74",
+   "pdf_bytes": 1155840,
+   "gold_bytes": 26299,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 30,
+    "value_exact": null,
+    "consistency": 1.0,
+    "coverage": null,
+    "seconds": 99.4,
+    "gold_total": 34
+   }
+  },
+  {
+   "id": "gjb-1951a-2020",
+   "pdf": "docs\\gjb-1951a-2020.pdf",
+   "gold": "gold\\gjb-1951a-2020.json",
+   "pdf_sha256": "c66b5cdb7577185e7ad3ca3c76949b930340fa1b64b2ab2a8ee9f36a526f5741",
+   "gold_sha256": "56444ffb1847a52ddceca752b9319190ae1eaba11b9df0fc211ee48a3259bdc5",
+   "pdf_bytes": 15460316,
+   "gold_bytes": 762556,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 539,
+    "value_exact": null,
+    "consistency": 0.4935,
+    "coverage": null,
+    "seconds": 400.9,
+    "gold_total": 706
+   }
+  },
+  {
+   "id": "gbt-14976-2025",
+   "pdf": "docs\\gbt-14976-2025.pdf",
+   "gold": "gold\\gbt-14976-2025.json",
+   "pdf_sha256": "0fbc43f87c21d0b6587b8a6f0b56f11bfdc10937dca796e63b395df9ea7d236b",
+   "gold_sha256": "ee456b82189c49d807d2046a4ece3788ec175e8b82c245b69fff2412ed81d36f",
+   "pdf_bytes": 1055593,
+   "gold_bytes": 363466,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 388,
+    "value_exact": null,
+    "consistency": 0.8918,
+    "coverage": null,
+    "seconds": 194.0,
+    "gold_total": 497
+   }
+  },
+  {
+   "id": "gbt-8547-2019",
+   "pdf": "docs\\gbt-8547-2019.pdf",
+   "gold": "gold\\gbt-8547-2019.json",
+   "pdf_sha256": "9332d3b51665d516e393dda1473aa6f4ad6c7923a60f28c51ecebac8d02b78a7",
+   "gold_sha256": "c2509200d6fc3c97039ec09c60c45c311b5401cbf003fec00c51792c109b3b9d",
+   "pdf_bytes": 862640,
+   "gold_bytes": 9063,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 1,
+    "value_exact": null,
+    "consistency": 1.0,
+    "coverage": null,
+    "seconds": 44.0,
+    "gold_total": 9
+   }
+  },
+  {
+   "id": "gbt-5231-2022",
+   "pdf": "docs\\gbt-5231-2022.pdf",
+   "gold": "gold\\gbt-5231-2022.json",
+   "pdf_sha256": "c8afe6bda6e73a95f61ed9888a71fc390123f21d0f63bc528a9793bd6008fbfd",
+   "gold_sha256": "17d41d7bffd835a7cc9890d37bb27fc9ed272ef028348d3a1331eab689f31e81",
+   "pdf_bytes": 1266167,
+   "gold_bytes": 1174908,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 1891,
+    "value_exact": null,
+    "consistency": 0.9847,
+    "coverage": null,
+    "seconds": 371.2,
+    "gold_total": 2687
+   }
+  },
+  {
+   "id": "gbt-3623-2022",
+   "pdf": "docs\\gbt-3623-2022.pdf",
+   "gold": "gold\\gbt-3623-2022.json",
+   "pdf_sha256": "2d136fe24e03c9fc15075385e671df79246069232e3b026a3ff2138224e5be2e",
+   "gold_sha256": "526efabf3e5defd6267856b89dc5467ea3ecb7aa8d4f43af3288e94332d11b8d",
+   "pdf_bytes": 483198,
+   "gold_bytes": 216992,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 249,
+    "value_exact": null,
+    "consistency": 1.0,
+    "coverage": null,
+    "seconds": 69.0,
+    "gold_total": 260
+   }
+  },
+  {
+   "id": "gbt-3620-1-2016",
+   "pdf": "docs\\gbt-3620-1-2016.pdf",
+   "gold": "gold\\gbt-3620-1-2016.json",
+   "pdf_sha256": "07f8e6fa9853a13248fdee7d1cb2f6a21e0b13aaec4859be5ab0f368e4b91f55",
+   "gold_sha256": "2c5b3b4e85944ddb24d3e3295d27d81ad038e87bea60acfe911402668cd66b36",
+   "pdf_bytes": 1027953,
+   "gold_bytes": 829291,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 657,
+    "value_exact": null,
+    "consistency": 0.8037,
+    "coverage": null,
+    "seconds": 101.1,
+    "gold_total": 1108
+   }
+  },
+  {
+   "id": "gbt-3077-2015",
+   "pdf": "docs\\gbt-3077-2015.pdf",
+   "gold": "gold\\gbt-3077-2015.json",
+   "pdf_sha256": "6e310dc0b06c9f3a93a5b159a2c8d91ee73944504a1fd97495e0452679a97dc4",
+   "gold_sha256": "15b4469071fb816b4cfb6c7489430bec5d9d0ee4bc3d40270f124ee036f22ef9",
+   "pdf_bytes": 2309596,
+   "gold_bytes": 935590,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 951,
+    "value_exact": null,
+    "consistency": 0.6078,
+    "coverage": null,
+    "seconds": 339.5,
+    "gold_total": 1168
+   }
+  },
+  {
+   "id": "gbt-2965-2023",
+   "pdf": "docs\\gbt-2965-2023.pdf",
+   "gold": "gold\\gbt-2965-2023.json",
+   "pdf_sha256": "58798221089c64ad5057d46e14fde7f37e90e95c0725b1c471b5437133a5c4b8",
+   "gold_sha256": "9450e9286ba3913c4ad7f7b1d2fa5612642a6554d586e45c07a9ead1419961fc",
+   "pdf_bytes": 642332,
+   "gold_bytes": 147124,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 147,
+    "value_exact": null,
+    "consistency": 0.9116,
+    "coverage": null,
+    "seconds": 143.9,
+    "gold_total": 211
+   }
+  },
+  {
+   "id": "gbt-2054-2023",
+   "pdf": "docs\\gbt-2054-2023.pdf",
+   "gold": "gold\\gbt-2054-2023.json",
+   "pdf_sha256": "2b7b5a4b6eb0c0b1c1bc2bde795b56eb6535ebe8f32a5c7ad099fb317b7fb12d",
+   "gold_sha256": "cabb06a9d7cd4d05f1d576de1b41756b831a39284a86db3ad71466f28fb29368",
+   "pdf_bytes": 331478,
+   "gold_bytes": 176769,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 202,
+    "value_exact": null,
+    "consistency": 0.995,
+    "coverage": null,
+    "seconds": 77.5,
+    "gold_total": 223
+   }
+  },
+  {
+   "id": "astm-b348-25",
+   "pdf": "docs\\astm-b348-25.pdf",
+   "gold": "gold\\astm-b348-25.json",
+   "pdf_sha256": "ccfb1a4e6d9eb816854c3535d6f98c7825929baa61198525eab3eb557f12c496",
+   "gold_sha256": "ac8f7838ff70b99d0aa929af83d5a7270733101afab4435faf3b45855f1883d2",
+   "pdf_bytes": 268718,
+   "gold_bytes": 576566,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 247,
+    "value_exact": null,
+    "consistency": 0.6437,
+    "coverage": null,
+    "seconds": 82.6,
+    "gold_total": 569
+   }
+  },
+  {
+   "id": "nbt-47019-8-2011",
+   "pdf": "docs\\nbt-47019-8-2011.pdf",
+   "gold": "gold\\nbt-47019-8-2011.json",
+   "pdf_sha256": "25601d53ce150f896b96d0baec0f16c73583ee6fd382e5f4a0994532aff37d83",
+   "gold_sha256": "76ad8ac1eb35b2c7f6ad5b1b5394a61dbfbf6b7469f03f06174d5f5e1e5a640d",
+   "pdf_bytes": 1154474,
+   "gold_bytes": 43450,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 49,
+    "value_exact": null,
+    "consistency": 1.0,
+    "coverage": null,
+    "seconds": 39.2,
+    "gold_total": 59
+   }
+  },
+  {
+   "id": "xx454-2022",
+   "pdf": "docs\\xx454-2022.pdf",
+   "gold": "gold\\xx454-2022.json",
+   "pdf_sha256": "45a2385d77c6d4b406fb9c301941df2010f13ed937dda714b79dbca83b0ba2e8",
+   "gold_sha256": "98d89f0be75a8a4630495f6bc9985eb555d1444a98da5bfbade522dad15f2867",
+   "pdf_bytes": 1196429,
+   "gold_bytes": 16778,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 12,
+    "value_exact": null,
+    "consistency": 1.0,
+    "coverage": null,
+    "seconds": 67.3,
+    "gold_total": 22
+   }
+  },
+  {
+   "id": "yst-656-2015",
+   "pdf": "docs\\yst-656-2015.pdf",
+   "gold": "gold\\yst-656-2015.json",
+   "pdf_sha256": "06c6609be4ccde6cc14dc0826d37d0d38233c60753d0db8a8113f04d8c743281",
+   "gold_sha256": "db5f7df149f5dec7e7a837f7070da3030c8642668588714ec384872c03ab7029",
+   "pdf_bytes": 1383313,
+   "gold_bytes": 120743,
+   "source": "20-doc-batch",
+   "baseline_v2": {
+    "matched": 104,
+    "value_exact": null,
+    "consistency": 1.0,
+    "coverage": null,
+    "seconds": 91.7,
+    "gold_total": 134
+   }
+  },
+  {
+   "id": "gbt-713.7-2023",
+   "pdf": "docs\\gbt-713.7-2023.pdf",
+   "gold": "gold\\gbt-713.7-2023.json",
+   "pdf_sha256": "f323585f1f54ed8c8a3c69b9da054b822a5f403ddecfb70b6943d22b6a9e01cc",
+   "gold_sha256": "89210c89b4d6cb02e2732f18be3f22f85226e0537311f25a9e631645f23514c9",
+   "pdf_bytes": 1466076,
+   "gold_bytes": 733942,
+   "source": "v2-six-replay",
+   "baseline_v2": {
+    "matched": 971,
+    "value_exact": 944,
+    "consistency": 0.9722,
+    "coverage": 0.739,
+    "seconds": null,
+    "gold_total": 1314
+   }
+  },
+  {
+   "id": "gbt-1591-2018",
+   "pdf": "docs\\gbt-1591-2018.pdf",
+   "gold": "gold\\gbt-1591-2018.json",
+   "pdf_sha256": "ec28e5ffab96c635554ad9efd37e1eee001810935f253acdfc5a71b951cdd7bc",
+   "gold_sha256": "13f8bf0589af6fc493552d62f6417cf542c8c3f6388c4a7f69f056d56f7ad9c9",
+   "pdf_bytes": 1139970,
+   "gold_bytes": 1225358,
+   "source": "v2-six-replay",
+   "baseline_v2": {
+    "matched": 1970,
+    "value_exact": 1904,
+    "consistency": 0.9665,
+    "coverage": 0.9695,
+    "seconds": null,
+    "gold_total": 2032
+   }
+  },
+  {
+   "id": "gbt-3191-1998",
+   "pdf": "docs\\gbt-3191-1998.pdf",
+   "gold": "gold\\gbt-3191-1998.json",
+   "pdf_sha256": "806bcc72cb594bbdba80195235215fa29bf1b88118bbf469a8508372d4f60644",
+   "gold_sha256": "fd29dc7455f7c7477976da6061ee8768f45b448e555a1136ea2609a82ef772d5",
+   "pdf_bytes": 352601,
+   "gold_bytes": 199005,
+   "source": "v2-six-replay",
+   "baseline_v2": {
+    "matched": 171,
+    "value_exact": 137,
+    "consistency": 0.8012,
+    "coverage": 0.8301,
+    "seconds": null,
+    "gold_total": 206
+   }
+  },
+  {
+   "id": "gbt-6892-2015",
+   "pdf": "docs\\gbt-6892-2015.pdf",
+   "gold": "gold\\gbt-6892-2015.json",
+   "pdf_sha256": "f523e88dded2c8517ce33808f4382b10daf256eec3f383bd2cdd2c207f987670",
+   "gold_sha256": "461db1b9b8afaf7b046c066cbe3363420a2f2a24f2bf10ceb733c4c88c7d66ff",
+   "pdf_bytes": 2917108,
+   "gold_bytes": 1079246,
+   "source": "v2-six-replay",
+   "baseline_v2": {
+    "matched": 816,
+    "value_exact": 715,
+    "consistency": 0.8762,
+    "coverage": 0.8063,
+    "seconds": null,
+    "gold_total": 1012
+   }
+  },
+  {
+   "id": "gjb-2294-1995",
+   "pdf": "docs\\gjb-2294-1995.pdf",
+   "gold": "gold\\gjb-2294-1995.json",
+   "pdf_sha256": "f860cad38be16fca21cfc234460338d28e29baa673f3aa22570c792aeea247ad",
+   "gold_sha256": "c3dcf5ca8ed2cb5c94c6000871ab289ce6179ce54e020e996d51ca7d1631d258",
+   "pdf_bytes": 460884,
+   "gold_bytes": 340713,
+   "source": "v2-six-replay",
+   "baseline_v2": {
+    "matched": 396,
+    "value_exact": 368,
+    "consistency": 0.9293,
+    "coverage": 0.8443,
+    "seconds": null,
+    "gold_total": 469
+   }
+  },
+  {
+   "id": "yst-397-2015",
+   "pdf": "docs\\yst-397-2015.pdf",
+   "gold": "gold\\yst-397-2015.json",
+   "pdf_sha256": "586f2b6adde7307827111c7072e29de94e6f99bd1deb7cc13d2c44786c11692c",
+   "gold_sha256": "a9a07ece3e13e01e807efda0befb4162d2b8a05062d9a3673d62d0477ea8d20a",
+   "pdf_bytes": 2182345,
+   "gold_bytes": 60914,
+   "source": "v2-six-replay",
+   "baseline_v2": {
+    "matched": 77,
+    "value_exact": 77,
+    "consistency": 1.0,
+    "coverage": 0.9506,
+    "seconds": null,
+    "gold_total": 81
+   }
+  }
+ ]
+}
