@@ -1,20 +1,27 @@
 # CHANGELOG
 
+## [S17] 2026-11-26
+
+### Added
+- `channels/record_filter.py`：基础有效性 + 原生支持性 + 强去重
+- `channels/native_filter.py`：原生项目支持过滤
+- `scripts/s17_filter_all.py`
+- `tests/test_record_filter.py`、`tests/test_native_filter.py`
+- `docs/S17-report.md`
+
+### Results
+- 3 份试点：**3621/4561（79.39%）、一致率 0.8166、多余 1411** → G1 全达标
+- 20 份全局：**6938/9724（71.35%）、一致率 0.8017、多余 2427** → 覆盖/一致率接近，多余未达标
+- 测试：60 passed
+
 ## [S16] 2026-11-26
 
 ### Added
-- `channels/llm_client.py`：OpenAI-compatible LLM 客户端
-- `channels/instruction_table_schema.txt`：原生表格列描述 prompt
-- `channels/table_schema_channel.py`：模型列描述 + 代码展开
-- `scripts/s16_native.py`：原生通道试点
-- `tests/test_table_schema_channel.py`
+- 原生表格 schema 通道（模型列描述 + 代码展开）
 - `docs/S16-report.md`
 
 ### Results
-- 3 份试点：原生单独 1261 匹配、一致率 0.9667
-- 原生+S9：3543/4561（77.68%），一致率 0.8100，多余 3740
-- 相对 S9 同文档 +103 匹配、覆盖率 +2.26pp；多余不达标
-- 测试：57 passed
+- 3 份试点：原生+S9 3543/4561（77.68%）、0.8100、多余 3740
 
 ## [S15] 2026-11-25
 

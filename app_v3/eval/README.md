@@ -11,6 +11,8 @@
 - `s3-eval.json`：S3 条件补全后的评测（6698/9724、0.7952、68.88%）
 - `s3-repair-verify-report.json`：S3 修复+验证汇总
 - `s4-eval.json`：S4 牌号修复后的评测（6698/9724、0.7944、68.88%）
+- `s17-quality2-eval.json`：S17 全局（6938/9724、0.8017、71.35%、多余 2427）
+- `s17-quality2-pilot-eval.json`：S17 试点 3 份 G1 达标（3621/4561、0.8166、多余 1411）
 - `s16-native-eval3.json`：S16 原生通道单独评测（1261 匹配、一致率 0.9667）
 - `s16-merged-eval3.json`：S16 原生+S9 合并评测（3543/4561、0.8100、多余 3740）
 - `s16-native-report.json`：S16 原生通道表选择/记录数
