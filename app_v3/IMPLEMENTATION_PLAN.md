@@ -10,6 +10,9 @@
 
 ## 修订记录 v2（2026-11-25，S1–S10 后）
 
+> P0 验收失败复盘：[docs/P0-acceptance-review.md](docs/P0-acceptance-review.md)
+
+
 > 本修订取代原 P0/P1 边界与指标假设。原方案见文末历史版本（v1）。
 
 ### 执行结果回顾
