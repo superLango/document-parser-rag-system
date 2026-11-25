@@ -11,6 +11,9 @@
 - `s3-eval.json`：S3 条件补全后的评测（6698/9724、0.7952、68.88%）
 - `s3-repair-verify-report.json`：S3 修复+验证汇总
 - `s4-eval.json`：S4 牌号修复后的评测（6698/9724、0.7944、68.88%）
+- `s6-audit.json`：S6 未解决队列审计（原因/类别/文档分布）
+- `s6-dsl-demo.json`：S6 DSL 真实表执行/回放结果（gbt-2054 T9，coverage=1.0）
+- `blind_manifest.json`：真正盲测清单（待新增未见文档）
 - `s5-verification-report.json`：S5 证据感知冲突分级后的验证汇总（unresolved 820）
 - `s4-repair-verify-report.json`：S4 修复+验证汇总
 - `s4-normalization-report.json`：S4 后牌号解析率（91.67%）

@@ -1,0 +1,10 @@
+{
+  "schema_version": "blind-manifest.v1",
+  "description": "真正盲测集（待新增未见文档后填充；不得用于调参）",
+  "policy": [
+    "盲测文档只用于最终评测，不参与规则/词表/模板调整；",
+    "每次评测前记录文档 SHA256 与 gold SHA256；",
+    "盲测结果单独报告，不与调参集混合。"
+  ],
+  "documents": []
+}

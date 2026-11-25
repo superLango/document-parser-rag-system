@@ -1,0 +1,194 @@
+{
+ "documents": 20,
+ "queue_total": 2161,
+ "by_reason": {
+  "missing_temperature": 1323,
+  "value_conflict": 820,
+  "same_row_value_conflict": 558,
+  "metadata_evidence_missing": 5,
+  "missing_unit": 4,
+  "value_conflict_insufficient_conditions": 3
+ },
+ "by_category": {
+  "室温拉伸": 1353,
+  "化学成分": 257,
+  "热处理制度": 186,
+  "冲击试验": 155,
+  "硬度试验": 100,
+  "高温拉伸": 68,
+  "高倍": 34,
+  "标准信息": 5,
+  "持久试验": 2,
+  "弯曲试验": 1
+ },
+ "top_documents": {
+  "gbt-3077-2015": 446,
+  "gjb-2351a-2021": 362,
+  "gjb-1951a-2020": 325,
+  "astm-b348-25": 288,
+  "asme-sb338-2025": 205,
+  "gbt-5231-2022": 130,
+  "gbt-14976-2025": 92,
+  "hb-20079-2012": 80,
+  "gbt-3620-1-2016": 74,
+  "ams-4928x": 70
+ },
+ "examples": {
+  "same_row_value_conflict": [
+   {
+    "doc": "ams-4928x",
+    "record_id": "T2-R1-C1",
+    "category": "化学成分",
+    "item": "Al",
+    "requirement": "≤5.50",
+    "message": "同一键存在不同要求值"
+   },
+   {
+    "doc": "ams-4928x",
+    "record_id": "T2-R1-C2",
+    "category": "化学成分",
+    "item": "Al",
+    "requirement": "≤6.75",
+    "message": "同一键存在不同要求值"
+   },
+   {
+    "doc": "ams-4928x",
+    "record_id": "T2-R2-C1",
+    "category": "化学成分",
+    "item": "Al",
+    "requirement": "≤3.50",
+    "message": "同一键存在不同要求值"
+   }
+  ],
+  "missing_temperature": [
+   {
+    "doc": "ams-4928x",
+    "record_id": "T3-R1-C1",
+    "category": "室温拉伸",
+    "item": "抗拉强度(Rm)",
+    "requirement": "135",
+    "message": "缺少试验温度"
+   },
+   {
+    "doc": "ams-4928x",
+    "record_id": "T3-R1-C2",
+    "category": "室温拉伸",
+    "item": "规定塑性延伸强度(Rp0.2)",
+    "requirement": "125",
+    "message": "缺少试验温度"
+   },
+   {
+    "doc": "ams-4928x",
+    "record_id": "T3-R1-C3",
+    "category": "室温拉伸",
+    "item": "断后伸长率(A)",
+    "requirement": "10",
+    "message": "缺少试验温度"
+   }
+  ],
+  "value_conflict": [
+   {
+    "doc": "asme-sb338-2025",
+    "record_id": "T8-R9-C1",
+    "category": "室温拉伸",
+    "item": "抗拉强度(Rm)",
+    "requirement": "125",
+    "message": "同一键存在不同要求值"
+   },
+   {
+    "doc": "asme-sb338-2025",
+    "record_id": "T8-R9-C2",
+    "category": "室温拉伸",
+    "item": "抗拉强度(Rm)",
+    "requirement": "860",
+    "message": "同一键存在不同要求值"
+   },
+   {
+    "doc": "asme-sb338-2025",
+    "record_id": "T8-R9-C3",
+    "category": "室温拉伸",
+    "item": "规定塑性延伸强度(Rp0.2)",
+    "requirement": "105",
+    "message": "同一键存在不同要求值"
+   }
+  ],
+  "metadata_evidence_missing": [
+   {
+    "doc": "astm-b348-25",
+    "record_id": "T11-R2-C1",
+    "category": "标准信息",
+    "item": "尺寸偏差",
+    "requirement": "+1/2,-0 [+12.70]",
+    "message": "标准信息缺少元数据来源"
+   },
+   {
+    "doc": "astm-b348-25",
+    "record_id": "T11-R2-C2",
+    "category": "标准信息",
+    "item": "尺寸偏差",
+    "requirement": "+3/4,-0 [+19.05]",
+    "message": "标准信息缺少元数据来源"
+   },
+   {
+    "doc": "astm-b348-25",
+    "record_id": "T11-R8-C1",
+    "category": "标准信息",
+    "item": "尺寸偏差",
+    "requirement": "+1/8,-0 [+3.18]",
+    "message": "标准信息缺少元数据来源"
+   }
+  ],
+  "value_conflict_insufficient_conditions": [
+   {
+    "doc": "gjb-1951a-2020",
+    "record_id": "T107-R2-C1",
+    "category": "高倍",
+    "item": "非金属夹杂物",
+    "requirement": "≤2.0",
+    "message": "同一键存在不同要求值（条件不足，先复核条件）"
+   },
+   {
+    "doc": "gjb-1951a-2020",
+    "record_id": "T122-R4-C2",
+    "category": "高倍",
+    "item": "非金属夹杂物",
+    "requirement": "≤1.5",
+    "message": "同一键存在不同要求值（条件不足，先复核条件）"
+   },
+   {
+    "doc": "gjb-1951a-2020",
+    "record_id": "T122-R4-C6",
+    "category": "高倍",
+    "item": "非金属夹杂物",
+    "requirement": "≤1.0",
+    "message": "同一键存在不同要求值（条件不足，先复核条件）"
+   }
+  ],
+  "missing_unit": [
+   {
+    "doc": "gjb-2351a-2021",
+    "record_id": "T61-R12-C16-2D70-T6",
+    "category": "硬度试验",
+    "item": "HRBW",
+    "requirement": "≥125",
+    "message": "缺少单位"
+   },
+   {
+    "doc": "gjb-2351a-2021",
+    "record_id": "T61-R21-C16-2014-T6",
+    "category": "硬度试验",
+    "item": "HRBW",
+    "requirement": "≥360",
+    "message": "缺少单位"
+   },
+   {
+    "doc": "gjb-2351a-2021",
+    "record_id": "T61-R22-C16-2014-T6",
+    "category": "硬度试验",
+    "item": "HRBW",
+    "requirement": "≥350",
+    "message": "缺少单位"
+   }
+  ]
+ }
+}

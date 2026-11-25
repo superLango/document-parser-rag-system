@@ -11,6 +11,16 @@
   - 总耗时：**2882.3s（48 分 02 秒）**
   - 代码运行前后 SHA256 一致（未修改、未重跑）
 
+## S6 状态（2026-11-25）
+
+- P1 WP1.2：DSL 执行器（explode/melt/pivot/filter）+ 回放校验已实现；
+- 真实表 gbt-2054 T9：DSL 产出 209 条，回放 coverage=1.0；
+- 未解决队列审计：2161 条（missing_temperature 1323、value_conflict 820）；
+- 评测与 S5 一致：6698/9724、0.7944、68.88%；
+- 盲测清单占位 `eval/blind_manifest.json`；
+- 单元测试 **47 passed**；
+- S6 报告：[docs/S6-report.md](docs/S6-report.md)、审计：[docs/S6-audit.md](docs/S6-audit.md)
+
 ## S5 状态（2026-11-25）
 
 - 验证器冲突分级精化：同表同行冲突降为 warn，未解决 1370→820；

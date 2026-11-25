@@ -1,0 +1,149 @@
+{
+ "table": {
+  "table_id": "T9",
+  "page_no": 9,
+  "caption": "表7 室温力学性能",
+  "header_rows": 2,
+  "width": 8,
+  "headers": [
+   "牌号",
+   "状态",
+   "厚度mm",
+   "室温拉伸性能 抗拉强度(Rm)MPa",
+   "室温拉伸性能 规定塑性延伸强度b(Rp0.2)MPa",
+   "室温拉伸性能 断后伸长率(A50mm)%",
+   "硬度a HV",
+   "硬度a HRB"
+  ],
+  "units": [
+   "",
+   "",
+   "mm",
+   "MPa",
+   "MPa",
+   "%",
+   "HV",
+   "HRB"
+  ]
+ },
+ "program": {
+  "schema_version": "table_program.v1",
+  "table_id": "T9",
+  "header_rows": 2,
+  "steps": [
+   {
+    "op": "explode",
+    "column": 0
+   },
+   {
+    "op": "melt",
+    "id_columns": [
+     0,
+     1,
+     2
+    ],
+    "value_columns": [
+     {
+      "column": 3,
+      "measure": "抗拉强度(Rm)",
+      "unit": "MPa",
+      "category": "室温拉伸",
+      "conditions": {
+       "试验温度": "室温"
+      }
+     },
+     {
+      "column": 4,
+      "measure": "规定塑性延伸强度(Rp0.2)",
+      "unit": "MPa",
+      "category": "室温拉伸",
+      "conditions": {
+       "试验温度": "室温"
+      }
+     },
+     {
+      "column": 5,
+      "measure": "断后伸长率(A)",
+      "unit": "%",
+      "category": "室温拉伸",
+      "conditions": {
+       "试验温度": "室温"
+      }
+     },
+     {
+      "column": 6,
+      "measure": "维氏硬度(HV)",
+      "unit": "HV",
+      "category": "硬度试验"
+     },
+     {
+      "column": 7,
+      "measure": "洛氏硬度(HRB)",
+      "unit": "HRB",
+      "category": "硬度试验"
+     }
+    ]
+   }
+  ]
+ },
+ "records": 209,
+ "validation": {
+  "ok": true,
+  "missing": [],
+  "extra": [],
+  "coverage": 1.0
+ },
+ "sample": [
+  {
+   "source_row": 2,
+   "source_column": 3,
+   "key_values": {
+    "0": "N4",
+    "1": "M",
+    "2": "0.1~1.5"
+   },
+   "raw": "≥345",
+   "measure": "抗拉强度(Rm)",
+   "unit": "MPa",
+   "operator": null,
+   "conditions": {
+    "试验温度": "室温"
+   },
+   "category": "室温拉伸"
+  },
+  {
+   "source_row": 2,
+   "source_column": 4,
+   "key_values": {
+    "0": "N4",
+    "1": "M",
+    "2": "0.1~1.5"
+   },
+   "raw": "≥80",
+   "measure": "规定塑性延伸强度(Rp0.2)",
+   "unit": "MPa",
+   "operator": null,
+   "conditions": {
+    "试验温度": "室温"
+   },
+   "category": "室温拉伸"
+  },
+  {
+   "source_row": 2,
+   "source_column": 5,
+   "key_values": {
+    "0": "N4",
+    "1": "M",
+    "2": "0.1~1.5"
+   },
+   "raw": "≥35",
+   "measure": "断后伸长率(A)",
+   "unit": "%",
+   "operator": null,
+   "conditions": {
+    "试验温度": "室温"
+   },
+   "category": "室温拉伸"
+  }
+ ]
+}
