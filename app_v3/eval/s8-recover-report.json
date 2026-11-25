@@ -1,14 +1,14 @@
 {
  "total": {
-  "records": 9256,
+  "records": 9221,
   "cleaned": 1083,
-  "recovered": 71,
+  "recovered": 36,
   "verify_status": {
-   "warn": 1412,
+   "warn": 1377,
    "ok": 7014,
    "unresolved": 830
   },
-  "queue": 2242
+  "queue": 2207
  },
  "documents": [
   {
@@ -591,11 +591,11 @@
     ]
    },
    "recover": {
-    "tables": 5,
-    "records": 24,
+    "tables": 3,
+    "records": 13,
     "categories": {
      "硬度试验": 1,
-     "高倍": 23
+     "高倍": 12
     },
     "examples": [
      {
@@ -609,33 +609,25 @@
      {
       "table_id": "T118",
       "records": 10
-     },
-     {
-      "table_id": "T122",
-      "records": 8
-     },
-     {
-      "table_id": "T129",
-      "records": 3
      }
     ]
    },
    "verify": {
-    "total": 597,
+    "total": 586,
     "status": {
-     "warn": 307,
+     "warn": 296,
      "unresolved": 42,
      "ok": 248
     },
     "diagnostics": {
-     "missing_temperature": 327,
+     "missing_temperature": 316,
      "value_conflict": 42,
-     "value_conflict_insufficient_conditions": 17,
+     "value_conflict_insufficient_conditions": 13,
      "same_row_value_conflict": 2,
      "missing_unit": 1
     },
-    "queue": 349,
-    "conflicts": 27,
+    "queue": 338,
+    "conflicts": 22,
     "tables": 229
    }
   },
@@ -725,20 +717,12 @@
     "examples": []
    },
    "recover": {
-    "tables": 3,
-    "records": 25,
+    "tables": 1,
+    "records": 1,
     "categories": {
-     "高倍": 25
+     "高倍": 1
     },
     "examples": [
-     {
-      "table_id": "T109",
-      "records": 12
-     },
-     {
-      "table_id": "T111",
-      "records": 12
-     },
      {
       "table_id": "T113",
       "records": 1
@@ -746,21 +730,20 @@
     ]
    },
    "verify": {
-    "total": 807,
+    "total": 783,
     "status": {
      "ok": 420,
      "unresolved": 252,
-     "warn": 135
+     "warn": 111
     },
     "diagnostics": {
      "value_conflict": 252,
      "same_row_value_conflict": 62,
      "missing_unit": 4,
-     "missing_temperature": 87,
-     "value_conflict_insufficient_conditions": 24
+     "missing_temperature": 63
     },
-    "queue": 387,
-    "conflicts": 136,
+    "queue": 363,
+    "conflicts": 130,
     "tables": 250
    }
   },

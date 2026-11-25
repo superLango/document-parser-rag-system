@@ -1,8 +1,9 @@
-"""表格补充通道（S8）：从 OCR 表补充 v2 绑定遗漏的列/表。
+"""表格补充通道（S8/S9）：从 OCR 表补充 v2 绑定遗漏的列/表。
 
 原则：
 - 只补充"缺失的度量列"（按 record_id 的列号判断），不替换 v2 已有列；
 - 仅处理表头可识别为规范量的列（高倍/弯曲/冲击/硬度/拉伸）；
+- 度量名从列头路径中取"最后一段有意义的标签"，跳过级别/不大于/数字/单位等条件段；
 - 生成记录标记来源 `channel: recovered`，供验证器/评测使用。
 """
 from __future__ import annotations
@@ -12,17 +13,28 @@ from typing import Any
 
 from app_v3.analyze.grade_columns import analyze_table_grades
 from app_v3.normalize.grade import parse_grade_cell
-from app_v3.table_program.ir import load_tables
+from app_v3.normalize.items import normalize_item
+from app_v3.table_program.ir import TableIR, load_tables
 
 HIGH_MAG_KEYWORDS = ("偏析", "疏松", "低倍", "夹杂", "发纹", "脱碳", "晶粒", "显微组织", "铁素体", "斑点", "断口")
 ROW_COL_RE = re.compile(r"-R(\d+)-C(\d+)")
+CONDITION_SEGMENT_RE = re.compile(r"^(?:级别|不大于|不小于|[≥≤<>]|单位|注|产品|类别|牌号|序号)|^\d+(?:\.\d+)?$")
+
+
+def measure_label(ir: TableIR, column: int) -> str:
+    path = [str(part).strip() for part in ir.column_path(column) if str(part).strip()]
+    if not path:
+        return ""
+    meaningful = [part for part in path if not CONDITION_SEGMENT_RE.search(part)]
+    label = (meaningful or path)[-1]
+    label = re.sub(r"[a-z]$", "", label) if len(label) > 2 else label
+    return label
 
 
 def classify_header(header: str) -> tuple[str, str, str] | None:
     text = str(header or "")
-    stripped = re.sub(r"[a-z]$", "", text).strip()
     if any(keyword in text for keyword in HIGH_MAG_KEYWORDS):
-        return ("高倍", stripped, "级")
+        return ("高倍", re.sub(r"[a-z]$", "", text).strip(), "级")
     if "弯曲" in text:
         return ("弯曲试验", "弯曲试验", "")
     if "冲击" in text or "KV" in text.upper():
@@ -54,7 +66,6 @@ def recover_missing_columns(records: list[dict[str, Any]], ocr: dict[str, Any]) 
     recovered: list[dict[str, Any]] = []
     stats: dict[str, Any] = {"tables": 0, "records": 0, "categories": {}, "examples": []}
     for table_id, ir in tables.items():
-        headers = [ir.column_header(index) for index in range(ir.width)]
         grade_info = analyze_table_grades({
             "table_id": table_id,
             "header_rows": ir.header_rows,
@@ -62,11 +73,12 @@ def recover_missing_columns(records: list[dict[str, Any]], ocr: dict[str, Any]) 
             "rows": ir.rows,
         })
         grade_columns = [column["index"] for column in grade_info.get("grade_columns") or []]
-        measure_columns = [
-            (index, classify_header(header))
-            for index, header in enumerate(headers)
-            if classify_header(header) and index not in grade_columns
-        ]
+        measure_columns = []
+        for index in range(ir.width):
+            label = measure_label(ir, index)
+            classified = classify_header(label) if label else None
+            if classified and index not in grade_columns:
+                measure_columns.append((index, classified))
         if not measure_columns:
             continue
         skip_columns = existing.get(table_id, set())
@@ -92,6 +104,7 @@ def recover_missing_columns(records: list[dict[str, Any]], ocr: dict[str, Any]) 
                 if not re.search(r"\d", raw) and "不允许" not in raw:
                     continue
                 category, item, unit = classified
+                item = normalize_item(item)[0]
                 requirement = raw
                 if category == "高倍" and re.fullmatch(r"\d+(?:\.\d+)?", raw):
                     requirement = f"≤{raw}"

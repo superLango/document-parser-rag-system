@@ -1,18 +1,31 @@
 # CHANGELOG
 
+## [S9] 2026-11-25
+
+### Added
+- `channels/table_recover.py`：度量标签修复（跳过条件段/脚注，取有意义标签）
+- `tests/test_table_recover.py` 更新
+- `docs/S9-report.md`
+
+### Results
+- 恢复记录 36 条（高精度）
+- 修正 matcher 后：6760/9724、一致率 0.7917、覆盖率 69.52%（较 S8 +15 匹配）
+- 同口径原始 v2：6713/9724、69.04%
+- 测试：52 passed
+
 ## [S8] 2026-11-25
 
 ### Added
-- `channels/table_recover.py`：缺失度量列恢复（按 record_id 列号只补缺失列）
-- `eval/matcher.py`：`全部牌号/所有牌号/各牌号/任意牌号/通用` 通配语义
+- `channels/table_recover.py`：缺失度量列恢复
+- `eval/matcher.py`：`全部牌号` 通配语义
 - `scripts/s8_demo.py`
 - `tests/test_table_recover.py`、`tests/test_matcher.py`
 - `docs/S8-report.md`
 
 ### Results
 - 恢复记录 71 条
-- 修正 matcher 后：S8 6745/9724、一致率 0.7930、覆盖率 69.36%
-- 同口径原始 v2 基线：6713/9724、0.7886、69.04%
+- 修正 matcher 后：6745/9724、0.7930、69.36%
+- 同口径原始 v2：6713/9724、0.7886、69.04%
 - 测试：52 passed
 
 ## [S7] 2026-11-25
@@ -25,7 +38,6 @@
 ### Results
 - 清理牌号 1083 条
 - 评测：6700/9724、0.7943、68.90%
-- 负向实验：类别室温默认无变化；跳过表恢复宽松 +3/+65 多余、严格 0 条
 - 测试：49 passed
 
 ## [S6] 2026-11-25
@@ -35,8 +47,8 @@
 - `docs/S6-report.md`、`docs/S6-audit.md`
 
 ### Results
-- gbt-2054 T9：209 条，回放 coverage=1.0
-- 队列 2161；评测 6698/9724、0.7944、68.88%
+- 真实表 gbt-2054 T9：209 条，回放 coverage=1.0
+- 评测：6698/9724、0.7944、68.88%
 - 测试：47 passed
 
 ## [S5] 2026-11-25
@@ -46,8 +58,7 @@
 - `docs/S5-report.md`
 
 ### Results
-- unresolved 1370→820
-- 评测 6698/9724、0.7944、68.88%
+- unresolved 1370→820；评测 6698/9724、0.7944、68.88%
 - 测试：43 passed
 
 ## [S4] 2026-11-25
