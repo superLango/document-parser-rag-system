@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## [S2] 2026-11-25
+
+### Added
+- `analyze/grade_columns.py`：表格牌号列分析
+- `analyze/document_grade.py`：文档级牌号推断
+- `analyze/repair.py`：牌号修复（默认保守模式）
+- `verify/evidence.py`：证据验证
+- `verify/conservation.py`：值守恒验证
+- `verify/conditions.py`：条件完整性验证
+- `verify/conflicts.py`：冲突检测
+- `verify/queue.py`：未解决队列
+- `verify/pipeline.py`：验证流水线 CLI
+- `eval/matcher.py`：冻结 v5 matcher 迁入
+- `eval/run_eval.py`：固定评测入口
+- `scripts/s2_demo.py`：S2 修复+验证演示
+- `tests/test_analyze.py`、`tests/test_verify.py`
+- `docs/S2-report.md`
+
+### Results
+- 评测器校准：6672/9724、0.7899、68.61%（与冻结基线一致）
+- 保守牌号修复：6698/9724、0.7890、68.88%（ISO 0→26）
+- 验证器：9185 条，ok 6829 / warn 812 / unresolved 1544，队列 2356
+
 ## [S1] 2026-11-25
 
 ### Added

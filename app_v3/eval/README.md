@@ -5,7 +5,10 @@
 - `baseline-v2-metrics.json`：冻结版 v2 的 20 份文档指标（覆盖率/一致率/时间）
 - `baseline-v2-categories.json`：冻结版 v2 的分类别缺口
 - `s1-normalization-report.json`：S1 归一化层在 20 份 v2 产物上的统计
-- 后续 `run_eval.py`（S2）将统一评测入口
+- `s2-baseline-eval.json`：S2 评测器对基线的回放（应与冻结指标一致：6672/9724、0.7899、68.61%）
+- `s2-repaired-eval.json`：S2 保守牌号修复后的评测（6698/9724、0.7890、68.88%）
+- `s2-repair-verify-report.json`：20 份修复+验证汇总
+- `run_eval.py`（在 `eval/run_eval.py`）：固定评测入口
 
 ## 评测口径（固定）
 
@@ -19,4 +22,5 @@
 
 - gold 只用于评测，不参与规则/词表推导；
 - 固定 20 份 + 盲测集；
-- 每次改动输出分类别报告与回归对比。
+- 每次改动输出分类别报告与回归对比；
+- 评测入口：`python -m app_v3.eval.run_eval`。
