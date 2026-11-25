@@ -11,6 +11,9 @@
 - `s3-eval.json`：S3 条件补全后的评测（6698/9724、0.7952、68.88%）
 - `s3-repair-verify-report.json`：S3 修复+验证汇总
 - `s4-eval.json`：S4 牌号修复后的评测（6698/9724、0.7944、68.88%）
+- `s14-routing-report.json`：S14 路由决策（20 份）
+- `s14-routed-eval.json`：S14 阈值 1.05 版本（6796/0.7794）
+- `s14-routed2-eval.json`：S14 最终版本（6795/0.7923、69.88%）
 - `s13-routing-report.json`：S13 路由决策与验证器评分
 - `s13-routed-eval.json`：S13 路由后评测（6 份：1219/2175）
 - `s12-full-eval.json`：S12 冻结文档全链路试点（gbt-8547/xx454/hb-20079，139/287）

@@ -34,7 +34,7 @@ def verification_score(records: list[dict[str, Any]], ocr: dict[str, Any] | None
 
 
 def choose_channel(s9_records: list[dict[str, Any]], full_records: list[dict[str, Any]],
-                   ocr: dict[str, Any] | None, min_gain: float = 1.05) -> dict[str, Any]:
+                   ocr: dict[str, Any] | None, min_gain: float = 1.15) -> dict[str, Any]:
     """覆盖代理：全链路唯一键数显著多于 S9 时选全链路；否则 S9。
 
     约定：更完整的记录集合优先；验证器分数仅记录，不作为否决条件（避免漏掉有效覆盖）。
