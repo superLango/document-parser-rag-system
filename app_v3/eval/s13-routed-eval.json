@@ -1,0 +1,139 @@
+{
+ "docs": 6,
+ "gold": 2175,
+ "ours": 1872,
+ "matched": 1219,
+ "value_exact": 933,
+ "consistency": 0.7654,
+ "coverage": 0.5605,
+ "missing": 956,
+ "extra": 653,
+ "rows": [
+  {
+   "doc": "gbt-8547-2019",
+   "gold": 9,
+   "ours": 8,
+   "matched": 4,
+   "value_exact": 4,
+   "consistency": 1.0,
+   "coverage": 0.4444,
+   "missing": 5,
+   "extra": 4,
+   "missing_by_category": {
+    "热处理制度": 1,
+    "室温拉伸": 2,
+    "弯曲试验": 2
+   },
+   "extra_by_category": {
+    "弯曲试验": 4
+   }
+  },
+  {
+   "doc": "hb-20079-2012",
+   "gold": 256,
+   "ours": 204,
+   "matched": 123,
+   "value_exact": 75,
+   "consistency": 0.6098,
+   "coverage": 0.4805,
+   "missing": 133,
+   "extra": 81,
+   "missing_by_category": {
+    "热处理制度": 49,
+    "化学成分": 2,
+    "室温拉伸": 28,
+    "冲击试验": 14,
+    "硬度试验": 9,
+    "高倍": 29,
+    "高温拉伸": 2
+   },
+   "extra_by_category": {
+    "室温拉伸": 12,
+    "冲击试验": 9,
+    "硬度试验": 1,
+    "高温拉伸": 3,
+    "高倍": 16,
+    "化学成分": 2,
+    "热处理制度": 38
+   }
+  },
+  {
+   "doc": "xx454-2022",
+   "gold": 22,
+   "ours": 26,
+   "matched": 15,
+   "value_exact": 15,
+   "consistency": 1.0,
+   "coverage": 0.6818,
+   "missing": 7,
+   "extra": 11,
+   "missing_by_category": {
+    "室温拉伸": 1,
+    "高倍": 6
+   },
+   "extra_by_category": {
+    "化学成分": 11
+   }
+  },
+  {
+   "doc": "gbt-2965-2023",
+   "gold": 211,
+   "ours": 308,
+   "matched": 173,
+   "value_exact": 152,
+   "consistency": 0.8786,
+   "coverage": 0.8199,
+   "missing": 38,
+   "extra": 135,
+   "missing_by_category": {
+    "标准信息": 1,
+    "热处理制度": 19,
+    "高倍": 2,
+    "高温拉伸": 16
+   },
+   "extra_by_category": {
+    "其他": 4,
+    "室温拉伸": 100,
+    "高温拉伸": 16,
+    "持久试验": 15
+   }
+  },
+  {
+   "doc": "gbt-3620-1-2016",
+   "gold": 1108,
+   "ours": 907,
+   "matched": 657,
+   "value_exact": 528,
+   "consistency": 0.8037,
+   "coverage": 0.593,
+   "missing": 451,
+   "extra": 250,
+   "missing_by_category": {
+    "化学成分": 451
+   },
+   "extra_by_category": {
+    "化学成分": 250
+   }
+  },
+  {
+   "doc": "astm-b348-25",
+   "gold": 569,
+   "ours": 419,
+   "matched": 247,
+   "value_exact": 159,
+   "consistency": 0.6437,
+   "coverage": 0.4341,
+   "missing": 322,
+   "extra": 172,
+   "missing_by_category": {
+    "化学成分": 317,
+    "室温拉伸": 5
+   },
+   "extra_by_category": {
+    "化学成分": 77,
+    "标准信息": 12,
+    "室温拉伸": 83
+   }
+  }
+ ]
+}
