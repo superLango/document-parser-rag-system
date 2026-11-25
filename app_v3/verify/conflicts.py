@@ -6,6 +6,7 @@ import re
 from collections import defaultdict
 from typing import Any
 
+ROW_RE = re.compile(r"-R(\d+)-C\d+")
 NUMBER_RE = re.compile(r"\d+(?:\.\d+)?")
 CONDITIONAL_CATEGORIES = {"室温拉伸", "高温拉伸", "冲击试验", "硬度试验", "持久试验", "蠕变试验",
                           "弯曲试验", "高倍", "热处理制度"}
@@ -15,6 +16,18 @@ CONDITION_FIELDS = ("试验温度", "试样状态", "尺寸厚度", "方向", "�
 def _has_conditions(record: dict[str, Any]) -> bool:
     conditions = record.get("conditions") or {}
     return any(str(conditions.get(field) or "").strip() for field in CONDITION_FIELDS)
+
+
+def _location(record: dict[str, Any]) -> tuple[str, int | None]:
+    table_id = str(record.get("source_table") or "")
+    if not table_id:
+        evidence = record.get("evidence") or {}
+        ref = (evidence.get("requirement") or {}).get("ref") if isinstance(evidence, dict) else {}
+        if isinstance(ref, dict):
+            table_id = str(ref.get("table_id") or "")
+    match = ROW_RE.search(str(record.get("record_id") or ""))
+    row = int(match.group(1)) if match else None
+    return table_id, row
 
 
 def _key(record: dict[str, Any]) -> tuple:
@@ -40,8 +53,17 @@ def detect_conflicts(records: list[dict[str, Any]]) -> tuple[dict[int, list[dict
             group_records = [records[index] for index, _ in items]
             category = str(key[0] or "")
             insufficient = category in CONDITIONAL_CATEGORIES and not all(_has_conditions(record) for record in group_records)
-            code = "value_conflict_insufficient_conditions" if insufficient else "value_conflict"
-            severity = "warn" if insufficient else "error"
+            locations = {_location(record) for record in group_records}
+            same_row = len(locations) == 1 and None not in {row for _, row in locations}
+            if same_row:
+                code = "same_row_value_conflict"
+                severity = "warn"
+            elif insufficient:
+                code = "value_conflict_insufficient_conditions"
+                severity = "warn"
+            else:
+                code = "value_conflict"
+                severity = "error"
             summary = {"key": list(key), "records": [index for index, _ in items],
                        "values": [sorted(numbers) for _, numbers in items],
                        "severity": severity}

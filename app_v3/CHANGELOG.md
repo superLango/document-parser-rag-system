@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## [S5] 2026-11-25
+
+### Added
+- `verify/conflicts.py`：证据感知冲突分级（同表同行 warn / 跨行跨表 error / 条件不足 warn）
+- `table_program/ir.py`：表格 IR v1（TableIR）
+- `table_program/DSL.md`：表格程序 DSL v1 规范（草案）
+- `scripts/s5_demo.py`：S5 验证演示
+- `tests/test_table_ir.py`；更新 `tests/test_verify.py`
+- `docs/S5-report.md`
+
+### Results
+- verify unresolved 1370→820（同表同行冲突 558 条降为 warn）
+- 队列 2161 不变
+- 评测与 S4 一致：6698/9724、0.7944、68.88%
+- 测试：43 passed
+
 ## [S4] 2026-11-25
 
 ### Added

@@ -1,0 +1,356 @@
+{
+ "total": {
+  "records": 9185,
+  "verify_status": {
+   "warn": 1341,
+   "ok": 7024,
+   "unresolved": 820
+  },
+  "verify_diagnostics": {
+   "same_row_value_conflict": 558,
+   "missing_temperature": 1323,
+   "value_conflict": 820,
+   "metadata_evidence_missing": 5,
+   "value_conflict_insufficient_conditions": 3,
+   "missing_unit": 4
+  },
+  "queue": 2161
+ },
+ "documents": [
+  {
+   "doc": "ams-4928x",
+   "summary": {
+    "total": 71,
+    "status": {
+     "warn": 70,
+     "ok": 1
+    },
+    "diagnostics": {
+     "same_row_value_conflict": 52,
+     "missing_temperature": 50
+    },
+    "queue": 70,
+    "conflicts": 24,
+    "tables": 4
+   }
+  },
+  {
+   "doc": "asme-sb338-2025",
+   "summary": {
+    "total": 597,
+    "status": {
+     "warn": 183,
+     "ok": 392,
+     "unresolved": 22
+    },
+    "diagnostics": {
+     "missing_temperature": 205,
+     "same_row_value_conflict": 155,
+     "value_conflict": 22
+    },
+    "queue": 205,
+    "conflicts": 60,
+    "tables": 11
+   }
+  },
+  {
+   "doc": "astm-b348-25",
+   "summary": {
+    "total": 348,
+    "status": {
+     "ok": 60,
+     "warn": 218,
+     "unresolved": 70
+    },
+    "diagnostics": {
+     "metadata_evidence_missing": 5,
+     "same_row_value_conflict": 152,
+     "missing_temperature": 283,
+     "value_conflict": 70
+    },
+    "queue": 288,
+    "conflicts": 97,
+    "tables": 12
+   }
+  },
+  {
+   "doc": "gbt-14976-2025",
+   "summary": {
+    "total": 507,
+    "status": {
+     "ok": 415,
+     "unresolved": 72,
+     "warn": 20
+    },
+    "diagnostics": {
+     "value_conflict": 72,
+     "same_row_value_conflict": 4,
+     "missing_temperature": 56
+    },
+    "queue": 92,
+    "conflicts": 40,
+    "tables": 25
+   }
+  },
+  {
+   "doc": "gbt-2054-2023",
+   "summary": {
+    "total": 202,
+    "status": {
+     "warn": 7,
+     "ok": 195
+    },
+    "diagnostics": {
+     "missing_temperature": 7
+    },
+    "queue": 7,
+    "conflicts": 0,
+    "tables": 14
+   }
+  },
+  {
+   "doc": "gbt-2965-2023",
+   "summary": {
+    "total": 189,
+    "status": {
+     "ok": 181,
+     "unresolved": 8
+    },
+    "diagnostics": {
+     "value_conflict": 8
+    },
+    "queue": 8,
+    "conflicts": 4,
+    "tables": 115
+   }
+  },
+  {
+   "doc": "gbt-3077-2015",
+   "summary": {
+    "total": 1321,
+    "status": {
+     "ok": 875,
+     "warn": 397,
+     "unresolved": 49
+    },
+    "diagnostics": {
+     "missing_temperature": 280,
+     "value_conflict": 49,
+     "same_row_value_conflict": 123
+    },
+    "queue": 446,
+    "conflicts": 106,
+    "tables": 24
+   }
+  },
+  {
+   "doc": "gbt-3620-1-2016",
+   "summary": {
+    "total": 907,
+    "status": {
+     "ok": 833,
+     "warn": 8,
+     "unresolved": 66
+    },
+    "diagnostics": {
+     "same_row_value_conflict": 8,
+     "value_conflict": 66
+    },
+    "queue": 74,
+    "conflicts": 34,
+    "tables": 22
+   }
+  },
+  {
+   "doc": "gbt-3623-2022",
+   "summary": {
+    "total": 266,
+    "status": {
+     "ok": 266
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 12
+   }
+  },
+  {
+   "doc": "gbt-5231-2022",
+   "summary": {
+    "total": 2703,
+    "status": {
+     "ok": 2573,
+     "unresolved": 130
+    },
+    "diagnostics": {
+     "value_conflict": 130
+    },
+    "queue": 130,
+    "conflicts": 58,
+    "tables": 83
+   }
+  },
+  {
+   "doc": "gbt-8547-2019",
+   "summary": {
+    "total": 1,
+    "status": {
+     "ok": 1
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 22
+   }
+  },
+  {
+   "doc": "gjb-1951a-2020",
+   "summary": {
+    "total": 573,
+    "status": {
+     "warn": 283,
+     "unresolved": 42,
+     "ok": 248
+    },
+    "diagnostics": {
+     "missing_temperature": 303,
+     "value_conflict": 42,
+     "value_conflict_insufficient_conditions": 3,
+     "same_row_value_conflict": 2
+    },
+    "queue": 325,
+    "conflicts": 21,
+    "tables": 229
+   }
+  },
+  {
+   "doc": "gjb-2296a-2005",
+   "summary": {
+    "total": 30,
+    "status": {
+     "ok": 24,
+     "warn": 6
+    },
+    "diagnostics": {
+     "missing_temperature": 6
+    },
+    "queue": 6,
+    "conflicts": 0,
+    "tables": 95
+   }
+  },
+  {
+   "doc": "gjb-2351a-2021",
+   "summary": {
+    "total": 782,
+    "status": {
+     "ok": 420,
+     "unresolved": 252,
+     "warn": 110
+    },
+    "diagnostics": {
+     "value_conflict": 252,
+     "same_row_value_conflict": 62,
+     "missing_unit": 4,
+     "missing_temperature": 62
+    },
+    "queue": 362,
+    "conflicts": 130,
+    "tables": 250
+   }
+  },
+  {
+   "doc": "gjb-9581-2018",
+   "summary": {
+    "total": 280,
+    "status": {
+     "ok": 280
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 115
+   }
+  },
+  {
+   "doc": "hb-20079-2012",
+   "summary": {
+    "total": 166,
+    "status": {
+     "ok": 86,
+     "unresolved": 56,
+     "warn": 24
+    },
+    "diagnostics": {
+     "value_conflict": 56,
+     "missing_temperature": 30
+    },
+    "queue": 80,
+    "conflicts": 22,
+    "tables": 15
+   }
+  },
+  {
+   "doc": "iso-5832-3-2021",
+   "summary": {
+    "total": 34,
+    "status": {
+     "unresolved": 33,
+     "ok": 1
+    },
+    "diagnostics": {
+     "value_conflict": 33,
+     "missing_temperature": 26
+    },
+    "queue": 33,
+    "conflicts": 5,
+    "tables": 8
+   }
+  },
+  {
+   "doc": "nbt-47019-8-2011",
+   "summary": {
+    "total": 59,
+    "status": {
+     "ok": 44,
+     "warn": 15
+    },
+    "diagnostics": {
+     "missing_temperature": 15
+    },
+    "queue": 15,
+    "conflicts": 0,
+    "tables": 10
+   }
+  },
+  {
+   "doc": "xx454-2022",
+   "summary": {
+    "total": 23,
+    "status": {
+     "unresolved": 20,
+     "ok": 3
+    },
+    "diagnostics": {
+     "value_conflict": 20
+    },
+    "queue": 20,
+    "conflicts": 11,
+    "tables": 93
+   }
+  },
+  {
+   "doc": "yst-656-2015",
+   "summary": {
+    "total": 126,
+    "status": {
+     "ok": 126
+    },
+    "diagnostics": {},
+    "queue": 0,
+    "conflicts": 0,
+    "tables": 8
+   }
+  }
+ ]
+}

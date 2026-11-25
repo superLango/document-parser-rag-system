@@ -50,6 +50,30 @@ def test_conflicts_same_key_different_value():
     assert 0 in diagnostics and 1 in diagnostics
 
 
+def test_conflict_same_row_downgraded():
+    records = [
+        {"record_id": "T1-R1-C1", "category": "室温拉伸", "item": "抗拉强度(Rm)", "grade": "N4",
+         "requirement": "≥345", "conditions": {"试验温度": "室温"}, "source_table": "T1"},
+        {"record_id": "T1-R1-C2", "category": "室温拉伸", "item": "抗拉强度(Rm)", "grade": "N4",
+         "requirement": "≥380", "conditions": {"试验温度": "室温"}, "source_table": "T1"},
+    ]
+    diagnostics, summaries = detect_conflicts(records)
+    assert summaries[0]["severity"] == "warn"
+    assert any(item["code"] == "same_row_value_conflict" for item in diagnostics[0])
+
+
+def test_conflict_cross_row_error():
+    records = [
+        {"record_id": "T1-R1-C1", "category": "室温拉伸", "item": "抗拉强度(Rm)", "grade": "N4",
+         "requirement": "≥345", "conditions": {"试验温度": "室温"}, "source_table": "T1"},
+        {"record_id": "T2-R1-C1", "category": "室温拉伸", "item": "抗拉强度(Rm)", "grade": "N4",
+         "requirement": "≥380", "conditions": {"试验温度": "室温"}, "source_table": "T2"},
+    ]
+    diagnostics, summaries = detect_conflicts(records)
+    assert summaries[0]["severity"] == "error"
+    assert any(item["code"] == "value_conflict" for item in diagnostics[0])
+
+
 def test_verify_pipeline_and_queue():
     records = [
         {"record_id": "T9-R1-C1", "category": "室温拉伸", "item": "抗拉强度(Rm)",
