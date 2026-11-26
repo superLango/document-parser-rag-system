@@ -1,0 +1,31 @@
+{
+ "docs": 1,
+ "gold": 9,
+ "ours": 0,
+ "matched": 0,
+ "value_exact": 0,
+ "consistency": 0.0,
+ "coverage": 0.0,
+ "missing": 9,
+ "extra": 0,
+ "rows": [
+  {
+   "doc": "gbt-8547-2019",
+   "gold": 9,
+   "ours": 0,
+   "matched": 0,
+   "value_exact": 0,
+   "consistency": 0.0,
+   "coverage": 0.0,
+   "missing": 9,
+   "extra": 0,
+   "missing_by_category": {
+    "标准信息": 1,
+    "热处理制度": 1,
+    "室温拉伸": 5,
+    "弯曲试验": 2
+   },
+   "extra_by_category": {}
+  }
+ ]
+}
