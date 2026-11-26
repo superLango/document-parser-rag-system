@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Phase-0 PoC: measure layout-first table block detection on zero-record PDFs."""
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RUNS = REPO_ROOT / "new_app" / "docs" / "reports" / "closeout-standards-e2e.json"
 DEFAULT_OUT_JSON = REPO_ROOT / "new_app" / "docs" / "reports" / "layout-first-poc.json"
 DEFAULT_OUT_MD = REPO_ROOT / "new_app" / "docs" / "reports" / "layout-first-poc.md"
-DEFAULT_API = "http://192.168.1.35:9978"
+DEFAULT_API = "http://192.168.188.75:9978"
 
 
 def zero_record_docs(path: Path, limit: int) -> list[dict]:

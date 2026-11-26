@@ -1,6 +1,6 @@
 """app_v3 的轻量 LLM 客户端（OpenAI-compatible /chat/completions）。
 
-默认走 DSH 代理（192.168.1.35:9989），代理会注入 enable_thinking=false。
+默认走 DSH 代理（192.168.188.75:9989），代理会注入 enable_thinking=false。
 """
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-DEFAULT_BASE_URL = os.environ.get("V3_LLM_BASE_URL", "http://192.168.1.35:9989/v1")
+DEFAULT_BASE_URL = os.environ.get("V3_LLM_BASE_URL", "http://192.168.188.75:9989/v1")
 DEFAULT_MODEL = os.environ.get("V3_LLM_MODEL", "Qwen3.6-35B-A3B-NVFP4")
 
 

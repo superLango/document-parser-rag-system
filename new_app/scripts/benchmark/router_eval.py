@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """RouterAgent accuracy against the deterministic M3 matcher."""
 
 from __future__ import annotations
@@ -178,7 +178,7 @@ async def evaluate(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="RouterAgent accuracy evaluation")
-    parser.add_argument("--base-url", default="http://192.168.1.35:9988")
+    parser.add_argument("--base-url", default="http://192.168.188.75:9988")
     parser.add_argument("--model", default="Qwen3.6-35B-A3B-NVFP4")
     parser.add_argument("--timeout", type=float, default=180.0)
     parser.add_argument("--session-db", default="/tmp/hanson-agent/router-eval.db")

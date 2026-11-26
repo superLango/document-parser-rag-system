@@ -24,7 +24,7 @@ PY = str(ROOT / "new_app" / ".venv" / "Scripts" / "python.exe")
 DEV = ROOT / "new_app" / "scripts" / "dev"
 BASE = ROOT / ".tmp" / "batch20"
 OUT = ROOT / ".tmp" / "s11_rebind"
-REMOTE = "grainuser@192.168.1.35"
+REMOTE = "grainuser@192.168.188.75"
 
 
 def candidates(ocr: dict, used: set[str]) -> list[str]:

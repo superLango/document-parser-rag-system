@@ -1,0 +1,35 @@
+{
+ "docs": 1,
+ "gold": 9,
+ "ours": 40,
+ "matched": 3,
+ "value_exact": 2,
+ "consistency": 0.6667,
+ "coverage": 0.3333,
+ "missing": 6,
+ "extra": 37,
+ "rows": [
+  {
+   "doc": "gbt-8547-2019",
+   "gold": 9,
+   "ours": 40,
+   "matched": 3,
+   "value_exact": 2,
+   "consistency": 0.6667,
+   "coverage": 0.3333,
+   "missing": 6,
+   "extra": 37,
+   "missing_by_category": {
+    "标准信息": 1,
+    "室温拉伸": 3,
+    "弯曲试验": 2
+   },
+   "extra_by_category": {
+    "尺寸外形": 7,
+    "其他": 26,
+    "热处理制度": 2,
+    "弯曲试验": 2
+   }
+  }
+ ]
+}

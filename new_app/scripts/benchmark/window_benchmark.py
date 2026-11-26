@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Window benchmark for the Qwen 35B endpoint (32K/64K/128K prompts)."""
 
 from __future__ import annotations
@@ -23,14 +23,14 @@ BASE_TEXT = (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Qwen window benchmark")
-    parser.add_argument("--base-url", default="http://192.168.1.35:9988")
+    parser.add_argument("--base-url", default="http://192.168.188.75:9988")
     parser.add_argument("--model", default="Qwen3.6-35B-A3B-NVFP4")
     parser.add_argument("--sizes", default="32000,64000,120000")
     parser.add_argument("--max-tokens", type=int, default=32)
     # P2-02：并发 4 组合压测（32K/64K/128K x 4）。
     parser.add_argument("--concurrency", type=int, default=4)
     parser.add_argument("--timeout", type=float, default=900.0)
-    parser.add_argument("--ssh-host", default="192.168.1.35")
+    parser.add_argument("--ssh-host", default="192.168.188.75")
     parser.add_argument("--ssh-user", default="grainuser")
     parser.add_argument(
         "--out",

@@ -16,7 +16,7 @@ PY = str(ROOT / "new_app" / ".venv" / "Scripts" / "python.exe")
 DEV = ROOT / "new_app" / "scripts" / "dev"
 BASE = ROOT / ".tmp" / "batch20"
 OUT = ROOT / ".tmp" / "s12_full"
-REMOTE = "grainuser@192.168.1.35"
+REMOTE = "grainuser@192.168.188.75"
 DOCS = ["gbt-8547-2019", "xx454-2022", "hb-20079-2012"]
 
 
